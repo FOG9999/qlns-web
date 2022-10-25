@@ -1,0 +1,346 @@
+﻿
+@using Viettel.Domain.DomainModel
+@model VDT_KHV_PhanBoVon
+
+@{
+    ViewBag.Title = "ChinhSua";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+    <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsQLKeHoachVonNam.js"></script>
+    <link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
+    <script src="~/Scripts/js/dropdowntree.js"></script>
+    <style>
+        #pnlThongTinChiTiet .row {
+            background-color: #efefef;
+        }
+    </style>
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <input type="hidden" id="iId_PhanBoVonId" value="@Model.iID_PhanBoVonID">
+        <div class="card">
+            <div class="card-body create_thdt">
+
+                <input type="hidden" id="iId_PhanBoVonId" value="@Model.iID_PhanBoVonID">
+                <input type="hidden" id="txtId" />
+                <input type="hidden" id="txtParentId" />
+                <input type="hidden" id="txtXauNoiMa" />
+                <input type="hidden" id="drpNganhOld">
+                <input type="hidden" id="drpDuAnOld">
+                <input type="hidden" id="drpPheDuyetOld">
+
+                <input type="hidden" id="drpDonViQuanLy" value="@Model.iID_DonViQuanLyID">
+                <input type="hidden" id="drpNguonNganSach" value="@Model.iID_NguonVonID">
+                <input type="hidden" id="drpLoaiNganSach" value="@ViewBag.LoaiNganSachId">
+
+                <div class="form-group">
+                    <h4 class="color-text-red">Thông tin chung:</h4>
+                    <hr class='color-background-red' />
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label class="">Đơn vị quản lý</label>
+                            <input type="text" value="@ViewBag.DonViQuanLy" class="form-control clearable show-edit-off" disabled="disabled">
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txtSoKeHoach" class="">Số kế hoạch <span class="require">*</span></label>
+                            <input type="text" value="@Model.sSoQuyetDinh" id="txtSoKeHoach" class="form-control clearable show-edit-off">
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txtNgayLap" class="">Ngày lập <span class="require">*</span></label>
+                            <div class='input-group date'>
+                                <input type='text' class="form-control" id="txtNgayLap" value="@Model.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy")" />
+                                <span class="btn-default input-group-addon">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label class="">Nguồn vốn</label>
+                            <input type="text" value="@ViewBag.NguonVon" class="form-control clearable show-edit-off" disabled="disabled">
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="">Loại ngân sách</label>
+                            <input type="text" value="@ViewBag.LoaiNganSach" class="form-control clearable show-edit-off" disabled="disabled">
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txt_NgayToTrinh" class="">Loại - khoản</label>
+                            <input type="text" value="" class="form-control clearable show-edit-off" disabled="disabled">
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txt_SoToTrinh" class="">Năm kế hoạch </label>
+                            <input type="text" id="txtNamKeHoach" value="@Model.iNamKeHoach" class="form-control clearable show-edit-off" disabled="disabled">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <h4 class="color-text-red">Thông tin chi tiết:</h4>
+                    <hr class='color-background-red' />
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="drpNganh" class="">Mục - Tiểu mục - Tiết mục - Ngành<span class="require">*</span></label>
+                            <select id="drpNganh" class="form-control clearable"></select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="txtLoaiCongTrinh" class="">Loại công trình <span class="require">*</span></label>
+                            <input type="text" id="txtLoaiCongTrinh" class="form-control clearable">
+                            <input type="hidden" id="drpLoaicongTrinh">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="drpDuAn" class="">Dự án <span class="require">*</span></label>
+                            <select id="drpDuAn" class="form-control clearable"></select>
+                        </div>
+                        <div class="col-sm-3  col-sm-offset-3">
+                            <div style=" margin-top: 25px; " class="pull-right">
+                                <span class="require text-italic mr-10">(Thêm mới dự án tại bước nhập chỉ tiêu)</span>
+                                <button class="btn btn-primary btn-icon"><i class="fa fa-plus" aria-hidden="true" style="margin:0px;"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label for="txtMaKetNoi" class="">Mã kết nối</label>
+                            <input type="text" readonly="readonly" class="form-control clearable" id="txtMaKetNoi">
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="drpCapPheDuyet" class="">Cấp phê duyệt</label>
+                            @Html.DropDownList("drpCapPheDuyet", ViewBag.drpCapPheDuyet as List<SelectListItem>, new { @class = "form-control clearable" })
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txtGiaTriDauTu" class="">Giá trị đầu tư</label>
+                            <input type="text" readonly="readonly" class="form-control clearable" id="txtGiaTriDauTu">
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txtVonDaBoTri" class="">Vốn đã bố trí</label>
+                            <input type="text" readonly="readonly" class="form-control clearable" id="txtVonDaBoTri">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label for="txtVonDaBoTri" class="">Chỉ tiêu đầu năm</label>
+                            <input type="text" readonly="readonly" class="form-control clearable" id="txtChiTieuDauNam">
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txtVonConLai" class="">Vốn còn lại</label>
+                            <input type="text" readonly="readonly" class="form-control clearable" id="txtVonConLai">
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txtVonNamTruocChuyenSang" class="">KH vốn năm trước chuyển sang</label>
+                            <input type="text" readonly="readonly" class="form-control clearable" id="txtVonNamTruocChuyenSang">
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txtBoXungNam" class="">Bổ xung/ điều chỉnh trong năm </label>
+                            <input required type='text' class="form-control clearable" id="txtBoXungNam" readonly="readonly" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label for="txtSoDaGiaiNgan" class="">Số đã giải ngân trong năm </label>
+                            <input required type='text' class="form-control clearable" id="txtSoDaGiaiNgan" readonly="readonly" />
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txtGTTruocDieuChinh" class="">Giá trị trước điều chỉnh </label>
+                            <input required type='text' class="form-control clearable" id="txtGTTruocDieuChinh" readonly="readonly" />
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="sLoaiDieuChinh" class="">Loại điều chỉnh</label>
+                            <select id="sLoaiDieuChinh" class="form-control clearable">
+                                <option value="BoXung">Bổ sung(+)</option>
+                                <option value="DieuChinh">Điều chỉnh(-)</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txtGiaTriDieuChinh" class="">Giá trị điều chỉnh </label>
+                            <input required type='text' class="form-control clearable" id="txtGiaTriDieuChinh" />
+                        </div>
+                       
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label for="txtGTSauDieuChinh" class="">Giá trị sau điều chỉnh </label>
+                            <input required type='text' class="form-control clearable" id="txtGTSauDieuChinh" readonly="readonly" />
+                        </div>
+                        <div class="col-sm-3 col-sm-offset-6">
+                            <div style=" margin-top: 25px;" class="pull-right">
+                                <span class="require text-italic mr-10">(Thêm dữ liệu xuống bảng chi tiết)</span>
+                                <button class="btn btn-info btn-icon" onclick="ClearDataInsert()"><i class="fa fa-refresh" aria-hidden="true" style="margin:0px;"></i></button>
+                                <button class="btn btn-primary btn-icon" onclick="InsertDieuChinhData()"><i class="fa fa-plus" aria-hidden="true" style="margin:0px;"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div id="ViewTable" style="overflow-x: auto; overflow-y: auto; max-height:300px;"></div>
+                        <table id="SumTable" class="table table-striped table-border">
+                            <tr>
+                                <th width="5%"></th>
+                                <th width="200px"></th>
+                                <th width="200px"></th>
+                                <th width="400px" style="text-align:center;"> <span style="font-size:15px;font-weight:700">&Sigma;</span> Tổng cộng:</th>
+                                <th width="200px"></th>
+                                <th width="200px"></th>
+                                <th width="200px"></th>
+                                <th width="200px"></th>
+                                <th width="200px"></th>
+                                <th width="200px"></th>
+                                <th width="300px"></th>
+                                <th width="10%"></th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <h4 class="color-text-red">Thông tin tài liệu đính kèm:</h4>
+                    <button class="btn btn-success pull-right" style="margin-top:-37px" onclick="CancelSaveData()"><i class="fa fa-plus" aria-hidden="true"></i><span>Đính kèm</span></button>
+                    <hr class='color-background-red' />
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <table class="table table-striped table-border">
+                                <thead>
+                                    <tr>
+                                        <th width="5%">STT</th>
+                                        <th width="75%">Tài liệu</th>
+                                        <th width="10%">Size</th>
+                                        <th width="10%"></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group text-center">
+                        <button class="btn btn-default" onclick="CancelSaveData()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                        <button class="btn btn-primary" onclick="SaveDataDieuChinh()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                    </div>
+
+                </div>
+            </div>
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+
+<script>
+    var tblDataGrid = [];
+    var dataUpdate = [];
+    var iIdMax = 3;
+
+    $(document).ready(function () {
+        GetDropdownLoaiCongTrinh();
+
+        $("#txtNamKeHoach").change(function (e) {
+            $("#drpLoaiNganSach").empty();
+            $("#drpLoaiKhoan").empty();
+            $("#drpNganh").empty();
+            GetDataDropdownLoaiNganSach();
+        });
+
+        $("#drpLoaiNganSach").change(function (e) {
+            $("#drpLoaiKhoan").empty();
+            $("#drpNganh").empty();
+            GetDataDropdownLoaiAndKhoanByLoaiNganSach();
+        });
+
+        $("#drpLoaiKhoan").change(function (e) {
+            $("#drpNganh").empty();
+            GetDataDropdownNganh();
+        });
+
+        $("#drpDuAn").change(function (e) {
+            $("#drpCapPheDuyet").val($("#drpDuAn").val());
+            GetThongTinDauTuDuAn();
+        });
+
+        $("#txtGiaTriDieuChinh").on("change", function () {
+            var fSauChinh = 0;
+            if ($("#txtGiaTriDieuChinh").val() == null) {
+                $("#txtGiaTriDieuChinh").val(0);
+            }
+            if ($.isNumeric($("#txtGiaTriDieuChinh").val().replaceAll(".",""))) {
+                var sNumber = Number($("#txtGiaTriDieuChinh").val().replaceAll(".", "")).toLocaleString('vi-VN');
+                if ($("#sLoaiDieuChinh").val() == "DieuChinh") {
+                    fSauChinh = (parseFloat($("#txtGTTruocDieuChinh").val().replaceAll(".", "")) - parseFloat($("#txtGiaTriDieuChinh").val().replaceAll(".", ""))).toLocaleString('vi-VN');
+                } else {
+                    fSauChinh = (parseFloat($("#txtGTTruocDieuChinh").val().replaceAll(".", "")) + parseFloat($("#txtGiaTriDieuChinh").val().replaceAll(".", ""))).toLocaleString('vi-VN');
+                }
+                $("#txtGTSauDieuChinh").val(fSauChinh);
+                $("#txtGiaTriDieuChinh").val(sNumber);
+            }
+            else {
+                $("#txtGiaTriDieuChinh").val(0);
+                $("#txtGTSauDieuChinh").val($("#txtGTTruocDieuChinh").val());
+            }
+        });
+
+        $("#sLoaiDieuChinh").on("change", function () {
+            var fSauChinh = 0;
+            if ($("#txtGiaTriDieuChinh").val() == null) {
+                $("#txtGiaTriDieuChinh").val(0);
+            }
+            if ($.isNumeric($("#txtGiaTriDieuChinh").val().replaceAll(".",""))) {
+                var sNumber = Number($("#txtGiaTriDieuChinh").val().replaceAll(".", "")).toLocaleString('vi-VN');
+                if ($("#sLoaiDieuChinh").val() == "DieuChinh") {
+                    fSauChinh = (parseFloat($("#txtGTTruocDieuChinh").val().replaceAll(".", "")) - parseFloat($("#txtGiaTriDieuChinh").val().replaceAll(".", ""))).toLocaleString('vi-VN');
+                } else {
+                    fSauChinh = (parseFloat($("#txtGTTruocDieuChinh").val().replaceAll(".", "")) + parseFloat($("#txtGiaTriDieuChinh").val().replaceAll(".", ""))).toLocaleString('vi-VN');
+                }
+                $("#txtGTSauDieuChinh").val(fSauChinh);
+                $("#txtGiaTriDieuChinh").val(sNumber);
+            }
+            else {
+                $("#txtGiaTriDieuChinh").val(0);
+                $("#txtGTSauDieuChinh").val($("#txtGTTruocDieuChinh").val());
+            }
+        });
+        GetDataDropdownLoaiNganSach(true);
+        GetInfoPhanBoVonChiTietInGridViewByPhanBoVonID($("#iId_PhanBoVonId").val(), true);
+    });
+
+    $("#txtGiaTriDieuChinh").trigger("change");
+    $("#sLoaiDieuChinh").trigger("change");
+
+    function GetItemData(iId) {
+        var data = $.map(tblDataGrid, function (n) { return n.iId == iId ? n : null })[0];
+        $("#txtId").val(data.iId);
+        $("#drpNganhOld").val(data.iID_NganhID);
+        $("#drpDuAnOld").val(data.iID_DuAnID);
+        trLoaiCongTrinh.setSelection([data.iId_LoaiCongTrinh]);
+        $("#drpLoaicongTrinh").val(data.iId_LoaiCongTrinh);
+        $("#txtMaKetNoi").val(data.sMaKetNoi);
+        $("#txtGiaTriDauTu").val(data.fGiaTriDauTu)
+        $("#drpPheDuyetOld").val(data.iId_CapPheDuyet);
+        $("#txtVonDaBoTri").val(data.fVonDaBoTri);
+        $("#txtVonConLai").val(data.fVonConLai);
+        $("#txtKeHoachUng").val("");
+        $("#txtGiaTriUng").val("");
+        $("#txtGiaTriThuHoi").val("");
+        $("#txtVonNamTruocChuyenSang").val("");
+        $("#txtChiTieuDuocDuyet").val(data.fChiTieuNganSachDuocDuyet);
+        $("#txtGhiChu").val(data.sGhiChu);
+        $("#txtGTTruocDieuChinh").val(data.fGiaTrPhanBo);
+        $("#txtGTSauDieuChinh").val(data.fGiaTriSauDieuChinh);
+        $("#sLoaiDieuChinh").val(data.sLoaiDieuChinh);
+        $("#txtGiaTriDieuChinh").val(data.fGiaTriDieuChinh)
+        GetDataDropdownNganhEdit(data.iID_NganhID, @Model.iNamKeHoach);
+        if (data.sLoaiDieuChinh == undefined || data.sLoaiDieuChinh == null || data.sLoaiDieuChinh == '') {
+            $("#sLoaiDieuChinh").val("BoXung");
+        }
+    }
+</script>

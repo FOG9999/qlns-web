@@ -1,0 +1,127 @@
+﻿@*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesome-bootstrap-checkbox/0.3.5/awesome-bootstrap-checkbox.min.css" />*@
+@*<link rel="stylesheet" href="~/Content/css/awesome-bootstrap-checkbox.min.css" />*@
+<link rel="stylesheet" type="text/css" href="/Content/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/fonts/font-awesome/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="/content/plugins/sweetalert2/sweetalert2.min.css" />
+<link rel="stylesheet" type="text/css" href="/content/css/style.css" />
+<link rel="stylesheet" type="text/css" href="/content/css/style_breadcrumbs.css" />
+<link rel="stylesheet" type="text/css" href="/content/css/theme.css" />
+<link rel="stylesheet" type="text/css" href="/content/css/awesome-bootstrap-checkbox.min.css" />
+<link rel="stylesheet" type="text/css" href="/content/css/site.css" />
+
+<script type="text/javascript" src="/Scripts/js/jquery-3.1.0.min.js"></script>
+<script type="text/javascript" src="/Scripts/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/Scripts/js/jquery.unobtrusive-ajax.min.js"></script>
+<script type="text/javascript" src="/Scripts/js/bootstrap.js"></script>
+<script type="text/javascript" src="/Scripts/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="/Scripts/js/jquery.validate.unobtrusive.min.js"></script>
+<script type="text/javascript" src="/content/plugins/sweetalert2/sweetalert2.min.js"></script>
+<script type="text/javascript" src="/Scripts/plugins/icheck/icheck.min.js"></script>
+<script type="text/javascript" src="/Scripts/js/js_ui.js"></script>
+<script type="text/javascript" src="/Scripts/js/js_app.js"></script>
+<style type="text/css">
+    /* Don't add a check icon to the radio */
+    input[type="radio"].icheck:checked + label:after {
+        font-family: 'FontAwesome';
+        content: '';
+    }
+</style>
+<form id="checkboxForm" method="post" class="form-horizontal">
+    <div class="form-group">
+        <label class="col-xs-3 control-label">Job position</label>
+        <div class="col-xs-6">
+            <div class="radio">
+                <input type="radio" name="job" value="designer" id="designerRadio" checked class="icheck" />
+                <label for="designerRadio">Designer ádfasdf</label>
+            </div>
+            <div class="radio">
+                <input type="radio" name="job" value="frontend" id="frontendRadio" class="icheck" />
+                <label for="frontendRadio">Front-end Developer</label>
+            </div>
+            <div class="radio">
+                <input type="radio" name="job" value="backend" id="backendRadio" class="icheck" />
+                <label for="backendRadio">Back-end Developer</label>
+            </div>
+            <div class="radio">
+                <input type="radio" name="job" value="dba" id="dbaRadio" class="icheck" />
+                <label for="dbaRadio">Database Administrator</label>
+            </div>
+            <div class="radio">
+                <input type="radio" name="job" value="sys" id="sysRadio" class="icheck" />
+                <label for="sysRadio">System Engineer</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-3 control-label">Programming Languages</label>
+        <div class="col-xs-6">
+            <div class="checkbox">
+                <input type="checkbox" name="languages[]" value="net" id="netCheckbox" class="icheck" />
+                <label for="netCheckbox">.Net</label>
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" name="languages[]" value="java" id="javaCheckbox" class="icheck" />
+                <label for="javaCheckbox">Java</label>
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" name="languages[]" value="c" id="cCheckbox" class="icheck" />
+                <label for="cCheckbox">C/C++</label>
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" name="languages[]" value="php" id="phpCheckbox" class="icheck" />
+                <label for="phpCheckbox">PHP</label>
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" name="languages[]" value="perl" id="perlCheckbox" class="icheck" />
+                <label for="perlCheckbox">Perl</label>
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" name="languages[]" value="ruby" id="rubyCheckbox" class="icheck" />
+                <label for="rubyCheckbox">Ruby</label>
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" name="languages[]" value="python" id="pythonCheckbox" class="icheck" />
+                <label for="pythonCheckbox">Python</label>
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" name="languages[]" value="javascript" id="javascriptCheckbox" class="icheck" />
+                <label for="javascriptCheckbox">Javascript</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-5 col-xs-offset-3">
+            <button type="submit" class="btn btn-default">Validate</button>
+        </div>
+    </div>
+</form>
+<script>
+    //$(document).ready(function () {
+    //    $('#checkboxForm').formValidation({
+    //        framework: 'bootstrap',
+    //        icon: {
+    //            valid: 'glyphicon glyphicon-ok',
+    //            invalid: 'glyphicon glyphicon-remove',
+    //            validating: 'glyphicon glyphicon-refresh'
+    //        },
+    //        fields: {
+    //            job: {
+    //                validators: {
+    //                    notEmpty: {
+    //                        message: 'The job position is required'
+    //                    }
+    //                }
+    //            },
+    //            'languages[]': {
+    //                validators: {
+    //                    choice: {
+    //                        min: 2,
+    //                        max: 4,
+    //                        message: 'Please choose 2 - 4 programming languages you are good at'
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    });
+    //});
+</script>

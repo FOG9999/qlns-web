@@ -1,0 +1,20 @@
+﻿@model VIETTEL.Models.SheetViewModel
+@{
+    var bang = Model.Table;
+}
+@Html.Partial("_sheettable", Model)
+<div style="display: none;">
+    @Html.Partial("_SheetForm2", bang)
+    @if (!bang.IsReadonly)
+    {
+        <form id="formDuyet" action="@Model.UrlPost" method="post">
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.FiltersString)
+            @Html.Partial("_SheetForm", bang)
+        </form>
+    }
+    else
+    {
+        @Html.Partial("_SheetForm", bang)
+    }    
+</div>

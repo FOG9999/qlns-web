@@ -1,0 +1,194 @@
+﻿@using Viettel.Models.BaoHiemXaHoi
+@model DanhMucBHXHDonViPagingViewModel
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Danh sách đơn vị bảo hiểm xã hội (@Model._paging.TotalItems)</label>
+    </div>
+    <button class="btn btn-primary pull-right" onclick="OpenModal()" data-toggle="modal" data-target="#modalBHXHDonVi"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+    <button class="btn btn-default pull-right" style="margin-right:10px; color:black !important" onclick="ImportDonViBHXH();"><i class="fa fa-upload" aria-hidden="true"></i>Import</button>
+    @*<div class="form-group text-right">
+            @using (Html.BeginForm("ExportData", "DanhMucDonViBHXH", FormMethod.Post))
+            {
+                <input type="text" name="sMaLoaiDuToan" class="form-control clearable" id="txt_sMaLoaiDuToanExcel" style="display:none" />
+                <input type="text" name="sSoChungTu" class="form-control clearable" id="txt_sSoChungTuExcel" style="display:none" />
+                <input type="text" name="sSoQuyetDinh" class="form-control clearable" id="txt_sSoQuyetDinhExcel" style="display:none" />
+                <input type="text" name="dNgayQuyetDinhTu" class="form-control clearable" id="txt_dNgayQuyetDinhTuExcel" style="display:none" />
+                <input type="text" name="dNgayQuyetDinhDen" class="form-control clearable" id="txt_dNgayQuyetDinhDenExcel" style="display:none" />
+                <input type="text" name="sNoiDung" class="form-control clearable" id="txt_sNoiDungExcel" style="display:none" />
+                <input type="text" name="sLoaiTep" value="EXCEL" class="form-control clearable" style="display:none" />
+                <button class="btn btn-primary" style="margin-right:10px;width:auto !important" onclick="Export()"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Excel</button>
+            }
+        </div>*@
+</div>
+<table class="table table-bordered" id="tblListDMDonViBHXH">
+    <thead class="header-search">
+    <th width="5%"></th>
+    <th width="15%"><input type="text" class="form-control gr_search" id="txtMaDonVi" autocomplete="off" /></th>
+    <th width="20%"><input type="text" class="form-control gr_search" id="txtTenDonVi" autocomplete="off" /></th>
+    <th width="20%">
+        <input type="hidden" id="iID_DonViBHXH_Parent_ID" value="@ViewBag.iID_DonViBHXH_ID" />
+        @*@Html.DropDownList("cboDonViParent", (SelectList)(ViewBag.ListDonViParent), "--Chọn đơn vị--", new { @class = "form-control", @id = "cboDonViParent" })*@
+        <select class="form-control" style="width: 100%" id="cboDonViParent" name="cboDonViParent"></select>
+    </th>
+    <th width="20%">
+        <input type="hidden" id="iID_MaDonViNS" value="@ViewBag.iID_MaDonViNS" />
+        @*@Html.DropDownList("cboDonViNS", (SelectList)(ViewBag.ListDonViNS), "--Chọn đơn vị Mappping--", new { @class = "form-control", @id = "cboDonViNS" })*@
+        <select class="form-control" style="width: 100%" id="cboDonViNS" name="cboDonViNS"></select>
+    </th>
+    <th width="10%"></th>
+    <th width="10%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+    </thead>
+    <thead>
+    <th width="5%">STT</th>
+    <th width="15%">Mã đơn vị</th>
+    <th width="20%">Tên đơn vị</th>
+    <th width="20%">Đơn vị cha</th>
+    <th width="20%">Đơn vị Mapping</th>
+    <th width="10%">Loại đơn vị</th>
+    <th width="10%"></th>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (var item in Model.Items)
+            {
+                index++;
+                <tr style="cursor: pointer">
+                    <td align="center">@(pageIndex + index)</td>
+
+                    <td align="left">@item.iID_MaDonViBHXH</td>
+
+                    <td align="left">@item.sTen</td>
+
+                    <td align="left">@item.sTenBHXHDonViParent</td>
+
+                    <td align="left">@item.sTenNSDonViMapping</td>
+
+                    <td align="left">@item.sLoaiDonVi</td>
+
+                    <td align="center" style="vertical-align: middle !important" class="col-sm-12">
+                        <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.iID_BHXH_DonViID')" data-toggle="modal" data-target="#modalBHXHDonVi"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-edit" onclick="OpenModal('@item.iID_BHXH_DonViID')" data-toggle="modal" data-target="#modalBHXHDonVi"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" onclick="Delete('@item.iID_BHXH_DonViID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
+@*<button type="button" id="btnShowConfirmModal" data-toggle="modal" data-target="#confirmModal"></button>*@
+
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.date')
+            .datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+            });
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+
+        $("#tblListDMDonViBHXH .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                if (e.which == 13) {//Enter key pressed
+                    ChangePage();
+                }
+            });
+        });
+    /*formatMoney();*/
+        EventDonViBHXHParent();
+        EventDonViNS();
+        
+    });
+
+    function EventDonViBHXHParent() {
+        $('#cboDonViParent').select2({
+            width: 'resolve',
+            matcher: matchStart
+        });
+
+        LoadDataComboBoxDonViBHParent();
+    }
+
+    function EventDonViNS() {
+        $('#cboDonViNS').select2({
+            width: 'resolve',
+            matcher: matchStart
+        });
+
+        LoadDataComboBoxDonViNS();
+    }
+
+    function matchStart(params, data) {
+        if ($.trim(params.term) === '') {
+            return data;
+        }
+
+        if (typeof data.children === 'undefined') {
+            return null;
+        }
+
+        var filteredChildren = [];
+        $.each(data.children, function (idx, child) {
+            if (child.text.toUpperCase().indexOf(params.term.toUpperCase()) == 0) {
+                filteredChildren.push(child);
+            }
+        });
+
+        if (filteredChildren.length) {
+            var modifiedData = $.extend({}, data, true);
+            modifiedData.children = filteredChildren;
+
+            return modifiedData;
+        }
+
+        return null;
+    }
+
+    function LoadDataComboBoxDonViBHParent() {
+        $.ajax({
+            url: "/BaoHiemXaHoi/DanhMucDonViBHXH/GetDataComboBoxDonViBHParent",
+            type: "POST",
+            dataType: "json",
+            //data: { id: id },
+            success: function (resp) {
+                $('#cboDonViParent').select2({
+                    data: resp.data
+                });
+                $("#cboDonViParent").val($("#iID_DonViBHXH_Parent_ID").val()).trigger('change.select2');
+            }
+        })
+    }
+
+    function LoadDataComboBoxDonViNS() {
+        $.ajax({
+            url: "/BaoHiemXaHoi/DanhMucDonViBHXH/GetDataComboBoxDonViNSSearch",
+            type: "POST",
+            dataType: "json",
+            //data: { id: id },
+            success: function (resp) {
+                $('#cboDonViNS').select2({
+                    data: resp.data
+                });
+                $("#cboDonViNS").val($("#iID_MaDonViNS").val()).trigger('change.select2');
+            }
+        })
+    }
+</script>
+

@@ -1,0 +1,188 @@
+﻿@using Viettel.Models.QLNH
+@model BaoCaoTaiSanModelViewModel
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+
+<style>
+    .dropdown {
+        position: relative;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        top: 30px;
+        background-color: #f9f9f9;
+        min-width: 120px;
+        height: 60px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content a {
+        white-space: nowrap;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+</style>
+
+<div class="tooltip-header-search">
+    <div class="col-sm-6" style="display:flex;padding-left:0px;">
+        <label class="control-label">Báo cáo tài sản hình thành theo hợp đồng dự án (@Model._paging.TotalItems)</label>
+    </div>
+
+    <div class="col-sm-6">
+        @*<button class="btn btn-info pull-right" style="margin-right:10px;"><i class="fa fa-refresh" aria-hidden="true"></i>Export</button>*@
+        <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+        <div class="dropdown pull-right mr-10">
+            <button class="dropbtn btn btn-warning"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
+            <div class="dropdown-content list-group">
+                <a href="#" class="list-group-item list-group-item-action" onclick="ChooseTable(true);">Danh sách tài sản</a>
+                <a href="#" class="list-group-item list-group-item-action" onclick="ChooseTable(false);">Thống kê tài sản</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <table class="table table-bordered tr-hover" id="tbListBaoCaoTaiSan1">
+        <thead class="header-search">
+            <tr>
+                <th width="3%"></th>
+                <th width="8%">
+                    @Html.DropDownList("slbDonViFilter", Model.ListDonVi, new { @class = "form-control", @id = "slbDonViFilter", @onchange = "ChangePage();" })
+                </th>
+                <th width="8%">
+                    @Html.DropDownList("slbDuAnFilter", Model.ListDuAn, new { @class = "form-control", @id = "slbDuAnFilter", @onchange = "ChangePage();" })
+                </th>
+                <th width="8%">
+                    @Html.DropDownList("slbDopDongFilter", Model.ListHopDong, new { @class = "form-control", @id = "slbDopDongFilter", @onchange = "ChangePage();" })
+                </th>
+                <th colspan="9"></th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th width="3%">STT</th>
+                <th width="8%">Đơn vị sử dụng</th>
+                <th width="8%">Thuộc dự án</th>
+                <th width="8%">Thuộc hợp đồng</th>
+                <th width="8%">Mã tài sản</th>
+                <th width="9%">Tên tài sản</th>
+                <th width="8%">Loại tài sản</th>
+                <th width="8%">Ngày bắt đầu sử dụng</th>
+                <th width="8%">Trạng thái sử dụng</th>
+                <th width="8%">Tình trạng sử dụng</th>
+                <th width="8%">Số lượng</th>
+                <th width="8%">Đơn vị tính</th>
+                <th width="8%">Nguyên giá</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int index = 0;
+                foreach (var item in Model.Items)
+                {
+                    index++;
+                    <tr style="cursor: pointer">
+                        <td class="text-center">@(pageIndex + index)</td>
+                        <td class="text-left">@Html.Raw(Html.Encode(item.sDonVi))</td>
+                        <td class="text-left">@Html.Raw(Html.Encode(item.sDuAn))</td>
+                        <td class="text-left">@Html.Raw(Html.Encode(item.sHopDong))</td>
+                        <td class="text-left">@Html.Raw(Html.Encode(item.sMaTaiSan))</td>
+                        <td class="text-left">@Html.Raw(Html.Encode(item.sTenTaiSan))</td>
+                        <td class="text-center">@Html.Raw(item.iLoaiTaiSan == 1 ? "Hữu hình" : "Vô hình")</td>
+                        <td class="text-center">@(item.dNgayBatDauSuDung.HasValue ? item.dNgayBatDauSuDung.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                        <td class="text-center">@Html.Raw(item.iTrangThai == 1 ? "Chưa sử dụng" : item.iTrangThai == 2 ? "Đang sử dụng" : " Không sử dụng")</td>
+                        <td class="text-center">@Html.Raw(item.iTinhTrangSuDung == 1 ? "Mới" : item.iTinhTrangSuDung == 2 ? " Cũ" :"Hết giá trị")</td>
+                        <td class="text-right">@Html.Raw(item.fSoLuong)</td>
+                        <td class="text-center">@Html.Raw(item.sDonViTinh)</td>
+                        <td class="text-right">@Html.Raw(item.fNguyenGia)</td>
+                    </tr>
+
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    <table class="table table-bordered tr-hover" id="tbListBaoCaoTaiSan2" >
+        <thead class="header-search">
+            <tr>
+                <th width="3%"></th>
+                <th width="8%">
+                    @Html.DropDownList("slbsDonViFilter", Model.ListDonVi2, new { @class = "form-control", @id = "slbsDonViFilter", @onchange = "ChangePage2();" })
+                </th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th width="3%" rowspan="2">STT</th>
+                <th width="8%" rowspan="2">Đơn vị sử dụng</th>
+                <th width="8%" rowspan="2">Mã tài sản</th>
+                <th width="9%" rowspan="2">Tên tài sản</th>
+                <th width="8%" colspan="2">Loại tài sản</th>
+                <th width="8%" colspan="3">Trạng thái sử dụng</th>
+                <th width="8%" colspan="3">Tình trạng sử dụng</th>
+            </tr>
+            <tr>
+                <th width="9%">Tài sản hữu hình</th>
+                <th width="9%">Tài sản vô hình</th>
+                <th width="9%">Chưa sử dụng</th>
+                <th width="9%">Đang sử dụng</th>
+                <th width="9%">Không sử dụng</th>
+                <th width="9%">Mới</th>
+                <th width="9%">Cũ</th>
+                <th width="9%">Hết giá trị</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int indexx = 0;
+                foreach (var item in Model.Items2)
+                {
+                    indexx++;
+                        <tr style="cursor: pointer">
+                            <td class="text-center">@(pageIndex + indexx)</td>
+                            <td class="text-left">@Html.Raw(Html.Encode(item.sDonVi))</td>
+                            <td class="text-left">@Html.Raw(Html.Encode(item.sMaTaiSan))</td>
+                            <td class="text-left">@Html.Raw(Html.Encode(item.sTenTaiSan))</td>
+                            <td class="text-left">@Html.Raw(Html.Encode(item.slHH))</td>
+                            <td class="text-left">@Html.Raw(Html.Encode(item.slVH))</td>
+                            <td class="text-left">@Html.Raw(Html.Encode(item.slChua))</td>
+                            <td class="text-left">@Html.Raw(Html.Encode(item.slDang))</td>
+                            <td class="text-left">@Html.Raw(Html.Encode(item.slKhong))</td>
+                            <td class="text-left">@Html.Raw(Html.Encode(item.slMoi))</td>
+                            <td class="text-left">@Html.Raw(Html.Encode(item.slCu))</td>
+                            <td class="text-left">@Html.Raw(Html.Encode(item.slHet))</td>
+                        </tr>
+                }
+
+            }
+        </tbody>
+    </table>
+</div>
+
+@Html.BuildPagingButtons(Model._paging)
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#slbDonViFilter").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#slbDuAnFilter").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#slbDopDongFilter").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#slbsDonViFilter").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+
+        $("#tbListBaoCaoTaiSan .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                if (e.which == 13) {
+                    ChangePage();
+                }
+            });
+        });
+    });
+</script>
+
+

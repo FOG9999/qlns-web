@@ -1,0 +1,263 @@
+﻿@model Viettel.Models.QLVonDauTu.VDT_DA_TT_HopDong_ViewModel
+@using VIETTEL.Common
+@{
+    ViewBag.Title = "Cập nhật thông tin hợp đồng kinh tế";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+@{
+    const byte HOP_DONG_GIAO_VIEC = (byte)Constants.LOAI_HOP_DONG.HOP_DONG_GIAO_VIEC;
+    const byte HOP_DONG_KINH_TE = (byte)Constants.LOAI_HOP_DONG.HOP_DONG_KINH_TE;
+}
+<style>
+    #tblDanhSachGoiThau, #tblDanhSachPhuLucChiPhi {
+        display: block;
+        overflow: auto;
+        max-height: 360px;
+    }
+
+    #tblDanhSachPhuLucHangMuc {
+        display: block;
+        overflow: auto;
+        max-height: 900px;
+    }
+
+    #tblDanhSachGoiThau thead, #tblDanhSachPhuLucChiPhi thead, #tblDanhSachPhuLucHangMuc thead {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+</style>
+
+<link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+
+<div class="main">
+    <input type="hidden" id="iIDHopDongId" value="@Model.iID_HopDongID" />
+    <input type="hidden" id="iIDPhanLoaiId" value="@Model.iID_LoaiHopDongID" />
+    <input type="hidden" id="iIDNhaThauId" value="@Model.iID_NhaThauThucHienID" />
+    <input type="hidden" id="iIDGoiThauId" value="@Model.iID_GoiThauID" />
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body create_thdt">
+                @*Thông tin hợp đồng*@
+                <div class="form-group">
+                    <h4 class="color-text-red">Thông tin hợp đồng:</h4>
+                    <hr class='color-background-red' />
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label for="sSoHopDong">Số hợp đồng</label>
+                            @Helpers.Required()
+                            <input type="text" id="sSoHopDong" class="form-control" value="@Model.sSoHopDong" name="sSoHopDong" maxlength="100" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="sTenHopDong">Tên hợp đồng</label>
+                            @Helpers.Required()
+                            <input type="text" id="sTenHopDong" class="form-control" value="@Model.sTenHopDong" name="sTenHopDong" maxlength="100" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="dNgayHopDong">Ngày lập</label>
+                            @Helpers.Required()
+                            <div class='input-group date'>
+                                <input type='text' class="form-control" value="@Model.dNgayHopDong.ToString("dd/MM/yyyy")" id="dNgayHopDong" name="dNgayHopDong" autocomplete="off" />
+                                <span class="btn-default input-group-addon">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="iThoiGianThucHien">TG thực hiện (ngày)</label>
+                            @Helpers.Required()
+                            <div style="display: flex">
+                                <input type='text' class="form-control col-sm-2 sotien" value="@Model.iThoiGianThucHien" id="iThoiGianThucHien" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                        </div>
+                       
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label for="txtDonViQuanLy">Phân loại</label>
+                            @Html.DropDownList("iID_LoaiHopDongID", (SelectList)(ViewBag.ListPhanLoaiHopDong), new { @class = "form-control", @id = "iID_LoaiHopDongID" })
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="dKhoiCongDuKien">Ngày khởi công dự kiến</label>
+                            <div class='input-group date'>
+                                <input type='text' class="form-control dateFormat startDate" value="@(Model.dKhoiCongDuKien.HasValue ? Model.dKhoiCongDuKien.Value.ToString("dd/MM/yyyy") : string.Empty)" name="dKhoiCongDuKien" id="dKhoiCongDuKien" autocomplete="off" />
+                                <span class="btn-default input-group-addon">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="dKetThucDuKien">Ngày kết thúc dự kiến</label>
+                            <div class='input-group date'>
+                                <input type='text' class="form-control dateFormat endDate" value="@(Model.dKetThucDuKien.HasValue ? Model.dKetThucDuKien.Value.ToString("dd/MM/yyyy") : string.Empty)" name="dKetThucDuKien" id="dKetThucDuKien" autocomplete="off" />
+                                <span class="btn-default input-group-addon">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <label for="txtNhaThau">Nhà thầu đại diện</label>
+                            @Html.DropDownList("iID_NhaThauID", (SelectList)(ViewBag.ListNhaThau), new { @class = "form-control", @id = "iID_NhaThauID" })
+                        </div>
+                       
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label for="sHinhThucHopDong">HT hợp đồng</label>
+                            <input type="text" id="sHinhThucHopDong" class="form-control" value="@Model.sHinhThucHopDong" name="sHinhThucHopDong" maxlength="500" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-3" disable>
+                            <label for="fGiaTriHopDong">Giá trị hợp đồng</label>
+                            @Helpers.Required()
+                            <div style="display: flex">
+                                <input type='text' class="form-control col-sm-2 sotien" value="@Model.fTienHopDong" id="fGiaTriHopDong" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" readonly />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="sSoHopDong">Nội dung hợp đồng</label>
+                            @*<input type="text" id="idNoiDungHopDong" class="form-control" value="@Model.NoiDungHopDong" name="NoiDungHopDong" maxlength="500" autocomplete="off" />*@
+                            <textarea id="idNoiDungHopDong" class="form-control" value="@Model.NoiDungHopDong" name="NoiDungHopDong" maxlength="500" autocomplete="off" rows="3">@Model.NoiDungHopDong</textarea>
+                        </div>
+
+                    </div>
+                </div>
+                @*Thông tin nội dung*@
+            <div class="form-group">
+                <h4 class="color-text-red">Thông tin dự án:</h4>
+                <hr class='color-background-red' />
+                <div class="form-group row">
+
+                    <div class="col-sm-6">
+                        <label for="txtDuAn">Dự án</label>
+                        <p class="label-sua">@Html.Raw(Model.sMaDuAn + " - " + Model.sTenDuAn)</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtDonViQL">Đơn vị</label>
+                        <p class="label-sua">@Html.Raw(Model.sTenDonViQL)</p>
+                    </div>
+
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <label for="sDiaDiem">Địa điểm</label>
+                        <p class="label-sua">@Html.Raw(Model.sDiaDiem)</p>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="sThoiGianThucHien">Thời gian thực hiện</label>
+                        <p class="label-sua">@Html.Raw(Model.sKhoiCong + " - " + Model.sKetThuc)</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <label for="fTongMucDauTu">Tổng mức đầu tư</label>
+                        <p class="label-sua sotien">@Html.Raw(Model.fTongMucDauTu.ToString("N0")) </p>
+                    </div>
+                </div>
+            </div>
+
+
+                <div class="form-group">
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            @*Thông tin gói thầu*@
+                            <div class="form-group">
+                                <h4 class="color-text-red">Thông tin gói thầu</h4>
+                                <hr class='color-background-red' />
+                                <br />
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered" id="tblDanhSachGoiThau">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th class="min-width-150">Gói thầu</th>
+                                                    <th class="min-width-200">Nhà thầu</th>
+                                                    <th class="min-width-150">Giá trị được duyệt</th>
+                                                    <th class="min-width-150">Giá trị</th>
+                                                    <th class="min-width-150">Giá trị trúng thầu</th>
+                                                    <th class="min-width-150">Giá trị hợp đồng</th>
+                                                    <th class="min-width-150">Giá trị còn lại</th>
+                                                    <th class="min-width-150">Thao tác</th>
+                                                    @*<th width="20%">Giá trị phê duyệt</th>*@
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            @*Thông tin phụ lục - chi phí*@
+                            <div class="form-group">
+                                <h4 class="color-text-red">Thông tin phụ lục - chi phí</h4>
+                                <hr class='color-background-red' />
+                                <br />
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered" id="tblDanhSachPhuLucChiPhi">
+                                            <thead>
+                                                <tr>
+                                                    <th width="5%"></th>
+                                                    <th width="10%">Chi phí</th>
+                                                    <th width="15%">Giá trị được duyệt</th>
+                                                    <th width="15%">Giá trị còn lại</th>
+                                                    <th width="15%"></th>
+                                                    @*<th width="20%">Giá trị phê duyệt</th>*@
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            @*Thông tin phụ lục - hạng mục*@
+                            <div class="form-group">
+                                <h4 class="color-text-red">Thông tin phụ lục - hạng mục</h4>
+                                <hr class='color-background-red' />
+                                <br />
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered" id="tblDanhSachPhuLucHangMuc">
+                                            <thead>
+                                                <tr>
+                                                    <th width="5%"></th>
+                                                    <th width="10%">Stt</th>
+                                                    <th width="15%">Tên hạng mục</th>
+                                                    <th width="15%">Giá trị được duyệt</th>
+                                                    <th width="15%">Giá trị còn lại</th>
+
+                                                    @*<th width="20%">Giá trị phê duyệt</th>*@
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+                <div class="form-group text-center">
+                    <input type="hidden" id="txtHopDongId" value="@Model.iID_HopDongID" />
+                    <input type="hidden" id="txtDuAnId" value="@Model.iID_DuAnID" />
+                    <input type="hidden" id="txtCurrentGoiThauSelected" />
+                    <input type="hidden" id="txtIdGoiThauNhaThau" />
+                    <input type="hidden" id="txtIsGoc" value="@Model.bIsGoc.ToString()" />
+                    <button class="btn btn-default" style="width: 100%" onclick="Cancel()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                    <button class="btn btn-primary" id="btnSave" style="width: 100%" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/QLVonDauTu/ThongTinDuAn/jsSuaThongTinHopDong.js"></script>
+<script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+<script src="~/Scripts/js/js_vdtWeb.js" type="text/javascript"></script>

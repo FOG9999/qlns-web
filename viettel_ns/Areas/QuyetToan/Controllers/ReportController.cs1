@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using Viettel.Controllers;
+using Viettel.Domain.Interfaces.Services;
+
+namespace VIETTEL.Areas.QuyetToan.Controllers
+{
+    public partial class ReportController : FlexcelReportController
+    {
+        public ReportController(ILoggingService loggingService, ILocalizationService localizationService, ISettingsService settingsService, ICacheService cacheService) : base(loggingService, localizationService, settingsService, cacheService)
+        {
+        }
+    }
+}

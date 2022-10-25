@@ -1,0 +1,181 @@
+﻿@using System.Data
+@using DomainModel
+@using DomainModel.Controls
+@using VIETTEL.Models
+
+@{
+    var a = ViewBag.idChuyenQuyetToan;
+    String iID_MaMucLucNganSach = Request.QueryString["iID_MaMucLucNganSach"];
+    String iID_ChuyenQuyetToan = Request.QueryString["id"] ?? ViewBag.idChuyenQuyetToan;
+
+    //Cập nhập các thông tin tìm kiếm
+    Boolean CoTabIndex = false;
+    String MaND = User.Identity.Name;
+    String ControlID = "ChuyenDuLieuQuyetToan";
+    String IPSua = Request.UserHostAddress;
+    String ParentID = ControlID + "_Search";
+
+    String DSTruong = MucLucNganSachModels.strDSTruongQuyetToan;
+    String strDSTruongDoRong = MucLucNganSachModels.strDSTruongDoRongQuyetToan;
+    //MucLucNganSachModels.CapNhapLai();
+    String[] arrDSTruong = DSTruong.Split(',');
+    String[] arrDSTruongDoRong = strDSTruongDoRong.Split(',');
+    Dictionary<String, String> arrGiaTriTimKiem = new Dictionary<string, string>();
+    String sLNS = Request.QueryString["sLNS"];
+    if (String.IsNullOrEmpty(sLNS)) { sLNS = "0"; }
+    for (int i = 0; i < arrDSTruong.Length; i++)
+    {
+        arrGiaTriTimKiem.Add(arrDSTruong[i], Request.QueryString[arrDSTruong[i]]);
+    }
+    if (sLNS == "0")
+    {
+        arrGiaTriTimKiem["sLNS"] = null;
+    }
+    DataTable dtsLNS = HamChung.getSLNS();
+    SelectOptionList slLNS = new SelectOptionList(dtsLNS, "sLNS", "TenLNS");
+    // anhht edit: truyen tham tham so loadData, voi man hinh nay thi chi lay ra
+    ChuyenDuLieuQuyetToan_BangDuLieu bang = new ChuyenDuLieuQuyetToan_BangDuLieu(arrGiaTriTimKiem, MaND, IPSua, iID_ChuyenQuyetToan, true);
+    dtsLNS.Dispose();
+
+    String DetailSubmit = Url.Action("DetailSubmit", "ChuyenDuLieuQuyetToan", new { sLNS = sLNS });
+
+}
+<div id="nhapform">
+    <div id="form2">
+        <div style="display:flex; justify-content:space-between">
+            <form action="@Url.Action("LocSubmit","ChuyenDuLieuQuyetToan",new {ParentID=ParentID, id=iID_ChuyenQuyetToan})"
+                  method="post">
+                <table class="mGrid1">
+                    <tr>
+                        <td>
+                            @Html.Raw(MyHtmlHelper.DropDownList(ParentID, slLNS, sLNS, "sLNS", "", "class=\"form-control\""))
+                        </td>
+                        <td style="padding: 1px 5px; text-align: left;">
+                            <button type="submit" id="@(ParentID + "_btnTimKiem")" class="btn btn-info" @(bang.DuocSuaChiTiet ? "" : "tab-index='-1'" )><i class="fa fa-search"></i>Tìm kiếm</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <div class="text-center" style="padding-top:1rem">
+                @*<button class="btn btn-primary" @(bang.arrDuLieu.Count!=0?"disabled":string.Empty) id="btnFistTime" onclick="getFistData()"><i class="fa fa-download" aria-hidden="true"></i><span>Nhập lần đầu</span></button>*@
+                <button class="btn btn-primary" id="btnUpdate" onclick="javascript:return Bang_HamTruocKhiKetThuc();"><i class="fa fa-download" aria-hidden="true"></i><span>Cập nhật</span></button>
+                @*<button class="btn btn-primary" id="btnChuyenDuLieu"><i class="fa fa-ban" aria-hidden="true"></i><span>Chuyển dữ liệu</span></button>*@
+            </div>
+        </div>
+
+        <table class="mGrid1">
+            <tr>
+                @{
+                    for (int j = 0; j < arrDSTruong.Length; j++)
+                    {
+                        int iColWidth = Convert.ToInt32(arrDSTruongDoRong[j]) + 4;
+
+                        String strAttr = "";
+                        if (arrDSTruong[j] == "sLNS" && !String.IsNullOrEmpty(arrGiaTriTimKiem["sLNS"]))
+                        {
+                            if (arrDSTruong[j] == "sLNS" && arrGiaTriTimKiem["sLNS"].Length == 7)
+                            {
+                                strAttr = String.Format("class='input1_4' onkeypress='jsMLNS_Search_onkeypress(event)' search-control='1' search-field='{1}' style='width:{0}px;height:22px;' readonly='readonly'", iColWidth, arrDSTruong[j]);
+                            }
+                            else
+                            {
+                                strAttr = String.Format("class='input1_4' onkeypress='jsMLNS_Search_onkeypress(event)' search-control='1' search-field='{1}' style='width:{0}px;height:22px;'", iColWidth, arrDSTruong[j]);
+                            }
+                        }
+                        else
+                        {
+                            strAttr = String.Format("class='input1_4' onkeypress='jsMLNS_Search_onkeypress(event)' search-control='1' search-field='{1}' style='width:{0}px;height:22px;'", iColWidth, arrDSTruong[j]);
+                        }
+                        if (CoTabIndex)
+                        {
+                            strAttr += String.Format(" tab-index='-1'");
+                        }
+
+
+                        <td style="text-align:left;width:@(iColWidth + "px");">
+
+                            @Html.Raw(@MyHtmlHelper.TextBox(new { ParentID = ParentID, Value = arrGiaTriTimKiem[arrDSTruong[j]], TenTruong = arrDSTruong[j], LoaiTextBox = "2", Attributes = strAttr }))
+
+
+                        </td>
+                    }
+                }
+            </tr>
+        </table>
+
+        <div id="returnData">
+            @Html.Partial("ChuyenDuLieuQuyetToan_Edit_Frame", new { sLNS = sLNS })
+        </div>
+    </div>
+
+
+</div>
+<script>
+    var jsMLNS_Url_Frame = '';
+    var jsMLNS_Url = '';
+    function getFistData() {
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            async: false,
+            url: "/QLNH/ChuyenDuLieuQuyetToan/TestSave",
+            data: { isFirst: true },
+            success: function (data) {
+                $("#btnFistTime").attr("disabled", true)
+                $("#returnData").html(data);
+            }
+        });
+    }
+
+    function jsMLNS_LoadLaiChiTiet() {
+        if ($("#tabs-1").css("display") != "none") {
+            var url = jsMLNS_Url_Frame;
+            var controls = $('input[search-control="1"]');
+            var i;
+            var data = {};
+            for (i = 0; i < controls.length; i++) {
+                var field = $(controls[i]).attr("search-field");
+                var value = $(controls[i]).val();
+                url += "&" + field + "=" + encodeURI(value);
+                data[field] = encodeURI(value);
+            }
+            jsMLNS_Search_inteval = setInterval(function () {
+                jsMLNS_Search_clearInterval();
+                $.ajax({
+                    type: "POST",
+                    dataType: "html",
+                    async: false,
+                    url: jsMLNS_Url_Frame,
+                    data: data,
+                    success: function (data) {
+                        $("#returnData").html(data);
+                    }
+                });
+                //document.getElementById("ifrChiTietMLNS").src = url;
+            }, 100);
+            // console.log(url)
+
+        }
+    }
+
+    var jsMLNS_Search_inteval = null;
+
+    function jsMLNS_Search_onkeypress(e) {
+        console.log(e)
+        jsMLNS_Search_clearInterval();
+        if (e.keyCode == 13) {
+            $('input[search-control="1"]').attr('disabled', true);
+            setTimeout(function () {
+                $('input[search-control="1"]').attr('disabled', false)
+            }, 1000);
+            jsMLNS_LoadLaiChiTiet();
+        }
+        else {
+            jsMLNS_Search_inteval = setInterval(function () { jsMLNS_Search_clearInterval(); jsMLNS_LoadLaiChiTiet(); }, 2000);
+        }
+    }
+
+    function jsMLNS_Search_clearInterval() {
+        clearInterval(jsMLNS_Search_inteval);
+    }
+</script>

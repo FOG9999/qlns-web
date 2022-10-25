@@ -1,0 +1,216 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTQuanLyDuAnInfoModel
+<div class="card-body">
+    @if (Model.dataPDQT.quyetToan.iID_QuyetToanID == new Guid())
+    {
+        <div class="form-group row" style="font-size: 16px !important;">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <span style="font-size: 16px !important;">Phê duyệt quyết toán chưa có thêm mới </span><a href="@Url.Action("CreateNew", "QLPheDuyetQuyetToan", new { })" target="_blank" style="font-size: 16px !important;">tại đây</a>
+        </div>
+    }
+    else
+    {
+        @*Thông tin phê duyệt*@
+        <div class="form-group">
+            <h4 class="color-text-red">Thông tin quyết toán:</h4>
+            <hr class='color-background-red' />
+            <div class="row">
+                <div class="col-sm-2">
+                    <input type="hidden" id="iID_QuyetToanID" name="iID_QuyetToanID" value="@Model.dataPDQT.quyetToan.iID_QuyetToanID">
+                    <label class="control-label">Số quyết định</label>
+                    <p>@Model.dataPDQT.quyetToan.sSoQuyetDinh</p>
+                </div>
+                <div class="col-sm-2">
+                    <input type="hidden" id="dNgayQuyetDinh" name="dNgayQuyetDinh" value="@Model.dataPDQT.quyetToan.dNgayQuyetDinh">
+                    <label class="control-label">Ngày phê duyệt</label>
+                    <p>@(Model.dataPDQT.quyetToan.dNgayQuyetDinh.HasValue ? Model.dataPDQT.quyetToan.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy") : "")</p>
+                </div>
+                <div class="col-sm-2">
+                    <label class="control-label">Cơ quan phê duyệt</label>
+                    <p>@Model.dataPDQT.quyetToan.sCoQuanPheDuyet</p>
+                </div>
+                <div class="col-sm-2">
+                    <label class="control-label">Người ký</label>
+                    <p>@Model.dataPDQT.quyetToan.sNguoiKy</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <input type="hidden" id="iID_DonViQuanLyID" name="iID_DonViQuanLyID" value="@Model.dataPDQT.quyetToan.iID_DonViQuanLyID">
+                    <label class="control-label">Đơn vị quản lý</label>
+                    <p id="sTenDonViQuanLy">@Model.dataPDQT.quyetToan.sTenDonViQuanLy</p>
+                </div>
+                <div class="col-sm-2">
+                    <input type="hidden" id="iID_DuAnID" name="iID_DuAnID" value="@Model.dataPDQT.quyetToan.iID_DuAnID">
+                    <label class="control-label">Dự án</label>
+                    <p id="sTenDuAn">@Model.dataPDQT.quyetToan.sTenDuAn</p>
+                </div>
+                <div class="col-sm-2">
+                    <label class="control-label">Kế hoạch ứng</label>
+                    <p id="fGiaTriUng">@Model.dataPDQT.dataDuAnQT.fGiaTriUng.ToString("###,###") (VNĐ)</p>
+                </div>
+                <div class="col-sm-2">
+                    <label class="control-label">Vốn ứng đã cấp</label>
+                    <p id="fLKSoVonDaTamUng">@Model.dataPDQT.dataDuAnQT.fLKSoVonDaTamUng.ToString("###,###") (VNĐ)</p>
+                </div>
+                <div class="col-sm-2">
+                    <label class="control-label">Vốn ứng đã thu hồi</label>
+                    <p id="fLKThuHoiUng">@Model.dataPDQT.dataDuAnQT.fLKThuHoiUng.ToString("###,###") (VNĐ)</p>
+                </div>
+                <div class="col-sm-2">
+                    <label class="control-label">Giá trị còn phải thu hồi</label>
+                    <p id="fConPhaiThuHoi">@Model.dataPDQT.dataDuAnQT.fConPhaiThuHoi.ToString("###,###") (VNĐ)</p>
+                </div>
+            </div>
+        </div>
+
+        @*Chi phí đầu tư*@
+        <div class="form-group">
+            <h4 class="color-text-red">Chi phí đầu tư:</h4>
+            <hr class='color-background-red' />
+            <br />
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-bordered" id="tblChiPhiDauTuPDQT">
+                        <thead>
+                            <tr>
+                                <th width="5%">STT</th>
+                                <th width="60%">Tên chi phí</th>
+                                <th width="35%">Giá trị quyết toán</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int index = 0;
+                                foreach (var item in Model.dataPDQT.listQuyetToanChiPhi)
+                                {
+                                    index++;
+                                    <tr style='cursor: pointer;'>
+                                        <td align="center" class='r_STT'>@index</td>
+
+                                        <td><input type='hidden' class='r_iID_ChiPhi' value='@item.iID_ChiPhiID' />@item.sTenChiPhi</td>
+
+                                        <td class='r_GiaTriPheDuyet' align='right'>@item.fTienPheDuyet.ToString("###,###")</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th>Tổng cộng</th>
+                                <th class="cpdt_tong_giatripheduyet text-right" id="id_tong_giatripheduyet_chiphi"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        @*Nguồn vốn đầu tư*@
+        <div class="form-group">
+            <h4 class="color-text-red">Nguồn vốn đầu tư:</h4>
+            <hr class='color-background-red' />
+            <br />
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-bordered" id="tblNguonVonDauTuPDQT">
+                        <thead>
+                            <tr>
+                                <th width="5%">STT</th>
+                                <th width="60%">Tên nguồn vốn</th>
+                                <th width="35%">Giá trị quyết toán</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int indexNV = 0;
+                                foreach (var item in Model.dataPDQT.listQuyetToanNguonVon)
+                                {
+                                    indexNV++;
+                                    <tr style='cursor: pointer;'>
+                                        <td align="center" class='r_STT'>@indexNV</td>
+
+                                        <td><input type='hidden' class='r_iID_NguonVon' value='@item.iID_NguonVonID' />@item.sTen</td>
+
+                                        <td class='r_GiaTriPheDuyet' align='right'>@item.fTienPheDuyet.ToString("###,###")</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th>Tổng cộng</th>
+                                <th class="cpdt_tong_giatripheduyet text-right" id="id_tong_giatripheduyet_nguonvon"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    @{
+                        foreach (var item in Model.dataPDQT.listQuyetToanNguonVon)
+                        {
+                            <script>
+                                arrNguonVonTemp.push({
+                                    iID_NguonVonID: @item.iID_NguonVonID,
+                                    fTienPheDuyet: @item.fTienPheDuyet
+                                })
+                            </script>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        @*Nội dung quyết toán*@
+        <div class="form-group">
+            <h4 class="color-text-red">Nội dung quyết toán:</h4>
+            <hr class='color-background-red' />
+            <div class="row">
+                <div class="col-sm-2">
+                    <label class="control-label">GT dự toán</label>
+                    <p id="fTongGiaTriPhanBo">---</p>
+                </div>
+                <div class="col-sm-2">
+                    <label class="control-label">GT quyết toán</label>
+                    <p id="tongGiaTriPheDuyet">---</p>
+                </div>
+                <div class="col-sm-2">
+                    <label class="control-label">GT chênh lệch</label>
+                    <p id="fTongGiaTriChenhLech">---</p>
+                </div>
+                <div class="col-sm-3">
+                    <label for="txtNoiDung">Nội dung</label>
+                    <p>@Html.Raw(Model.dataPDQT.quyetToan.sNoiDung)</p>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-12" id="lstDataView">
+                    @Html.Partial("_partialListNoiDungQuyetToan", Model.dataPDQT)
+                </div>
+            </div>
+        </div>
+
+        @*Thông tin tài liệu đính kèm*@
+        <div class="form-group">
+
+            <h4 class="color-text-red">Thông tin tài liệu:</h4>
+            <hr class='color-background-red' />
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-bordered" id="tblThongTinTaiLieuDinhKem">
+                        <thead>
+                            <tr>
+                                <th width="5%">STT</th>
+                                <th width="60%">Tài liệu</th>
+                                <th width="25%">Size</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>

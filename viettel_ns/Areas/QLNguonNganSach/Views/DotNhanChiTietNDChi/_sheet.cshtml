@@ -1,0 +1,105 @@
+﻿@model VIETTEL.Areas.QLNguonNganSach.Models.DotNhanChiTietNDChiViewModel
+@{
+    var sheet = Model.Sheet;
+}
+<div class="tooltip-header-search">
+    <input type="text" hidden value="@Model.iID_DotNhan" id="iID_DotNhan" />
+    <div class="row">
+        <div class="col-sm-12">
+            <label class="control-label">Phân nguồn năm @PhienLamViec.iNamLamViec - @Model.sNoiDung</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6" style="display: flex">
+            <label class="control-label" style="color:#e17009;">Nhận từ BTC: </label> &nbsp;&nbsp; <p style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">@(Model.fSoTienNhanTuBTC != 0 ? Model.fSoTienNhanTuBTC.ToString("###,###") : "0")</p>
+            <label class="control-label" style="padding-left:20px; color:#e17009;">Đợt phân này: </label> &nbsp;&nbsp; <p style="margin-top: 10px; font-size:14px" id="SoTienDaPhanNDC">@(Model.SoTienDaPhanNDC != 0 ? Model.SoTienDaPhanNDC.ToString("###,###") : "0")</p>
+            <label class="control-label" style="padding-left:20px; color:#e17009;">Số tiền còn lại: </label> &nbsp;&nbsp; <p style="margin-top: 10px; font-size:14px" id="fSoTienConLai">@(Model.fSoTienConLai != 0 ? Model.fSoTienConLai.ToString("###,###") : "0")</p>
+        </div>
+        <div class="col-sm-6">
+            <p class="pull-right" style="margin-top: 10px; font-size:14px" id="">&nbsp;&nbsp;Xóa tìm kiếm</p>
+            <label class="control-label pull-right" style="padding-left:20px;">F9: </label>
+            <p class="pull-right" style="margin-top: 10px; font-size:14px" id="">&nbsp;&nbsp;Tìm kiếm</p>
+            <label class="control-label pull-right" style="padding-left:20px;">Enter: </label>
+            <p class="pull-right" style="margin-top: 10px; font-size:14px" id="">&nbsp;&nbsp;Lưu dữ liệu</p>
+            <label class="control-label pull-right" style="padding-left:20px;">F10: </label>
+            @if (Model.isClone)
+            {
+                <button class="btn btn-primary pull-right" onclick="loadSoKiemTra();"><i class="fa fa-copy" aria-hidden="true"></i>Sao chép</button>
+            }
+        </div>
+    </div>
+</div>
+<iframe id="sheet" name="iframe-sheet" class="iframe-sheet"></iframe>
+<div class="">
+    <div id="nhapform">
+        <div id="form2">
+            <div class="button-bar">
+                <div class="text-center">
+                    <button class="btn btn-default" onclick="goBack('@Model.iID_DotNhan')" style="margin-right: 10px;"><i class="fa fa-ban" aria-hidden="true"></i><span>Quay lại</span></button>
+                    <button class="btn btn-primary btn-save" id="btnSave"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="ajax-div">
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+@using (Html.BeginScripts())
+{
+    <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var fSoTienConLai = @Model.fSoTienConLai;
+        $(".btn-save").click(function () {
+            $("#sheet")[0].contentWindow.Bang_HamTruocKhiKetThuc();
+        });
+
+        loadFrame(1);
+
+        function goBack(id) {
+            window.location.href = "/QLNguonNganSach/QLDotNhan/Detail/" + id;
+        }
+
+        $(".btn-option").click(function () {
+            var option = $(this).data("id")
+            loadFrame(option);
+        });
+
+        function loadFrame(option) {
+            var id = '@Model.iID_DotNhanChiTiet';
+            var url = '@Url.Action("SheetFrame")'
+                + "/?id=" + id;
+            $("#sheet").attr("src", url);
+        }
+
+        var CONFIRM = 0;
+        function loadSoKiemTra() {
+            $("#btnShowConfirmSaoChep").click();
+        }
+
+        function setSoTienConLai(SoTienDaPhanNDC) {
+            var fSoTienNhanTuBTC = UnFormatNumber($("#fSoTienNhanTuBTC").html());
+            fSoTienConLai = fSoTienNhanTuBTC - SoTienDaPhanNDC;
+            $("#SoTienDaPhanNDC").html(FormatNumber(SoTienDaPhanNDC));
+            $("#fSoTienConLai").html(fSoTienConLai == 0 ? 0 : FormatNumber(fSoTienConLai));
+        }
+
+        function loadModal(data) {
+            $("#divModalConfirm").html(data);
+        }
+
+        document.addEventListener('keydown', eventKey);
+        function eventKey(e) {
+            if (e != null && e != undefined) {
+                if (e.key == "F9") {
+                    $("#sheet")[0].contentWindow.BangDuLieu_onKeypress_F9();
+                }
+            }
+        }
+    </script>
+}

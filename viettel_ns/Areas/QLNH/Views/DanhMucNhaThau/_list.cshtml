@@ -1,0 +1,118 @@
+﻿@using Viettel.Models.QLNH
+@model NHDMNhaThauViewModel
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Danh mục nhà thầu (@Model._paging.TotalItems)</label>
+    </div>
+    <button class="btn btn-primary pull-right" style="margin-right:10px;" onclick="OpenModal()" data-toggle="modal" data-target="#modalNhaThau"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+    <button class="btn btn-default pull-right mr-10" style="color: #111111 !important" onclick="ImportNT();" data-toggle="modal" data-target="#modalNhaThau"><i class="fa fa-upload" aria-hidden="true"></i>Import</button>
+</div>
+
+<table class="table table-bordered tr-hover" id="tblListNhaThau">
+    <thead class="header-search">
+        <tr>
+            <th width="8%">
+                <select name="slbILoai" id="slbILoai" class="form-control">
+                    @{
+                        foreach (var nhathau in (List<NHDMNhaThau_Dropdown_LoaiNhaThau>)ViewBag.ListLoaiNhaThau)
+                        {
+                            <option value="@nhathau.valueId">@nhathau.labelName</option>
+                        }
+                    }
+                </select>
+            </th>
+            <th width="9%"><input type="text" class="form-control gr_search" id="txt_MaNhaThau" placeholder="Mã nhà thầu" maxlength="100"/></th>
+            <th width="9%"><input type="text" class="form-control gr_search" id="txt_TenNhaThau" placeholder="Tên nhà thầu" maxlength="300"/></th>
+            <th width="9%"><input type="text" class="form-control gr_search" id="txt_Diachi" placeholder="Địa chỉ" maxlength="300"/></th>
+            <th width="9%"><input type="text" class="form-control gr_search" id="txt_DaiDien" placeholder="Đại diện" maxlength="100"/></th>
+            <th width="9%"><input type="text" class="form-control gr_search" id="txt_ChucVu" placeholder="Chức vụ" maxlength="100"/></th>
+            <th width="9%"><input type="text" class="form-control gr_search" id="txt_SoDienThoai" placeholder="Số điện thoại" maxlength="100"/></th>
+            <th width="9%"><input type="text" class="form-control gr_search" id="txt_SoFax" placeholder="Số fax" maxlength="100"/></th>
+            <th width="9%"><input type="text" class="form-control gr_search" id="txt_Email" placeholder="Email" maxlength="100"/></th>
+            <th width="9%"><input type="text" class="form-control gr_search" id="txt_Website" placeholder="Website" maxlength="300"/></th>
+            <th width="11%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+        </tr>
+    </thead>
+    <thead>
+        <tr>
+            <th width="8%">Loại</th>
+            <th width="9%">Mã nhà thầu</th>
+            <th width="9%">Tên nhà thầu</th>
+            <th width="9%">Địa chỉ</th>
+            <th width="9%">Đại diện</th>
+            <th width="9%">Chức vụ</th>
+            <th width="9%">Số điện thoại</th>
+            <th width="9%">Số fax</th>
+            <th width="9%">Email</th>
+            <th width="9%">Website</th>
+            <th width="11%">Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (var item in Model.Items)
+            {
+                index++;
+                <tr style="cursor: pointer">
+                    <td align="center">
+                        @{
+                            if (item.iLoai == 1)
+                            {
+                                @Html.Raw("Nhà thầu");
+                            }
+                            else
+                            {
+                                @Html.Raw("Đơn vị ủy thác");
+                            }
+                        }
+                    </td>
+                    <td align="left">@Html.Raw(Html.Encode(item.sMaNhaThau))</td>
+                    <td align="left">@Html.Raw(Html.Encode(item.sTenNhaThau))</td>
+                    <td align="left">@Html.Raw(Html.Encode(item.sDiaChi))</td>
+                    <td align="left">@Html.Raw(Html.Encode(item.sDaiDien))</td>
+                    <td align="left">@Html.Raw(Html.Encode(item.sChucVu))</td>
+                    <td align="left">@Html.Raw(Html.Encode(item.sDienThoai))</td>
+                    <td align="left">@Html.Raw(Html.Encode(item.sFax))</td>
+                    <td align="left">@Html.Raw(Html.Encode(item.sEmail))</td>
+                    <td align="left">@Html.Raw(Html.Encode(item.sWebsite))</td>
+                    <td align="center" style="vertical-align: middle !important" class="col-sm-12">
+                        <button type="button" class="btn-detail" title="Xem chi tiết" onclick="OpenModalDetail('@item.Id')" data-toggle="modal" data-target="#modalNhaThau"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-edit" title="Sửa" onclick="OpenModal('@item.Id')" data-toggle="modal" data-target="#modalNhaThau"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" title="Xóa" onclick="DeleteItem('@item.Id')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#slbILoai").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $('.date')
+            .datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+            });
+
+        $("#tblListNhaThau .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                if (e.which == 13) {//Enter key pressed
+                    ChangePage();
+                }
+            });
+        });
+    });
+</script>

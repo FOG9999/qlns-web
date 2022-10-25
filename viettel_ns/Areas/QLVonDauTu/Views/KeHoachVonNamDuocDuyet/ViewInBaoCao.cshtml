@@ -1,0 +1,130 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTKeHoachVonNamDuocDuyetExport
+@{
+    ViewBag.Title = "In báo cáo";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+<link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.0.45/css/materialdesignicons.min.css">
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="header-create-update">
+                    <span>
+                        @Html.Raw("In báo cáo dự toán được giao")
+                    </span>
+                </div>
+            </div>
+
+            <div class="card-body tab-content" style="padding-top: 0px !important;">
+                <div class="row">
+                    <div class="col-sm-4 col-md-4 col-lg-4">
+                        <div class="col-sm-12 form-group">
+                            <label>Loại chứng từ</label>
+                            @Helpers.Required()
+                            @Html.DropDownList("ValueItem", (SelectList)(ViewBag.lstLoaiChungTu), new { @class = "form-control", @id = "ValueItemLoaiChungTu" })
+                        </div>
+                        <div class="col-sm-12 form-group">
+                            <label for="txtNamKeHoach">Năm kế hoạch</label>@Helpers.Required()<br />
+                            <input type="text" class="form-control" id="txtNamKeHoach" onkeydown="ValidateInputKeydown(event, this, 1)" onblur="ValidateInputFocusOut(event, this, 6)"/>
+                        </div>
+                        <div class="col-sm-12 form-group" id="divMaNguonNganSach">
+                            <label>Loại nguồn vốn</label>
+                            @Helpers.Required()
+                            @Html.DropDownList("iID_MaNguonNganSach", (SelectList)(ViewBag.lstNguonVon), new { @class = "form-control", @id = "iID_MaNguonNganSach" })
+                        </div>
+                        <div class="col-sm-12 form-group" id="divLoaiCongTrinh">
+                            <label>Loại công trình</label>
+                            @Helpers.Required()
+                            @Html.DropDownList("iID_LoaiCongTrinh", (SelectList)(ViewBag.lstLoaiCongTrinh), new { @class = "form-control", @id = "iID_LoaiCongTrinh" })
+                        </div>
+                        <div class="col-sm-12 form-group">
+                            <label>Đơn vị tính</label>
+                            @Helpers.Required()
+                            @Html.DropDownList("ValueItem", (SelectList)(ViewBag.lstDonViTinh), new { @class = "form-control", @id = "ValueItemDonViTinh" })
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-4 col-lg-4">
+                        <div class="col-sm-12 form-group">
+                            <table class="table table-bordered" id="tblListDonViQuanLy">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" name="cbAll_DVQL" class="cbAll_DVQL" id="select-all-donviquanly" /></th>
+                                        <th width="90%">Đơn vị</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        foreach (var item in Model.lstDonViQuanLy)
+                                        {
+                                            <tr style="cursor: pointer">
+                                                <td align="center"><input type="checkbox" name="cb_DVQL" class="cb_DVQL" value="@item.iID_Ma" /></td>
+                                                <td align="left">@item.sTen</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-4 col-lg-4">
+                        <div class="col-sm-12 form-group">
+                            <label for="txtHeader1">Tiêu đề 1</label>@Helpers.Required()<br />
+                            <input type="text" class="form-control" id="txtHeader1" value="DỰ TOÁN CHI XDCB NGUỒN NGÂN SÁCH QUỐC PHÒNG NĂM ....." />
+                        </div>
+                        <div class="col-sm-12 form-group">
+                            <label for="txtHeader2">Tiêu đề 2</label>@Helpers.Required()<br />
+                            <input type="text" class="form-control" id="txtHeader2" value="(Kèm theo Quyết định số ....... ngày ........ tháng ..... năm ..... của ......)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group text-center tooltip-header-search">
+        <button class="btn btn-back" title="Quay lại" onclick="BackIndex()"><i class="fa fa-arrow-left" aria-hidden="true"></i><span>Quay lại</span></button>
+        <button class="btn btn-warning" title="In báo cáo" type="button" onclick="PrintBaoCao(true)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i><span>In báo cáo</span></button>
+        <button class="btn btn-info" title="Xuất dữ liệu ra excel" type="button" onclick="PrintBaoCao(false)"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Xuất excel</button>
+        <a class="btn-mvc" id="btnChuKy"><i class="fa fa-file-excel"></i>Sửa chữ ký</a>
+
+    </div>
+</div>
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+@Html.Partial("_ui_chuky")
+
+@section Scripts{
+    <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsKeHoachVonNamDuocDuyet.js"></script>
+    <script type="text/javascript">
+        $('#select-all-donviquanly').click(function (event) {
+            if (this.checked) {
+                $(':checkbox').each(function () {
+                    this.checked = true;
+                });
+            } else {
+                $(':checkbox').each(function () {
+                    this.checked = false;
+                });
+            }
+        });
+
+        $("#ValueItemLoaiChungTu").on("change", function () {
+            if ($("#ValueItemLoaiChungTu").val() == "2") {
+                document.getElementById("divMaNguonNganSach").style.display = "none";
+                document.getElementById("divLoaiCongTrinh").style.display = "none";
+            }
+            else {
+                document.getElementById("divMaNguonNganSach").style.display = "";
+                document.getElementById("divLoaiCongTrinh").style.display = "";
+            }
+        });
+    </script>
+}

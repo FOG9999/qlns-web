@@ -1,0 +1,102 @@
+﻿@model rptDuToanKT_M03ViewModel
+@{
+
+    ViewBag.Title = "Thông báo số kiểm tra dự toán ngân sách năm " + (int.Parse(PhienLamViec.iNamLamViec) + 1);
+}
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">@ViewBag.Title</span>
+    </div>
+    <div class="panel-body">
+        <!-- header -->
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-8">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Chọn phòng ban:</label>
+                        <div class="col-sm-8">
+                            @if (Model.PhongBanList == null || Model.PhongBanList.Count() <= 2)
+                            {
+                                @Html.Hidden("Id_PhongBan", PhienLamViec.iID_MaPhongBan);
+                                <input type="text" readonly class="form-control" value="@PhienLamViec.sTenPhongBanFull" />
+                            }
+                            else
+                            {
+                                @Html.DropDownList("Id_PhongBan", Model.PhongBanList, new { @class = "form-control", onchange = "change()" })
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Tiêu đề:</label>
+                        <div class="col-sm-8">
+                            @Html.TextArea("TieuDe", Model.TieuDe, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Đề nghị:</label>
+                        <div class="col-sm-8">
+                            @Html.DropDownList("Request", Model.RequestList, new { @class = "form-control", onchange = "change()" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div id="Id_DonVi" class="ls-box" data-check="first-only"></div>
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i>In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <span class="text-muted">|</span>
+                <a class="btn-mvc" id="btnChuKy"><i class="fa fa-file-excel"></i>Sửa chữ ký</a>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "Report", new { area="DuToanKT"} )">Hủy</a>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("_ui_chuky")
+<script type="text/javascript">
+
+    change();
+
+    function change() {
+        fillDonVi();
+    }
+
+    function fillDonVi() {
+        var id_phongban = $("#Id_PhongBan").val();
+        var request = $("#Request").val();
+
+        var url = '@Url.Action("Ds_DonVi")' + "/?"
+            + "id_phongban=" + id_phongban +
+            "&request=" + request;
+
+        fillCheckboxList("Id_DonVi", "Id_DonVi", url);
+    }
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+        var ext = $(this).data("ext");
+
+
+        $("input:checkbox[check-group='Id_DonVi']").each(function () {
+            if (this.checked) {
+                var item = this.value;
+
+                var url = '@Url.Action("Print")' +
+                           "?ext=" + ext +
+                           "&r=130" +
+                           "&Request=" + $("#Request").val() +
+                           "&Id_DonVi=" + item +
+                           "&chuky=1,2" +
+                           "&TieuDe=" + $("#TieuDe").val();
+                url = unescape(url);
+                links.push(url);
+            }
+        });
+
+        openLinks(links);
+    });
+
+</script>

@@ -1,0 +1,36 @@
+﻿@{
+    Layout = "~/views/shared/_layout.cshtml";
+
+    ViewBag.Title = "Danh sách báo dự toán ngân sách năm " + PhienLamViec.iNamLamViec;
+
+    var items = new List<MenuItem>
+    {
+
+    new MenuItem{
+        id="M03",
+        name = "Thông báo số kiểm tra dự toán ngân sách năm",
+        url = Url.Action("Index", "rptDuToanKT_M03"),
+        note = "Đơn vị"},
+
+     new MenuItem{
+        id="M03b",
+        name = "Thông báo số kiểm tra dự toán ngân sách năm - Tổng hợp các Bql",
+        url = Url.Action("Index", "rptDuToanKT_M03b"),
+        note = "",
+        is_disable = PhienLamViec.iID_MaPhongBan == "02"},
+
+    new MenuItem{
+        id="M04a",
+        name = "Thông báo tổng hợp số kiểm tra dự toán ngân sách năm (Các ngành bảo đảm)",
+        url = Url.Action("Index", "rptDuToanKT_M04a"),
+        note = "Ngành"},
+
+    new MenuItem{
+        id="M04b",
+        name = L("DTKT.rptDuToanKT_M04b"),
+        url = Url.Action("Index", "rptDuToanKT_M04b"),
+        note = "Ngành"},
+
+    };
+}
+@Html.Partial("_report_table", items)

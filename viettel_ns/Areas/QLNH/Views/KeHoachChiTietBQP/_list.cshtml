@@ -1,0 +1,119 @@
+﻿@using DomainModel
+@using System.Globalization;
+@using Viettel.Models.KeHoachChiTietBQP;
+@using Viettel.Domain.DomainModel;
+@model NH_KHChiTietBQPViewModel
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Kế hoạch chi tiết Bộ Quốc phòng phê duyệt (@Model._paging.TotalItems)</label>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12">
+        <button class="btn btn-primary pull-right" onclick="OpenModal(null, 'CREATE');" data-toggle="modal" data-target="#modalKHChiTietBQP"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+        <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+    </div>
+</div>
+
+<table class="table table-bordered tr-hover" id="tblKHChiTietBQPList">
+    <thead class="header-search">
+        <tr>
+            <th width="5%"></th>
+            <th width="5%">
+                <input type="text" maxlength="4" class="form-control event-filter" onkeydown="ValidateInputKeydown(event, this, 1)" onblur="ValidateInputFocusOut(event, this, 6)" id="txtFromDateFitler" autocomplete="off" placeholder="Từ năm" />
+            </th>
+            <th width="5%">
+                <input type="text" maxlength="4" class="form-control event-filter" onkeydown="ValidateInputKeydown(event, this, 1)" onblur="ValidateInputFocusOut(event, this, 6)" id="txtToDateFitler" autocomplete="off" placeholder="Đến năm" />
+            </th>
+            <th width="10%">
+                <input type="text" placeholder="Số kế hoạch" maxlength="100" class="form-control event-filter" id="txtSoKeHoachFilter" name="txtSoKeHoachFilter" autocomplete="off" />
+            </th>
+            <th width="10%">
+                <div class='input-group date'>
+                    <input type='text' class="form-control event-filter" id="txtNgayBanHanhFilter" autocomplete="off" placeholder="dd/MM/yyyy" onkeydown="ValidateInputKeydown(event, this, 3)" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </th>
+            <th width="52%" colspan="5"></th>
+            <th width="13%"><button class="btn btn-info" onclick="GetListData()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+        </tr>
+    </thead>
+    <thead>
+        <tr>
+            <th width="5%">STT</th>
+            <th width="10%" colspan="2">Năm</th>
+            <th width="10%">Số kế hoạch</th>
+            <th width="10%">Ngày kế hoạch</th>
+            <th width="15%">Mô tả</th>
+            <th width="10%">Giá trị phê duyệt (USD)</th>
+            <th width="10%">Giá trị phê duyệt (VND)</th>
+            <th width="7%">Lần điều chỉnh</th>
+            <th width="10%">Điều chỉnh từ</th>
+            <th width="13%">Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (NH_KHChiTietBQPModel item in Model.Items)
+            {
+                index++;
+                <tr>
+                    <td align="center">@(pageIndex + index)</td>
+                    <td align="left" colspan="2">@Html.Raw(Html.Encode(item.sNam))</td>
+                    <td align="left">@Html.Raw(Html.Encode(item.sSoKeHoach))</td>
+                    <td align="center">@(item.dNgayKeHoach.HasValue ? item.dNgayKeHoach.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                    <td align="left">@Html.Raw(!string.IsNullOrEmpty(Html.Encode(item.sMoTaChiTiet)) ? Html.Encode(item.sMoTaChiTiet).Replace("\n", "<br/>") : string.Empty)</td>
+                    <td align="right">@(item.fTongGiaTriUSD.HasValue ? CommonFunction.DinhDangSo(item.fTongGiaTriUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                    <td align="right">@(item.fTongGiaTriVND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fTongGiaTriVND.Value).ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                    <td align="center">(@Html.Raw(item.iLanDieuChinh))</td>
+                    @if (item.iID_ParentAdjustID.HasValue)
+                    {
+                        <td align="left" class="text-underline text-primary" role="button" onclick="OpenModalDetail('@item.iID_ParentAdjustID', 'DETAIL')">@Html.Raw(Html.Encode(item.sDieuChinhTu))</td>
+                    }
+                    else
+                    {
+                        <td align="left">@Html.Raw(Html.Encode(item.sDieuChinhTu))</td>
+                    }
+                    <td align="center">
+                        <button type="button" title="Điều chỉnh" class="@(!item.bIsActive ? "invisible" : "") btn-detail" onclick="OpenModal('@item.ID', 'ADJUST')" data-toggle="modal" data-target="#modalKHChiTietBQP"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" title="Xem chi tiết" class="btn-detail" onclick="OpenModalDetail('@item.ID', 'DETAIL')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" title="Sửa" class="@(!item.bIsActive ? "invisible" : "") btn-edit" onclick="OpenModal('@item.ID', 'UPDATE')" data-toggle="modal" data-target="#modalKHChiTietBQP"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" title="Xóa" class="@(!item.bIsActive ? "invisible" : "") btn-delete" onclick="ConfirmDelete('@item.ID', '@item.sNam', '@item.sSoKeHoach')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@Html.BuildPagingButtons(Model._paging)
+
+<script src="~/Scripts/QLNH/KeHoachChiTietBQP/jsNH_KeHoachChiTietBQP.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.date')
+            .datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+            });
+
+        // Check enter filter
+        $('.event-filter').on('keypress', function (e) {
+            if (e.which === 13) {
+                GetListData();
+            }
+        });
+    });
+</script>

@@ -1,0 +1,358 @@
+﻿@using Viettel.Models.QLVonDauTu
+
+@model VDTKHLuaChonNhaThauViewModel
+@{
+    ViewBag.Title = ViewBag.Title;
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+<style>
+    #tblDanhSachDuToan, #tblDanhSachGoiThau, #tblDanhSachNguonVon, #tblChiPhiDauTu, #tblDanhSachNguonVonModal, #tblDanhSachChiPhiModalCSS {
+        display: block;
+        overflow: auto;
+        max-height: 320px;
+    }
+    #tblHangMucChinh {
+        display: block;
+        overflow: auto;
+        max-height: 650px;
+    }
+
+        #tblDanhSachDuToan thead, #tblDanhSachGoiThau thead, #tblDanhSachNguonVon thead, #tblChiPhiDauTu thead,
+        #tblDanhSachNguonVonModal thead, #tblDanhSachChiPhiModalCSS thead, #tblHangMucChinh thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        #tblDanhSachNguonVonModal tfoot {
+            position: sticky;
+            bottom: 0;
+            z-index: 1;
+        }
+
+    #tblDanhSachDuToan tr, #tblDanhSachGoiThau tr, #tblDanhSachNguonVon tr, #tblChiPhiDauTu tr,
+    #tblDanhSachNguonVonModal tr, #tblDanhSachChiPhiModalCSS tr, #tblHangMucChinh tr {
+        display: table;
+        table-layout: fixed;
+        width: 100%;
+    }
+</style>
+<div class="main">
+    <input type="hidden" id="iIdKeHoachLuaChonNhaThau" value="@Model.Id" />
+    <input type="hidden" id="iIdDuToanId" value="@Model.iID_DuToanID" />
+    <input type="hidden" id="iIdQDDauTuId" value="@Model.iID_QDDauTuID" />
+    <input type="hidden" id="iIdMaDonVi" value="@Model.iID_MaDonViQuanLy" />
+    <input type="hidden" id="iIdDuAnId" value="@Model.iID_DuAnID" />
+    <input type="hidden" id="bIsDieuChinh" value="@ViewBag.bIsDieuChinh" />
+    <input type="hidden" id="iTypeDuToan" value="@ViewBag.iTypeDuToan">
+
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body create_thdt">
+                @*Thông tin nội dung*@
+                <div class="header-create-update">
+                    <span>
+                        @Html.Raw(ViewBag.Title)
+                    </span>
+                </div>
+                <div class="form-group">
+                    <h4 class="color-text-red">Thông tin nội dung</h4>
+                    <hr class='color-background-red' />
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label for="cbxLoaiChungTu">Căn cứ</label>
+                            @Helpers.Required()
+                            @Html.DropDownList("cbxLoaiChungTu", ViewBag.ItemsLoaiChungTu as SelectList, new { @class = "form-control required", @id = "cbxLoaiChungTu", @onchange = "GetDuAn();" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label for="sSoQuyetDinh">Số quyết định</label>
+                            @Helpers.Required()
+                            <input type="text" id="sSoQuyetDinh" class="form-control requireInput" value="@Model.sSoQuyetDinh" name="sSoQuyetDinh" maxlength="100" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="dNgayQuyetDinh">Ngày quyết định</label>
+                            @Helpers.Required()
+                            <div class='input-group date'>
+                                <input type='text' class="form-control requireInput dateFormat" value="@ViewBag.sNgayQuyetDinhDefault" id="dNgayQuyetDinh" name="dNgayQuyetDinh" autocomplete="off" />
+                                <span class="btn-default input-group-addon">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label for="iID_DonViQuanLyID">Đơn vị <span class="require">*</span></label>
+                            <select id="iID_DonViQuanLyID" class="form-control" onchange="GetDuAn();">
+                                <option value="">--Chọn--</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="iID_DuAnId">Dự án</label>
+                            <select id="iID_DuAnID" name="iID_DuAnID" class="form-control" onchange="ChooseDuAn();">
+                                <option>--Chọn--</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="cbxChuDauTu">Chủ đầu tư</label>
+                            @Html.DropDownList("cbxChuDauTu", ViewBag.ItemsChuDauTu as SelectList, "--Chọn--", new { @class = "form-control", @id = "cbxChuDauTu", @disabled = "disabled" })
+                            @*@Html.DropDownList("cbxChuDauTu", ViewBag.ItemsChuDauTu as SelectList, new { @class = "form-control", @id = "cbxChuDauTu", @disabled = "disabled" })*@
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="fTongMucDauTuPheDuyet">TMĐT phê duyệt</label>
+                            <input type="text" disabled id="fTongMucDauTuPheDuyet" class="form-control" name="fTongMucDauTuPheDuyet" value="@Model.fTongMucDauTu" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-9">
+                        <label for="txtsMoTa">Mô tả</label>
+                        <textarea id="sMoTa" name="sMoTa" class="form-control">@Html.Raw(Model.sMoTa)</textarea>
+                    </div>
+                </div>
+
+                @*Danh sách dự toán*@
+                <div class="form-group row">
+                    @*left*@
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <h4 class="color-text-red" id="idShowTitle">Danh sách dự toán</h4>
+                            <hr class='color-background-red' />
+                            <br />
+                            <div class="row">
+                                <div class="col-sm-12" >
+                                    <table class="table table-bordered" id="tblDanhSachDuToan">
+                                        <thead>
+                                            <tr>
+                                                <th width="50px"></th>
+                                                <th>Số quyết định</th>
+                                                <th>Ngày quyết định</th>
+                                                <th>Đơn vị</th>
+                                                <th>Tổng giá trị phê duyệt</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="lstChungTu">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h4 class="color-text-red">Danh sách gói thầu</h4>
+                            <hr class='color-background-red' />
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-6">
+                                    <div class="input-group pull-right">
+                                        <div class="input-group-append">
+                                            <span class="require text-italic mr-10">(Thêm dữ liệu xuống bảng chi tiết)</span>
+                                            <button class="btn btn-primary btn-icon btnAdd" type="button" onclick="InsertGoiThau()">
+                                                <i class="fa fa-plus fa-lg" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-bordered" id="tblDanhSachGoiThau">
+                                        <thead>
+                                            <tr>
+                                                <th width="200px">Tên gói thầu</th>
+                                                <th>Giá gói thầu</th>
+                                                <th>Hình thức chọn nhà thầu</th>
+                                                <th>Phương thức lựa chọn nhà thầu</th>
+                                                <th>Thời gian bắt đầu tổ chức lựa chọn nhà thầu</th>
+                                                <th>Loại hợp đồng</th>
+                                                <th>Thời gian thực hiện (số ngày)</th>
+                                                <th width="50px">Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tblGoiThau">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*right*@
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <h4 class="color-text-red">Nguồn vốn, chi phí</h4>
+                            <hr class='color-background-red' />
+                            <br />
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-bordered" id="tblDanhSachNguonVon">
+                                        <thead>
+                                            <tr>
+                                                <th>Nguồn vốn</th>
+                                                <th >Giá trị phê duyệt</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12" id="tblDanhSachChiPhi">
+                                    <table class="table table-bordered" id="tblChiPhiDauTu">
+                                        <thead>
+                                            <tr>
+                                                <th>Chi phí</th>
+                                                <th>Giá trị phê duyệt</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group text-center">
+                    <button class="btn btn-default" onclick="CancelSaveData()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                    <button class="btn btn-primary" onclick="SaveKHLCNT()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm" z-index="99999">
+
+</div>
+
+<!-- Modal thong tin chi tiet goi thau -->
+<div class="modal fade" id="modalChiTietGoiThau" tabindex="-1" role="dialog" aria-labelledby="modalChiTietGoiThau" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:90%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-center">Thông tin chi tiết gói thầu</h3>
+                <input type="hidden" id="iIdGoiThau">
+            </div>
+            <div class="modal-body" id="contentModalChiTietGoiThau" style="overflow: auto; padding: 0 20px 0 20px; max-height: 700px">
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <h4 class="color-text-red">Thông tin nguồn vốn</h4>
+                            <hr class='color-background-red' />
+                            <br />
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-bordered" id="tblDanhSachNguonVonModal">
+                                        <thead>
+                                            <tr>
+                                                <th width="50px"><input type="checkbox" name="cbAll_NguonVon" class="cbAll_NguonVon" /></th>
+                                                <th>Nguồn vốn</th>
+                                                <th class="opShowGTPheDuyet">Giá trị phê duyệt</th>
+                                                <th>Giá trị nguồn vốn</th>
+                                                <th>Giá trị còn lại</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th width="50px"></th>
+                                                <th>Tổng nguồn vốn</th>
+                                                <th></th>
+                                                <th class="rTongNguonVon" style="text-align: right"></th>
+                                                <th></th>
+                                            </tr>
+                                            <tr>
+                                                <th width="50px"></th>
+                                                <th>Còn lại</th>
+                                                <th></th>
+                                                <th class="rConLai" style="text-align: right"></th>
+                                                <th></th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <h4 class="color-text-red">Thông tin chi phí</h4>
+                            <hr class='color-background-red' />
+                            <br />
+                            <div class="row">
+                                <div class="col-sm-12" id="tblDanhSachChiPhiModal">
+                                    <table class="table table-bordered" id="tblDanhSachChiPhiModalCSS">
+                                        <thead>
+                                            <tr>
+                                                <th width="50px"><input type="checkbox" name="cbAll_ChiPhi" onclick="CheckAllChiPhi(this)" /></th>
+                                                <th>Chi phí</th>
+                                                <th class="opShowGTPheDuyet">Giá trị phê duyệt</th>
+                                                <th>Giá trị chi phí</th>
+                                                <th>Giá trị còn lại</th>
+                                                <th width="50px"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <h4 class="color-text-red">Thông tin hạng mục</h4>
+                        <hr class='color-background-red' />
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-12" id="tblDanhSachHangMuc">
+                                <input type="hidden" id="iIdChiPhiChoose">
+                                <table class="table table-bordered" id="tblHangMucChinh">
+                                    <thead>
+                                        <tr>
+                                            <th width="50px"><input type="checkbox" id="cbAll_HangMuc" onclick="CheckAllHangMuc(this)"/></th>
+                                            <th width="50px">STT</th>
+                                            <th>Tên Hạng mục</th>
+                                            <th class="opShowGTPheDuyet">Giá trị phê duyệt</th>
+                                            <th>Giá trị hạng mục</th>
+                                            <th>Giá trị còn lại</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                    <button class="btn btn-primary" onclick="SaveDetailGoiThau()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/QLVonDauTu/ThongTinDuAn/KHLCNhaThau/jsVDT_Update_KHLuaChonNhaThau.js" type="text/javascript"></script>
+<script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+<script src="~/Scripts/js/js_vdtWeb.js"></script>
+
+<style>
+    .create_thdt h4 {
+        font-size: 17px;
+    }
+
+    .r_STT {
+        text-align: center;
+    }
+
+    .table-bordered tbody {
+        overflow: auto;
+    }
+</style>

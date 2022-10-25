@@ -1,0 +1,89 @@
+﻿﻿@using Viettel.Models.QLVonDauTu
+@model VDT_DM_NhaThau_ViewModel
+
+<div class="modal-body">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtMaNhaThau">Mã nhà thầu</label>
+                <p>@Html.Raw(Model.sMaNhaThau)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtTenNhaThau">Tên nhà thầu</label>
+                <p>@Html.Raw(Model.sTenNhaThau)</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtDiaChi">Địa chỉ</label>
+                <p>@Html.Raw(Model.sDiaChi)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtMaSoThue">Mã số thuế</label>
+                <p>@Html.Raw(Model.sMaSoThue)</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtDaiDien">Đại diện</label>
+                <p>@Html.Raw(Model.sDaiDien)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtChucVu">Chức vụ</label>
+                <p>@Html.Raw(Model.sChucVu)</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtDienThoai">Điện thoại</label>
+                <p>@Html.Raw(Model.sDienThoai)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtFax">Fax</label>
+                <p>@Html.Raw(Model.sFax)</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtEmail">Email</label>
+                <p>@Html.Raw(Model.sEmail)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtWebsite">Website</label>
+                <p>@Html.Raw(Model.sWebsite)</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtSoTK">Số tài khoản</label>
+                <p>@Html.Raw(Model.sSoTaiKhoan)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtNganHang">Ngân hàng</label>
+                <p>@Html.Raw(Model.sNganHang)</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtNguoiLH">Người liên hệ</label>
+                <p>@Html.Raw(Model.sNguoiLienHe)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtSoDTLH">Điện thoại liên hệ</label>
+                <p>@Html.Raw(Model.sDienThoaiLienHe)</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtMaNganHang">Mã ngân hàng</label>
+                <p>@Html.Raw(Model.sMaNganHang)</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+    </div>
+</div>
+

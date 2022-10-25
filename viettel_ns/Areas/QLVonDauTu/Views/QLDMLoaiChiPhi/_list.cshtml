@@ -1,0 +1,92 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model DanhMucLoaiChiPhiViewModel
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Danh mục loại chi phí (@Model._paging.TotalItems)</label>
+    </div>
+    <button class="btn btn-primary pull-right" style="margin-right:10px;" onclick="OpenModal()" data-toggle="modal" data-target="#modalLoaiChiPhi"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+</div>
+<table class="table table-bordered" id="tblListLoaiChiPhi">
+    <thead class="header-search">
+    <th width="3%"></th>
+    <th width="10%"><input type="text" class="form-control gr_search" id="txtMaChiPhi" /></th>
+    <th width="20%"><input type="text" class="form-control gr_search" id="txtTenVietTat" /></th>
+    <th width="20%"><input type="text" class="form-control gr_search" id="txtTenChiPhi" /></th>
+    <th width="7%"></th>
+    <th width="28%"></th>
+    <th width="11%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+    </thead>
+    <thead>
+    <th width="3%">STT</th>
+    <th width="10%">Mã chi phí</th>
+    <th width="20%">Tên viết tắt</th>
+    <th width="20%">Tên chi phí</th>
+    <th width="7%">Thứ tự</th>
+    <th width="28%">Mô tả</th>
+    <th width="11%">Thao tác</th>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (var item in Model.Items)
+            {
+                index++;
+                <tr style="cursor: pointer">
+                    <td align="center">@(pageIndex + index)</td>
+
+                    <td align="left">@item.sMaChiPhi</td>
+
+                    <td align="left">@item.sTenVietTat</td>
+
+                    <td align="left">@item.sTenChiPhi</td>
+
+                    <td align="center">@item.iThuTu</td>
+
+                    <td align="left">@item.sMoTa</td>
+
+                    <td align="center" style="vertical-align: middle !important" class="col-sm-12">
+                        <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.iID_ChiPhi')" data-toggle="modal" data-target="#modalLoaiChiPhi"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-edit" onclick="OpenModal('@item.iID_ChiPhi')" data-toggle="modal" data-target="#modalLoaiChiPhi"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" onclick="DeleteItem('@item.iID_ChiPhi')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.date')
+            .datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+            });
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+
+        $("#tblListLoaiChiPhi .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                if (e.which == 13) {//Enter key pressed
+                    ChangePage();
+                }
+            });
+        });
+        /*formatMoney();*/
+    });
+
+</script>

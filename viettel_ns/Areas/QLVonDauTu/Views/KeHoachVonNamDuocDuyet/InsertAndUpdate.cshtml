@@ -1,0 +1,95 @@
+﻿@using Viettel.Domain.DomainModel
+@model VDT_KHV_KeHoachVonNam_DuocDuyet
+
+<div class="modal-body">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <input type="hidden" id="iID_KHVonNamDuocDuyetIDModal" value="@Model.iID_KeHoachVonNam_DuocDuyetID">
+                <input type="hidden" id="VoucherModified" value="@ViewBag.IsModified" />
+                <input type="hidden" id="VoucherView" value="@ViewBag.IsView" />
+                <label for="txtDonViQuanLy">Đơn vị</label>
+                @Helpers.Required()
+                @Html.DropDownList("iID_DonViQuanLyIDModal", new SelectList(ViewBag.ListDonViQuanLy, "Value", "Text", Model.iID_DonViQuanLyID), new { @class = "form-control", @id = "iID_DonViQuanLyIDModal" })
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <label for="txtSoKeHoachModal">Số kế hoạch</label>
+                @Helpers.Required()
+                <input type="text" id="txtSoKeHoachModal" name="txtSoKeHoachModal" class="form-control" value="@Html.Raw(Html.Encode(@Model.sSoQuyetDinh))" maxlength="100" autocomplete="off" />
+            </div>
+
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <label for="txtNgayLapModal">Ngày lập</label>
+                @Helpers.Required()
+                <div class='input-group date'>
+                    <input type="text" id="dNgayQuyetDinhModal" autocomplete="off" value="@(Model.dNgayQuyetDinh != null ? Model.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy") : string.Empty)" class="form-control gr_search" placeholder="dd/MM/yyyy" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <label for="txtNguonVonModal">Nguồn vốn</label>
+                @Helpers.Required()
+                @Html.DropDownList("iID_NguonVonIDModal", new SelectList(ViewBag.ListNguonVon, "Value", "Text", Model.iID_NguonVonID), new { @class = "form-control", @id = "iID_NguonVonIDModal" })
+            </div>
+
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <label for="txtNamKeHoachModal">Năm kế hoạch</label>
+                @Helpers.Required()
+                <input type="text" maxlength="4" name="txtNamKeHoachModal" class="form-control" id="txtNamKeHoachModal" value="@Html.Raw(Html.Encode(@Model.iNamKeHoach))" autocomplete="off" />
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" id="btnVoucherCancel" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" id="btnVoucherSave" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+        @if (ViewBag.IsView == "true") {
+        <button class="btn btn-info" id="btnVoucherDetail" onclick="ChiTietKeHoachVonNamDuocDuyet('@Model.iID_KeHoachVonNam_DuocDuyetID',true)"><i class="fa fa-eye fa-lg" aria-hidden="true"></i><span>Xem chi tiết</span></button>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ($("#iID_KHVonNamDuocDuyetIDModal").val() == GUID_EMPTY) {
+            document.getElementById('txtNamKeHoachModal').removeAttribute("disabled");
+            document.getElementById('iID_DonViQuanLyIDModal').removeAttribute("disabled");
+            document.getElementById('iID_NguonVonIDModal').removeAttribute("disabled");
+            document.getElementById('iID_VonNamDeXuatIDModal').removeAttribute("disabled");
+            document.getElementById('btnVoucherCancel').removeAttribute("disabled");
+            document.getElementById('btnVoucherSave').removeAttribute("disabled");
+        }
+        else {
+
+
+            if ($("#VoucherView").val() == "true") {
+                document.getElementById('iID_KHVonNamDuocDuyetIDModal').setAttribute("disabled", "disabled");
+                document.getElementById('txtNamKeHoachModal').setAttribute("disabled", "disabled");
+                document.getElementById('iID_DonViQuanLyIDModal').setAttribute("disabled", "disabled");
+                document.getElementById('iID_NguonVonIDModal').setAttribute("disabled", "disabled");
+                document.getElementById('txtSoKeHoachModal').setAttribute("disabled", "disabled");
+                document.getElementById('dNgayQuyetDinhModal').setAttribute("disabled", "disabled");
+                document.getElementById('btnVoucherSave').setAttribute("disabled", "disabled");
+            //} else {
+            //    document.getElementById('txtSoKeHoachModal').removeAttribute("disabled");
+            //    document.getElementById('dNgayQuyetDinhModal').removeAttribute("disabled");
+            //    document.getElementById('btnVoucherSave').removeAttribute("disabled");
+            }
+        }
+
+        $("#iID_DonViQuanLyIDModal").on("change", function () {
+            OpenModal($("#iID_KHVonNamDuocDuyetIDModal").val(), $("#iID_DonViQuanLyIDModal").val());
+        });
+    });
+</script>

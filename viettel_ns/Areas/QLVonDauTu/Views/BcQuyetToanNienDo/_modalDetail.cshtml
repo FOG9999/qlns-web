@@ -1,0 +1,52 @@
+﻿
+@using Viettel.Models.QLVonDauTu
+@model VdtQtBcQuyetToanNienDoViewModel
+
+<div class="modal-body">
+    <div>
+        <div class="form-group row">
+            <div class="col-sm-4">
+                <label>Số đề nghị</label>
+                <div>@Html.Raw(Model.sSoDeNghi)</div>
+            </div>
+            <div class="col-sm-4">
+                <label>Ngày đề nghị</label>
+                <div>@(Model.dNgayDeNghi.HasValue ? Model.dNgayDeNghi.Value.ToString("dd/MM/yyyy") : string.Empty)</div>
+            </div>
+            <div class="col-sm-4">
+                <label>Năm kế hoạch</label>
+                <div>@Html.Raw(Model.iNamKeHoach)</div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-4">
+                <label>Đơn vị</label>
+                <div>@(Model.sTenDonVi)</div>
+            </div>
+            <div class="col-sm-4">
+                <label>Loại thanh toán</label>
+                <div>
+                    @{if (Model.iLoaiThanhToan == 1)
+                        {
+                            @Html.Raw("Thanh Toán");
+                        }
+                        if (Model.iLoaiThanhToan == 2)
+                        {
+                            @Html.Raw("Tạm ứng");
+                        }
+                                }
+                  </div>
+            </div>
+            <div class="col-sm-4">
+                <label>Tên nguồn vốn</label>
+                <div>@(Model.sTenNguonVon )</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Đóng</span></button>
+    </div>
+</div>
+

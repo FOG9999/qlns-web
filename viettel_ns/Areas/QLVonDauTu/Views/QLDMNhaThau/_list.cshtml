@@ -1,0 +1,130 @@
+﻿﻿@using Viettel.Models.QLVonDauTu
+@model DanhMucNhaThauViewModel
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Danh mục nhà thầu (@Model._paging.TotalItems)</label>
+    </div>
+    <button class="btn btn-primary pull-right" style="margin-right:10px;" onclick="OpenModal()" data-toggle="modal" data-target="#modalNhaThau"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+</div>
+<table class="table table-bordered" id="tblListNhaThau">
+    <thead class="header-search">
+    <th width="3%"></th>
+    <th width="4%"><input type="text" class="form-control gr_search" id="txtMaNhaThau" /></th>
+    <th width="7%"><input type="text" class="form-control gr_search" id="txtTenNhaThau" /></th>
+    <th width="7%"><input type="text" class="form-control gr_search" id="txtDiaChi" /></th>
+    <th width="7%"><input type="text" class="form-control gr_search" id="txtDaiDien" /></th>
+    <th width="7%"><input type="text" class="form-control gr_search" id="txtChucVu" /></th>
+    <th width="7%"><input type="text" class="form-control gr_search" id="txtDienThoai" /></th>
+    <th width="7%"><input type="text" class="form-control gr_search" id="txtFax" /></th>
+    <th width="7%"><input type="text" class="form-control gr_search" id="txtEmail" /></th>
+    <th width="7%"><input type="text" class="form-control gr_search" id="txtWebsite" /></th>
+    <th width="7%"><input type="text" class="form-control gr_search" id="txtSoTaiKhoan" /></th>
+    <th width="7%"><input type="text" class="form-control gr_search" id="txtNganHang" /></th>
+    <th width="7%"><input type="text" class="form-control gr_search" id="txtMaSoThue" /></th>
+    <th width="7%"><input type="text" class="form-control gr_search" id="txtNguoiLienHe" /></th>
+    <th width="7%"><input type="text" class="form-control gr_search" id="txtDienThoaiLienHe" /></th>
+    <th width="7%"><input type="text" class="form-control gr_search" id="txtMaNganHang" /></th>
+    <th width="9%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+    </thead>
+    <thead>
+    <th width="3%">STT</th>
+    <th width="4%">Mã nhà thầu</th>
+    <th width="7%">Tên nhà thầu</th>
+    <th width="7%">Địa chỉ</th>
+    <th width="7%">Đại diện</th>
+    <th width="7%">Chức vụ</th>
+    <th width="7%">Điện thoại</th>
+    <th width="7%">Fax</th>
+    <th width="7%">Email</th>
+    <th width="7%">Website</th>
+    <th width="7%">Số tài khoản</th>
+    <th width="7%">Ngân hàng</th>
+    <th width="7%">Mã số thuế</th>
+    <th width="7%">Người liên hệ</th>
+    <th width="7%">Điện thoại liên hệ</th>
+    <th width="7%">Mã ngân hàng</th>
+    <th width="9%">Thao tác</th>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (var item in Model.Items)
+            {
+                index++;
+                <tr style="cursor: pointer">
+                    <td align="center">@(pageIndex + index)</td>
+
+                    <td align="left">@item.sMaNhaThau</td>
+
+                    <td align="left">@item.sTenNhaThau</td>
+
+                    <td align="left">@item.sDiaChi</td>
+
+                    <td align="left">@item.sDaiDien</td>
+
+                    <td align="left">@item.sChucVu</td>
+
+                    <td align="left">@item.sDienThoai</td>
+
+                    <td align="left">@item.sFax</td>
+
+                    <td align="left">@item.sEmail</td>
+
+                    <td align="left">@item.sWebsite</td>
+
+                    <td align="left">@item.sSoTaiKhoan</td>
+
+                    <td align="left">@item.sNganHang</td>
+
+                    <td align="left">@item.sMaSoThue</td>
+
+                    <td align="left">@item.sNguoiLienHe</td>
+
+                    <td align="left">@item.sDienThoaiLienHe</td>
+
+                    <td align="left">@item.sMaNganHang</td>
+
+                    <td align="center" style="vertical-align: middle !important" class="col-sm-12">
+                        <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.iID_NhaThauID')" data-toggle="modal" data-target="#modalNhaThau"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-edit" onclick="OpenModal('@item.iID_NhaThauID')" data-toggle="modal" data-target="#modalNhaThau"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" onclick="DeleteItem('@item.iID_NhaThauID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.date')
+            .datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+            });
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+
+        $("#tblListNhaThau .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                if (e.which == 13) {//Enter key pressed
+                    ChangePage();
+                }
+            });
+        });
+    });
+</script>

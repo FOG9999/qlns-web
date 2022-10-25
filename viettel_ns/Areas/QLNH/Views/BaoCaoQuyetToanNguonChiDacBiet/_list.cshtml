@@ -1,0 +1,121 @@
+﻿@using Viettel.Models.QLNH.QuyetToan
+@using Viettel.Domain.DomainModel
+@using System.Globalization;
+@using VIETTEL.Common
+@model NH_QT_QuyetToanNienDo_ChiTietView
+
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Báo cáo quyết toán thuộc các nguồn chi đặc biệt</label>
+    </div>
+    <div style="display:flex;">
+        @Html.DropDownList("slbNamKeHoachFillter", (SelectList)ViewBag.ListNamKeHoach, new { @class = "form-control", @id = "slbNamKeHoachFillter" })
+        <button class="btn btn-info pull-right mr-10 ml-10" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
+        <div class="dropdown pull-right mr-10">
+            <button class="btn btn-info pull-right"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
+            <div class="dropdown-content list-group">
+                <a href="#" class="list-group-item list-group-item-action" onclick="ExportQTNguonChiDacBiet('xlsx');">Excel</a>
+                <a href="#" class="list-group-item list-group-item-action" onclick="ExportQTNguonChiDacBiet('pdf');">PDF</a>
+            </div>
+        </div>
+        <button class="btn btn-info pull-right mr-10" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+    </div>
+</div>
+<div>
+    <table class="table table-bordered tr-hover" id="tbListBCQuyetToanNguonChiDacBiet">
+        <thead>
+            <tr>
+                <th style="width: 16%;" rowspan="4">Chương trình, danh mục VKTBKT, nội dung chi</th>
+                <th style="width: 42%;" colspan="6">Kinh phí được cấp trong năm</th>
+                <th style="width: 14%;" colspan="2" rowspan="2">Kinh phí đề nghị quyết toán trong năm</th>
+                <th style="width: 14%;" colspan="2" rowspan="2">Kinh phí đề nghị chuyển năm sau thanh toán, quyết toán</th>
+                <th style="width: 14%;" colspan="2" rowspan="2">Thừa, thiếu kinh phí trong năm (thừa ghi số dương, thiếu ghi số âm)</th>
+            </tr>
+            <tr>
+                <th style="width: 14%;" colspan="2">Tổng số</th>
+                <th style="width: 14%;" colspan="2">Năm trước chuyển sang</th>
+                <th style="width: 14%;" colspan="2">Năm nay</th>
+            </tr>
+            <tr>
+                <th style="width: 7%;">USD</th>
+                <th style="width: 7%;">VND</th>
+                <th style="width: 7%;">USD</th>
+                <th style="width: 7%;">VND</th>
+                <th style="width: 7%;">USD</th>
+                <th style="width: 7%;">VND</th>
+                <th style="width: 7%;">USD</th>
+                <th style="width: 7%;">VND</th>
+                <th style="width: 7%;">USD</th>
+                <th style="width: 7%;">VND</th>
+                <th style="width: 7%;">USD</th>
+                <th style="width: 7%;">VND</th>
+            </tr>
+            <tr>
+                <th>1 = 3+5</th>
+                <th>2 = 4+6</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                <th>6</th>
+                <th>7</th>
+                <th>8</th>
+                <th>9</th>
+                <th>10</th>
+                <th>11 = 1-7-9</th>
+                <th>12 = 2-8-10</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int index = 0;
+                foreach (var item in Model.ListQTNDNguonChiDacBiet)
+                {
+                    index++;
+                    <tr style="cursor: pointer" class="@(item.IsData.HasValue && item.IsData.Value == 3 ? "text-bold" : string.Empty)">
+                        <td class="
+                            @(item.IsData.HasValue && item.IsData.Value == 3 ? "text-right " : "text-left ")
+                            @(item.IsBold.HasValue && item.IsBold.Value == 1 ? "text-bold" : string.Empty)">
+                            @Html.Raw(Html.Encode(item.sTen))
+                        </td>
+                        <td class="text-right">@(item.fQTKinhPhiDuocCap_TongSo_USD.HasValue ? CommonFunction.DinhDangSo(item.fQTKinhPhiDuocCap_TongSo_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td class="text-right">@(item.fQTKinhPhiDuocCap_TongSo_VND.HasValue ? CommonFunction.DinhDangSo(item.fQTKinhPhiDuocCap_TongSo_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                        <td class="text-right">@(item.fQTKinhPhiDuocCap_NamTruocChuyenSang_USD.HasValue ? CommonFunction.DinhDangSo(item.fQTKinhPhiDuocCap_NamTruocChuyenSang_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td class="text-right">@(item.fQTKinhPhiDuocCap_NamTruocChuyenSang_VND.HasValue ? CommonFunction.DinhDangSo(item.fQTKinhPhiDuocCap_NamTruocChuyenSang_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                        <td class="text-right">@(item.fQTKinhPhiDuocCap_NamNay_USD.HasValue ? CommonFunction.DinhDangSo(item.fQTKinhPhiDuocCap_NamNay_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td class="text-right">@(item.fQTKinhPhiDuocCap_NamNay_VND.HasValue ? CommonFunction.DinhDangSo(item.fQTKinhPhiDuocCap_NamNay_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                        <td class="text-right">@(item.fDeNghiQTNamNay_USD.HasValue ? CommonFunction.DinhDangSo(item.fDeNghiQTNamNay_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td class="text-right">@(item.fDeNghiQTNamNay_VND.HasValue ? CommonFunction.DinhDangSo(item.fDeNghiQTNamNay_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                        <td class="text-right">@(item.fDeNghiChuyenNamSau_USD.HasValue ? CommonFunction.DinhDangSo(item.fDeNghiChuyenNamSau_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td class="text-right">@(item.fDeNghiChuyenNamSau_VND.HasValue ? CommonFunction.DinhDangSo(item.fDeNghiChuyenNamSau_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                        <td class="text-right">@(item.fThuaThieuKinhPhiTrongNam_USD.HasValue ? CommonFunction.DinhDangSo(item.fThuaThieuKinhPhiTrongNam_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td class="text-right">@(item.fThuaThieuKinhPhiTrongNam_VND.HasValue ? CommonFunction.DinhDangSo(item.fThuaThieuKinhPhiTrongNam_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#slbNamKeHoachFillter").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+    });
+</script>
+<style>
+    .dropdown {
+        position: relative;
+    }
+
+    .dropdown-content {
+        position: absolute;
+        display: none;
+        top: 30px;
+        width: 100px;
+        height: 60px;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+</style>
+

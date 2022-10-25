@@ -1,0 +1,42 @@
+﻿@using Viettel.Models.QLNH
+@model List<GetTaiSan>
+
+<div class="tooltip-header-search">
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ThemDong()"><i class="fa fa-plus" aria-hidden="true"></i>Tạo mới</button>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="SaveLoaiTaiSan()"><i class="fa fa-save" aria-hidden="true"></i>Lưu dữ liệu</button>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChange()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+</div>
+<div style="overflow-y:auto;height:65vh">
+    <table class="table table-bordered tr-hover" id="tbListLoaiTaiSan">
+        <thead>
+            <tr>
+                <th width="10%">STT</th>
+                <th width="25%">Mã tài sản</th>
+                <th width="25%">Tên tài sản</th>
+                <th width="28%">Mô tả</th>
+                <th width="12%">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ 
+                foreach (var item in Model)
+                {
+                    <tr style="cursor: pointer" ondblclick="Choose(this);">
+                        <td class="text-center">@Html.Raw(Html.Encode(item.STT))</td>
+                        <td class="hidden"><input type="hidden" name="ID" value="@item.ID" /></td>
+                        <td class="hidden"><input type="hidden" name="dNgayTao" value="@item.dNgayTao" /></td>
+                        <td class="text-left"><input type="text" name="sMaLoaiTaiSan" class="form-control" value="@Html.Raw(Html.Encode(item.sMaLoaiTaiSan))" /></td>
+                        <td class="text-left"><input type="text" name="sTenLoaiTaiSan" class="form-control" value="@Html.Raw(Html.Encode(item.sTenLoaiTaiSan))" /></td>
+                        <td class="text-left"><input type="text" name="sMoTa" class="form-control" value="@Html.Raw(Html.Encode(item.sMoTa))" /></td>
+                        <td class="text-center"><button class='btn btn-delete btn-icon' type='button' onclick='XoaDong(this)'><i class='fa fa-trash-o fa-lg' aria-hidden='true'></i>Xóa</button></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+    </div>
+</div>

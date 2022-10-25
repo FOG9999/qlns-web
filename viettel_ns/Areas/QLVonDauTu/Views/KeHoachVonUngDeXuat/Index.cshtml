@@ -1,0 +1,58 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTKeHoachVonUngDeXuatPagingModel
+@{
+    ViewBag.Title = "Kế hoạch vốn ứng đề xuất";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body tab-content" id="lstDataView">
+                @Html.Partial("_list", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalKHVonUngNamDeXuat" tabindex="-1" role="dialog" aria-labelledby="modalKHVonUngNamDeXuatLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-left" id="modalKHVonUngNamDeXuatLabel"></h3>
+            </div>
+            <div id="contentModalKHVonUngNamDeXuat">
+
+            </div>
+        </div>
+    </div>
+</div>
+<button type="button" id="btnShowModalTongHop" data-toggle="modal" data-target="#modalKHVonUngNamDeXuat"></button>
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+@section Scripts{
+    <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/KeHoachVonUngDeXuat/jsVDTQLKeHoachVonUngDeXuat.js" type="text/javascript"></script>
+    <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+    <script>
+        var _paging = {};
+        var sUrlListView = "";
+        $(document).ready(function () {
+            sUrlListView = '@Url.Action("TimKiemKHVUDeXuat", "KeHoachVonUngDeXuat")';
+            _paging.CurrentPage = @Model._paging.CurrentPage ;
+            _paging.ItemsPerPage = @Model._paging.ItemsPerPage ;
+
+            /*formatMoneyOfLstKHVU();*/
+        });
+    </script>
+}
+
+
+
+

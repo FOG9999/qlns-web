@@ -1,0 +1,34 @@
+﻿@model MappingMLNSViewModel
+@{
+    var sheet = Model.Sheet;
+}
+<iframe id="sheet" name="iframe-sheet" class="iframe-sheet"></iframe>
+<div class="box_tong">
+    <div id="nhapform">
+        <div id="form2">
+            <div class="button-bar">                
+            </div>
+        </div>
+    </div>
+</div>
+<hr id="hr-split" />
+<div id="ajax-div">
+</div>
+@using (Html.BeginScripts())
+{
+    <script type="text/javascript">
+
+        loadFrame();
+
+        function goBack() {
+            window.location.href = '@Url.Action("Index", "MappingMLNS")';
+        }
+
+        function loadFrame() {
+            var url = '@Url.Action("SheetFrame")';
+            console.log(url);
+            $("#sheet").attr("src", url);
+        }
+
+    </script>
+}

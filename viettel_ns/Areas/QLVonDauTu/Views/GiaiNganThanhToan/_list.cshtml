@@ -1,0 +1,153 @@
+﻿@using VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
+@using System.Globalization;
+@model GiaiNganThanhToanPagingModel
+
+
+<div class="row" id="divTab">
+    <div class="col-sm-12">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#thanhtoan">Chứng từ cấp phát</a></li>
+            <li><a data-toggle="tab" href="#thongtri">Chứng từ thông tri</a></li>
+        </ul>
+
+        <div class="card-body tab-content">
+            <div id="thanhtoan" class="tab-pane fade in active">
+                <div class="tooltip-header-search">
+                    <div class="col-sm-6" style="display: flex; padding-left: 0px;">
+                        <label class="control-label">Danh sách cấp phát thanh toán (@Model._paging.TotalItems)</label>
+                    </div>
+                    <button class="btn btn-primary pull-right" onclick="BtnInsertDataClick()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+                    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="OpenModal()">Tạo thông tri</button>
+                </div>
+                <table class="table table-bordered">
+                    <thead class="header-search">
+                        <tr>
+                            <th width="2%"></th>
+                            <th width="2%"></th>
+                            <th width="10%"> <input type="text" class="form-control clearable" id="txtSoDeNghi" autocomplete="off" /></th>
+                            <th width="4%">
+                                <div style="display:flex">
+                                    <div class='input-group date'>
+                                        <input type='text' class="form-control dateFormat startDate" id="txtNgayDeNghiFrom" autocomplete="off" placeholder="dd/MM/yyyy" />
+                                        <span class="btn-default input-group-addon">
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                    <span style="margin: 8px 5px 0px 5px;">-</span>
+
+                                    <div class='input-group date'>
+                                        <input type='text' class="form-control dateFormat endDate" id="txtNgayDeNghiTo" autocomplete="off" placeholder="dd/MM/yyyy" />
+                                        <span class="btn-default input-group-addon">
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </th>
+                            <th width="15%"></th>
+                            <th width="10%"></th>
+                            <th width="5%"><input type="text" class="form-control clearable yearFormat" id="txtNamKeHoach" autocomplete="off" /></th>
+                            <th width="15%"></th>
+                            <th width="10%">@Html.DropDownList("drpDonViQuanLy", ViewBag.drpDonViQuanLy as List<SelectListItem>, "--Tất cả--", new { @class = "form-control clearable" })</th>
+                            <th width="10%"></th>
+                            <th width="5%"></th>
+                            <th width="5%"></th>
+                            <th width="5%"></th>
+                            <th width="5%"></th>
+                            <th width="10%"><button class="btn btn-info" onclick="ChangePage()" id="btnTimKiem"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+                        </tr>
+                    </thead>
+                    <thead>
+                        <tr>
+                            <th width="2%"></th>
+                            <th width="2%">STT</th>
+                            <th width="10%">Số đề nghị</th>
+                            <th width="4%">Ngày đề nghị</th>
+                            <th width="15%">Dự án</th>
+                            <th width="10%">Hợp đồng</th>
+                            <th width="5%">Năm kế hoạch</th>
+                            <th width="15%">Nguồn vốn</th>
+                            <th width="10%">Đơn vị quản lý</th>
+                            <th width="10%">Giá trị thanh toán trong nước</th>
+                            <th width="5%">Giá trị thanh toán nước ngoài</th>
+                            <th width="5%">Giá trị thu hồi trong nước</th>
+                            <th width="5%">Giá trị thu hồi nước ngoài</th>
+                            <th width="5%">Cơ quan thanh toán</th>
+                            <th width="10%">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int index = Model._paging.ItemForm;
+                            foreach (var item in Model.lstData)
+                            {
+                                <tr>
+                                    <td align="center"><input type="checkbox" onclick="" value="@item.iID_DeNghiThanhToanID" data-iidnguonvon="@item.iID_NguonVonID" data-inamkehoach="@item.iNamKeHoach" data-iloaithanhtoan="@item.iLoaiThanhToan" data-donviquanlyid="@item.iID_DonViQuanLyID" /></td>
+                                    <td align="center">@index</td>
+                                    <td align="left">@item.sSoDeNghi</td>
+                                    <td align="center">@(item.dNgayDeNghi.HasValue ? item.dNgayDeNghi.Value.ToString("dd/MM/yyyy") : String.Empty )</td>
+                                    <td align="left">@item.sTenDuAn</td>
+                                    <td align="left">@item.sSoHopDong</td>
+                                    <td align="center">@item.iNamKeHoach</td>
+                                    <td align="left">@item.sNguonVon</td>
+                                    <td align="left">@item.sTenDonVi</td>
+                                    <td align="right">@item.sGiaTriThanhToanTN</td>
+                                    <td align="right">@item.sGiaTriThanhToanNN</td>
+                                    <td align="right">@item.sGiaTriThuHoiTN</td>
+                                    <td align="right">@item.sGiaTriThuHoiNN</td>
+                                    <td align="left">@item.sCoQuanThanhToan</td>
+                                    <td align="center" class="col-sm-12">
+                                        <button type="submit" class="btn-detail" onclick="XuatFile('@item.iID_DeNghiThanhToanID')"><i class="fa fa-download fa-lg" aria-hidden="true"></i></button>
+                                        <button type="button" class="btn-edit" onclick="GetItemDataList('@item.iID_DeNghiThanhToanID')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                                        <button type="button" class="btn-detail" onclick="ViewDetailList('@item.iID_DeNghiThanhToanID')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                                        <button type="button" class="btn-delete" onclick="DeleteItemList('@item.iID_DeNghiThanhToanID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div id="thongtri" class="tab-pane fade in">
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.date')
+            .datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+            });
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+
+        $('#tblListVDTTTDeNghiThanhToan tr').each(function () {
+            var soTien = $(this).find(".sotien").text();
+            if (soTien) {
+                soTien = FormatNumber(soTien);
+                $(this).find(".sotien").text(soTien);
+            }
+        });
+
+        document.addEventListener('keydown', timKiem);
+    });
+
+    function timKiem(event) {
+        if (event.key === "Enter") {
+            $("#btnTimKiem").click()
+        }
+    }
+
+</script>

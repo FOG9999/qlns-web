@@ -1,0 +1,70 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model List<BcquyetToanNienDoVonUngChiTietViewModel>
+<table class="table table-bordered table-parent" style="margin-bottom: 0px">
+    <thead>
+        <tr>
+            <th rowspan="2">STT</th>
+            <th rowspan="2">Nội dung</th>
+            <th rowspan="2">Địa điểm mở tài khoản</th>
+            <th rowspan="2">Mã dự án đầu tư</th>
+            <th colspan="2">Tổng số vốn ứng trước chưa thu hồi từ các năm trước chuyển sang</th>
+            <th colspan="2">Kế hoạch vốn ứng trước năm trước được kéo dài thanh toán trong năm</th>
+            <th colspan="2">Vốn ứng trước thu hồi trong năm</th>
+            <th colspan="2">Vốn ứng trong năm</th>
+            <th colspan="2">Vốn ứng trước chưa thu hồi chuyển sang thu hồi vào các năm sau</th>
+        </tr>
+        <tr>
+            <th>Kế hoạch vốn ứng trước chưa thu hồi</th>
+            <th>Lũy kế vốn đã thanh toán</th>
+            <th>Kế hoạch</th>
+            <th>Số vốn đã thanh toán trong năm</th>
+            <th>Kế hoạch vốn bố trí thu hồi trong năm</th>
+            <th>Số thu hồi theo kết quả giải ngân thực tế</th>
+            <th>Kế hoạch vốn ứng trước trong năm</th>
+            <th>Số vốn đã thanh toán trong năm</th>
+            <th>Kế hoạch vốn ứng trước chưa thu hồi</th>
+            <th>Tổng số vốn đã thanh toán... thu hồi</th>
+        </tr>
+        <tr>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>1</th>
+            <th>2</th>
+            <th>3 = 1-2</th>
+            <th>4</th>
+            <th>5</th>
+            <th>6</th>
+            <th>7</th>
+            <th>8</th>
+            <th>9 = 1-5+7</th>
+            <th>10 = 2+4+...</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int i = 0;
+        }
+        @foreach (var item in Model)
+        {
+            { i = i + 1; }
+            <tr>
+                <td>@i</td>
+                <td>@item.sTenDuAn</td>
+                <td>@item.sDiaDiem</td>
+                <td>@item.sMaDuAn</td>
+                <td>@item.fUngTruocChuaThuHoiNamTruoc</td>
+                <td>@item.fLuyKeThanhToanNamTruoc</td>
+                <td>@item.fKeHoachVonDuocKeoDai</td>
+                <td>@item.fVonKeoDaiDaThanhToanNamNay</td>
+                <td>@item.fThuHoiVonNamNay</td>
+                <td><input type="text" data-iIdDuAn="@item.iID_DuAnID" class="fGiaTriThuHoiTheoGiaiNganThucTe" value="@item.fGiaTriThuHoiTheoGiaiNganThucTe"></td>
+                <td>@item.fKHVUNamNay</td>
+                <td>@item.fVonDaThanhToanNamNay</td>
+                <td>@item.fKHVUChuaThuHoiChuyenNamSau</td>
+                <td>@item.fTongSoVonDaThanhToanThuHoi</td>
+            </tr>
+        }
+    </tbody>
+</table>

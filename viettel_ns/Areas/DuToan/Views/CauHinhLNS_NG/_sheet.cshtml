@@ -1,0 +1,58 @@
+﻿@model CauHinhLNS_NGViewModel
+@{
+    var sheet = Model.Sheet;
+}
+<iframe id="sheet" name="iframe-sheet" class="iframe-sheet"></iframe>
+<div class="box_tong">
+    <div id="nhapform">
+        <div id="form2">
+            <div class="button-bar">
+                <div class="text-center">
+                    <button class="btn btn-mvc btn-mvc-green btn-save" id="btnSave">@L("Buttons.SaveData")</button>
+                    @if (Model.FilterOptions.Count > 0)
+                    {
+                        <div class="btn-group">
+                            <button class="btn btn-mvc dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="btn-test">
+                                @L("Buttons.Option")
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                @foreach (var item in Model.FilterOptions)
+                                {
+                                    <li><a class="btn-option" data-id="@item.Key">@item.Value</a></li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    <span class="text-muted">|</span>
+                    <button class="btn btn-mvc" onclick="goBack()">@L("Buttons.Back")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr id="hr-split" />
+<div id="ajax-div">
+</div>
+@using (Html.BeginScripts())
+{
+    <script type="text/javascript">
+
+        $(".btn-save").click(function () {
+            $("#sheet")[0].contentWindow.Bang_HamTruocKhiKetThuc();
+        });
+
+        loadFrame();
+
+        function goBack() {
+            window.location.href = '@Url.Action("Index", "CauHinhLNS_NG")';
+        }
+
+        function loadFrame() {
+            var url = '@Url.Action("SheetFrame")';
+            console.log(url);
+            $("#sheet").attr("src", url);
+        }
+
+    </script>
+}

@@ -1,0 +1,125 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTDuAnPagingModel
+<!--<div class="tooltip-header-search">
+    <label class="control-label">Danh sách dự án chưa thực hiện (@Model._paging.TotalItems)</label>-->
+@*<button class="btn btn-primary pull-right" onclick="BtnCreateDataClick()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>*@
+<!--</div>-->
+<table class="table table-bordered table-striped" id="tblListDuAn">
+    <thead class="header-search">
+    <th width="5%"></th>
+    <th width="35%"><input type="text" class="form-control clearable gr_search" id="txtTenDuAn" /></th>
+    <th width="10%">@Html.DropDownList("iID_CapPheDuyetID", (SelectList)(ViewBag.ListPhanCapPheDuyet), "--Tất cả--", new { @class = "form-control", @id = "iID_CapPheDuyetID" })</th>
+    <th width="15%">
+        <div style="display: flex">
+            <div class='input-group'>
+                <input type="number" class="form-control clearable gr_search startYear" id="tThoiGianThucHienTuNam" />
+            </div>
+            <span style="margin: 8px 5px 0px 5px;">-</span>
+            <div class='input-group'>
+                <input type="number" class="form-control clearable gr_search endYear" id="tThoiGianThucHienDenNam" />
+            </div>
+        </div>
+    </th>
+    <th width="10%">@Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), "--Tất cả--", new { @class = "form-control", @id = "iID_DonViQuanLyID" })</th>
+    @*<th width="10%">
+        <input type="hidden" id="hid_iID_LoaiCongTrinhID">
+        <input type="text" id="iID_LoaiCongTrinhID" name="iID_LoaiCongTrinhID" class="form-control gr_search" value="" />
+    </th>*@
+    <th width="5%"></th>
+    <th width="10%">
+        @*<button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>*@
+        <button class="btn btn-info" onclick="SearchData()"><i class="fa fa-search" aria-hidden="true"></i> Tìm kiếm</button>
+    </th>
+    </thead>
+    <thead>
+    <th width="5%">STT</th>
+    <th width="35%">Tên dự án</th>
+    <th width="10%">Phân cấp phê duyệt</th>
+    <th width="15%">Thời gian TH</th>
+    <th width="12%">Đơn vị quản lý</th>
+    @*<th width="10%">Loại công trình</th>*@
+    <th width="8%">Tài liệu</th>
+    <th width="10%">Thao tác</th>
+    </thead>
+    <tbody>
+        @{
+            int index = Model._paging.ItemForm;
+            foreach (var item in Model.lstData)
+            {
+                <tr>
+                    <td align="center">@index</td>
+
+                    <td align="left">@item.sMaDuAn - @item.sTenDuAn</td>
+
+                    <td align="left">@item.sTenCapPheDuyet</td>
+
+                    <td align="center">
+                        <span>@item.sKhoiCong - @item.sKetThuc</span>
+                    </td>
+
+                    <td align="left">@item.sTenDonVi</td>
+
+                    @*<td align="left">
+                        @item.sTenLoaiCongTrinh
+                    </td>*@
+                    <td align="left">
+                        (0)
+                    </td>
+
+                    <td align="center" class="col-sm-12">
+                        <button type="button" class="btn-detail"><i class="fa fa-eye fa-lg" aria-hidden="true" onclick="ViewItemDetail('@item.iID_DuAnID')"></i></button>
+                        <button class="btn-edit"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true" onclick="GetItemData('@item.iID_DuAnID')"></i></button>
+                        <button class="btn-delete"><i class="fa fa-trash-o fa-lg" aria-hidden="true" onclick="DeleteItem('@item.iID_DuAnID')"></i></button>
+                    </td>
+                </tr>
+                index++;
+            }
+        }
+    </tbody>
+</table>
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+
+        //$.ajax({
+        //    url: "/QLVonDauTu/ChuTruongDauTu/FillDropdown",
+        //    type: "POST",
+        //    data: "",
+        //    dataType: "json",
+        //    cache: false,
+        //    success: function (data) {
+        //        trLoaiCongTrinh = $('#iID_LoaiCongTrinhID').comboTree({
+        //            source: data,
+        //            isMultiple: false,
+        //            cascadeSelect: false,
+        //            collapse: true,
+        //            selectableLastNode: false,
+        //            selected: [$("#hid_iID_LoaiCongTrinhID").val()]
+        //        });
+        //        trLoaiCongTrinh.onChange(function () {
+        //            $('#hid_iID_LoaiCongTrinhID').val(trLoaiCongTrinh.getSelectedIds());
+        //            console.log(trLoaiCongTrinh.getSelectedIds());
+        //        });
+        //    },
+        //    error: function (data) {
+
+        //    }
+        //})
+
+        $("#tblListDuAn .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                if (e.which == 13) {//Enter key pressed
+                    SearchData();
+                }
+            });
+        });
+    });
+
+</script>
+<script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>

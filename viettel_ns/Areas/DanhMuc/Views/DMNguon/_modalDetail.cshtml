@@ -1,0 +1,42 @@
+﻿@using Viettel.Domain.DomainModel
+@model DanhMucNguonViewModel
+
+<div class="modal-body">
+    <div class="form-group row">
+        <div class="form-group">
+            <div class="col-sm-6">
+                <label for="txtMaCTMTModal">Mã chương trình mục tiêu</label>
+                <p>@Html.Raw(Model.sMaCTMT)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtMaNguonModal">Tên loại dự toán</label>
+                <p>@Html.Raw(Model.sMaNguon)</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-6">
+                <label for="txtLoaiModal">Loại</label>
+                <p>@Html.Raw(Model.sLoai)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtKhoanModal">Khoản</label>
+                <p>@Html.Raw(Model.sKhoan)</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-6">
+                <label for="txtMaNguonChaModal">Mã nguồn cha</label>
+                <p>@Html.Raw(Model.sMaNguonCha)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtNoiDungModal">Nội dung</label>
+                <p>@Html.Raw(Model.sNoiDung)</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+    </div>
+</div>

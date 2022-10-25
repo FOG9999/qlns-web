@@ -1,0 +1,51 @@
+﻿@using VIETTEL.Common
+@using Viettel.Models.BaoHiemXaHoi
+@model DanhMucBHXHDonViViewModel
+
+@{
+    string laDoanhNghiep = string.Empty;
+    if(Model.bDoanhNghiep != null && Model.bDoanhNghiep == false)
+    {
+        laDoanhNghiep = "Là doanh nghiệp";
+    }
+    if (Model.bDoanhNghiep != null && Model.bDoanhNghiep == true)
+    {
+        laDoanhNghiep = "Là đơn vị dự toán";
+    }
+}
+
+<div class="modal-body">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtTenDonViModal">Tên đơn vị</label>
+                <p>@Html.Raw(Model.sTen)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtMaDonViModal">Mã đơn vị</label>
+                <p>@Html.Raw(Model.iID_MaDonViBHXH)</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="cboDonViParentModal">Đơn vị cha</label>
+                <p>@Html.Raw(Model.sTenBHXHDonViParent)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="cboDonViNNSModal">Đơn vị Mapping NNS</label>
+                <p>@Html.Raw(Model.sTenNSDonViMapping)</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="cboLoaiDonVi">Loại đơn vị</label>
+                <p>@Html.Raw(laDoanhNghiep)</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+    </div>
+</div>

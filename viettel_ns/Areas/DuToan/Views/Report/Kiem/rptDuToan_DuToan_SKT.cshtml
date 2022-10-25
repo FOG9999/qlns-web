@@ -1,0 +1,103 @@
+﻿@model rptDuToan_SKTViewModel
+@{
+
+}
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">Báo cáo lập phương án phân bổ số kiểm tra ngân sách năm @PhienLamViec.iNamLamViec (KT-ĐV)</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6"></div>
+                <div class="col-xs-6">
+                    <h6><strong class="text-uppercase">Đơn vị:</strong></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Phòng ban:</label>
+                            <div class="col-sm-8">
+                                @if (Model.PhongBanList == null || Model.PhongBanList.Count() <= 2)
+                                {
+                                    <input type="text" readonly value="@PhienLamViec.sTenPhongBanFull" class="form-control" />
+                                    <input id="id_phongban" type="text" value="@PhienLamViec.iID_MaPhongBan" class="form-control hide" />
+                                }
+                                else
+                                {
+
+                                    @Html.DropDownList("iID_MaPhongBan", Model.PhongBanList, new { @class = "form-control", onchange = "change()" })
+                                }
+                            </div>                                 
+                        </div>                        
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <div id="Id_DonVi" class="ls-box">
+                        @if (PhienLamViec.userRole != (int)UserRoleType.TroLyTongHop)
+                        {
+                            @Html.Partial("_CheckboxList", new ChecklistModel("Id_DonVi", Model.DonViList))
+                        }
+                    </div>
+                </div>
+            </div>            
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "DuToan_Report", new { area="", sLoai=2})">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    change();
+
+    function change() {
+        if (@PhienLamViec.iID_MaPhongBan == "02"|| @PhienLamViec.iID_MaPhongBan == "11" || @PhienLamViec.userRole == 2){
+            fillDonVi();
+        }
+    }
+
+    function fillDonVi() {
+        var id_phongban = $("#iID_MaPhongBan").val();
+        if (id_phongban == undefined) {
+            id_phongban = "s";
+        }
+
+        var url = '@Url.Action("Ds_DonVi")' + "/?"
+            + "id_phongban=" + id_phongban;
+
+        fillCheckboxList("Id_DonVi", "Id_DonVi", url);
+    }
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+
+        var ext = $(this).data("ext");
+        var id_phongban = $("#iID_MaPhongBan").val();
+        if (id_phongban == undefined) {
+            id_phongban = "s";
+        }
+                
+        $("input:checkbox[check-group='Id_DonVi']").each(function () {
+            if (this.checked) {
+                var item = this.value;
+                var url = unescape('@Url.Action("Print")' +
+                    "?ext=" + ext +
+                    "&id_phongban=" + id_phongban +
+                    "&id_donvi=" + item);
+                links.push(url);
+
+                console.log(url);
+            }
+        });
+
+        openLinks(links);      
+    });
+
+</script>

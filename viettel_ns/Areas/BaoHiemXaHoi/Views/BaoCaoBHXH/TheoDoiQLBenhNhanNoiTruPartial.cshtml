@@ -1,0 +1,49 @@
+﻿@using Viettel.Models.BaoHiemXaHoi
+@model List<QLBenhNhanBHXHViewModel>
+
+@{
+    <div class="tableFixHead">
+        <div class="col-sm-8" style="display:flex;padding-left:0px;">
+            <label class="control-label">Danh sách bệnh nhân điều trị nội trú BHXH</label>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th width="5%">STT</th>
+                    <th width="15%">Họ và tên</th>
+                    <th width="10%">Giới tính</th>
+                    <th width="10%">Ngày sinh</th>
+                    <th width="10%">Mã thẻ BH</th>
+                    <th width="15%">Đơn vị công tác</th>
+                    <th width="4%">Tháng</th>
+                    <th width="8%">Ngày vào viện</th>
+                    <th width="8%">Ngày ra viện</th>
+                    <th width="15%">Tên bệnh viện</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 1;
+                }
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td align="center">@index</td>
+                    <td align="left">@item.sTen</td>
+                    <td align="center">@item.sGioiTinh</td>
+                    <td align="center">@item.sNgaySinhBN</td>
+                    <td align="center">@item.sMaThe</td>
+                    <td align="left">@item.sTenDonVi</td>
+                    <td align="center">@item.iThang</td>
+                    <td align="center">@item.sNgayVaoVienBN</td>
+                    <td align="center">@item.sNgayRaVienBN</td>
+                    <td align="left">@item.sTenBenhVien</td>
+                </tr>
+                    index++;
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+

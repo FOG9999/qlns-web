@@ -1,0 +1,83 @@
+﻿@using VIETTEL.Models
+@{
+
+    var items = new List<MenuItem>()
+{
+   new MenuItem{
+        id="QT1",
+        name = "Số phê duyệt quyết toán ngân sách năm " + PhienLamViec.iNamLamViec,
+        url = Url.Action("Index", "rptQuyetToanNam_PheDuyet"),
+        note = ""},
+
+
+      new MenuItem {
+        id="QT2A",
+        name = "Báo cáo số liệu kết luận quyết toán ngân sách",
+        url = Url.Action("Index", "rptQuyetToanNam_2a"),
+        note = ""},
+
+     new MenuItem {
+        id="QT2A2",
+        name = "Báo cáo số liệu đề nghị Bộ Quyết toán bổ sung",
+        url = Url.Action("Index", "rptQuyetToanNam_2a2"),
+        note = ""},
+
+     new MenuItem{
+        id="QT3",
+        name = "Báo cáo chi tiết số đề nghị chuyển năm sau",
+        url = Url.Action("Index", "rptQuyetToanNam_SoChuyenNamSau"),
+        note = ""},
+
+      new MenuItem{
+        id="QT3.3a",
+        name = "Báo cáo chuyển ngân sách năm sau - Ngân sách bảo đảm",
+        url = Url.Action("Index", "rptDuToanBS_ChuyenNam"),
+        note = ""},
+
+      new MenuItem{
+        id="QT3.3b",
+        name = "Báo cáo chuyển ngân sách năm sau - Ngân sách sử dụng",
+        url = Url.Action("Index", "rptDuToanBS_ChuyenNam_NSSD"),
+        note = ""},
+
+    new MenuItem{
+        name = "Tổng hợp quyết toán - Năm quý",
+        url = Url.Action("Index", "rptQuyetToan_TongHop_NamQuy"),
+        id = "QTN-01A"},
+
+    new MenuItem{
+        name = "Tổng hợp quyết toán - Năm quý - Chọn tờ theo đơn vị",
+        url = Url.Action("Index", "rptQuyetToan_TongHop_NamQuy_ChonTo2"),
+        id = "QTN-01C"},
+
+      new MenuItem{
+        name = "Báo cáo số liệu quyết toán chi ngân sách năm",
+        url = Url.Action("Index", "rptQuyetToanNam_ChiTiet"),
+        id = "QTN-03"},
+
+       new MenuItem{
+        name = "TQT - Phụ lục 2 - I. Tổng hợp kinh phí quyết toán",
+        url = Url.Action("Index", "rptQuyetToan_DonVi_PL02_ChonTo"),
+        id = "QTN-PhuLuc2-I"},
+
+         new MenuItem{
+        name = "TQT - Phụ lục 2 - II. Chi tiết quyết toán theo MLNS",
+        url = Url.Action("Index", "rptTQT_PhuLuc2"),
+        id = "QTN-PhuLuc2-II"},
+
+
+           new MenuItem{
+        name = "TQT - Thông báo - I. Tổng hợp kinh phí quyết toán",
+        url = Url.Action("Index", "rptTQT_TB02_ChonTo"),
+        id = "QTN-TB-I"},
+
+         new MenuItem{
+        name = "TQT - Thông báo - II. Chi tiết quyết toán theo MLNS",
+        url = Url.Action("Index", "rptTQT_TB02"),
+        id = "QTN-TB-II"},        
+};
+
+    ViewBag.Title = "Báo cáo tổng quyết toán ngân sách năm " + PhienLamViec.iNamLamViec;
+
+}
+@Html.Partial("_report_table", items)

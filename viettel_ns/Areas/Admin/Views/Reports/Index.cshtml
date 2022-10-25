@@ -1,0 +1,59 @@
+﻿@model AdminReportViewModel
+@{
+    //Layout = "~/views/shared/_layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+
+    ViewBag.Title = "Danh sách báo cáo tổng hợp quản trị";
+
+    var items = new List<MenuItem>();
+
+    if (Model.loai == "1")
+    {
+        items = new List<MenuItem>
+        {
+
+            new MenuItem
+            {
+                id = "Ad01",
+                name = "Tổng hợp đơn vị đã nhập số liệu dự toán năm " + PhienLamViec.iNamLamViec,
+                url = Url.Action("Print", "rptAdmin_IK01", new { ext = "pdf" }),
+                note = "DT",
+                is_disable = PhienLamViec.iID_MaPhongBan != "11",
+            },
+            new MenuItem
+            {
+                id = "Ad02",
+                name = "Tổng hợp đơn vị đã nhập số liệu quyết toán quân số năm " + PhienLamViec.iNamLamViec,
+                url = Url.Action("Print", "rptAdmin_IK02", new { ext = "pdf" }),
+                note = "QTQS",
+                is_disable = PhienLamViec.iID_MaPhongBan != "11",
+            },
+            new MenuItem
+            {
+                id = "Ad03",
+                name = "Tổng hợp đơn vị đã nhập số liệu thu nộp năm " + PhienLamViec.iNamLamViec,
+                url = Url.Action("Print", "rptAdmin_IK03", new { ext = "pdf" }),
+                note = "TN",
+                is_disable = PhienLamViec.iID_MaPhongBan != "11",
+            },
+            new MenuItem
+            {
+                id = "Ad04",
+                name = "Tổng số liệu dự toán theo số kiểm tra đã nhập năm " + PhienLamViec.iNamLamViec,
+                url = Url.Action("Print", "rptAdmin_IK04", new { ext = "pdf", loai = 1 }),
+                note = "DT",
+                is_disable = PhienLamViec.iID_MaPhongBan != "11",
+            },
+            new MenuItem
+            {
+                id = "Ad05",
+                name = "Tổng số liệu dự toán bao gồm số xin bổ sung đã nhập năm " + PhienLamViec.iNamLamViec,
+                url = Url.Action("Print", "rptAdmin_IK04", new { ext = "pdf", loai = 2 }),
+                note = "DT",
+                is_disable = PhienLamViec.iID_MaPhongBan != "11",
+            },
+        };
+    }
+
+}
+    @Html.Partial("_report_table", items)

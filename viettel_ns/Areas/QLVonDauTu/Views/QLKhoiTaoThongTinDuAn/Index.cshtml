@@ -1,0 +1,54 @@
+﻿@model Viettel.Models.QLVonDauTu.KhoiTaoThongTinDuAnViewModel
+@{
+    ViewBag.Title = "Danh sách khởi tạo thông tin dự án";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body" id="lstDataView">
+                @Html.Partial("_list", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalKhoiTaoTTDA" @*tabindex="-1"*@ role="dialog" aria-labelledby="modalKhoiTaoTTDALabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-left" id="modalKhoiTaoTTDALabel"></h3>
+            </div>
+            <div id="contentModalKhoiTaoTTDA">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+@section Scripts{
+    @*@Html.Partial("_SheetScript")*@
+    <script src="~/Scripts/QLVonDauTu/KhoiTao/jsKhoiTaoTTDA.js"></script>
+    <script src="~/Scripts/js/js_vdtWeb.js"></script>
+
+    <script>
+        var _paging = {};
+        $(document).ready(function () {
+            _paging.CurrentPage = @Model._paging.CurrentPage ;
+            _paging.ItemsPerPage = @Model._paging.ItemsPerPage ;
+        });
+    </script>
+}
+

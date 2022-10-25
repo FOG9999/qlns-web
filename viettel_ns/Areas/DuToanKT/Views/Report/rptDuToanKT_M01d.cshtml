@@ -1,0 +1,142 @@
+﻿@model rptDuToanKT_M01ViewModel
+@{
+    ViewBag.Title = L("DTKT.rptDuToanKT_M01d");
+}
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">@ViewBag.Title</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6">
+                    <h6></h6>
+                </div>
+                <div class="col-xs-6">
+                    <h6><strong class="text-uppercase">Chọn tờ</strong></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Phòng ban:</label>
+                            <div class="col-sm-8">
+                                @if (Model.PhongBanList == null || Model.PhongBanList.Count() <= 2)
+                                {
+                                    <input type="text" readonly value="@PhienLamViec.sTenPhongBanFull" class="form-control" />
+                                    <input id="id_phongban" type="text" value="@PhienLamViec.iID_MaPhongBan" class="form-control hide" />
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("id_phongban", Model.PhongBanList, new { @class = "form-control", onchange = "change()" })
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loại báo cáo:</label>
+                            <div class="col-sm-8">
+                                <div id="loaiBaoCao">
+                                    <div class="radio">
+                                        <input type="radio" name="loaiBaoCao" value="0" id="loaiBaoCao-0" checked />
+                                        <label for="loaiBaoCao-0">Đợt 0 (số đề nghị + đặc thù)</label>
+                                    </div>
+                                    <div class="radio">
+                                        <input type="radio" name="loaiBaoCao" value="1" id="loaiBaoCao-1" />
+                                        <label for="loaiBaoCao-1">Đợt điều chỉnh (Bao gồm số tăng giảm)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group request" style="display:none">
+                            <label class="control-label col-sm-4">Đợt số:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("request", Model.RequestList, new { @class = "form-control", onchange = "change()" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Kiểu báo cáo:</label>
+                            <div class="col-sm-8">
+                                <hr />
+                                <div id="trinhky">
+                                    <div class="radio">
+                                        <input type="radio" name="trinhky" value="0" id="trinhky-0" checked />
+                                        <label for="trinhky-0">Phụ lục</label>
+                                    </div>
+                                    <div class="radio">
+                                        <input type="radio" name="trinhky" value="1" id="trinhky-1" />
+                                        <label for="trinhky-1">Trình ký</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @Html.Partial("_ui_dvt")
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <div id="id_to" class="ls-box" data-check="first">
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <span class="text-muted">|</span>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "Report")">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    change();
+
+    function change() {
+        var id_phongban = $("#id_phongban").val();
+        var url = '@Url.Action("Ds_To")' +
+                    "/?id_phongban=" + id_phongban;
+
+        fillCheckboxList("id_to", "To", url);
+    }
+
+
+
+    $("input[name='loaiBaoCao']").change(function () {
+        $(".request").toggle();
+    })
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+        var ext = $(this).data("ext");
+
+        var id_phongban = $("#id_phongban").val();
+        var loaiBaoCao = $("input[name='loaiBaoCao']:checked").val();
+        var trinhky = $("input[name='trinhky']:checked").val();
+        var request = $("#request").val();
+        var dvt = $("#dvt").val();
+
+
+        $("input:checkbox[check-group='To']").each(function () {
+            if (this.checked) {
+                var item = this.value;
+                var url = '@Url.Action("Print")' +
+                    "/?ext=" + ext +
+                    "&dvt=" + dvt +
+                    "&id_phongban=" + id_phongban +
+                    "&loaiBaoCao=" + loaiBaoCao +
+                    "&trinhky=" + trinhky +
+                    "&request=" + request +
+                    "&r=120" +
+                    "&to=" + item;
+
+                url = unescape(url);
+                links.push(url);
+            }
+        });
+
+        openLinks(links, 100);
+    });
+
+</script>

@@ -1,0 +1,121 @@
+﻿@model rptDuToanBS_InPhuLucTHPCViewModel
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">Phụ lục dự toán bổ sung tổng hợp theo đơn vị năm @PhienLamViec.iNamLamViec</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6">
+                    <h6></h6>
+                </div>
+                <div class="col-xs-6">
+                    <h6><strong class="text-uppercase">Chọn tờ</strong></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Đợt bổ sung NS:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("iID_MaDot", Model.DotList, new { @class = "form-control", onchange = "changeDot()" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Ngành:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("id_nganh", Model.NganhList, new { @class = "form-control", onchange = "changeDot()" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Tên phụ lục:</label>
+                            <div class="col-sm-8">
+                                @Html.TextArea("tenPhuLuc", Model.TieuDe, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Quyết định:</label>
+                            <div class="col-sm-8">
+                                @Html.TextArea("quyetDinh", Model.QuyetDinh, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Dãn dòng:</label>
+                            <div class="col-sm-8">
+                                @Html.Partial("_ui_rowheight")
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <div id="To" class="ls-box" data-check="first">
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <span class="text-muted">|</span>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "DuToanBS_Report")">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    changeDot();
+
+    function changeDot() {
+
+        // clear
+        $("#To").empty();
+
+        var iID_MaDot = $("#iID_MaDot").val();
+        if (iID_MaDot == "-1")
+            return;
+
+        change(iID_MaDot);
+    }
+
+    function change(iID_MaDot) {
+        var id_nganh = $("#id_nganh").val();
+
+        var url = '@Url.Action("Ds_To")' +
+                   "/?iID_MaDot=" + iID_MaDot +
+                    "&id_nganh=" + id_nganh;
+
+        fillCheckboxList("To", "To", url);
+    }
+
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+        var ext = $(this).data("ext");
+
+        var id_nganh = $("#id_nganh").val();
+        var iID_MaDot = $("#iID_MaDot").val();
+
+        $("input:checkbox[check-group='To']").each(function () {
+            if (this.checked) {
+                var item = this.value;
+                var url = '@Url.Action("Print")' +
+                    "/?ext=" + ext +
+                    "&r=" + $("#rowheight").val() +
+                    "&iID_MaDot=" + iID_MaDot +
+                    "&id_nganh=" + id_nganh +
+                    "&tenPhuLuc=" + $("#tenPhuLuc").val() +
+                    "&quyetDinh=" + $("#quyetDinh").val() +
+                    "&to=" + item;
+
+                url = unescape(url);
+                links.push(url);
+            }
+        });
+
+        openLinks(links);
+    });
+
+</script>

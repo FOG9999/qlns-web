@@ -1,0 +1,129 @@
+﻿@model rptDuToanBS_ChiTieuNganSachViewModel
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">Phụ lục dự toán bổ sung theo ngành năm @Model.iNamLamViec</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6">
+                    <h6></h6>
+                </div>
+                <div class="col-xs-6">
+                    <h6><strong class="text-uppercase">Ngành</strong></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Đợt bổ sung NS:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("iID_MaDot", Model.DotList, new { @class = "form-control", onchange = "changeDot()" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Phòng ban:</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly value="@PhienLamViec.sTenPhongBanFull" class="form-control" />
+                                <input id="iID_MaPhongBan" type="text" value="@PhienLamViec.iID_MaPhongBan" class="form-control hide" />
+                                @*@Html.DropDownList("iID_MaPhongBan", Model.PhongBanList, new { @class = "form-control", onchange = "changeDot()" })*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Tên phụ lục:</label>
+                            <div class="col-sm-8">
+                                @Html.TextArea("tenPhuLuc", Model.TieuDe, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Quyết định:</label>
+                            <div class="col-sm-8">
+                                @Html.TextArea("quyetDinh", Model.QuyetDinh, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Ghi chú:</label>
+                            <div class="col-sm-8">
+                                @Html.TextArea("ghiChu", Model.GhiChu, new { @class = "form-control" })
+                                <hr />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Dãn dòng:</label>
+                            <div class="col-sm-8">
+                                @Html.Partial("_ui_rowheight")
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <div id="sNG" class="ls-box" data-check="first-only"></div>
+                </div>
+                @* <div class="col-xs-4">
+                        <div id="sLNS" class="ls-box"></div>
+                    </div>*@
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "DuToanBS_Report" )">Hủy</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function changeDot() {
+
+        // clear
+        $("#sNG").empty();
+
+        var iID_MaDot = $("#iID_MaDot").val();
+        var iID_MaPhongBan = $("#iID_MaPhongBan").val();
+        if (iID_MaDot == "-1")
+            return;
+
+        fillNganh(iID_MaDot, iID_MaPhongBan);
+    }
+
+
+    function fillNganh(iID_MaDot, iID_MaPhongBan) {
+        var url = '@Url.Action("Ds_NG")' +
+                   "/?iID_MaDot=" + iID_MaDot +
+                   "&iID_MaPhongBan=" + iID_MaPhongBan;
+
+        fillCheckboxList("sNG", "sNG", url);
+    }
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+        var ext = $(this).data("ext");
+
+        var loaiBaoCao = $("#loaiBaoCao input[type='radio']:checked").val();
+        var ghichu = $("#ghiChu").val();
+
+        $("input:checkbox[check-group='sNG']").each(function () {
+            if (this.checked) {
+                var url = '@Url.Action("Print")' +
+                    "?ext=" + ext +
+                    "&r=" + $("#rowheight").val() +
+                    "&iID_MaDot=" + $("#iID_MaDot").val() +
+                    "&iID_MaPhongBan=" + $("#iID_MaPhongBan").val() +
+                    "&sNG=" + this.value +
+                    "&loaiBaoCao=1" +
+                    "&tenPhuLuc=" + $("#tenPhuLuc").val() +
+                    "&quyetDinh=" + $("#quyetDinh").val() +
+                    "&ghiChu=" + ghichu;
+
+                url = unescape(url);
+                links.push(url);
+            }
+        });
+
+        openLinks(links);
+    });
+
+</script>

@@ -1,0 +1,49 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model KeHoach5NamDeXuatModel
+
+<div class="modal-body">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txt_DonViQuanLy">Đơn vị</label>
+                <p>@Html.Raw(Model.sTenDonvVi)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txt_ChungTuDeXuat">Loại dự án</label>
+                <p>@Html.Raw(Model.sLoaiDuAn)</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtSoKeHoach">Số kế hoạch</label>
+                <p>@Html.Raw(Model.sSoQuyetDinh)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtNgayLap">Ngày lập</label>
+                <p>@Html.Raw(Model.dNgayQuyetDinh.HasValue ? Model.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy") : string.Empty)</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtGiaiDoanTu">Giai đoạn từ</label>
+                <p>@Html.Raw(Model.iGiaiDoanTu)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtGiaiDoanDen">Giai đoạn đến</label>
+                <p>@Html.Raw(Model.iGiaiDoanDen)</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <label for="txt_MoTaChiTiet">Mô tả chi tiết</label>
+                <p>@Html.Raw(Model.sMoTaChiTiet)</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" onclick="ChiTietKeHoach5NamDeXuat('@Html.Raw(Model.iID_KeHoach5Nam_DeXuatID)')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i><span>Xem chi tiết</span></button>        
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+    </div>
+</div>

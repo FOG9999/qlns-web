@@ -1,0 +1,52 @@
+﻿@using Viettel.Domain.DomainModel
+@model DM_Nguon
+
+<div class="modal-body">
+    <div class="form-group row">
+        <div class="form-group">
+            <div class="form-group">
+                <div class="col-md-6">
+                    <input type="hidden" id="txt_ID_Nguon" value="@Model.iID_Nguon" />
+                    <label for="txt_MaChuongTrinhMucTieu">Mã chương trình mục tiêu <span class="require">*</span></label>
+                    <input type="text" id="txt_MaChuongTrinhMucTieu" class="form-control" value="@Model.sMaCTMT" maxlength="50" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label for="txt_MaNguon">Mã nguồn <span class="require">*</span></label>
+                    <input type="text" required id="txt_MaNguon" class="form-control" value="@Model.sMaNguon" maxlength="50" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label for="txt_Loai">Loại <span class="require">*</span></label>
+                    <input type="text" required id="txt_Loai" class="form-control" value="@Model.sLoai" maxlength="50" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label for="txt_Khoan">Khoản <span class="require">*</span></label>
+                    <input type="text" required id="txt_Khoan" class="form-control" value="@Model.sKhoan" maxlength="50" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label for="txt_MaNguonCha">Mã nguồn cha</label>
+                    @Html.DropDownList("iID_NguonCha", new SelectList(ViewBag.ListMaNguonCha, "iID_Nguon", "sMaNguon"),"--Chọn--", new { @class = "form-control", @id="txt_iID_NguonCha" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label for="txt_NoiDung">Ghi chú</label>
+                    <textarea id="txt_NoiDung" class="form-control">@Html.Raw(Model.sNoiDung)</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="SaveData()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>

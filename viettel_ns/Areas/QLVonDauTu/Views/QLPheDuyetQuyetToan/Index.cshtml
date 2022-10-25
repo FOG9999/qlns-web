@@ -1,0 +1,46 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTPheDuyetQuyetToanPagingModel
+@{
+    ViewBag.Title = "Quản lý dự án";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+<link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.0.45/css/materialdesignicons.min.css">
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body" id="lstDataView">
+                @Html.Partial("_partialListPheDuyetQuyetToanDA", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/QLVonDauTu/QuyetToan/jsVDT_DanhSach_QLPheDuyetQuyetToan.js" type="text/javascript"></script>
+    <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+    <script src="~/Scripts/js/dropdowntree.js"></script>
+    <script src="~/Scripts/js/js_vdtWeb.js"></script>
+    <script>
+        var _paging = {};
+        var sUrlListView = "";
+        $(document).ready(function () {
+            sUrlListView = '@Url.Action("TimKiemPheDuyetQuyetToan", "QLPheDuyetQuyetToan")';
+            _paging.CurrentPage = @Model._paging.CurrentPage ;
+            _paging.ItemsPerPage = @Model._paging.ItemsPerPage ;
+
+        });
+
+    </script>
+}
+
+

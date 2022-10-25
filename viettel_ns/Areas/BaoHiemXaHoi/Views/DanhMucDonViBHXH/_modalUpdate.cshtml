@@ -1,0 +1,166 @@
+﻿@using VIETTEL.Common
+@using Viettel.Models.BaoHiemXaHoi
+@model DanhMucBHXHDonViViewModel
+
+@{
+    const byte LA_DOANH_NGHIEP = (byte)Constants.LOAI_DON_VI.DOANH_NGHIEP;
+    const byte LA_DON_VI_DU_TOAN = (byte)Constants.LOAI_DON_VI.DON_VI_DU_TOAN;
+    string selectedDoanhNghiep = Model.bDoanhNghiep == false ? "selected" : "";
+    string selectedDonViDuToan = Model.bDoanhNghiep == true ? "selected" : "";
+    string selectedNull = Model.bDoanhNghiep == null ? "selected" : "";
+}
+
+<div class="modal-body">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <input type="hidden" id="iID_BHXH_DonViID" value="@Model.iID_BHXH_DonViID">
+                <input type="hidden" id="iID_ParentID" value="@Model.iID_ParentID">
+                <input type="hidden" id="iID_NS_MaDonVi" value="@Model.iID_NS_MaDonVi">
+                <label for="txtTenDonViModal">Tên đơn vị</label>
+                @Helpers.Required()
+                <input type="text" required id="txtTenDonViModal" class="form-control" value="@Model.sTen" maxlength="500" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtMaDonViModal">Mã đơn vị</label>
+                @Helpers.Required()
+                <input type="text" required id="txtMaDonViModal" class="form-control" value="@Model.iID_MaDonViBHXH" maxlength="50" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="cboDonViParentModal">Đơn vị cha</label>
+                @*@Html.DropDownList("cboDonViParentModal", (SelectList)(ViewBag.ListDonViParentModal), "--Chọn--", new { @class = "form-control", @id = "cboDonViParentModal" })*@
+                <select class="form-control" style="width: 100%" id="cboDonViParentModal" name="cboDonViParentModal">
+                </select>
+                <input type="hidden" id="iID_DonViParentModal" name="iID_DonViParentModal" />
+                <input type="hidden" id="sMaDonViParentModal" name="sMaDonViParentModal" />
+            </div>
+            <div class="col-sm-6">
+                <label for="cboDonViNNSModal">Đơn vị Mapping QLNS</label>
+                @*@Html.DropDownList("cboDonViNSModal", (SelectList)(ViewBag.ListDonViNSModal), "--Chọn--", new { @class = "form-control", @id = "cboDonViNSModal" })*@
+                <select class="form-control" style="width: 100%" id="cboDonViNSModal" name="cboDonViNSModal">
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="cboLoaiDonVi">Loại đơn vị</label>
+                <select class="form-control required" name="bLoaiDonViModal" id="bLoaiDonViModal">
+                    <option value="" @selectedNull>--Chọn--</option>
+                    <option value="@LA_DOANH_NGHIEP" @selectedDoanhNghiep>Là doanh nghiệp</option>
+                    <option value="@LA_DON_VI_DU_TOAN" @selectedDonViDuToan>Là đơn vị dự toán</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        if ($("#iID_ParentID").val() != null && $("#iID_ParentID").val() != undefined && $("#iID_ParentID").val() != "") {
+            //$("#cboDonViParentModal").val($("#iID_ParentID").val());
+            $('#cboDonViParentModal').val($("#iID_ParentID").val()).trigger('change.select2');
+            $("#cboDonViNSModal").val("");
+            $("#cboDonViNSModal").attr('disabled', 'disabled');
+        }
+            
+        if ($("#iID_NS_MaDonVi").val() != null && $("#iID_NS_MaDonVi").val() != undefined && $("#iID_NS_MaDonVi").val() != "") {
+            //$("#cboDonViNSModal").val($("#iID_NS_MaDonVi").val());
+            $('#cboDonViNSModal').val($("#iID_NS_MaDonVi").val()).trigger('change.select2');
+        }
+      
+        EventDonViParent();
+        EventDonViNS();
+    });
+
+    function EventDonViParent() {
+        $('#cboDonViParentModal').select2({
+            width: 'resolve',
+            matcher: matchStart
+        });
+
+        $("#cboDonViParentModal").change(function () {
+            if (this.value != "" && this.value != GUID_EMPTY) {
+            /*$("#cboDonViNSModal").val("");*/
+                $('#cboDonViNSModal').val("").trigger('change.select2');
+                $("#cboDonViNSModal").attr('disabled', 'disabled');
+            } else {
+                $("#cboDonViNSModal").removeAttr("disabled");
+            }
+        });
+
+        LoadDataComboBoxDonViParent($("#iID_BHXH_DonViID").val());
+    }
+
+    function matchStart(params, data) {
+        if ($.trim(params.term) === '') {
+            return data;
+        }
+
+        if (typeof data.children === 'undefined') {
+            return null;
+        }
+
+        var filteredChildren = [];
+        $.each(data.children, function (idx, child) {
+            if (child.text.toUpperCase().indexOf(params.term.toUpperCase()) == 0) {
+                filteredChildren.push(child);
+            }
+        });
+
+        if (filteredChildren.length) {
+            var modifiedData = $.extend({}, data, true);
+            modifiedData.children = filteredChildren;
+
+            return modifiedData;
+        }
+
+        return null;
+    }
+
+    function LoadDataComboBoxDonViParent(id) {
+        $.ajax({
+            url: "/BaoHiemXaHoi/DanhMucDonViBHXH/GetDataComboBoxDonViParent",
+            type: "POST",
+            dataType: "json",
+            data: { id: id},
+            success: function (resp) {
+                $('#cboDonViParentModal').select2({
+                    data: resp.data
+                });
+                $('#cboDonViParentModal').val($("#iID_ParentID").val()).trigger('change.select2');
+            }
+        })
+    }
+
+    function EventDonViNS() {
+        $('#cboDonViNSModal').select2({
+            width: 'resolve',
+            matcher: matchStart
+        });
+
+        LoadDataComboBoxDonViNS($("#iID_BHXH_DonViID").val());
+    }
+
+    function LoadDataComboBoxDonViNS(id) {
+        $.ajax({
+            url: "/BaoHiemXaHoi/DanhMucDonViBHXH/GetDataComboBoxDonViNS",
+            type: "POST",
+            dataType: "json",
+            data: { id: id },
+            success: function (resp) {
+                $('#cboDonViNSModal').select2({
+                    data: resp.data
+                });
+                $('#cboDonViNSModal').val($("#iID_NS_MaDonVi").val()).trigger('change.select2');
+            }
+        })
+    }
+</script>

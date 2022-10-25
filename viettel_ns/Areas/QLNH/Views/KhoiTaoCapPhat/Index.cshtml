@@ -1,0 +1,49 @@
+﻿﻿@model Viettel.Models.QLNH.KhoiTao.KhoiTao_KhoiTaoCapPhatModel
+@{
+    ViewBag.Title = "Khởi tạo cấp phát";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body" id="lstDataView">
+                @Html.Partial("_list", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal*@
+<div class="modal fade modalKTCapPhat" id="modalKTCapPhat" role="dialog" aria-labelledby="modalKTCapPhatLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:80%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-left" id="modalKTCapPhatLabel"></h3>
+            </div>
+            <div id="contentModalKTCapPhat"></div>
+        </div>
+    </div>
+</div>
+
+<div id="divModalConfirm">
+
+</div>
+@section Scripts{
+    <script src="~/Scripts/QLNH/KhoiTaoCapPhat/jsKhoiTaoCapPhat.js"></script>
+    <script src="~/Scripts/QLNH/KhoiTaoCapPhat/jsUpdateKhoiTaoCapPhat.js"></script>
+    <script src="~/Scripts/jsNumber.js"></script>
+    <script>
+        var _paging = {};
+        var sUrlListView = "";
+        $(document).ready(function () {
+            sUrlListView = '@Url.Action("TimKiem", "KhoiTaoCapPHat")';
+                _paging.CurrentPage = @Model._paging.CurrentPage ;
+                _paging.ItemsPerPage = @Model._paging.ItemsPerPage ;
+            });
+    </script>
+
+}
+

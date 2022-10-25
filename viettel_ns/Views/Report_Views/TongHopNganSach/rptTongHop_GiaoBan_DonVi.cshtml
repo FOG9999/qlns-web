@@ -1,0 +1,125 @@
+﻿@model rptTongHop_GiaoBan_DonViViewModel
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">Tổng hợp tình hình thực hiện ngân sách năm @Model.iNamLamViec - Theo đơn vị (TH-GB2)</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6"></div>
+                <div class="col-xs-6">
+                    <h6><strong class="text-uppercase">Đơn vị:</strong></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Phòng ban:</label>
+                            <div class="col-sm-9">
+                                @Html.DropDownList("iID_MaPhongBan", Model.PhongBanList, new { @class = "form-control", onchange = "change()" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Loại báo cáo:</label>
+                            <div class="col-sm-9" id="loaiBaoCao">
+                                @*<div class="radio">
+                                        <input type="radio" id="loaiBaoCao-tonghop" name="optradio" checked="checked" value="0" />
+                                        <label for="loaiBaoCao-tonghop">
+                                            Tổng hợp tới đơn vị
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <input type="radio" id="loaiBaoCao-tonghop2" name="optradio" value="1" />
+                                        <label for="loaiBaoCao-tonghop2">
+                                            Tổng hợp tới LNS
+                                        </label>
+                                    </div> *@
+                                <div class="radio">
+                                    <input type="radio" name="optradio" id="loaiBaoCao-b" value="8" checked="checked" />
+                                    <label for="loaiBaoCao-b">
+                                        Chi tiết đơn vị - Theo phòng ban - A3
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="optradio" id="loaiBaoCao-b-a4" value="84" />
+                                    <label for="loaiBaoCao-b-a4">
+                                        Chi tiết đơn vị - Theo phòng ban - A4
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="optradio" id="loaiBaoCao-ct-b-a4" value="841" />
+                                    <label for="loaiBaoCao-ct-b-a4">
+                                        Chỉ tiêu đơn vị - Theo phòng ban - A4
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="optradio" id="loaiBaoCao-chitiet" value="9" />
+                                    <label for="loaiBaoCao-chitiet">
+                                        Chi tiết đơn vị - A3
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="optradio" id="loaiBaoCao-chitiet" value="94" />
+                                    <label for="loaiBaoCao-chitiet-a4">
+                                        Chi tiết đơn vị - A4
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+
+
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <div id="iID_MaDonVi" class="ls-box">
+                            @Html.Partial("_CheckboxList", new ChecklistModel("DonVi", Model.DonViList))
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "rptTongHopNS")">Hủy</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(".btn-print").click(function () {
+
+        var ext = $(this).data("ext");
+        var links = [];
+
+        $("input:checkbox[check-group='DonVi']").each(function () {
+            if (this.checked) {
+                var donvi = this.value;
+                var url = '@Url.Action("Print", "rptTongHop_GiaoBan_DonVi")' +
+                    "?ext=" + ext +
+                    "&r=160" +
+                    "&iID_MaDonVi=" + donvi +
+                    "&iID_MaPhongBan=" + $("#iID_MaPhongBan").val() +
+                    "&loaiBaoCao=" + $("#loaiBaoCao input[type='radio']:checked").val() +
+
+                    "&iNamLamViec=" + '@Model.iNamLamViec';
+
+                url = unescape(url);
+                links.push(url);
+            }
+        });
+
+        openLinks(links);
+    });
+
+</script>

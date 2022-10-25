@@ -1,0 +1,74 @@
+﻿@using Viettel.Domain.DomainModel
+@using Viettel.Helpers
+@using VIETTEL.Areas.QLVonDauTu.Model.QuyetToan
+@model VdtQtBcQuyetToanNienDoPagingModel
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+<div class="modal-body">
+    <div class="form-group row">
+        <div class="col-sm-4">
+            <label for="">Số đề nghị</label>
+            @Helpers.Required()
+            <div>
+                <input type="text" required id="txtSoDeNghi" class="form-control" maxlength="100" autocomplete="off" />
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <label for="txtNgayDeNghi">Ngày đề nghị</label>
+            <div class='input-group date'>
+                <input type='text' class="form-control" id="txtNgayDeNghi" autocomplete="off" />
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <label for="txtNamKeHoach">Năm kế hoạch</label>
+            <div>
+                <input type='text' class="form-control" id="slbNamKeHoach" value="@ViewBag.ListNamKeHoach" autocomplete="off" disabled />
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <table class="table table-bordered" id="tbListQuyetToanNienDo">
+            <thead>
+                <tr>
+                    <th width="5%">STT</th>
+                    <th width="17%">Số đề nghị</th>
+                    <th width="18%">Ngày đề nghị</th>
+                    <th width="10%">Năm kế hoạch</th>
+                    <th width="20%">Đơn vị</th>
+                    <th width="20%">Nguồn ngân sách</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 0;
+                    foreach (var item in Model.lstData)
+                    {
+                        index++;
+                        <tr style="cursor: pointer" class="row-select">
+                            <td align="center">@(pageIndex + index)</td>
+                            <td align="center">@Html.Raw(Html.Encode(item.sSoDeNghi))</td>
+                            <td align="center">@(item.dNgayDeNghi.HasValue ? item.dNgayDeNghi.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                            <td align="center">@Html.Raw(Html.Encode(item.iNamKeHoach))</td>
+                            <td align="center">@Html.Raw(Html.Encode(item.sTenDonVi))</td>
+                            <td align="center">@Html.Raw(Html.Encode(item.sTenNguonVon))</td>
+
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" id="btnHuyModal" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="SaveTongHop('@ViewBag.ListId')" id="btnLuuModal"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>
+<script src="~/Scripts/QLVonDauTu/QuyetToan/jsVdtQtBcQuyetToanNienDo.js"></script>

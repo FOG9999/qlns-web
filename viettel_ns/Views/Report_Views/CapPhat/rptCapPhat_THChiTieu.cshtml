@@ -1,0 +1,65 @@
+﻿@model rptCapPhat_THChiTieuViewModel
+@{
+    ViewBag.Title = "Cấp phát - Tổng hợp chỉ tiêu séc định mức nội bộ " + PhienLamViec.iNamLamViec;
+}
+
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">Cấp phát - Tổng hợp chỉ tiêu séc định mức nội bộ @Model.iNamLamViec</span>
+    </div>
+    <div class="panel-body">
+
+        <div class="container">
+
+            <!-- header -->
+            <div class="row">
+                <div class="col-xs-4">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Chọn loai ngân sách:</label>
+                            <div class="col-sm-9">
+                                @Html.DropDownList("MaLoai", Model.loaiNSList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-md-5">Khoảng cách giữa các dòng:</label>
+                            <div class="col-sm-3">
+                                @Html.TextBox("khoangCachDong", Model.khoangCachDong, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i>In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action(" Index", "CapPhat_Report" )">Hủy</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+        var ext = $(this).data("ext");
+        var items = "";
+
+        var url = '@Url.Action("Print", "rptCapPhat_THChiTieu")' +
+                                "?ext=" + ext +
+                                "&loaiNS=" + $("#MaLoai").val() +
+                                "&khoangCachDong=" + $("#khoangCachDong").val();
+        url = unescape(url);
+
+        links.push(url);
+
+        openLinks(links);
+    });
+
+</script>

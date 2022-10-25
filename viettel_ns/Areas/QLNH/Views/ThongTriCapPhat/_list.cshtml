@@ -1,0 +1,112 @@
+﻿@using Viettel.Models.QLNH
+@model  ThongTriCapPhatModelPaging
+
+<div class="tooltip-header-search">
+    <div class="col-sm-6" style="display:flex;padding-left:0px">
+        <label class="control-label">Thông tri cấp phát (@Model._paging.TotalItems)</label>
+    </div>
+</div>
+<div class="row mt-10 mb-10">
+    <div class="col-sm-3 col-md-3 col-lg-3">
+
+    </div>
+    <div class="col-sm-9 col-md-9 col-lg-9"></div>
+    <button class="btn btn-primary pull-right mr-10" onclick="onModal()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-warning pull-right mr-10" onclick="ViewInBaoCao()"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
+    <button class="btn btn-info pull-right mr-10" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+</div>
+
+<table class="table table-bordered tr-hover" id="tblListThongTriCapPhat">
+    <thead class="header-search">
+        <tr>
+            <th width="3%"></th>
+            <th width="5%"></th>
+            <th width="15%">
+                @Html.DropDownList("idonvisearch", (SelectList)(ViewBag.ListDonViQuanLy), new { @class = "form-control", @id = "idonvisearch" })
+            </th>
+            <th width="15%"><input placeholder="Mã thông tri" class="form-control gr_search smathongtri" id="imathongtrisearch" maxlength="100" title="Mã thông tri" /></th>
+            <th width="10%">
+                <div class='input-group date'>
+                    <input type='text' class="form-control" value="" id="ingaytaosearch gr_search" autocomplete="off" title="Ngày lập" placeholder="dd/MM/yyyy"/>
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </th>
+            <th width="10%"><input placeholder="Năm thực hiện" class="form-control gr_search snamthuchien" id="inamthuchiensearch" title="Ngày tạo" maxlength="4" /></th>
+            <th width="32%" colspan="2"></th>
+            <th width="10%"><button class="btn btn-info pull-right mr-10" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+        </tr>
+    <thead>
+    <thead>
+        <tr>
+            <th rowspan="2"><input type="checkbox" onclick="ChoiceAllCheckBox()" class="checkbox-header" /></th>
+            <th rowspan="2">STT</th>
+            <th rowspan="2">Đơn vị</th>
+            <th rowspan="2">Mã thông tri</th>
+            <th rowspan="2">Ngày tạo</th>
+            <th rowspan="2">Năm thực hiện</th>
+            <th colspan="2">Số kinh phí chấp nhận phê duyệt thanh toán kỳ này</th>
+            <th rowspan="2">Thao tác</th>
+        </tr>
+        <tr>
+            <th width="16%">USD</th>
+            <th width="16%">VND</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var item in Model.thongtri)
+            {
+                <tr data-idthongtri="@item.ID">
+                    <td align="center"><input type="checkbox" class="itemcheckbox" onclick="ChoiceCheckboxRow();" /></td>
+                    <td class="text-center">@Html.Raw(Html.Encode(item.STT))</td>
+                    <td>@Html.Raw(Html.Encode(item.sTenDonvi))</td>
+                    <td class="text-left">@Html.Raw(Html.Encode(item.sSoThongTri))</td>
+                    <td class="text-center">@item.sNgayLap</td>
+                    <td class="text-center">@Html.Raw(Html.Encode(item.iNamThongTri))</td>
+                    <td class="text-right">@Html.Raw(Html.Encode(item._sThongTri_USD))</td>
+                    <td class="text-right">@Html.Raw(Html.Encode(item._sThongTri_VND))</td>
+                    <td class="text-center">
+                        <button type="button" class="btn-detail" onclick="onModalDetail('@item.ID')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-edit" onclick="onModal('@item.ID')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" onclick="onModalThongBaoXoa('@item.ID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+    <tfoot></tfoot>
+</table>
+@Html.BuildPagingButtons(Model._paging)
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#idonvisearch").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $('.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: 'vi',
+            todayHighlight: true,
+            format: "dd/mm/yyyy"
+        });
+
+        $("#ingaytaosearch").keydown(function (event) {
+            ValidateInputKeydown(event, this, 3);
+        });
+
+        $("#inamthuchiensearch").keydown(function (event) {
+            ValidateInputKeydown(event, this, 1);
+        });
+
+        $("#tblListThongTriCapPhat .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                //Enter key pressed
+                if (e.which == 13) {
+                    ChangePage();
+                }
+            });
+        });
+    })
+</script>

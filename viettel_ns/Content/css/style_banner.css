@@ -1,0 +1,39 @@
+﻿.wrapper {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    background: url(../images/bg.png) repeat-x bottom left #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    position: relative;
+    display: inline;
+}
+/*---------------------------------------------------*/
+.banner {
+    background: url(../images/bgbanner.png) repeat-x top left;
+    width: auto;
+    height: 100px;
+    margin: 0 auto;
+    clear: both;
+    position: relative;
+}
+
+.anhbanner {
+    background: url(../images/anhbanner.png) no-repeat top right;
+    width: 198px;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    right: 200px;
+    z-index: 9px;
+}
+
+.nenbanner {
+    background: url(../images/nenbanner.png) no-repeat;
+    width: 490px;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}

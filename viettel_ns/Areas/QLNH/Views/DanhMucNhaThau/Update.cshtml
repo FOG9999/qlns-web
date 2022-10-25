@@ -1,0 +1,128 @@
+﻿@using Viettel.Domain.DomainModel
+@using Viettel.Models.QLNH
+@using VIETTEL.Helpers
+@model NHDMNhaThauModel
+
+<div class="modal-body">
+    <input type="hidden" id="Id_NhaThauModal" value="@Model.Id">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-4" style="display:flex;align-items:center;">
+                <label for="slbsiLoai">Loại&nbsp;</label>
+                @Helpers.Required()
+                <span>&nbsp;&nbsp;</span>
+                <select name="slbsiLoai" id="slbsiLoai" class="form-control">
+                    @{
+                        foreach (var nhathau in (List<NHDMNhaThau_Dropdown_LoaiNhaThau>)ViewBag.ListLoaiNhaThau)
+                        {
+                            <option value="@nhathau.valueId" @(Model.iLoai.HasValue && Model.iLoai.Value == nhathau.valueId ? "selected" : string.Empty)>@nhathau.labelName</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtsMaNhaThau">Mã nhà thầu/ đơn vị ủy thác</label>
+                @Helpers.Required()
+                <input type="text" id="txtsMaNhaThau" class="form-control" value="@Html.Raw(Html.Encode(Model.sMaNhaThau))" maxlength="100" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtsTenNhaThau">Tên nhà thầu/ đơn vị ủy thác</label>
+                @Helpers.Required()
+                <input type="text" id="txtsTenNhaThau" class="form-control" value="@Html.Raw(Html.Encode(Model.sTenNhaThau))" maxlength="300" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtsDiaChi">Địa chỉ</label>
+                <input type="text" id="txtsDiaChi" class="form-control" value="@Html.Raw(Html.Encode(Model.sDiaChi))" maxlength="300" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtsDaiDien">Đại diện</label>
+                <input type="text" id="txtsDaiDien" class="form-control" value="@Html.Raw(Html.Encode(Model.sDaiDien))" maxlength="100" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtsChucVu">Chức vụ</label>
+                <input type="text" id="txtsChucVu" class="form-control" value="@Html.Raw(Html.Encode(Model.sChucVu))" maxlength="100" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtsDienThoai">Điện thoại</label>
+                <input type="text" id="txtsDienThoai" class="form-control txtPhoneOrFax" value="@Html.Raw(Html.Encode(Model.sDienThoai))" maxlength="100" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtsFax">Fax</label>
+                <input type="text" id="txtsFax" class="form-control txtPhoneOrFax" value="@Html.Raw(Html.Encode(Model.sFax))" maxlength="100" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtsEmail">Email</label>
+                <input type="email" id="txtsEmail" class="form-control" value="@Html.Raw(Html.Encode(Model.sEmail))" maxlength="100" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtsWebsite">Website</label>
+                <input type="text" id="txtsWebsite" class="form-control" value="@Html.Raw(Html.Encode(Model.sWebsite))" maxlength="300" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtsSoTK">Số tài khoản</label>
+                <input type="text" id="txtsSoTK" class="form-control" value="@Html.Raw(Html.Encode(Model.sSoTaiKhoan))" maxlength="100" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtsNganHang">Tên ngân hàng</label>
+                <input type="text" id="txtsNganHang" class="form-control" value="@Html.Raw(Html.Encode(Model.sNganHang))" maxlength="100" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtsMaNganHang">Mã ngân hàng</label>
+                <input type="text" id="txtsMaNganHang" class="form-control" value="@Html.Raw(Html.Encode(Model.sMaNganHang))" maxlength="100" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtsMaSoThue">Mã số thuế</label>
+                <input type="text" id="txtsMaSoThue" class="form-control" value="@Html.Raw(Html.Encode(Model.sMaSoThue))" maxlength="100" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtsNguoiLH">Người liên hệ</label>
+                <input type="text" id="txtsNguoiLH" class="form-control" value="@Html.Raw(Html.Encode(Model.sNguoiLienHe))" maxlength="300" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtsDTLH">SĐT người liên hệ</label>
+                <input type="text" id="txtsDTLH" class="form-control txtPhoneOrFax" value="@Html.Raw(Html.Encode(Model.sDienThoaiLienHe))" maxlength="100" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtsSoCMND">Số CMND</label>
+                <input type="text" id="txtsSoCMND" class="form-control" value="@Html.Raw(Html.Encode(Model.sSoCMND))" maxlength="100" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtsNoiCapCMND">Nơi cấp CMND</label>
+                <input type="text" id="txtsNoiCapCMND" class="form-control" value="@Html.Raw(Html.Encode(Model.sNoiCapCMND))" maxlength="100" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtdNgayCapCMND">Ngày cấp CMND</label>
+                <div class='input-group date'>
+                    <input type="text" id="txtdNgayCapCMND" class="form-control" onchange="SetDateMask(this, 'dd/MM/yyyy')" value="@Html.Raw(Html.Encode(Model.dNgayCapCMNDStr))" maxlength="100" autocomplete="off" placeholder="dd/MM/yyyy" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>

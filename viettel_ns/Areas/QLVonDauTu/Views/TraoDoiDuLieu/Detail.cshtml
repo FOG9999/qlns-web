@@ -1,0 +1,153 @@
+﻿@model Viettel.Models.QLVonDauTu.VDT_NS_TraoDoiDuLieuViewModel
+
+
+@{
+    ViewBag.Title = "Insert";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<style>
+    .table-parent th {
+        text-align: center;
+        border-top: 2px solid #ddd;
+    }
+</style>
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="form-group">
+                <h4 class="color-text-red">Thông tin chung</h4>
+                <hr class='color-background-red' />
+
+
+                <div class="form-group row">
+                    <div class="col-sm-4 col-md-6 col-lg-4">
+                        <input type="hidden" id="txt_update">
+                        <input type="hidden" id="txt_update">
+                        <input type="hidden" id="txt_ID_TraoDoiDL" value="@Model.ID">
+                        <input type="hidden" id="txtIsDetails" value="@ViewBag.isDetail">
+                        <label for="txtSoChungTu">Số chứng từ</label>
+                        @Helpers.Required()
+                        <p>@Model.sSoChungTu</p>
+
+
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="txtNgayChungTu">Ngày chứng từ</label>
+                        @Helpers.Required()
+                        @*<div class='input-group date'>*@
+                        <p>@Model.sSoChungTu</p>
+                        @*<input type='text' class="form-control" value="@(Model.dNgayChungTu.HasValue ? Model.dNgayChungTu.Value.ToString("dd/MM/yyyy") : DateTime.Now.ToString("dd/MM/yyyy"))" id="txt_NgayChungTu" autocomplete="off" />*@
+                        @*<span class="btn-default input-group-addon">
+                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                            </span>*@
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="txtDonViQuanLy">Đơn vị</label>
+                        @Helpers.Required()
+                        <p>@Model.sDonViQuanLy</p>
+                        @*@Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.drpDonViQuanLy), new { @class = "form-control", @id = "iID_DonViQuanLyID" })*@
+                        @*@Html.DropDownList("iID_DonViQuanLyID", (List<SelectListItem>)ViewBag.drpDonViQuanLy, new { @class = "form-control", @id = "iID_DonViQuanLyID" })*@
+                    </div>
+                </div>
+
+            </div>
+        <div class="form-group row">
+            <div class="col-sm-4">
+                <label for="txtSoKeHoach">Năm kế hoạch</label>
+                @Helpers.Required()
+                <p>@Model.iNamLamViec</p>
+                @*<input type="text" id="txtiNamkeHoach" class="form-control" value="@Model.iNamLamViec" maxlength="50" autocomplete="off" />*@
+            </div>
+            <div class="col-sm-4">
+                <label for="txtQuy">Quý</label>
+                <p>@Model.sTenQuy</p>
+                @*@Helpers.Required()*@
+                @*@Html.DropDownList("iQuy", (SelectList)(ViewBag.drpQuy), new { @class = "form-control", @id = "iQuy" })*@
+            </div>
+
+            <div class="col-sm-4">
+                <label for="txtNguonVon">Nguồn vốn</label>
+                <p>@Model.sNguonVon</p>
+                @*@Helpers.Required()*@
+                @*@Html.DropDownList("iID_NguonVon", (SelectList)(ViewBag.drpNguonNganSach), new { @class = "form-control", @id = "iID_NguonVon" })*@
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-4">
+                <label for="txtLoaiTraoDoi">Loại trao đổi</label>
+                @Helpers.Required()
+                <p>@Model.sTenLoaiTraoDoi</p>
+                @*@Html.DropDownList("iLoaiTraoDoi", (SelectList)(ViewBag.drpLoaiTraoDoi), new { @class = "form-control", @id = "iLoaiTraoDoi" })*@
+            </div>
+            <div class="col-sm-4">
+                <label for="txtLoaiThongTri">Loại thông tri</label>
+                <p>@Model.sTenThongTri</p>
+                @*@Helpers.Required()*@
+                @*@Html.DropDownList("iLoaiThongtri" +
+                    "", (SelectList)(ViewBag.drpLoaiThongTri), new { @class = "form-control", @id = "iLoaiThongtri" })*@
+            </div>
+            <div class="col-sm-4">
+                <label for="txtLoaiDuToan">Loại dự toán</label>
+                <p>@Model.sTenLoaiDuToan</p>
+                @*@Helpers.Required()*@
+                @*@Html.DropDownList("iLoaiDuToan", (SelectList)(ViewBag.drpLoaiDuToan), new { @class = "form-control", @id = "iLoaiDuToan" })*@
+            </div>
+        </div>
+    </div>
+    @*<div class="modal-footer">
+            <div class="text-center">
+                <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                <button class="btn btn-primary" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+            </div>
+        </div>*@
+
+
+    @*<div class="form-group row">
+        <div class="col-sm-10"></div>
+        <div class="col-sm-2">
+            <button class="btn btn-info" onclick="Loc()"><i class="fa fa-search" aria-hidden="true"></i>Lọc</button>
+            <button class="btn btn-danger" onclick="Xoa()">Xóa</button>
+        </div>
+    </div>*@
+
+    <div class="form-group">
+        <h4 class="color-text-red">Dữ liệu chuyển đổi chi tiết </h4>
+        <hr class='color-background-red' />
+
+        <div class="col-sm-18">
+            <table class="table table-bordered" id="tblDanhsachchuyendoidlchitiet">
+                <thead>
+                    <tr>
+                        <th rowspan="2" width="5%">LNS</th>
+                        <th rowspan="2" width="10%">L</th>
+                        <th rowspan="2" width="7%">K</th>
+                        <th rowspan="2">M</th>
+                        <th rowspan="2">TM</th>
+                        <th rowspan="2" width="7%">TTM</th>
+                        <th rowspan="2" width="7%">NG</th>
+                        <th rowspan="2">TNG</th>
+                        <th rowspan="2">Số tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="form-group text-center">
+        <button class="btn btn-default" onclick="CancelSaveData()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/QLVonDauTu/QuyetToan/jsVDT_TaoMoiTraoDoiDuLieu.js"></script>
+    <script src="~/Scripts/sheet/jsNumber.js"></script>
+}

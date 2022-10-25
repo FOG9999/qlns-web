@@ -1,0 +1,55 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDT_DM_ChiPhi_ViewModel
+
+<div class="modal-body">
+    <input type="hidden" id="iID_LoaiChiPhiModal" value="@Model.iID_ChiPhi">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtMaChiPhi">Mã chi phí</label>
+                @Helpers.Required()
+                <input type="text" id="txtsMaChiPhiModal" class="form-control" value="@Model.sMaChiPhi" maxlength="50" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtTenVietTat">Tên viết tắt</label>
+                <input type="text" id="txtsTenVietTatModal" class="form-control" value="@Model.sTenVietTat" maxlength="100" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtTenChiPhi">Tên chi phí</label>
+                @Helpers.Required()
+                <input type="text" id="txtsTenChiPhiModal" class="form-control" value="@Model.sTenChiPhi" maxlength="300" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtThuTu">Thứ tự</label>
+                @Helpers.Required()
+                <input type="text" name="txtiThuTuModal" class="form-control" id="txtiThuTuModal" value="@Model.iThuTu" autocomplete="off" />
+            </div>
+            
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <label for="txtMoTaLoaiChiPhi">Mô tả</label>
+                <textarea id="txtsMoTaLoaiChiPhi" name="txtsMoTaLoaiChiPhi" class="form-control" autocomplete="off">@Html.Raw(Model.sMoTa)</textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function ($) {
+        $("#txtiThuTuModal").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                return false;
+            }
+        });
+    });
+</script>

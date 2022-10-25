@@ -1,0 +1,268 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model KHVNDXPrintDataExportModel
+<style>
+    .tableFixHead {
+        overflow: auto;
+        height: 242px;
+    }
+
+        .tableFixHead thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+</style>
+@*Thông tin nội dung*@
+
+<div class="form-group">
+    <h4 class="color-text-red">Thông tin báo cáo:</h4>
+    <hr class='color-background-red' />
+</div>
+
+<div class="form-group row">
+    <div class="col-sm-6">
+        <div class="col-sm-12 form-group">
+            <label for="txt_DonViQuanLy">Đơn vị</label>
+            @Helpers.Required()
+            @Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), new { @class = "form-control", @id = "iID_DonViQuanLyID" })
+        </div>
+        <div class="col-sm-12 form-group">
+            <label for="txtGiaiDoanTu">Năm kế hoạch</label>
+            @Helpers.Required()
+            <input type="text" id="iNamKeHoach" name="iGiaiDoanTu" onchange="GetDataNamKeHoach()" class="form-control iNamKeHoach yearFormat" value="@Model.iNamKeHoach" maxlength="4" />
+        </div>
+        <div class="col-sm-12 form-group">
+            <label for="txt_KeHoach5NamDeXuat">Chọn chứng từ</label>
+            @Helpers.Required()
+            @*<select id="iID_KeHoach5Nam_DeXuatID" class="form-control clearable"></select>*@
+            @Html.DropDownList("iID_KeHoach5Nam_DeXuatID", (SelectList)(ViewBag.ListChungTuTH), new { @class = "form-control", @id = "iID_KeHoach5Nam_DeXuatID" })
+        </div>
+        <div class="col-sm-12 form-group">
+            <label for="txt_LoaiCongTrinh">Loại công trình </label>
+            @Helpers.Required()
+            @Html.DropDownList("iID_LoaiCongTrinh", (SelectList)(ViewBag.ListLoaiCongTrinh), new { @class = "form-control", @id = "iID_LoaiCongTrinh" })
+        </div>
+
+    </div>
+    @{
+        if (ViewBag.isStatus == "3")
+        {
+            <div class="col-sm-3 tableFixHead" id="">
+                <table class="table table-bordered" id="tblListDMNguonNganSachTH">
+                    <thead>
+                    <th><input type="checkbox" name="cbAll_NguonVon" class="cbAll_NguonVon" /></th>
+                    <th width="90%">Nguồn vốn</th>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var item in Model.lstDMNguonNganSach)
+                            {
+                                if (@item.iID_MaNguonNganSach != 1)
+                                {
+                                    <tr style="cursor: pointer">
+                                        <td align="center"><input type="checkbox" name="cb_NguonVonModal" class="cb_NguonVonModal" value="@item.iID_MaNguonNganSach" /></td>
+                                        <td align="left">@item.sTen</td>
+                                    </tr>
+                                }
+
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="col-sm-12 form-group">
+                    <label for="txt_DonViTinh">Đơn vị tính</label>
+                    @Helpers.Required()
+                    @Html.DropDownList("ValueItem", (SelectList)(ViewBag.LstDonViTinh), new { @class = "form-control", @id = "ValueItem" })
+                </div>
+                <div class="col-sm-12 form-group">
+                    <label for="txt_TieuDe1">Tiêu đề 1</label>
+                    <input type="text" required id="txt_TieuDe1" name="txt_TieuDe1" class="form-control" value="KẾ HOẠCH ĐẦU TƯ VỐN NĂM ...." maxlength="500" />
+                </div>
+                <div class="col-sm-12 form-group">
+                    <label for="txt_TieuDe2">Tiêu đề 2</label>
+                    <input type="text" required id="txt_TieuDe2" name="txt_TieuDe2" class="form-control" value="(Kèm theo Báo cáo số ...... ngày ... tháng ... năm ...)" maxlength="500" />
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="col-sm-6">
+                <div class="col-sm-12 form-group">
+                    <label for="txtNguonVon">Nguồn vốn</label>
+                    @Helpers.Required()
+                    @Html.DropDownList("iID_MaNguonNganSach", (SelectList)(ViewBag.LstNguonVon), new { @class = "form-control nguonvon", @id = "iID_MaNguonNganSach" })
+                </div>
+                <div class="col-sm-12 form-group">
+                    <label for="txt_DonViTinh">Đơn vị tính</label>
+                    @Helpers.Required()
+                    @Html.DropDownList("ValueItem", (SelectList)(ViewBag.LstDonViTinh), new { @class = "form-control", @id = "ValueItem" })
+                </div>
+                <div class="col-sm-12 form-group">
+                    <label for="txt_TieuDe1">Tiêu đề 1</label>
+                    <input type="text" required id="txt_TieuDe1" name="txt_TieuDe1" class="form-control" value="KẾ HOẠCH ĐẦU TƯ VỐN NĂM ...." maxlength="500" />
+                </div>
+                <div class="col-sm-12 form-group">
+                    <label for="txt_TieuDe2">Tiêu đề 2</label>
+                    <input type="text" required id="txt_TieuDe2" name="txt_TieuDe2" class="form-control" value="(Kèm theo Báo cáo số ...... ngày ... tháng ... năm ...)" maxlength="500" />
+                </div>
+            </div>
+        }
+    }
+
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        var isStatus = $("#txtStatusReport").val();
+        if (isStatus == "2") {
+            $('.nguonvon').attr('disabled', true);
+        }
+        var iID_DonViQL = $("#iID_DonViQuanLyID").val();
+        var iNamKeHoach = $("#iNamKeHoach").val();;
+        LoadComBoBoxChungTu(iID_DonViQL, iNamKeHoach);
+
+        //
+
+        $('.nav-tabs li').on('click', function () {
+            var data = $(this).children().attr("href");
+            if (data == "#bcTongHop") {
+                GetDataNamKeHoach();
+            }
+        });
+
+    });
+
+
+
+    function printBCTH() {
+        var data = {};
+        var strIdLoaiCongTrinhTH = "";
+        if ($("#iID_LoaiCongTrinhTH :selected").val() != undefined || $("#iID_LoaiCongTrinhTH :selected").val() != "" || $("#iID_LoaiCongTrinhTH :selected").val() == null) {
+            $("#iID_LoaiCongTrinhTH option").each(function () {
+                if (this.value != GUID_EMPTY) {
+                    if (strIdLoaiCongTrinhTH == "") {
+                        strIdLoaiCongTrinhTH += this.value;
+                    } else {
+                        strIdLoaiCongTrinhTH += "," + this.value;
+                    }
+                }
+            });
+            data.iID_LoaiCongTrinh = strIdLoaiCongTrinhTH;
+        } else {
+            data.iID_LoaiCongTrinh = $("#iID_LoaiCongTrinhTH :selected").val();
+        }
+
+        data.iNamKeHoach = $("#iNamKeHoach").val();
+
+        data.txt_TieuDe1 = $("#txt_TieuDe1").val();
+        data.txt_TieuDe2 = $("#txt_TieuDe2").val();
+        data.txt_TieuDe3 = $("#txt_TieuDe3").val();
+
+        data.fDonViTinh = $("#ValueItem").val();
+        data.sDonViTinh = $("#ValueItem option:selected").text();
+        data.iIDNguonVon = $("#iID_MaNguonNganSach").val();
+        data.sTenNguonVon = $("#iID_MaNguonNganSach option:selected").text();
+        data.iID_DonViQuanLyID = $("#iID_DonViQuanLyID").val();
+        data.iID_KeHoachVonNam_DeXuatID = $("#iID_KeHoach5Nam_DeXuatID").val();
+
+        var arrIdNguonVon = [];
+        //$("#tblListDMNguonNganSachTH input[type=checkbox]:checked").each(function () {
+        //    var rowValue = $(this).val();
+        //    if (rowValue != 'on') {
+        //        arrIdNguonVon.push(rowValue);
+        //    }
+        //});
+        var id_NguonVon = $("#iID_MaNguonNganSach option:selected").val();
+        arrIdNguonVon.push(id_NguonVon);
+
+        var arrIdDVQL = [];
+        $("#tblListDonViQuanLy input[type=checkbox]:checked").each(function () {
+            var rowValue = $(this).val();
+            if (rowValue != 'on') {
+                arrIdDVQL.push(rowValue);
+            }
+        });
+
+        if (!ValidateDataBCTH(data, arrIdNguonVon, arrIdDVQL)) {
+            return false;
+        }
+
+        exportBCTongHop(data, arrIdNguonVon, arrIdDVQL);
+    }
+
+    function ValidateDataBCTH(data, arrIdNguonVon, arrIdDVQL) {
+        var Title = 'Lỗi in báo cáo tổng hợp';
+        var Messages = [];
+
+        if (data.iID_LoaiCongTrinh == null || data.iID_LoaiCongTrinh == "") {
+            Messages.push("Loại công trình chưa chọn !");
+        }
+
+        if (data.iNamKeHoach == null || data.iNamKeHoach == "") {
+            Messages.push("Năm kế hoạch chưa nhập !");
+        }
+
+        var isStatus = $("#txtStatusReport").val();
+
+        if (isStatus == "1" || isStatus == "2") {
+            if (data.iIDNguonVon == null || data.iIDNguonVon == "") {
+                Messages.push("Nguồn vốn chưa chọn !");
+            }
+        }
+        else {
+            if (arrIdNguonVon.length == 0) {
+                Messages.push("Nguồn vốn chưa chọn !");
+            }
+        }
+
+        if (data.iID_DonViQuanLyID == null || data.iID_DonViQuanLyID == "") {
+            Messages.push("Đơn vị quản lý chưa chọn !");
+        }
+
+        if (Messages != null && Messages != undefined && Messages.length > 0) {
+            $.ajax({
+                type: "POST",
+                url: "/Modal/OpenModal",
+                data: { Title: Title, Messages: Messages, Category: ERROR },
+                success: function (data) {
+                    $("#iID_KeHoach5Nam_DeXuatID").html(data);
+                }
+            });
+            return false;
+        }
+
+        return true;
+    }
+    function GetDataNamKeHoach() {
+        $("#iID_KeHoach5Nam_DeXuatID").empty();
+        var iID_DonViQLValue = $("#iID_DonViQuanLyID").val();
+        var iNamKeHoachValue = $(".iNamKeHoach").val();
+        var html = "";
+        $.ajax({
+            type: "POST",
+            url: "/QLVonDauTu/KeHoachVonNamDeXuat/GetDataChungtu",
+            data: { idMadv: iID_DonViQLValue, namKh: iNamKeHoachValue },
+            success: function (data) {
+                var lenghThData = data.lstData.length;
+                if (data != undefined && lenghThData != 0) {
+                    var sCombobox = [];
+                    for (var i = 0; i < lenghThData; ++i) {
+                        sCombobox.push("<option value='" + data.lstData[i].iID_KeHoachVonNamDeXuatID + "'>" + data.lstData[i].sSoQuyetDinh + "</option>");
+                    }
+                    $("#iID_KeHoach5Nam_DeXuatID").append(sCombobox.join(""));
+                }
+            }
+        });
+    }
+    function LoadComBoBoxChungTu(iID_DonViQL, iNamKeHoach) {
+
+    }
+</script>
+<script type="text/javascript" src="/Scripts/js/js_app.js"></script>
+<script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>
+
+

@@ -1,0 +1,38 @@
+﻿@model IList<MenuItem>
+
+@{
+    // loc is_disable
+    var items = Model.Where(x => !x.is_disable).ToList();
+}
+<div class="">
+    <h3 class="text-danger"><i class="fa fa-area-chart"></i> @ViewBag.Title</h3>
+    @*<hr />*@
+</div>
+<table class="table table-bordered">
+    <thead>
+    <th width="60px" align="center">#</th>
+    <th width="200px">ID</th>
+    <th>Tên báo cáo</th>
+    <th>Ghi chú</th>
+    </thead>
+    <tbody>
+        @{
+            for (int i = 0; i < items.Count; i++)
+            {
+                dynamic item = items[i];
+                var color = i % 2 == 0 ? "" : "#f1f1f1";
+
+
+                <tr style="background-color: @color">
+                    <td align="center">@(i + 1)</td>
+                    <td>@item.id</td>
+                    <td>
+                        <a href="@item.url" style="font-size: 15px;">@item.name</a>
+                    </td>
+                    <td>@item.note</td>
+                </tr>
+
+            }
+        }
+    </tbody>
+</table>

@@ -1,0 +1,60 @@
+﻿@model Viettel.Models.QLVonDauTu.DanhMucChuDauTuViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body" id="lstDataView">
+                @Html.Partial("_list", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalChuDauTu" tabindex="-1" role="dialog" aria-labelledby="modalChuDauTuLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-left" id="modalChuDauTuLabel"></h3>
+            </div>
+            <div id="contentModalChuDauTu">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+@section Scripts{
+    @*@Html.Partial("_SheetScript")*@
+    <script src="~/Scripts/QLVonDauTu/DanhMuc/jsDanhMucChuDauTu.js"></script>
+
+    <script>
+        var _paging = {};
+        $(document).ready(function () {
+            _paging.CurrentPage = @Model._paging.CurrentPage ;
+            _paging.ItemsPerPage = @Model._paging.ItemsPerPage ;
+
+            //$("#txtNamKeHoach").keypress(function (e) {
+            //    //if the letter is not digit then display error and don't type anything
+            //    if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            //        return false;
+            //    }
+            //});
+        });
+    </script>
+}
+

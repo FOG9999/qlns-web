@@ -1,0 +1,119 @@
+﻿@model rptQuyetToan_TongHop_NamViewModel
+@{
+
+}
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">Báo cáo tổng hợp tình hình quyết toán ngân sách năm @Model.iNamLamViec</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-8"></div>                
+                <div class="col-xs-4">
+                    <h6><strong class="text-uppercase">Chọn tờ:</strong></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-8">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Phòng ban:</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="iID_MaPhongBan" readonly value="@PhienLamViec.iID_MaPhongBan" class="form-control hide" />
+                                <input type="text" readonly value="@PhienLamViec.sTenPhongBanFull" class="form-control" />
+                            </div>
+                        </div>      
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Đơn vị:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("iID_MaDonVi", Model.DonViList, new { @class = "form-control", onchange = "change()" })
+                            </div>
+                        </div> 
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Chọn loại báo cáo:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("loaiPl", Model.ReportList, new { @class = "form-control", onchange = "change()" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Thêm tên đơn vị vào báo cáo:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("loaiBaoCao", Model.TypeList, new { @class = "form-control"})
+                            </div>                           
+                        </div>                                         
+                    </form>
+                </div>
+                <div class="col-xs-4">
+                    <div id="toSo" class="ls-box" data-check="first-only">
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "QuyetToan_Report")">Hủy</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    change();
+
+    function change() {
+
+        var iID_MaDonVi = $("#iID_MaDonVi").val();
+
+        fillTo(iID_MaDonVi);
+    }
+
+    function fillTo(donvi) {
+
+        var iID_MaPhongBan = $("#iID_MaPhongBan").val();
+        var loaiPl = $("#loaiPl").val();
+
+        var url = '@Url.Action("Ds_To")'
+            + "/?iID_MaPhongBan=" + iID_MaPhongBan +
+            "&loai=" + loaiPl +
+            "&iID_MaDonVi=" + donvi;
+        fillCheckboxList("toSo", "To", url);
+    }
+
+
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+
+        var ext = $(this).data("ext");
+        var iID_MaPhongBan = $("#iID_MaPhongBan").val();
+        var iID_MaDonVi = $("#iID_MaDonVi").val();
+        var loaiBaoCao = $("#loaiBaoCao").val();
+        var loaiPl = $("#loaiPl").val();
+
+        $("input:checkbox[check-group='To']").each(function () {
+            if (this.checked) {
+                var item = this.value;
+                var url = unescape('@Url.Action("Print")' +
+                    "?ext=" + ext +
+                    "&r=160" +
+                    "&type=" + loaiBaoCao +
+                    "&iID_MaDonVi=" + iID_MaDonVi +
+                    "&loai=" + loaiPl +
+                    "&iID_MaPhongBan=" + iID_MaPhongBan +
+                    "&toSo=" + item
+                    );
+
+                links.push(url);
+
+                console.log(url);
+            }
+        });
+
+        openLinks(links);
+
+    });
+
+</script>

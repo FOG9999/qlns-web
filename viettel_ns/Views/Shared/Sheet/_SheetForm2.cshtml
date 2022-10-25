@@ -1,0 +1,12 @@
+﻿@model VIETTEL.Models.SheetTable
+@{
+    var bang = Model;
+}
+<input type="hidden" id="idXauDoRongCot" value="@bang.strDSDoRongCot" />
+<input type="hidden" id="idXauKieuDuLieu" value="@bang.strType" />
+<input type="hidden" id="idXauChiSoCha" value="@bang.strCSCha" />
+<input type="hidden" id="idBangChiDoc" value="@bang.IsReadonlyString" />
+<input type="hidden" id="idXauEdit" value="@bang.strEdit" />
+<input type="hidden" id="idViewport_N" value="@bang.Viewport_N" />
+<input type="hidden" id="idNC_Fixed" value="@bang.nC_Fixed" />
+<input type="hidden" id="idNC_Slide" value="@bang.nC_Slide" />

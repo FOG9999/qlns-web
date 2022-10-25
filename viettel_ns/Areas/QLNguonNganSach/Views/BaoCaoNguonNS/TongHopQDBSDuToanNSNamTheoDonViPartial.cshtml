@@ -1,0 +1,59 @@
+﻿@using Viettel.Models.QLNguonNganSach
+@model RptTongHopQDBSDuToanNSNamModel
+
+@{
+    <div class="tableFixHead">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th width="5%">STT</th>
+                    <th width="35%">Đơn vị</th>
+                    <th width="20%">Tổng ngân sách bổ sung trong năm</th>
+                    @foreach (var itemQD in Model.listSoQuyetDinh)
+                    {
+                        <th width="200px">@itemQD.sSoQuyetDinh</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 1;
+                }
+                @foreach (var itemDV in Model.listDonVi)
+                {
+                    <tr>
+                        <td align="center">@index</td>
+                        <td align="left">@itemDV.sTenDonVi</td>
+                        <td align="right">@itemDV.dTongTien.ToString("###,###")</td>
+                        @foreach (var itemQD in Model.listSoQuyetDinh)
+                        {
+                            double iTien = 0;
+                            foreach (var ct in Model.lstDataChiTiet)
+                            {
+                                if (ct.iID_MaDonVi == itemDV.iID_MaDonVi && ct.iID_DuToan == itemQD.iID_DuToan)
+                                {
+                                    iTien = ct.iTongTien;
+                                }
+                            }
+                            <td align="right">@Html.Raw(iTien == 0 ? "" : iTien.ToString("###,###"))</td>
+                        }
+                    </tr>
+                    index++;
+                }
+            </tbody>
+            <tfoot>
+                <tr class="text-bold">
+                    <th></th>
+                    <th>Tổng</th>
+                    <th class="text-right">@Model.dTong.ToString("###,###")</th>
+                    @foreach (var itemQD in Model.listSoQuyetDinh)
+                    {
+                        <th class="text-right">@itemQD.dTongTien.ToString("###,###")</th>
+                    }
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+}
+
+

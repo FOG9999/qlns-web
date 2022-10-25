@@ -1,0 +1,372 @@
+﻿@model Viettel.Models.QLVonDauTu.GiaiNganThanhToanViewModel
+@{
+    ViewBag.Title = "Chi tiết đề nghị - phê duyệt thanh toán";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<style>
+    .table-parent th {
+        text-align: center;
+        border-top: 2px solid #ddd;
+    }
+</style>
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body create_thdt">
+                <div class="form-group row">
+                    @*left*@
+                    <div class="col-sm-6">
+                        <h4 class="color-text-red">Thông tin chung</h4>
+                        <hr class='color-background-red' />
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="drpDonViQuanLy" class="">Đơn vị quản lý</label>
+                                <p class="label-sua">@Model.sDonViQuanLy</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtChuDauTu">Chủ đầu tư</label>
+                                <p class="label-sua">@Model.sChuDauTu</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="drpDuAn" class="">Dự án</label>
+                                <p class="label-sua">@Model.sTenDuAn</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="txtSoDeNghi" class="">Số đề nghị</label>
+                                <p class="label-sua">@Model.sSoDeNghi</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="txtNgayDeNghi" class="">Ngày đề nghị</label>
+                                <p class="label-sua">@Model.sNgayDeNghi</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="txtSoCanCu" class="">Số c/cứ bảng xác định KLHT</label>
+                                <p class="label-sua">@Model.sSoBangKLHT</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="txtNgayCanCu" class="">Ngày căn cứ</label>
+                                <p class="label-sua">@Model.sNgayBangKLHT</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="txtLuyKeGiaTriKLNghiemThu" class="">Lũy kế g/trị k/lượng nghiệm thu</label>
+                                <p class="label-sua">@Model.sLuyKeGiaTriNghiemThuKLHT</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="drpLoaiThanhToan" class="">Loại thanh toán</label>
+                                <p class="label-sua">@Model.sLoaiThanhToan</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="txtTTtheohopdong">Thanh toán theo hợp đồng</label>
+                                @if (Model.bThanhToanTheoHopDong.HasValue && Model.bThanhToanTheoHopDong.Value)
+                                {
+                                    <p class="label-sua">Thanh toán theo hợp đồng</p>
+
+                                }
+                                else
+                                {
+                                    <p class="label-sua">Không thanh toán theo hợp đồng</p>
+                                }
+                            </div>
+                        </div>
+
+                        @if (Model.bThanhToanTheoHopDong.HasValue && Model.bThanhToanTheoHopDong.Value)
+                        {
+                            <div class="form-group row divThongTinHopDong">
+                                <div class="col-sm-6">
+                                    <label for="drpHopDong" class="">Hợp đồng</label>
+                                    <p class="label-sua">@Model.sSoHopDong</p>
+                                </div>
+                            </div>
+                            <div class="form-group row divThongTinHopDong">
+                                <div class="col-sm-6">
+                                    <label for="txtGiaTriHopDong" class="">Giá trị hợp đồng</label>
+                                    <p class="label-sua" id="txtGiaTriHopDong">@Model.sTienHopDong</p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="drpNhaThau" class="">Nhà thầu</label>
+                                    <p class="label-sua">@Model.sTenNhaThau</p>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group row divDanhSachChiPhi">
+                                <div class="col-sm-12">
+                                    <table class="table table-bordered" id="tblDanhSachChiPhi">
+                                        <thead>
+                                            <tr>
+                                                <th width="5%"></th>
+                                                <th width="45%">Tên chi phí</th>
+                                                <th width="25%" class="text-right">Giá trị QĐ đầu tư</th>
+                                                <th class="text-right">Giá trị dự toán</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.listChiPhi.Count > 0)
+                                            {
+                                                foreach (var item in Model.listChiPhi)
+                                                {
+                                                    <tr>
+                                                        <td align="center"><input type='checkbox' disabled name='cb_chiphi' class='cb_chiphi' @(item.IsChecked ? "checked" : "")></td>
+                                                        <td align="left">@item.STenChiPhi</td>
+                                                        <td class="text-right">@item.FGiaTriPheDuyetQdDauTu</td>
+                                                        <td class="text-right">@item.FGiaTriPheDuyetDuToan</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtNguoiLap" class="">Người lập</label>
+                                <p class="label-sua">@Model.sNguoiLap</p>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txtNamKeHoach" class="">Năm kế hoạch</label>
+                                <p class="label-sua">@Model.iNamKeHoach</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="drpNguonNganSach" class="">Nguồn vốn</label>
+                                <p class="label-sua">@Model.sNguonVon</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="drpCoQuanThanhToan" class="">Cơ quan thanh toán</label>
+                                <p class="label-sua">@Model.sCoQuanThanhToan</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-11">
+                                <table class="table table-bordered" id="tblDanhSachKHV">
+                                    <thead>
+                                        <tr>
+                                            <th width="5%"></th>
+                                            <th width="35%">Tên loại</th>
+                                            <th width="20%">Số quyết định</th>
+                                            <th width="20%">Ngày quyết định</th>
+                                            <th>Vốn bố trí</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.listKeHoachVon.Count > 0)
+                                        {
+                                            foreach (var item in Model.listKeHoachVon)
+                                            {
+                                                <tr>
+                                                    <td class='r_checkbox' align='center'><input type='checkbox' disabled name='cb_KHV' class='cb_KHV' @(item.IsChecked ? "checked" : "")></td>
+                                                    <td class='r_stenloai' align='left'>@item.sTenLoai</td>
+                                                    <td class='r_ssoquyetdinh' align='left'>@item.sSoQuyetDinh</td>
+                                                    <td align='center'>@item.sNgayQuyetDinh</td>
+                                                    <td align='right'>@item.sLenhChi</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @*<label>THÔNG TIN ĐƠN VỊ THỤ HƯỞNG</label>
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <lablel>Tên nhà thầu:</lablel>
+                                <label id="txtNhaThau"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <lablel>Số tài khoản nhà thầu:</lablel>
+                                <label id="txtTaiKhoanNhaThau"></label>
+                            </div>
+                        </div>*@
+                    </div>
+                    @*right*@
+                    <div class="col-sm-6">
+                        <h4 class="color-text-red">Thông tin thanh toán</h4>
+                        <hr class='color-background-red' />
+                        <label>Lũy kế thanh toán</label>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="fTyLeThanhToan" class="">Tỷ lệ thanh toán</label>
+                                <p id="fTyLeThanhToan"></p>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="txtluyKeTTTN" class="">Thanh toán KLHT vốn trong nước</label>
+                                <p class="label-sua" id="txtluyKeTTTN">@Model.sLuyKeTTTN</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="txtluyKeTTNN" class="">Thanh toán KLHT vốn ngoài nước</label>
+                                <p class="label-sua" id="txtluyKeTTNN">@Model.sLuyKeTTNN</p>
+                            </div>
+                        </div>
+                        <label>Lũy kế tạm ứng chưa thu hồi (ứng trước)</label>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtluyKeTUUngTruocTN" class="">Vốn trong nước</label>
+                                <p class="label-sua" id="txtluyKeTUUngTruocTN">@Model.sLuyKeTUUngTruocTN</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtluyKeTUUngTruocNN" class="">Vốn ngoài nước</label>
+                                <p class="label-sua" id="txtluyKeTUUngTruocNN">@Model.sLuyKeTUUngTruocNN</p>
+                            </div>
+                        </div>
+                        <label>Lũy kế tạm ứng chưa thu hồi (theo chế độ)</label>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtluyKeTUTN" class="">Vốn trong nước</label>
+                                <p class="label-sua" id="txtluyKeTUTN">@Model.sLuyKeTUTN</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtluyKeTUNN" class="">Vốn ngoài nước</label>
+                                <p class="label-sua" id="txtluyKeTUNN">@Model.sLuyKeTUNN</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <label for="txtNoiDung" class="">Nội dung</label>
+                                <p class="label-sua">@Model.sGhiChu</p>
+                            </div>
+                        </div>
+                        <label>Số đề nghị tạm ứng, thanh toán KLHT</label>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtdntuVonTrongNuoc" class="">Vốn trong nước</label>
+                                <p class="label-sua" id="txtdntuVonTrongNuoc">@Model.sGiaTriThanhToanTN</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtdntuVonNgoaiNuoc" class="">Vốn ngoài nước</label>
+                                <p class="label-sua" id="txtdntuVonNgoaiNuoc">@Model.sGiaTriThanhToanNN</p>
+                            </div>
+                        </div>
+                        <label>Số thu hồi tạm ứng (ứng trước)</label>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtthtuUngTruocVonTrongNuoc" class="">Vốn trong nước</label>
+                                <p class="label-sua" id="txtthtuUngTruocVonTrongNuoc" >@Model.sGiaTriThuHoiUngTruocTN</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtthtuUngTruocVonNgoaiNuoc" class="">Vốn ngoài nước</label>
+                                <p class="label-sua" id="txtthtuUngTruocVonNgoaiNuoc">@Model.sGiaTriThuHoiUngTruocNN</p>
+                            </div>
+                        </div>
+                        <label>Số thu hồi tạm ứng (theo chế độ)</label>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtthtuVonTrongNuoc" class="">Vốn trong nước</label>
+                                <p class="label-sua" id="txtthtuVonTrongNuoc">@Model.sGiaTriThuHoiTN</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtthtuVonNgoaiNuoc" class="">Vốn ngoài nước</label>
+                                <p class="label-sua" id="txtthtuVonNgoaiNuoc">@Model.sGiaTriThuHoiNN</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtthtuThueGTGT" class="">Thuế giá trị gia tăng</label>
+                                <p class="label-sua">@Model.sThueGiaTriGiaTang</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtthtuTienBaoHanh" class="">Chuyển tiền bảo hành</label>
+                                <p class="label-sua">@Model.sChuyenTienBaoHanh</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <h4 class="color-text-red">Thông tin thanh toán:</h4>
+                    <hr class='color-background-red' />
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered" id="tblDanhSachThanhToanChiTiet">
+                                <thead>
+                                    <tr>
+                                        <th width="3%" rowspan="2">STT</th>
+                                        <th width="9%" rowspan="2">Loại thanh toán</th>
+                                        <th width="10%" rowspan="2">Kế hoạch vốn</th>
+                                        <th width="5%" rowspan="2">LNS</th>
+                                        <th width="3%" rowspan="2">L</th>
+                                        <th width="3%" rowspan="2">K</th>
+                                        <th width="3%" rowspan="2">M</th>
+                                        <th width="3%" rowspan="2">TM</th>
+                                        <th width="3%" rowspan="2">TTM</th>
+                                        <th width="3%" rowspan="2">NG</th>
+                                        <th width="10%" rowspan="2">Nội dung</th>
+                                        <th width="16%" colspan="2">Vốn trong nước</th>
+                                        <th width="16%" colspan="2">Vốn ngoài nước</th>
+                                        <th width="8%" rowspan="2">Tổng số</th>
+                                        <th width="20%" rowspan="2">Ghi chú</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Giá trị đề nghị</th>
+                                        <th>Giá trị phê duyệt</th>
+                                        <th>Giá trị đề nghị</th>
+                                        <th>Giá trị phê duyệt</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.listPheDuyetChiTiet.Count > 0)
+                                    {
+                                        var index = 0;
+                                        foreach (var item in Model.listPheDuyetChiTiet)
+                                        {
+                                            index++;
+                                            <tr>
+                                                <td align="center">@index</td>
+                                                <td align="center">@item.sLoaiDeNghi</td>
+                                                <td align="center">@item.sTenKHV</td>
+                                                <td align="center">@item.sLNS</td>
+                                                <td align="center">@item.sL</td>
+                                                <td align="center">@item.sK</td>
+                                                <td align="center">@item.sM</td>
+                                                <td align="center">@item.sTM</td>
+                                                <td align="center">@item.sTTM</td>
+                                                <td align="center">@item.sNG</td>
+                                                <td align="center">@item.sMoTa</td>
+                                                <td align="right">@item.sDefaultValueTN</td>
+                                                <td align="right">@item.sGiaTriTrongNuoc</td>
+                                                <td align="right">@item.sDefaultValueNN</td>
+                                                <td align="right">@item.sGiaTriNgoaiNuoc</td>
+                                                <td align="right">@item.sTongSo</td>
+                                                <td>@item.sGhiChu</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group text-center">
+                    <button class="btn btn-back" onclick="CancelSaveData()"><i class="fa fa-arrow-left" aria-hidden="true"></i><span>Quay  lại</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsVDT_ChiTietCapPhatThanhToan.js"></script>
+    <script src="~/Scripts/sheet/jsNumber.js"></script>
+}

@@ -1,0 +1,178 @@
+﻿@using Viettel.Models.QLNH
+@using Viettel.Domain.DomainModel
+@using Viettel.Models.Shared
+@using DomainModel
+@using System.Globalization;
+@model NHDAThongTinDuAnModel
+
+<link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+
+<div class="modal-body">
+    <input type="hidden" id="hidDuAnID" value="@Model.ID" />
+    <div class="header-create-update">
+        <span>
+            @Html.Raw("Xem chi tiết thông tin dự án")
+        </span>
+    </div>
+    <div class="form-group">
+        <h4 class="color-text-red">Thông tin căn cứ:</h4>
+        <hr class='color-background-red' />
+        <div class="form-group row">
+            <div class="col-sm-3">
+                <label for="slbKHTongTheBQP">Sổ kế hoạch chi tiết BQP</label>
+                <div>@Html.Raw(Html.Encode(Model.BQP))</div>
+            </div>
+            <div class="col-sm-3">
+                <label for="slbBQuanLy">B Quản Lý</label>
+                <div>@Html.Raw(Html.Encode(Model.sBQuanLy))</div>
+            </div>
+            <div class="col-sm-3">
+                <label for="slbDonVi">Đơn vị</label>
+                <div>@Html.Raw(Html.Encode(Model.sDonVi))</div>
+            </div>
+            <div class="col-sm-3">
+                <div id="divTenDuAn">
+                    <label for="slbChuongTrinh">Tên chương trình</label>
+                    <div>@Html.Raw(Html.Encode(Model.sTenNhiemVuChi))</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <h4 class="color-text-red">Thông tin dự án:</h4>
+            <hr class='color-background-red' />
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <label for="txtMaDuAn">Mã dự án</label>
+                    <div>@Html.Raw(Html.Encode(Model.sMaDuAn))</div>
+                </div>
+                <div class="col-sm-3">
+                    <label for="txtTenDuAn ">Tên dự án</label>
+                    <div>@Html.Raw(Html.Encode(Model.sTenDuAn))</div>
+                </div>
+                <div class="col-sm-3">
+                    <label for="txtSoChuTruongDauTu">Số chủ trương đầu tư</label>
+                    <div>@Html.Raw(Html.Encode(Model.sSoChuTruongDauTu))</div>
+                </div>
+                <div class="col-sm-3">
+                    <label for="txtMaDuAn">Ngày ban hành chủ trương đầu tư</label>
+                    <div>@Html.Raw(Model.dNgayChuTruongDauTu.HasValue ? Model.dNgayChuTruongDauTu.Value.ToString("dd/MM/yyyy") : string.Empty)</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-3">
+                <label for="txtSoQuyetDinhDauTu">Sổ quyết định đầu tư</label>
+                <div>@Html.Raw(Html.Encode(Model.sSoQuyetDinhDauTu))</div>
+            </div>
+            <div class="col-sm-3">
+                <label for="txtNgayBanHanhQuyetDinhDauTu">Ngày ban hành Quyết định đầu tư</label>
+                <div>@Html.Raw(Model.dNgayQuyetDinhDauTu.HasValue ? Model.dNgayQuyetDinhDauTu.Value.ToString("dd/MM/yyyy") : string.Empty)</div>
+            </div>
+            <div class="col-sm-3">
+                <label for="txtSoDuToanTu ">Số Dự toán</label>
+                <div>@Html.Raw(Html.Encode(Model.sSoDuToan))</div>
+            </div>
+            <div class="col-sm-3">
+                <label for="txtNgayBanHanhDuToan ">Ngày ban hành Dự toán</label>
+                <div>@Html.Raw(Model.dNgayDuToan.HasValue ? Model.dNgayDuToan.Value.ToString("dd/MM/yyyy") : string.Empty)</div>
+            </div>
+        </div>
+        <div class="form-group row">
+
+            <div class="col-sm-3">
+                <label for="slbChuDauTu ">Chủ đầu tư</label>
+                <div>@Html.Raw(Html.Encode(Model.sChuDauTu))</div>
+            </div>
+            <div class="col-sm-3">
+                <label for="slbPhanCapPheDuyet">Phân cấp phê duyệt</label>
+                <div>@Html.Raw(Html.Encode(Model.sPhanCapPheDuyet))</div>
+            </div>
+            <div class="col-sm-3">
+                <label for="txtThoiGianThucHienTu ">Thời gian thực hiện từ</label>
+                <div>@Html.Raw(Html.Encode(Model.sKhoiCong))</div>
+            </div>
+            <div class="col-sm-3">
+                <label for="slbPhanCapPheDuyet">Thời gian thực hiện đến</label>
+                <div>@Html.Raw(Html.Encode(Model.sKetThuc))</div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-3">
+                <label for="slbTiGia">Tỉ giá</label>
+                <div>@Html.Raw(Html.Encode(Model.sTenTiGia))</div>
+            </div>
+            <div class="col-sm-3">
+                <label for="slbMaNgoaiTeKhac">Mã ngoại tệ khác</label>
+                <div>@Html.Raw(Html.Encode(Model.sTenMaNgoaiTeKhac))</div>
+            </div>
+            <div class="col-sm-3">&nbsp;</div>
+            <div class="col-sm-3">&nbsp;</div>
+        </div>
+        <div class="form-group">
+            <h4 class="color-text-red">Giá trị dự án:</h4>
+            <hr class='color-background-red' />
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <label>Tổng mức đầu tư (USD)</label>
+                    <div>@CommonFunction.DinhDangSo((Model.fGiaTriUSD.HasValue ? Model.fGiaTriUSD.Value.ToString(CultureInfo.InvariantCulture) : string.Empty), 2)</div>
+                </div>
+                <div class="col-sm-3">
+                    <label>Tổng mức đầu tư (VND)</label>
+                    <div>@CommonFunction.DinhDangSo((Model.fGiaTriVND.HasValue ? Math.Round(Model.fGiaTriVND.Value).ToString(CultureInfo.InvariantCulture) : string.Empty), 0)</div>
+                </div>
+                <div class="col-sm-3">
+                    <label>Tổng mức đầu tư (EUR)</label>
+                    <div>@CommonFunction.DinhDangSo((Model.fGiaTriEUR.HasValue ? Model.fGiaTriEUR.Value.ToString(CultureInfo.InvariantCulture) : string.Empty), 2)</div>
+                </div>
+                <div class="col-sm-3">
+                    <label>Tổng mức đầu tư (<label id="iDTenNgoaiTeKhac">@Html.Raw(Html.Encode(string.IsNullOrEmpty(Model.sTenMaNgoaiTeKhac) ? "Ngoại tệ khác" : Model.sTenMaNgoaiTeKhac))</label>)</label>
+                    <div>@CommonFunction.DinhDangSo((Model.fGiaTriNgoaiTeKhac.HasValue ? Model.fGiaTriNgoaiTeKhac.Value.ToString(CultureInfo.InvariantCulture) : string.Empty), 2)</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <h4 class="color-text-red">Thông tin chi phí:</h4>
+            <hr class='color-background-red' />
+            <hr />
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-bordered tr-hover" id="tbListChiphi">
+                        <thead>
+                            <tr>
+                                <th width="5%">STT</th>
+                                <th width="35%">Tên chi phí</th>
+                                <th width="15%">Giá trị phê duyệt (USD)</th>
+                                <th width="15%">Giá trị phê duyệt (VND)</th>
+                                <th width="15%">Giá trị phê duyệt (EUR)</th>
+                                <th width="15%">Giá trị phê duyệt (Khác)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbListChiphi">
+                            @{
+                                int index = 0;
+                                foreach (var item in Model.TableChiPhis)
+                                {
+                                    index++;
+                                    <tr style="cursor: pointer">
+                                        <td class="text-center">@index</td>
+                                        <td class="text-left">@Html.Raw(Html.Encode(item.sTenChiPhi))</td>
+                                        <td class="text-right">@CommonFunction.DinhDangSo((item.fGiaTriUSD != null ? item.fGiaTriUSD.ToString(CultureInfo.InvariantCulture) : string.Empty), 2)</td>
+                                        <td class="text-right">@CommonFunction.DinhDangSo((item.fGiaTriVND != null ? item.fGiaTriVND.ToString(CultureInfo.InvariantCulture) : string.Empty), 0)</td>
+                                        <td class="text-right">@CommonFunction.DinhDangSo((item.fGiaTriEUR != null ? item.fGiaTriEUR.ToString(CultureInfo.InvariantCulture) : string.Empty), 2)</td>
+                                        <td class="text-right">@CommonFunction.DinhDangSo((item.fGiaTriNgoaiTeKhac != null ? item.fGiaTriNgoaiTeKhac.ToString(CultureInfo.InvariantCulture) : string.Empty), 2)</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" onclick="Cancel()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+    </div>
+</div>

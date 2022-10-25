@@ -1,0 +1,48 @@
+﻿@model VIETTEL.Areas.QLNguonNganSach.Models.NNSDuToanNhiemVuViewModel
+@{
+    ViewBag.Title = "Nhiệm vụ";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+@*<h4>Danh sách nhiệm vụ</h4>*@
+<div class="main" id="indexDMLoaiDuToan">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                @*<label class="control-label pull-left" style="margin-top:35px;">F2: Thêm dòng  -  F10: Lưu  -  Del: Xóa  -  Ent: Tìm kiếm  -  F9: Xoá tìm kiếm</label>*@
+                @*<div style="float:right;">
+                        <strong>F2:</strong>
+                        <span style="margin-right:20px">Thêm dòng</span>
+                        <strong>F10:</strong>
+                        <span style="margin-right:20px">Lưu</span>
+                        <strong>F9:</strong>
+                        <span style="margin-right:20px">Xóa tìm kiếm</span>
+                        <strong>Delete:</strong>
+                        <span style="margin-right:20px">Xóa</span>
+                    </div>*@
+                @Html.Partial("_sheet")
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('keydown', eventKey);
+    function eventKey(e) {
+        if (e != null && e != undefined) {
+            if (e.key == "F2") {
+                $("#sheet")[0].contentWindow.BangDuLieu_ThemHangMoiViewMaster(0, 0);
+            }
+
+            if (e.key == "F10") {
+                $("#sheet")[0].contentWindow.ValidateBeforeSave();
+            }
+
+            if (e.key == "F9") {
+                $("#sheet")[0].contentWindow.BangDuLieu_onKeypress_F9();
+            }
+        }
+    }
+</script>
+

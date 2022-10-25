@@ -1,0 +1,77 @@
+﻿@model VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong.KeHoachVonNamDuocDuyetChiTietGridViewModel
+@{
+    var sheet = Model.Sheet;
+}
+<iframe id="sheet" name="iframe-sheet" class="iframe-sheet"></iframe>
+<div class="">
+    <div id="nhapform">
+        <div id="form2">
+            <div class="button-bar">
+                <div class="text-center">
+                    <button class="btn btn-default" onclick="goBack();" style="margin-right: 10px;"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                    <button class="btn btn-primary btn-save" id="btnSave"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr id="hr-split" />
+<div id="ajax-div">
+</div>
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+@using (Html.BeginScripts())
+{
+<script type="text/javascript">
+    var GUID_EMPTY = '00000000-0000-0000-0000-000000000000';
+    $(document).ready(function () {
+        var iID_KHVN_DeXuat = $("#iID_KHVN_DeXuatID").val();
+        if (iID_KHVN_DeXuat != undefined && iID_KHVN_DeXuat != null && iID_KHVN_DeXuat != GUID_EMPTY) {
+            $("#iID_KeHoachVonNamDeXuatIDTH").val(iID_KHVN_DeXuat);
+            $('#iID_KeHoachVonNamDeXuatIDTH').trigger('change');
+        }
+    });
+
+    $(".btn-save").click(function () {
+            $("#sheet")[0].contentWindow.KHVonNamDD_ChiTiet_BangDuLieu_Save();
+            alert("Lưu dữ liệu thành công !");
+        });
+
+        loadFrame();
+
+        function goBack() {
+            window.location.href = "/QLVonDauTu/KeHoachVonNamDuocDuyet/Index/";
+        }
+
+        function loadFrame(option) {
+            sessionStorage.setItem('IIdParent', '@Model.KHVonNamDuocDuyet.iID_ParentId');
+            var idDxTH = $("#iID_KeHoachVonNamDeXuatIDTH").val();
+            if (idDxTH == null || idDxTH == undefined) idDxTH = "";
+
+            var url = '@Url.Action("SheetFrame")'
+                + "/?id=" + '@Model.KHVonNamDuocDuyet.iID_KeHoachVonNam_DuocDuyetID'
+                + "&idParent=" + '@Model.KHVonNamDuocDuyet.iID_ParentId'
+                + "&isActive=" + '@Model.KHVonNamDuocDuyet.bActive.Value'
+                + "&idDx=" +  idDxTH;
+            $("#sheet").attr("src", url);
+        }
+
+    function loadModal(data) {
+            $("#divModalConfirm").html(data);
+    }
+
+    $("#iID_KeHoachVonNamDeXuatIDTH").change(function () {
+            var itemSelected = $("#iID_KeHoachVonNamDeXuatIDTH").val();
+        var id = itemSelected != null ? itemSelected : "00000000-0000-0000-0000-000000000000";
+        var url = '@Url.Action("SheetFrame")'
+                + "/?id=" + '@Model.KHVonNamDuocDuyet.iID_KeHoachVonNam_DuocDuyetID'
+                + "&idParent=" + '@Model.KHVonNamDuocDuyet.iID_ParentId'
+                + "&isActive=" + '@Model.KHVonNamDuocDuyet.bActive.Value'
+            + "&idDx=" + id;
+            console.log(url);
+            $("#sheet").attr("src", url);
+        });
+</script>
+}

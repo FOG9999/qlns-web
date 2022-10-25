@@ -1,0 +1,108 @@
+﻿@using Viettel.Models.QLVonDauTu
+@using System.Globalization;
+@model VDTKHLuaChonNhaThauPagingModel
+
+<div class="tooltip-header-search">
+    <div class="col-sm-6" style="display: flex; padding-left: 0px;">
+        <label class="control-label">Danh sách kế hoạch lựa chọn nhà thầu (@Model._paging.TotalItems)</label>
+    </div>
+    <button class="btn btn-primary pull-right" onclick="Update()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+</div>
+<table class="table table-bordered">
+    <thead class="header-search">
+    <th width="2%"></th>
+    <th width="10%"> <input type="text" class="form-control clearable" id="txtSoQuyetDinh" autocomplete="off" /></th>
+    <th width="15%">
+        <div style="display:flex">
+            <div class='input-group date'>
+                <input type='text' class="form-control startDate dateFormat" id="txtNgayQuyetDinhFrom" autocomplete="off" placeholder="dd/MM/yyyy" />
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+            <span style="margin: 8px 5px 0px 5px;">-</span>
+
+            <div class='input-group date'>
+                <input type='text' class="form-control endDate dateFormat" id="txtNgayQuyetDinhTo" autocomplete="off" placeholder="dd/MM/yyyy" />
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+    </th>
+    <th width="20%">  <input type="text" class="form-control clearable" id="txtTenDuAn" autocomplete="off" /></th>
+    <th width="15%"> @Html.DropDownList("drpDonViQuanLy", ViewBag.drpDonViQuanLy as List<SelectListItem>, "--Tất cả--", new { @class = "form-control clearable" })</th>
+    <th width="20%"></th>
+    <th width="5%"></th>
+    <th width="10%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+    </thead>
+    <thead>
+        <tr>
+            <th width="2%">STT</th>
+            <th width="10%">Số quyết định</th>
+            <th width="15%">Ngày quyết định</th>
+            <th width="20%">Tên dự án</th>
+            <th width="15%">Đơn vị quản lý</th>
+            <th width="20%">Mô tả</th>
+            <th width="5%">Lần điều chỉnh</th>
+            <th width="10%">Thao tác</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @{
+            int index = Model._paging.ItemForm;
+            if (Model.lstData != null)
+            {
+                foreach (var item in Model.lstData)
+                {
+                    <tr>
+                        <td align="center">@index</td>
+                        <td align="left">@item.sSoQuyetDinh</td>
+                        <td align="center">@item.sNgayQuyetDinh</td>
+                        <td align="left">@item.sTenDuAn</td>
+                        <td align="left">@item.sTenDonViQuanLy</td>
+                        <td align="left">@item.sMoTa</td>
+                        <td align="center">@item.iSoLanDieuChinh</td>
+                        <td align="center" class="col-sm-12">
+                            @if (item.bActive == false)
+                            {
+                                <button type="button" class="btn-detail" onclick="ViewItemDetail('@item.Id')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn-detail" onclick="Update('@item.Id',true)"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-detail" onclick="ViewItemDetail('@item.Id')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-edit" onclick="Update('@item.Id')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-delete" onclick="DeleteItem('@item.Id')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                            }
+                        </td>
+                    </tr>
+                    index++;
+                }
+            }
+        }
+    </tbody>
+</table>
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.date')
+            .datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+            });
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+    });
+
+</script>
+<script src="~/Scripts/js/js_vdtWeb.js"></script>

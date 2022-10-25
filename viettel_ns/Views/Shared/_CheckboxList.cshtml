@@ -1,0 +1,61 @@
+﻿@model ChecklistModel
+@{
+
+    var list = Model.List.ToList();
+    var id = Model.Id;
+    var isEmpty = list.Count == 0;
+}
+@if (isEmpty)
+{
+    <div class="ls-box-empty">
+        <span class="text-muted">Không có bản ghi</span>
+    </div>
+}
+else
+{
+    <div class="table-box">
+        <input type="hidden" id="@Model.Id" name="@Model.Id" />
+        <table class="table table-bordered scroll" style="border-right: 0px;">
+            <thead style="background-color: #ccc">
+            <th style="width: 50px; text-align: center;">
+                <div class="checkbox icheck-danger">
+                    <input type="checkbox"
+                           data-group="@id"
+                           onclick="checkListAll(this.checked, $(this).data('group'))" />
+                    <label for="primary"></label>
+                </div>
+            </th>
+            <th></th>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < list.Count; i++)
+                {
+                    var item = list[i];
+                    var color = i % 2 == 0 ? "" : "#f1f1f1";
+
+                    <tr style="background-color: @color">
+                        <td style="text-align:center">
+                            <div class="checkbox">
+                                <input type="checkbox"
+                                       value="@item.Value"
+                                       data-value="@item.Value"
+                                       data-group="@id"
+                                       data-text="@item.Text"
+                                       check-group="@id"
+                                       id="@id-@item.Value"
+                                       onchange="checkItem('@id','@item.Value', this)" />
+                                <label for="@id-@item.Value"></label>
+                            </div>
+                        </td>
+                        <td>
+                            <label id="label-@id-@item.Value" for="@id-@item.Value">@item.Text</label>
+                            @*<span>@item.Text</span>*@
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+
+}

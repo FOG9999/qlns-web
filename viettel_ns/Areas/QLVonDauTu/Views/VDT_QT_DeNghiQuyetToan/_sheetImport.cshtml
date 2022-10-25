@@ -1,0 +1,219 @@
+﻿@model Viettel.Models.QLVonDauTu.DeNghiQuyetToanChiTietModel
+
+@{
+}
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="form-group">
+    <div class="header-create-update">
+        <span>
+            @Html.Raw("Import Đề nghi quyết toán dự án hoàn thành")
+        </span>
+    </div>
+    <div class="form-group row">
+        @*left*@
+        <div class="col-sm-6">
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <label for="txtSoBaoCao" class="">Số báo cáo <span class="require">*</span></label>
+                    <input type="text" required id="txt_SoBaoCao" class="form-control" maxlength="50" />
+                </div>
+                <div class="col-sm-6">
+                    <label for="txtNgayBaoCao" class="">Ngày báo cáo <span class="require">*</span></label>
+                    <div class='input-group date'>
+                        <input type='text' required class="form-control dateFormat" placeholder="dd/MM/yyyy" id="txtNgayBaoCao" autocomplete="off" />
+                        <span class="btn-default input-group-addon">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <label for="txt_DonViQuanLy" class="">Đơn vị <span class="require">*</span></label>
+                    <select class="form-control" style="width:100%" id="txt_DonViQuanLy" name="donViQuanLy"></select>
+                </div>
+                <div class="col-sm-6">
+                    <label for="txt_DuAn" class="">Dự án  <span class="require">*</span></label>
+                    <select class="form-control" style="width: 100%" id="txt_DuAn" name="duAn">
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <label for="iIdDuToanId" class="">Dự toán <span class="require">*</span></label>
+                    <select class="form-control" style="width:100%" id="iIdDuToanId"></select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-12">
+                    <p id="txt_TenDuAn"></p>
+                    <p id="txt_ChuDauTu"></p>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <label for="txtThoiGianKhoiCong" class="">Thời gian khởi công</label>
+                    <div class='input-group date'>
+                        <input type='text' required class="form-control startDate dateFormat" placeholder="dd/MM/yyyy" id="txtThoiGianKhoiCong" autocomplete="off" />
+                        <span class="btn-default input-group-addon">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label for="txtThoiGianHoanThanh" class="">Thời gian hoàn thành</label>
+                    <div class='input-group date'>
+                        <input type='text' required class="form-control endDate dateFormat" placeholder="dd/MM/yyyy" id="txtThoiGianHoanThanh" autocomplete="off" />
+                        <span class="btn-default input-group-addon">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <label for="txtGiaTriQuyetToan" class="">Giá trị quyết toán</label>
+                    <input type="text" required id="txtGiaTriQuyetToan" class="form-control" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                </div>
+                <div class="col-sm-6">
+                    <label for="txtGhiChu" class="">Ghi chú</label>
+                    <input type="text" required id="txtGhiChu" class="form-control" />
+                </div>
+            </div>
+        </div>
+
+        @*right*@
+        <div class="col-sm-6">
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <label for="txtChiPhiThietHai" class="">Chi phí thiệt hại do các nguyên nhân bất thường</label>
+                    <input type='text' class="form-control clearable" id="txtChiPhiThietHai" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                </div>
+                <div class="col-sm-6">
+                    <label for="txtChiPhiKhongTaoNenTaiSan" class="">Chi phí không tạo nên tài sản</label>
+                    <input type='text' class="form-control clearable" id="txtChiPhiKhongTaoNenTaiSan" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                </div>
+            </div>
+            <label>Tài sản dài hạn</label>
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <label for="txtTaiSanDaiHanThuocCDTQuanLy" class="">Thuộc CDT quản lý</label>
+                    <input type='text' class="form-control clearable" id="txtTaiSanDaiHanThuocCDTQuanLy" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                </div>
+                <div class="col-sm-6">
+                    <label for="txtTaiSanDaiHanDvKhacQuanLy" class="">Giao đơn vị khác quản lý</label>
+                    <input type='text' class="form-control clearable" id="txtTaiSanDaiHanDvKhacQuanLy" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                </div>
+            </div>
+            <label>Tài sản ngắn hạn</label>
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <label for="txtTaiSanNganHanThuocCDTQuanLay" class="">Thuộc CDT quản lý</label>
+                    <input type='text' class="form-control clearable" id="txtTaiSanNganHanThuocCDTQuanLay" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                </div>
+                <div class="col-sm-6">
+                    <label for="txtTaiSanNganHanDvKhacQuanLy" class="">Giao đơn vị khác quản lý</label>
+                    <input type='text' class="form-control clearable" id="txtTaiSanNganHanDvKhacQuanLy" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-12">
+                    <table class="table table-bordered" id="tblDanhSachNguonVon">
+                        <thead>
+                            <tr>
+                                <th width="45%">Nguồn vốn</th>
+                                <th width="25%" class="text-right">Giá trị phê duyệt</th>
+                                <th class="text-right">Chủ đầu tư đề nghị quyết toán</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-5">
+            <label for="txt_DonViQuanLy">Chọn file excel</label>
+            <input type="file" id="FileUpload" name="FileUpload" accept=".xlsx, .xls" />
+            <p style="margin-top: 9px; font-size: 14px; font-style: italic">Vui lòng chọn tệp có định dạng xlsx, xls có dung lượng không quá 10MB</p>
+        </div>
+        <div class="col-sm-7">
+            <button class="btn btn-info pull-right" style="margin-top: 28px;width:115px !important;" onclick="refreshImport();"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+            <button class="btn btn-info pull-right" style="margin-right: 10px; margin-top: 28px; width: 150px !important;" onclick="downloadImpExp();"><i class="fa fa-download" aria-hidden="true"></i>Tải file import mẫu</button>
+            <button class="btn btn-primary pull-right" style="margin-right:10px;margin-top: 28px;width:115px !important;" onclick="loadDataExcel();"><i class="fa fa-database" aria-hidden="true"></i>Lấy dữ liệu</button>
+        </div>
+    </div>
+
+    <div class="form-group div_ChiTiet" style="display: none">
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <table class="table table-bordered" id="tblDanhSachChiTiet">
+                    <thead>
+                        <tr>
+                            <th width="3%" rowspan="2">STT</th>
+                            <th width="7%" rowspan="2">Loại</th>
+                            <th width="20%" rowspan="2">Nội dung chi phí</th>
+                            <th width="10%" rowspan="2">Dự toán được duyệt</th>
+                            <th width="10%" rowspan="2">Giá trị quyết toán A-B</th>
+                            <th width="10%" rowspan="2">Kết quả kiểm toán của đơn vị kiểm toán</th>
+                            <th width="10%" rowspan="2">CDT đề nghị quyết toán</th>
+                            <th width="30%" colspan="3">Chênh lệch</th>
+                        </tr>
+                        <tr>
+                            <th width="10%">So với dự toán</th>
+                            <th width="10%">So với quyết toán A-B</th>
+                            <th width="10%">So với kết quả Kiểm toán của đơn vị kiểm toán</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>    
+<div class="">
+    <div id="nhapform">
+        <div id="form2">
+            <div class="button-bar">
+                <div class="text-center">
+                    <button class="btn btn-default" onclick="goBack();" style="margin-right: 10px;"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                    <button class="btn btn-primary btn-save" onclick="SaveData();" id="btnSave"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr id="hr-split" />
+<div id="ajax-div">
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+</div>
+@using (Html.BeginScripts())
+
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#FileUpload").change(function () {
+                if (document.getElementById("FileUpload").files[0].size > 10048576) {
+                    alert("File quá lớn!");
+                    document.getElementById("FileUpload").value = "";
+                };
+            });
+        });
+
+        function goBack() {
+            window.location.href = "/QLVonDauTu/VDT_QT_DeNghiQuyetToan/Index/";
+        }        
+    </script>
+}

@@ -1,0 +1,82 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model IEnumerable<VDTBaoCaoCapPhatViewModel>
+@{
+    ViewBag.Title = "Tổng hợp cấp phát";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+<link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.0.45/css/materialdesignicons.min.css">
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            @*<div class="header-create-update">
+                    <span>
+                        @Html.Raw("Tổng hợp thông tin dự án")
+                    </span>
+                </div>*@
+            <div class="card-search">
+                <div class="form-group header-card">
+                    <label class="label-title-card color-text-red">Thông tin tìm kiếm</label>
+                    <i class="fa fa-chevron-down fa-1x close-card-condition" aria-hidden="true" data-toggle="collapse" data-target="#card-condition" aria-expanded="true" aria-controls="card-condition"></i>
+                    <hr />
+                </div>
+                <div class="card-condition collapse in" id="card-condition">
+                    <div class="form-group">
+                        <div class="row" style="margin: 0px">
+                            <div class="col-sm-3">
+                                <label for="txtDonViQuanLy">Đơn vị quản lý <span class="require">*</span></label>
+                                <select class="form-control" id="idDonVi">
+                                </select>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="iNS_NguonNganSach">Nguồn ngân sách <span class="require">*</span></label>
+                                @Html.DropDownList("iIDNguonNganSach", (SelectList)(ViewBag.ListNguonVonDauTu), new { @class = "form-control", @id = "iIDNguonNganSach" })
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="iNamKeHoach">Năm <span class="require">*</span></label>
+                                <input type="number" class="form-control clearable" id="iNamKeHoach" />
+                            </div>
+                            <div class="col-sm-4 btn-search-group">
+                                <button class="btn btn-info" id="btnGetBaoCao" onclick="GetBaoCao()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
+                                <button class="btn btn-primary" onclick="exportBCKetQuaGiaiNganVonDauTuNguonVonNSQP()"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Excel</button>
+                                @*<button class="btn btn-warning" onclick="location.href='@Url.Action("PrintBCTongHopNguonBTC", "BaoCaoNguonNS", new { iTypeFile = 2})'"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>PDF</button>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<div class="card">
+            <div class="card-body tab-content" id="lstDataView">-->
+        @*@Html.Partial("_partialListKeHoachVonUngDuocDuyet", Model)*@
+        <!--</div>
+        </div>-->
+
+        <div class="card " id="contentReport">
+            <div class="card-body" style="overflow:auto" id="showData">
+                @Html.Partial("_partialTongHopCapPhat")
+            </div>
+        </div>
+    </div>
+</div>
+@* Modal confirm *@
+<div id="divModalConfirm" tabindex="-1">
+
+</div>
+@section Scripts{
+    <script src="~/Scripts/QLVonDauTu/TongHopCapPhat/jsVDT_Tong_Hop_Cap_Phat.js" type="text/javascript"></script>
+    <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+    <script src="~/Scripts/js/dropdowntree.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            LoadThongTinDonVi();
+        })
+    </script>
+
+}
+
+

@@ -1,0 +1,47 @@
+﻿@model Viettel.Models.QLNH.NH_QT_ThongTriQuyetToanViewModel
+@{
+    ViewBag.Title = "Thông tri quyết toán";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body" id="lstDataView">
+                @Html.Partial("_list", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal*@
+<div class="modal fade" id="modalThongTriQuyetToan" role="dialog" aria-labelledby="modalThongTriQuyetToanLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:45%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-left" id="modalThongTriQuyetToanLabel"></h3>
+            </div>
+            <div id="contentmodalThongTriQuyetToan"></div>
+        </div>
+    </div>
+</div>
+
+@*Modal confirm*@
+<div id="divModalConfirm">
+
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/QLNH/ThongTriQuyetToan/jsNH_ThongTriQuyetToan.js"></script>
+    <script>
+        var _paging = {};
+        $(document).ready(function () {
+            _paging.CurrentPage = @Model._paging.CurrentPage;
+            _paging.ItemsPerPage = @Model._paging.ItemsPerPage;
+        });
+    </script>
+}

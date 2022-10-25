@@ -1,0 +1,225 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model KeHoachVonNamDeXuatViewModel
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+<div class="tooltip-header-search">
+    <div class="col-sm-6" style="display:flex;padding-left:0px">
+        <label class="control-label">Danh sách kế hoạch vốn năm đề xuất (@Model._paging.TotalItems)</label>
+    </div>
+</div>
+<div class="row mt-10 mb-10">
+    <div class="col-sm-3 col-md-3 col-lg-3">
+        <input id='dxChungTu' type="radio" value="1" name="groupChungTuTongHop" @Model.chungTuTabIndex onclick="ChangeChungTu()">
+        <label for="dxChungTu" style="margin-right: 1rem;">Chứng từ</label>
+        <input id="dxChungTuTongHop" type="radio" value="2" name="groupChungTuTongHop" @Model.chungTuTongHopTabIndex onclick="ChangeChungTu()">
+        <label for="dxChungTuTongHop">Chứng từ tổng hợp</label>
+    </div>
+    <div class="col-sm-9 col-md-9 col-lg-9">
+        <button class="btn btn-warning pull-right ml-10 min-width-270" id="btnViewBaoCaoDieuChinh"><i class="fa fa-print" aria-hidden="true"></i>Báo cáo (Điều chỉnh)</button>
+        @*<button class="btn btn-warning pull-right ml-10 min-width-270" onclick="ViewInBaoCao('3');"><i class="fa fa-print" aria-hidden="true"></i>Báo cáo (Điều chỉnh Ngân sách khác)</button>
+            <button class="btn btn-info pull-right min-width-250" onclick="ViewInBaoCao('2');"><i class="fa fa-print" aria-hidden="true"></i>Báo cáo (Điều chỉnh NSQP)</button>*@
+        <button class="btn btn-info pull-right mr-10" onclick="ViewInBaoCao('1');"><i class="fa fa-print" aria-hidden="true"></i>Báo cáo</button>
+        <button class="btn btn-default pull-right mr-10" style="color: #111111 !important" onclick="ImportKHVNDX();"><i class="fa fa-upload" aria-hidden="true"></i>Import</button>
+        <button class="btn btn-info pull-right mr-10" onclick="OpenModal(null, 'false', 'true', 'true','false');"><i class="fa fa-save" aria-hidden="true"></i>Tổng hợp</button>
+        <button class="btn btn-primary pull-right mr-10" onclick="OpenModal(null, 'false', 'false', 'false', 'false')"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+        <button class="btn btn-info pull-right mr-10" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+    </div>
+</div>
+<table class="table table-bordered" id="tblListKHVonNamDeXuat">
+    <thead class="header-search">
+    <th width="1%"></th>
+    <th width="2%"></th>
+    <th width="10%"><input type="text" class="form-control gr_search" id="txtSoQuyetdinh" /></th>
+
+    <th width="16%">
+        <div style="display: flex">
+            <div class='input-group date'>
+                <input type="text" id="dNgayQuyetDinhFrom" autocomplete="off" class="form-control gr_search dateFormat startDate" placeholder="dd/MM/yyyy" />
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+            <span style="margin: 8px 5px 0px 5px;">-</span>
+            <div class='input-group date'>
+                <input type="text" id="dNgayQuyetDinhTo" autocomplete="off" class="form-control gr_search dateFormat startDate" placeholder="dd/MM/yyyy" />
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+    </th>
+    <th width="5%"><input type="text" maxlength="4" class="form-control gr_search yearFormat" id="txtNamKeHoach" autocomplete="off" /></th>
+    <th width="10%">@Html.DropDownList("iID_NguonVonID", (SelectList)(ViewBag.ListNguonVon), "--Tất cả--", new { @class = "form-control", @id = "iID_NguonVonID" })</th>
+    <th width="10%">@Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), "--Tất cả--", new { @class = "form-control", @id = "iID_DonViQuanLyID" })</th>
+    <th width="8%"></th>
+    <th width="8%"></th>
+    <th width="10%"></th>
+    <th width="6%"></th>
+    <th width="6%"></th>
+    <th width="18%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+    </thead>
+    <thead>
+    <th width="1%"></th>
+    <th width="2%">STT</th>
+    <th width="10%">Số quyết định</th>
+
+    <th width="16%">Ngày lập</th>
+    <th width="5%">Năm kế hoạch</th>
+    <th width="10%">Nguồn vốn</th>
+    <th width="10%">Đơn vị</th>
+    <th width="8%">Thu hồi vốn ứng trước</th>
+    <th width="8%">Thanh toán</th>
+    <th width="10%">Điều chỉnh từ SKH</th>
+    <th width="6%">Lần điều chỉnh</th>
+    <th width="6%">Trạng thái</th>
+    <th width="18%"></th>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (var item in Model.Items)
+            {
+                index++;
+                <tr style="cursor: pointer; @(!string.IsNullOrEmpty(item.sTongHop) ? "font-weight: bold;" : string.Empty)">
+                    @if (item.bActive == true)
+                    {
+                        <td>
+                            <input type="checkbox" class="@item.iID_KeHoachVonNamDeXuatID" onclick="SetState('@item.iID_KeHoachVonNamDeXuatID');" />
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <input type="checkbox" disabled="disabled" class="@item.iID_KeHoachVonNamDeXuatID" onclick="SetState('@item.iID_KeHoachVonNamDeXuatID');" />
+                        </td>
+                    }
+
+                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@(pageIndex + index)</td>
+
+                    <td align="left" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@item.sSoQuyetDinh</td>
+
+                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@item.dNgayQuyetDinh.ToString("dd/MM/yyyy")</td>
+
+                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@item.iNamKeHoach</td>
+
+                    <td align="left" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@item.sTenNguonVon</td>
+
+                    <td align="left" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@item.sTenDonVi</td>
+
+                    <td align="right" class="sotien" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@(item.fThuHoiVonUngTruoc.HasValue ? item.fThuHoiVonUngTruoc.Value.ToString("###,###") : "0")</td>
+
+                    <td align="right" class="sotien" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@(item.fThanhToan.HasValue ? item.fThanhToan.Value.ToString("###,###") : "0")</td>
+
+                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@item.sDieuChinhTuSKH</td>
+
+                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">(@item.iSoLanDieuDieuChinh)</td>
+
+                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">
+                        @if (item.iKhoa.HasValue && item.iKhoa.Value)
+                        {
+                            <span style="font-size: 2rem !important;"><i class="fa fa-lock"></i></span>
+                        }
+                    </td>
+
+                    @*<td align="left" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@item.sTrangThaiKetNoi</td>*@
+
+                    <td align="center" style="vertical-align: middle !important" class="col-sm-12">
+
+                        @{
+                            if (item.bActive == false || (item.iKhoa.HasValue && item.iKhoa.Value))
+                            {
+                                <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.iID_KeHoachVonNamDeXuatID')" data-toggle="modal" data-target="#modalKHVonNamDeXuat"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-file" onclick="OpenExport('@item.iID_KeHoachVonNamDeXuatID')"><i class="fa fa-trash-o fa-file" aria-hidden="true"></i></button>
+
+                                if (item.iKhoa.HasValue && item.iKhoa.Value)
+                                {
+                                    <button type="button" class="btn-edit" onclick="LockItem('@item.iID_KeHoachVonNamDeXuatID', '@item.sSoQuyetDinh', '@item.iKhoa')"><i class="fa fa-unlock fa-lg" aria-hidden="true"></i></button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn-edit" onclick="LockItem('@item.iID_KeHoachVonNamDeXuatID', '@item.sSoQuyetDinh', '@item.iKhoa')"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></button>
+                                }
+                            }
+                            else
+                            {
+                                if (item.sTongHop == null || item.sTongHop == "")
+                                {
+                                    <button type="button" class="btn-detail" onclick="OpenModal('@item.iID_KeHoachVonNamDeXuatID', 'true', 'false', 'false','false')"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>
+                                }
+
+                                <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.iID_KeHoachVonNamDeXuatID')" data-toggle="modal" data-target="#modalKHVonNamDeXuat"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-edit" onclick="OpenModal('@item.iID_KeHoachVonNamDeXuatID', 'false', 'false', 'false', 'true')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-delete" onclick="DeleteItem('@item.iID_KeHoachVonNamDeXuatID', '@item.sSoQuyetDinh')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-file" onclick="OpenExport('@item.iID_KeHoachVonNamDeXuatID')"><i class="fa fa-trash-o fa-file" aria-hidden="true"></i></button>
+                                if (item.iKhoa.HasValue && item.iKhoa.Value)
+                                {
+                                    <button type="button" class="btn-edit" onclick="LockItem('@item.iID_KeHoachVonNamDeXuatID', '@item.sSoQuyetDinh', '@item.iKhoa')"><i class="fa fa-unlock fa-lg" aria-hidden="true"></i></button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn-edit" onclick="LockItem('@item.iID_KeHoachVonNamDeXuatID', '@item.sSoQuyetDinh', '@item.iKhoa')"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></button>
+                                }
+                            }
+
+
+                        }
+
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var isShowing = false;
+        $('.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: 'vi',
+            todayHighlight: true,
+            format: "dd/mm/yyyy"
+        }).on('hide', () => {
+            isShowing = false;
+        }).on('show', () => {
+            isShowing = true;
+        });
+
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+
+        $("#tblListKHVonNamDeXuat .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                if (e.which == 13) {//Enter key pressed
+                    ChangePage();
+                }
+            });
+        });
+
+        $("#btnViewBaoCaoDieuChinh").click(function () {
+            /*Mặc định hiển thị view báo cáo ngân sách quốc phòng*/
+            ViewInBaoCao('2');
+        })
+        /*formatMoney();*/
+
+        var data = {
+            isChecked: false,
+            iID_KeHoachVonNamDeXuatID: null
+        };
+
+        sessionStorage.setItem('dataVonNamDeXuatChecked', JSON.stringify(data));      
+    });
+
+</script>
+<script type="text/javascript" src="/Scripts/js/js_app.js"></script>
+<script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>

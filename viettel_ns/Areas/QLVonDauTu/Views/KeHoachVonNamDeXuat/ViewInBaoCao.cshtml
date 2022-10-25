@@ -1,0 +1,102 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model KHVNDXPrintDataExportModel
+@{
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+<link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.0.45/css/materialdesignicons.min.css">
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    @if (@ViewBag.isStatus != "1")
+    {
+        <div div class="panel-list-item col-sm-6 dropViewBaoCaoDieuChinh" style="display: flex; padding-right: 0px; float: right; width: 385px">
+            <div>
+                <label style="width:100px">Mẫu báo cáo</label>
+            </div>
+            <div>
+                <select class="form-control" id="iLoaiBaoCao" onchange="ChonLoaiBaoCao()">
+                    <option value="2" selected="selected">BM03/TT268 - Ngân sách quốc phòng</option>
+                    <option value="3">BM04/TT268 - Ngân sách khác</option>
+                </select>
+            </div>
+
+        </div>
+    }
+
+
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="header-create-update">
+                    <span>
+                        @Html.Raw(ViewBag.Title)
+                    </span>
+                    <input type="hidden" value="@ViewBag.isStatus" id="txtStatusReport" />
+                </div>
+                <ul class="nav nav-tabs" style="margin-top: 10px;">
+                    <li class="active"><a data-toggle="tab" href="#bcTheoDonVi">Báo cáo theo đơn vị</a></li>
+                    <li><a data-toggle="tab" href="#bcTongHop">Báo cáo tổng hợp</a></li>
+                </ul>
+            </div>
+
+            <div class="card-body tab-content" style="padding-top: 0px !important;">
+                <div id="bcTheoDonVi" class="tab-pane fade in active">
+                    @Html.Partial("_partialPrintBCDV", Model)
+                </div>
+                <div id="bcTongHop" class="tab-pane fade in ">
+                    @Html.Partial("_partialPrintBCTH", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group text-center panel-list-item col-sm-12">
+        <button class="btn btn-back" onclick="backViewKHVNDX()"><i class="fa fa-arrow-left" aria-hidden="true"></i><span>Quay lại</span></button>
+        <button class="btn btn-warning" onclick="printBaoCao();"><i class="fa fa-file-pdf-o" aria-hidden="true"></i><span>In báo cáo</span></button>
+        @*<a class="btn-mvc" id="btnChuKy"><i class="fa fa-file-excel"></i>Sửa chữ ký</a>*@
+        <button class="btn btn-success" id="btnChuKy"><i class="fa fa-edit" aria-hidden="true"></i><span>Sửa chữ ký</span></button>
+
+
+    </div>
+</div>
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+@Html.Partial("_ui_chuky")
+
+@section Scripts{
+    <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsBaoCao_KHVNDX.js"></script>
+    <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+
+    <script>
+        $(document).ready(function () {
+            var isStatus = @ViewBag.isStatus;
+            $("#iLoaiBaoCao").val(isStatus);
+        });
+
+        function printBaoCao() {
+            var className = $('#bcTheoDonVi').attr('class');
+            var arrClass = className.split(" ");
+            var active = (arrClass.indexOf("active") > -1);
+            console.log(active);
+            if (active) {
+                printBCDV();
+            } else {
+                printBCTH();
+            }
+        }
+        function ChonLoaiBaoCao() {
+            var iLoaiBaoCao = $("#iLoaiBaoCao").val();
+            window.location.href = "/QLVonDauTu/KeHoachVonNamDeXuat/ViewInBaoCao/?isStatus=" + iLoaiBaoCao;
+
+
+        }
+
+    </script>
+}
+
+

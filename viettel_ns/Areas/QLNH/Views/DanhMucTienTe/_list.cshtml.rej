@@ -1,0 +1,21 @@
+diff a/sourcecode/viettel_ns/Areas/QLNH/Views/DanhMucTienTe/_list.cshtml b/sourcecode/viettel_ns/Areas/QLNH/Views/DanhMucTienTe/_list.cshtml	(rejected hunks)
+@@ -8,7 +8,7 @@
+     <div class="col-sm-8" style="display:flex;padding-left:0px;">
+         <label class="control-label">Danh mục nhà thầu (@Model._paging.TotalItems)</label>
+     </div>
+-    <button class="btn btn-primary pull-right" style="margin-right:10px;" onclick="OpenModal()" data-toggle="modal" data-target="#modalChuDauTu"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
++    <button class="btn btn-primary pull-right" style="margin-right:10px;" onclick="OpenModal()" data-toggle="modal" data-target="#modalTienTe"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+     <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+ </div>
+ <table class="table table-bordered" id="tblListDonViTienTe">
+@@ -44,8 +44,8 @@
+ 
+ 
+                     <td align="center" style="vertical-align: middle !important" class="col-sm-12">
+-                        <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.ID')" data-toggle="modal" data-target="#modalChuDauTu"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+-                        <button type="button" class="btn-edit" onclick="OpenModal('@item.ID')" data-toggle="modal" data-target="#modalChuDauTu"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
++                        <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.ID')" data-toggle="modal" data-target="#modalTienTe"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
++                        <button type="button" class="btn-edit" onclick="OpenModal('@item.ID')" data-toggle="modal" data-target="#modalTienTe"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                         <button type="button" class="btn-delete" onclick="DeleteItem('@item.ID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                     </td>
+                 </tr>

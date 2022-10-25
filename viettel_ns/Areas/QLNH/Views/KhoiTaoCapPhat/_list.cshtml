@@ -1,0 +1,150 @@
+﻿@using Viettel.Models.QLNH.KhoiTao
+@using Viettel.Domain.DomainModel
+@model KhoiTao_KhoiTaoCapPhatModel
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+<div id="QuyetToanNienDo">
+    <div class="tooltip-header-search">
+        <div class="col-sm-4 col-md-4 col-lg-4" style="display:flex;padding-left:0px;">
+            <label class="control-label">Khởi tạo cấp phát (@Model._paging.TotalItems)</label>
+        </div>
+    </div>
+</div>
+@*<div id="QuyetToanNienDoTongHop" style="display:none">
+        <div class="tooltip-header-search">
+            <div class="col-sm-4 col-md-4 col-lg-4" style="display:flex;padding-left:0px;">
+                <label class="control-label">Quyết toán niên độ tổng hợp (<span id="txtSobannghi"></span>)</label>
+            </div>
+        </div>
+    </div>*@
+<div class="tooltip-header-search">
+    @*<div class="col-sm-8" style="display:flex;padding-left:0px;">
+            <input id='dxChungTu' type="radio" value="0" name="groupVoucher" onclick="ChangeVoucher()" checked="checked">
+            <label for="dxChungTu" style="margin-right: 1rem; margin-left: 1rem;">Quyết toán niên độ</label>
+            <input id="dxChungTuTongHop" type="radio" value="1" name="groupVoucher" onclick="ChangeVoucher()">
+            <label for="dxChungTuTongHop" style="margin-right: 1rem; margin-left: 1rem;">Quyết toán niên độ tổng hợp</label>
+        </div>*@
+    <div style="display:flex ;justify-content:end ;padding-bottom:1rem">
+        @*<button class="btn btn-info pull-right" style="margin-right:10px;" onclick="InBaoCaoModal()">In báo cáo</button>>*@
+        @*<button class="btn btn-info pull-right" style="margin-right:10px;">
+                Tổng hợp
+            </button>*@
+        <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+        <button class="btn btn-primary pull-right" style="margin-right:10px;" onclick="OpenModal()" data-toggle="modal" data-target="#modalKTCapPhat"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    </div>
+</div>
+<table class="table table-bordered tr-hover" id="tbListKhoiTaoCapPhat">
+    <thead>
+        <tr class="header-search">
+            <th width="5%"></th>
+            <th width="15%"></th>
+            <th width="15%">
+                <select id="slbNamKhoiTaoFillter" name="slbNamKhoiTaoFillter" class="form-control">
+                    @if (ViewBag.ListNamKhoiTao != null)
+                    {
+                        foreach (var namKhoiTao in (List<Dropdown_SelectValue>)ViewBag.ListNamKhoiTao)
+                        {
+                            <option value="@namKhoiTao.Value">@Html.Raw(Html.Encode(namKhoiTao.Label))</option>
+                        }
+                    }
+                </select>
+            </th>
+            <th width="20%">
+                <div class='input-group date'>
+                    <input type="text" id="txtNgayKhoiTaoFillter" autocomplete="off" class="form-control gr_search" placeholder="dd/MM/yyyy" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </th>
+            <th width="20%">
+                <select id="iDonViFillter" name="iDonVi" class="form-control">
+                    @if (ViewBag.ListDonVi != null)
+                    {
+                        foreach (var donvi in (List<NS_DonVi>)ViewBag.ListDonVi)
+                        {
+                            <option value="@donvi.iID_Ma" data-madonvi="@Html.Raw(Html.Encode(donvi.iID_MaDonVi))">@Html.Raw(Html.Encode(donvi.sMoTa))</option>
+                        }
+                    }
+                </select>
+            </th>
+            <th width="25%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+        </tr>
+        <tr>
+            <th width="5%"></th>
+            <th width="15%">STT</th>
+            <th width="15%">Năm khởi tạo</th>
+            <th width="20%">Ngàykhởi tạo</th>
+            <th width="20%">Đơn vị</th>
+            <th width="25%">Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (var item in Model.Items)
+            {
+                index++;
+                <tr style="cursor: pointer" class="row-select">
+                    <td class="text-center"><input type='checkbox' name='cbQuyetToan' id="cbQuyetToan" data-id="@item.ID" data-islock="@item.bIsKhoa"></td>
+                    <td class="text-center">@(pageIndex + index)</td>
+                    <td class="text-center" data-getname="iNamKhoiTao" data-getvalue="@Html.Raw(Html.Encode(item.iNamKhoiTao))">@Html.Raw(Html.Encode(item.iNamKhoiTao))</td>
+                    <td class="text-center">@(item.dNgayKhoiTao.HasValue ? item.dNgayKhoiTao.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                    <td class="text-left">@Html.Raw(Html.Encode(item.sTenDonVi))</td>
+                    <td class="text-center" data-gettonghop="iID_TongHopID" data-gettonghopvalue="@item.iID_TongHopID" hidden></td>
+                    <td class="text-center" style="vertical-align: middle !important">
+                        @if (item.bIsKhoa)
+                        {
+                            <button type="button" title="Chi tiết" class="btn-detail" onclick="OpenModalDetail('@item.ID')" data-toggle="modal" data-target="#modalKTCapPhat"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                            @*<button type="button" class="btn-edit"><i class="fa fa-unlock fa-lg" aria-hidden="true"></i></button>*@
+                        }
+                        else
+                        {
+                            @*<button type="button" class="btn-edit"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></button>*@
+                            <button type="button" title="Chi tiết" class="btn-detail" onclick="OpenModalDetail('@item.ID')" data-toggle="modal" data-target="#modalKTCapPhat"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" title="Sửa" class="btn-edit" onclick="OpenModal('@item.ID')" data-toggle="modal" data-target="#modalKTCapPhat"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" title="Xóa" class="btn-delete" onclick="Xoa('@item.ID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@Html.BuildPagingButtons(Model._paging)
+<script src="~/Scripts/jsNumber.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#slbNamKhoiTaoFillter").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#iDonViFillter").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+
+        $('.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: 'vi',
+            todayHighlight: true,
+            format: "dd/mm/yyyy"
+        });
+
+        $("#txtNgayKhoiTaoFillter").keydown(function (event) {
+            ValidateInputKeydown(event, this, 3);
+        });
+
+        $("#tbListKhoiTaoCapPhat .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                if (e.which == 13) {
+                    ChangePage();
+                }
+            });
+        });
+    });
+
+</script>
+
+

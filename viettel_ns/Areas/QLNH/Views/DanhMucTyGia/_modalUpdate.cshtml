@@ -1,0 +1,89 @@
+﻿@using Viettel.Domain.DomainModel
+@using Viettel.Models.QLNH
+@using System.Globalization;
+@model NH_DM_TiGia
+
+<div class="modal-body">
+    <input type="hidden" id="iID_TyGiaModal" value="@Model.ID">
+    <input type="hidden" id="hidTienTeGocID" value="@Model.iID_TienTeGocID">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtsMaTyGia">Mã tỉ giá</label>
+                @Helpers.Required()
+                <input type="text" id="txtsMaTyGia" class="form-control" value="@Html.Raw(Html.Encode(Model.sMaTiGia))" maxlength="50" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtsTenTyGia">Tên tỉ giá</label>
+                @Helpers.Required()
+                <input type="text" id="txtsTenTyGia" class="form-control" value="@Html.Raw(Html.Encode(Model.sTenTiGia))" maxlength="50" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <label for="txtsMotaTyGia">Mô tả</label>
+                <textarea id="txtsMotaTyGia" name="txtsMotaTyGia" class="form-control" autocomplete="off">@Html.Raw(Html.Encode(Model.sMoTaTiGia))</textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtNgayLap">Ngày lập</label>
+                <div class='input-group date'>
+                    <input type="text" id="txtNgayLap" autocomplete="off"
+                           class="form-control gr_search" placeholder="dd/MM/yyyy"
+                           value="@(Model.dThangLapTiGia.HasValue ? Model.dThangLapTiGia.Value.ToString("dd/MM/yyyy") : string.Empty)" />
+                    <span class="btn-default input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtsMaTienTeGoc">Mã tiền tệ gốc</label>
+                <select id="slbMaTienTeGoc" name="slbMaTienTeGoc" class="form-control" @(Model.ID != Guid.Empty ? "disabled" : "") onchange="ChangeMaTienTeGocSelect();">
+                    @if (ViewBag.ListMaTienTe != null)
+                    {
+                        foreach (var maTienTeObj in (List<NH_DM_LoaiTienTe>)ViewBag.ListMaTienTe)
+                        {
+                            <option value="@maTienTeObj.ID" @(Model.iID_TienTeGocID.HasValue && Model.iID_TienTeGocID.Value == maTienTeObj.ID ? "selected" : string.Empty) data-matiente="@Html.Raw(Html.Encode(maTienTeObj.sMaTienTe))">@Html.Raw(Html.Encode(maTienTeObj.sMaTienTe))</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-12"><label>THÔNG TIN TỈ GIÁ CHI TIẾT</label></div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <table class="table table-bordered tr-hover" id="tblTiGiaChiTiet">
+                    <thead>
+                        <tr>
+                            <th class="col-sm-4">Mã tiền tệ gốc</th>
+                            <th class="col-sm-4">Tỉ giá</th>
+                            <th class="col-sm-4">Mã tiền tệ quy đổi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.ListTiGiaChiTietTable != null)
+                        {
+                            foreach (var item in (List<NH_DM_TiGiaChiTiet_TableModel>)ViewBag.ListTiGiaChiTietTable)
+                            {
+                                <tr data-idtgct="@item.IdTiGiaChiTiet" data-idtiente="@item.IdTienTe">
+                                    <td>@Html.Raw(Html.Encode(item.sMaTienTeGoc))</td>
+                                    <td>
+                                        <input type="text" class="form-control colGiaTriTiGia" value="@Html.Raw(Html.Encode(item.sFTiGia))" autocomplete="off"/>
+                                    </td>
+                                    <td class='colTienTeQuyDoi'>@Html.Raw(Html.Encode(item.sMaTienTeQuyDoi))</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>

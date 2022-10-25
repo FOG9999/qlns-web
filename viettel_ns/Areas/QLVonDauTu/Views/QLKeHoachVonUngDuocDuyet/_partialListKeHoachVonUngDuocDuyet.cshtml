@@ -1,0 +1,52 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTKeHoachVonUngPagingModel
+@{
+    int index = Model._paging.ItemForm;
+    foreach (var item in Model.lstData)
+    {
+        <tr>
+            <td align="center">@index</td>
+
+            <td align="left">@item.sSoQuyetDinh</td>
+
+            <td align="center">@(item.dNgayQuyetDinh.HasValue ? item.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy") : "")</td>
+
+            <td align="center">@item.iNamKeHoach</td>
+
+            <td align="left">@item.sNguonVon</td>
+
+            <td align="left">@item.sTenDonViQL</td>
+
+            <td align="right">
+                <span class="fGiaTriUng">@item.fGiaTriUng</span>
+            </td>
+
+            <td align="center" class="col-sm-12">
+                <button type="button" class="btn-detail"><i class="fa fa-eye fa-lg" aria-hidden="true" onclick="ViewItemDetail('@item.iID_KeHoachUngID')"></i></button>
+                <button class="btn-edit"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true" onclick="GetItemKHVU('@item.iID_KeHoachUngID')"></i></button>
+                <button class="btn-delete"><i class="fa fa-trash-o fa-lg" aria-hidden="true" onclick="DeleteItemKHVU('@item.iID_KeHoachUngID')"></i></button>
+                <button type="button" class="btn-file" onclick="ExportKHVUDuocDuyet('@item.iID_KeHoachUngID')"><i class="fa fa-trash-o fa-file" aria-hidden="true"></i></button>
+            </td>
+        </tr>
+        index++;
+    }
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.date')
+            .datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+            });
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+    });
+</script> 

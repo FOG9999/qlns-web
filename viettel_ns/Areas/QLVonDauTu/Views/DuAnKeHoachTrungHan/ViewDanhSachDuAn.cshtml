@@ -1,0 +1,48 @@
+﻿@using VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
+@model DuAnKH5NDuocDuyetGridViewModel
+@{
+    ViewBag.Title = "Chọn dự án";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+<link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.0.45/css/materialdesignicons.min.css">
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="header-create-update">
+                    <span>
+                        @Html.Raw("Chọn dự án kế hoạch trung hạn được duyệt")
+                    </span>
+                </div>
+                <ul class="nav nav-tabs" style="margin-top: 10px;">
+                    <li class="active"><a data-toggle="tab" href="#khthdx">Kế hoạch trung hạn đề xuất</a></li>
+                    <li><a data-toggle="tab" href="#danhmucduan" onclick="loadFrame();">Danh mục dự án</a></li>
+                </ul>
+            </div>
+
+            <div class="card-body tab-content" style="padding-top: 0px !important;">
+                <div id="khthdx" class="tab-pane fade in active">
+                    @Html.Partial("_sheetDuAnKH5NDX", Model.DuAnKH5NDX)
+                </div>
+                <div id="danhmucduan" class="tab-pane fade in ">
+                    @Html.Partial("_sheetDMDuAn", Model.DanhMucDuAn)
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<div class="form-group text-center">
+        <button class="btn btn-back" onclick="CancelSaveData()"><i class="fa fa-arrow-left" aria-hidden="true"></i><span>Quay lại</span></button>
+    </div>*@
+</div>
+
+@section Scripts{
+    @*<script src="~/Scripts/QLVonDauTu/ThongTinDuAn/jsVDT_DanhSach_QLDuAn.js" type="text/javascript"></script>*@
+    <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+}
+
+

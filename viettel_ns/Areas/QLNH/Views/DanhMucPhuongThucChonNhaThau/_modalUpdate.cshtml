@@ -1,0 +1,38 @@
+﻿@using Viettel.Domain.DomainModel
+@using Viettel.Models.QLNH
+@using System.Globalization;
+@model NH_DM_PhuongThucChonNhaThau
+
+<div class="modal-body">
+    <input type="hidden" id="iID_PhuongThucModal" value="@Model.ID">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtsMaPhuongThuc">Mã phương thức chọn nhà thầu</label>
+                @Helpers.Required()
+                <input type="text" id="txtsMaPhuongThuc" class="form-control" value="@Html.Raw(Html.Encode(Model.sMaPhuongThuc))" maxlength="50" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtsTenVietTat">Tên viết tắt</label>
+                <input type="text" id="txtsTenVietTat" class="form-control" value="@Html.Raw(Html.Encode(Model.sTenVietTat))" maxlength="50" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtsTenPhuongThuc">Tên phương thức chọn nhà thầu</label>
+                @Helpers.Required()
+                <input type="text" id="txtsTenPhuongThuc" class="form-control" value="@Html.Raw(Html.Encode(Model.sTenPhuongThuc))" maxlength="300" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtsMota">Mô tả</label>
+                <textarea id="txtsMoTa" name="txtsMoTa" class="form-control" maxlength="255" autocomplete="off">@Html.Raw(Html.Encode(Model.sMoTa))</textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>

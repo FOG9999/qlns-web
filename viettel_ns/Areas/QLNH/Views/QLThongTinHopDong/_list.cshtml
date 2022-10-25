@@ -1,0 +1,151 @@
+﻿@using Viettel.Models.QLNH
+@using Viettel.Domain.DomainModel
+@using DomainModel
+@using System.Globalization;
+@model NHDAThongTinHopDongViewModel
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Thông tin hợp đồng (@Model._paging.TotalItems)</label>
+    </div>
+
+    <button class="btn btn-primary pull-right" style="margin-right:10px;" onclick="OpenContractInfo();"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage();"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+    <button class="btn btn-default pull-right mr-10" style="color: #111111 !important" onclick="ImportThongTinHopDong();" data-toggle="modal" data-target="#modalTTHopDong"><i class="fa fa-upload" aria-hidden="true"></i>Import</button>
+</div>
+<div style="overflow:auto">
+    <table class="table table-bordered tr-hover" id="tblHopDongList">
+        <thead class="header-search">
+            <tr>
+                <th width="2%"></th>
+                <th width="7%"><input type="text" class="form-control gr_search" id="txtTenHopDongFilter" autocomplete="off" placeholder="Tên hợp đồng" maxlength="300" /></th>
+                <th width="7%">
+                    <select id="iDonVi" name="iDonVi" class="form-control" onchange="ChangeSelectDonVi();">
+                        @if (ViewBag.ListDonVi != null)
+                        {
+                            foreach (var donvi in (List<NS_DonVi>)ViewBag.ListDonVi)
+                            {
+                                <option value="@donvi.iID_Ma" data-madonvi="@Html.Raw(Html.Encode(donvi.iID_MaDonVi))">@Html.Raw(Html.Encode(donvi.sMoTa))</option>
+                            }
+                        }
+                    </select>
+                </th>
+                <th width="7%">@Html.DropDownList("iChuongTrinh", (SelectList)ViewBag.ListChuongTrinh, new { @class = "form-control", @id = "iChuongTrinh", @onchange = "ChangeSelectChuongTrinh();" })</th>
+                <th width="7%">@Html.DropDownList("iDuAn", (SelectList)ViewBag.ListDuAn, new { @class = "form-control", @id = "iDuAn" })</th>
+                <th width="7%"><input type="text" class="form-control gr_search" id="txtSoHopDongFilter" name="txtSoHopDongFilter" autocomplete="off" placeholder="Số hợp đồng" maxlength="100" /></th>
+                <th width="7%">
+                    <div class='input-group date'>
+                        <input type='text' class="form-control gr_search" id="txtNgayKyHopDongFilter" autocomplete="off" placeholder="dd/MM/yyyy" />
+                        <span class="btn-default input-group-addon">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                </th>
+                <th width="6%">@Html.DropDownList("iLoaiHopDong", (SelectList)(ViewBag.ListLoaiHopDong), new { @class = "form-control", @id = "iLoaiHopDong" })</th>
+                <th width="40%" colspan="6"></th>
+                <th width="10%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th width="2%" rowspan="2">STT</th>
+                <th width="7%" rowspan="2">Tên hợp đồng</th>
+                <th width="7%" rowspan="2">Đơn vị</th>
+                <th width="7%" rowspan="2">Chương trình</th>
+                <th width="7%" rowspan="2">Dự án</th>
+                <th width="7%" rowspan="2">Số hợp đồng</th>
+                <th width="7%" rowspan="2">Ngày ký hợp đồng</th>
+                <th width="6%" rowspan="2">Loại hợp đồng</th>
+                <th width="28%" colspan="4">Giá trị hợp đồng</th>
+                <th width="6%" rowspan="2">Lần điều chỉnh</th>
+                <th width="6%" rowspan="2">Điều chỉnh từ</th>
+                <th width="10%" rowspan="2">Thao tác</th>
+            </tr>
+            <tr>
+                <th width="7%">USD</th>
+                <th width="7%">VND</th>
+                <th width="7%">EUR</th>
+                <th width="7%">Ngoại tệ khác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int index = 0;
+                foreach (NH_DA_HopDongModel item in Model.Items)
+                {
+                    index++;
+                    <tr>
+                        <td align="center">@(pageIndex + index)</td>
+                        <td align="left">@Html.Raw(Html.Encode(item.sTenHopDong))</td>
+                        <td align="left">@Html.Raw(Html.Encode(item.sTenDonVi))</td>
+                        <td align="left">@Html.Raw(Html.Encode(item.sTenChuongTrinh))</td>
+                        <td align="left">@Html.Raw(Html.Encode(item.sTenDuAn))</td>
+                        <td align="center">@Html.Raw(Html.Encode(item.sSoHopDong))</td>
+                        <td align="center">@(item.dNgayHopDong.HasValue ? item.dNgayHopDong.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                        <td align="left">@Html.Raw(Html.Encode(item.sTenLoaiHopDong))</td>
+                        <td align="right">@(item.fGiaTriUSD.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td align="right">@(item.fGiaTriVND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fGiaTriVND.Value).ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                        <td align="right">@(item.fGiaTriEUR.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriEUR.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td align="right">@(item.fGiaTriNgoaiTeKhac.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriNgoaiTeKhac.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td align="center">@item.sSoLanDieuChinh</td>
+                        @if (item.iLanDieuChinh == 0)
+                        {
+                            <td align="center">@Html.Raw(Html.Encode(item.sDieuChinhTu))</td>
+                        }
+                        else
+                        {
+                            <td align="center" class="text-underline text-primary" role="button" onclick="OpenContractInfoDetail('@item.iID_ParentAdjustID')">@Html.Raw(Html.Encode(item.sDieuChinhTu))</td>
+                        }
+                        <td align="center" style="padding:0;">
+                            @if (item.bIsActive)
+                            {
+                                <button type="button" class="btn-adjust" title="Điều chỉnh" onclick="OpenContractInfo('@item.ID', true)"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>
+                            }
+                            <button type="button" class="btn-detail" title="Xem chi tiết" onclick="OpenContractInfoDetail('@item.ID')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                            @if (item.bIsActive)
+                            {
+                                <button type="button" class="btn-edit" title="Sửa" onclick="OpenContractInfo('@item.ID', false)"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-delete" title="Xóa" onclick="Xoa('@item.ID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#iDonVi").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#iChuongTrinh").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#iDuAn").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#iLoaiHopDong").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+
+        $('.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: 'vi',
+            todayHighlight: true,
+            dateFormat: "dd/mm/yyyy"
+        });
+        $("#txtNgayKyHopDongFilter").keydown(function (event) {
+            ValidateInputKeydown(event, this, 3);
+        });
+
+        $("#tblHopDongList .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                //Enter key pressed
+                if (e.which == 13) {
+                    ChangePage();
+                }
+            });
+        });
+    });
+</script>

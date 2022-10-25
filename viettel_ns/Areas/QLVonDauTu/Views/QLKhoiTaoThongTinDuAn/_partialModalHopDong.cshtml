@@ -1,0 +1,47 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model HopDongKhoiTaoThongTinDuAnViewModel
+
+@{
+    
+
+    int i = 0;
+    foreach (var item in Model.Items)
+    {
+        i++;
+    <tr>
+        <input type="hidden" class="STT" value="@item.STT" />
+        <input type="hidden" class="iIDThanhToan" value="@item.iID_KhoiTaoDuLieuChiTietThanhToanID" />
+        <td>
+            @Html.DropDownList("iID_HopDong_" + i, new SelectList(ViewBag.ListHopDong, "Value", "Text", item.iID_HopDongId), new { @class = "form-control hopdong", @id = "iID_HopDong_" + i })
+        </td>
+        <td class="sTenNhaThau">@item.sTenNhaThau</td>
+        <td class="sGiaTriHopDong">@item.sGiaTriHD</td>
+        <td align="center"><input class="cs-input-ctktda fluykethanhtoantnvn tn-luykethanhtoan sotien1" type="text" value="@item.fLuyKeTTKLHTTN_KHVN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" /></td>
+        <td align="center"><input class="cs-input-ctktda fluykechuathuhoitnvn tn-luykechuathuhoi sotien1" type="text" value="@item.fLuyKeTUChuaThuHoiTN_KHVN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" /></td>
+        <td align="center"><input class="cs-input-ctktda fluykethanhtoannnvn nn-luykethanhtoan sotien1" type="text" value="@item.fLuyKeTTKLHTNN_KHVN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" /></td>
+        <td align="center"><input class="cs-input-ctktda fluykechuathuhoinnvn nn-luykechuathuhoi sotien1" type="text" value="@item.fLuyKeTUChuaThuHoiNN_KHVN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" /></td>
+
+        <td align="center"><input class="cs-input-ctktda fluykethanhtoantnvu tn-luykethanhtoan sotien1" type="text" value="@item.fLuyKeTTKLHTTN_KHVU" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" /></td>
+        <td align="center"><input class="cs-input-ctktda fluykechuathuhoitnvu tn-luykechuathuhoi sotien1" type="text" value="@item.fLuyKeTUChuaThuHoiTN_KHVU" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" /></td>
+        <td align="center"><input class="cs-input-ctktda fluykethanhtoannnvu nn-luykethanhtoan sotien1" type="text" value="@item.fLuyKeTTKLHTNN_KHVU" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" /></td>
+        <td align="center"><input class="cs-input-ctktda fluykechuathuhoinnvu nn-luykechuathuhoi sotien1" type="text" value="@item.fLuyKeTUChuaThuHoiNN_KHVU" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" /></td>
+        <td align="center" style="vertical-align: middle !important">
+            <button type="button" class="btn-delete" onclick="RemoveRowHopDong(@item.STT, '@Model.iID_KhoiTaoDuLieuChiTietID', '@Model.iID_DuAnID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+        </td>
+    </tr>
+    }
+}
+
+<script>
+    $(document).ready(function ($) {
+
+        $("#txtNamKhoiTaoModal").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                return false;
+            }
+        });
+
+        DinhDangSo1();
+    });
+</script>

@@ -1,0 +1,50 @@
+﻿
+@using VIETTEL.Areas.DanhMuc.Models
+@model DMLoaiDuToanPagingModel
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Danh sách danh mục loại dự toán (@Model._paging.TotalItems)</label>
+
+    </div>
+    <button class="btn btn-primary pull-right" onclick="OpenModal()" data-toggle="modal" data-target="#modalDanhMucLoaiDuToan"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+</div>
+<table class="table table-bordered table-striped">
+    <thead>
+    <th width="5%">STT</th>
+    <th width="15%">Mã loại dự toán</th>
+    <th width="25%">Tên loại dự toán</th>
+    <th width="45%">Ghi chú</th>
+    <th width="10%"></th>
+    </thead>
+    <tbody>
+        @{
+            int index = 1;
+            foreach (var item in Model.lstData)
+            {
+                <tr>
+                    <td align="center">@(pageIndex + index)</td>
+
+                    <td align="center">@item.sMaLoaiDuToan</td>
+
+                    <td align="left">@item.sTenLoaiDuToan</td>
+
+                    <td align="left">@item.sGhiChu</td>
+
+                    <td align="center" class="col-sm-12">
+                        <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.iID_LoaiDuToan')" data-toggle="modal" data-target="#modalDanhMucLoaiDuToan"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-edit" onclick="OpenModal('@item.iID_LoaiDuToan')" data-toggle="modal" data-target="#modalDanhMucLoaiDuToan"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" onclick="DeleteItem('@item.iID_LoaiDuToan')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                index++;
+            }
+        }
+    </tbody>
+</table>
+@Html.BuildPagingButtons(Model._paging)

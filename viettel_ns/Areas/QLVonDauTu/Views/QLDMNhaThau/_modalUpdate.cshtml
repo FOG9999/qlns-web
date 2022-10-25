@@ -1,0 +1,93 @@
+﻿﻿@using Viettel.Domain.DomainModel
+@model VDT_DM_NhaThau
+
+<div class="modal-body">
+    <input type="hidden" id="iID_NhaThauModal" value="@Model.iID_NhaThauID">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtMaNhaThau">Mã nhà thầu</label>
+                @Helpers.Required()
+                <input type="text" id="txtsMaNhaThau" class="form-control" value="@Model.sMaNhaThau" maxlength="100" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtTenNhaThau">Tên nhà thầu</label>
+                @Helpers.Required()
+                <input type="text" id="txtsTenNhaThau" class="form-control" value="@Model.sTenNhaThau" maxlength="300" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtDiaChi">Địa chỉ</label>
+                <input type="text" id="txtsDiaChi" class="form-control" value="@Model.sDiaChi" maxlength="300" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtMaSoThue">Mã số thuế</label>
+                <input type="text" id="txtsMaSoThue" class="form-control" value="@Model.sMaSoThue" maxlength="100" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtDaiDien">Đại diện</label>
+                <input type="text" id="txtsDaiDien" class="form-control" value="@Model.sDaiDien" maxlength="100" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtChucVu">Chức vụ</label>
+                <input type="text" id="txtsChucVu" class="form-control" value="@Model.sChucVu" maxlength="100" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtDienThoai">Điện thoại</label>
+                <input type="text" id="txtsDienThoai" class="form-control" value="@Model.sDienThoai" maxlength="100" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtFax">Fax</label>
+                <input type="text" id="txtsFax" class="form-control" value="@Model.sFax" maxlength="100" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtEmail">Email</label>
+                <input type="text" id="txtsEmail" class="form-control" value="@Model.sEmail" maxlength="100" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtWebsite">Website</label>
+                <input type="text" id="txtsWebsite" class="form-control" value="@Model.sWebsite" maxlength="300" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtSoTK">Số tài khoản</label>
+                <input type="text" id="txtsSoTK" class="form-control" value="@Model.sSoTaiKhoan" maxlength="100" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtNganHang">Ngân hàng</label>
+                <input type="text" id="txtsNganHang" class="form-control" value="@Model.sNganHang" maxlength="100" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtNguoiLH">Người liên hệ</label>
+                <input type="text" id="txtsNguoiLH" class="form-control" value="@Model.sNguoiLienHe" maxlength="300" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtSoDTLH">Điện thoại liên hệ</label>
+                <input type="text" id="txtsDTLH" class="form-control" value="@Model.sDienThoaiLienHe" maxlength="100" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtMaNganHang">Mã ngân hàng</label>
+                <input type="text" id="txtsMaNganHang" class="form-control" value="@Model.sMaNganHang" maxlength="300" autocomplete="off" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>
+<script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>

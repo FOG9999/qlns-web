@@ -1,0 +1,85 @@
+﻿<div class="modal-body">
+    <h6 class="chao-banner1 text-italic text-underline lblBieuMauImport mb-10" onclick="DownloadFileTemplate();">Tải xuống biểu mẫu import</h6>
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <label id="lblUpload" for="inpFileUpload"><span class="ml-10">Lựa chọn file excel</span><i class="fa fa-file-excel-o fa-2x" aria-hidden="true"></i></label>
+            <input type="file" id="inpFileUpload" name="inpFileUpload" class="hide" accept=".xlsx, .xls" onchange="ChangeFile(this);" />
+        </div>
+    </div>
+    <div class="form-group pull-right mr-10">
+        <button class="btn btn-primary mr-10" onclick="LoadDataExcel();">Kiểm tra</button>
+        <button class="btn btn-default" onclick="RefreshImport();">Hủy</button>
+    </div>
+    <div class="form-group row mx-0">
+        <div class="col-sm-12 divContainer">
+            <div style="width: 2630px; height: 450px;">
+                <table class="table table-bordered tr-hover" id="tblGoiThauListImport">
+                    <thead>
+                        <tr>
+                            <th width="100">Trạng thái</th>
+                            <th width="80">STT</th>
+                            <th width="240">Tên gói thầu</th>
+                            <th width="130">Thời gian thực hiện (ngày)</th>
+                            <th width="230">Đơn vị</th>
+                            <th width="230">Chương trình</th>
+                            <th width="230">Loại</th>
+                            <th width="230">Dự án</th>
+                            <th width="240">Số quyết định Kế hoạch lựa chọn nhà thầu/ Phương án nhập khẩu</th>
+                            <th width="130">Ngày quyết định Kế hoạch lựa chọn nhà thầu/ Phương án nhập khẩu</th>
+                            <th width="240">Số quyết định Kết quả lựa chọn nhà thầu/ Kết quả đàm phán</th>
+                            <th width="130">Ngày quyết định Kết quả lựa chọn nhà thầu/ Kết quả đàm phán</th>
+                            <th width="230">Nhà thầu/Đơn vị ủy thác</th>
+                            <th width="180">Thanh toán bằng</th>
+                            <th width="230">Hình thức chọn nhà thầu</th>
+                            <th width="230">Phương thức chọn nhà thầu</th>
+                            <th width="230">Loại hợp đồng</th>
+                            <th width="270">Lỗi</th>
+                            <th width="100">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Đóng</span></button>
+        <button class="btn btn-primary" id="btnSaveImport" onclick="SaveImport();"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>
+<style>
+    #modalTTGoiThau .lblBieuMauImport {
+        cursor: pointer;
+    }
+    #tblGoiThauListImport {
+        table-layout: fixed;
+    }
+    #modalTTGoiThau #lblUpload {
+        cursor: pointer;
+        height: 40px;
+        border: 1px solid #CCC;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+    #modalTTGoiThau #lblUpload i {
+        position: absolute;
+        right: 5px;
+    }
+    #modalTTGoiThau .mx-0 {
+        margin-right: 0;
+        margin-left: 0;
+    }
+    #modalTTGoiThau .divContainer {
+        overflow: auto;
+        position: relative;
+        padding: 0;
+    }
+    #modalTTGoiThau ::-webkit-scrollbar {
+        height: 5px !important;
+    }
+</style>

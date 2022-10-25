@@ -1,0 +1,218 @@
+﻿@using Viettel.Models.QLNH
+@using Viettel.Domain.DomainModel
+@using DomainModel
+@using System.Globalization;
+@model ChenhLechTiGiaViewModel
+
+<div class="tooltip-header-search">
+    <div class="col-sm-12" style="padding-left:0px;">
+        <label class="control-label">Quản lí chênh lệch tỉ giá hối đoái</label>
+    </div>
+    <div class="form-group" style="display:flex;align-items:center;border:1px solid #CCC;padding:10px 0;">
+        <div class="col-sm-8">
+            <div class="col-sm-4">
+                <select id="slbDonVi" name="slbDonVi" class="form-control" onchange="ChangeSelectDonVi();">
+                    @foreach (var donvi in Model.DonViList)
+                    {
+                        <option value="@donvi.iID_Ma" data-madonvi="@donvi.iID_MaDonVi">@Html.Raw(Html.Encode(donvi.sMoTa))</option>
+                    }
+                </select>
+            </div>
+            <div class="col-sm-4">
+                @Html.DropDownList("slbChuongTrinh", Model.ChuongTrinhList, new { @class = "form-control", @id = "slbChuongTrinh", @onchange = "ChangeSelectChuongTrinh();" })
+            </div>
+            <div class="col-sm-4">
+                <select id="slbHopDong" name="slbHopDong" class="form-control">
+                    @foreach (var hopdong in Model.HopDongList)
+                    {
+                        <option value="@hopdong.ID">@Html.Raw(Html.Encode(hopdong.sTenHopDong))</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-3">
+            <div class="dropdown pull-right">
+                <button class="btn btn-info pull-right"><i class="fa fa-print" aria-hidden="true"></i>Export</button>
+                <div class="dropdown-content list-group">
+                    <a href="#" class="list-group-item list-group-item-action" onclick="ExportChenhLechTiGia('xlsx');">Excel</a>
+                    <a href="#" class="list-group-item list-group-item-action" onclick="ExportChenhLechTiGia('pdf');">PDF</a>
+                </div>
+            </div>
+            <button class="btn btn-info pull-right mr-10" onclick="ResetChangePage();"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+            <button class="btn btn-info pull-right mr-10" onclick="ChangePage();"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+<table class="table table-bordered tr-hover" id="tblChenhLechTiGia">
+    <thead>
+        <tr>
+            <th width="10%" rowspan="3"></th>
+            <th width="15%" colspan="2">Theo KHTT BQP cấp CTC</th>
+            <th width="15%" colspan="2">Theo Hợp đồng</th>
+            <th width="15%" colspan="2">Kinh phí được cấp CTC cấp cho CĐT</th>
+            <th width="15%" colspan="2">
+                Kinh phí đã thanh toán, tạm ứng
+                <br />- CĐT thanh toán cho NT, ĐVUT
+                <br />- CĐT cấp kinh phí cho đơn vị cấp dưới
+            </th>
+            <th width="15%" colspan="2">Chênh lệch tỉ giá hối đoái giữa Hợp đồng và Kinh phí cấp cho CĐT</th>
+            <th width="15%" colspan="2">Chênh lệch tỉ giá hối đoái giữa Kinh phí được cấp và Kinh phí đã giải ngân</th>
+        </tr>
+        <tr>
+            <th width="7.5%">USD</th>
+            <th width="7.5%">VND</th>
+            <th width="7.5%">USD</th>
+            <th width="7.5%">VND</th>
+            <th width="7.5%">USD</th>
+            <th width="7.5%">VND</th>
+            <th width="7.5%">USD</th>
+            <th width="7.5%">VND</th>
+            <th width="7.5%">USD</th>
+            <th width="7.5%">VND</th>
+            <th width="7.5%">USD</th>
+            <th width="7.5%">VND</th>
+        </tr>
+        <tr>
+            <th align="center" width="7.5%">1</th>
+            <th align="center" width="7.5%">2</th>
+            <th align="center" width="7.5%">3</th>
+            <th align="center" width="7.5%">4</th>
+            <th align="center" width="7.5%">5</th>
+            <th align="center" width="7.5%">6</th>
+            <th align="center" width="7.5%">7</th>
+            <th align="center" width="7.5%">8</th>
+            <th align="center" width="7.5%">9 = 3 - 5</th>
+            <th align="center" width="7.5%">10 = 4 - 6</th>
+            <th align="center" width="7.5%">11 = 5 - 7</th>
+            <th align="center" width="7.5%">12 = 6 - 8</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var item in Model.Items)
+            {
+                <tr class="@(item.IsBold == 1 ? "text-bold" : "")">
+                    <td align="left">@Html.Raw(Html.Encode(item.sTenDisplay))</td>
+                    <td align="center">@CommonFunction.DinhDangSo((item.fTienKHTTBQPCapUSD.HasValue ? item.fTienKHTTBQPCapUSD.Value.ToString(CultureInfo.InvariantCulture) : string.Empty), 2)</td>
+                    <td align="center">@CommonFunction.DinhDangSo((item.fTienKHTTBQPCapVND.HasValue ? item.fTienKHTTBQPCapVND.Value.ToString(CultureInfo.InvariantCulture) : string.Empty), 0)</td>
+                    <td align="center">@CommonFunction.DinhDangSo((item.fTienTheoHopDongUSD.HasValue ? item.fTienTheoHopDongUSD.Value.ToString(CultureInfo.InvariantCulture) : string.Empty), 2)</td>
+                    <td align="center">@CommonFunction.DinhDangSo((item.fTienTheoHopDongVND.HasValue ? item.fTienTheoHopDongVND.Value.ToString(CultureInfo.InvariantCulture) : string.Empty), 0)</td>
+                    <td align="center">@CommonFunction.DinhDangSo((item.fKinhPhiDuocCapChoCDTUSD.HasValue ? item.fKinhPhiDuocCapChoCDTUSD.Value.ToString(CultureInfo.InvariantCulture) : string.Empty), 2)</td>
+                    <td align="center">@CommonFunction.DinhDangSo((item.fKinhPhiDuocCapChoCDTVND.HasValue ? item.fKinhPhiDuocCapChoCDTVND.Value.ToString(CultureInfo.InvariantCulture) : string.Empty), 0)</td>
+                    <td align="center">@CommonFunction.DinhDangSo((item.fKinhPhiDaThanhToanUSD.HasValue ? item.fKinhPhiDaThanhToanUSD.Value.ToString(CultureInfo.InvariantCulture) : string.Empty), 2)</td>
+                    <td align="center">@CommonFunction.DinhDangSo((item.fKinhPhiDaThanhToanVND.HasValue ? item.fKinhPhiDaThanhToanVND.Value.ToString(CultureInfo.InvariantCulture) : string.Empty), 0)</td>
+                    <td align="center">
+                        @{
+                            string fTiGiaCLHopDongVsCDTUSD = string.Empty;
+                            if (item.fTiGiaCLHopDongVsCDTUSD.HasValue)
+                            {
+                                if (item.fTiGiaCLHopDongVsCDTUSD.Value == 0)
+                                {
+                                    fTiGiaCLHopDongVsCDTUSD = "0,00";
+                                }
+                                else
+                                {
+                                    fTiGiaCLHopDongVsCDTUSD = CommonFunction.DinhDangSo(item.fTiGiaCLHopDongVsCDTUSD.Value.ToString(CultureInfo.InvariantCulture), 2);
+                                    if (item.fTiGiaCLHopDongVsCDTUSD.Value < 0)
+                                    {
+                                        fTiGiaCLHopDongVsCDTUSD = "-" + fTiGiaCLHopDongVsCDTUSD;
+                                    }
+                                }
+                            }
+                        }
+                        @fTiGiaCLHopDongVsCDTUSD
+                    </td>
+                    <td align="center">
+                        @{
+                            string fTiGiaCLHopDongVsCDTVND = string.Empty;
+                            if (item.fTiGiaCLHopDongVsCDTVND.HasValue)
+                            {
+                                if (item.fTiGiaCLHopDongVsCDTVND.Value == 0)
+                                {
+                                    fTiGiaCLHopDongVsCDTVND = "0";
+                                }
+                                else
+                                {
+                                    fTiGiaCLHopDongVsCDTVND = CommonFunction.DinhDangSo(item.fTiGiaCLHopDongVsCDTVND.Value.ToString(CultureInfo.InvariantCulture), 0);
+                                    if (item.fTiGiaCLHopDongVsCDTVND.Value < 0)
+                                    {
+                                        fTiGiaCLHopDongVsCDTVND = "-" + fTiGiaCLHopDongVsCDTVND;
+                                    }
+                                }
+                            }
+                        }
+                        @fTiGiaCLHopDongVsCDTVND
+                    </td>
+                    <td align="center">
+                        @{
+                            string fTiGiaCLKinhPhiDuocCapVsGiaiNganUSD = string.Empty;
+                            if (item.fTiGiaCLKinhPhiDuocCapVsGiaiNganUSD.HasValue)
+                            {
+                                if (item.fTiGiaCLKinhPhiDuocCapVsGiaiNganUSD.Value == 0)
+                                {
+                                    fTiGiaCLKinhPhiDuocCapVsGiaiNganUSD = "0,00";
+                                }
+                                else
+                                {
+                                    fTiGiaCLKinhPhiDuocCapVsGiaiNganUSD = CommonFunction.DinhDangSo(item.fTiGiaCLKinhPhiDuocCapVsGiaiNganUSD.Value.ToString(CultureInfo.InvariantCulture), 2);
+                                    if (item.fTiGiaCLKinhPhiDuocCapVsGiaiNganUSD.Value < 0)
+                                    {
+                                        fTiGiaCLKinhPhiDuocCapVsGiaiNganUSD = "-" + fTiGiaCLKinhPhiDuocCapVsGiaiNganUSD;
+                                    }
+                                }
+                            }
+                        }
+                        @fTiGiaCLKinhPhiDuocCapVsGiaiNganUSD
+                    </td>
+                    <td align="center">
+                        @{
+                            string fTiGiaCLKinhPhiDuocCapVsGiaiNganVND = string.Empty;
+                            if (item.fTiGiaCLKinhPhiDuocCapVsGiaiNganVND.HasValue)
+                            {
+                                if (item.fTiGiaCLKinhPhiDuocCapVsGiaiNganVND.Value == 0)
+                                {
+                                    fTiGiaCLKinhPhiDuocCapVsGiaiNganVND = "0";
+                                }
+                                else
+                                {
+                                    fTiGiaCLKinhPhiDuocCapVsGiaiNganVND = CommonFunction.DinhDangSo(item.fTiGiaCLKinhPhiDuocCapVsGiaiNganVND.Value.ToString(CultureInfo.InvariantCulture), 0);
+                                    if (item.fTiGiaCLKinhPhiDuocCapVsGiaiNganVND.Value < 0)
+                                    {
+                                        fTiGiaCLKinhPhiDuocCapVsGiaiNganVND = "-" + fTiGiaCLKinhPhiDuocCapVsGiaiNganVND;
+                                    }
+                                }
+                            }
+                        }
+                        @fTiGiaCLKinhPhiDuocCapVsGiaiNganVND
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#slbDonVi").select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#slbChuongTrinh").select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#slbHopDong").select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
+    });
+</script>
+<style>
+    .dropdown {
+        position: relative;
+    }
+    .dropdown-content {
+        position: absolute;
+        display: none;
+        top: 30px;
+        width: 100px;
+        height: 60px;
+    }
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+</style>
+

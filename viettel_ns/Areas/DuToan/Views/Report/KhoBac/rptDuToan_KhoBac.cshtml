@@ -1,0 +1,55 @@
+﻿@model rptDuToan_KhoBacViewModel
+@{
+
+}
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">Báo cáo lập phương án phân bổ số kiểm tra ngân sách năm @PhienLamViec.iNamLamViec (KT-ĐV)</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6">
+                    <h6><strong class="text-uppercase">Đơn vị:</strong></h6>
+                </div>
+            </div>
+            <div class="row">                
+                <div class="col-xs-6">
+                    <div id="Id_DonVi" class="ls-box">                        
+                        @Html.Partial("_CheckboxList", new ChecklistModel("Id_DonVi", Model.DonViList))
+                    </div>
+                </div>
+            </div>            
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "DuToan_Report", new { area="", sLoai=2})">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    
+    $(".btn-print").click(function () {
+
+        var links = [];
+
+        var ext = $(this).data("ext");
+                
+        $("input:checkbox[check-group='Id_DonVi']").each(function () {
+            if (this.checked) {
+                var item = this.value;
+                var url = unescape('@Url.Action("Print")' +
+                    "?ext=" + ext +
+                    "&id_donvi=" + item);
+                links.push(url);
+
+                console.log(url);
+            }
+        });
+
+        openLinks(links);      
+    });
+
+</script>

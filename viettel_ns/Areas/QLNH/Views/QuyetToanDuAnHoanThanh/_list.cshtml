@@ -1,0 +1,167 @@
+﻿@using Viettel.Models.QLNH.QuyetToan
+@using Viettel.Domain.DomainModel
+@model QuyetToan_QuyetToanDuAnModel
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+<div id="QuyetToanDAHT">
+    <div class="tooltip-header-search">
+        <div class="col-sm-4 col-md-4 col-lg-4" style="display:flex;padding-left:0px;">
+            <label class="control-label">Quyết toán dự án hoàn thành (@Model._paging.TotalItems)</label>
+        </div>
+    </div>
+</div>
+<div id="QuyetToanDAHTTongHop" style="display:none">
+    <div class="tooltip-header-search">
+        <div class="col-sm-4 col-md-4 col-lg-4" style="display:flex;padding-left:0px;">
+            <label class="control-label">Quyết toán dự án hoàn thành tổng hợp (<span id="txtSobannghi"></span>)</label>
+        </div>
+    </div>
+</div>
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <input id='dxChungTu' type="radio" value="0" name="groupVoucher" onclick="ChangeVoucher()" checked="checked">
+        <label for="dxChungTu" style="margin-right: 1rem; margin-left: 1rem;">Quyết toán dự án hoàn thành</label>
+        <input id="dxChungTuTongHop" type="radio" value="1" name="groupVoucher" onclick="ChangeVoucher()">
+        <label for="dxChungTuTongHop" style="margin-right: 1rem; margin-left: 1rem;">Quyết toán dự án hoàn thành tổng hợp</label>
+    </div>
+    <div class="col-sm-4" style="display:flex ;justify-content:end">
+        <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="InBaoCaoModal()">In báo cáo</button>
+        <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="TongHopModal()">Tổng hợp</button>
+        <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+        <button class="btn btn-primary pull-right" style="margin-right:10px;" onclick="OpenModal()" data-toggle="modal" data-target="#modalQTDuAn"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    </div>
+</div>
+<table class="table table-bordered tr-hover" id="tbListQuyetToanDuAn">
+    <thead>
+        <tr class="header-search">
+            <th width="5%"></th>
+            <th width="5%"></th>
+            <th width="15%"><input type="text" class="form-control gr_search" maxlength="100" id="txtSoDeNghiFillter" placeholder="Số đề nghị" /></th>
+            <th width="15%">
+                <div class='input-group date'>
+                    <input type="text" id="txtNgayDeNghiFillter" autocomplete="off" class="form-control gr_search" placeholder="dd/MM/yyyy" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </th>
+            <th width="7%">
+                <select id="slbNamBaoCaoTuFillter" name="slbNamBaoCaoTuFillter" class="form-control">
+                    @if (ViewBag.ListNamBaoCaoTu != null)
+                    {
+                        foreach (var namBaoCaoTu in (List<Dropdown_QuyetToanDAHT>)ViewBag.ListNamBaoCaoTu)
+                        {
+                            <option value="@namBaoCaoTu.Value">@Html.Raw(Html.Encode(namBaoCaoTu.Label))</option>
+                        }
+                    }
+                </select>
+            </th>
+            <th width="7%">
+                <select id="slbNamBaoCaoDenFillter" name="slbNamBaoCaoDenFillter" class="form-control">
+                    @if (ViewBag.ListNamBaoCaoDen != null)
+                    {
+                        foreach (var namBaoCaoDen in (List<Dropdown_QuyetToanDAHT>)ViewBag.ListNamBaoCaoDen)
+                        {
+                            <option value="@namBaoCaoDen.Value">@Html.Raw(Html.Encode(namBaoCaoDen.Label))</option>
+                        }
+                    }
+                </select>
+            </th>
+            <th width="16%">
+                <select id="iDonViFillter" name="iDonVi" class="form-control">
+                    @if (ViewBag.ListDonVi != null)
+                    {
+                        foreach (var donvi in (List<NS_DonVi>)ViewBag.ListDonVi)
+                        {
+                            <option value="@donvi.iID_Ma" data-madonvi="@donvi.iID_MaDonVi">@Html.Raw(Html.Encode(donvi.sMoTa))</option>
+                        }
+                    }
+                </select>
+            </th>
+            <th width="15%"></th>
+            <th width="15%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+        </tr>
+        <tr>
+            <th width="5%"></th>
+            <th width="5%">STT</th>
+            <th width="15%">Số đề nghị</th>
+            <th width="15%">Ngày đề nghị</th>
+            <th width="7%">Năm báo cáo từ</th>
+            <th width="7%">Năm báo cáo đến</th>
+            <th width="16%">Đơn vị</th>
+            <th width="15%">Trạng thái</th>
+            <th width="15%">Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (var item in Model.Items)
+            {
+                index++;
+                <tr style="cursor: pointer" class="row-select">
+                    <td class="text-center"><input type='checkbox' name='cbQuyetToan' id="cbQuyetToan" data-id="@item.ID" data-islock="@item.bIsKhoa"></td>
+                    <td class="text-center">@(pageIndex + index)</td>
+                    <td class="text-center">@Html.Raw(Html.Encode(item.sSoDeNghi))</td>
+                    <td class="text-center">@(item.dNgayDeNghi.HasValue ? item.dNgayDeNghi.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                    <td class="text-center" data-getname="iNamBaoCaoTu" data-getvalue="@Html.Raw(Html.Encode(item.iNamBaoCaoTu))">@Html.Raw(Html.Encode(item.iNamBaoCaoTu))</td>
+                    <td class="text-center" data-getname="iNamBaoCaoDen" data-getvalue="@Html.Raw(Html.Encode(item.iNamBaoCaoDen))">@Html.Raw(Html.Encode(item.iNamBaoCaoDen))</td>
+                    <td class="text-center" data-gettonghop="iID_TongHopID" data-gettonghopvalue="@item.iID_TongHopID" hidden></td>
+                    <td class="text-center">@Html.Raw(Html.Encode(item.sTenDonVi))</td>
+                    <td class="text-center">@Html.Raw(Html.Encode(item.sTrangThai))</td>
+                    <td class="text-center">
+                        @if (item.bIsKhoa)
+                        {
+                            <button type="button" title="Chi tiết" class="btn-detail" onclick="OpenModalDetail('@item.ID')" data-toggle="modal" data-target="#modalQTDuAn"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" title="Mở khóa" class="btn-edit" onclick="LockItem('@item.ID', '@item.sSoDeNghi', '@item.bIsKhoa', '@item.iID_TongHopID')"><i class="fa fa-unlock fa-lg" aria-hidden="true"></i></button>
+                        }
+                        else
+                        {
+                            <button type="button" title="Khóa" class="btn-edit" onclick="LockItem('@item.ID', '@item.sSoDeNghi', '@item.bIsKhoa', '@item.iID_TongHopID')"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" title="Chi tiết" class="btn-detail" onclick="OpenModalDetail('@item.ID')" data-toggle="modal" data-target="#modalQTDuAn"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" title="Sửa" class="btn-edit" onclick="OpenModal('@item.ID')" data-toggle="modal" data-target="#modalQTDuAn"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" title="Xóa" class="btn-delete" onclick="Xoa('@item.ID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<div id="ViewTable"></div>
+
+<div id="Padding">
+    @Html.BuildPagingButtons(Model._paging)
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#slbNamBaoCaoTuFillter").select2({ width: '100%', matcher: FilterInComboBox });
+        $("#slbNamBaoCaoDenFillter").select2({ width: '100%', matcher: FilterInComboBox });
+        $("#iDonViFillter").select2({ width: '100%', matcher: FilterInComboBox });
+        $('.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: 'vi',
+            todayHighlight: true,
+            format: "dd/mm/yyyy"
+        });
+
+        $(".#txtNgayDeNghiFillter").keydown(function (event) {
+            ValidateInputKeydown(event, this, 3);
+        });
+
+        $("#tbListQuyetToanDuAn .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                if (e.which == 13) {
+                    ChangePage();
+                }
+            });
+        });
+    });
+</script>
+

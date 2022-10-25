@@ -1,0 +1,41 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDT_DM_ChuDauTu_ViewModel
+
+<div class="modal-body">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtMaDonViTHDA">Mã đơn vị</label>
+                <p>@Html.Raw(Model.sId_CDT)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtTenDonViTHDA">Tên đơn vị</label>
+                <p>@Html.Raw(Model.sTenCDT)</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtDiaChi">Ký hiệu</label>
+                <p>@Html.Raw(Model.sKyHieu)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtDonViTHDACha">mô tả</label>
+                <p>@Html.Raw(Model.sMoTa)</p>
+            </div>
+        </div> <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtDiaChi">Loại</label>
+                <p>@Html.Raw(Model.sKyHieu)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtDonViTHDACha">Chủ đầu tư cha</label>
+                <p>@Html.Raw(Model.sTenChuDauTuCha)</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+    </div>
+</div>

@@ -1,0 +1,174 @@
+﻿@using Viettel.Models.QLVonDauTu;
+@using Newtonsoft.Json;
+@model KeHoach5NamViewModel
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+    <link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+
+        <div class="card">
+            <div class="card-body create_thdt">
+                <input type="hidden" id="txtId" />
+                <input type="hidden" id="txtParentId" />
+                <input type="hidden" id="txtXauNoiMa" />
+                <input type="hidden" id="iID_KeHoach5NamID" value="@Model.iID_KeHoach5NamID" />
+
+                <div class="card-area">
+                    <div class="form-group">
+                        <h4 class="color-text-red">Thông tin chung:</h4>
+                        <hr class='color-background-red' />
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <label for="txtSoKeHoach" class="">Số kế hoạch <span class="require">*</span></label>
+                                <input type='text' class="form-control clearable" id="txtSoKeHoach" value="@Model.sSoQuyetDinh" />
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txtNgayLap" class="">Ngày lập <span class="require">*</span></label>
+                                <div>
+                                    <label>@Model.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy")</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txtSoKeHoach" class="">Giai đoạn <span class="require">*</span></label>
+                                <div style="display:flex">
+                                    <label>@Model.iGiaiDoanTu  - </label>
+                                    <label>@Model.iGiaiDoanDen</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="drpNguonNganSach" class="">Nguồn vốn <span class="require">*</span></label>
+                                <div>
+                                    <label>@Model.sTenNguonVon</label>
+                                </div>
+
+
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="drpLoaiNganSach" class="">Loại ngân sách <span class="require">*</span></label>
+                                <div>
+                                    <label>@Model.sTenLoaiNganSach</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="drpLoaiKhoan" class="">Loại - khoản</label>
+                                <div>
+                                    <label>Loại: @Model.sLoai </label>
+                                    <label>Khoản:  @Model.sKhoan</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h4 class="color-text-red">Thông tin chi tiết:</h4>
+                        <hr class='color-background-red' />
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="drpNganh" class="">Dự án<span class="require">*</span></label>
+                                @Html.DropDownList("drpDuAn", (SelectList)ViewBag.ListDuAn, "--Chọn--", new { @class = "form-control clearable" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="">Thời gian thực hiện <span class="require">*</span></label>
+                                <div>
+                                    <label id="txtThoiGianThucHien"></label>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="">Giá trị kế hoạch</label>
+                                <input type="text" class="form-control" id="txtGiaTriKeHoach" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);">
+
+                            </div>
+                        </div>
+                        <input type="hidden" class="form-control clearable" id="txtNamKeHoach" value="@((int)ViewBag.NamLamViec)" />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="txtGhiChu" class="">Ghi chú</label>
+                                <textarea class="form-control clearable" id="txtGhiChu"></textarea>
+                            </div>
+                            <div class="col-sm-6">
+                                <div style=" margin-top: 25px; ">
+                                    <button class="btn btn-danger btn-icon" onclick="ClearDataInsert()"><i class="fa fa-refresh" aria-hidden="true" style="margin:0px;"></i></button>
+                                    <button class="btn btn-primary btn-icon" onclick="InsertDetailData()"><i class="fa fa-plus" aria-hidden="true" style="margin:0px;"></i></button>
+                                    <span class="require text-italic">(Thêm dữ liệu xuống bảng chi tiết)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div id="ViewTable" style="overflow-x: auto; overflow-y: auto; max-height: 500px"></div>
+                        <table id="SumTable" class="table table-bordered">
+                            <tr>
+                                <th width="3%"></th>
+                                <th width="200px"></th>
+                                <th width="400px" style="text-align:center;"> <span style="font-size:15px;font-weight:700">&Sigma;</span> Tổng cộng:</th>
+                                <th width="200px"></th>
+                                <th width="200px" id="tong_giatri" class="text-right"></th>
+                                <th width="300px"></th>
+                                <th width="300px"></th>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="form-group">
+                        <h4 class="color-text-red">Thông tin tài liệu đính kèm:</h4>
+                        <button style="margin-top: -37px;" class="btn btn-success pull-right" onclick="CancelSaveData()"><i class="fa fa-plus" aria-hidden="true"></i><span>Đính kèm</span></button>
+                        <hr class="color-background-red">
+                        <table class="table table-bordered table-parent">
+                            <thead>
+                                <tr>
+                                    <th width="3%">STT</th>
+                                    <th width="75%">Tài liệu</th>
+                                    <th width="10%">Size</th>
+                                    <th width="10%"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <button class="btn btn-default" onclick="Huy()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                        <button class="btn btn-primary" onclick="Insert()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                    </div>
+
+                </div>
+        </div>
+
+    </div>
+</div>
+<input type="hidden" value="@(JsonConvert.SerializeObject(Model.listChiTiet)) " id="listKeHoachChiTiet"/>
+
+@section Scripts{
+    <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsQLKeHoach5Nam_edit.js"></script>
+    <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+    <script src="~/Scripts/js/dropdowntree.js"></script>
+    <script>
+        var tblDataGrid = [];
+
+        $(document).ready(function () {
+            GetDataGridViewDefault();
+
+        });
+
+        function GetDataGridViewDefault() {
+            tblDataGrid = JSON.parse($("#listKeHoachChiTiet").val());
+            iIdMax = tblDataGrid.length;
+            sumGiaTriDauTuVaVonUng(tblDataGrid);
+            FormatNumberTBLChiTiet(tblDataGrid);
+            FillDataToGridViewInsert(tblDataGrid);
+
+        }
+    </script>
+}
+

@@ -1,0 +1,34 @@
+﻿@using Viettel.Domain.DomainModel
+@model DM_LoaiDuToan
+
+<div class="modal-body">
+    <div class="form-group row">
+        <div class="form-group">
+            <div class="form-group">
+                <div class="col-md-6">
+                    <input type="hidden" id="txt_ID_LoaiDuToan" value="@Model.iID_LoaiDuToan">
+                    <label for="txt_MaLoaiDuToan">Mã loại dự toán <span class="require">*</span></label>
+                    <input type="text" required id="txt_MaLoaiDuToan" class="form-control" value="@Model.sMaLoaiDuToan" maxlength="50" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label for="txt_TenLoaiDuToan">Tên loại dự toán <span class="require">*</span></label>
+                    <input type="text" required id="txt_TenLoaiDuToan" class="form-control" value="@Model.sTenLoaiDuToan" maxlength="500" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="txt_GhiChu">Ghi chú</label>
+                    <textarea id="txt_GhiChu" class="form-control">@Html.Raw(Model.sGhiChu)</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="SaveData()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>

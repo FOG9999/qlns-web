@@ -1,0 +1,67 @@
+﻿@model VIETTEL.Areas.QLNguonNganSach.Models.NhiemVuChungTuViewModel
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <div class="col-sm-6" style="margin-bottom:5px;">
+                <label for="txtPhongBan">Phòng ban</label>
+                <select class="form-control" style="width: 100%" id="txtPhongBan" name="phongBan">
+                </select>
+            </div>
+            <div class="col-sm-6" style="margin-bottom:5px;">
+                <label for="txtNoiDungChi">Nội dung chi</label>
+                <select class="form-control" style="width: 100%" id="txtNoiDungChi" name="txtNoiDungChi">
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <div class="col-md-10">
+                <label for="lbtongtien">Tổng số tiền của đợt DTBS: </label><label id="lb_tongtien"></label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body table-responsive" style="max-height:400px">
+        <table class="table table-bordered" id="tblListChungTu">
+            <thead>
+            <th width="5%" style="text-align:center"><input class="form-check-input" onchange="GetOnchangeCheckBox(this)" type="checkbox" id="checkInputAll"></th>
+            <th width="15%" style="text-align:center">Phòng ban nhập</th>
+            <th width="10%" style="text-align:center">Ngày chứng từ</th>
+            <th width="10%" style="text-align:center">Tổng tiền</th>
+            <th width="30%" style="text-align:center">Nội dung</th>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var item in Model.Items)
+                    {
+                        <tr style="cursor: pointer">
+                            <td align="center"><input class="form-check-input" onchange="GetOnChangeCheckBoxChiTiet(this)" type="checkbox" data-id="@item.iID_MaChungTu" data-noidung="@item.sNoiDung" data-sotien="@item.SoTien"></td>
+
+                            <td align="left">@item.sTenPhongBan</td>
+
+                            <td align="center">@item.dNgayChungTu.ToString("dd/MM/yyyy")</td>
+
+                            <td align="right">@item.sSoTien</td>
+
+                            <td align="left">@item.sNoiDung</td>
+
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="SaveChooseSelection()"><i class="fa fa-check" aria-hidden="true"></i><span>Xác nhận</span></button>
+    </div>
+</div>
+

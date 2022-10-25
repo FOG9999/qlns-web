@@ -1,0 +1,174 @@
+﻿@model rptNCSKT_TH11ViewModel
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">Tổng hợp số liệu số kiểm tra và số dự kiến theo tờ năm @PhienLamViec.iNamLamViec</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6">
+                    <h6></h6>
+                </div>
+                <div class="col-xs-6" id="tl">
+                    <h6><strong class="text-uppercase">Chọn tờ</strong></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Phòng ban:</label>
+                            <div class="col-sm-8">
+                                @if (Model.PhongBanList == null || Model.PhongBanList.Count() <= 2)
+                                {
+                                    <input type="text" readonly value="@PhienLamViec.sTenPhongBanFull" class="form-control" />
+                                    <input id="id_phongban" type="text" value="@PhienLamViec.iID_MaPhongBan" class="form-control hide" />
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("id_phongban", Model.PhongBanList, new { @class = "form-control", onchange = "change()" })
+                                }
+                            </div>
+                        </div>
+                    </form>
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loại báo cáo:</label>
+                            <div class="col-sm-8" id="loaiBaoCao">
+                                <div class="radio">
+                                    <input type="radio" id="loaiBaoCao-ngang" name="optradio" value="1" checked onclick="changeBC()"/>
+                                    <label for="loaiBaoCao-ng">
+                                        Báo cáo ngang
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" id="loaiBaoCao-doc" name="optradio" value="2" onclick="changeBC()"/>
+                                    <label for="loaiBaoCao-d">
+                                        Báo cáo dọc (Lương, phụ cấp)
+                                    </label>
+                                </div>                                
+                            </div>
+                        </div>
+                    </form>
+                    <form action="" class="form-horizontal" id="lsl">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loại số liệu:</label>
+                            <div class="col-sm-8" id="loai">
+                                <div class="radio" id="div-loai-th">
+                                    <input type="radio" id="loai-th" name="optradio" value="1" checked onclick="change()" />
+                                    <label for="loai-th">
+                                        Tổng hợp
+                                    </label>                                    
+                                </div>
+                                <div class="radio" id="div-loai-dt">
+                                    <input type="radio" id="loai-dt" name="optradio" value="2" onclick="change()" />
+                                    <label for="loai-th">
+                                        Đơn vị dự toán
+                                    </label>
+                                </div>
+                                <div class="radio" id="div-loai-nv00">
+                                    <input type="radio" id="loai-nv00" name="optradio" value="2" onclick="change()" />
+                                    <label for="loai-nv00">
+                                        Lương, phụ cấp + Nghiệp vụ 00
+                                    </label>
+                                </div>
+                                <div class="radio" id="div-loai-dn">
+                                    <input type="radio" id="loai-dn" name="optradio" value="3" onclick="change()" />
+                                    <label for="loai-nv00">
+                                        Khối doanh nghiệp
+                                    </label>
+                                </div>
+                                <div class="radio" id="div-loai-nv">
+                                    <input type="radio" id="loai-nv" name="optradio" value="3" onclick="change()" />
+                                    <label for="loai-nv">
+                                        Nghiệp vụ
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-6" id="tv">
+                    <div id="id_to" class="ls-box" data-check="first">
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <span class="text-muted">|</span>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "Report")">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    changeBC();
+
+    function changeBC() {
+        var loaiBaoCao = $("#loaiBaoCao input[type='radio']:checked").val();
+        $('#div-loai-nv').hide();
+        $('#div-loai-th').hide();
+        $('#div-loai-nv00').hide();        
+        $('#div-loai-dt').hide();
+        $('#div-loai-dn').hide();
+        if (loaiBaoCao == "1") {
+            change();
+            document.getElementById("tl").style.display = 'inherit';
+            document.getElementById("tv").style.display = 'inherit';
+            document.getElementById("div-loai-nv").style.display = 'inherit';
+            document.getElementById("div-loai-th").style.display = 'inherit';
+            document.getElementById("div-loai-nv00").style.display = 'inherit';
+        } else {
+            $('#tl').hide();
+            $('#tv').hide();
+            document.getElementById("div-loai-th").style.display = 'inherit';
+            document.getElementById("div-loai-dt").style.display = 'inherit';
+            document.getElementById("div-loai-dn").style.display = 'inherit';
+        }
+    }
+
+    function change() {
+        var loaiBaoCao = $("#loaiBaoCao input[type='radio']:checked").val();
+        if (loaiBaoCao == "1"){
+            var id_phongban = $("#id_phongban").val();
+            var loai = $("#loai input[type='radio']:checked").val();
+
+            var url = '@Url.Action("Ds_To")' +
+                       "/?id_phongban=" + id_phongban +
+                       "&loai=" + loai;
+
+            fillCheckboxList("id_to", "To", url);
+        }
+    }
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+        var ext = $(this).data("ext");
+
+        var id_phongban = $("#id_phongban").val();
+        var loaiBaoCao = $("#loaiBaoCao input[type='radio']:checked").val();
+        var loai = $("#loai input[type='radio']:checked").val();
+
+        $("input:checkbox[check-group='To']").each(function () {
+            if (this.checked) {
+                var item = this.value;
+                var url = '@Url.Action("Print")' +
+                    "/?ext=" + ext +
+                    "&id_phongban=" + id_phongban +
+                    "&loai=" + loai +
+                    "&loaiBC=" + loaiBaoCao +
+                    "&to=" + item;
+
+                url = unescape(url);
+                links.push(url);
+            }
+        });
+
+        openLinks(links, 100);
+    });
+
+</script>

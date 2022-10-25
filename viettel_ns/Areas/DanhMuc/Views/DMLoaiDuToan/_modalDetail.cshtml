@@ -1,0 +1,28 @@
+﻿@using Viettel.Domain.DomainModel
+@model DM_LoaiDuToan
+
+<div class="modal-body">
+    <div class="form-group row">
+        <div class="form-group">
+            <div class="col-sm-6">
+                <label for="txtLoaiDuToanModal">Mã loại dự toán</label>
+                <p>@Html.Raw(Model.sMaLoaiDuToan)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtTenLoaiDuToanModal">Tên loại dự toán</label>
+                <p>@Html.Raw(Model.sTenLoaiDuToan)</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <label for="txtGhiChuModal">Ghi chú</label>
+                <p>@Html.Raw(Model.sGhiChu)</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+    </div>
+</div>

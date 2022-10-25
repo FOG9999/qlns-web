@@ -1,0 +1,84 @@
+﻿@using Viettel.Domain.DomainModel
+@model NNS_DotNhan
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="card">
+        <div class="card-header">
+            <div class="form-group">
+                @if (Model.iID_DotNhan == new Guid())
+                {
+                    @Html.Raw("Thêm mới thông tin đợt nhận")
+                }
+                else
+                {
+                    @Html.Raw("Cập nhật thông tin " + @Model.sNoiDung)
+                }
+
+                <hr>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <input type="hidden" id="txt_IDDotNhan" value="@Model.iID_DotNhan">
+                    <label for="txtMaKhoi">Loại dự toán</label>
+                    @Helpers.Required()
+                    @Html.DropDownListFor(model => model.sMaLoaiDuToan, (IEnumerable<SelectListItem>)(ViewBag.ListLoaiDuToan), new { @class = "form-control" })
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="txt_NoiDung">Nội dung</label>
+                    @Helpers.Required()
+                    <input type="text" required id="txt_NoiDung" class="form-control" value="@Model.sNoiDung" maxlength="500" />
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="txtSoChungTu">Số chứng từ</label>
+                    <input type="text" disabled required id="txtSoChungTu" class="form-control" value="@Model.sSoChungTu" maxlength="50" />
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="txt_NgayChungTu">Ngày chứng từ</label>
+                    <div class='input-group date'>
+                        @Html.TextBoxFor(x => x.dNgayChungTu, "{0:dd/MM/yyyy}", new { @class = "form-control date", format = "dd/mm/yyyy" })
+                        <span class="btn-default input-group-addon">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </span>
+                    </div>
+
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="txt_SoQuyetDinh">Số quyết định</label>
+                    @Helpers.Required()
+                    <input type="text" required id="txt_SoQuyetDinh" class="form-control" value="@Model.sSoQuyetDinh" maxlength="50" />
+
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="txt_NgayQuyetDinh">Ngày quyết định</label>
+                    @Helpers.Required()
+                    <div class='input-group date'>
+                        @Html.TextBoxFor(x => x.dNgayQuyetDinh, "{0:dd/MM/yyyy}", new { @class = "form-control date", format = "dd/mm/yyyy" })
+                        <span class="btn-default input-group-addon">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group text-center">
+                    <button class="btn btn-default" onclick="CancelSaveData()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                    <button class="btn btn-primary" onclick="SaveData()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @Html.Partial("_SheetScript")
+    <script src="~/Scripts/DanhMuc/jsDotNhanNguonNS.js"></script>
+}
+

@@ -1,0 +1,418 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDT_ThongTriViewModel
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+<div class="pull-right">
+    <button class="btn btn-default" onclick="RejectIndex()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+</div>
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body abc">
+                <div class="header-create-update">
+                    <span>Cập nhật thông tri</span>
+                </div>
+                <div class="form-group">
+                    <div class="color-text-red">
+                        <h4 style="padding-left:8px">Thông tin nội dung:</h4>
+                        <hr class="color-background-red" />
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input type="text" value="@Model.iID_ThongTriID" id="txt_iID_ThongTriID" hidden />
+                                <label for="txt_DonViQuanLy" class="label-item">Đơn vị</label>
+                                <input type="text" value="@Model.TenDonVi" required id="txt_DonViQuanLyView" class="form-control" maxlength="255" disabled />
+                                <input type="text" value="@Model.iID_DonViID" required id="txt_DonViQuanLy" class="form-control" maxlength="255" style="display:none" />
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txt_NguonVon" class="label-item">Nguồn vốn</label>
+                                <input type="text" value="@Model.TenNguonVon" required id="txt_NguonVonView" class="form-control" maxlength="255" disabled />
+                                <input type="text" value="@Model.sMaNguonVon" required id="txt_NguonVon" class="form-control" maxlength="255" style="display:none" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="txtLoaiCongTrinh" class="label-item">Loại công trình</label>
+                                    <input type="text" value="@Model.sTenLoaiCongTrinh" id="txtLoaiCongTrinhView" class="form-control clearable" disabled />
+                                    <input type="text" value="@Model.iID_LoaiCongTrinh" id="txtLoaiCongTrinh" class="form-control clearable" style="display:none" />
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txt_NamThucHien" class="label-item">Năm thực hiện</label>
+                                <input type="text" value="@Model.iNamThongTri" required id="txt_NamThucHien" class="form-control" maxlength="255" disabled />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="txt_MaThongTri" class="label-item">Mã thông tri</label>
+                                <input type="text" value="@Model.sMaThongTri" required id="txt_MaThongTri" class="form-control" maxlength="50" disabled />
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txt_NgayTaoThongTri" class="label-item">Ngày tạo thông tri</label>
+                                <div class='input-group date'>
+                                    <input type='text' value="@Model.dNgayThongTri" required class="form-control" id="txt_NgayTaoThongTri" autocomplete="off" disabled />
+                                    <span class="btn-default input-group-addon">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txt_NguoiLapThongTri" class="label-item">Người lập thông tri</label>
+                                <input type="text" value="@Model.sNguoiLap" required id="txt_NguoiLapThongTri" class="form-control" maxlength="50" disabled />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="txt_TruongPhongTaiChinh" class="label-item">Trưởng phòng tài chính</label>
+                                <input type="text" value="@Model.sTruongPhong" required id="txt_TruongPhongTaiChinh" class="form-control" maxlength="50" disabled />
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txt_ThuTruongDonVi" class="label-item">Thủ trưởng đơn vị</label>
+                                <input type="text" value="@Model.sThuTruongDonVi" required id="txt_ThuTruongDonVi" class="form-control" maxlength="50" disabled />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-12" style="margin-top:20px">
+                        <div class="row">
+                            <div class="form-group text-center">
+                                <button class="btn btn-primary" onclick="FilterData()"><i class="fa fa-search" aria-hidden="true"></i><span>Lọc</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class=" active" id="qt_kinh_phi_nam_nam_truoc_tab" data-toggle="tab" href="#qt_kinh_phi_nam_nam_truoc" role="tab" aria-controls="qt_kinh_phi_nam_nam_truoc" aria-selected="true">Quyết toán kinh phí năm trước</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="" id="qt_kinh_phi_nam_sau_tab" data-toggle="tab" href="#qt_kinh_phi_nam_sau" role="tab" aria-controls="qt_kinh_phi_nam_sau" aria-selected="false">Quyết toán kinh phí năm nay</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="" id="thu_kinh_phi_chuyen_nam_sau_tab" data-toggle="tab" href="#thu_kinh_phi_chuyen_nam_sau" role="tab" aria-controls="thu_kinh_phi_chuyen_nam_sau" aria-selected="false">Thu kinh phí chuyển năm sau</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="" id="cap_thanh_khoan_tab" data-toggle="tab" href="#cap_thanh_khoan" role="tab" aria-controls="cap_thanh_khoan" aria-selected="false">Cấp thanh khoản</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="" id="thu_thanh_khoan_tab" data-toggle="tab" href="#thu_thanh_khoan" role="tab" aria-controls="thu_thanh_khoan" aria-selected="false">Thu thanh khoản</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="" id="cap_kinh_phi_chuyen_sang_tab" data-toggle="tab" href="#cap_kinh_phi_chuyen_sang" role="tab" aria-controls="cap_kinh_phi_chuyen_sang" aria-selected="false">Cấp kinh phí chuyển sang</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="" id="thu_nop_ngan_sach_tab" data-toggle="tab" href="#thu_nop_ngan_sach" role="tab" aria-controls="thu_nop_ngan_sach" aria-selected="false">Thu nộp ngân sách</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade active" id="qt_kinh_phi_nam_nam_truoc" role="tabpanel" aria-labelledby="qt_kinh_phi_nam_nam_truoc_tab">
+                            <table class="table table-bordered" id="lstData_QT_KinhPhiNamTruoc">
+                                <thead>
+                                    <tr>
+                                        <th width="5%" style="text-align:center">STT</th>
+                                        <th width="10%" style="text-align:center">Mục</th>
+                                        <th width="10%" style="text-align:center">Tiểu mục</th>
+                                        <th width="10%" style="text-align:center">Tiết mục</th>
+                                        <th width="10%" style="text-align:center">Ngành</th>
+                                        <th width="45%" style="text-align:center">Nội dung</th>
+                                        <th width="10%" style="text-align:center">Số tiền</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                </tbody>
+
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="qt_kinh_phi_nam_sau" role="tabpanel" aria-labelledby="qt_kinh_phi_nam_sau_tab">
+                            <table class="table table-bordered" id="lstData_QT_KinhPhiNamSau">
+                                <thead>
+                                    <tr>
+                                        <th width="5%" style="text-align:center">STT</th>
+                                        <th width="10%" style="text-align:center">Mục</th>
+                                        <th width="10%" style="text-align:center">Tiểu mục</th>
+                                        <th width="10%" style="text-align:center">Tiết mục</th>
+                                        <th width="10%" style="text-align:center">Ngành</th>
+                                        <th width="45%" style="text-align:center">Nội dung</th>
+                                        <th width="10%" style="text-align:center">Số tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="thu_kinh_phi_chuyen_nam_sau" role="tabpanel" aria-labelledby="thu_kinh_phi_chuyen_nam_sau_tab">
+                            <table class="table table-bordered" id="lstData_thu_kinh_phi_chuyen_nam_sau">
+                                <thead>
+                                    <tr>
+                                        <th width="5%" style="text-align:center">STT</th>
+                                        <th width="10%" style="text-align:center">Mục</th>
+                                        <th width="10%" style="text-align:center">Tiểu mục</th>
+                                        <th width="10%" style="text-align:center">Tiết mục</th>
+                                        <th width="10%" style="text-align:center">Ngành</th>
+                                        <th width="45%" style="text-align:center">Nội dung</th>
+                                        <th width="10%" style="text-align:center">Số tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="cap_thanh_khoan" role="tabpanel" aria-labelledby="cap_thanh_khoan_tab">
+                            <table class="table table-bordered" id="lstData_cap_thanh_khoan">
+                                <thead>
+                                    <tr>
+                                        <th width="5%" style="text-align:center">STT</th>
+                                        <th width="10%" style="text-align:center">Mục</th>
+                                        <th width="10%" style="text-align:center">Tiểu mục</th>
+                                        <th width="10%" style="text-align:center">Tiết mục</th>
+                                        <th width="10%" style="text-align:center">Ngành</th>
+                                        <th width="45%" style="text-align:center">Nội dung</th>
+                                        <th width="10%" style="text-align:center">Số tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="thu_thanh_khoan" role="tabpanel" aria-labelledby="thu_thanh_khoan_tab">
+                            <table class="table table-bordered" id="lstData_thu_thanh_khoan">
+                                <thead>
+                                    <tr>
+                                        <th width="5%" style="text-align:center">STT</th>
+                                        <th width="10%" style="text-align:center">Mục</th>
+                                        <th width="10%" style="text-align:center">Tiểu mục</th>
+                                        <th width="10%" style="text-align:center">Tiết mục</th>
+                                        <th width="10%" style="text-align:center">Ngành</th>
+                                        <th width="45%" style="text-align:center">Nội dung</th>
+                                        <th width="10%" style="text-align:center">Số tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="cap_kinh_phi_chuyen_sang" role="tabpanel" aria-labelledby="cap_kinh_phi_chuyen_sang_tab">
+                            <table class="table table-bordered" id="lstData_cap_kinh_phi_chuyen_sang">
+                                <thead>
+                                    <tr>
+                                        <th width="5%" style="text-align:center">STT</th>
+                                        <th width="10%" style="text-align:center">Mục</th>
+                                        <th width="10%" style="text-align:center">Tiểu mục</th>
+                                        <th width="10%" style="text-align:center">Tiết mục</th>
+                                        <th width="10%" style="text-align:center">Ngành</th>
+                                        <th width="45%" style="text-align:center">Nội dung</th>
+                                        <th width="10%" style="text-align:center">Số tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="thu_nop_ngan_sach" role="tabpanel" aria-labelledby="thu_nop_ngan_sach_tab">
+                            <table class="table table-bordered" id="lstData_thu_nop_ngan_sach">
+                                <thead>
+                                    <tr>
+                                        <th width="5%" style="text-align:center">STT</th>
+                                        <th width="10%" style="text-align:center">Mục</th>
+                                        <th width="10%" style="text-align:center">Tiểu mục</th>
+                                        <th width="10%" style="text-align:center">Tiết mục</th>
+                                        <th width="10%" style="text-align:center">Ngành</th>
+                                        <th width="45%" style="text-align:center">Nội dung</th>
+                                        <th width="10%" style="text-align:center">Số tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="divModalConfirm">
+</div>
+
+<script>
+    $(document).ready(function () {
+        FilterData();
+
+        GetDropdownLoaiCongTrinh();
+    });
+
+    function RejectIndex() {
+        window.location.href = "/QLVonDauTu/VDT_ThongTri/Index";
+    }
+
+    function isStringEmpty(value) {
+        if (value == null || value == undefined || value == "") {
+            return false;
+        }
+        return true;
+    }
+
+    function FilterData() {
+        var item = GetDataFilter();
+
+        var message = [];
+        if (!isStringEmpty(item.iID_DonViQuanLy)) {
+            message.push("Thông tin đơn vi chưa có hoặc chưa chính xác");
+        } else {
+            if (!isStringEmpty(item.NamThucHien)) {
+                message.push("Chưa nhập năm thực hiện");
+            }
+        }
+
+        if (message.length > 0) {
+            popupModal("Lỗi lọc dữ liệu thông tri", message, 1);
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/QLVonDauTu/VDT_ThongTri/Filter",
+            data: { model: item },
+            success: function (resp) {
+                LoadViewDataChung("lstData_QT_KinhPhiNamTruoc", resp.data, "QUYET_TOAN_KINH_PHI_NAM_TRUOC");
+                LoadViewDataChung("lstData_QT_KinhPhiNamSau", resp.data, "QUYET_TOAN_KINH_PHI_NAM_SAU");
+                LoadViewDataChung("lstData_thu_kinh_phi_chuyen_nam_sau", resp.data, "THU_KINH_PHI_CHUYEN_NAM_SAU");
+                LoadViewDataChung("lstData_cap_thanh_khoan", resp.data, "CAP_THANH_KHOAN");
+                LoadViewDataChung("lstData_thu_thanh_khoan", resp.data, "THU_THANH_KHOAN");
+                LoadViewDataChung("lstData_cap_kinh_phi_chuyen_sang", resp.data, "CAP_KINH_PHI_CHUYEN_SANG");
+                LoadViewDataChung("lstData_thu_nop_ngan_sach", resp.data, "THU_NOP_NGAN_SACH");
+            }
+        });
+    }
+
+    var arr_Type = ["QUYET_TOAN_KINH_PHI_NAM_TRUOC", "QUYET_TOAN_KINH_PHI_NAM_SAU"];
+
+    function LoadViewDataChung(idTable, data, type) {
+        var items = [];
+        var tongTien = 0;
+
+        if (type == "QUYET_TOAN_KINH_PHI_NAM_TRUOC") {
+            items = data.ListQuyetToanKinhPhiNamTruoc;
+            tongTien = data.TongTienQuyetToanKinhPhiNamTruocAsString;
+        }
+
+        if (type == "QUYET_TOAN_KINH_PHI_NAM_SAU") {
+            items = data.ListQuyetToanKinhPhiNamSau;
+            tongTien = data.TongTienQuyetToanKinhPhiNamSauAsString;
+        }
+
+        if (type == "THU_KINH_PHI_CHUYEN_NAM_SAU") {
+            items = data.ListThuKinhPhiChuyenNamSau;
+            tongTien = data.TongTienThuKinhPhiChuyenNamSauAsString;
+        }
+
+        if (type == "CAP_THANH_KHOAN") {
+            items = data.ListCapThanhKhoan;
+            tongTien = data.TongTienCapThanhKhoanAsString;
+        }
+
+        if (type == "THU_THANH_KHOAN") {
+            items = data.ListThuThanhKhoan;
+            tongTien = data.TongTienThuThanhKhoanAsString;
+        }
+
+        if (type == "CAP_KINH_PHI_CHUYEN_SANG") {
+            items = data.ListCapKinhPhiChuyenSang;
+            tongTien = data.TongTienCapKinhPhiChuyenSangAsString;
+        }
+
+        if (type == "THU_NOP_NGAN_SACH") {
+            items = data.ListThuNopNganSach;
+            tongTien = data.TongTienThuNopNganSachAsString;
+        }
+
+        if (items.length <= 0) {
+            $("#" + idTable + " tfoot").html("");
+            $("#" + idTable + " tbody").html("");
+            return;
+        }
+
+        var htmlSoTien = "";
+
+        htmlSoTien += "<tr>";
+        htmlSoTien += "<td style='border:none'></td>";
+        htmlSoTien += "<td style='border:none;font-weight:bold'>Tổng tiền : </td>";
+        htmlSoTien += "<td style='border:none'></td>";
+        htmlSoTien += "<td style='border:none'></td>";
+        htmlSoTien += "<td style='border:none'></td>";
+        htmlSoTien += "<td style='border:none'></td>";
+        htmlSoTien += "<td style='text-align:right;font-weight:bold'>" + tongTien + "</td>";
+        htmlSoTien += "</tr>";
+
+        $("#" + idTable + " tfoot").html(htmlSoTien);
+
+        var html = "";
+        var count = 1;
+
+        items.forEach(x => {
+            html += "<tr>";
+
+            html += '<td style="text-align:center">' + count + '</td>';
+            html += '<td style="text-align:left">' + x.Muc + '</td>';
+            html += '<td style="text-align:left">' + x.TieuMuc + '</td>';
+            html += '<td style="text-align:left">' + x.TietMuc + '</td>';
+            html += '<td style="text-align:left">' + x.Nganh + '</td>';
+            html += '<td style="text-align:left;">' + x.NoiDung + '</td>';
+            html += '<td style="text-align:right">' + x.SoTienAsString + '</td>';
+
+            html += "</tr>";
+
+            count++;
+        });
+
+        $("#" + idTable + " tbody").html(html);
+    }
+
+    function GetDataFilter() {
+        var donVi = $("#txt_DonViQuanLy").val();
+        var nguonVon = $("#txt_NguonVon").val();
+        var loaiCongTrinh = $("#drpLoaicongTrinh").val();
+        var namThucHien = $("#txt_NamThucHien").val();
+        var maThongTri = $("#txt_MaThongTri").val();
+        var ngayThongTri = $("#txt_NgayTaoThongTri").val();
+        var nguoiLapThongTri = $("#txt_NguoiLapThongTri").val();
+        var truongPhongTaiChinh = $("#txt_TruongPhongTaiChinh").val();
+        var thuTruongDonVi = $("#txt_ThuTruongDonVi").val();
+
+        return {
+            iID_DonViQuanLy: donVi,
+            iID_NguonVon: nguonVon,
+            iID_LoaiCongTrinh: loaiCongTrinh,
+            NamThucHien: namThucHien,
+            MaThongTri: maThongTri,
+            NgayTaoThongTri: ngayThongTri,
+            NguoiLapThongTri: nguoiLapThongTri,
+            TruongPhongTaiChinh: truongPhongTaiChinh,
+            ThuTruongDonVi: thuTruongDonVi
+        };
+    }
+</script>
+
+

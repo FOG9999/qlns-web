@@ -1,0 +1,362 @@
+﻿
+@using Viettel.Domain.DomainModel
+@model VDT_KHV_PhanBoVon
+
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+    <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsQLKeHoachVonNam.js"></script>
+    <link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
+    <script src="~/Scripts/js/dropdowntree.js"></script>
+
+    <style>
+        #pnlThongTinChiTiet .row {
+            /* background-color: #efefef;*/
+        }
+    </style>
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <input type="hidden" id="iId_PhanBoVonId" value="@Model.iID_PhanBoVonID">
+        <div class="card">
+            <div class="card-body create_thdt">
+
+                <input type="hidden" id="txtId" />
+                <input type="hidden" id="txtParentId" />
+                <input type="hidden" id="txtXauNoiMa" />
+                <input type="hidden" id="drpNganhOld">
+                <input type="hidden" id="drpDuAnOld">
+                <input type="hidden" id="drpPheDuyetOld">
+                <input type="hidden" id="drpLoaiNganSachOld" value="@Model.iID_LoaiNguonVonID">
+                <input type="hidden" id="drpDonViQuanLy" value="@Model.iID_DonViQuanLyID">
+
+                <div class="form-group">
+                    <div class="">
+                        <label class="color-text-red"><h4>Thông tin chung:</h4></label>
+                        <div class="pull-right">
+                            <button class="btn btn-success show-edit-off" onclick="EditThongTinChung_On()"><i class="fa fa-pencil-square-o" aria-hidden="true"></i><span>Sửa</span></button>
+                            <button class="btn btn-primary show-edit-on" onclick="SaveThongTinChung()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                            <button class="btn btn-default show-edit-on" onclick="CancelSaveThongTinChung()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                        </div>
+                    </div>
+                    <hr class='color-background-red' />
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label>Đơn vị quản lý</label>
+                            @*@Html.DropDownList("drpDonViQuanLyUpdate", ViewBag.drpDonViQuanLy as List<SelectListItem>, new { @class = "form-control clearable", @disabled = "disabled" })*@
+                            @Html.DropDownListFor(model => model.iID_DonViQuanLyID, ViewBag.drpDonViQuanLy as List<SelectListItem>, new { @class = "form-control", @disabled = "disabled" })
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txtSoKeHoach">Số kế hoạch <span class="require">*</span></label>
+                            <input type="text" value="@Model.sSoQuyetDinh" id="txtSoKeHoach" class="form-control clearable show-edit-off" disabled="disabled">
+                            <input type="hidden" id="txtSoQuyetDinhOld" value="@Model.sSoQuyetDinh">
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txtNgayLap">Ngày lập <span class="require">*</span></label>
+                            <div class='input-group date'>
+                                <input type='text' class="form-control" id="txtNgayLap" value="@Model.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy")" disabled="disabled" />
+                                <span class="btn-default input-group-addon">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                            <input type="hidden" id="txtNgayLapOld" value="@Model.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy")">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label>Nguồn vốn</label>
+                            @Html.DropDownList("drpNguonNganSach", ViewBag.drpNguonVon as List<SelectListItem>, new { @class = "form-control clearable", @disabled = "disabled" })
+                        </div>
+                        <div class="col-sm-3">
+                            <label>Loại ngân sách</label>
+                            @Html.DropDownList("drpLoaiNganSach", ViewBag.drpLoaiNganSach as List<SelectListItem>, new { @class = "form-control clearable", @disabled = "disabled" })
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txt_NgayToTrinh">Loại - khoản</label>
+                            <input type="text" value="" class="form-control clearable show-edit-off" disabled="disabled">
+                        </div>
+
+                        <div class="col-sm-3">
+                            <label for="txt_SoToTrinh">Năm kế hoạch <span class="require">*</span></label>
+                            <input type="text" id="txtNamKeHoach" value="@Model.iNamKeHoach" class="form-control clearable show-edit-off" disabled="disabled">
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="form-group">
+                    <div class="">
+                        <label class="color-text-red"><h4>Thông tin chi tiết: </h4></label>
+                        <div class="pull-right">
+                            <button class="btn btn-success show-edit-detail-off" onclick="EditThongTinChiTiet_On()"><i class="fa fa-pencil-square-o" aria-hidden="true"></i><span>Sửa</span></button>
+                            <button class="btn btn-primary show-edit-detail-on" onclick="SaveThongTinChiTiet()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                            <button class="btn btn-default show-edit-detail-on" onclick="CancelSaveThongChiTiet()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                        </div>
+                    </div>
+                    <hr class="color-background-red">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="txt_SoToTrinh">Chi tiêu ngân sách được duyệt : <b>@ViewBag.fChiTieuDuyet</b></label>
+                        </div>
+                    </div>
+                    <div id="pnlThongTinChiTiet">
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="drpNganh">Mục - Tiểu mục - Tiết mục - Ngành<span class="require">*</span></label>
+                                <select id="drpNganh" class="form-control clearable"></select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtLoaiCongTrinh">Loại công trình <span class="require">*</span></label>
+                                <input type="text" id="txtLoaiCongTrinh" class="form-control clearable">
+                                <input type="hidden" id="drpLoaicongTrinh">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="drpDuAn">Dự án <span class="require">*</span></label>
+                                <select id="drpDuAn" class="form-control clearable"></select>
+                            </div>
+                            <div class="col-sm-3 col-sm-offset-3">
+                                <div style=" margin-top: 25px;" class="pull-right">
+                                    <span class="require text-italic mr-10">(Thêm mới dự án tại bước nhập chỉ tiêu)</span>
+                                    <button class="btn btn-primary btn-icon"><i class="fa fa-plus" aria-hidden="true" style="margin:0px;"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <label for="txt_CoQuanPheDuyet">Thời gian thực hiện <span class="require">*</span></label>
+                                <div style="display:flex">
+                                    <input type="text" class="form-control clearable" readonly="readonly" maxlength="4" id="txtNamThucHienFrom" /> <span style="margin: 8px 5px 0px 5px;">-</span> <input type="text" maxlength="4" readonly="readonly" class="form-control clearable" id="txtNamThucHienTo" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txt_SoToTrinh">Cấp phê duyệt</label>
+                                @Html.DropDownList("drpCapPheDuyet", ViewBag.drpCapPheDuyet as List<SelectListItem>, new { @class = "form-control clearable", @disabled = "disabled" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txt_SoToTrinh">Mã kết nối</label>
+                                <input type="text" readonly="readonly" class="form-control clearable" id="txtMaKetNoi">
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txt_SoToTrinh">Giá trị đầu tư</label>
+                                <input type="text" readonly="readonly" class="form-control clearable" id="txtGiaTriDauTu">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <label for="txt_SoToTrinh">Vốn đã bố trí</label>
+                                <input type="text" readonly="readonly" class="form-control clearable" id="txtVonDaBoTri">
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txt_SoToTrinh">Vốn còn lại</label>
+                                <input type="text" readonly="readonly" class="form-control clearable" id="txtVonConLai">
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txt_SoToTrinh">Giá trị đã ứng</label>
+                                <input type="text" class="form-control clearable" disabled="disabled" />
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txt_SoToTrinh">Giá trị đã thu hồi</label>
+                                <input type="text" class="form-control clearable" disabled="disabled" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <label for="txt_SoToTrinh">Kế hoạch ứng</label>
+                                <input type="text" class="form-control clearable" disabled="disabled" />
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txt_SoToTrinh">KH vốn năm trước chuyển sang</label>
+                                <input type="text" class="form-control clearable" disabled="disabled" />
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txt_SoToTrinh">Chỉ tiêu ngân sách được duyệt <span class="require">*</span></label>
+                                <input required type='text' class="form-control clearable" id="txtChiTieuDuocDuyet" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txt_SoToTrinh">Ghi chú</label>
+                                <textarea class="form-control clearable" id="txtGhiChu"></textarea>
+                            </div>
+                            <div class="col-sm-6">
+                                <div style=" margin-top: 25px; " class="pull-right">
+                                    <span class="require text-italic mr-10">(Thêm dữ liệu xuống bảng chi tiết)</span>
+                                    <button class="btn btn-info btn-icon" onclick="ClearDataInsert()"><i class="fa fa-refresh" aria-hidden="true" style="margin:0px;"></i></button>
+                                    <button class="btn btn-primary btn-icon" onclick="InsertDetailData(2)"><i class="fa fa-plus" aria-hidden="true" style="margin:0px;"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <div style=" ">
+                                    <button class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i><span>Lấy số liệu</span></button>
+                                    <span class="require text-italic">(Lấy dự án- công trình chuyển tiếp chưa lập chỉ tiêu)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div id="ViewTable" style="overflow-x: auto; overflow-y: auto; max-height:300px;"></div>
+                    <table id="SumTable" class="table table-border">
+                        <tfoot>
+                            <tr>
+                                <th width="3%"></th>
+                                <th width="200px"></th>
+                                <th width="200px"></th>
+                                <th width="400px" style="text-align:center;"> <span style="font-size:15px;font-weight:700">&Sigma;</span> Tổng cộng:</th>
+                                <th width="200px"></th>
+                                <th width="200px"></th>
+                                <th width="200px"></th>
+                                <th width="200px"></th>
+                                <th width="200px"></th>
+                                <th width="200px"></th>
+                                <th width="300px"></th>
+                                <th width="10%"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="form-group">
+                    <div class="">
+                        <label class="color-text-red"><h4>Thông tin tài liệu đính kèm</h4></label>
+                        <div class="pull-right">
+                            <button class="btn btn-success show-edit-attach-off" onclick="EditTaiLieu_On()"><i class="fa fa-pencil-square-o" aria-hidden="true"></i><span>Sửa</span></button>
+                            <button class="btn btn-success show-edit-attach-on" onclick="CancelTaiLieu()"><i class="fa fa-plus" aria-hidden="true"></i><span>Đính kèm</span></button>
+                            <button class="btn btn-default show-edit-attach-on" onclick="CancelTaiLieu()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                        </div>
+                    </div>
+                    <hr class="color-background-red">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th width="5%">STT</th>
+                                        <th width="75%">Tài liệu</th>
+                                        <th width="10%">Size</th>
+                                        <th width="10%" class="show-edit-attach-on"></th>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="show-edit-attach-on"></td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                        <div class="form-group text-center">
+                            <button class="btn btn-default" onclick="CancelSaveData()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                        </div>
+
+                    </div>
+                </div>
+
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+
+<script>
+    var tblDataGrid = [];
+    var dataUpdate = [];
+    var iIdMax = 3;
+
+    $(document).ready(function () {
+
+        CancelTaiLieu();
+        GetDropdownLoaiCongTrinh();
+        $("#txtNamKeHoach").change(function (e) {
+            $("#drpLoaiNganSach").empty();
+            $("#drpLoaiKhoan").empty();
+            $("#drpNganh").empty();
+            GetDataDropdownLoaiNganSach(true);
+        });
+
+        $("#drpLoaiNganSach").change(function (e) {
+            $("#drpLoaiKhoan").empty();
+            $("#drpNganh").empty();
+            GetDataDropdownLoaiAndKhoanByLoaiNganSach(true);
+        });
+
+        $("#drpLoaiKhoan").change(function (e) {
+            $("#drpNganh").empty();
+            GetDataDropdownNganh(true);
+        });
+
+        $("#drpDuAn").change(function (e) {
+            $("#drpCapPheDuyet").val($("#drpDuAn").val());
+            GetThongTinDauTuDuAn(true);
+        });
+
+
+        $("#txtChiTieuDuocDuyet").on("change", function () {
+            var fSauChinh = 0;
+            if ($("#txtChiTieuDuocDuyet").val() == null) {
+                $("#txtChiTieuDuocDuyet").val(0);
+            }
+            if ($.isNumeric($("#txtChiTieuDuocDuyet").val().replaceAll(".", ""))) {
+                var sNumber = Number($("#txtChiTieuDuocDuyet").val().replaceAll(".", "")).toLocaleString('vi-VN');
+                $("#txtChiTieuDuocDuyet").val(sNumber);
+            }
+            else {
+                $("#txtChiTieuDuocDuyet").val(0);
+            }
+        });
+
+        GetInfoPhanBoVonChiTietInGridViewByPhanBoVonID($("#iId_PhanBoVonId").val());
+
+        EditThongTinChung_Off();
+        EditThongTinChiTiet_Off();
+        GetDataDropdownLoaiNganSach(true);
+    });
+
+    function GetItemData(iId) {
+        var data = $.map(tblDataGrid, function (n) { return n.iId == iId ? n : null })[0];
+        $("#txtId").val(data.iId);
+        $("#drpNganhOld").val(data.iID_NganhID);
+        $("#drpDuAnOld").val(data.iID_DuAnID);
+        trLoaiCongTrinh.setSelection([data.iId_LoaiCongTrinh]);
+        $("#drpLoaicongTrinh").val(data.iId_LoaiCongTrinh);
+        $("#txtMaKetNoi").val(data.sMaKetNoi);
+        $("#txtGiaTriDauTu").val(data.fGiaTriDauTu)
+        $("#drpPheDuyetOld").val(data.iId_CapPheDuyet);
+        $("#txtVonDaBoTri").val(data.fVonDaBoTri);
+        $("#txtVonConLai").val(data.fVonConLai);
+        $("#txtKeHoachUng").val("");
+        $("#txtGiaTriUng").val("");
+        $("#txtGiaTriThuHoi").val("");
+        $("#txtVonNamTruocChuyenSang").val("");
+        $("#txtChiTieuDuocDuyet").val(data.fChiTieuNganSachDuocDuyet);
+        $("#txtGhiChu").val(data.sGhiChu);
+        $("#txtGTTruocDieuChinh").val(data.fGiaTrPhanBo);
+        $("#txtGTSauDieuChinh").val(data.fGiaTriSauDieuChinh);
+        $("#sLoaiDieuChinh").val(data.sLoaiDieuChinh);
+        $("#txtGiaTriDieuChinh").val(data.fGiaTriDieuChinh)
+        GetDataDropdownNganhEdit(data.iID_NganhID, @Model.iNamKeHoach);
+    }
+
+</script>

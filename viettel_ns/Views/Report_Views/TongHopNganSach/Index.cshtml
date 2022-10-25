@@ -1,0 +1,70 @@
+﻿@using VIETTEL.Models
+@{
+
+    var items = new List<MenuItem>()
+{
+    new MenuItem {
+        name = "Tổng hợp giao ban - Theo Bql",
+        url = Url.Action("Index", "rptTongHop_GiaoBan"),
+        id = "TH1C1-GB"},
+    //new MenuItem {
+    //    name = "Tổng hợp giao ban - Theo Bql",
+    //    url = Url.Action("Index", "rptTongHop_GiaoBan_v2"),
+    //    id = "TH1C1-GB Ng"},
+    new MenuItem{
+        name = "Tổng hợp giao ban - Theo đơn vị",
+        url = Url.Action("Index", "rptTongHop_GiaoBan_DonVi", new { }),
+        id = "TH1C1-GB DV"},
+    //new MenuItem{
+    //    name = "Tổng hợp giao ban - Theo đơn vị",
+    //    url = Url.Action("Index", "rptTongHop_GiaoBan_DonViNg", new { }),
+    //    id = "TH1C1-GB DV Ng"},
+
+    new MenuItem{
+        name = "Tổng hợp chỉ tiêu ngân sách đơn vị",
+        url = Url.Action("Index", "rptTongHop_ChiTieu_DonVi"),
+        id = "NS-CT1"},
+
+      new MenuItem{
+        name = "Tổng hợp cấp phát ngân sách đơn vị",
+        url = Url.Action("Index", "rptTongHop_ChiTieu_CapPhat"),
+        id = "NS-CP"},
+
+
+      new MenuItem {
+        name = "Tổng hợp tình hình thực hiện ngân sách năm - Theo loại ngân sách",
+        url = Url.Action("Index", "rptTongHop_NganSachLNS"),
+        id = "THNS-LNS"},
+
+
+     new MenuItem{
+        id="",
+        name = "Tổng hợp chỉ tiêu ngân sách năm " + PhienLamViec.iNamLamViec + " tách BQL",
+        url = Url.Action("Index", "rptTongHop_ChiTieu_TachBQL_ChonTo"),
+        note = ""},
+
+
+    new MenuItem{
+        name = "Tổng hợp quyết toán - Năm quý",
+        url = Url.Action("Index", "rptQuyetToan_TongHop_NamQuy"),
+        id = "QTN-01A"},
+
+    new MenuItem{
+        name = "Tổng hợp quyết toán - Năm quý - Chọn tờ theo đơn vị",
+        url = Url.Action("Index", "rptQuyetToan_TongHop_NamQuy_ChonTo2"),
+        id = "QTN-01C"},
+
+      new MenuItem{
+        name = "Báo cáo số liệu quyết toán chi ngân sách năm",
+        url = Url.Action("Index", "rptQuyetToanNam_ChiTiet"),
+        id = "QTN-03"},
+      new MenuItem{
+        name = "Báo cáo số liệu chênh lệch dự toán - quyết toán chi ngân sách năm",
+        url = Url.Action("Index", "rptTongHop_ChiTieu_QT"),
+        id = "QTN-04"},
+};
+
+    ViewBag.Title = "Báo cáo tổng hợp ngân sách năm " + PhienLamViec.iNamLamViec;
+
+}
+@Html.Partial("_report_table", items)

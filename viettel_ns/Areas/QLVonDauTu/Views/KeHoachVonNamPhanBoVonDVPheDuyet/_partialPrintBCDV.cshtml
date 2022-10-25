@@ -1,0 +1,95 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTKeHoachVonNamDuocDuyetExport
+<style>
+    .tableFixHead {
+        overflow: auto;
+        height: 242px;
+    }
+
+        .tableFixHead thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+</style>
+<div class="form-group">
+    <h4 class="color-text-red">Thông tin báo cáo:</h4>
+    <hr class='color-background-red' />
+</div>
+
+@*Thông tin nội dung*@
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="header-create-update">
+                    <span>
+                        @Html.Raw("In báo cáo kế hoạch vốn năm được duyệt")
+                    </span>
+                </div>
+            </div>
+
+            <div class="card-body tab-content" style="padding-top: 0px !important;">
+                <div class="row">
+                    <div class="col-sm-4 col-md-4 col-lg-4">
+                        <div class="col-sm-12 form-group">
+                            <label>Loại chứng từ</label>
+                            @Helpers.Required()
+                            @Html.DropDownList("ValueItem", (SelectList)(ViewBag.lstLoaiChungTu), new { @class = "form-control", @id = "ValueItemLoaiChungTuDv" })
+                        </div>
+                        <div class="col-sm-12 form-group">
+                            <label for="txtNamKeHoach">Năm kế hoạch</label>@Helpers.Required()<br />
+                            <input type="text" class="form-control yearFormat" id="txtNamKeHoach" />
+                        </div>
+                        <div class="col-sm-12 form-group" id="divMaNguonNganSach">
+                            <label>Loại nguồn vốn</label>
+                            @Helpers.Required()
+                            @Html.DropDownList("iID_MaNguonNganSachdv", (SelectList)(ViewBag.lstNguonVon), new { @class = "form-control iID_MaNguonNganSachDv", @id = "iID_MaNguonNganSachDv" })
+                        </div>
+                        <div class="col-sm-12 form-group" id="divLoaiCongTrinh">
+                            <label>Loại công trình</label>
+                            @Helpers.Required()
+                            @Html.DropDownList("iID_LoaiCongTrinhdv", (SelectList)(ViewBag.lstLoaiCongTrinh), new { @class = "form-control iID_LoaiCongTrinhDv", @id = "iID_LoaiCongTrinhDv" })
+                        </div>
+                        <div class="col-sm-12 form-group">
+                            <label>Đơn vị tính</label>
+                            @Helpers.Required()
+                            @Html.DropDownList("ValueItemdv", (SelectList)(ViewBag.lstDonViTinh), new { @class = "form-control", @id = "ValueItemDonViTinhDv" })
+                        </div>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                        <div class="col-sm-12 tableFixHead" id="">
+                            <table class="table table-bordered" id="tblListDonViQuanLy">
+                                <thead>
+                                <th><input type="checkbox" name="cbAll_DVQL" class="cbAll_DVQL" id="select-all-donviquanly" /></th>
+                                <th width="90%">Đơn vị</th>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        foreach (var item in Model.lstDonViQuanLy)
+                                        {
+                                            <tr style="cursor: pointer">
+                                                <td align="center"><input type="checkbox" name="cb_DVQL" class="cb_DVQL" value="@item.iID_Ma" /></td>
+                                                <td align="left">@item.sTen</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-4 col-lg-4">
+                        <div class="col-sm-12 form-group">
+                            <label for="txtHeader1">Tiêu đề 1</label>@Helpers.Required()<br />
+                            <input type="text" class="form-control" id="txtHeader1" value="DỰ TOÁN CHI XDCB NGUỒN NGÂN SÁCH QUỐC PHÒNG NĂM ....." />
+                        </div>
+                        <div class="col-sm-12 form-group">
+                            <label for="txtHeader2">Tiêu đề 2</label>@Helpers.Required()<br />
+                            <input type="text" class="form-control" id="txtHeader2" value="(Kèm theo Quyết định số ....... ngày ........ tháng ..... năm ..... của ......)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

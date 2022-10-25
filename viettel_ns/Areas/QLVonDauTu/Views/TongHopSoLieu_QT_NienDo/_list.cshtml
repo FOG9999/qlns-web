@@ -1,0 +1,82 @@
+﻿@using VIETTEL.Areas.QLVonDauTu.Model.QuyetToan
+@model VDT_QT_TongHopSoLieuPagingModel
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Danh sách tổng hợp số liệu quyết toán niên độ (@Model._paging.TotalItems)</label>
+
+    </div>
+    <button class="btn btn-primary pull-right" onclick="ViewCreate()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+</div>
+<table class="table table-bordered" id="lstDataView">
+    <thead class="header-search">
+        <tr>
+            <th width="5%" style="text-align:center"></th>
+            <th width="12%" style="text-align:center"><input type="text" class="form-control" id="txt_NamKeHoachSearch" /></th>
+            <th width="25%" style="text-align:center">@Html.DropDownList("cboDonViQuanLy", (SelectList)(ViewBag.ListDonVi), "--Tất cả--", new { @class = "form-control", @id = "txt_DonViQuanLySearch" })</th>
+            <th width="25%" style="text-align:center">@Html.DropDownList("cboNguonVon", (SelectList)(ViewBag.ListNguonVon), "--Tất cả--", new { @class = "form-control", @id = "txt_NguonVonSearch" })</th>
+            <th width="12%" style="text-align:center"></th>
+            <th width="12%" style="text-align:center"></th>
+            <th width="10%" style="text-align:center"><button class="btn btn-info" style="width:100px" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+        </tr>
+    </thead>
+    <thead>
+        <tr>
+            <th width="5%" style="text-align:center">STT</th>
+            <th width="12%" style="text-align:center">Năm kế hoạch</th>
+            <th width="25%" style="text-align:center">Tên đơn vị</th>
+            <th width="25%" style="text-align:center">Tên nguồn vốn</th>
+            <th width="12%" style="text-align:center">Trạng thái cán bộ</th>
+            <th width="12%" style="text-align:center">Trạng thái kết nối</th>
+            <th width="10%"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int index = 1;
+            foreach (var item in Model.lstData)
+            {
+                <tr style="cursor: pointer;">
+                    <td align="center">@(pageIndex + index)</td>
+
+                    <td align="center">@item.iNamKeHoach</td>
+
+                    <td align="left">@item.TenDonViQuanLy</td>
+
+                    <td align="left">@item.TenNguonVon</td>
+
+                    @if (item.bIsCanBoDuyet == true)
+                    {
+                        <td align="center"><a class="btn btn-success" onclick="ChangeStatus(this,'bIsCanBoDuyet')" data-id="@item.iID_TongHopSoLieuID" style="text-decoration:none;color:white" href="#">Đã duyệt</a></td>
+                    }
+                    else
+                    {
+                        <td align="center"><a class="btn btn-primary" onclick="ChangeStatus(this,'bIsCanBoDuyet')" data-id="@item.iID_TongHopSoLieuID" style="text-decoration:none;color:white" href="#">Chưa duyệt</a></td>
+                    }
+
+                    @if (item.bIsDuyet == true)
+                    {
+                        <td align="center">Đã duyệt</td>
+                    }
+                    else
+                    {
+                        <td align="center">Chưa duyệt</td>
+                    }
+
+                    <td align="center" class="col-sm-12">
+                        <button type="button" class="btn-detail" onclick="ViewDetail('@item.iID_TongHopSoLieuID')">  <i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-edit" onclick="ViewUpdate('@item.iID_TongHopSoLieuID')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" onclick="DeleteItem('@item.iID_TongHopSoLieuID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                index++;
+            }
+        }
+    </tbody>
+</table>
+@Html.BuildPagingButtons(Model._paging)

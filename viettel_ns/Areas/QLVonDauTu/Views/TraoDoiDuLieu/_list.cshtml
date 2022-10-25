@@ -1,0 +1,123 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDT_NS_TraoDoiDuLieuPagingInfo
+
+<div class="tooltip-header-search">
+    <div class="col-sm-6" style="display: flex; padding-left: 0px;">
+        <label class="control-label">Danh sách trao đổi dữ liệu (@Model._paging.TotalItems)</label>
+    </div>
+    @*<button class="btn btn-primary pull-right" onclick="OpenModal()" data-toggle="modal" data-target="#modalTraoDoiDuLieu"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>*@
+    <button class="btn btn-primary pull-right" onclick="BtnInsertDataClick()" data-toggle="modal" data-target="#divModalConfirm"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    @*<button class="btn_tranfer btn-primary pull-right" onclick="BtnTranferClick()"><i aria-hidden="true"></i>Chuyển dử liệu</button>*@
+    <button class="btn btn-info pull-right mr-10 min-width-200" onclick="BtnTranferClick();"><i class="fa fa-print" aria-hidden="true"></i>Chuyển dữ liệu</button>
+    @*<button class="btn btn-info pull-right" style="margin-right:20px; width:auto" onclick="BtnTranferClick()"><i class="fa fa-print" aria-hidden="true"></i>Chuyển dữ liệu</button>*@
+    <button class="btn btn-info pull-right" style="margin-right:20px; width:auto" onclick="Refresh()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+</div>
+<table class="table table-bordered">
+    <thead class="header-search">
+    <th width="1%"></th>
+    <th width="2%"></th>
+    <th width="10%"> <input type="text" class="form-control clearable" id="txtSoChungTu" autocomplete="off" /></th>
+    <th width="15%">
+        <div style="display:flex">
+            <div class='input-group date'>
+                <input type='text' class="form-control inputDate dateFormat" id="txtNgayChungTu" autocomplete="off" placeholder="dd/MM/yyyy" />
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+            <span style="margin: 8px 5px 0px 5px;">-</span>
+        </div>
+    </th>
+    <th width="10%">@Html.DropDownList("drpDonViQuanLy", ViewBag.drpDonViQuanLy as List<SelectListItem>, new { @class = "form-control clearable" })</th>
+    <th width="10%"><input type="number" class="form-control clearable yearFormat" id="txtNamLamViec" autocomplete="off" /></th></th>
+    @* <th width="6%">@Html.DropDownList("drpQuy", ViewBag.drpQuy as List<SelectListItem>, new { @class = "form-control clearable" })</th>*@
+    @*<th width="15%">@Html.DropDownList("drpNguonNganSach", ViewBag.drpNguonNganSach as List<SelectListItem>, new { @class = "form-control clearable" })</th>*@
+    <th width="13%">@Html.DropDownList("drpLoaiTraoDoi", ViewBag.drpLoaiTraoDoi as List<SelectListItem>, new { @class = "form-control clearable" })</th>
+    <th width="13%"></th>
+    <th width="13%">@Html.DropDownList("drpTrangThai", ViewBag.drpTrangThai as List<SelectListItem>, new { @class = "form-control clearable" })</th>
+    <th width=""><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+    </thead>
+    <thead>
+    <th width="1%"></th>
+    <th width="2%">STT</th>
+    <th width="9%">Số chứng từ</th>
+    <th width="15%">Ngày chứng từ</th>
+    <th width="10%">Đơn vị</th>
+    <th width="6%">Năm kế hoạch</th>
+    <th width="3%">Loại trao đổi</th>
+
+    <th width="15%">Số tiền</th>
+    <th width="13%">Trạng thái</th>
+    <th width="">Thao tác</th>
+    </thead>
+    <tbody>
+        @{
+            if (Model.lstData != null)
+            {
+                int index = Model._paging.ItemForm;
+                foreach (var item in Model.lstData)
+                {
+                    <tr>
+                        <td>
+                            <input type="checkbox" class="@item.ID" data-idChecked="@item.ID" onclick="SetState('@item.ID');" />
+                        </td>
+                        <td align="center">@index</td>
+                        <td align="left">@item.sSoChungTu</td>
+                        <td align="center">@item.dNgayChungTu.Value.ToString("dd/MM/yyyy")</td>
+                        <td align="center">@item.sDonViQuanLy</td>
+                        <td align="center">@item.iNamLamViec</td>
+                        <td align="center">@item.sTenLoaiTraoDoi</td>
+                        <td align="right">@Html.Raw(string.Format("{0:0,0}", item.fSoTien))</td>
+                        <td align="center">@item.sTenTrangThai</td>
+                        <td align="center" class="col-sm-12">
+                            @*<button type="submit" class="btn-detail" onclick="XuatFile('@item.ID')"><i class="fa fa-download fa-lg" aria-hidden="true"></i></button>*@
+                            <button type="button" class="btn-edit" onclick="GetItemDataList('@item.ID')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" class="btn-delete" onclick="DeleteItemList('@item.ID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" class="btn-detail" onclick="ViewDetailList('@item.ID')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        </td>
+                    </tr>
+                    index++;
+                }
+            }
+        }
+    </tbody>
+</table>
+@Html.BuildPagingButtons(Model._paging)
+<script type="text/javascript" src="/Scripts/js/js_app.js"></script>
+<script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.date')
+            .datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+            }).on('hide', () => {
+                isShowing = false;
+            }).on('show', () => {
+                isShowing = true;
+            });
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+        sessionStorage.setItem('datatddlChecked', JSON.stringify(dataID));
+
+    });
+
+    document.addEventListener('keydown', eventKey);
+    function eventKey(e) {
+        if (e != null && e != undefined) {
+            if (e.key == "Enter") {
+                ChangePage();
+            }
+        }
+    }
+
+</script>

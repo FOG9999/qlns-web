@@ -1,0 +1,90 @@
+﻿@model ChungTuChiTietViewModel
+@{
+    var bang = Model.Sheet.Table;
+
+    <div class="box_tong">
+        <div id="nhapform">
+            <div id="form2">
+                <div id="sheet">
+                    @Html.Partial("_SheetEditor", Model.Sheet)
+                </div>
+                <div class="button-bar">
+                    <div class="text-center">
+                        <button class="btn btn-mvc btn-mvc-green" id="btnSave">@L("Buttons.Save")</button>
+                        <button class="btn btn-mvc" onclick="goBack()">@L("Buttons.Back")</button>
+                        <button class="btn btn-mvc" data-toggle="modal" data-target="#modal_Options">@L("Buttons.Option")</button>
+                        <a class="btn btn-mvc" href="@Url.Action("rptQuyetToan_BieuKiem", "Report", new { iID_MaChungTu = Model.Id })" target="_blank">@L("Buttons.PrintKiem")</a>
+                        <button class="btn btn-mvc" id="btn-thongtri">@L("Buttons.PrintThongTri")</button>
+                        <button class="btn btn-mvc" id="btn-test">@L("Buttons.Test")</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div id="ajax-div">
+</div>
+@using (Html.BeginScripts())
+{
+    <script src="~/Scripts/jsBang_QuyetToan.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            Bang_arrDSTruongTien = '@MucLucNganSachModels.strDSTruongTien'.split(',');
+            Bang_Url_getGiaTri = '@Url.Action("get_GiaTri", "Public")';
+            Bang_Url_getDanhSach = '@Url.Action("get_DanhSach", "Public")';
+            BangDuLieu_DuocSuaChiTiet = '@bang.IsEditable';
+            @bang.IsEditable?"":"Bang_keys.fnSetFocus(null, null);"
+        });
+
+        $("#btnSave").click(function () {
+            ShowPopupThucHien();
+
+            Bang_HamTruocKhiKetThuc();
+        });
+
+        $("#btn-thongtri").click(function(){
+            var url = '@Url.Action("BaocaoThongTri", "ChungTuChiTiet", new { id = Model.Id})';
+
+
+            $("#ajax-div").empty();
+            $("#ajax-div").load(url, function(response, status, xhr){
+                if(status == "success")
+                {
+                    $("#modal_thongtri").modal();
+                }
+                if(status == "error")
+                    alert("Error: " + xhr.status + ": " + xhr.statusText);
+            });
+
+            //$.ajax({
+            //    type: 'get',
+            //    url: url,
+            //    success: function(data) {
+            //        $("#ajax-div").empty();
+            //        $("#ajax-div").html(data);
+            //        $('#modal_thongtri').modal({'show' : true});
+
+            //        console.log(data);
+            //    }
+            //});
+
+        })
+
+        function goBack(){
+            window.loca.href = '@Url.Action("Index", "QuyetToan_ChungTu", new { Loai = Model.Filter })';
+        }
+
+        $("#btn-test").click(function(){
+            var url = '@Url.Action("SheetPartial", new { id = Model.Id, filter=2})';
+            $.ajax({
+                type: 'get',
+                url: url,
+                success: function(data) {
+                    $("#sheet").html(data);
+                    console.log(data);
+                }
+            });
+        });
+    </script>
+}

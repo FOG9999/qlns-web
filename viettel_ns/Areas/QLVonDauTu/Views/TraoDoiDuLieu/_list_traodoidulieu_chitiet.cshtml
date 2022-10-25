@@ -1,0 +1,120 @@
+﻿@model IEnumerable<Viettel.Domain.DomainModel.VDT_NS_TraoDoiDuLieu_ChiTiet>
+
+@{
+    var flag = ViewBag.isDetail;
+    var detail = false;
+    if (flag == 1)
+    {
+        detail = true;
+    }
+}
+
+
+@{
+    int index = 1;
+    double? sum = 0;
+    var TBL_DANH_SACH = "tblDanhsachchuyendoidlchitiet";
+
+
+
+    if (detail)
+    {
+
+        foreach (var item in Model)
+        {
+            <tr>
+
+                <input type="hidden" class="c_" value="@item.iID_TraodoidulieuID" />
+                <input type="hidden" class="c_iID_TraodoiDuLieuChiTietID" value="@item.iID_TraodoiDuLieuChiTietID" />
+                <input type="hidden" class="c_iID_iID_MaMucLucNganSach" value="@item.iID_MaMucLucNganSach" />
+                <input type="hidden" class="c_iID_MaMucLucNganSach_Cha" value="@item.iID_MaMucLucNganSach_Cha" />
+                <input type="hidden" class="c_bLaHangCha" value="@item.bLaHangCha" />
+                <input type="hidden" class="c_sXauNoiMa" value="@item.sXauNoiMa" />
+                @*<td align="center">@index</td>*@
+                <td align="left" class="c_sLNS">@item.sLNS</td>
+                <td align="center" class="c_sL">@item.sL</td>
+                <td align="center" class="c_sK">@item.sK</td>
+                <td align="center" class="c_sM">@item.sM</td>
+                <td align="center" class="c_sTM">@item.sTM</td>
+                <td align="center" class="c_sTTM">@item.sTTM</td>
+                <td align="center" class="c_sNG">@item.sNG</td>
+                <td align="center" class="c_sTNG">@item.sTNG</td>
+                <td align="right" class="c_sfSotien">@Html.Raw(string.Format("{0:0,0}", item.fSoTien))</td>
+                @*<label for="c_sfSotien"></label>*@
+                @*<td align="right" class="c_sfSotien" style="padding:0px;padding-top:0px"> <input type="text" class="form-control ctxt_sfSotien" onblur='TinhLaiDongTong(TBL_DANH_SACH)' value="@item.fSoTien" style="width:100% ; justify-content:end"></td>*@
+
+            </tr>
+            index++;
+            sum += item.fSoTien;
+        }
+
+
+        <tr>
+            @*<td align="center">@index</td>*@
+            <td align="left" class="c_sLNS"></td>
+            <td align="center" class="c_sL"></td>
+            <td align="center" class="c_sK"></td>
+            <td align="center" class="c_sM"></td>
+            <td align="center" class="c_sTM"></td>
+            <td align="center" class="c_sTTM"></td>
+            <td align="center" class="c_sNG"></td>
+            <td align="center" class="c_sTNG"></td>
+            <td align="center" class="c_fTongSotien" style="padding:0px;padding-top:0px">@Html.Raw(string.Format("{0:0,0}", sum))</td>
+        </tr>
+    }
+    else
+    {
+
+        foreach (var item in Model)
+        {
+            <tr>
+
+                <input type="hidden" class="c_" value="@item.iID_TraodoidulieuID" />
+                <input type="hidden" class="c_iID_TraodoiDuLieuChiTietID" value="@item.iID_TraodoiDuLieuChiTietID" />
+                <input type="hidden" class="c_iID_iID_MaMucLucNganSach" value="@item.iID_MaMucLucNganSach" />
+                <input type="hidden" class="c_iID_MaMucLucNganSach_Cha" value="@item.iID_MaMucLucNganSach_Cha" />
+                <input type="hidden" class="c_bLaHangCha" value="@item.bLaHangCha" />
+                <input type="hidden" class="c_sXauNoiMa" value="@item.sXauNoiMa" />
+                @*<td align="center">@index</td>*@
+                <td align="left" class="c_sLNS">@item.sLNS</td>
+                <td align="center" class="c_sL">@item.sL</td>
+                <td align="center" class="c_sK">@item.sK</td>
+                <td align="center" class="c_sM">@item.sM</td>
+                <td align="center" class="c_sTM">@item.sTM</td>
+                <td align="center" class="c_sTTM">@item.sTTM</td>
+                <td align="center" class="c_sNG">@item.sNG</td>
+                <td align="center" class="c_sTNG">@item.sTNG</td>
+                <td align="right" class="c_sfSotien" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control ctxt_sfSotien" maxlength="50" onblur='TinhLaiDongTong(TBL_DANH_SACH)' onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fSoTien))" style="width:100% ; justify-content:end"></td>
+                @*<input type="text" class="form-control clearable ctxt_sfGiaTriDeNghi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value=@(item.fGiaTriDeNghi)>*@
+            </tr>
+
+            index++;
+            sum += item.fSoTien;
+
+        }
+        <tr>
+            @*<td align="center">@index</td>*@
+            <td align="left" class="c_sLNS"></td>
+            <td align="center" class="c_sL"></td>
+            <td align="center" class="c_sK"></td>
+            <td align="center" class="c_sM"></td>
+            <td align="center" class="c_sTM"></td>
+            <td align="center" class="c_sTTM"></td>
+            <td align="center" class="c_sNG"></td>
+            <td align="center" class="c_sTNG"></td>
+            <td align="center" class="c_fTongSotien" style="padding:0px;padding-top:0px"> </td>
+        </tr>
+    }
+
+}
+
+<script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>
+<script>
+    $(document).ready(function () {
+
+    });
+    function FormatNumber(n) {
+        // format number 1000000 to 1,234,567
+        return n.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    }
+</script>

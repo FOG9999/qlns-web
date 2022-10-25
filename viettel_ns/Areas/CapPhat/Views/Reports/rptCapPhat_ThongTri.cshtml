@@ -1,0 +1,271 @@
+﻿@model VIETTEL.Areas.CapPhat.Models.rptCapPhat_ThongTriViewModel
+@{
+    //Layout = "~/Views/Shared/_Layout2.cshtml";
+    ViewBag.Title = "CẤP PHÁT - In thông tri cấp phát";
+}
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l"><strong>@ViewBag.Title</strong></span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal hide">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Mã chứng từ:</label>
+                            <div class="col-sm-8">
+                                <input id="id_chungtu" type="text" value="@Model.Entity.iID_MaCapPhat" class="form-control" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <h6><strong class="text-uppercase">Loại ngân sách:</strong></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loại thông tri:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("loaiThongTri", Model.LoaiThongTriList, new { @class = "form-control", onchange = "change()" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loại cấp phát:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("loaiCapPhat", Model.LoaiCapPhatList, new { @class = "form-control" })
+                                @*<hr />*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Số chữ ký:</label>
+                            <div class="col-sm-8" id="chuky">
+                                <div class="radio radio-inline radio-success">
+                                    <input type="radio" name="chuky" checked="checked" value="2" id="r-chuky-2" />
+                                    <label for="r-chuky-2">
+                                        2 Chữ ký
+                                    </label>
+                                </div>
+                                <div class="radio radio-inline radio-success">
+                                    <input type="radio" name="chuky" value="3" id="r-chuky-3" />
+                                    <label for="r-chuky-3">
+                                        3 Chữ ký
+                                    </label>
+                                </div>
+                                <p class="help">(Cấu hình chữ ký 1,2,5)</p>
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                                <label class="control-label col-sm-4">Số thừa lệnh:</label>
+                                <div class="col-sm-8" id="thualenh">
+                                    <div class="radio">
+                                        <input type="radio" name="thualenh" value="0" id="r-thualenh-2" />
+                                        <label for="r-thualenh-2">
+                                            0
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <input type="radio" name="thualenh" checked="checked" value="1" id="r-thualenh-1" />
+                                        <label for="r-thualenh-1">
+                                            1
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <input type="radio" name="thualenh" value="2" id="r-thualenh-1" />
+                                        <label for="r-thualenh-1">
+                                            2
+                                        </label>
+                                    </div>
+                                    <hr />
+                                </div>
+                            </div>*@
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Ghi chú: @*<span class="help">(Tối đa mỗi dòng 10 chữ)</span>*@</label>
+                            <div class="col-sm-8">
+                                <textarea id="ghiChu" class="form-control" style="min-height: 120px;" readonly onchange="updateGhiChu($(this).val())"></textarea>
+                                <p id="ghiChu_Hint" class="help"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Vị trí ghi chú:</label>
+                            <div class="col-sm-8" id="iIn">
+                                <div class="radio radio-inline radio-success">
+                                    <input type="radio" name="iIn" checked="checked" value="1" id="r-upOrDown-Down" />
+                                    <label for="r-upOrDown-Down">
+                                        Trong bảng số liệu
+                                    </label>
+                                </div>
+                                <div class="radio radio-inline radio-success">
+                                    <input type="radio" name="iIn" value="0" id="r-upOrDown-Up" />
+                                    <label for="r-upOrDown-Up">
+                                        Dưới bảng
+                                    </label>
+                                </div>
+                                <hr />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <div id="lns" class="ls-box" style="min-height:80px; max-height:400px" data-check="all"></div>
+                    <br />
+                    <h6><strong class="text-uppercase">Đơn vị:</strong></h6>
+                    <div id="id_donvi" class="ls-box" style="max-height:320px"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">Ngày tháng in thông tri:</label>
+                            <div class="col-sm-4">
+                                @Html.Partial("_ui_printeddate")
+                            </div>
+                            <label class="control-label col-sm-1">Dãn dòng:</label>
+                            <div class="col-sm-5">
+                                @Html.Partial("_ui_rowheight")
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> <strong>In thông tri</strong></a>
+                <span class="help">|</span>
+                <a class="btn-mvc btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <span class="help">|</span>
+                <a class="btn-mvc" target="_blank" data-ext="xls" href="@Url.Action("Edit","ChuKy", new { c="rptCapPhat_ThongTri", area=""})"><i class="fa fa-file-excel"></i>Sửa chữ ký</a>
+                @*<a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "CapPhat_Report")">Hủy</a>*@
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    var _currentDonVi = "";
+    //selectTheFirst();
+
+    //function selectTheFirst() {
+    //    $("#loaiThongTri")[0].selectedIndex = 1;
+
+    //    var value = $("#loaiThongTri").val();
+    //    if (value != '-1' || value != undefined) {
+    //        change();
+    //    }
+    //}
+
+    change();
+
+    function change() {
+
+        var urlLNS = '@Url.Action("Ds_LNS")' + "/?"
+                    + "id_chungtu=" + $("#id_chungtu").val()
+                    + "&loaiThongTri=" + $("#loaiThongTri").val();
+
+        fillCheckboxList("lns", "lns", urlLNS)
+    }
+
+    function checkItem(group, value, checkbox) {
+
+        if (group == "LNS") {
+            var values = getCheckedItems(group);
+            fillDonVi(values);
+
+            console.log(values);
+        }
+        else if (group == "DonVi") {
+            var checked = $(checkbox).is(":checked");
+            var text = $(checkbox).data("text");
+
+            fillGhiChu(value, checked, text);
+        }
+    }
+
+
+    function fillDonVi(lns) {
+        var url = '@Url.Action("Ds_DonVi")' + "/?"
+                    + "id_chungtu=" + $("#id_chungtu").val()
+                    + "&loaiThongTri=" + $("#loaiThongTri").val()
+                    + "&lns=" + lns;
+
+        fillCheckboxList("id_donvi", "DonVi", url)
+    }
+
+    function fillGhiChu(donvi, checked, text) {
+        _currentDonVi = donvi;
+
+        $("#ghiChu_Hint").text('(' + text + ')');
+        $("#ghiChu").empty();
+
+        if (donvi == null || donvi.length == 0 || !checked) {
+            $("#ghiChu").prop("readonly", true);
+        }
+        else {
+            $("#ghiChu").removeAttr('readonly');
+
+            var url = '@Url.Action("ghichu")' +
+                    "/?id_donvi=" + donvi +
+                    "&id_chungtu=" + $("#id_chungtu").val() +
+                    "&loaiThongTri=" + $("#loaiThongTri").val();
+
+            $.getJSON(url, function (data) {
+                $("#ghiChu").val(data);
+            });
+        }
+    }
+
+    function updateGhiChu(ghiChu) {
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("ghichu_update")',
+            data: {
+                id_chungtu: $("#id_chungtu").val(),
+                id_donvi: _currentDonVi,
+                loaiThongTri: $("#loaiThongTri").val(),
+                ghiChu: ghiChu
+            },
+            success: function (data) {
+                console.log(data);
+            },
+        });
+    }
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+        var ext = $(this).data("ext");
+        var chuky = $("#chuky input[type='radio']:checked").val();
+        //var thualenh = $("#thualenh input[type='radio']:checked").val();
+        //var loai = $("#loai input[type='radio']:checked").val();
+        var iIn = $("#iIn input[type='radio']:checked").val();
+
+        $("input:checkbox[check-group='DonVi']").each(function () {
+            if (this.checked) {
+                var item = this.value;
+                var url = unescape('@Url.Action("Print")' +
+                                    "?ext=" + ext +
+                                    "&r=" + $("#rowheight").val() +
+                                    "&id_donvi=" + item +
+                                    "&loaiCapPhat=" + $("#loaiCapPhat").val() +
+                                    "&loaiThongTri=" + $("#loaiThongTri").val() +
+                                    "&lns=" + getCheckedItems("LNS") +
+                                    //"&loai=" + 0 +
+                                    "&iChuky=" + chuky +
+                                    "&date=" + $("#date").val() +
+                                    "&iIn=" + iIn +
+                                    "&id_chungtu=" + $("#id_chungtu").val()
+                                    );
+
+                links.push(url);
+            }
+        });
+
+        openLinks(links);
+    });
+
+</script>

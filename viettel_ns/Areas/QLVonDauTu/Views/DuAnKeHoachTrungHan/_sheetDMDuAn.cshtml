@@ -1,0 +1,78 @@
+﻿@model VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong.DanhMucDuAnGridViewModel
+@{
+    var sheet = Model.Sheet;
+}
+<div class="tooltip-header-search">
+    <div class="col-sm-4" style="display:flex;padding-left:0px;">
+    </div>
+    <div class="col-sm-8">
+        <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Xóa tìm kiếm</p>
+        <label class="control-label pull-right" style="padding-left:20px;">F9: </label>
+        <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Tìm kiếm</p>
+        <label class="control-label pull-right" style="padding-left:20px;">Ent: </label>
+        <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Chọn dự án</p>
+        <label class="control-label pull-right" style="padding-left:20px;">F11: </label>
+        <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Lưu</p>
+        <label class="control-label pull-right" style="padding-left:20px;">F10: </label>
+        <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Bỏ chọn tất cả</p>
+        <label class="control-label pull-right" style="padding-left:20px;">F8: </label>
+        <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Chọn tất cả</p>
+        <label class="control-label pull-right" style="padding-left:20px;">F7: </label>
+        <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Thêm chi tiết DA</p>
+        <label class="control-label pull-right" style="padding-left:20px;">F3: </label>
+        <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Thêm dự án</p>
+        <label class="control-label pull-right">F2: </label>
+    </div>
+</div>
+<iframe id="sheetDMDuAn" name="iframe-sheet" class="iframe-sheet"></iframe>
+<div class="">
+    <div id="nhapform">
+        <div id="form2">
+            <div class="button-bar">
+                <div class="text-center">
+                    <button class="btn btn-default" onclick="goBack();" style="margin-right: 10px;"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                    <button class="btn btn-primary btn-dmduan-save" id="btnSave" style="margin-right: 10px;"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                    <button class="btn btn-info btn-add-duan" id="btnAddDuAn"><i class="fa fa-plus" aria-hidden="true"></i><span>Chọn dự án</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr id="hr-split" />
+<div id="ajax-div">
+</div>
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+@using (Html.BeginScripts())
+{
+<script type="text/javascript">
+
+        $(".btn-dmduan-save").click(function () {
+            $("#sheetDMDuAn")[0].contentWindow.DM_DuAn_KH5NDD_BangDuLieu_Save();
+        });
+
+    $(".btn-add-duan").click(function () {
+        var h = $("#sheetDMDuAn")[0].contentWindow.Bang_keys.Row();
+            $("#sheetDMDuAn")[0].contentWindow.DM_DuAn_BangDuLieu_ChonDuAn(h);
+        });
+
+        //loadFrame();
+
+        function goBack() {
+            window.location.href = "/QLVonDauTu/KeHoachTrungHanDuocDuyet/Detail/" + '@Model.iID_KeHoach5NamID';
+        }
+
+        function loadFrame(option) {
+            var url = '@Url.Action("SheetFrameDMDuAn")'
+                + "/?id=" + '@Model.iID_KeHoach5NamID';
+            console.log(url);
+            $("#sheetDMDuAn").attr("src", url);
+        }
+
+        function loadModal(data) {
+            $("#divModalConfirm").html(data);
+        }
+</script>
+}

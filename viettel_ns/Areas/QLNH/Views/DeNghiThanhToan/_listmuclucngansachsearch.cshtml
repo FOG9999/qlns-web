@@ -1,0 +1,96 @@
+﻿@using Viettel.Models.QLNH
+@model  MucLucNganSachPagingViewModel
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+
+<div class="modal-dialog" role="document" style="width:70%;">
+    <div class="modal-content mr-10" id="listmucngansach">
+        <div class="modal-header">
+            <h4 class="modal-title text-bold text-left" id="modalDeNghiThanhToanLabel">DANH SÁCH MỤC LỤC NGÂN SÁCH</h4>
+        </div>
+        <div class="contentmuclucngansach" id="lstDataViewNganSach">
+            <div class="tooltip-header-search">
+                <div class="col-sm-8">
+
+                </div>
+            </div>
+            <div class="contentngansach mr-10 ml-10">
+                <table class="table table-bordered tr-hover" id="tblListMucLucNganSach">
+                    <thead>
+                        <tr>
+                            <th width="8%">LNS</th>
+                            <th width="8%">L</th>
+                            <th width="8%">K</th>
+                            <th width="8%">M</th>
+                            <th width="8%">TM</th>
+                            <th width="8%">TTM</th>
+                            <th width="8%">NG</th>
+                            <th width="8%">TNG</th>
+                            <th width="32%">Nội dung</th>
+                            <th width="8%">Chương</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var item in Model.Items)
+                            {
+                                string value_item = @item.sL + '-' + @item.sK + '-' + @item.sM + '-' + @item.sTM + '-' + @item.sTTM + '-' + @item.sNG + '-' + @item.sTNG;
+                                <tr ondblclick="ChonMucLucNganSach(this);" class="@(item.iID_MaMucLucNganSach_Cha.HasValue ? "" : "text-bold")" style="cursor:pointer;">
+                                    <td width="8%" style="text-align:left;cursor:pointer;" data-dong="@Html.Raw(Html.Encode(value_item))" data-idmuclucngansach="@item.iID_MaMucLucNganSach">@Html.Raw(Html.Encode(item.sLNS))</td>
+                                    <td width="8%" style="text-align:right;">@Html.Raw(Html.Encode(item.sL))</td>
+                                    <td width="8%" style="text-align:right;">@Html.Raw(Html.Encode(item.sK))</td>
+                                    <td width="8%" style="text-align:right;">@Html.Raw(Html.Encode(item.sM))</td>
+                                    <td width="8%" style="text-align:right;">@Html.Raw(Html.Encode(item.sTM))</td>
+                                    <td width="8%" style="text-align:right;">@Html.Raw(Html.Encode(item.sTTM))</td>
+                                    <td width="8%" style="text-align:right;">@Html.Raw(Html.Encode(item.sNG))</td>
+                                    <td width="8%" style="text-align:right;">@Html.Raw(Html.Encode(item.sTNG))</td>
+                                    <td width="32%" style="text-align:left;">@Html.Raw(Html.Encode(item.sMoTa))</td>
+                                    <td width="8%" style="text-align:left;">@Html.Raw(Html.Encode(item.sChuong))</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="modal-footer">@Html.BuildPagingButtons(Model._paging)</div>
+        <div class="form-group text-center">
+            <button class="btn btn-default" id="btnVoucherCancel" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Đóng</span></button>
+        </div>
+    </div>
+  
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        _paging.CurrentPage = @Model._paging.CurrentPage ;
+        _paging.ItemsPerPage = @Model._paging.ItemsPerPage;
+    })
+</script>
+<style>
+    #tblListMucLucNganSach {
+        display: flex;
+        flex-flow: column;
+    }
+    #tblListMucLucNganSach thead {
+        flex: 0 0 auto;
+    }
+    #tblListMucLucNganSach tbody {
+        flex: 1 1 auto;
+        display: block;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        max-height: 600px;
+        margin-right: -5px;
+    }
+    #tblListMucLucNganSach tr {
+        width: 100%;
+        display: table;
+        table-layout: fixed;
+    }
+    #tblListMucLucNganSach td, #tblTiGiaChiTiet th {
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>

@@ -1,0 +1,130 @@
+﻿@model IEnumerable<ChungTuDetailsViewModel>
+@Html.AntiForgeryToken()
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th style="width: 40px">#</th>
+            <th style="width: 100px">Số CT</th>
+            @*<th style="width:auto">@Html.DisplayNameFor(x => x.TieuDe)</th>*@
+            @if (ViewBag.Loai == 1)
+            {
+                <th style="width: 260px">Đơn vị</th>
+            }
+            else
+            {
+                <th style="width: 260px">Ngành - đơn vị</th>
+            }
+            <th style="width: 200px">Lần đề nghị</th>
+            <th style="width: 120px">Ngày chứng từ</th>
+            <th style="width: auto">Nội dung</th>
+            <th style="width: 100px">Người tạo</th>
+            <th style="width: 130px">Thời gian tạo</th>
+            <th style="width: 100px"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            var item = Model.ElementAt(i);
+            var url = Url.Action("Index", "ChungTuChiTiet", new { area = "DuToanKT", item.Id });
+            var bg = (i % 2) == 0 ? "" : "background-color: #F8F8F8";
+
+
+            <tr style="@bg">
+                <td>@(i + 1)</td>
+                <td style="text-align: center">
+                    <a class="link-nounderline text-danger" href="@url">
+                        @string.Format("{0}-{1}", "DTKT", item.SoChungTu.GetValueOrDefault().ToString("00#"))
+                    </a>
+                </td>
+                <td>
+                    <a class="link-nounderline text-danger" href="@url">
+                        <strong>@item.TenDonVi</strong>
+                    </a>
+                </td>
+                <td style="text-align: left">
+                    @item.Request
+                </td>
+                <td style="text-align: center">
+                    @item.NgayChungTu.ToString("dd/MM/yyyy")
+                </td>
+                <td>
+                    <a class="link-nounderline text-danger" href="@url">
+                        @item.NoiDung
+                    </a>
+                </td>
+                <td>@item.UserCreator</td>
+                <td>@item.DateCreated.GetValueOrDefault().ToString("dd/MM/yyyy HH:mm")</td>
+                <td class="text-center">
+                    <a class="btn btn-mvc btn-mvc-small" title="@L("Button.Edit")" href="@Url.Action("Edit", "ChungTu", new {item.Id})"><i class="fa fa-edit"></i></a>
+                    <a class="btn btn-mvc btn-mvc-small btn_delete" data-id="@item.Id" title="@L("Button.Delete")"><i class="fa fa-remove"></i></a>
+                </td>
+            </tr>
+        }
+</table>
+
+
+
+@using (Html.BeginScripts())
+{
+    <script>
+
+        $(".btn_delete").click(function () {
+            swal({
+                title: 'Xóa chứng từ?',
+                text: 'Bạn muốn xóa chứng từ!',
+                type: 'question',
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Đồng ý xóa!',
+                cancelButtonText: 'Hủy',
+            }).then((r) => {
+
+                if (r.value) {
+
+                    var id = $(this).data("id");
+                    deleteChungTu(id);
+                }
+
+            });
+        });
+
+        function deleteChungTu(id) {
+            var url = '@Url.Action("delete", "chungtu")';
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    id,
+                    __RequestVerificationToken: token,
+                },
+                success: function (data) {
+
+                    JSON.stringify(data);
+
+                    if (data.success) {
+                        swal({
+                            title: 'Đã xóa!',
+                            text: 'Chứng từ đã được xóa thành công.',
+                            type: 'success',
+                            timer: 1500
+                        }).then((r) => {
+                            location.reload();
+                        });
+                    }
+                    else {
+                        swal(
+                        'Xóa bị lỗi!',
+                        data.msg,
+                        'error');
+                    }
+                },
+            });
+
+
+        }
+
+    </script>
+}

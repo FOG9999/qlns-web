@@ -1,0 +1,90 @@
+﻿@model Viettel.Models.QLVonDauTu.VDTThongTriModel
+
+@{
+    ViewBag.Title = "Xem chi tiết thông tin thông tri thanh toán";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+<link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+
+<input type="hidden" id="iIDThongTriID" value="@Model.iID_ThongTriID" />
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body create_thdt">
+                <div class="form-group">
+                    <h4 class="color-text-red">Thông tin thông tri:</h4>
+                    <hr class='color-background-red' />
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label for="txtDonViQuanLy">Đơn vị quản lý</label>
+                            <p class="label-sua">@Html.Raw(Model.sTenDonVi)</p>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="ddlNguonVon">Nguồn vốn</label>
+                            <p class="label-sua">@Html.Raw(Model.sTenNguonNganSach)</p>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="sMaThongTri">Mã thông tri</label>
+                            <p class="label-sua">@Html.Raw(Model.sMaThongTri)</p>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="sNgayLapGanNhat">Ngày lập gần nhất</label>
+                            <p class="label-sua" id="dNgayLapGanNhat">@Html.Raw(Model.dNgayLapGanNhat.HasValue == false ? "" : Model.dNgayLapGanNhat.Value.ToString("dd/MM/yyyy"))</p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <label for="dNgayThongTri">Ngày tạo thông tri</label>
+                            <p class="label-sua">@Html.Raw(Model.dNgayThongTri.HasValue == false ? "" : Model.dNgayThongTri.Value.ToString("dd/MM/yyyy"))</p>
+                        </div>
+                        <div class="col-sm-1">
+                            <label for="sNamThongTri">Năm thực hiện</label>
+                            <p class="label-sua">@Html.Raw(Model.iNamThongTri)</p>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="sNguoiLap">Người lập thông tri</label>
+                            <p class="label-sua">@Html.Raw(Model.sNguoiLap)</p>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="sTruongPhong">Trưởng phòng (Ban) tài chính</label>
+                            <p class="label-sua">@Html.Raw(Model.sTruongPhong)</p>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="sThuTruongDonVi">Thủ trưởng đơn vị</label>
+                            <p class="label-sua">@Html.Raw(Model.sThuTruongDonVi)</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="divTab">
+                        <div class="col-sm-12">
+                            <ul class="nav nav-tabs">
+                                <li id="li_capthanhtoankpqp" class="active"><a data-toggle="tab" href="#capthanhtoankpqp">Cấp thanh toán KPQP</a></li>
+                                <li id="li_tamungkpqp"><a data-toggle="tab" href="#tamungkpqp">Tạm ứng KPQP</a></li>
+                                <li id="li_thuungkpqp"><a data-toggle="tab" href="#thuungkpqp">Thu ứng KPQP</a></li>
+                            </ul>
+
+                            <div class="card-body tab-content">
+                                <div id="capthanhtoankpqp" class="tab-pane fade in active">
+                                    <div id="tbl_capthanhtoankpqp"></div>
+                                </div>
+                                <div id="tamungkpqp" class="tab-pane fade in">
+                                    <div id="tbl_tamungkpqp"></div>
+                                </div>
+                                <div id="thuungkpqp" class="tab-pane fade in">
+                                    <div id="tbl_thuungkpqp"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <button class="btn btn-back" onclick="Huy()"><i class="fa fa-arrow-left" aria-hidden="true"></i><span>Quay lại</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/QLVonDauTu/QuyetToan/jsVDT_ChiTietThongTriQuyetToan.js" type="text/javascript"></script>
+<script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>

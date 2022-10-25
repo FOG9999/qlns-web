@@ -1,0 +1,101 @@
+﻿@model rptTongHop_GiaoBanViewModel
+@{
+}
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">Tổng hợp tình hình thực hiện ngân sách năm @Model.iNamLamViec - Biểu giao ban(TH-GB1)</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">Phòng ban:</label>
+                            <div class="col-sm-10">
+                                @Html.DropDownList("iID_MaPhongBan", Model.PhongBanList, new { @class = "form-control" })
+                                <hr />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">Kiểu báo cáo:</label>
+                            <div class="col-sm-10" id="ext">
+                                <div class="radio">
+                                    <input type="radio" name="radio" id="radio-pdf" checked="checked" value="pdf" />
+                                    <label for="radio-pdf">
+                                        Xem báo cáo trực tiếp
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="radio" id="radio-ext" value="xls" />
+                                    <label for="radio-ext">
+                                        Xuất báo cáo file excel
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-offset-2 col-sm-10">
+                    <a class="btn-mvc btn-mvc-green" id="btnNSQP"><i class="fa fa-file-excel"></i>Ngân sách quốc phòng</a>
+                    <a class="btn-mvc btn-mvc-green" id="btnNSNN"><i class="fa fa-file-excel"></i>Ngân sách nhà nước</a>
+                    <a class="btn-mvc btn-mvc-green" id="btnNSBV"><i class="fa fa-file-excel"></i>Ngân sách bệnh viện</a>
+                    <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "rptTongHopNS")">Hủy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $("#btnNSQP").click(function () {
+
+        var iID_MaPhongBan = $("#iID_MaPhongBan").val();
+        var ext = $("#ext input[type='radio']:checked").val();
+
+        var url = unescape('@Url.Action("Print", "rptDuToan_THGB_NSQP", new { nam= Model.iNamLamViec})');
+
+        if (iID_MaPhongBan != "-1")
+            url = url +
+                "&ext=" + ext +
+                "&r=180" +
+                "&iID_MaPhongBan=" + iID_MaPhongBan;
+
+        window.open(url, '_blank');
+    });
+
+    $("#btnNSNN").click(function () {
+
+        var iID_MaPhongBan = $("#iID_MaPhongBan").val();
+        var ext = $("#ext input[type='radio']:checked").val();
+
+        var url = unescape('@Url.Action("Print", "rptDuToan_THGB_NSNN", new { nam=Model.iNamLamViec})');
+
+        if (iID_MaPhongBan != "-1")
+            url = url +
+                "&ext=" + ext +
+                "&r=180" +
+                "&iID_MaPhongBan=" + iID_MaPhongBan;
+
+        window.open(url, '_blank');
+    });
+
+    $("#btnNSBV").click(function () {
+
+        var iID_MaPhongBan = $("#iID_MaPhongBan").val();
+        var ext = $("#ext input[type='radio']:checked").val();
+
+        var url = unescape('@Url.Action("Print", "rptDuToan_THGB_NSBV", new { nam= Model.iNamLamViec})');
+
+        if (iID_MaPhongBan != "-1")
+            url = url +
+                "&ext=" + ext +
+                "&r=180" +
+                "&iID_MaPhongBan=" + iID_MaPhongBan;
+
+        window.open(url, '_blank');
+    });
+
+</script>

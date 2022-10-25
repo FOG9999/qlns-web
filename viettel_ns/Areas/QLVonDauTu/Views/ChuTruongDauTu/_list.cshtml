@@ -1,0 +1,169 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTPheDuyetChuTruongDauTuViewModel
+<div class="tooltip-header-search">
+    <div class="col-sm-6" style="display:flex;padding-left:0px;">
+        <label class="control-label">Danh sách quyết định phê duyệt chủ trương đầu tư (@Model._paging.TotalItems)</label>
+    </div>
+    <button class="btn btn-primary" style="float:right" onclick="themMoi()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+    <button class="btn btn-info pull-right mr-10" onclick="ExportChuTruongDauTu();"><i class="fa fa-print" aria-hidden="true"></i>Xuất excel</button>
+</div>
+
+    <table class="table table-bordered" id="tblListVDTChuTruongDauTu">
+        <thead class="header-search">
+        <th width="3%">
+        </th>
+        <th width="13%">
+            <input type="text" class="form-control" id="txtSoQuyetDinh" autocomplete="off" maxlength="100"/>
+        </th>
+        <th width="20%">
+            <div style="display:flex">
+                <div class='input-group date'>
+                    <input type='text' class="form-control" id="txtNgayQuyetDinhFrom" placeholder="dd/MM/yyyy" autocomplete="off" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <span style="margin: 8px 5px 0px 5px;">-</span>
+                <div class='input-group date'>
+                    <input type='text' class="form-control" id="txtNgayQuyetDinhTo" placeholder="dd/MM/yyyy" autocomplete="off" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </div>
+        </th>
+        <th width="23%">
+            <input type="text" class="form-control" id="txtNoiDung" autocomplete="off" />
+        </th>
+        <th width="10%">
+            @Html.DropDownList("ddlDonViQuanLy", (SelectList)(ViewBag.ListDonViQuanLy), "--Tất cả--", new { @class = "form-control", @id = "txtDonViQuanLy" })
+        </th>
+        <th width="13%">
+            <div style="display: flex">
+                <input type='text' style="width: 50%" class="form-control col-sm-2" value="" id="txtTongMucDauTuFrom" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                <span style="margin: 8px 5px 0px 5px;">-</span>
+                <input type='text' style="width: 50%" class="form-control col-sm-2" value="" id="txtTongMucDauTuTo" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+            </div>
+        </th>
+        <th>
+        </th>
+        <th>
+            <button class="btn btn-info" id="btn_timKiem"  onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
+        </th>
+        </thead>
+        <thead>
+        <th width="3%">STT</th>
+        <th width="13%">Số quyết định</th>
+        <th width="20%">Ngày quyết định</th>
+        <th width="23%">Nội dung</th>
+        <th width="10%">Đơn vị</th>
+        <th width="13%">TMĐT dự kiến phê duyệt</th>
+        <th width="5%">Lần điều chỉnh</th>
+        <th>Thao tác</th>
+        </thead>
+        <tbody>
+            @{
+                int index = 0;
+                foreach (VDTChuTruongDauTuViewModel item in Model.Items)
+                {
+                    index++;
+                        <tr style="cursor: pointer">
+                            <td align="center">@index</td>
+                            <td align="left">@item.sSoQuyetDinh</td>
+                            <td align="center">@(item.dNgayQuyetDinh.HasValue ? item.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                            <td align="left">@item.TenDuAn</td>
+                            <td align="center">@item.sDonViQuanLy</td>
+                            <td align="right" class="sotien">@item.fTMDTDuKienPheDuyet</td>
+                            <td align="center">@string.Format("({0})", item.iSoLanDieuChinh)</td>
+                            <td align="center">
+                                @if (item.bActive == false)
+                                {
+                                    @*<button type="button" class="btn-detail" hidden onclick="dieuChinh('@item.iID_ChuTruongDauTuID')"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>*@
+                                    <button type="button" class="btn-detail" onclick="xemChiTiet('@item.iID_ChuTruongDauTuID')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn-detail" onclick="dieuChinh('@item.iID_ChuTruongDauTuID')"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>
+                                    <button type="button" class="btn-detail" onclick="xemChiTiet('@item.iID_ChuTruongDauTuID')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                                    <button type="button" class="btn-edit" onclick="sua('@item.iID_ParentID', '@item.iID_ChuTruongDauTuID')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                                    <button type="button" class="btn-delete" onclick="xoa('@item.iID_ChuTruongDauTuID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                                }
+
+                            </td>
+                        </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @Html.BuildPagingButtons(Model._paging)
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var isShowing = false;
+            $('.date').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+                format: "dd/mm/yyyy"
+            }).on('hide', () => {
+                isShowing = false;
+            }).on('show', () => {
+                isShowing = true;
+            });
+
+            $("tr").hover(function () {
+                $(this).css("background-color", "#e7f8fe");
+            }, function () {
+                $(this).css("background-color", "");
+            });
+
+            $('#tblListVDTChuTruongDauTu tr').each(function () {
+                var soTien = $(this).find(".sotien").text();
+                if (soTien) {
+                    soTien = FormatNumber(soTien);
+                    $(this).find(".sotien").text(soTien);
+                }
+            });
+
+            $("#txtNgayQuyetDinhFrom").keydown(function (event) {
+                ValidateInputKeydown(event, this, 3);
+            }).blur(function (event) {
+                setTimeout(() => {
+                    if (!isShowing) ValidateInputFocusOut(event, this, 3);
+                }, 0);
+            });
+
+            $("#txtNgayQuyetDinhTo").keydown(function (event) {
+                ValidateInputKeydown(event, this, 3);
+            }).blur(function (event) {
+                setTimeout(() => {
+                    if (!isShowing) ValidateInputFocusOut(event, this, 3);
+                }, 0);
+            });
+
+            $("#txtDonViQuanLy").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+
+            $("#txtTongMucDauTuFrom").keydown(function (event) {
+                ValidateInputKeydown(event, this, 1);
+            }).blur(function (event) {
+                ValidateInputFocusOut(event, this, 2);
+            });
+
+            $("#txtTongMucDauTuTo").keydown(function (event) {
+                ValidateInputKeydown(event, this, 1);
+            }).blur(function (event) {
+                ValidateInputFocusOut(event, this, 2);
+            });
+
+            $("#txtSoQuyetDinh").keyup(function (event) {
+                ValidateMaxLength(this, 100);
+            });
+        });
+
+    </script>
+    <script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>
+

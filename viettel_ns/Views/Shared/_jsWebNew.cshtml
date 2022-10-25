@@ -1,0 +1,45 @@
+﻿@using SquishIt.Mvc;
+@using SquishIt.Framework;
+<script type="text/javascript">
+    var app_base = '@Url.Content("~/")';
+    var largeSpinnerBlockImage = '@Url.Content("~/content/Images/ajaxloader-large.gif")';
+</script>
+@{
+    var b = Bundle.JavaScript()
+    .Add("~/Scripts/js/jquery-3.1.0.min.js")
+    .Add("~/Scripts/js/jquery-ui.min.js")
+    .Add("~/Scripts/js/jquery.unobtrusive-ajax.min.js")
+    .Add("~/Scripts/js/bootstrap.js")
+    .Add("~/Scripts/js/jquery.validate.min.js")
+    .Add("~/Scripts/js/jquery.validate.unobtrusive.min.js")
+    .Add("~/content/plugins/sweetalert2/sweetalert2.min.js")
+    //.Add("~/Scripts/plugins/icheck/icheck.min.js")
+    .Add("~/Scripts/js/js_ui.js")
+    .Add("~/Scripts/js/js_app.js")
+    .Add("~/Scripts/js/js_layout.js")
+    .Add("~/Scripts/js/js_TableHelper.js")
+    .Add("~/Scripts/plugins/datapicker/bootstrap-datepicker.js")
+         .Add("~/Scripts/plugins/datapicker/bootstrap-datepicker.vi.js")
+          .Add("~/Scripts/js/select2.min.js")
+          .Add("~/Scripts/js/js_editor.js");
+
+    var isEditor = ViewBag.IsEditor != null && ViewBag.IsEditor;
+
+    //b.MvcRenderNamed("js")
+
+    //if (isEditor)
+    //{
+    //    b.Add("~/Scripts/plugins/datapicker/bootstrap-datepicker.js")
+    //     .Add("~/Scripts/plugins/datapicker/bootstrap-datepicker.vi.js")
+    //     .Add("~/Scripts/js/js_editor.js");
+
+    //}
+}
+@(
+
+             b.MvcRender(isEditor ?
+                "~/Scripts/js/cache/combined_editor.js" :
+                "~/Scripts/js/cache/combined_ls.js")
+
+//b.MvcRender()
+)

@@ -1,0 +1,87 @@
+﻿@model SheetViewModel
+@{
+    ViewBag.Title = "_sheetFrame";
+    Layout = "~/Views/Shared/Sheet/_LayoutSheetFrame.cshtml";
+}
+
+@section Styles{
+    <link rel="Stylesheet" type="text/css" href="~/Content/css/sheet.css">
+}
+
+@Html.Partial("_sheetSearch", Model)
+@Html.Partial("_SheetEditor", Model)
+@section Scripts{
+    @Html.Partial("_SheetScript")
+    <script src="~/Scripts/js/sheets/jsBang_NNS_DuToan_NhiemVu.js"></script>
+    <script>
+        document.addEventListener('keydown', eventKey);
+        function eventKey(e) {
+            if (e != null && e != undefined) {
+                if (e.key == "F2") {
+                    var h = Bang_keys.Row();
+                    var c = Bang_keys.Col() - Bang_nC_Fixed;
+                    if ((h == null || h == 0) && Bang_arrGiaTri.length == 0) {
+                        BangDuLieu_onKeypress_F2_NoRow(0, undefined);
+                    } else {
+                        BangDuLieu_onKeypress_F2_NoRow(h, c);
+                    }
+                    window.parent.ResetListSelect();
+                    //BangDuLieu_onKeypress_F2(0, undefined);
+                }
+
+                if (e.key == "F10") {
+                    ValidateBeforeSave();
+                    window.parent.ResetListSelect();
+                }
+
+                if (e.key == "F9") {
+                    BangDuLieu_onKeypress_F9();
+                    window.parent.ResetListSelect();
+                }
+            }
+        }
+
+        $(document).ready(function () {
+            var listRow = $("#BangDuLieu_TB11 tbody tr");
+            if (listRow != null && listRow.length >= 0) {
+                listRow.each(function (i, x) {
+                    //var idDuToan = null;
+                    //var idMaChungTu = null;
+                    //var idNhiemVu = null;
+                    //if (Bang_arrGiaTri[i] != undefined) {
+                    //    idDuToan = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_DuToan"]];
+                    //    idMaChungTu = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_MaChungTu"]];
+                    //    idNhiemVu = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_NhiemVu"]];
+                    //}
+                    $(listRow[i]).on('dblclick', function () {
+                        RejectViewChiTiet(i);
+                    });
+                });
+            }
+        });
+
+        function RejectViewChiTiet(count) {
+            if (Bang_arrGiaTri == undefined || Bang_arrGiaTri == null || Bang_arrGiaTri.length <= 0) {
+                return false;
+            }
+            if (Bang_arrGiaTri[count] == undefined) {
+                return false;
+            }
+            var idDuToan = Bang_arrGiaTri[count][Bang_arrCSMaCot["iID_DuToan"]];
+            var idMaChungTu = Bang_arrGiaTri[count][Bang_arrCSMaCot["iID_MaChungTu"]];
+            var idNhiemVu = Bang_arrGiaTri[count][Bang_arrCSMaCot["iID_NhiemVu"]];
+            if (idDuToan == null || idDuToan == undefined || idDuToan == "") {
+                return false;
+            }
+
+            if (idNhiemVu == null || idNhiemVu == undefined || idNhiemVu == "") {
+                return false;
+            }
+
+            window.parent.ReloadPage(idDuToan, idMaChungTu, idNhiemVu);
+
+        }
+
+    </script>
+}
+

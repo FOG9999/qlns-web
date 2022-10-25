@@ -1,0 +1,233 @@
+﻿@using Viettel.Models.CPNH
+@using System.Globalization
+@using DomainModel
+@model CPNHThucHienNganSach_ModelPaging
+
+<div id="NhuCauChiQuy">
+    <div class="tooltip-header-search">
+        <div class="col-sm-8 col-md-8 col-lg-8" style="display:flex;padding-left:0px;">
+            <label class="control-label">Báo cáo đối chiếu tổng hợp số liệu kinh phí thực hiện cấp phát thanh toán toàn quân </label>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="IDTable"/>
+<table class="table table-bordered" id="tblFromTimkiemTongHopKinhPhiDuocCap">
+    <thead class="header-search">
+        <tr>
+            <th width="25%">
+                @*<div style="display: flex">
+                <div class='input-group date'>
+                    <input type="text" id="txtTuNgay" autocomplete="off" class="form-control gr_search txtDate" placeholder="Từ ngày" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <span style="margin: 8px 5px 0px 5px;">-</span>
+                <div class='input-group date'>
+                    <input type="text" id="txtDenNgay" autocomplete="off" class="form-control gr_search txtDate" placeholder="Đến ngày" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </div>*@
+            <div style="display: flex">
+                <div style="width:50%">
+                    @Html.DropDownList("iQuy", (SelectList)(ViewBag.ListQuyTypes), new { @class = "form-control", @id = "iQuyList", @onchange = "ChangePage()" })
+                </div>
+                <span style="margin: 8px 5px 0px 5px;">-</span>
+                <div style="width:50%">
+                    @Html.DropDownList("Value", new SelectList(ViewBag.ListYear, "Value", "Text", ViewBag.YearNow), new { @class = "form-control", @id = "txtNam", @onchange = "ChangePage()" })
+                </div>
+            </div>
+            </th>
+            <th width="75%">
+                <button class="btn btn-info pull-right mr-10" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+                <button class="btn btn-info pull-right mr-10 btn-print" data-ext="xls"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
+                <button class="btn btn-info pull-right mr-10" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
+            </th>
+        </tr>
+    </thead>
+</table>
+
+@{
+    <div style="overflow-x:auto">
+        <table class="table table-bordered tr-hover" id="tblTongHopKinhPhiDuocCap">
+            <thead>
+                <tr>
+                    <th style="min-width: 400px" rowspan="4" class="center">Nội dung</th>
+                    <th style="min-width: 300px" rowspan="2" colspan="2">Giá trị hợp đồng mua sắm hoặc dự toán được duyệt</th>
+                    <th style="min-width: 900px" rowspan="1" colspan="6">Kinh phí được cấp</th>
+                    <th style="min-width: 900px" rowspan="1" colspan="6">Kinh phí đã giải ngân (thanh toán, tạm ứng)</th>
+                    <th style="min-width: 300px" rowspan="2" colspan="2">Kinh phí được cấp chưa chi đến quý này</th>
+                </tr>
+                <tr>
+                    <th style="min-width: 300px" class="m-w100" colspan="2">Tổng số</th>
+                    <th style="min-width: 300px" class="m-w100" colspan="2">Kinh phí được cấp các năm trước</th>
+                    <th style="min-width: 300px" class="m-w100" colspan="2">Kinh phí được cấp từ đầu năm đến quý này</th>
+                    <th style="min-width: 300px" class="m-w100" colspan="2">Tổng số</th>
+                    <th style="min-width: 300px" class="m-w100" colspan="2">Các năm trước</th>
+                    <th style="min-width: 300px" class="m-w100" colspan="2">Từ đầu năm đến quý này</th>
+                </tr>
+                <tr>
+                    <th style="min-width: 50px" class="m-w100" colspan="1">USD</th>
+                    <th style="min-width: 50px" class="m-w100" colspan="1">VND</th>
+                    <th class="m-w100" colspan="1">USD</th>
+                    <th class="m-w100" colspan="1">VND</th>
+                    <th class="m-w100" colspan="1">USD</th>
+                    <th class="m-w100" colspan="1">VND</th>
+                    <th class="m-w100" colspan="1">USD</th>
+                    <th class="m-w100" colspan="1">VND</th>
+                    <th class="m-w100" colspan="1">USD</th>
+                    <th class="m-w100" colspan="1">VND</th>
+                    <th class="m-w100" colspan="1">USD</th>
+                    <th class="m-w100" colspan="1">VND</th>
+                    <th class="m-w100" colspan="1">USD</th>
+                    <th class="m-w100" colspan="1">VND</th>
+                    <th class="m-w100" colspan="1">USD</th>
+                    <th class="m-w100" colspan="1">VND</th>
+                </tr>
+                <tr>
+                    <th class="text-nowrap">1</th>
+                    <th class="text-nowrap">2</th>
+                    <th class="text-nowrap">3 = 5 + 7</th>
+                    <th class="text-nowrap">4 = 6 + 8</th>
+                    <th class="text-nowrap">5</th>
+                    <th class="text-nowrap">6</th>
+                    <th class="text-nowrap">7</th>
+                    <th class="text-nowrap">8</th>
+                    <th class="text-nowrap">9 = 11 + 13</th>
+                    <th class="text-nowrap">10 = 12 + 14</th>
+                    <th class="text-nowrap">11</th>
+                    <th class="text-nowrap">12</th>
+                    <th class="text-nowrap">13</th>
+                    <th class="text-nowrap">14</th>
+                    <th class="text-nowrap">15 = 3 - 9</th>
+                    <th class="text-nowrap">16 = 4 - 10</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 0;
+                    foreach (var item in Model.Items)
+                    {
+                        index++;
+                        <tr style="cursor: pointer">
+                            <td class="@item.isTitle @(item.isSum == true ? "text-center" : "text-left" )">@Html.Raw(Html.Encode(item.depth)) @Html.Raw(Html.Encode(item.sTenNoiDungChi))</td>
+                            <td class="text-right @item.isTitle">
+                                @Html.Raw(item.HopDongUSD.HasValue ? CommonFunction.DinhDangSo(item.HopDongUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)
+                            </td>
+                            <td class="@item.isTitle" align="right">
+                                @Html.Raw(item.HopDongVND.HasValue ? CommonFunction.DinhDangSo(item.HopDongVND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)
+                            </td>
+                            <td class="text-right @item.isTitle">@Html.Raw(item.TongKinhPhiUSD.HasValue ? CommonFunction.DinhDangSo(item.TongKinhPhiUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                            <td class="text-right @item.isTitle">@Html.Raw(item.TongKinhPhiVND.HasValue ? CommonFunction.DinhDangSo(item.TongKinhPhiVND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                            <td class="text-right @item.isTitle">@Html.Raw(item.KinhPhiUSD.HasValue ? CommonFunction.DinhDangSo(item.KinhPhiUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                            <td class="text-right @item.isTitle">@Html.Raw(item.KinhPhiVND.HasValue ? CommonFunction.DinhDangSo(item.KinhPhiVND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                            <td class="text-right @item.isTitle">@Html.Raw(item.KinhPhiToYUSD.HasValue ? CommonFunction.DinhDangSo(item.KinhPhiToYUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                            <td class="text-right @item.isTitle">@Html.Raw(item.KinhPhiToYVND.HasValue ? CommonFunction.DinhDangSo(item.KinhPhiToYVND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                            <td class="text-right @item.isTitle">@Html.Raw(item.TongKinhPhiDaChiUSD.HasValue ? CommonFunction.DinhDangSo(item.TongKinhPhiDaChiUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                            <td class="text-right @item.isTitle">@Html.Raw(item.TongKinhPhiDaChiVND.HasValue ? CommonFunction.DinhDangSo(item.TongKinhPhiDaChiVND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                            <td class="text-right @item.isTitle">@Html.Raw(item.KinhPhiDaChiUSD.HasValue ? CommonFunction.DinhDangSo(item.KinhPhiDaChiUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                            <td class="text-right @item.isTitle">@Html.Raw(item.KinhPhiDaChiVND.HasValue ? CommonFunction.DinhDangSo(item.KinhPhiDaChiVND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                            <td class="text-right @item.isTitle">@Html.Raw(item.KinhPhiDaChiToYUSD.HasValue ? CommonFunction.DinhDangSo(item.KinhPhiDaChiToYUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                            <td class="text-right @item.isTitle">@Html.Raw(item.KinhPhiDaChiToYVND.HasValue ? CommonFunction.DinhDangSo(item.KinhPhiDaChiToYVND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                            <td class="text-right @item.isTitle">
+                                @Html.Raw(item.KinhPhiDuocCapChuaChiUSD < 0 ? "-" + (item.KinhPhiDuocCapChuaChiUSD.HasValue ? CommonFunction.DinhDangSo(item.KinhPhiDuocCapChuaChiUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty) : (item.KinhPhiDuocCapChuaChiUSD.HasValue ? CommonFunction.DinhDangSo(item.KinhPhiDuocCapChuaChiUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty))
+                            </td>
+                            <td class="text-right @item.isTitle">
+                                @Html.Raw(item.KinhPhiDuocCapChuaChiVND < 0 ? "-" + (item.KinhPhiDuocCapChuaChiVND.HasValue ? CommonFunction.DinhDangSo(item.KinhPhiDuocCapChuaChiVND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty) : (item.KinhPhiDuocCapChuaChiVND.HasValue ? CommonFunction.DinhDangSo(item.KinhPhiDuocCapChuaChiVND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty))
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    }
+
+    <input type="hidden" id="urlExport" value="@Url.Action("ExportExcelBaoCao")" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var isShowing = false;
+            $('.date').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+                format: "dd/mm/yyyy"
+            }).on('hide', () => {
+                isShowing = false;
+            }).on('show', () => {
+                isShowing = true;
+            });
+
+            $(".txtDate").keydown(function (event) {
+                ValidateInputKeydown(event, this, 3);
+            }).blur(function (event) {
+                setTimeout(() => {
+                    if (!isShowing) ValidateInputFocusOut(event, this, 3);
+                }, 0);
+            });
+        });
+        $(".btn-print").click(function () {
+            var links = [];
+            var ext = $(this).data("ext");
+            var iQuyList = $("#iQuyList").val();
+            var iNam = $("#txtNam").val();
+            var dTuNgay = $("#txtTuNgay").val();
+            var dDenNgay = $("#txtDenNgay").val();
+            var iDonvi = $("#iDonvi").val();
+            //var dvt = $("#dvt").val();
+            var url = $("#urlExport").val() +
+                "?ext=" + ext +
+                "&dvt=1000&to=1&iQuyList=" + iQuyList + "&iNam=" + iNam + "&iDonvi=" + iDonvi;
+            url = unescape(url);
+            links.push(url);
+
+            openLinks(links);
+        });
+    </script>
+
+    <style>
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 30px;
+            background-color: #f9f9f9;
+            min-width: 140px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content button {
+            color: black;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ff6002
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            background-color: #ff6002;
+        }
+        .font-bold{
+            font-weight:bold;
+        }
+        .font-bold-red {
+            font-weight: bold;
+            color: #e85c5c;
+        }
+    </style>

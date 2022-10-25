@@ -1,0 +1,119 @@
+﻿@*@model SheetViewModel*@
+@model VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong.KeHoachVonNamDeXuatChiTietGridViewModel
+@{
+    Layout = "~/Views/shared/sheet/_LayoutSheetFrame.cshtml";
+}
+@section Styles{
+    <link rel="Stylesheet" type="text/css" href="~/Content/css/sheet.css">
+}
+
+<style>
+    #sTen {
+        /*margin-left: 50px;*/
+    }
+    #STT, #iThoiGianThucHien, #sTenLoaiCongTrinh, #sCapPheDuyet {
+        visibility: hidden;
+    }
+</style>
+@Html.Partial("_SheetSearch", Model.Sheet)
+@Html.Partial("_SheetEditor", Model.Sheet)
+@section Scripts{
+    @Html.Partial("_SheetScript")
+    <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsKeHoachVonNamDeXuat_ChiTiet.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            Bang_arrDSTruongTien = '@MucLucNganSachModels.strDSTruongTien'.split(',');
+            Bang_Url_getGiaTri = '@Url.Action("get_GiaTri", "Public", new { area = "" })';
+            Bang_Url_getDanhSach = '@Url.Action("get_DanhSach", "Public", new { area = "" })';
+            BangDuLieu_DuocSuaChiTiet = '@Model.Sheet.Table.IsEditable';
+            if (BangDuLieu_DuocSuaChiTiet) {
+                Bang_keys.fnSetFocus(null, null);
+            }
+
+            setFontWeight();
+            setEditHC();
+        });
+
+        document.addEventListener('keydown', eventKey);
+        function eventKey(e) {
+            if (e != null && e != undefined) {
+                if (e.key == "F1") {
+                    var h = Bang_keys.Row();
+                    var c = Bang_keys.Col() - Bang_nC_Fixed;
+                    if (h == null) {
+                        BangDuLieu_onKeypress_F1_NoRow(0, undefined);
+                    } else {
+                        BangDuLieu_onKeypress_F1_NoRow(h, c);
+                    }
+                }
+                if (e.key == "F2") {
+                    var h = Bang_keys.Row();
+                    var c = Bang_keys.Col() - Bang_nC_Fixed;
+                    if (h == null) {
+                        BangDuLieu_onKeypress_F2_NoRow(0, undefined);
+                    } else {
+                        BangDuLieu_onKeypress_F2_NoRow(h, c);
+                    }
+                }
+                if (e.key == "F3") {
+                    var h = Bang_keys.Row();
+                    var c = Bang_keys.Col() - Bang_nC_Fixed;
+                    if (h == null) {
+                        BangDuLieu_onKeypress_F3_NoRow(0, undefined);
+                    } else {
+                        BangDuLieu_onKeypress_F3_NoRow(h, c);
+                    }
+                }
+
+                if (e.key == "F10") {
+                    KH5NamDX_ChiTiet_BangDuLieu_Save();
+                }
+
+                if (e.key == "F9") {
+                    BangDuLieu_onKeypress_F9();
+                }
+            }
+        }
+
+        //function set lai edit hang
+        function setEditHC() {
+            for (var h = 0; h < Bang_nH; h++) {
+                var Level = Bang_LayGiaTri(h, "iLevel");
+                var LaHangCha = Bang_arrLaHangCha[h];
+                if (!LaHangCha) {
+                    if (Level == "1") {
+                        var c;
+                        for (c = 0; c < Bang_nC; c++) {
+                            if (c != 1 && c != 18) {
+                                Bang_arrEdit[h][c] = false;
+                            } else {
+                                Bang_arrEdit[h][c] = true;
+                            }
+                        }
+                    } else if (Level == "2") {
+                        var c;
+                        for (c = 0; c < Bang_nC; c++) {
+                            if (c > 0 && c < 7) {
+                                Bang_arrEdit[h][c] = true;
+                            } else {
+                                Bang_arrEdit[h][c] = false;
+                            }
+                        }
+                    } else if (Level == "3") {
+                        var c;
+                        for (c = 0; c < Bang_nC; c++) {
+                            if (c < 7 || c == 10 || c == 11) {
+                                Bang_arrEdit[h][c] = false;
+                            } else {
+                                Bang_arrEdit[h][c] = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    </script>
+}

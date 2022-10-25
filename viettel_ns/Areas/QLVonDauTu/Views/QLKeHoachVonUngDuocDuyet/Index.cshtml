@@ -1,0 +1,112 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTKeHoachVonUngPagingModel
+@{
+    ViewBag.Title = "Danh sách kế hoạch vốn ứng được duyệt";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body tab-content">
+                <div class="tooltip-header-search">
+                    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+                        <label class="control-label">Danh sách kế hoạch vốn ứng được duyệt (@Model._paging.TotalItems)</label>
+
+                    </div>
+                    <button class="btn btn-primary pull-right" onclick="BtnCreateDataClick()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+                    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="SearchDataReset()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+                </div>
+                <table class="table table-bordered table-striped" id="tblListVDTKHVU">
+                    <thead class="header-search">
+                    <th width="5%"></th>
+                    <th width="10%">
+                        <input type="text" class="form-control clearable" id="sSoQuyetDinh" autocomplete="off" maxlength="50" />
+                    </th>
+                    <th width="20%">
+                        <div style="display: flex">
+                            <div class='input-group date' style="width:49%">
+                                <input type="text" id="dNgayQuyetDinhFrom" autocomplete="off" class="form-control dateFormat startDate" placeholder="dd/MM/yyyy" />
+                                <span class="btn-default input-group-addon">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                            <span style="margin: 8px 5px 0px 5px;">-</span>
+                            <div class='input-group date' style="width:49%">
+                                <input type="text" id="dNgayQuyetDinhTo" autocomplete="off" class="form-control dateFormat endDate" placeholder="dd/MM/yyyy" />
+                                <span class="btn-default input-group-addon">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </th>
+                    <th width="8%"> <input type="text" class="form-control clearable yearFormat" id="iNamKeHoach" onkeydown="ValidateInputKeydown(event, this, 1)" onblur="ValidateInputFocusOut(event, this, 6)" maxlength="4" autocomplete="off"  /></th>
+                    <th width="15%">@Html.DropDownList("iId_NguonVon", (SelectList)(ViewBag.LstNguonVon), "--Tất cả--", new { @class = "form-control", @id = "iId_NguonVon" })</th>
+                    <th width="7%">
+                        @Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), "--Tất cả--", new { @class = "form-control", @id = "iID_DonViQuanLyID" })
+                    </th>
+                    <th width="15%"></th>
+                    <th width="10%">
+                        <button class="btn btn-info" onclick="SearchData()"><i class="fa fa-search" aria-hidden="true"></i> Tìm kiếm</button>
+                    </th>
+                    </thead>
+                    <thead>
+                    <th width="5%">STT</th>
+                    <th width="10%">Số kế hoạch</th>
+                    <th width="20%">Ngày lập</th>
+                    <th width="8%">Năm kế hoạch</th>
+                    <th width="15%">Nguồn vốn</th>
+                    <th width="15%">Đơn vị quản lý</th>
+                    <th width="15%">Kế hoạch vốn ứng được duyệt</th>
+                    <th width="7%">Thao tác</th>
+                    </thead>
+                    <tbody id="lstDataView">
+                        @Html.Partial("_partialListKeHoachVonUngDuocDuyet", Model)
+                    </tbody>
+                </table>
+                @Html.BuildPagingButtons(Model._paging)
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsVDT_QLKeHoachVonUngDuocDuyet.js" type="text/javascript"></script>
+    <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+    <script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>
+
+    <script>
+        var _paging = {};
+        var sUrlListView = "";
+        $(document).ready(function () {
+            sUrlListView = '@Url.Action("TimKiemKHVUDuocDuyet", "QLKeHoachVonUngDuocDuyet")';
+            _paging.CurrentPage = @Model._paging.CurrentPage ;
+            _paging.ItemsPerPage = @Model._paging.ItemsPerPage ;
+
+            formatMoneyOfLstKHVU();
+            //$("#iNamKeHoach").keypress(function (e) {
+            //    var length = this.value.length;
+            //    if (length > 4) {
+            //        e.preventDefault();
+            //        this.setCustomValidity("Không được nhập quá 4 ký tự!");
+            //        this.reportValidity();
+            //        return false;
+            //    }
+            //});
+
+        });
+
+    </script>
+}
+
+

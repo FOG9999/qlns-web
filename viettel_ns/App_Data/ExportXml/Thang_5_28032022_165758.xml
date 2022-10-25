@@ -1,0 +1,100 @@
+<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+      <xs:complexType>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="DLKCB">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="stt" type="xs:int" minOccurs="0" />
+                <xs:element name="ho_ten" type="xs:string" minOccurs="0" />
+                <xs:element name="NGAYSINH" type="xs:string" minOccurs="0" />
+                <xs:element name="GIOITINH" type="xs:string" minOccurs="0" />
+                <xs:element name="CAPBAC" type="xs:string" minOccurs="0" />
+                <xs:element name="CHUCVU" type="xs:string" minOccurs="0" />
+                <xs:element name="MATHE" type="xs:string" minOccurs="0" />
+                <xs:element name="NGAY_VAO_VIEN" type="xs:string" minOccurs="0" />
+                <xs:element name="NGAY_RA_VIEN" type="xs:string" minOccurs="0" />
+                <xs:element name="SO_NGAY_DTRI" type="xs:int" minOccurs="0" />
+                <xs:element name="MABV" type="xs:string" minOccurs="0" />
+                <xs:element name="TENBV" type="xs:string" minOccurs="0" />
+                <xs:element name="MADV" type="xs:string" minOccurs="0" />
+                <xs:element name="TENDV" type="xs:string" minOccurs="0" />
+                <xs:element name="GHICHU" type="xs:string" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <DLKCB>
+    <stt>1</stt>
+    <ho_ten>A</ho_ten>
+    <NGAYSINH>19940323</NGAYSINH>
+    <GIOITINH>Nam</GIOITINH>
+    <CAPBAC>Binh nhì</CAPBAC>
+    <CHUCVU>Chiến sỹ</CHUCVU>
+    <MATHE>QN5979719050636</MATHE>
+    <NGAY_VAO_VIEN>20210130</NGAY_VAO_VIEN>
+    <NGAY_RA_VIEN>20210205</NGAY_RA_VIEN>
+    <SO_NGAY_DTRI>7</SO_NGAY_DTRI>
+    <MABV>97936</MABV>
+    <TENBV>Bệnh xá HVPKKQ/QCPKKQ</TENBV>
+    <MADV>0101</MADV>
+    <TENDV>Văn phòng DV1</TENDV>
+    <GHICHU />
+  </DLKCB>
+  <DLKCB>
+    <stt>1</stt>
+    <ho_ten>B</ho_ten>
+    <NGAYSINH>2.00006e</NGAYSINH>
+    <GIOITINH>Nam</GIOITINH>
+    <CAPBAC>Binh nhì</CAPBAC>
+    <CHUCVU>Chiến sỹ</CHUCVU>
+    <MATHE>QN5979719050105</MATHE>
+    <NGAY_VAO_VIEN>20210124</NGAY_VAO_VIEN>
+    <NGAY_RA_VIEN>20210202</NGAY_RA_VIEN>
+    <SO_NGAY_DTRI>9</SO_NGAY_DTRI>
+    <MABV>40001</MABV>
+    <TENBV>Bệnh viện 105</TENBV>
+    <MADV>0101</MADV>
+    <TENDV>Văn phòng DV1</TENDV>
+    <GHICHU />
+  </DLKCB>
+  <DLKCB>
+    <stt>2</stt>
+    <ho_ten>C</ho_ten>
+    <NGAYSINH>19940323</NGAYSINH>
+    <GIOITINH>Nam</GIOITINH>
+    <CAPBAC>Binh nhì</CAPBAC>
+    <CHUCVU>Chiến sỹ</CHUCVU>
+    <MATHE>QN5979719050636</MATHE>
+    <NGAY_VAO_VIEN>20210206</NGAY_VAO_VIEN>
+    <NGAY_RA_VIEN>20210218</NGAY_RA_VIEN>
+    <SO_NGAY_DTRI>13</SO_NGAY_DTRI>
+    <MABV>97936</MABV>
+    <TENBV>Bệnh xá HVPKKQ/QCPKKQ</TENBV>
+    <MADV>0101</MADV>
+    <TENDV>Văn phòng DV1</TENDV>
+    <GHICHU />
+  </DLKCB>
+  <DLKCB>
+    <stt>1</stt>
+    <ho_ten>D</ho_ten>
+    <NGAYSINH>19940323</NGAYSINH>
+    <GIOITINH>Nam</GIOITINH>
+    <CAPBAC>Binh nhì</CAPBAC>
+    <CHUCVU>Chiến sỹ</CHUCVU>
+    <MATHE>QN5979719050636</MATHE>
+    <NGAY_VAO_VIEN>20210130</NGAY_VAO_VIEN>
+    <NGAY_RA_VIEN>20210205</NGAY_RA_VIEN>
+    <SO_NGAY_DTRI>7</SO_NGAY_DTRI>
+    <MABV>97936</MABV>
+    <TENBV>Bệnh xá HVPKKQ/QCPKKQ</TENBV>
+    <MADV>0101</MADV>
+    <TENDV>Văn phòng DV1</TENDV>
+    <GHICHU />
+  </DLKCB>
+</NewDataSet>

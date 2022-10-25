@@ -1,0 +1,111 @@
+﻿@model rptDuToan_K11_NGViewModel
+@{
+    ViewBag.Title = L("DuToan.rptDuToan_K11_NG");
+}
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">@ViewBag.Title</span>
+    </div>
+    <div class="panel-body">
+        <!-- header -->
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-4">
+                    <label class="control-label">Chọn phòng ban:</label>
+                </div>
+                <div class="col-xs-8">
+                    <label class="control-label text-uppercase">Đơn vị:</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        @if (Model.PhongBanList == null || Model.PhongBanList.Count() <= 2)
+                        {
+                            @Html.Hidden("Id_PhongBan", PhienLamViec.iID_MaPhongBan);
+                            <input type="text" readonly class="form-control" value="@PhienLamViec.sTenPhongBanFull" />
+                        }
+                        else
+                        {
+                            @Html.DropDownList("Id_PhongBan", Model.PhongBanList, new { @class = "form-control", onchange = "change()" })
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Tiêu đề:</label>
+                        @Html.TextArea("TieuDe", Model.TieuDe, new { @class = "form-control" })
+                    </div>
+                    @*<div class="form-group">
+                            <label class="control-label">Loại báo cáo:</label>
+                            <div id="loaiBaoCao">
+                                <div class="radio">
+                                    <input type="radio" name="loaiBaoCao" value="1" id="loaiBaoCao-1" checked />
+                                    <label for="loaiBaoCao-1">Trình ký</label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="loaiBaoCao" value="2" id="loaiBaoCao-2" />
+                                    <label for="loaiBaoCao-2">Trình ký cấp Phòng</label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="loaiBaoCao" value="3" id="loaiBaoCao-3" />
+                                    <label for="loaiBaoCao-3">Trình ký số đề nghị</label>
+                                </div>
+                            </div>
+                        </div>*@
+                </div>
+                <div class="col-xs-8">
+                    <div id="Id_DonVi" class="ls-box" data-check="first-only"></div>
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i>In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <span class="text-muted">|</span>
+                <a class="btn-mvc" id="btnChuKy"><i class="fa fa-file-excel"></i>Sửa chữ ký</a>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("KiemTra", "Report")">Hủy</a>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("_ui_chuky")
+<script type="text/javascript">
+
+    change();
+
+    function change() {
+        fillDonVi();
+    }
+
+    function fillDonVi() {
+        var id_phongban = $("#Id_PhongBan").val();
+
+        var url = '@Url.Action("Ds_DonVi")' + "/?"
+            + "id_phongban=" + id_phongban;
+
+        fillCheckboxList("Id_DonVi", "Id_DonVi", url);
+    }
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+        var ext = $(this).data("ext");
+
+        $("input:checkbox[check-group='Id_DonVi']").each(function () {
+            if (this.checked) {
+                var item = this.value;
+
+                var url = '@Url.Action("Print")' +
+                                       "?ext=" + ext +
+                                       "&r=130" +
+                                       "&id_phongban=" + $("#Id_PhongBan").val() +
+                                       "&id_donvi=" + item +
+                                       "&TieuDe=" + $("#TieuDe").val();
+                url = unescape(url);
+                links.push(url);
+            }
+        });
+
+        openLinks(links);
+    });
+
+</script>

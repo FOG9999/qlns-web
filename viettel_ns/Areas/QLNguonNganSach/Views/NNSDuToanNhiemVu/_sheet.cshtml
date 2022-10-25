@@ -1,0 +1,536 @@
+﻿@model VIETTEL.Areas.QLNguonNganSach.Models.NNSDuToanNhiemVuViewModel
+@{
+    var sheet = Model.Sheet;
+}
+<div class="tooltip-header-search">
+    <div class="col-sm-6" style="display:flex;padding-left:0px;">
+        <label class="control-label">Danh sách nhiệm vụ (@Model.Sheet.Table.dtChiTiet.Rows.Count)</label>
+    </div>
+    <div class="col-sm-6">
+        <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Xóa tìm kiếm</p>
+        <label class="control-label pull-right" style="padding-left:20px;">F9: </label>
+        <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Tìm kiếm</p>
+        <label class="control-label pull-right" style="padding-left:20px;">Ent: </label>
+        <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Xóa</p>
+        <label class="control-label pull-right" style="padding-left:20px;">Del: </label>
+        <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Lưu</p>
+        <label class="control-label pull-right" style="padding-left:20px;">F10: </label>
+        <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Thêm dòng</p>
+        <label class="control-label pull-right">F2: </label>
+        <button class="btn btn-primary" style="width:120px !important;float:right;margin-right:10px" id="btn-saoChepDuLieu" data-toggle="modal" data-target="#modalLoadViewChungTu" onclick="LoadViewChungTu()" title="Chọn chứng từ"><i class="fa fa-plus" aria-hidden="true"></i> <span>Chọn chứng từ</span></button>
+    </div>
+</div>
+<iframe id="sheet" name="iframe-sheet" class="iframe-sheet"></iframe>
+<div class="">
+    <div id="nhapform">
+        <div id="form2">
+            <div class="button-bar">
+                <div class="text-center">
+                    <button class="btn btn-default" onclick="goBack()"><i class="fa fa-ban" aria-hidden="true"></i><span>Quay lại</span></button>
+                    <button class="btn btn-primary btn-save" id="btnSave"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr id="hr-split" />
+<div id="ajax-div">
+</div>
+<div class="modal fade" id="modalLoadViewChungTu" role="dialog" aria-labelledby="modalLoadViewChungTuLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="tooltip-header-search">
+                    <h4>Danh sách chứng từ</h4>
+                </div>
+            </div>
+            <div id="contentLoadViewChungTu">
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="divModalConfirm">
+
+</div>
+
+<script src="~/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+
+@using (Html.BeginScripts())
+{
+    <script type="text/javascript">
+
+        function ResetListSelect() {
+            listId = [];
+        }
+
+        $(".btn-save").click(function () {
+            $("#sheet")[0].contentWindow.ValidateBeforeSave();
+            listId = [];
+        });
+
+        function LoadHamTruocKhiKetThuc() {
+            $("#sheet")[0].contentWindow.Bang_HamTruocKhiKetThuc();
+            listId = [];
+        }
+
+        function GetOnchangeCheckBox(e) {
+            $("#tblListChungTu input[type=checkbox]").prop('checked', e.checked);
+        }
+
+        function PopupModal(title, message) {
+            var result = "";
+            $.ajax({
+                type: "POST",
+                url: "/Modal/OpenModal",
+                data: { Title: title, Messages: message, Category: 1 },
+                async: false,
+                success: function (data) {
+                    result = data;
+                }
+            });
+
+            return result;
+        }
+
+        var listId = [];
+
+        function CheckAllSelection() {
+            var itemCheck = $("#tblListChungTu input:checked");
+            if (itemCheck != null && itemCheck != undefined) {
+                var itemCheckKhacAll = [];
+                var tongtien = 0;
+                itemCheck.each(function (i, x) {
+                    if (x.id != "checkInputAll") {
+                        itemCheckKhacAll.push(x);
+                        tongtien += parseInt(x.dataset.sotien);
+                    }
+                });
+
+                window.parent.document.getElementById("lb_tongtien").innerHTML = tongtien.toLocaleString('vi-VN');
+
+                //$("#lb_tongtien").html(FormatNumber(tongtien));
+
+                if (itemCheckKhacAll.length == 0) {
+                    $("#tblListChungTu #checkInputAll").prop('checked', false);
+                    return;
+                }
+            }
+
+            var itemAll = $("#tblListChungTu input[type=checkbox]");
+            if ((itemCheck != null && itemCheck != undefined) && (itemAll != null && itemAll != undefined)) {
+                if ((itemCheck.length + 1) == itemAll.length) {
+                    $("#tblListChungTu #checkInputAll").prop('checked', true);
+                }
+            }
+        }
+
+        function GetOnChangeCheckBoxChiTiet(e) {
+            CheckAllSelection();
+        }
+
+        function ClearSelection() {
+            var items = $("#tblListChungTu input[type=checkbox]");
+            if (items == null || items == undefined || items.length <= 0) {
+                return;
+            }
+
+            items.each(function (i, x) {
+                $(x).prop('checked', false);
+            });
+        }
+
+        function SetDataSelectionById(ids) {
+            if (ids == null || ids == undefined || ids.length <= 0) {
+                return;
+            }
+
+            var items = $("#tblListChungTu input[type=checkbox]");
+            if (items == null || items == undefined || items.length <= 0) {
+                return;
+            }
+
+            items.each(function (i, x) {
+                var item = ids.includes(x.dataset.id);
+                if (item) {
+                    $(x).prop('checked', item);
+                }
+            });
+
+            CheckAllSelection();
+        }
+
+        function GetIdSelectionKey() {
+            var result = [];
+            var data = GetDataSelectionKey();
+
+            if (data.length <= 0) {
+                return result;
+            }
+
+            for (var i = 0; i < data.length; i++) {
+                result.push(data[i].iID_MaChungTu);
+            }
+
+            return result;
+        }
+
+        function GetDataSelectionKey() {
+            var result = [];
+
+            var items = $("#tblListChungTu input:checked");
+            if (items == null || items == undefined || items.length <= 0) {
+                return result;
+            }
+
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].dataset.id != null && items[i].dataset.id != undefined && items[i].dataset.id != "") {
+                    result.push({
+                        iID_MaChungTu: items[i].dataset.id,
+                        sNhiemVu: items[i].dataset.noidung,
+                        sSoTien: items[i].dataset.sotien,
+                        sMaNoiDungChi: $("#txtNoiDungChi").val(),
+                        sTenNoiDungChi: $("#txtNoiDungChi option:selected").text()
+                    });
+                }
+            }
+
+            return result;
+        }
+
+        function ValidateBeforeSaveSelection(data) {
+            var tienConLaiNDC = parseInt(UnFormatNumber($("#txtNoiDungChi option:selected").text().split(':')[1].trim()));
+            var sTenNDC = $("#txtNoiDungChi option:selected").text().split(':')[0].trim();
+
+            if (tienConLaiNDC < 0) {
+                var html = PopupModal("Lỗi lưu nhiệm vụ theo chứng từ", ["Số tiền còn lại của nội dung chi nhỏ hơn 0 "]);
+                $("#divModalConfirm").html(html);
+                return false;
+            } else if (data == null || data == undefined || data.length <= 0) {
+                var html = PopupModal("Lỗi lưu nhiệm vụ theo chứng từ", ["Vui lòng chọn bản ghi cần lưu!"]);
+                $("#divModalConfirm").html(html);
+                return false;
+            } else {
+                var tongSoTienDTBS = $("#lb_tongtien").html() == "" ? 0 : parseInt(UnFormatNumber($("#lb_tongtien").html()));
+                if (tongSoTienDTBS > tienConLaiNDC) {
+                    var html = PopupModal("Lỗi lưu nhiệm vụ theo chứng từ", ["Số giao dự toán vượt quá số tiền có của nội dung chi " + sTenNDC]);
+                    $("#divModalConfirm").html(html);
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        var listIdSelectionKey = [];
+
+        function GetIdSelectionKeyLoadView() {
+            return listIdSelectionKey;
+        }
+
+        function ClearIdSelectionKeyLoadView() {
+            listIdSelectionKey = [];
+        }
+
+        function CheckContainSelectionKey(item, ids) {
+            if (item == null || item == undefined) {
+                return false;
+            }
+
+            if (ids == null || ids == undefined || ids.length <= 0) {
+                return true;
+            }
+
+            if (ids.includes(item.iID_MaChungTu)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        function DeleteSelectionLoadView(id) {
+            if (id == null || id == "" || id == undefined) {
+                return;
+            }
+
+            var items = GetIdSelectionKeyLoadView();
+            if (items.length <= 0) {
+                return;
+            }
+
+            if (!items.includes(id)) {
+                return;
+            }
+
+            var result = [];
+
+            for (var i = 0; i < items.length; i++) {
+                if (items[i] != id) {
+                    result.push(items[i]);
+                }
+            }
+
+            listIdSelectionKey = result;
+        }
+
+        function GetListIdDeleteFromViewChonChungTu(listIdChonChungTu,listIdNhiemVu) {
+            var result = [];
+
+            if (listIdNhiemVu.length <= 0) {
+                return result;
+            }
+
+            var items = listIdNhiemVu;
+            for (var i = 0; i < items.length; i++) {
+                if (!listIdChonChungTu.includes(items[i])) {
+                    result.push(items[i]);
+                }
+            }
+
+            return result;
+        }
+
+        function DeleteRow() {
+            var data = $("#sheet")[0].contentWindow.Bang_arrGiaTri;
+            var bangCot = $("#sheet")[0].contentWindow.Bang_arrCSMaCot;
+
+            var listIdDelete = GetListIdDeleteFromViewChonChungTu(GetIdSelectionKey(), GetIdSelectionKeyLoadView());
+            if (listIdDelete.length <= 0) {
+                return;
+            }
+
+            for (var i = 0; i < data.length; i++) {
+                var id_MaChungTu = data[i][bangCot["iID_MaChungTu"]];
+                if (listIdDelete.includes(id_MaChungTu)) {
+                    DeleteSelectionLoadView(id_MaChungTu);
+                    $("#sheet")[0].contentWindow.BangDuLieu_onKeypress_Delete_ChonChungTu(i, 0);
+                }
+            }
+        }
+
+        function SaveChooseSelection() {
+            var items = GetDataSelectionKey();
+
+            if (!ValidateBeforeSaveSelection(items)) {
+                return false;
+            }
+
+            for (var i = 0; i < items.length; i++) {
+                if (CheckContainSelectionKey(items[i], GetIdSelectionKeyLoadView())) {
+                    $("#sheet")[0].contentWindow.BangDuLieu_ThemHangMoi_ChonChungTu(0, undefined, items[i]);
+                    listIdSelectionKey.push(items[i].iID_MaChungTu);
+                }
+            }
+
+            DeleteRow();
+
+            $("#modalLoadViewChungTu").modal("hide");
+        }
+
+        function Choose() {
+            var listChecked = $("#tblListChungTu input:checked");
+            var items = listChecked;
+            if (items == null || undefined || items.length <= 0) {
+                var html = PopupModal("Lỗi lưu nhiệm vụ theo chứng từ", ["Vui lòng chọn bản ghi cần lưu!"]);
+                $("#divModalConfirm").html(html);
+                return false;
+            }
+
+            if (items.length <= 0) {
+                var html = PopupModal("Lỗi lưu nhiệm vụ theo chứng từ", ["Vui lòng chọn bản ghi cần lưu!"]);
+                $("#divModalConfirm").html(html);
+                return false;
+            }
+
+            var ids = [];
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].dataset.id != undefined && items[i].dataset.id != null && items[i].dataset.id != "") {
+                    var object = {
+                        iID_MaChungTu: items[i].dataset.id,
+                        sNhiemVu: items[i].dataset.noidung,
+                        sSoTien: items[i].dataset.sotien,
+                        sMaNoiDungChi: $("#txtNoiDungChi").val(),
+                        sTenNoiDungChi: $("#txtNoiDungChi option:selected").text().split(':')[0].trim()
+                    };
+                    ids.push(items[i].dataset.id);
+                    var check = listId.includes(object.iID_MaChungTu);
+                    if (check == false) {
+                        $("#sheet")[0].contentWindow.BangDuLieu_ThemHangMoi_ChonChungTu(0, undefined, object);
+                        listId.push(object.iID_MaChungTu);
+                    }
+                }
+            }
+        }
+
+        function LoadViewChungTu(sMaPhongBan = "") {
+            $.ajax({
+                type: "POST",
+                dataType: "html",
+                url: "/QLNguonNganSach/NNSDuToanNhiemVu/GetListChungTu",
+                data: { idDuToan: '@Model.IdDuToan', sMaPhongBan: sMaPhongBan},
+                success: function (data) {
+                    $("#contentLoadViewChungTu").html(data);
+
+                    $('#txtPhongBan').select2({
+                        width: 'resolve',
+                        minimumResultsForSearch: -1,
+                        matcher: matchStart
+                    });
+
+                    $('#txtNoiDungChi').select2({
+                        minimumResultsForSearch: -1,
+                        width: 'resolve',
+                        matcher: matchStart
+                    });
+
+                    SetDataComboBoxPhongBan();
+                    SetDataComboBoxNoiDungChi();
+                    EventChange();
+                    SetDataSelectionById(GetIdSelectionKeyLoadView());
+                    //SetDataKey();
+                }
+            });
+        }
+
+        function SetDataComboBoxPhongBan() {
+            $.ajax({
+                type: "POST",
+                url: "/QLNguonNganSach/NNSDuToanNhiemVu/GetListPhongBan",
+                dataType: "html",
+                success: function (resp) {
+                    resp = JSON.parse(resp);
+                    if (resp.status == false) {
+                        return false;
+                    }
+
+                    if (resp.data != null && resp.data != undefined && resp.data.length > 0) {
+                        $('#txtPhongBan').select2({
+                            data: resp.data
+                        });
+                    }
+                }
+            });
+        }
+
+        function SetDataComboBoxNoiDungChi() {
+            $.ajax({
+                type: "POST",
+                url: "/QLNguonNganSach/NNSDuToanNhiemVu/GetListNoiDungChi",
+                dataType: "html",
+                success: function (resp) {
+                    resp = JSON.parse(resp);
+                    if (resp.status == false) {
+                        return false;
+                    }
+
+                    if (resp.data != null && resp.data != undefined && resp.data.length > 0) {
+                        $('#txtNoiDungChi').select2({
+                            data: resp.data
+                        });
+                    }
+                }
+            });
+        }
+
+        function LoadViewChungTuSearch(maPhongBan) {
+            $.ajax({
+                type: "POST",
+                url: "/QLNguonNganSach/NNSDuToanNhiemVu/GetListChungTuSearch",
+                data: { maPhongBan: maPhongBan},
+                success: function (resp) {
+                    if (resp == null || resp == undefined) {
+                        return false;
+                    }
+
+                    if (resp.status == false) {
+                        return false;
+                    }
+
+                    $("#tblListChungTu #checkInputAll").prop('checked', false);
+
+                    var html = "";
+                    $("#tblListChungTu tbody").html(html);
+
+                    if (resp.data == null || resp.data.length <= 0) {
+                        return;
+                    }
+
+                    var items = resp.data;
+                    for (var i = 0; i < items.length; i++) {
+                        html += '<tr style="cursor: pointer">';
+                        html += '<td align="center"><input class="form-check-input" onchange="GetOnChangeCheckBoxChiTiet(this)" type="checkbox" data-id="' + items[i].iID_MaChungTu + '" data-noidung="' + items[i].sNoiDung + '" data-sotien="' + items[i].SoTien +'"></td>';
+                        html += '<td align="left">' + items[i].sTenPhongBan + '</td>';
+                        html += '<td align="center">' + items[i].sNgayChungTu + '</td>';
+                        html += '<td align="right">' + items[i].sSoTien + '</td>';
+                        html += '<td align="left">' + items[i].sNoiDung + '</td>';
+                        html += '</tr>';
+                    }
+
+                    $("#tblListChungTu tbody").append(html);
+                }
+            });
+        }
+
+        function EventChange() {
+            $('#txtPhongBan').on('select2:select', function (e) {
+                var data = e.params.data;
+                if (data != null && data != undefined) {
+                    LoadViewChungTuSearch(data.id);
+                }
+            });
+            //$("#txtPhongBan").on('select2:select', function (e) {
+            //    var value = e.params.data;
+            //    if (value != null && value != "" && value != undefined) {
+            //        LoadViewChungTu(value);
+            //    }
+            //});
+        }
+
+        function matchStart(params, data) {
+            if ($.trim(params.term) === '') {
+                return data;
+            }
+
+            if (typeof data.children === 'undefined') {
+                return null;
+            }
+
+
+            var filteredChildren = [];
+            $.each(data.children, function (idx, child) {
+                if (child.text.toUpperCase().indexOf(params.term.toUpperCase()) == 0) {
+                    filteredChildren.push(child);
+                }
+            });
+
+            if (filteredChildren.length) {
+                var modifiedData = $.extend({}, data, true);
+                modifiedData.children = filteredChildren;
+
+                return modifiedData;
+            }
+
+            return null;
+        }
+
+        loadFrame();
+
+        function goBack() {
+            window.location.href = "/QLNguonNganSach/QLGiaoDuToanChoDV/Index";
+        }
+
+        function loadModal(data) {
+            $("#divModalConfirm").html(data);
+        }
+
+        function loadFrame() {
+            var url = '@Url.Action("SheetFrame")' + "?id=" + '@Model.IdDuToan' + "&&filter=null";
+            $("#sheet").attr("src", url);
+        }
+
+        function ReloadPage(idDuToan, idMaChungTu, idNhiemVu) {
+            window.location.href = "/QLNguonNganSach/QLGiaoDuToanChoDV/ChiTietDuToan?id=" + idDuToan + "_" + idMaChungTu + "_" + idNhiemVu;
+       }
+
+    </script>
+}

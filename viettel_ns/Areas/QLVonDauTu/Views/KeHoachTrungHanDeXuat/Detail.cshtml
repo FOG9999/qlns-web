@@ -1,0 +1,20 @@
+﻿@using VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
+@model KeHoach5NamDeXuatChiTietGridViewModel
+@{
+    ViewBag.Title = "Kế hoạch trung hạn đề xuất chi tiết";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <input type="hidden" id="c" value="@ViewBag.BIsDetail">
+                @Html.Partial("_sheet", Model)
+            </div>
+        </div>
+    </div>
+</div>
