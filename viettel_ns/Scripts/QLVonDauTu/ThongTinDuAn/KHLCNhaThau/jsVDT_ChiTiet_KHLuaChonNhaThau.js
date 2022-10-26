@@ -27,12 +27,13 @@ $(document).ready(function ($) {
 });
 
 var arrDuToan = [];
-var selectedDuToan = $('#iID_DuToanID').val() ? $('#iID_DuToanID').val() : ($('#iID_QDDauTuID').val() ? $('#iID_QDDauTuID').val() : $('#iID_ChuTruongDauTuID').val() );
+var selectedDuToan = $('#iID_DuToanID').val() ? $('#iID_DuToanID').val() : ($('#iID_QDDauTuID').val() ? $('#iID_QDDauTuID').val() : $('#iID_ChuTruongDauTuID').val());
+var selectedLoaiChungTu = $('#iID_DuToanID').val() ? 1 : ($('#iID_QDDauTuID').val() ? 2 : 3);
 function GetDanhSachDuToan(id) {
     $.ajax({
         url: "/QLVonDauTu/KHLuaChonNhaThau/LayDanhSachDuToanTheoDuAn",
         type: "POST",
-        data: { iID: id },
+        data: { iID: id, loaiChungTu: selectedLoaiChungTu },
         dataType: "json",
         cache: false,
         success: function (data) {

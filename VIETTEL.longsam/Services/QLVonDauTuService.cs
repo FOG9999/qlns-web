@@ -3008,6 +3008,56 @@ namespace Viettel.Services
             return null;
         }
 
+        public List<VDT_DA_DuToan_Nguonvon_ViewModel> GetListNguonVonTheoQDDT(Guid duToanId)
+        {
+            try
+            {
+                var sql = FileHelpers.GetSqlQuery("vdt_get_listnguonvon_qddt_by_id.sql");
+                using (var conn = _connectionFactory.GetConnection())
+                {
+
+                    var item = conn.Query<VDT_DA_DuToan_Nguonvon_ViewModel>(sql,
+                        param: new
+                        {
+                            duToanId
+                        },
+                        commandType: CommandType.Text).ToList();
+                    if (item == null) return new List<VDT_DA_DuToan_Nguonvon_ViewModel>();
+                    return item;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return null;
+        }
+
+        public List<VDT_DA_DuToan_Nguonvon_ViewModel> GetListNguonVonTheoCTDT(Guid duToanId)
+        {
+            try
+            {
+                var sql = FileHelpers.GetSqlQuery("vdt_get_listnguonvon_dutoan_by_id.sql");
+                using (var conn = _connectionFactory.GetConnection())
+                {
+
+                    var item = conn.Query<VDT_DA_DuToan_Nguonvon_ViewModel>(sql,
+                        param: new
+                        {
+                            duToanId
+                        },
+                        commandType: CommandType.Text).ToList();
+                    if (item == null) return new List<VDT_DA_DuToan_Nguonvon_ViewModel>();
+                    return item;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return null;
+        }
+
         public List<VDT_DA_DuToan_ChiPhi_ViewModel> GetChiPhiTKTCTDTByDuAnId(Guid iIdDuAnId)
         {
             try
@@ -3037,6 +3087,56 @@ namespace Viettel.Services
             try
             {
                 var sql = FileHelpers.GetSqlQuery("vdt_get_listchiphi_dutoan_by_id.sql");
+                using (var conn = _connectionFactory.GetConnection())
+                {
+
+                    var item = conn.Query<VDT_DA_DuToan_ChiPhi_ViewModel>(sql,
+                        param: new
+                        {
+                            duToanId
+                        },
+                        commandType: CommandType.Text);
+
+                    return item;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return null;
+        }
+
+        public IEnumerable<VDT_DA_DuToan_ChiPhi_ViewModel> GetListChiPhiTheoQDDT(Guid duToanId)
+        {
+            try
+            {
+                var sql = FileHelpers.GetSqlQuery("vdt_get_listchiphi_qddt_by_id.sql");
+                using (var conn = _connectionFactory.GetConnection())
+                {
+
+                    var item = conn.Query<VDT_DA_DuToan_ChiPhi_ViewModel>(sql,
+                        param: new
+                        {
+                            duToanId
+                        },
+                        commandType: CommandType.Text);
+
+                    return item;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return null;
+        }
+
+        public IEnumerable<VDT_DA_DuToan_ChiPhi_ViewModel> GetListChiPhiTheoCTDT(Guid duToanId)
+        {
+            try
+            {
+                var sql = FileHelpers.GetSqlQuery("vdt_get_listchiphi_ctdt_by_id.sql");
                 using (var conn = _connectionFactory.GetConnection())
                 {
 
