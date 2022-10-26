@@ -2,11 +2,8 @@
 var GUID_EMPTY = '00000000-0000-0000-0000-000000000000';
 var ERROR = 1;
 var QT_Tai_San = "qttaisan";
-var arr_DataDonVi = [];
 var ListTaiSan = [];
 var dataLoaiTaiSan;
-var arr_DataDuAn = [];
-var arr_DataHopDong = [];
 var arr_DataTinhTrang = [];
 var arr_DataLoaiTaiSan = [];
 var arr_DataTinhTrangSuDung = [];
@@ -17,9 +14,6 @@ function GetDropdownData() {
         async: false,
         url: "/QLNH/TaiSan/GetDropdownData",
         success: function (result) {
-            arr_DataDonVi = result.donViList;
-            arr_DataDuAn = result.duAnList;
-            arr_DataHopDong = result.hopDongList;
             arr_DataTinhTrang = result.tinhTrangList;
             arr_DataLoaiTaiSan = result.loaiTaiSanList;
             arr_DataTinhTrangSuDung = result.tinhTrangSuDungList;
@@ -59,22 +53,23 @@ function BindingValidateAndSelect2() {
     });
 }
 
-function CreateHtmlSelectDonVi(value) {
+function CreateHtmlSelectDonVi(donViList, value) {
     var htmlOption = "";
-   htmlOption += "<option value='' selected>--Chọn đơn vị--</option>";
-    arr_DataDonVi.forEach(x => {
+    htmlOption += "<option value='' " + (value == undefined || value == "" || value == GUID_EMPTY ? "selected" : "") + ">--Chọn đơn vị--</option>";
+    donViList.forEach(x => {
         if (value != undefined && value == x.iID_Ma)
             htmlOption += "<option data-madonvi='" + $("<div/>").text(x.iID_MaDonVi).html() + "' value='" + x.iID_Ma + "'selected >" + $("<div/>").text(x.sTen).html() + "</option>";
         else
             htmlOption += "<option data-madonvi='" + $("<div/>").text(x.iID_MaDonVi).html() + "' value='" + x.iID_Ma + "' >" + $("<div/>").text(x.sTen).html() + "</option>";
     })
-    return "<select class='form-control listdonvi' name='iID_DonViID'>" + htmlOption + "</option>";
+    return "<select class='form-control listdonvi' name='iID_DonViID' onchange='ChangeDonVi(this)'>" + htmlOption + "</option>";
 }
 
-function CreateHtmlSelectDuAn(value) {
+function CreateHtmlSelectDuAn(duAnList, value) {
     var htmlOption = "";
-   htmlOption += "<option value=''selected>--Chọn dự án--</option>";
-    arr_DataDuAn.forEach(x => {
+    htmlOption += "<option value='' " + (value == undefined || value == "" || value == GUID_EMPTY ? "selected" : "") + ">--Chọn dự án--</option>";
+
+    duAnList.forEach(x => {
         if (value != undefined && value == x.ID)
             htmlOption += "<option value='" + x.ID + "' selected>" + $("<div/>").text(x.sTenDuAn).html() + "</option>";
         else
@@ -84,10 +79,11 @@ function CreateHtmlSelectDuAn(value) {
     return "<select class='form-control listduan' name='iID_DuAnID'>" + htmlOption + "</option>";
 }
 
-function CreateHtmlSelectHopDong(value) {
+function CreateHtmlSelectHopDong(hopDongList,value) {
     var htmlOption = "";
-   htmlOption += "<option value=''selected >--Chọn hợp đồng--</option>";
-    arr_DataHopDong.forEach(x => {
+    htmlOption += "<option value='' " + (value == undefined || value == "" || value == GUID_EMPTY ? "selected" : "") + ">--Chọn hợp đồng--</option>";
+
+    hopDongList.forEach(x => {
         if (value != undefined && value == x.ID)
             htmlOption += "<option value='" + x.ID + "' selected>" + $("<div/>").text(x.sTenHopDong).html() + "</option>";
         else
@@ -422,6 +418,21 @@ function ValidateData(data) {
 }
 
 function AddRow() {
+    var ID = GUID_EMPTY;
+    var donViList = [];
+    var duAnList = [];
+    var hopDongList = [];
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/TaiSan/GetDataDropDownFromDatabase",
+        data: { ID: ID },
+        async:false,
+        success: function (result) {
+            donViList = result.donViList;
+            duAnList = result.duAnList;
+            hopDongList = result.hopDongList;
+        }
+    });
     var dongMoi = "";
     dongMoi += "<tr>";
     dongMoi += "<td class='text-center r_STT'></td>";
@@ -435,9 +446,9 @@ function AddRow() {
     dongMoi += "<td class='text-center'><input type='text' name='sDonViTinh' class='form-control' /></td>";
     dongMoi += "<td class='text-center'><input type='text' name='fNguyenGia' class='form-control' onkeydown='ValidateInputKeydown(event, this, 2);' /></td>";
     dongMoi += "<td class='text-center'>" + CreateHtmlSelectTinhTrangSuDung() + "</td>";
-    dongMoi += "<td class='text-center'>" + CreateHtmlSelectDonVi() + "</td>";
-    dongMoi += "<td class='text-center'>" + CreateHtmlSelectDuAn() + "</td>";
-    dongMoi += "<td class='text-center'>" + CreateHtmlSelectHopDong() + "</td>";
+    dongMoi += "<td class='text-center'>" + CreateHtmlSelectDonVi(donViList) + "</td>";
+    dongMoi += "<td class='text-center'>" + CreateHtmlSelectDuAn(duAnList) + "</td>";
+    dongMoi += "<td class='text-center'>" + CreateHtmlSelectHopDong(hopDongList) + "</td>";
     dongMoi += "<td class='text-center'><button class='btn btn-delete btn-icon' type='button' onclick='XoaDong(this);'><i class='fa fa-trash-o fa-lg' aria-hidden='true'></i>Xóa</button></td>";
     dongMoi += "</tr>";
     $("#tbListTaiSan tbody").append(dongMoi);
@@ -458,35 +469,43 @@ function UpdateSequenceColumn(elementid) {
 }
 
 function LoadDataViewChitiet() {
-    var data = GetListDataChitietJson();
-    if (data != null) {
-        for (var i = 0; i < data.length; i++) {
-            var dongMoi = "";
-            dongMoi += "<tr class='parent'>";
-            dongMoi += "<td class='text-center r_STT'>" + (i + 1) + "</td>";
-            dongMoi += "<td class='text-center' hidden><input type='hidden' name='ID' value='" + data[i].ID + "' /></td>";
-            dongMoi += "<td class='text-center' style='cursor: pointer;' onclick='Openlist(this);' ondblclick='Openlist(this);'><input type='text' name='sMaTaiSan' class='form-control' style='cursor: pointer;' value='" + EscapeHtml(data[i].sMaTaiSan) + "' readonly /></td>";
-            dongMoi += "<td class='text-center' style='cursor: pointer;' onclick='Openlist(this);' ondblclick='Openlist(this);'><input type='text' name='sTenTaiSan' class='form-control' style='cursor: pointer;' value='" + EscapeHtml(data[i].sTenTaiSan) + "' readonly /></td>";
-            dongMoi += "<td class='text-center' style='cursor: pointer;' onclick='Openlist(this);' ondblclick='Openlist(this);'><input type='text' name='sMoTaTaiSan' class='form-control' style='cursor: pointer;' value='" + EscapeHtml(data[i].sMoTaTaiSan) + "' readonly /></td>";
-            dongMoi += "<td class='text-center'>" + CreateHtmlSelectLoaiTaiSan(data[i].iLoaiTaiSan) + "</td>";
-            dongMoi += "<td class='text-center'><div class='input-group date'><input type='text' name='dNgayBatDauSuDung' class='form-control txtDate' value='" + data[i].dNgayBatDauSuDungStr + "' autocomplete='off' placeholder='dd/MM/yyyy' /><span class='btn-default input-group-addon'><i class='fa fa-calendar' style='margin:0;' aria-hidden='true'></i></span></div></td>";
-            dongMoi += "<td class='text-center'>" + CreateHtmlSelectTinhTrang(data[i].iTrangThai) + "</td>";
-            dongMoi += "<td class='text-center'><input type='text' name='fSoLuong' class='form-control' onkeydown='ValidateInputKeydown(event, this, 1);' value='" + EscapeHtml(data[i].fSoLuong) + "' /></td>";
-            dongMoi += "<td class='text-center'><input type='text' name='sDonViTinh' class='form-control' value='" + EscapeHtml(data[i].sDonViTinh) + "' /></td>";
-            dongMoi += "<td class='text-center'><input type='text' name='fNguyenGia' class='form-control' onkeydown='ValidateInputKeydown(event, this, 2);' value='" + EscapeHtml(data[i].fNguyenGia) + "'/></td>";
-            dongMoi += "<td class='text-center'>" + CreateHtmlSelectTinhTrangSuDung(data[i].iTinhTrangSuDung) + "</td>";
-            dongMoi += "<td class='text-center'>" + CreateHtmlSelectDonVi(data[i].iID_DonViID) + "</td>";
-            dongMoi += "<td class='text-center'>" + CreateHtmlSelectDuAn(data[i].iID_DuAnID) + "</td>";
-            dongMoi += "<td class='text-center'>" + CreateHtmlSelectHopDong(data[i].iID_HopDongID) + "</td>";
-            dongMoi += "<td class='text-center'><button class='btn btn-delete btn-icon' type='button' onclick='XoaDong(this);'><i class='fa fa-trash-o fa-lg' aria-hidden='true'></i> Xóa</button></td>";
-            dongMoi += "</tr>";
+    var ID = GUID_EMPTY;
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/TaiSan/GetDataDropDownFromDatabase",
+        data: { ID: ID },
+        success: function (result) {
+            var data = GetListDataChitietJson();
+            if (data != null) {
+                for (var i = 0; i < data.length; i++) {
+                    var dongMoi = "";
+                    dongMoi += "<tr class='parent'>";
+                    dongMoi += "<td class='text-center r_STT'>" + (i + 1) + "</td>";
+                    dongMoi += "<td class='text-center' hidden><input type='hidden' name='ID' value='" + data[i].ID + "' /></td>";
+                    dongMoi += "<td class='text-center' style='cursor: pointer;' onclick='Openlist(this);' ondblclick='Openlist(this);'><input type='text' name='sMaTaiSan' class='form-control' style='cursor: pointer;' value='" + EscapeHtml(data[i].sMaTaiSan) + "' readonly /></td>";
+                    dongMoi += "<td class='text-center' style='cursor: pointer;' onclick='Openlist(this);' ondblclick='Openlist(this);'><input type='text' name='sTenTaiSan' class='form-control' style='cursor: pointer;' value='" + EscapeHtml(data[i].sTenTaiSan) + "' readonly /></td>";
+                    dongMoi += "<td class='text-center' style='cursor: pointer;' onclick='Openlist(this);' ondblclick='Openlist(this);'><input type='text' name='sMoTaTaiSan' class='form-control' style='cursor: pointer;' value='" + EscapeHtml(data[i].sMoTaTaiSan) + "' readonly /></td>";
+                    dongMoi += "<td class='text-center'>" + CreateHtmlSelectLoaiTaiSan(data[i].iLoaiTaiSan) + "</td>";
+                    dongMoi += "<td class='text-center'><div class='input-group date'><input type='text' name='dNgayBatDauSuDung' class='form-control txtDate' value='" + data[i].dNgayBatDauSuDungStr + "' autocomplete='off' placeholder='dd/MM/yyyy' /><span class='btn-default input-group-addon'><i class='fa fa-calendar' style='margin:0;' aria-hidden='true'></i></span></div></td>";
+                    dongMoi += "<td class='text-center'>" + CreateHtmlSelectTinhTrang(data[i].iTrangThai) + "</td>";
+                    dongMoi += "<td class='text-center'><input type='text' name='fSoLuong' class='form-control' onkeydown='ValidateInputKeydown(event, this, 1);' value='" + EscapeHtml(data[i].fSoLuong) + "' /></td>";
+                    dongMoi += "<td class='text-center'><input type='text' name='sDonViTinh' class='form-control' value='" + EscapeHtml(data[i].sDonViTinh) + "' /></td>";
+                    dongMoi += "<td class='text-center'><input type='text' name='fNguyenGia' class='form-control' onkeydown='ValidateInputKeydown(event, this, 2);' value='" + EscapeHtml(data[i].fNguyenGia) + "'/></td>";
+                    dongMoi += "<td class='text-center'>" + CreateHtmlSelectTinhTrangSuDung(data[i].iTinhTrangSuDung) + "</td>";
+                    dongMoi += "<td class='text-center'>" + CreateHtmlSelectDonVi(result.donViList, data[i].iID_DonViID) + "</td>";
+                    dongMoi += "<td class='text-center'>" + CreateHtmlSelectDuAn(result.duAnList, data[i].iID_DuAnID) + "</td>";
+                    dongMoi += "<td class='text-center'>" + CreateHtmlSelectHopDong(result.hopDongList, data[i].iID_HopDongID) + "</td>";
+                    dongMoi += "<td class='text-center'><button class='btn btn-delete btn-icon' type='button' onclick='XoaDong(this);'><i class='fa fa-trash-o fa-lg' aria-hidden='true'></i> Xóa</button></td>";
+                    dongMoi += "</tr>";
 
-            $("#tbListTaiSan tbody").append(dongMoi);
-            UpdateSequenceColumn("tbListTaiSan");
+                    $("#tbListTaiSan tbody").append(dongMoi);
+                    UpdateSequenceColumn("tbListTaiSan");
 
-            BindingValidateAndSelect2();
+                    BindingValidateAndSelect2();
+                }
+            }
         }
-    }
+});
 }
 
 function GetListDataChitietJson() {
@@ -613,4 +632,22 @@ function Choose(ele) {
 
 function CheckBeforeSave() {
     alert("Vui lòng lưu dữ liệu trước khi chọn");
+}
+function ChangeDonVi(element) {
+    var trElement = $(element).closest("tr");
+    var ID = trElement.find("select[name='iID_DonViID']").val();
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/TaiSan/GetDataDropDownFromDatabase",
+        data: { id: ID  },
+        success: function (result) {
+            trElement.find("select[name='iID_DonViID']").closest("td").empty().html(CreateHtmlSelectDonVi(result.donViList, ID));
+            trElement.find("select[name='iID_DuAnID']").closest("td").empty().html(CreateHtmlSelectDuAn(result.duAnList));
+            trElement.find("select[name='iID_HopDongID']").closest("td").empty().html(CreateHtmlSelectHopDong(result.hopDongList));
+
+            trElement.find(".listdonvi").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+            trElement.find(".listduan").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+            trElement.find(".listhopdong").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        }
+    });
 }

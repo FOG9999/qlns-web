@@ -182,7 +182,7 @@ function Tooltip() {
     var fatrashlg = document.querySelectorAll(".fa-trash-o.fa-lg");
     var fatrashfile = document.querySelectorAll(".fa-trash-o.fa-file");
     var falock = document.querySelectorAll(".fa-lock.fa-lg");
-    //var fadownload = document.querySelectorAll(".fa-download.fa-lg");
+    var fadownload = document.querySelectorAll(".fa-download.fa-lg");
     if (facopy != null) {
         $.each(facopy, function (index, item) {
             item.setAttribute("title", "Điều chỉnh");
@@ -213,11 +213,11 @@ function Tooltip() {
             item.setAttribute("title", "Khóa");
         });
     }
-    //if (fadownload != null) {
-    //    $.each(fadownload, function (index, item) {
-    //        item.setAttribute("title", "Gửi dữ liệu");
-    //    });
-    //}
+    if (fadownload != null) {
+        $.each(fadownload, function (index, item) {
+            item.setAttribute("title", "Gửi dữ liệu");
+        });
+    }
 }
 
 function CallFunctionCommon() {

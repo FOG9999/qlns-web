@@ -4727,6 +4727,9 @@
     <Content Include="Report_Views\QuyetToan\rptTongHopLienThamQuanSoQuyetToan_03.aspx" />
     <Content Include="Report_Views\QuyetToan\rptTongHopQuanSoBinhQuan_51.aspx" />
     <Content Include="Report_Views\QuyetToan\rptTongHopQuanSoTangGiamTheoDonVi_48.aspx" />
+    <Content Include="ScriptDatabase\StoreChange\proc_get_all_kehoachvonnamdexuat_paging2.sql" />
+    <Content Include="ScriptDatabase\StoreChange\proc_get_all_kehoachvonnamduocduyet_paging.sql" />
+    <Content Include="ScriptDatabase\StoreChange\proc_get_all_thongtri_quyettoan_paging.sql" />
     <Content Include="Scripts\DanhMuc\jsImPortDMDonViBHXH.js" />
     <Content Include="Scripts\DanhMuc\jsDMLoaiCongTrinh.js" />
     <Content Include="Scripts\DanhMuc\jsDMNguon.js" />

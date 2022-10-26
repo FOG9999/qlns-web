@@ -14,6 +14,7 @@ var arrGoiThau = [];
 var arrGoiThauNguonVon = [];
 var arrGoiThauChiPhi = [];
 var arrGoiThauHangMuc = [];
+var arrDuAnChiPhi = []; // mảng để map giữa các chi phí đã chọn và các chi phí trên list
 
 var iIDDuAnID = "";
 var iIDKHLuaChonNTID = "";
@@ -26,6 +27,7 @@ $(document).ready(function ($) {
 });
 
 var arrDuToan = [];
+var selectedDuToan = $('#iID_DuToanID').val() ? $('#iID_DuToanID').val() : ($('#iID_QDDauTuID').val() ? $('#iID_QDDauTuID').val() : $('#iID_ChuTruongDauTuID').val() );
 function GetDanhSachDuToan(id) {
     $.ajax({
         url: "/QLVonDauTu/KHLuaChonNhaThau/LayDanhSachDuToanTheoDuAn",
@@ -42,7 +44,10 @@ function GetDanhSachDuToan(id) {
                     var htmlDanhSachDuToan = "";
                     data.forEach(function (x) {
                         htmlDanhSachDuToan += "<tr>";
-                        htmlDanhSachDuToan += "<td class='width-50' align='center'><input type='checkbox' data-dutoanid='" + x.iID_DuToanID + "' name='cb_DuToan' class='cb_DuToan'></td>";
+                        if (x.iID_DuToanID == selectedDuToan) {
+                            htmlDanhSachDuToan += "<td class='width-50' align='center'><input type='radio' data-dutoanid='" + x.iID_DuToanID + "' name='cb_DuToan' class='cb_DuToan' checked disabled></td>";
+                        }
+                        else htmlDanhSachDuToan += "<td class='width-50' align='center'><input type='radio' data-dutoanid='" + x.iID_DuToanID + "' name='cb_DuToan' class='cb_DuToan' disabled></td>";
                         htmlDanhSachDuToan += "<td align='left'>" + x.sSoQuyetDinh + "</td>";
                         htmlDanhSachDuToan += "<td class='width-150' align='center'>" + x.sNgayQuyetDinh + "</td>";
                         htmlDanhSachDuToan += "<td align='left'>" + x.sTenDonViQL + "</td>";
@@ -75,11 +80,24 @@ function GetDanhSachGoiThau(id) {
             if (data != null) {
                 // fill thong tin chi tiet du an
                 if (data != null) {
+                    arrDuAnChiPhi = data.lstDuAnChiPhis;
                     arrGoiThau = data.lstGoiThau;
                     arrGoiThauNguonVon = data.lstGoiThauNguonVon;
                     arrGoiThauChiPhi = data.lstGoiThauChiPhi;
                     arrGoiThauHangMuc = data.lstGoiThauHangMuc;
                     VeDanhSachGoiThau();
+
+                    // thêm trường iID_ChiPhi vào arrGoiThauChiPhi, để map vào arrChiPhiModal
+                    arrGoiThauChiPhi = [...arrGoiThauChiPhi.map(c => {
+                        let tempChiPhi = arrDuAnChiPhi.filter(x => x.iID_DuAn_ChiPhi == c.iID_ChiPhiID)[0];
+                        if (tempChiPhi) {
+                            return {
+                                ...tempChiPhi,
+                                ...c
+                            }
+                        }
+                        else return c;
+                    })]
                 }
             }
         },
@@ -181,8 +199,8 @@ function DisplayNguonVonChiPhiModal(iID_DuToanID, idDisplayNguonVon, idDisplayCh
                 arrChiPhiModal.push({
                     sTenChiPhi: objChiPhi.sTenChiPhi,
                     fTienPheDuyet: parseInt(objChiPhi.fTienPheDuyet == undefined ? 0 : objChiPhi.fTienPheDuyet),
-                    Id: objChiPhi.Id,
-                    iID_ChiPhiCha: objChiPhi.iID_ChiPhiCha,
+                    Id: objChiPhi.iID_DuAn_ChiPhi,
+                    iID_ChiPhiCha: objChiPhi.iID_ChiPhi_Parent,
                     fGiaTriGoiThau: 0
                 })
             } else {
@@ -202,7 +220,7 @@ function DisplayNguonVonChiPhiModal(iID_DuToanID, idDisplayNguonVon, idDisplayCh
     })
 
     arrChiPhiModal.forEach(function (cp) {
-        var objGoiThauChiPhi = arrGoiThauChiPhi.find(function (x) { return x.iID_DuToanID == iID_DuToanID && x.iID_GoiThauID == iID_GoiThauID_select && x.iID_ChiPhiID == cp.Id });
+        var objGoiThauChiPhi = arrGoiThauChiPhi.find(function (x) { return x.iID_GoiThauID == iID_GoiThauID_select && x.iID_ChiPhi == cp.Id });
         if (objGoiThauChiPhi != undefined) {
             cp.fGiaTriGoiThau = objGoiThauChiPhi.fTienGoiThau;
             cp.bChecked = 1
@@ -430,12 +448,12 @@ function SuKienDbClickDongTable() {
         var $this = $(this);
         var row = $this.closest("tr");
         var rGoiThauID = row.find('.r_iID_GoiThauID').val();
-        var rDuToanID = row.find('.r_iID_DuToanID').val();
+        var rDuToanID = selectedDuToan;
 
         iID_GoiThauID_select = rGoiThauID;
         iID_DuToanID_select = rDuToanID;
 
-        DisplayNguonVonChiPhiModal(new Array(rDuToanID), TBL_DANH_SACH_NGUON_VON_MODAL, TBL_DANH_SACH_CHI_PHI_MODAL);
+        DisplayNguonVonChiPhiModal(rDuToanID, TBL_DANH_SACH_NGUON_VON_MODAL, TBL_DANH_SACH_CHI_PHI_MODAL);
 
         TinhTongNguonVon();
         TinhTongChiPhi();

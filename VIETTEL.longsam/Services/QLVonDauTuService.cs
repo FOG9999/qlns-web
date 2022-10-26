@@ -1283,7 +1283,7 @@ namespace Viettel.Services
         /// </summary>
         /// <param name="iIdDuAn"></param>
         /// <returns></returns>
-        List<VDTDADuToanModel> GetDuToanByDuAnId(Guid iIdDuAn);
+        List<VDTDADuToanModel> GetDuToanByDuAnId(Guid iIdDuAn, int loaiChungTu);
         List<VDTDADuToanModel> GetDuToanDieuChinhByDuAnId(Guid iIdDuAn);
 
         /// <summary>
@@ -14707,12 +14707,13 @@ namespace Viettel.Services
         /// </summary>
         /// <param name="iIdDuAn"></param>
         /// <returns></returns>
-        public List<VDTDADuToanModel> GetDuToanByDuAnId(Guid iIdDuAn)
+        public List<VDTDADuToanModel> GetDuToanByDuAnId(Guid iIdDuAn, int loaiChungTu)
         {
             using (var conn = _connectionFactory.GetConnection())
             {
                 DynamicParameters lstParam = new DynamicParameters();
                 lstParam.Add("@iID_DuAnID", iIdDuAn);
+                lstParam.Add("@loaiChungTu", loaiChungTu);
                 var items = conn.Query<VDTDADuToanModel>("sp_vdt_get_dutoan_by_duanid", lstParam, commandType: CommandType.StoredProcedure);
                 return items.ToList();
             }

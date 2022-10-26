@@ -83,7 +83,7 @@
     </tbody>
 </table>
 @Html.BuildPagingButtons(Model._paging)
-
+<script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $('.date')
@@ -101,8 +101,17 @@
             $(this).css("background-color", "");
         });
 
-        formatMoney();
+        formatMoney();       
     });
+
+    document.addEventListener('keydown', eventKey);
+    function eventKey(e) {
+        if (e != null && e != undefined) {
+            if (e.key == "Enter") {
+                ChangePage();
+            }
+        }
+    }
 
 </script>
 

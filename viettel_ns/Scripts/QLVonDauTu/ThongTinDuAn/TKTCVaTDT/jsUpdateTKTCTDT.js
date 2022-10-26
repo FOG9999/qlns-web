@@ -181,9 +181,9 @@ function ThemMoiHangMucCon(nutThem) {
     dongMoi += "<td class='r_STT width-50'>" + objInfoDongMoi.sMaOrder + "</td>";
     dongMoi += "<td class='r_sTenHangMuc'><input type='text' id='sTenHangMuc' onblur='UpdateHangMuc(this)' class='form-control sTenHangMuc'/></td>"
     dongMoi += "<td><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh() + "</div></td>";
-    dongMoi += "<td class='fGiaTriPDDA' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control txtGiaTriPDDA' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);'/></td>";
+    dongMoi += "<td class='fGiaTriPDDA' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control txtGiaTriPDDA' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' disabled/></td>";
     dongMoi += "<td class='fGiaTriPDTKTC' align='right'><input type='text' id='fTienPheDuyet' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control fTienPheDuyet' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' /></td>";
-    dongMoi += "<td class='fChenhLech' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control txtChenhLech' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' /></td>";
+    dongMoi += "<td class='fChenhLech' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control txtChenhLech' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' disabled/></td>";
     dongMoi += "<td align='center' class='width-100'>";
 
     dongMoi += "<button class='btn-add-child btn-icon' type='button' onclick='ThemMoiHangMucCon(this)' > " +
@@ -352,7 +352,7 @@ function RenderNguonVon(lstNguonVon) {
         lstStrNguonVon.push("<td class='iID_NguonVonID'><select class='form-control'>" + strCbxNguonVon + "<select></td>");
         lstStrNguonVon.push("<td style='text-align:right'>" + FormatNumber(item.fTienPheDuyetQDDT) + "</td>");
         if (bIsDieuChinh == "True") {
-            lstStrNguonVon.push("<td class='fGiaTriDieuChinh' style='text-align:right'>" + FormatNumber(item.fGiaTriDieuChinh) + "</td>");
+            lstStrNguonVon.push("<td class='fGiaTriDieuChinh' style='text-align:right'>" + FormatNumber(item.fGiaTriTruocDieuChinh) + "</td>");
         }
         lstStrNguonVon.push("<td><input type='text' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' class='fTienPheDuyet form-control' style='text-align:right' onchange='GetTongMucDauTuTKTC();' value='" + FormatNumber(item.fTienPheDuyet) + "'/></td>");
         lstStrNguonVon.push("<td class='width-100 text-center'><button class='btn-delete'><i class='fa fa-trash-o fa-lg' aria-hidden='true' onclick='DeleteNguonVon($(this))'></i></button></td>");
@@ -374,7 +374,7 @@ function RenderChiPhi(lstChiPhi) {
         lstStrChiPhi.push("<td><input type='text' class='sTenChiPhi form-control' value='" + item.sTenChiPhi + "'></td>");
         lstStrChiPhi.push("<td style='text-align:right'>" + FormatNumber(item.fTienPheDuyetQDDT) + "</td>");
         if (bIsDieuChinh == "True") {
-            lstStrChiPhi.push("<td class='fGiaTriDieuChinh' style='text-align:right'>" + FormatNumber(item.fGiaTriDieuChinh) + "</td>");
+            lstStrChiPhi.push("<td class='fGiaTriDieuChinh' style='text-align:right'>" + FormatNumber(item.fTienPheDuyet) + "</td>");
         }
         if (!item.isParent) {
             lstStrChiPhi.push("<td><input type='text' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' class='fTienPheDuyet form-control' style='text-align:right' value='" + FormatNumber(item.fTienPheDuyet) + "'/></td>");
@@ -1129,7 +1129,7 @@ function ShowHideButtonHangMuc() {
         } else {
             $("#tblHangMucChinh *[data-id='" + x.iID_HangMucID + "']").removeClass("parent-row");
             $("#tblHangMucChinh *[data-id='" + x.iID_HangMucID + "']").find("button.btn-delete").show();
-            $("#tblHangMucChinh *[data-id='" + x.iID_HangMucID + "']").find("input, select").removeAttr('disabled');
+            //$("#tblHangMucChinh *[data-id='" + x.iID_HangMucID + "']").find("input, select").removeAttr('disabled');
         }
     })
 }

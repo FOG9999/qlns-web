@@ -69,7 +69,15 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             if (data == null) return View("Index");
             ViewBag.bIsDieuChinh = bIsDieuChinh ? 1 : 0;
             ViewBag.ItemsChuDauTu = new SelectList(GetCbxChuDauTu(), "Value", "Text");
-            ViewBag.ItemsLoaiChungTu = new SelectList(GetCbxLoaiChungTu(), "Value", "Text", ((int)CanCuType.Type.TKTC_TONG_DU_TOAN).ToString());
+            if(data.iID_ChuTruongDauTuID != null)
+            {
+                ViewBag.ItemsLoaiChungTu = new SelectList(GetCbxLoaiChungTu(), "Value", "Text", ((int)CanCuType.Type.CHU_TRUONG_DAU_TU).ToString());
+            }
+            else if (data.iID_QDDauTuID != null)
+            {
+                ViewBag.ItemsLoaiChungTu = new SelectList(GetCbxLoaiChungTu(), "Value", "Text", ((int)CanCuType.Type.QUYET_DINH_DAU_TU).ToString());
+            }
+            else ViewBag.ItemsLoaiChungTu = new SelectList(GetCbxLoaiChungTu(), "Value", "Text", ((int)CanCuType.Type.TKTC_TONG_DU_TOAN).ToString());
             ViewBag.sNgayQuyetDinhDefault = data.dNgayQuyetDinh.HasValue ? data.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy") : DateTime.Now.ToString("dd/MM/yyyy");
             ViewBag.iTypeDuToan = (int)CanCuType.Type.TKTC_TONG_DU_TOAN;
             return View(data);
@@ -418,9 +426,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             return Json(listGoiThau, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult LayDanhSachDuToanTheoDuAn(string iID)
+        public JsonResult LayDanhSachDuToanTheoDuAn(string iID, int loaiChungTu)
         {
-            List<VDTDADuToanModel> lstDuToan = _iQLVonDauTuService.GetDuToanByDuAnId(Guid.Parse(iID));
+            List<VDTDADuToanModel> lstDuToan = _iQLVonDauTuService.GetDuToanByDuAnId(Guid.Parse(iID), loaiChungTu);
             List<VDT_DA_DuToan_ViewModel> lstDuToanChiTiet = new List<VDT_DA_DuToan_ViewModel>();
             foreach (var item in lstDuToan)
             {

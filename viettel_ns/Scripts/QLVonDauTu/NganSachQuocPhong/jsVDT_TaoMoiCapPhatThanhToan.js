@@ -209,8 +209,8 @@ function GetDuAnByDVQLandCDT() {
 
 function GetDataDropdownNguonVon() {
     var iIdDuAn = $("#drpDuAn").val();
-    if (iIdDuAn == GUID_EMPTY)
-        return false;
+    if (iIdDuAn == undefined || iIdDuAn == null || iIdDuAn == GUID_EMPTY || iIdDuAn == "") return;
+
 
     $.ajax({
         type: "POST",
@@ -229,6 +229,7 @@ function GetDataDropdownNguonVon() {
 
 function GetDataDropdownHopDong() {
     var iIdDuAn = $("#drpDuAn option:selected").val();
+    if (iIdDuAn == undefined || iIdDuAn == null || iIdDuAn == GUID_EMPTY || iIdDuAn == "") return;
     $.ajax({
         type: "POST",
         url: "/QLVonDauTu/GiaiNganThanhToan/GetDataDropdownHopDong",

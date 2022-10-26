@@ -57,6 +57,7 @@ function fnChooseFiles() {
     }
     if (fileMessages.length > 0) {
         alert(fileMessages.join('\n'));
+        fileMessages = [];
     }
     FillTaiLieuDinhKemTbl();
 }
@@ -67,13 +68,23 @@ function validateFile(file) {
         if (file.size < 1e+7) {
             return true;
         } else {
-            fileMessages.push(`Tài liệu ${file.name} vượt quá dung lượng cho phép, vui lòng chọn lại`);
+            fileMessages.push(`Tài liệu ${file.name} vượt quá dung lượng cho phép (${calculateBytes(file.size)}), vui lòng chọn lại`);
             return false;
         }
     } {
         fileMessages.push(`Tài liệu ${file.name} không hợp lệ`);
         return false;
     }
+}
+
+function calculateBytes(bytes) {
+    const units = ['bytes', 'KB', 'MB'];
+    let index = 0, tempResult = parseInt(bytes, 10) || 0;
+    while (tempResult >= 1024 && ++index) {
+        tempResult = tempResult / 1024;
+    }
+    var result = tempResult.toFixed(tempResult == 0 ? 1 : 0) + '' + units[index];
+    return result;
 }
 
 function FillTaiLieuDinhKemTbl() {

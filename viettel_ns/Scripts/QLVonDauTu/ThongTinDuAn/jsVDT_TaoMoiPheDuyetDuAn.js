@@ -611,7 +611,8 @@ function ThemMoiHangMuc() {
 function ThemMoiHangMucCon(nutThem) {
     var dongHienTai = nutThem.closest("tr");
     var idHangMucHienTai = $(dongHienTai).attr("data-id");
-    var objHangMucHienTai = arrHangMucSave.filter(x => x.id == idHangMucHienTai)[0];
+    //var objHangMucHienTai = arrHangMucSave.filter(x => x.id == idHangMucHienTai)[0];
+    var objHangMucHienTai = arrHangMucTemp.filter(x => x.id == idHangMucHienTai)[0];
 
     var objInfoDongMoi = TaoMaOrderHangMucMoi(objHangMucHienTai.iID_QDDauTu_DM_HangMucID);
     var hangMucId = uuidv4();
@@ -694,7 +695,8 @@ function TaoMaOrderHangMucMoi(parentId) {
     var iIdDuAnChiPhi = $("#txtIIdDuAnChiPhi").val();
     var sMaOrder = "";
     var indexRow = -1;
-    var arrHangMucOrder = arrHangMucSave.filter(x => x.iID_DuAn_ChiPhi == "" || x.iID_DuAn_ChiPhi == null || x.iID_DuAn_ChiPhi == iIdDuAnChiPhi).sort(compareSMaOrder);
+    //var arrHangMucOrder = arrHangMucSave.filter(x => x.iID_DuAn_ChiPhi == "" || x.iID_DuAn_ChiPhi == null || x.iID_DuAn_ChiPhi == iIdDuAnChiPhi).sort(compareSMaOrder);
+    var arrHangMucOrder = arrHangMucTemp.filter(x => x.iID_DuAn_ChiPhi == "" || x.iID_DuAn_ChiPhi == null || x.iID_DuAn_ChiPhi == iIdDuAnChiPhi).sort(compareSMaOrder);
     if (parentId == "" || parentId == null) {
         var arrHangMucParent = arrHangMucOrder.filter(x => x.iID_ParentID == null || x.iID_ParentID == "");
         var sMaOrderLast = "0";
@@ -715,6 +717,7 @@ function TaoMaOrderHangMucMoi(parentId) {
             indexRow = arrHangMucOrder.findLastIndex(x => x.sMaOrder.startsWith(sMaOrderLast));
         }
     }
+    console.log({ sMaOrder, indexRow });
     return {
         sMaOrder: sMaOrder,
         indexRow: indexRow

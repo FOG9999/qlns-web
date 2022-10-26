@@ -48,7 +48,9 @@ function GetChiPhi() {
         data: { iIdDuAnId: iIdDuAnId, iIdDuToan: iIdDuToanId, bIsDieuChinh: bIsDieuChinh },
         success: function (result) {
             lstChiPhi = result.data;
-            RenderChiPhi(lstChiPhi);
+            SortByMaOrder(lstChiPhi);
+            //RenderChiPhi(lstChiPhi);
+            RenderChiPhi(lstChiPhiTemp);
         }
     });
 }
@@ -94,6 +96,7 @@ function RenderChiPhi(lstChiPhi) {
     var lstStrChiPhi = [];
     $.each(lstChiPhi, function (index, item) {
         lstStrChiPhi.push("<tr data-id='" + item.iID_DuAn_ChiPhi + "' data-parent='" + item.iID_ChiPhi_Parent + "' data-fTienPheDuyetQDDT='" + item.fTienPheDuyetQDDT + "' data-iIDChiPhiID='" + item.iID_ChiPhiID + "'>");
+        lstStrChiPhi.push("<td>" + item.sMaOrder + "</td>");
         lstStrChiPhi.push("<td>" + item.sTenChiPhi + "</td>");
         lstStrChiPhi.push("<td style='text-align:right'>" + FormatNumber(item.fTienPheDuyetQDDT) + "</td>");
         if (bIsDieuChinh == "True") {
@@ -111,13 +114,35 @@ function RenderChiPhi(lstChiPhi) {
     });
     $("#grdChiPhi").html(lstStrChiPhi.join(""));
 }
+var lstChiPhiTemp = [];
+function SortByMaOrder(lstData) {
+    var lstParent = lstData.filter(item => item.iID_ChiPhi_Parent == null);
+    if (lstParent) {
+        lstParent.forEach((parent, indexP) => {
+            let sMaOrderParent = indexP + 1;
+            lstChiPhiTemp.push({ ...parent, sMaOrder: sMaOrderParent });
+            recursiveLstChildChiPhi(parent.iID_DuAn_ChiPhi, lstData, sMaOrderParent);
+        });
+    }
+}
+
+function recursiveLstChildChiPhi(parentID, lstData, sMaOrderParent) {
+    let lstChild = lstData.filter(item => item.iID_ChiPhi_Parent == parentID);
+    if (lstChild) {
+        lstChild.forEach((child, indexC) => {
+            let sMaOrderChild = sMaOrderParent + '-' + (indexC + 1).toString();
+            lstChiPhiTemp.push({ ...child, sMaOrder: sMaOrderChild });
+            recursiveLstChildChiPhi(child.iID_DuAn_ChiPhi, lstData, sMaOrderChild);
+        });
+    } else return;
+}
 
 function RenderHangMuc(lstHangMucByChiPhi) {
     var lstStrHangMuc = [];
     var fGiaTriPheDuyetDuAn = 0;
     var fGiaTriPheDuyetTKTC = 0;
     var fGiaTriChenhLech = 0;
-    var tongGTPD = 0, tongGTPDTktc =0, tongChenhLech = 0;
+    var tongGTPD = 0, tongGTPDTktc = 0, tongChenhLech = 0;
 
     $.each(lstHangMucByChiPhi, function (index, item) {
         lstStrHangMuc.push("<tr data-id='" + item.iID_HangMucID + "' data-parent='" + item.iID_ParentID + "' data-fTienPheDuyetQDDT='" + item.fTienPheDuyetQDDT + "' data-iIDLoaiCongTrinhID='" + item.iID_LoaiCongTrinhID + "' data-iIdHangMucPhanChia='" + item.iID_HangMucPhanChia + "' data-bIsParent='" + item.isParent + "'>");
@@ -148,7 +173,7 @@ function RenderHangMuc(lstHangMucByChiPhi) {
         }
         tongGTPD += (item.fTienPheDuyetQDDT == null || item.fTienPheDuyetQDDT == "") ? 0 : parseFloat(item.fTienPheDuyetQDDT);
         tongGTPDTktc += (item.fTienPheDuyet == null || item.fTienPheDuyet == "") ? 0 : parseFloat(item.fTienPheDuyet);
-        
+
     });
     $("#tblHangMucChinh").html(lstStrHangMuc.join(""));
 
@@ -159,10 +184,10 @@ function RenderHangMuc(lstHangMucByChiPhi) {
         }
     })
     fGiaTriChenhLech = fGiaTriPheDuyetTKTC - fGiaTriPheDuyetDuAn;
-    $(".cpdt_tong_giatripheduyetduan").html('<b>' + FormatNumber(fGiaTriPheDuyetDuAn) +'</b>');
-    $(".cpdt_tong_giatripheduyet").html('<b>' + FormatNumber(fGiaTriPheDuyetTKTC) +'</b>');
+    $(".cpdt_tong_giatripheduyetduan").html('<b>' + FormatNumber(fGiaTriPheDuyetDuAn) + '</b>');
+    $(".cpdt_tong_giatripheduyet").html('<b>' + FormatNumber(fGiaTriPheDuyetTKTC) + '</b>');
     if (fGiaTriChenhLech > 0) {
-        $(".cpdt_tong_giatrichenhlech").html('<b>' + FormatNumber(fGiaTriChenhLech) +'</b>');
+        $(".cpdt_tong_giatrichenhlech").html('<b>' + FormatNumber(fGiaTriChenhLech) + '</b>');
     }
     $("#tblHangMucChinh").html(lstStrHangMuc.join(""));
     $("#tblHangMucCSS .fTongGiaTriPD").html(FormatNumber(tongGTPD));

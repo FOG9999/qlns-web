@@ -162,14 +162,15 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
         {
             datactts.sSoChungTu = HttpUtility.HtmlDecode(datactts.sSoChungTu);
             datactts.sTenChungTu = HttpUtility.HtmlDecode(datactts.sTenChungTu);
-
-            foreach(NH_QT_TaiSan item in datats)
-            {
-                item.sTenTaiSan = HttpUtility.HtmlDecode(item.sTenTaiSan);
-                item.sMaTaiSan = HttpUtility.HtmlDecode(item.sMaTaiSan);
-                item.sMoTaTaiSan = HttpUtility.HtmlDecode(item.sMoTaTaiSan);
-                item.sDonViTinh = HttpUtility.HtmlDecode(item.sDonViTinh);
-                item.iID_MaDonVi = HttpUtility.HtmlDecode(item.iID_MaDonVi);
+            if (datats != null) {
+                foreach (NH_QT_TaiSan item in datats)
+                {
+                    item.sTenTaiSan = HttpUtility.HtmlDecode(item.sTenTaiSan);
+                    item.sMaTaiSan = HttpUtility.HtmlDecode(item.sMaTaiSan);
+                    item.sMoTaTaiSan = HttpUtility.HtmlDecode(item.sMoTaTaiSan);
+                    item.sDonViTinh = HttpUtility.HtmlDecode(item.sDonViTinh);
+                    item.iID_MaDonVi = HttpUtility.HtmlDecode(item.iID_MaDonVi);
+                }
             }
 
             if (!_qlnhService.SaveChungTuTaiSan(datats, datactts))
@@ -184,9 +185,6 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
         {
             return Json(new
             {
-                donViList = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec, false, false),
-                duAnList = _qlnhService.GetLookupDuAn(),
-                hopDongList = _qlnhService.GetLookupHopDong(),
                 tinhTrangList = lstTinhTrang,
                 loaiTaiSanList = lstLoaitaisan,
                 tinhTrangSuDungList = lstTinhtrangsudung,
@@ -231,6 +229,17 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                 return Json(new { bIsComplete = false, sMessError = "Không cập nhật được dữ liệu !" }, JsonRequestBehavior.AllowGet);
             }
             return Json(new { bIsComplete = true }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetDataDropDownFromDatabase(Guid? id)
+        {
+            return Json(new
+            {
+                donViList = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec, false, false),
+                duAnList = _qlnhService.GetLookupDuAn(id),
+                hopDongList = _qlnhService.GetLookupHopDong(id),
+            });
         }
     }
 }

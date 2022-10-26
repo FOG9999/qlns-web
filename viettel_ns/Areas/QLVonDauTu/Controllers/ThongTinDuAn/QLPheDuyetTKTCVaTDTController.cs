@@ -92,7 +92,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             else
             {
                 lstDuAn = _qLVonDauTuService.LayDuAnByDonViQLVaLoaiQuyetDinh(iID_DonViQuanLyID, iLoaiQuyetDinh).ToList();
-            }            
+            }
             return Json(new { data = lstDuAn }, JsonRequestBehavior.AllowGet);
         }
 
@@ -115,7 +115,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         public JsonResult GetNguonVonByDuToan(Guid iIdDuAnId, Guid? iIdDuToan = null, bool bIsDieuChinh = false)
         {
             List<VDT_DA_DuToan_Nguonvon_ViewModel> lstData = new List<VDT_DA_DuToan_Nguonvon_ViewModel>();
-            if (iIdDuToan == null || iIdDuToan == Guid.Empty || bIsDieuChinh)
+            if (iIdDuToan == null || iIdDuToan == Guid.Empty || bIsDieuChinh == false)
             {
                 lstData = _qLVonDauTuService.GetNguonVonTKTCTDTByDuAnId(iIdDuAnId);
             }
@@ -130,7 +130,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         public JsonResult GetChiPhiByDuToan(Guid iIdDuAnId, Guid? iIdDuToan = null, bool bIsDieuChinh = false)
         {
             List<VDT_DA_DuToan_ChiPhi_ViewModel> lstData = new List<VDT_DA_DuToan_ChiPhi_ViewModel>();
-            if (iIdDuToan == null || iIdDuToan == Guid.Empty || bIsDieuChinh)
+            if (iIdDuToan == null || iIdDuToan == Guid.Empty || bIsDieuChinh == false)
             {
                 lstData = _qLVonDauTuService.GetChiPhiTKTCTDTByDuAnId(iIdDuAnId);
             }
@@ -224,6 +224,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                         objEdit.sTenDuToan = objDuToan.sTenDuToan;
                         objEdit.dDateUpdate = DateTime.Now;
                         objEdit.sUserUpdate = Username;
+                        objEdit.fTongDuToanPheDuyet = objDuToan.fTongDuToanPheDuyet;
                         conn.Update(objEdit, trans);
                     }
 
@@ -596,11 +597,11 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             var listModel = _qLVonDauTuService.GetListHangMucTheoQDDauTu(qdDauTu.iID_QDDauTuID);
             return Json(new { status = true, data = listModel });
         }
-            public JsonResult GetListHangMucByTKTC(Guid id)
+        public JsonResult GetListHangMucByTKTC(Guid id)
         {
             var listModel = _qLVonDauTuService.GetListHangMucTheoTKTC(id);
             return Json(new { status = true, data = listModel });
         }
-        
+
     }
 }

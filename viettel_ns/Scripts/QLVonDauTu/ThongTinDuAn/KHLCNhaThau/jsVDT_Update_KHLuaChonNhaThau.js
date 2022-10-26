@@ -606,7 +606,7 @@ function GetChiPhiGoiThauDetail(iIdGoiThau) {
             else return ele.iID_ChiPhiID;
         }).indexOf(item.iID_ChiPhiID);
 
-        if ((childIndex >= 0 || parentIndex >= 0) || currGiaTriConLai > 0) {
+        if ((childIndex >= 0 || parentIndex >= 0) || currGiaTriConLai >= 0) {
             sItem.push("<tr data-id='" + item.iID_ChiPhiID + "' data-parent='" + item.iID_ParentId + "'>");
             sItem.push("<td class='width-50 text-center'><input type='checkbox' class='ck_ChiPhi' value='" + item.iID_ChiPhiID +
                 (childIndex >= 0 || parentIndex >= 0 ? "\' checked " : "\'") + " onClick='CheckChiPhi(this)'></td>");

@@ -191,6 +191,7 @@ namespace Viettel.Models.QLVonDauTu
         public string sTenNguonVon { get; set; }
         public double fTienPheDuyet { get; set; }
         public double fGiaTriDieuChinh { get; set; }
+        public double fGiaTriTruocDieuChinh { get; set; }
         public double fTienPheDuyetQDDT { get; set; }
         public bool isDelete { get; set; }
     }

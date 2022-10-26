@@ -240,12 +240,12 @@ function GetListChiTiet() {
             },
             success: function (r) {
                 if (!r.bIsComplete) {
-                    if (r.sMessError != undefined || r.sMessError != null || r.sMessError != "") {                    
-                        alert(r.sMessError);
-                        isAdd = false;
-                    } else {
+                    if (r.sMessError == undefined || r.sMessError == null || r.sMessError == "") {                    
                         sMessError.push(`Đơn vị ${nameDonViQL} đã có kế hoạch chi quý năm ${iNamKeHoach}!`);
                         alert(sMessError.join('\n'));
+                        isAdd = false;
+                    } else {
+                        alert(r.sMessError);
                         isAdd = false;
                     }
                 }

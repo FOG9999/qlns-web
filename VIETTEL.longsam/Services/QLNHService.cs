@@ -134,8 +134,8 @@ namespace Viettel.Services
         bool DeleteTaiSan(Guid iId);
         bool SaveChungTuTaiSan(List<NH_QT_TaiSan> datats, NH_QT_ChungTuTaiSan datactts);
         bool SaveListLoaiTaiSan(List<NH_DM_LoaiTaiSan> data);
-        IEnumerable<NH_DA_DuAn> GetLookupDuAn();
-        IEnumerable<NH_DA_HopDong> GetLookupHopDong();
+        IEnumerable<NH_DA_DuAn> GetLookupDuAn(Guid? ID);
+        IEnumerable<NH_DA_HopDong> GetLookupHopDong(Guid? ID);
         #endregion
 
         #region QLNH - Đề nghị thanh toán
@@ -2544,33 +2544,49 @@ namespace Viettel.Services
             return false;
         }
 
-        public IEnumerable<NH_DA_DuAn> GetLookupDuAn()
+        public IEnumerable<NH_DA_DuAn> GetLookupDuAn(Guid? id)
         {
             try
             {
                 using (var conn = _connectionFactory.GetConnection())
                 {
                     conn.Open();
-                    var query = conn.Query<NH_DA_DuAn>("SELECT ID, sTenDuAn FROM NH_DA_DuAn WHERE bIsActive = 1");
-                    return query;
+                    List<NH_DA_DuAn> duAnList = new List<NH_DA_DuAn>();
+                    if (id==null ||id == Guid.Empty)
+                    {
+                        duAnList = conn.Query<NH_DA_DuAn>("SELECT ID, sTenDuAn FROM NH_DA_DuAn WHERE bIsActive = 1").ToList();
+                    }
+                    else
+                    {
+                        duAnList = conn.Query<NH_DA_DuAn>("SELECT ID, sTenDuAn FROM NH_DA_DuAn WHERE bIsActive = 1 AND iID_DonViID=@ID", new { ID = id }).ToList();
+                    }
+                    return duAnList;
                 }
             }
             catch (Exception ex)
             {
                 AppLog.LogError(this.GetType().Name, MethodBase.GetCurrentMethod().Name, ex.Message);
             }
-
             return null;
         }
 
-        public IEnumerable<NH_DA_HopDong> GetLookupHopDong()
+        public IEnumerable<NH_DA_HopDong> GetLookupHopDong(Guid? id)
         {
             try
             {
                 using (var conn = _connectionFactory.GetConnection())
                 {
                     conn.Open();
-                    return conn.Query<NH_DA_HopDong>("SELECT ID, sTenHopDong FROM NH_DA_HopDong WHERE bIsActive = 1");
+                    List<NH_DA_HopDong> hopDongList = new List<NH_DA_HopDong>();
+                    if (id == null || id == Guid.Empty)
+                    {
+                        hopDongList = conn.Query<NH_DA_HopDong>("SELECT ID, sTenHopDong FROM NH_DA_HopDong WHERE bIsActive = 1").ToList();
+                    }
+                    else 
+                    {
+                        hopDongList = conn.Query<NH_DA_HopDong>("SELECT ID, sTenHopDong FROM NH_DA_HopDong WHERE bIsActive = 1 AND iID_DonViID=@ID", new { ID = id }).ToList(); 
+                    }
+                    return hopDongList;
                 }
             }
             catch (Exception ex)
@@ -4455,9 +4471,14 @@ namespace Viettel.Services
 
                 var items = conn.Query<NH_TT_ThanhToanViewModel>("proc_get_all_baocao_tinhhinhthuchien_duan_paging", lstPrams,
                     commandType: CommandType.StoredProcedure);
-
-                double Sum = items.FirstOrDefault().fGiaTriDuocCap_USD;
-                double Sumgn = items.FirstOrDefault().fGiaTriTTTU_USD;
+                double Sum=0;
+                double Sumgn=0;
+                if (items.Any())
+                {
+                     Sum = items.FirstOrDefault().fGiaTriDuocCap_USD;
+                     Sumgn = items.FirstOrDefault().fGiaTriTTTU_USD;
+                }
+                
                 //foreach (var item in items)
                 //{
                 //    if (item.iCoQuanThanhToan.HasValue)
