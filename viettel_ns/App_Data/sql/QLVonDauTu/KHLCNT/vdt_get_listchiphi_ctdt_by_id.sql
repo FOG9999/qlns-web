@@ -8,7 +8,7 @@ Lấy danh sách dự chi phí QDDT theo dự án - chi tiết KHLCNT
 */
 
 
-select null as iID_DuAn_ChiPhi,
+select dmcp.iID_ChiPhi as iID_DuAn_ChiPhi,
 	dmcp.sTenChiPhi,
 	dmcp.iID_ChiPhi as iID_ChiPhiID,
 	null as iID_ChiPhi_Parent,

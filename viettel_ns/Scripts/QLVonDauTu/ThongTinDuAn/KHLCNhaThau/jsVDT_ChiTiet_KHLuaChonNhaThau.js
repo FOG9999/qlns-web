@@ -295,7 +295,7 @@ function DisplayNguonVonChiPhiModal(iID_DuToanID, idDisplayNguonVon, idDisplayCh
 }
 
 function TinhTongCon(root, arr) {
-    var arrChil = arr.filter(function (x) { return x.iID_ChiPhiCha == root.Id });
+    var arrChil = arr.filter(function (x) { return x.iID_ChiPhiCha === root.Id });
     if (arrChil.length > 0) {
         root.fTienPheDuyet = 0;
         arrChil.forEach(child => {

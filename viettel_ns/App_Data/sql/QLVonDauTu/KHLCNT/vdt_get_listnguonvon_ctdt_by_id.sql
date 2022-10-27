@@ -1,4 +1,5 @@
 
+
 --#DECLARE#--
 /*
 
@@ -15,3 +16,4 @@ qdnv.fTienPheDuyet,
 qdnv.fGiaTriDieuChinh
 from VDT_DA_ChuTruongDauTu_NguonVon qdnv
 inner join NS_NguonNganSach nv ON nv.iID_MaNguonNganSach = qdnv.iID_NguonVonID
+where iID_ChuTruongDauTuID = @duToanId

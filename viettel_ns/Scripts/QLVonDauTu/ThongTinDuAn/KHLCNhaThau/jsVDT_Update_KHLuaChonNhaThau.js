@@ -116,20 +116,27 @@ function GetListChungTu() {
                     ConvertItemsChungTu($.map(lstChungTuAll, function (n) { return n.iID_ChungTu == iIdChungTu ? n : null }));
                 });
 
-                if (iLoaiChungTu == iTypeDuToan) {
+                if (iLoaiChungTu == 1) {
                     // trường hợp thêm mới
                     if ($("#iIdDuToanId").val() == '') {
                         $("#iIdDuToanId").val($("input[name=rd_ChungTu]:checked").val());
                     }
                     // trường hợp update
                     $("input[name=rd_ChungTu]:checked").val($("#iIdDuToanId").val());
-                } else {
+                } else if (iLoaiChungTu == 2) {
                     // trường hợp thêm mới
                     if ($("#iIdQDDauTuId").val() == '') {
                         $("#iIdQDDauTuId").val($("input[name=rd_ChungTu]:checked").val());
                     }
                     // trường hợp update
                     $("input[name=rd_ChungTu]:checked").val($("#iIdQDDauTuId").val());
+                } else {
+                    // trường hợp thêm mới
+                    if ($("#iID_ChuTruongDauTuID").val() == '') {
+                        $("#iID_ChuTruongDauTuID").val($("input[name=rd_ChungTu]:checked").val());
+                    }
+                    // trường hợp update
+                    $("input[name=rd_ChungTu]:checked").val($("#iID_ChuTruongDauTuID").val());
                 }
                 var lstChungTu = [];
                 $.each($("input[name=rd_ChungTu]:checked"), function (index, item) {
@@ -1234,10 +1241,11 @@ function SetKeHoachLuaChonNhaThau() {
     obj.iID_MaDonViQuanLy = $("#iID_DonViQuanLyID").val();
     obj.iID_DuAnID = $("#iID_DuAnID").val();
     obj.sMoTa = $("#sMoTa").val();
-    if (iLoaiChungTu == iTypeDuToan)
+    if (iLoaiChungTu == 1)
         obj.iID_DuToanID = $('input:radio[name="rd_ChungTu"]:checked').val();
-    else
+    else if (iLoaiChungTu == 2)
         obj.iID_QDDauTuID = $('input:radio[name="rd_ChungTu"]:checked').val();
+    else obj.iID_ChuTruongDauTuID = $('input:radio[name="rd_ChungTu"]:checked').val();
     return obj;
 }
 

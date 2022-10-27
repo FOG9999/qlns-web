@@ -12,6 +12,8 @@ namespace Viettel.Models.QLVonDauTu
     public class VDT_DA_DuToan_ViewModel : VDT_DA_DuToan
     {
         public string sMaDonViQuanLy { get; set; }
+        public Guid? iID_QDDauTuID { get; set; }
+        public Guid? iID_ChuTruongDauTuID { get; set; }
         public string sTenDuToan { get; set; }
         public string sTenDuAn { get; set; }
         public string sMaDuAn { get; set; }

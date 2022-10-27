@@ -3091,7 +3091,7 @@ namespace Viettel.Services
         {
             try
             {
-                var sql = FileHelpers.GetSqlQuery("vdt_get_listnguonvon_dutoan_by_id.sql");
+                var sql = FileHelpers.GetSqlQuery("vdt_get_listnguonvon_ctdt_by_id.sql");
                 using (var conn = _connectionFactory.GetConnection())
                 {
 
