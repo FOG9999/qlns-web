@@ -24,7 +24,7 @@ function ChangePage(iCurrentPage = 1) {
     data_search.iCoQuanThanhToan = $('#icoquanthanhtoan').val();
     data_search.iID_NhaThauID = $('#idonvihuongthu').val();
     data_search.iTrangThai = $('#idtrangthai').val();
-    GetListData(iCurrentPage);
+    GetListData();
 }
 
 function ResetChangePage(iCurrentPage = 1) {
@@ -35,7 +35,7 @@ function ResetChangePage(iCurrentPage = 1) {
 }
 
 
-function GetListData(iCurrentPage) {
+function GetListData() {
     $.ajax({
         type: "POST",
         dataType: "html",

@@ -89,9 +89,9 @@
                     <td align="left">@Html.Raw(item.iLoaiThongTri == 1 ? "Thông tri quyết toán" : "Thông tri giảm quyết toán")</td>
                     <td align="left">@Html.Raw(item.iLoaiNoiDungChi == 1 ? "Chi bằng ngoại tệ" : "Chi bằng nội tệ")</td>
                     <td align="center">
-                        <button type="button" class="btn-detail" onclick="OpenViewCreateThongTri('@item.ID', 'DETAIL')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
-                        <button type="button" class="btn-edit" onclick="OpenViewCreateThongTri('@item.ID', 'UPDATE')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
-                        <button type="button" class="btn-delete" onclick="ConfirmDelete('@item.ID', '@item.sSoThongTri')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-detail" onclick="OpenViewCreateThongTri('@item.ID', 'DETAIL')" title="Xem chi tiết"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-edit" onclick="OpenViewCreateThongTri('@item.ID', 'UPDATE')" title="Sửa"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" onclick="ConfirmDelete('@item.ID', '@item.sSoThongTri')" title="Xóa"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
                     </td>
                 </tr>
             }

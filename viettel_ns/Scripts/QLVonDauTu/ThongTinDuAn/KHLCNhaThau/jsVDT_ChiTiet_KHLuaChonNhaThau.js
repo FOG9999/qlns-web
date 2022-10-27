@@ -29,6 +29,27 @@ $(document).ready(function ($) {
 var arrDuToan = [];
 var selectedDuToan = $('#iID_DuToanID').val() ? $('#iID_DuToanID').val() : ($('#iID_QDDauTuID').val() ? $('#iID_QDDauTuID').val() : $('#iID_ChuTruongDauTuID').val());
 var selectedLoaiChungTu = $('#iID_DuToanID').val() ? 1 : ($('#iID_QDDauTuID').val() ? 2 : 3);
+
+function checkIfIsChungTuSelected(chungTu) {
+    if (selectedLoaiChungTu == 1) {
+        return chungTu.iID_DuToanID == selectedDuToan;
+    }
+    else if (selectedLoaiChungTu == 2) {
+        return chungTu.iID_QDDauTuID == selectedDuToan;
+    }
+    else return chungTu.iID_ChuTruongDauTuID == selectedDuToan;
+}
+
+function getGiaTriPheDuyet(chungTu) {
+    if (selectedLoaiChungTu == 1) {
+        return chungTu.fTongDuToanPheDuyet;
+    }
+    else if (selectedLoaiChungTu == 2) {
+        return chungTu.fTongMucDauTu;
+    }
+    else return chungTu.fTongMucDauTu;
+}
+
 function GetDanhSachDuToan(id) {
     $.ajax({
         url: "/QLVonDauTu/KHLuaChonNhaThau/LayDanhSachDuToanTheoDuAn",
@@ -45,14 +66,14 @@ function GetDanhSachDuToan(id) {
                     var htmlDanhSachDuToan = "";
                     data.forEach(function (x) {
                         htmlDanhSachDuToan += "<tr>";
-                        if (x.iID_DuToanID == selectedDuToan) {
+                        if (checkIfIsChungTuSelected(x)) {
                             htmlDanhSachDuToan += "<td class='width-50' align='center'><input type='radio' data-dutoanid='" + x.iID_DuToanID + "' name='cb_DuToan' class='cb_DuToan' checked disabled></td>";
                         }
                         else htmlDanhSachDuToan += "<td class='width-50' align='center'><input type='radio' data-dutoanid='" + x.iID_DuToanID + "' name='cb_DuToan' class='cb_DuToan' disabled></td>";
                         htmlDanhSachDuToan += "<td align='left'>" + x.sSoQuyetDinh + "</td>";
                         htmlDanhSachDuToan += "<td class='width-150' align='center'>" + x.sNgayQuyetDinh + "</td>";
                         htmlDanhSachDuToan += "<td align='left'>" + x.sTenDonViQL + "</td>";
-                        htmlDanhSachDuToan += "<td align='right'>" + FormatNumber(x.fTongDuToanPheDuyet) + "</td>";
+                        htmlDanhSachDuToan += "<td align='right'>" + FormatNumber(getGiaTriPheDuyet(x)) + "</td>";
                         htmlDanhSachDuToan += "</tr>";
                     })
 
@@ -176,7 +197,7 @@ function DisplayNguonVonChiPhi(arrDuToanID, idDisplayNguonVon, idDisplayChiPhi) 
 var arrNguonVonModal = [];
 var arrChiPhiModal = [];
 function DisplayNguonVonChiPhiModal(iID_DuToanID, idDisplayNguonVon, idDisplayChiPhi) {
-    var objDuToan = arrDuToan.filter(function (x) { return x.iID_DuToanID == iID_DuToanID })[0];
+    var objDuToan = arrDuToan.filter(function (x) { return checkIfIsChungTuSelected(x) })[0];
 
     if (objDuToan.ListNguonVon != null && objDuToan.ListNguonVon.length > 0) {
         objDuToan.ListNguonVon.forEach(function (objNguonVon) {

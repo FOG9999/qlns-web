@@ -392,12 +392,12 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                         data.sTongHop = string.Join(",", lstIdVonNam);
 
                         // Confirm TODO
-                        NS_DonVi donVi = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).FirstOrDefault();
-                        if (donVi != null)
-                        {
-                            data.iID_DonViQuanLyID = donVi.iID_Ma;
-                            data.iID_MaDonViQuanLy = donVi.iID_MaDonVi;
-                        }
+                        //NS_DonVi donVi = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).FirstOrDefault();
+                        //if (donVi != null)
+                        //{
+                        //    //data.iID_DonViQuanLyID = donVi.iID_Ma;
+                        //    //data.iID_MaDonViQuanLy = donVi.iID_MaDonVi;
+                        //}
                         //Confirm
                     }
 

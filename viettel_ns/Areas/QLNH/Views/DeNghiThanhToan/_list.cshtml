@@ -229,13 +229,13 @@
                     <td class="text-center" style="padding-left:0;padding-right:0;">
                         @if (item.iTrangThai == 1 || item.iTrangThai == 2)
                         {
-                            <button type="button" class="btn-detail" onclick="Detail('@item.ID')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
-                            <button type="button" class="btn-edit" onclick="Update('@item.ID')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
-                            <button type="button" class="btn-delete" onclick="onModalThongBaoXoa('@item.ID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" class="btn-detail" onclick="Detail('@item.ID')" title="Xem chi tiết"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" class="btn-edit" onclick="Update('@item.ID')" title="Sửa"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" class="btn-delete" onclick="onModalThongBaoXoa('@item.ID')" title="Xóa"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
                         }
                         else
                         {
-                            <button type="button" class="btn-detail" onclick="Detail('@item.ID')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" class="btn-detail" onclick="Detail('@item.ID')" title="Xem chi tiết"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
                         }
                     </td>
                 </tr>

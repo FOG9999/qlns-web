@@ -1,4 +1,3 @@
-
 IF(@iLoaiChungTu = 1)
 BEGIN
 	IF OBJECT_ID(N'tempdb..#tmp') IS NOT NULL
@@ -25,7 +24,7 @@ BEGIN
 
 	SELECT tmp.* FROM #tmp as tmp
 	LEFT JOIN #tmpnhathau nt on nt.iID_DuToanID = tmp.id
-	WHERE tmp.fGiaTriPheDuyet > nt.tientrungthau
+	WHERE tmp.fGiaTriPheDuyet >= nt.tientrungthau
 	UNION ALL
 	SELECT t.* FROM #tmp t
 	WHERE t.id not in (SELECT nt.iID_DuToanID FROM #tmpnhathau nt)
@@ -50,18 +49,18 @@ BEGIN
 	INNER JOIN NS_DonVi as dv on da.iID_DonViQuanLyID = dv.iID_Ma
 	WHERE dt.iID_DuAnID = @iIdDuAnId AND dt.bActive = 1
 
-	SELECT nt.Id,nt.iID_DuToanID, SUM(ISNULL(fTienTrungThau,0)) as tientrungthau into #tmpnhathau1  FROM VDT_QDDT_KHLCNhaThau nt
-	INNER JOIN VDT_DA_DuToan dt ON dt.iID_DuToanID = nt.iID_DuToanID
+	SELECT nt.Id,nt.iID_QDDauTuID, SUM(ISNULL(fTienTrungThau,0)) as tientrungthau into #tmpnhathau1  
+	FROM VDT_QDDT_KHLCNhaThau nt
 	INNER JOIN VDT_DA_GoiThau gt ON nt.Id = gt.iId_KHLCNhaThau
-	WHERE nt.iID_DuToanID in (SELECT tmp.id FROM #tmp1 tmp )
-	GROUP BY nt.Id, nt.iID_DuToanID
+	WHERE nt.iID_QDDauTuID in (SELECT tmp.id FROM #tmp1 tmp )
+	GROUP BY nt.Id, nt.iID_QDDauTuID
 
 	SELECT tmp.* FROM #tmp1 as tmp
-	LEFT JOIN #tmpnhathau1 nt on nt.iID_DuToanID = tmp.id
-	WHERE tmp.fGiaTriPheDuyet > nt.tientrungthau
+	LEFT JOIN #tmpnhathau1 nt on nt.iID_QDDauTuID = tmp.id
+	WHERE tmp.fGiaTriPheDuyet >= nt.tientrungthau
 	UNION ALL
 	SELECT t.* FROM #tmp1 t
-	WHERE t.id not in (SELECT nt.iID_DuToanID FROM #tmpnhathau1 nt)
+	WHERE t.id not in (SELECT nt.iID_QDDauTuID FROM #tmpnhathau1 nt)
 END
 ELSE 
 BEGIN
@@ -81,16 +80,17 @@ BEGIN
 	INNER JOIN NS_DonVi as dv on da.iID_DonViQuanLyID = dv.iID_Ma
 	WHERE ct.iID_DuAnID = @iIdDuAnId AND ct.bActive = 1
 
-	SELECT nt.Id,nt.iID_DuToanID, SUM(ISNULL(fTienTrungThau,0)) as tientrungthau into #tmpnhathau2  FROM VDT_QDDT_KHLCNhaThau nt
-	INNER JOIN VDT_DA_DuToan dt ON dt.iID_DuToanID = nt.iID_DuToanID
+	SELECT nt.Id,nt.iID_ChuTruongDauTuID, SUM(ISNULL(fTienTrungThau,0)) as tientrungthau into #tmpnhathau2  
+	FROM VDT_QDDT_KHLCNhaThau nt
+	--INNER JOIN VDT_DA_DuToan dt ON dt.iID_DuToanID = nt.iID_DuToanID
 	INNER JOIN VDT_DA_GoiThau gt ON nt.Id = gt.iId_KHLCNhaThau
-	WHERE nt.iID_DuToanID in (SELECT tmp.id FROM #tmp2 tmp )
-	GROUP BY nt.Id, nt.iID_DuToanID
+	WHERE nt.iID_ChuTruongDauTuID in (SELECT tmp.id FROM #tmp2 tmp )
+	GROUP BY nt.Id, nt.iID_ChuTruongDauTuID
 
 	SELECT tmp.* FROM #tmp2 as tmp
-	LEFT JOIN #tmpnhathau2 nt on nt.iID_DuToanID = tmp.id
-	WHERE tmp.fGiaTriPheDuyet > nt.tientrungthau
+	LEFT JOIN #tmpnhathau2 nt on nt.iID_ChuTruongDauTuID = tmp.id
+	WHERE tmp.fGiaTriPheDuyet >= nt.tientrungthau
 	UNION ALL
 	SELECT t.* FROM #tmp2 t
-	WHERE t.id not in (SELECT nt.iID_DuToanID FROM #tmpnhathau2 nt)
+	WHERE t.id not in (SELECT nt.iID_ChuTruongDauTuID FROM #tmpnhathau2 nt)
 END

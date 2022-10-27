@@ -6,7 +6,7 @@ Lấy danh sách dự nguồn vốn phê duyệt dự án theo dự án- màn ch
 
 */
 
-select qdnv.iID_ChuTruongDauTu_NguonVonID,
+select qdnv.iID_ChuTruongDauTu_NguonVonID as iID_DuToan_NguonVonID,
 qdnv.fTienPheDuyet,
 qdnv.fTienPheDuyet - isnull(qdnv.fGiaTriDieuChinh,0) as fGiaTriTruocDieuChinh,
 qdnv.iID_NguonVonID,

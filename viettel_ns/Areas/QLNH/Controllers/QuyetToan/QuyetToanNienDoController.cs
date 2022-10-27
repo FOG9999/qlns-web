@@ -238,6 +238,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                 {
                     listData = _qlnhService.GetDetailQuyetToanNienDoCreate(qtdv.quyetToanNienDo.iNamKeHoach, qtdv.donVi.iID_Ma, donViUSD, donViVND).ToList();
                 }
+                listData = qtdv.quyetToanNienDo.iLoaiQuyetToan == 1 ? listData : listData.Where(x => x.iID_HopDongID != null).ToList();
                 var listTitle = listData.Where(x => x.iID_ParentID != null).ToList();
                 if (quyetToanNienDoDetail.Count() > 1)
                 {
@@ -272,9 +273,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                     listResult.Add(newObj);
                     var getListDuAn = listData.Where(x => x.iID_KHCTBQP_NhiemVuChiID == chuongTrinh.iID_KHCTBQP_NhiemVuChiID && x.iID_DuAnID != null && x.iID_ParentID == null).ToList();
                     var getListHopDong = listData.Where(x => x.iID_KHCTBQP_NhiemVuChiID == chuongTrinh.iID_KHCTBQP_NhiemVuChiID && x.iID_DuAnID == null && x.iID_HopDongID != null && x.iID_ParentID == null).ToList();
-                    var getListNone = qtdv.quyetToanNienDo.iLoaiQuyetToan == 1
-                        ? listData.Where(x => x.iID_KHCTBQP_NhiemVuChiID == chuongTrinh.iID_KHCTBQP_NhiemVuChiID && x.iID_DuAnID == null && x.iID_HopDongID == null && x.iID_ParentID == null).ToList()
-                        : new List<NH_QT_QuyetToanNienDo_ChiTietData>();
+                    var getListNone = listData.Where(x => x.iID_KHCTBQP_NhiemVuChiID == chuongTrinh.iID_KHCTBQP_NhiemVuChiID && x.iID_DuAnID == null && x.iID_HopDongID == null && x.iID_ParentID == null).ToList();
+                       
                     var iCountDuAn = 0;
 
                     if (getListDuAn.Any())
@@ -490,17 +490,6 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                 return Json(new { bIsComplete = false, sMessError = "Không cập nhật được dữ liệu !" }, JsonRequestBehavior.AllowGet);
             }
             var returnData = _qlnhService.SaveQuyetToanNienDoDetail(data, Username, isAddOrUpdate != 0, idQuyetToan);
-
-            using (var conn = ConnectionFactory.Default.GetConnection())
-            {
-                conn.Open();
-                var trans = conn.BeginTransaction();
-                _qlnhService.InsertNHTongHop_Tang(conn, trans, "QUYET_TOAN", isAddOrUpdate != 0 ? 2 : 1, idQuyetToan, null);
-                _qlnhService.InsertNHTongHop_Giam(conn, trans, "QUYET_TOAN", isAddOrUpdate != 0 ? 2 : 1, idQuyetToan, null);
-                _qlnhService.InsertNHTongHop_Giam(conn, trans, "QTND", isAddOrUpdate != 0 ? 2 : 1, idQuyetToan, null);
-                trans.Commit();
-            }
-
 
             if (!returnData.IsReturn)
             {

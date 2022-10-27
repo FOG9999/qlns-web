@@ -42,6 +42,11 @@ $(document).ready(function () {
         matcher: FilterInComboBox
     });
 
+    $("select[name='iID_TiGiaID']").select2({
+        width: '100%',
+        matcher: FilterInComboBox
+    });
+
     $('#modalKHChiTietBQP').on('hidden.bs.modal', function () {
         USE_LAST_NEW_ADJUST = false;
     });

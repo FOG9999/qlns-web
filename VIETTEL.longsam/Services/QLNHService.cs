@@ -145,7 +145,7 @@ namespace Viettel.Services
         IEnumerable<NH_DA_DuAn> GetDADuAn(Guid? iID_NhiemVuChi, Guid? iID_ChuDauTu);
         IEnumerable<NH_DA_HopDong> GetThongTinHopDong(Guid? iID_NhiemVuChi);
         IEnumerable<NH_DM_TiGia> GetThongTinTyGia();
-        IEnumerable<MucLucNganSachViewModel> GetAllMucLucNganSach(ref PagingInfo _paging, string username, int namlamviec);
+        IEnumerable<MucLucNganSachViewModel> GetAllMucLucNganSach(ref PagingInfo _paging, string username, int namlamviec, ThongTinThanhToanSearchModel conditionSearch);
         IEnumerable<NH_DM_NhaThau> GetAllDMNhaThau();
         IEnumerable<ThongTinThanhToanModel> GetAllThongTinThanhToanPaging(ref PagingInfo _paging, Guid? iID_DonVi,
             string sSoDeNghi, DateTime? dNgayDeNghi, int? iLoaiNoiDungChi, int? iLoaiDeNghi,
@@ -2975,7 +2975,7 @@ namespace Viettel.Services
             return null;
         }
 
-        public IEnumerable<MucLucNganSachViewModel> GetAllMucLucNganSach(ref PagingInfo _paging, string username, int namlamviec)
+        public IEnumerable<MucLucNganSachViewModel> GetAllMucLucNganSach(ref PagingInfo _paging, string username, int namlamviec, ThongTinThanhToanSearchModel conditionSearch)
         {
             try
             {
@@ -2984,6 +2984,15 @@ namespace Viettel.Services
                     DynamicParameters lstParam = new DynamicParameters();
                     lstParam.Add("username", username);
                     lstParam.Add("namlamviec", namlamviec);
+                    lstParam.Add("sLNS", conditionSearch != null ? conditionSearch.sLNS : string.Empty);
+                    lstParam.Add("sL", conditionSearch != null ? conditionSearch.sL : string.Empty);
+                    lstParam.Add("sK", conditionSearch != null ? conditionSearch.sK : string.Empty);
+                    lstParam.Add("sM", conditionSearch != null ? conditionSearch.sM : string.Empty);
+                    lstParam.Add("sTM", conditionSearch != null ? conditionSearch.sTM : string.Empty);
+                    lstParam.Add("sTTM", conditionSearch != null ? conditionSearch.sTTM : string.Empty);
+                    lstParam.Add("sNG", conditionSearch != null ? conditionSearch.sNG : string.Empty);
+                    lstParam.Add("sTNG", conditionSearch != null ? conditionSearch.sTNG : string.Empty);
+                    lstParam.Add("sNoiDung", conditionSearch != null ? conditionSearch.sNoiDung : string.Empty);
                     lstParam.Add("CurrentPage", _paging.CurrentPage);
                     lstParam.Add("ItemsPerPage", _paging.ItemsPerPage);
                     lstParam.Add("iToTalItem", dbType: DbType.Int32, direction: ParameterDirection.Output);
@@ -3851,12 +3860,12 @@ namespace Viettel.Services
                 lstParam.Add("iDonVi", iDonVi);
                 lstParam.Add("iChuongTrinh", iChuongTrinh);
                 lstParam.Add("iHopDong", iHopDong);
-                lstParam.Add("CurrentPage", _paging.CurrentPage);
-                lstParam.Add("ItemsPerPage", _paging.ItemsPerPage);
-                lstParam.Add("iToTalItem", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                //lstParam.Add("CurrentPage", _paging.CurrentPage);
+                //lstParam.Add("ItemsPerPage", _paging.ItemsPerPage);
+                //lstParam.Add("iToTalItem", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
                 var items = conn.Query<ChenhLechTiGiaModel>("proc_get_all_nh_da_chenhlechtigia_paging", lstParam, commandType: CommandType.StoredProcedure);
-                _paging.TotalItems = lstParam.Get<int>("iToTalItem");
+                //_paging.TotalItems = lstParam.Get<int>("iToTalItem");
                 return items;
             }
         }

@@ -7,7 +7,7 @@
 <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
 
 <div class="main">
-    <input type="hidden" id="iIdLoaiThongTri" value="@ViewBag.iIdLoaiThongTri"/>
+    <input type="hidden" id="iIdLoaiThongTri" value="@ViewBag.iIdLoaiThongTri" />
     <div class="panel-list-item col-sm-12">
         <div class="card">
             <div class="card-body create_thdt">
@@ -32,7 +32,7 @@
                         <div class="col-sm-2">
                             <label for="sNamThongTri">Năm thực hiện</label>
                             @Helpers.Required()
-                            <input type="text" id="sNamThongTri" class="form-control" name="sNamThongTri" value="" maxlength="100" autocomplete="off" />
+                            <input type="text" id="sNamThongTri" class="form-control yearFormat" name="sNamThongTri" value="" maxlength="4" autocomplete="off" />
                         </div>
                         <div class="col-sm-4">
                             <label for="sChonChungTu">Chứng từ</label>
@@ -50,7 +50,7 @@
                             <label for="dNgayThongTri">Ngày tạo thông tri</label>
                             @Helpers.Required()
                             <div class='input-group date'>
-                                <input type='text' class="form-control requireInput" value="@ViewBag.dNgayThongTri" id="dNgayThongTri" name="dNgayThongTri" autocomplete="off" />
+                                <input type='text' class="form-control requireInput dateFormat" value="@ViewBag.dNgayThongTri" id="dNgayThongTri" name="dNgayThongTri" autocomplete="off" />
                                 <span class="btn-default input-group-addon">
                                     <i class="fa fa-calendar" aria-hidden="true"></i>
                                 </span>
@@ -98,3 +98,5 @@
 
 <script src="~/Scripts/QLVonDauTu/QuyetToan/jsVDT_TaoMoiThongTriQuyetToan.js" type="text/javascript"></script>
 <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+<script src="~/Scripts/js/js_vdtWeb.js"></script>
+

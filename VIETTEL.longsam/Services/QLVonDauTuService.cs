@@ -239,6 +239,7 @@ namespace Viettel.Services
         /// <param name="iID_DuToanID">ID TKTC và TDT</param>
         /// <returns></returns>
         VDT_DA_DuToan_ViewModel GetPheDuyetTKTCvaTDTByID(Guid iID_DuToanID);
+        VDT_DA_DuToan_ViewModel GetPheDuyetTKTCvaTDTByIDFix(Guid iID_DuToanID, int loaiChungTu);
         List<VDT_DA_DuToan_Nguonvon_ViewModel> GetNguonVonTKTCTDTByDuAnId(Guid iIdDuAnId);
 
         IEnumerable<VDT_DA_DuToan_ChiPhi_ByPheDuyetDuAn> GetListChiPhiTheoPheDuyetDuAn(Guid? idDuAn);
@@ -250,6 +251,12 @@ namespace Viettel.Services
         List<VDT_DA_DuToan_ChiPhi_ViewModel> GetChiPhiTKTCTDTByDuAnId(Guid iIdDuAnId);
         IEnumerable<VDT_DA_DuToan_ChiPhi_ViewModel> GetListChiPhiTheoTKTC(Guid duToanId);
         IEnumerable<VDT_DA_DuToan_HangMuc_ViewModel> GetListHangMucTheoTKTC(Guid duToanId);
+        List<VDT_DA_DuToan_Nguonvon_ViewModel> GetListNguonVonTheoQDDT(Guid duToanId);
+        List<VDT_DA_DuToan_Nguonvon_ViewModel> GetListNguonVonTheoCTDT(Guid duToanId);
+        IEnumerable<VDT_DA_DuToan_ChiPhi_ViewModel> GetListChiPhiTheoQDDT(Guid duToanId);
+        IEnumerable<VDT_DA_DuToan_ChiPhi_ViewModel> GetListChiPhiTheoCTDT(Guid duToanId);
+        IEnumerable<VDT_DA_DuToan_HangMuc_ViewModel> GetListHangMucTheoQDDT(Guid duToanId);
+        IEnumerable<VDT_DA_DuToan_HangMuc_ViewModel> GetListHangMucTheoCTDT(Guid duToanId);
         IEnumerable<VDT_DA_DuAn> GetDuAnByIdDuToan(Guid? iIdDuToanId);
         #endregion
 
@@ -2845,6 +2852,53 @@ namespace Viettel.Services
             return null;
         }
 
+        public VDT_DA_DuToan_ViewModel GetPheDuyetTKTCvaTDTByIDFix(Guid iID_DuToanID, int loaiChungTu)
+        {
+            try
+            {
+                var sql = FileHelpers.GetSqlQuery("vdt_get_pheduyet_tktcvatdt_byid.sql");
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    var item = conn.QueryFirstOrDefault<VDT_DA_DuToan_ViewModel>(sql,
+                       param: new
+                       {
+                           iID_DuToanID,
+                           loaiChungTu
+                       },
+                       commandType: CommandType.Text);
+                    if (item == null)
+                    {
+                        return null;
+                    }
+                    if(loaiChungTu == 1)
+                    {
+                        item.ListNguonVon = GetListNguonVonTheoTKTC(iID_DuToanID);
+                        item.ListChiPhi = GetListChiPhiTheoTKTC(iID_DuToanID);
+                        item.ListHangMuc = GetListHangMucTheoTKTC(iID_DuToanID);
+                    }
+                    else if(loaiChungTu == 2)
+                    {
+                        item.ListNguonVon = GetListNguonVonTheoQDDT(iID_DuToanID);
+                        item.ListChiPhi = GetListChiPhiTheoQDDT(iID_DuToanID);
+                        item.ListHangMuc = GetListHangMucTheoQDDT(iID_DuToanID);
+                    }
+                    else
+                    {
+                        item.ListNguonVon = GetListNguonVonTheoCTDT(iID_DuToanID);
+                        item.ListChiPhi = GetListChiPhiTheoCTDT(iID_DuToanID);
+                        item.ListHangMuc = GetListHangMucTheoCTDT(iID_DuToanID);
+                    }
+
+                    return item;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return null;
+        }
+
         public IEnumerable<VDT_DA_DuToan_ChiPhi_ByPheDuyetDuAn> GetListChiPhiTheoPheDuyetDuAn(Guid? idDuAn)
         {
             try
@@ -3141,10 +3195,7 @@ namespace Viettel.Services
                 {
 
                     var item = conn.Query<VDT_DA_DuToan_ChiPhi_ViewModel>(sql,
-                        param: new
-                        {
-                            duToanId
-                        },
+                        param: new {},
                         commandType: CommandType.Text);
 
                     return item;
@@ -3162,6 +3213,56 @@ namespace Viettel.Services
             try
             {
                 var sql = FileHelpers.GetSqlQuery("vdt_get_listhangmuc_dutoan_by_id.sql");
+                using (var conn = _connectionFactory.GetConnection())
+                {
+
+                    var item = conn.Query<VDT_DA_DuToan_HangMuc_ViewModel>(sql,
+                        param: new
+                        {
+                            duToanId
+                        },
+                        commandType: CommandType.Text);
+
+                    return item;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return null;
+        }
+
+        public IEnumerable<VDT_DA_DuToan_HangMuc_ViewModel> GetListHangMucTheoQDDT(Guid duToanId)
+        {
+            try
+            {
+                var sql = FileHelpers.GetSqlQuery("vdt_get_listhangmuc_qddt_by_id.sql");
+                using (var conn = _connectionFactory.GetConnection())
+                {
+
+                    var item = conn.Query<VDT_DA_DuToan_HangMuc_ViewModel>(sql,
+                        param: new
+                        {
+                            duToanId
+                        },
+                        commandType: CommandType.Text);
+
+                    return item;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return null;
+        }
+
+        public IEnumerable<VDT_DA_DuToan_HangMuc_ViewModel> GetListHangMucTheoCTDT(Guid duToanId)
+        {
+            try
+            {
+                var sql = FileHelpers.GetSqlQuery("vdt_get_listhangmuc_ctdt_by_id.sql");
                 using (var conn = _connectionFactory.GetConnection())
                 {
 
@@ -6766,10 +6867,11 @@ namespace Viettel.Services
         public VDT_DA_TT_HopDong_ViewModel LayChiTietThongTinHopDong(Guid iID_HopDongID)
         {
             StringBuilder query = new StringBuilder();
-            query.AppendFormat("SELECT hd.*, da.sMaDuAn, da.sTenDuAn, dv.sTen AS sTenDonViQL, da.sKhoiCong, da.sKetThuc, " +
+            query.AppendFormat("SELECT hd.*, da.sMaDuAn, da.sTenDuAn, dv.sTen AS sTenDonViQL, da.sKhoiCong, da.sKetThuc, da.fTongMucDauTu," +
                 //"da.fTongMucDauTu, " +
-                " (select ISNULL(sum(fTienPheDuyet), 0) from VDT_DA_QDDauTu_ChiPhi where iID_QDDauTuID in (select iID_QDDauTuID from VDT_DA_QDDauTu where iID_DuAnID = " +
-                " (select iID_DuAnID from VDT_DA_TT_HopDong where iID_HopDongID = '{0}'))) as fTongMucDauTu, " +
+                //" (select ISNULL(sum(fTienPheDuyet), 0) from VDT_DA_QDDauTu_ChiPhi where iID_QDDauTuID in (select iID_QDDauTuID from VDT_DA_QDDauTu where iID_DuAnID = " +
+                //" (select iID_DuAnID from VDT_DA_TT_HopDong where iID_HopDongID = '{0}'))) as fTongMucDauTu, " +
+                //"da.sDiaDiem, da.sSuCanThietDauTu, da.sMucTieu, ", iID_HopDongID);
                 "da.sDiaDiem, da.sSuCanThietDauTu, da.sMucTieu, ", iID_HopDongID);
             query.Append("da.sDienTichSuDungDat, da.sNguonGocSuDungDat, da.sQuyMo, nhomda.sTenNhomDuAn, hinhthucQL.sTenHinhThucQuanLy, lhd.sTenLoaiHopDong, nt.sTenNhaThau, gt.fTienTrungThau ");
             query.Append("FROM VDT_DA_TT_HopDong hd ");
@@ -7002,7 +7104,8 @@ namespace Viettel.Services
 
         public IEnumerable<ChiPhiInfoModel> GetThongTinChiPhiByGoiThauId(Guid goiThauId)
         {
-            var sql = @";WITH  ChiPhiTreeCTE 
+            // query bi loi lay ca chi phi cha va chi phi con khi ben khlcnt chi luu chi phi con vao db
+            /*var sql = @";WITH  ChiPhiTreeCTE 
                         AS 
                         ( select 
                         gtcp.iID_GoiThauID as IIDGoiThauID, 
@@ -7055,6 +7158,26 @@ namespace Viettel.Services
 			                            and tb2.iID_ChiPhi_Parent is not null 
 		                            ) as parentId ON parentId.iID_ChiPhi_Parent = tbl.IIDChiPhiID 
 		                            order by IThuTu, MaOrDer";
+            */
+            var sql = @";select 
+                        gtcp.iID_GoiThauID as IIDGoiThauID, 
+		                gtcp.iID_ChiPhiID as IIDChiPhiID, 
+		                null as IIDHopDongID, 
+		                null as IIDHangMucID, 
+		                null as IIDNhaThauID, 
+		                cast(0 as bit) as IsChecked, 
+		                dacp.sTenChiPhi as STenChiPhi, 
+		                gtcp.fTienGoiThau as FGiaTriDuocDuyet , 
+		                dacp.iThuTu as IThuTu, 
+		                dacp.iID_ChiPhi_Parent as IdChiPhiDuAnParent, 
+		                null as HangMucParentId, 
+		                CAST((dacp.iID_DuAn_ChiPhi) AS VARCHAR(MAX)) AS MaOrDer 
+		                from VDT_DA_GoiThau_ChiPhi gtcp 
+		                inner join VDT_DM_DuAn_ChiPhi dacp ON gtcp.iID_ChiPhiID = dacp.iID_DuAn_ChiPhi 
+		                where gtcp.iID_GoiThauID = 'd2999ec1-0645-462b-8b0e-44fc0b80db35' AND  
+		                dacp.iID_ChiPhi_Parent is null
+		                order by IThuTu, MaOrDer";
+
             using (var conn = _connectionFactory.GetConnection())
             {
                 var entity = conn.Query<ChiPhiInfoModel>(

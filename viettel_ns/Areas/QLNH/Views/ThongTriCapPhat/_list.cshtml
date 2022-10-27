@@ -68,9 +68,9 @@
                     <td class="text-right">@Html.Raw(Html.Encode(item._sThongTri_USD))</td>
                     <td class="text-right">@Html.Raw(Html.Encode(item._sThongTri_VND))</td>
                     <td class="text-center">
-                        <button type="button" class="btn-detail" onclick="onModalDetail('@item.ID')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
-                        <button type="button" class="btn-edit" onclick="onModal('@item.ID')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
-                        <button type="button" class="btn-delete" onclick="onModalThongBaoXoa('@item.ID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-detail" onclick="onModalDetail('@item.ID')" title="Xem chi tiết"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-edit" onclick="onModal('@item.ID')" title="Sửa"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" onclick="onModalThongBaoXoa('@item.ID')" title="Xóa"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
                     </td>
                 </tr>
             }

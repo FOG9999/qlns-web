@@ -136,7 +136,7 @@ function Themhopdong() {
     var dongMoi = "";
     dongMoi += "<tr style='cursor: pointer;' class='parent'>";
     dongMoi += "<td class='r_STT'></td><input type='hidden' value=''/>";
-    dongMoi += "<td><input type='hidden' class='r_iID_HopDong' /><div class='sTenHopDong' hidden></div><div class='selectHopDong'>" + CreateHtmlSelectChiquy() + "</div></td>";
+    dongMoi += "<td>" + CreateHtmlSelectChiquy() + "</td>";
     dongMoi += "<td class='r_ChingoaiteUSD' align='right'><div class='fChingoaiteUSD' hidden></div><input type='text' class='form-control txtChingoaiteUSD' /></td>";
     dongMoi += "<td class='text-right txtChingoaiteVND'></td>";
     dongMoi += "<td class='r_ChitrongnuocVND' align='right'><div class='fChitrongnuocVND' hidden></div><input type='text' class='form-control txtChiTrongnuocVND' /></td>";
@@ -208,7 +208,7 @@ function CreateHtmlSelectChiquy(value) {
         else
             htmlOption += "<option value='" + x.id + "'>" + $("<div/>").text(x.text).html() + "</option>";
     })
-    return "<select class='form-control'>" + htmlOption + "</option>";
+    return "<select class='form-control selectHopDong'>" + htmlOption + "</option>";
 }
 
 function XoaDong(nutXoa, idBang) {
@@ -404,7 +404,7 @@ function LoadDataViewChitiet() {
             dongMoi += "<tr style='cursor: pointer;' class='parent'>";
             dongMoi += "<td class='r_STT width-50'>" + (i + 1) + "</td>";
             if (data[i].sNoiDung == null || data[i].sNoiDung == "") {
-                dongMoi += "<td><input type='hidden' class='r_iID_HopDong' value='" + data[i].iID_HopDongID + "'/><div class='sTenHopDong' hidden></div><div class='selectHopDong'>" + CreateHtmlSelectChiquy(data[i].iID_HopDongID) + "</div></td>";
+                dongMoi += "<td>" + CreateHtmlSelectChiquy(data[i].iID_HopDongID) + "</td>";
             } else {
                 dongMoi += "<td class='r_Noidung' align='right'><div class='sNoiDung' hidden></div><input type='text' class='form-control txtNoidung 'value='" + data[i].sNoiDung + "'/></td>";
             }
@@ -418,7 +418,7 @@ function LoadDataViewChitiet() {
             dongMoi += "</tr>";
 
             $("#tblNhuCauChiQuyChiTiet tbody").append(dongMoi);
-
+            BindingValidateAndSelect2()
             TinhLaiDongTong(TBL_NCCQCT);
         }
     }
@@ -539,4 +539,8 @@ function popupModal(title, message, category) {
             $("#divModalConfirm").html(data);
         }
     });
+}
+
+function BindingValidateAndSelect2() {
+    $("#tblNhuCauChiQuyChiTiet tbody tr .selectHopDong").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
 }

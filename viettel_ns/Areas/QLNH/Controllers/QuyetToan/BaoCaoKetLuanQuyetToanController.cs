@@ -246,7 +246,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                             }
                         }
                     }
-                    if (item.iID_KHCTBQP_NhiemVuChiID != idChuongTrinh && item.iID_KHCTBQP_NhiemVuChiID != Guid.Empty)
+                    if (item.iID_KHCTBQP_NhiemVuChiID != idChuongTrinh /*&& item.iID_KHCTBQP_NhiemVuChiID != Guid.Empty*/)
                     {
                         SttChuongTrinh++;
                         SttDuAn = 0;
@@ -274,8 +274,15 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
 
                         DataCha.fThuaTraNSNN_USD = listDataCha.Sum(x => x.fThuaTraNSNN_USD);
                         DataCha.fThuaTraNSNN_VND = listDataCha.Sum(x => x.fThuaTraNSNN_VND);
-                        
-                        DataCha.sTenNoiDungChi = item.sTenNhiemVuChi;
+
+                        if (item.iID_KHCTBQP_NhiemVuChiID != Guid.Empty)
+                        {
+                            DataCha.sTenNoiDungChi = item.sTenNhiemVuChi;
+                        }
+                        else
+                        {
+                            DataCha.sTenNoiDungChi = "Nội dung chi khác";
+                        }
                         DataCha.STT = convertLetter(SttChuongTrinh) + ".";
                         DataCha.isTitle = "font-bold-red";
                         idChuongTrinh = item.iID_KHCTBQP_NhiemVuChiID;
@@ -307,7 +314,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
 
                         listData.Add(DataCha);
                     }
-                    if (item.iID_DuAnID != idDuAn && item.iID_DuAnID != Guid.Empty)
+                    if (item.iID_DuAnID != idDuAn /*&& item.iID_DuAnID != Guid.Empty*/)
                     {
                         SttDuAn++;
                         SttLoai = 0;
@@ -334,7 +341,18 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                         DataCha.fThuaTraNSNN_USD = listDataCha.Sum(x => x.fThuaTraNSNN_USD);
                         DataCha.fThuaTraNSNN_VND = listDataCha.Sum(x => x.fThuaTraNSNN_VND);
 
-                        DataCha.sTenNoiDungChi = item.sTenDuAn;
+                        if (item.iID_DuAnID != Guid.Empty)
+                        {
+                            DataCha.sTenNoiDungChi = item.sTenDuAn;
+                        }
+                        else if (item.iID_HopDongID != Guid.Empty)
+                        {
+                            DataCha.sTenNoiDungChi = "Chi hợp đồng";
+                        }
+                        else
+                        {
+                            DataCha.sTenNoiDungChi = "Chi khác";
+                        }
                         DataCha.STT = _cpnhService.GetSTTLAMA(SttDuAn) + ".";
                         DataCha.isTitle = "font-bold";
                         idDuAn = item.iID_DuAnID;
@@ -366,7 +384,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
 
                         listData.Add(DataCha);
                     }
-                    if (item.iLoaiNoiDungChi != idLoai && item.iLoaiNoiDungChi != 0)
+                    if (item.iLoaiNoiDungChi != idLoai /*&& item.iLoaiNoiDungChi != 0*/)
                     {
                         SttLoai++;
                         SttHopDong = 0;

@@ -4,7 +4,7 @@
 @{
     int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
 }
-<div class="tooltip-header-search">
+<div class="tooltip-header-search tr-hover">
     <div class="col-sm-8" style="display:flex;padding-left:0px;">
         <label class="control-label">Danh mục tài sản (@Model._paging.TotalItems)</label>
     </div>
@@ -38,13 +38,9 @@
                 index++;
                 <tr style="cursor: pointer">
                     <td align="center">@(pageIndex + index)</td>
-
                     <td align="left">@Html.Raw((Html.Encode(item.sMaLoaiTaiSan)))</td>
-
                     <td align="left">@Html.Raw((Html.Encode(item.sTenLoaiTaiSan)))</td>
-
                     <td align="left">@Html.Raw(!string.IsNullOrEmpty(Html.Encode(item.sMoTa)) ? Html.Encode(item.sMoTa).Replace("\n", "<br/>") : string.Empty)</td>
-
                     <td align="center">
                         <button type="button" class="btn-detail" title="Xem chi tiết" onclick="OpenModalDetail('@item.ID')" data-toggle="modal" data-target="#modalTaiSan"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
                         <button type="button" class="btn-edit" title="Sửa" onclick="OpenModal('@item.ID')" data-toggle="modal" data-target="#modalTaiSan"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
@@ -60,21 +56,6 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.date')
-            .datepicker({
-                todayBtn: "linked",
-                keyboardNavigation: false,
-                forceParse: false,
-                autoclose: true,
-                language: 'vi',
-                todayHighlight: true,
-            });
-        $("tr").hover(function () {
-            $(this).css("background-color", "#e7f8fe");
-        }, function () {
-            $(this).css("background-color", "");
-        });
-
         $("#tbListTaiSan .gr_search").each(function (index, value) {
             $(this).keypress(function (e) {
                 if (e.which == 13) {//Enter key pressed

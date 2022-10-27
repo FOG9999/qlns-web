@@ -18,19 +18,17 @@ function ChangePage(iCurrentPage = 1) {
     data_search = {};
     _paging.CurrentPage = iCurrentPage;
     data_search._paging = _paging;
-    data_search.iID_DonVi = $('#idonvi').val();
-    data_search.sSoDeNghi = $('#ssodenghi').val();
-    data_search.dNgayDeNghi = $('#sngaydenghi').val();
-    data_search.iLoaiNoiDungChi = $('#iloaidenghi').val();
-    data_search.iID_ChuDauTuID = $('#ichudautu').val();
-    data_search.iID_KHCTBQP_NhiemVuChiID = $('#itenchuongtrinh').val();
-    data_search.iNamKeHoach = $('#inamkehoach').val();
-    data_search.iQuyKeHoach = $('#iquykehoach').val();
-    data_search.iNamNganSach = $('#inamngansach').val();
-    data_search.iCoQuanThanhToan = $('#icoquanthanhtoan').val();
-    data_search.iID_NhaThauID = $('#idonvihuongthu').val();
-    data_search.iTrangThai = $('#idtrangthai').val();
-    GetListData(iCurrentPage);
+
+    data_search.sLNS = $("<div/>").text($.trim($("#txtLNS").val())).html();
+    data_search.sL = $("<div/>").text($.trim($("#txtL").val())).html();
+    data_search.sK = $("<div/>").text($.trim($("#txtK").val())).html();
+    data_search.sM = $("<div/>").text($.trim($("#txtM").val())).html();
+    data_search.sTM = $("<div/>").text($.trim($("#txtTM").val())).html();
+    data_search.sTTM = $("<div/>").text($.trim($("#txtTTM").val())).html();
+    data_search.sNG = $("<div/>").text($.trim($("#txtNG").val())).html();
+    data_search.sTNG = $("<div/>").text($.trim($("#txtTNG").val())).html();
+    data_search.sNoiDung = $("<div/>").text($.trim($("#txtNoiDung").val())).html();
+    GetListData();
 }
 
 function ResetChangePage(iCurrentPage = 1) {
@@ -40,7 +38,6 @@ function ResetChangePage(iCurrentPage = 1) {
     GetListData(iCurrentPage);
 }
 
-
 function GetListData() {
     $.ajax({
         type: "POST",
@@ -49,8 +46,21 @@ function GetListData() {
         data: { data: data_search },
         success: function (data) {
             $("#modalMucLucNganSach").html(data);
+            AddConditionSearchMLNS();
         }
     });
+}
+
+function AddConditionSearchMLNS() {
+    $('#txtLNS').val($("<div/>").html(data_search.sLNS).text());
+    $('#txtL').val($("<div/>").html(data_search.sL).text());
+    $('#txtK').val($("<div/>").html(data_search.sK).text());
+    $('#txtM').val($("<div/>").html(data_search.sM).text());
+    $('#txtTM').val($("<div/>").html(data_search.sTM).text());
+    $('#txtTTM').val($("<div/>").html(data_search.sTTM).text());
+    $('#txtNG').val($("<div/>").html(data_search.sNG).text());
+    $('#txtTNG').val($("<div/>").html(data_search.sTNG).text());
+    $('#txtNoiDung').val($("<div/>").html(data_search.sNoiDung).text());
 }
 
 function LoadThongTinCreate() {
@@ -161,8 +171,8 @@ function onChangeChuDauTu() {
             if (result) {
                 $('#itenduan').empty().html(result.htmlDA);
                 $("#itenduan").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
-                $("#igtrhopdongusd").val('');
-                $("#igtrhopdongvnd").val('');
+                //$("#igtrhopdongusd").val('');
+                //$("#igtrhopdongvnd").val('');
                 $("#iddutoanusd").val('');
                 $("#iddutoanvnd").val('');
                 LoadThongTinLuyKe(0);
@@ -284,6 +294,7 @@ function ThemDuLieuChiTiet() {
         }
     });
 }
+
 function XoaDong(nutXoa, idBang) {
     var dongXoa = nutXoa.parentElement.parentElement;
     var iddong = $(dongXoa).data('idchitiet');
@@ -521,7 +532,6 @@ function onBlurThongTinChuyenKhoan() {
 
 }
 
-
 function showErr(type) {
     $.ajax({
         type: "POST",
@@ -539,15 +549,15 @@ function ShowMucLucNganSach(td_dong) {
     $('#modalMucLucNganSach').modal('toggle');
     $('#modalMucLucNganSach').modal('show');
 
-    sUrlListView = '/QLNH/DeNghiThanhToan/MucNganSachSearch';
+    sUrlListView = '/QLNH/DeNghiThanhToan/MucLucNganSachSearch';
     idContentView = 'modalMucLucNganSach';
-    data_search._paging = null;
+    //data_search._paging = null;
 
     $.ajax({
         type: "POST",
         dataType: "html",
-        url: "/QLNH/DeNghiThanhToan/MucNganSachSearch",
-        data: { data: data_search },
+        url: "/QLNH/DeNghiThanhToan/OpenMucLucNganSach",
+        //data: { data: data_search },
         success: function (data) {
             $("#modalMucLucNganSach").html(data);
         }
@@ -555,9 +565,11 @@ function ShowMucLucNganSach(td_dong) {
 }
 
 function ChonMucLucNganSach(tr_muclucngansach) {
-    var value_item = $(tr_muclucngansach).find('td').data('dong');
-    var value_mangansach = $(tr_muclucngansach).find('td').data('idmuclucngansach');
+    var value_content = $("<div/>").text($(tr_muclucngansach).find('.tdContent').data('content')).html();
+    var value_item = $(tr_muclucngansach).find('.tdLNS').data('dong');
+    var value_mangansach = $(tr_muclucngansach).find('.tdLNS').data('idmuclucngansach');
     $(td_dong_ngansach).html(value_item);
+    $(td_dong_ngansach).closest("tr").find("input.inoidungchi").val($("<div/>").html(value_content).text());
     $(td_dong_ngansach).attr("data-ingansach", value_mangansach);
     $('#modalMucLucNganSach').modal('hide');
 }

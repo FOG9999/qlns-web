@@ -122,6 +122,7 @@ namespace Viettel.Models.QLNH
     public class ThongTinThanhToanSearchModel
     {
         public PagingInfo _paging { get; set; }
+        //Condition thanh toán
         public Guid? iID_DonVi { get; set; }
         public string sSoDeNghi { get; set; }
         public DateTime? dNgayDeNghi { get; set; }
@@ -136,6 +137,16 @@ namespace Viettel.Models.QLNH
         public Guid? iID_NhaThauID { get; set; }
         public int? iTrangThai { get; set; }
 
+        //Condition MLNS
+        public string sLNS { get; set; }
+        public string sL { get; set; }
+        public string sK { get; set; }
+        public string sM { get; set; }
+        public string sTM { get; set; }
+        public string sTTM { get; set; }
+        public string sNG { get; set; }
+        public string sTNG { get; set; }
+        public string sNoiDung { get; set; }
     }
 
     public class ThongTinThanhToanDetaiModel

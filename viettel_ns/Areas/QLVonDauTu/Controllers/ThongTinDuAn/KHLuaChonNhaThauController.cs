@@ -432,7 +432,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             List<VDT_DA_DuToan_ViewModel> lstDuToanChiTiet = new List<VDT_DA_DuToan_ViewModel>();
             foreach (var item in lstDuToan)
             {
-                lstDuToanChiTiet.Add(_iQLVonDauTuService.GetPheDuyetTKTCvaTDTByID(item.iID_DuToanID));
+                lstDuToanChiTiet.Add(_iQLVonDauTuService.GetPheDuyetTKTCvaTDTByIDFix(item.iID_DuToanID, loaiChungTu));
             }
             return Json(lstDuToanChiTiet, JsonRequestBehavior.AllowGet);
         }

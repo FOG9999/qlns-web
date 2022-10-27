@@ -88,7 +88,7 @@ CREATE TABLE #tmp(
 		VALUES('101'), ('121a'), ('111'), ('131')
 		UPDATE #tmp 
 		SET fTongGiaTri =(SELECT fCapPhatTaiKhoBac from VDT_KHV_KeHoachVonNam_DuocDuyet khvn_dd where khvn_dd.iID_KeHoachVonNam_DuocDuyetID=Id)
-		WHERE Id=(SELECT Id FROM #tmpChungTuVonNam)
+		WHERE Id in (SELECT Id FROM #tmpChungTuVonNam)
 	END
 	ELSE
 	BEGIN
@@ -96,7 +96,7 @@ CREATE TABLE #tmp(
 		VALUES('102'), ('122a'), ('112'), ('132')
 		UPDATE #tmp 
 		SET fTongGiaTri =(SELECT fCapPhatBangLenhChi from VDT_KHV_KeHoachVonNam_DuocDuyet khvn_dd where khvn_dd.iID_KeHoachVonNam_DuocDuyetID=Id)
-		WHERE Id=(SELECT Id FROM #tmpChungTuVonNam) 
+		WHERE Id in (SELECT Id FROM #tmpChungTuVonNam) 
 	END
 
 

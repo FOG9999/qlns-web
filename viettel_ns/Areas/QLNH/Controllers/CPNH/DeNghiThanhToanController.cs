@@ -217,7 +217,16 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
         }
 
         [HttpPost]
-        public ActionResult MucNganSachSearch(ThongTinThanhToanSearchModel data)
+        public ActionResult OpenMucLucNganSach()
+        {
+            MucLucNganSachPagingViewModel vm = new MucLucNganSachPagingViewModel();
+            vm._paging.CurrentPage = 1;
+            vm.Items = _qlnhService.GetAllMucLucNganSach(ref vm._paging, Username, PhienLamViec.NamLamViec, null);
+            return PartialView("_listmuclucngansachsearch", vm);
+        }
+
+        [HttpPost]
+        public ActionResult MucLucNganSachSearch(ThongTinThanhToanSearchModel data)
         {
             MucLucNganSachPagingViewModel vm = new MucLucNganSachPagingViewModel();
             if (data._paging == null)
@@ -228,8 +237,17 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
             {
                 vm._paging.CurrentPage = data._paging.CurrentPage;
             }
+            data.sLNS = HttpUtility.HtmlDecode(data.sLNS);
+            data.sL = HttpUtility.HtmlDecode(data.sL);
+            data.sK = HttpUtility.HtmlDecode(data.sK);
+            data.sM = HttpUtility.HtmlDecode(data.sM);
+            data.sTM = HttpUtility.HtmlDecode(data.sTM);
+            data.sTTM = HttpUtility.HtmlDecode(data.sTTM);
+            data.sNG = HttpUtility.HtmlDecode(data.sNG);
+            data.sTNG = HttpUtility.HtmlDecode(data.sTNG);
+            data.sNoiDung = HttpUtility.HtmlDecode(data.sNoiDung);
 
-            vm.Items = _qlnhService.GetAllMucLucNganSach(ref vm._paging, Username, PhienLamViec.NamLamViec);
+            vm.Items = _qlnhService.GetAllMucLucNganSach(ref vm._paging, Username, PhienLamViec.NamLamViec, data);
             return PartialView("_listmuclucngansachsearch", vm);
         }
 

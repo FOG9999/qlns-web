@@ -339,6 +339,7 @@ getCanCu(iLoaiChungTu = $("#cbxLoaiChungTu").val());
 
 function GetDuAn() {
     $("#tblGoiThau").html('');
+    ChooseDuAn();
 
     lstDuAn = [];
     $("#iID_DuAnID").html("<option value='' data-sMaDuAn='' data-fTongMucDauTu='0' data-iIDMaCDT=''>--Chọn--</option>");

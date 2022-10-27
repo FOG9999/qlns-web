@@ -567,6 +567,10 @@
     <Content Include="App_Data\sql\QLVonDauTu\DanhMuc\LoaiChiPhi\lcp_get_all_LoaiChiPhi.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\DanhMuc\LoaiChiPhi\lcp_insert_LoaiChiPhi.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\KHLCNT\dm_get_all_duan_by_donvi_khluachonnhathau.sql" />
+    <Content Include="App_Data\sql\QLVonDauTu\KHLCNT\vdt_get_listchiphi_ctdt_by_id.sql" />
+    <Content Include="App_Data\sql\QLVonDauTu\KHLCNT\vdt_get_listchiphi_qddt_by_id.sql" />
+    <Content Include="App_Data\sql\QLVonDauTu\KHLCNT\vdt_get_listhangmuc_ctdt_by_id.sql" />
+    <Content Include="App_Data\sql\QLVonDauTu\KHLCNT\vdt_get_listhangmuc_qddt_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\KHLCNT\vdt_get_listnguonvon_ctdt_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\KHLCNT\vdt_get_listnguonvon_qddt_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\KHLCNT\vdt_khlcnt_get_chungtu_by_duan.sql" />

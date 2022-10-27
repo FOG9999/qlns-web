@@ -321,7 +321,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
 
                 ViewBag.ListColumn = listColumn;
             }
-            
+
             List<CPNHThucHienNganSach_Model> listData = new List<CPNHThucHienNganSach_Model>().ToList();
             int SttLoai = 0;
             int SttHopDong = 0;
@@ -337,6 +337,10 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             DataTong.lstGiaiDoanTTCP = new List<ThucHienNganSach_GiaiDoan_Model>();
             DataTong.lstGiaiDoanKinhPhiDuocCap = new List<ThucHienNganSach_GiaiDoan_Model>();
             DataTong.lstGiaiDoanKinhPhiDaGiaiNgan = new List<ThucHienNganSach_GiaiDoan_Model>();
+
+            DataTong.HopDongUSD = listTong.GroupBy(x => new { x.IDHopDong, x.iLoaiNoiDungChi }).Select(x => x.First()).Sum(x => x.HopDongUSD);
+            DataTong.HopDongVND = listTong.GroupBy(x => new { x.IDHopDong, x.iLoaiNoiDungChi }).Select(x => x.First()).Sum(x => x.HopDongVND);
+
             DataTong.NCVTTCP = listTong.GroupBy(x => x.IDNhiemVuChi).Select(x => x.First()).Sum(x => x.NCVTTCP);
             DataTong.NhiemVuChi = listTong.GroupBy(x => x.IDNhiemVuChi).Select(x => x.First()).Sum(x => x.NhiemVuChi);
             DataTong.KinhPhiUSD = listTong.GroupBy(x => x.iID_ThanhToanID).Select(x => x.First()).Sum(x => x.KinhPhiUSD);
@@ -505,8 +509,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                         CPNHThucHienNganSach_Model DataCha = new CPNHThucHienNganSach_Model();
                         List<CPNHThucHienNganSach_Model> listDataCha = list.Where(x => x.IDDuAn == item.IDDuAn && x.IDNhiemVuChi == item.IDNhiemVuChi).ToList();
 
-                        DataCha.HopDongUSD = listDataCha.Sum(x => x.HopDongUSD);
-                        DataCha.HopDongVND = listDataCha.Sum(x => x.HopDongVND);
+                        DataCha.HopDongUSD = listDataCha.GroupBy(x => new { x.IDHopDong, x.iLoaiNoiDungChi }).Select(x => x.First()).Sum(x => x.HopDongUSD);
+                        DataCha.HopDongVND = listDataCha.GroupBy(x => new { x.IDHopDong, x.iLoaiNoiDungChi }).Select(x => x.First()).Sum(x => x.HopDongVND);
 
                         DataCha.KinhPhiUSD = listDataCha.GroupBy(x => x.iID_ThanhToanID).Select(x => x.First()).Sum(x => x.KinhPhiUSD);
                         DataCha.KinhPhiVND = listDataCha.GroupBy(x => x.iID_ThanhToanID).Select(x => x.First()).Sum(x => x.KinhPhiVND);
@@ -521,7 +525,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                         DataCha.fLuyKeKinhPhiDuocCap_VND = listDataCha.Sum(x => x.fLuyKeKinhPhiDuocCap_VND);
                         DataCha.fDeNghiQTNamNay_USD = listDataCha.Sum(x => x.fDeNghiQTNamNay_USD);
                         DataCha.fDeNghiQTNamNay_VND = listDataCha.Sum(x => x.fDeNghiQTNamNay_VND);
-
+                        
                         //DataCha.NCVTTCP = listDataCha.Sum(x => x.NCVTTCP);
                         //DataCha.NhiemVuChi = listDataCha.Sum(x => x.NhiemVuChi);
 
@@ -551,6 +555,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                         {
                             DataCha.sTenNoiDungChi = "Chi khác";
                         }
+                        DataCha.sTenCDT = item.sTenCDT;
                         DataCha.isTitle = "font-bold";
                         DataCha.isDuAn = true;
                         DataCha.depth = _cpnhService.GetSTTLAMA(SttDuAn) + ".";
@@ -676,8 +681,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                         CPNHThucHienNganSach_Model DataCha = new CPNHThucHienNganSach_Model();
                         List<CPNHThucHienNganSach_Model> listDataCha = list.Where(x => x.IDHopDong == item.IDHopDong && x.iLoaiNoiDungChi == item.iLoaiNoiDungChi && x.IDDuAn == item.IDDuAn && x.IDNhiemVuChi == item.IDNhiemVuChi).ToList();
 
-                        DataCha.HopDongUSD = listDataCha.Sum(x => x.HopDongUSD);
-                        DataCha.HopDongVND = listDataCha.Sum(x => x.HopDongVND);
+                        DataCha.HopDongUSD = item.HopDongUSD;
+                        DataCha.HopDongVND = item.HopDongVND;
 
                         DataCha.KinhPhiUSD = listDataCha.GroupBy(x => x.iID_ThanhToanID).Select(x => x.First()).Sum(x => x.KinhPhiUSD);
                         DataCha.KinhPhiVND = listDataCha.GroupBy(x => x.iID_ThanhToanID).Select(x => x.First()).Sum(x => x.KinhPhiVND);
@@ -746,8 +751,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
 
                     
 
-                    DataTong.HopDongUSD += item.HopDongUSD;
-                    DataTong.HopDongVND += item.HopDongVND;
+                    
                     //DataTong.KinhPhiUSD += item.KinhPhiUSD;
                     //DataTong.KinhPhiVND += item.KinhPhiVND;
                     //DataTong.KinhPhiToYUSD += item.KinhPhiToYUSD;
@@ -783,6 +787,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
 
                     if (tabTable == 2)
                     {
+                        item.sTenCDT = "";
                         item.HopDongUSD = 0;
                         item.HopDongVND = 0;
                         item.NCVTTCP = 0;

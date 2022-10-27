@@ -1,11 +1,18 @@
 USE [CTC_DB_TEST]
 GO
-/****** Object:  StoredProcedure [dbo].[sp_vdt_get_dutoan_by_duanid]    Script Date: 10/26/2022 5:43:09 PM ******/
+
+/****** Object:  StoredProcedure [dbo].[sp_vdt_get_dutoan_by_duanid]    Script Date: 10/27/2022 5:51:01 PM ******/
+DROP PROCEDURE [dbo].[sp_vdt_get_dutoan_by_duanid]
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_vdt_get_dutoan_by_duanid]    Script Date: 10/27/2022 5:51:01 PM ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
-ALTER PROC [dbo].[sp_vdt_get_dutoan_by_duanid]
+
+CREATE PROC [dbo].[sp_vdt_get_dutoan_by_duanid]
 @iID_DuAnID uniqueidentifier,
 @loaiChungTu int
 AS
@@ -46,3 +53,5 @@ BEGIN
 			INNER JOIN NS_DonVi as dv on da.iID_DonViQuanLyID = dv.iID_Ma
 			WHERE tbl.iID_DuAnID = @iID_DuAnID AND tbl.bActive = 1
 END
+GO
+

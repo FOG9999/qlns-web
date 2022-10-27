@@ -104,7 +104,17 @@
             //    }
             //});
 
+
         });
+
+        document.addEventListener('keydown', eventKey);
+        function eventKey(e) {
+            if (e != null && e != undefined) {
+                if (e.key == "Enter") {
+                    SearchData();
+                }
+            }
+        }
 
     </script>
 }

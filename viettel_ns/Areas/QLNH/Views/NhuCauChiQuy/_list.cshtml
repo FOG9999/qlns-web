@@ -107,25 +107,25 @@
                     <td class="text-right">@Html.Raw(item.fTongChiNgoaiTeUSD.HasValue ? CommonFunction.DinhDangSo(item.fTongChiNgoaiTeUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
                     <td class="text-right">@Html.Raw(item.fTongChiTrongNuocVND.HasValue ? CommonFunction.DinhDangSo(item.fTongChiTrongNuocVND.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
                     <td class="text-center">
-                        <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.ID')" data-toggle="modal" data-target="#modalNhuCauChiQuy"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.ID')" data-toggle="modal" data-target="#modalNhuCauChiQuy" title="Xem chi tiết"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
                         @{ if (item.bIsActive)
                             {
-                                <button type="button" class="btn-edit invisible" onclick="OpenModal('@item.ID', 'false')" data-toggle="modal" data-target="#modalNhuCauChiQuy"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
-                                <button type="button" class="btn-delete invisible" onclick="Delete('@item.ID')" data-toggle="modal" data-target="#modalNhuCauChiQuy"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
-                                <button type="button" class="btn-edit invisible" onclick="LockItem('@item.ID', '@item.sSoDeNghi', '@item.bIsKhoa')"><i class="fa fa-lock fa-lg" style="width: 24.86px" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-edit invisible" onclick="OpenModal('@item.ID', 'false')" data-toggle="modal" data-target="#modalNhuCauChiQuy" title="Sửa"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-delete invisible" onclick="Delete('@item.ID')" data-toggle="modal" data-target="#modalNhuCauChiQuy" title="Xóa"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-edit invisible" onclick="LockItem('@item.ID', '@item.sSoDeNghi', '@item.bIsKhoa')" title="Khóa"><i class="fa fa-lock fa-lg" style="width: 24.86px" aria-hidden="true"></i></button>
                             }
                             else
                             {
                                 @*<button type="button" class="btn-detail @(item.bIsKhoa == false ? "" : "invisible")" onclick="OpenModal('@item.ID', 'true', 'false')" data-toggle="modal" data-target="#modalNhuCauChiQuy"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>*@
-                                <button type="button" class="btn-edit @(!item.bIsKhoa ? "" : "invisible")" onclick="OpenModal('@item.ID', 'false')" data-toggle="modal" data-target="#modalNhuCauChiQuy"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
-                                <button type="button" class="btn-delete @(!item.bIsKhoa ? "" : "invisible")" onclick="Delete('@item.ID')" data-toggle="modal" data-target="#modalNhuCauChiQuy"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-edit @(!item.bIsKhoa ? "" : "invisible")" onclick="OpenModal('@item.ID', 'false')" data-toggle="modal" data-target="#modalNhuCauChiQuy"title="Sửa"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-delete @(!item.bIsKhoa ? "" : "invisible")" onclick="Delete('@item.ID')" data-toggle="modal" data-target="#modalNhuCauChiQuy" title="Xóa"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
                                 if (!item.bIsKhoa)
                                 {
-                                    <button type="button" class="btn-edit" onclick="LockItem('@item.ID', '@item.sSoDeNghi', '@item.bIsKhoa')"><i class="fa fa-lock fa-lg" style="width: 24.86px" aria-hidden="true"></i></button>
+                                    <button type="button" class="btn-edit" onclick="LockItem('@item.ID', '@item.sSoDeNghi', '@item.bIsKhoa')" title="Khóa"><i class="fa fa-lock fa-lg" style="width: 24.86px" aria-hidden="true"></i></button>
                                 }
                                 else
                                 {
-                                    <button type="button" class="btn-edit" onclick="LockItem('@item.ID', '@item.sSoDeNghi', '@item.bIsKhoa.ToString().ToLower()')"><i class="fa fa-unlock fa-lg" aria-hidden="true"></i></button>
+                                    <button type="button" class="btn-edit" onclick="LockItem('@item.ID', '@item.sSoDeNghi', '@item.bIsKhoa.ToString().ToLower()')" title="Mở khóa"><i class="fa fa-unlock fa-lg" aria-hidden="true"></i></button>
 
                                 }
                             }

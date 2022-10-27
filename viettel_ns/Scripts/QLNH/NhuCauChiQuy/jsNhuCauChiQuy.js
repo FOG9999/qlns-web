@@ -452,17 +452,11 @@ function Themhopdong() {
     var dongMoi = "";
     dongMoi += "<tr style='cursor: pointer;' class='parent'>";
     dongMoi += "<td class='r_STT'></td><input type='hidden' class='' value=''/>";
-    dongMoi += "<td><input type='hidden' class='r_iID_HopDong' /><div class='sTenHopDong' hidden></div><div class='selectHopDong'>" + CreateHtmlSelectChiquy() + "</div></td>";
+    dongMoi += "<td>" + CreateHtmlSelectChiquy() + "</td>";
     dongMoi += "<td class='r_ChingoaiteUSD' align='right'><div class='fChingoaiteUSD' hidden></div><input type='text' class='form-control txtChingoaiteUSD'/></td>";
     dongMoi += "<td class='text-right txtChingoaiteVND'></td>";
     dongMoi += "<td class='r_ChitrongnuocVND' align='right'><div class='fChitrongnuocVND' hidden></div><input type='text' class='form-control txtChiTrongnuocVND' /></td>";
     dongMoi += "<td class='text-right txtChiTrongnuocUSD'></td>";
-    //dongMoi += "<button class='btn-save btn-icon' type = 'button' onclick = 'Luu(this, \"" + TBL_NCCQCT + "\")' > " +
-    //    "<i class='fa fa-floppy-o fa-lg' aria-hidden='true'></i>" +
-    //    "</button> ";
-    //dongMoi += "<button class='btn-edit btn-icon' hidden type = 'button' onclick = 'Sua(this, \"" + TBL_NCCQCT + "\")' > " +
-    //    "<i class='fa fa-pencil-square-o fa-lg' aria-hidden='true'></i>" +
-    //    "</button> ";
     dongMoi += "<td><button class='btn-delete btn-icon' type='button' onclick='XoaDong(this, \"" + TBL_NCCQCT + "\")'>" +
         "<span class='fa fa-trash-o fa-lg' aria-hidden='true'></span>" +
         "</button></td>";
@@ -470,6 +464,7 @@ function Themhopdong() {
 
     $("#" + TBL_NCCQCT + " tbody").append(dongMoi);
     CapNhatCotSttChiQuy(TBL_NCCQCT);
+    BindingValidateAndSelect2()
 }
 
 function CapNhatCotSttChiQuy(idBang) {
@@ -487,7 +482,7 @@ function CreateHtmlSelectChiquy(value) {
         else
             htmlOption += "<option value='" + x.id + "'>" + $("<div/>").text(x.text).html() + "</option>";
     })
-    return "<select class='form-control' onchange='GetListData_By_Name()'>" + htmlOption + "</option>";
+    return "<select class='form-control selectHopDong' onchange='GetListData_By_Name()'>" + htmlOption + "</option>";
 }
 
 function CreateHtmlSelectBQuanLy(value) {
@@ -1035,6 +1030,10 @@ function ChangeTiGiaSelect() {
             $("#tienTeQuyDoiID").html(data.htmlTienTe);
         }
     });
+}
+
+function BindingValidateAndSelect2() {
+    $("#tblNhuCauChiQuyChiTiet tbody tr .selectHopDong").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
 }
 
 

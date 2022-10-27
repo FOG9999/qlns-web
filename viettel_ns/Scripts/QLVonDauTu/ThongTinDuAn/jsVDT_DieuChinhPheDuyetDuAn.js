@@ -69,7 +69,7 @@ function GetChiPhiHangMucTheoQDDauTu() {
              }
 
              if (arrHasValue(resp.dataHangMuc)) {
-                 resp.dataHangMuc.forEach(x => {
+                 resp.dataHangMuc.forEach((x,index) => {
                      var item = {
                          id: uuidv4(),
                          iID_QDDauTu_HangMuciID: null,

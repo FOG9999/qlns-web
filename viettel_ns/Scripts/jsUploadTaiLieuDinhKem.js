@@ -58,6 +58,7 @@ function fnChooseFiles() {
     if (fileMessages.length > 0) {
         alert(fileMessages.join('\n'));
         fileMessages = [];
+        return;
     }
     FillTaiLieuDinhKemTbl();
 }
@@ -125,12 +126,8 @@ function UploadFile(iID, moduleType) {
         cache: false,
         contentType: false,
         processData: false,
-        success: function (data) {
-            console.log(data.UploadedFileCount + ' file(s) uploaded successfully');
-        },
-        error: function (xhr, error, status) {
-            console.log(error, status);
-        }
+        success: function (data) {},
+        error: function (xhr, error, status) {}
     });
     return false;
 }
@@ -145,12 +142,8 @@ function DieuChinhUploadFile(iID, moduleType) {
             data: { taiLieuIDs: TaiLieuIDs, ObjectID: iID },
             dataType: "json",
             cache: false,
-            success: function (data) {
-                console.log(data.UploadedFileCount + ' file(s) uploaded successfully');
-            },
-            error: function (xhr, error, status) {
-                console.log(error, status);
-            }
+            success: function (data) {},
+            error: function (xhr, error, status) {}
         });
     }
     return false;
