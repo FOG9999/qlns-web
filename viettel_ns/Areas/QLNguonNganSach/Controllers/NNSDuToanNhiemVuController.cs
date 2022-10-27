@@ -21,7 +21,7 @@ namespace VIETTEL.Areas.QLNguonNganSach.Controllers
     {
         private readonly IQLNguonNganSachService _qLNguonNSService = QLNguonNganSachService.Default;
         // GET: QLNguonNganSach/NNSDuToanNhiemVu
-        public ActionResult Index(string id, string filter = null)
+        public ActionResult Index(string id, string filter = null, string currentPage = "1")
         {
             //return View();
             var listFilter = filter == null ? Request.QueryString.ToDictionary() : JsonConvert.DeserializeObject<Dictionary<string, string>>(filter);
