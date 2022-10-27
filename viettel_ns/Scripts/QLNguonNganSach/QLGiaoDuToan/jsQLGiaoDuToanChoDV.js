@@ -233,7 +233,8 @@ function Delete(id) {
 }
 
 function UpdateChiTietDuToan(id) {
-    window.location.href = "/QLNguonNganSach/QLGiaoDuToanChoDV/ChiTietDuToan/" + id;
+    let currentPage = $('.page-item.active').find('a').html();
+    window.location.href = "/QLNguonNganSach/QLGiaoDuToanChoDV/ChiTietDuToan/" + id + "?currentPage=" + currentPage;
 }
 
 function formatMoney() {

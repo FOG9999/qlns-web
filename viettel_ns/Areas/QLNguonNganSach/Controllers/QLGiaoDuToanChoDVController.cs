@@ -37,6 +37,11 @@ namespace VIETTEL.Areas.QLNguonNganSach.Controllers
         {
             NNSGiaoDuToanViewModel vm = new NNSGiaoDuToanViewModel();
             vm._paging.CurrentPage = 1;
+            var currentPage = (string)TempData["CurrentPage"];
+            if (currentPage != null)
+            {
+                vm._paging.CurrentPage = Int32.Parse(currentPage);
+            }
             vm.Items = _qLNguonNSService.GetAllNNSGiaoDuToanChoDV(ref vm._paging, "", "", "", "", null, null, "", null, null, Username);
             List<DM_LoaiDuToan> lstLoaiDuToan = _qLNguonNSService.GetAllLoaiDuToan("", Username);
             lstLoaiDuToan.Insert(0, new DM_LoaiDuToan { sMaLoaiDuToan = string.Empty, sTenLoaiDuToan = Constants.TAT_CA });
@@ -222,7 +227,7 @@ namespace VIETTEL.Areas.QLNguonNganSach.Controllers
         #endregion
 
         #region Chi tiet du toan
-        public ActionResult ChiTietDuToan(string id)
+        public ActionResult ChiTietDuToan(string id, string currentPage)
         {
             var ids = id.Split('_');
             var idDuToan = "";
@@ -240,7 +245,11 @@ namespace VIETTEL.Areas.QLNguonNganSach.Controllers
             {
                 idNhiemVu = ids[2];
             }
-            var vm = new NNSDuToanChiTietViewModel
+            if (currentPage != null && currentPage != "")
+            {
+                TempData["CurrentPage"] = currentPage;
+            }
+                var vm = new NNSDuToanChiTietViewModel
             {
                 Id_DuToan = idDuToan,
                 Entity = _qLNguonNSService.GetNNSGiaoDuToanByID(Guid.Parse(idDuToan)),
@@ -269,8 +278,11 @@ namespace VIETTEL.Areas.QLNguonNganSach.Controllers
                 {
                     return View(vm);
                 }
-
-                return Redirect($"/QLNguonNganSach/NNSDuToanNhiemVu?id={idDuToan}&&filter=null");
+                if (currentPage != null && currentPage != "")
+                {
+                    return Redirect($"/QLNguonNganSach/NNSDuToanNhiemVu?id={idDuToan}&&filter=null&currentPage={currentPage}");
+                }
+                else return Redirect($"/QLNguonNganSach/NNSDuToanNhiemVu?id={idDuToan}&&filter=null");
             }
         }
 
