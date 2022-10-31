@@ -12,7 +12,7 @@ BEGIN
 	INNER JOIN NS_DonVi dv ON dv.iID_Ma = da.iID_DonViQuanLyID
 	where  da.iID_MaDonViThucHienDuAnID = @iIdMaDonViQuanLy 
 	AND EXISTS (select * from VDT_DA_ChuTruongDauTu WHERE iID_DuAnID = da.iID_DuAnID)
-	AND NOT EXISTS (select * from VDT_QDDT_KHLCNhaThau where iID_DuAnID = da.iID_DuAnID)
+	--AND NOT EXISTS (select * from VDT_QDDT_KHLCNhaThau where iID_DuAnID = da.iID_DuAnID)
 END
 ELSE
 BEGIN

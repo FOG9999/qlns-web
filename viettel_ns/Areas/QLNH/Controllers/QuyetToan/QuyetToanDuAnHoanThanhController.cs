@@ -252,14 +252,14 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
             return PartialView("_modalDetail", data);
         }
 
-        public ActionResult ExportFile(string txtTieuDe1, string txtTieuDe2, string txtIDQuyetToan, int? slbDonViUSD, int? slbDonViVND, string ext = "xlsx", int to = 1)
+        public ActionResult ExportFile(string txtTieuDe1, string txtTieuDe2, string txtIDQuyetToan, string txtDonViCapTren, string txtDonViCapDuoi, int? slbDonViUSD, int? slbDonViVND, string ext = "xlsx", int to = 1)
         {
             var a = getQuyetToanDonVi(txtIDQuyetToan);
             string fileName = string.Format("{0}.{1}", "Quyet toan du an hoan thanh giai doan " + a[0].quyetToanDuAn.iNamBaoCaoTu + " - " + a[0].quyetToanDuAn.iNamBaoCaoDen, ext);
-            ExcelFile xls = TaoFileExel(txtTieuDe1, txtTieuDe2, a, slbDonViUSD, slbDonViVND, to);
+            ExcelFile xls = TaoFileExel(txtTieuDe1, txtTieuDe2, a, slbDonViUSD, slbDonViVND, txtDonViCapTren, txtDonViCapDuoi, to);
             return Print(xls, ext, fileName);
         }
-        public ExcelFile TaoFileExel(string txtTieuDe1, string txtTieuDe2, List<NH_QT_QuyetToanDuAnByDonVi> quyetToanNienDoDetail, int? slbDonViUSD, int? slbDonViVND, int to = 1)
+        public ExcelFile TaoFileExel(string txtTieuDe1, string txtTieuDe2, List<NH_QT_QuyetToanDuAnByDonVi> quyetToanNienDoDetail, int? slbDonViUSD, int? slbDonViVND, string txtDonViCapTren, string txtDonViCapDuoi, int to = 1)
         {
             var donViVND = lstDonViVND.Find(x => x.Value == slbDonViVND);
             var donViUSD = lstDonViUSD.Find(x => x.Value == slbDonViUSD);
@@ -273,6 +273,9 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                 x.iNamBaoCaoTu,
                 x.iNamBaoCaoDen
             }).Where(x => x.iNamBaoCaoTu != null && x.iNamBaoCaoDen != null).OrderBy(x => x.iNamBaoCaoTu).Distinct().ToList();
+            var listSumTTCP = new List<NH_QT_QuyetToanDuAnDataGiaiDoan>();
+            var listSumKPDC = new List<NH_QT_QuyetToanDuAnDataGiaiDoan>();
+            var sumDataQTDD = new List<NH_QT_QuyetToanDuAnDataGiaiDoan>();
             foreach (var item in data)
             {
                 item.listDataTTCP = new List<NH_QT_QuyetToanDuAnDataGiaiDoan>();
@@ -282,15 +285,66 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
 
                 foreach (var giaiDoan in giaiDoans)
                 {
+                    //Tỉnh tổng theo giai đoạn
                     if (item.iNamBaoCaoTu == giaiDoan.iNamBaoCaoTu && item.iNamBaoCaoDen == giaiDoan.iNamBaoCaoDen)
                     {
                         item.listDataTTCP.Add(new NH_QT_QuyetToanDuAnDataGiaiDoan() { value = item.fKeHoach_TTCP_USD });
                         item.listDataKPDC.Add(new NH_QT_QuyetToanDuAnDataGiaiDoan() { valueUSD = item.fKinhPhiDuocCap_Tong_USD, valueVND = item.fKinhPhiDuocCap_Tong_VND });
                         item.listDataQTDD.Add(new NH_QT_QuyetToanDuAnDataGiaiDoan() { valueUSD = item.fQuyetToanDuocDuyet_Tong_USD, valueVND = item.fQuyetToanDuocDuyet_Tong_VND });
 
+
+                        if (item.sLevel == 0 && item.iNamBaoCaoTu != 0 && item.iNamBaoCaoDen != 0 && item.iNamBaoCaoTu != null && item.iNamBaoCaoDen != null)
+                        {
+                            listSumTTCP.Add(new NH_QT_QuyetToanDuAnDataGiaiDoan()
+                            {
+                                value = item.fKeHoach_TTCP_USD,
+                                iNamBaoCaoDen = giaiDoan.iNamBaoCaoDen ?? 0,
+                                iNamBaoCaoTu = giaiDoan.iNamBaoCaoTu ?? 0,
+                            });
+                            listSumKPDC.Add(new NH_QT_QuyetToanDuAnDataGiaiDoan()
+                            {
+                                valueUSD = item.fKinhPhiDuocCap_Tong_USD,
+                                valueVND = item.fKinhPhiDuocCap_Tong_VND,
+                                iNamBaoCaoDen = giaiDoan.iNamBaoCaoDen ?? 0,
+                                iNamBaoCaoTu = giaiDoan.iNamBaoCaoTu ?? 0,
+
+                            });
+                            sumDataQTDD.Add(new NH_QT_QuyetToanDuAnDataGiaiDoan()
+                            {
+                                iNamBaoCaoDen = giaiDoan.iNamBaoCaoDen ?? 0,
+                                iNamBaoCaoTu = giaiDoan.iNamBaoCaoTu ?? 0,
+                                valueUSD = item.fQuyetToanDuocDuyet_Tong_USD,
+                                valueVND = item.fQuyetToanDuocDuyet_Tong_VND
+                            });
+                        }
+                        //
                     }
                     else
                     {
+                        if (item.sLevel == 0 && item.iNamBaoCaoTu != 0 && item.iNamBaoCaoDen != 0 && item.iNamBaoCaoTu != null && item.iNamBaoCaoDen != null)
+                        {
+                            listSumTTCP.Add(new NH_QT_QuyetToanDuAnDataGiaiDoan()
+                            {
+                                value = 0,
+                                iNamBaoCaoDen = giaiDoan.iNamBaoCaoDen ?? 0,
+                                iNamBaoCaoTu = giaiDoan.iNamBaoCaoTu ?? 0,
+                            });
+                            listSumKPDC.Add(new NH_QT_QuyetToanDuAnDataGiaiDoan()
+                            {
+                                valueUSD = 0,
+                                valueVND = 0,
+                                iNamBaoCaoDen = giaiDoan.iNamBaoCaoDen ?? 0,
+                                iNamBaoCaoTu = giaiDoan.iNamBaoCaoTu ?? 0,
+
+                            });
+                            sumDataQTDD.Add(new NH_QT_QuyetToanDuAnDataGiaiDoan()
+                            {
+                                iNamBaoCaoDen = giaiDoan.iNamBaoCaoDen ?? 0,
+                                iNamBaoCaoTu = giaiDoan.iNamBaoCaoTu ?? 0,
+                                valueUSD = 0,
+                                valueVND = 0
+                            });
+                        }
                         item.listDataTTCP.Add(new NH_QT_QuyetToanDuAnDataGiaiDoan());
                         item.listDataKPDC.Add(new NH_QT_QuyetToanDuAnDataGiaiDoan());
                         item.listDataQTDD.Add(new NH_QT_QuyetToanDuAnDataGiaiDoan());
@@ -304,7 +358,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                 txtTieuDe2 = txtTieuDe2,
                 donViUSD = donViUSD.Label,
                 donViVND = donViVND.Label,
-
+                txtDonViCapDuoi = txtDonViCapDuoi?.Trim()?.ToUpper(),
+                txtDonViCapTren = txtDonViCapTren?.Trim()?.ToUpper()
             });
             //fr.SetValue("iTongSoNgayDieuTri", iTongSoNgayDieuTri.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")));
             foreach (var item in data)
@@ -321,7 +376,84 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
 
             }
 
+
+            var countColumn = 11 + giaiDoans.Count() + (giaiDoans.Count() * 4);
+            var listColumn = new List<NH_QT_QuyetToanDuAnGiaiDoan>();
+            for (var i = 1; i <= countColumn; i++)
+            {
+                var startColumn1 = 3 + giaiDoans.Count() + 1;
+                var startColumn2 = startColumn1 + (giaiDoans.Count() * 2) + 2;
+                var startColumn3 = startColumn2 + (giaiDoans.Count() * 2) + 2;
+
+
+                if (i == startColumn1 || i == startColumn1 + 1 || i == startColumn2 || i == startColumn2 + 1)
+                {
+                    var nowColumn = i.ToString() + " =";
+                    for (var j = 1; j <= giaiDoans.Count(); j++)
+                    {
+                        nowColumn += (i + (j * 2)).ToString() + " +";
+                    }
+                    listColumn.Add(new NH_QT_QuyetToanDuAnGiaiDoan()
+                    {
+                        giaiDoan = nowColumn.Remove(nowColumn.Length - 1)
+                    });
+                }
+                else if (i == startColumn3)
+                {
+                    var nowColumn = i.ToString() + " =" + startColumn1.ToString() + " -" + startColumn2.ToString();
+                    listColumn.Add(
+                        new NH_QT_QuyetToanDuAnGiaiDoan()
+                        {
+                            giaiDoan = nowColumn
+                        });
+                }
+                else if (i == startColumn3 + 1)
+                {
+                    var nowColumn = i.ToString() + " =" + (startColumn1 + 1).ToString() + " -" + (startColumn2 + 1).ToString();
+                    listColumn.Add(new NH_QT_QuyetToanDuAnGiaiDoan()
+                    {
+                        giaiDoan = nowColumn
+                    });
+                }
+                else
+                {
+                    listColumn.Add(
+                        new NH_QT_QuyetToanDuAnGiaiDoan()
+                        {
+                            giaiDoan = i.ToString()
+                        });
+                }
+            }
+
+            var returnSumDataQTDD = sumDataQTDD.GroupBy(x => new { x.iNamBaoCaoTu, x.iNamBaoCaoDen }).Select(x => new NH_QT_QuyetToanDuAnDataGiaiDoan
+            {
+                iNamBaoCaoDen = x.Key.iNamBaoCaoDen,
+                iNamBaoCaoTu = x.Key.iNamBaoCaoTu,
+                valueUSD = x.Sum(y => y.valueUSD),
+                valueVND = x.Sum(y => y.valueVND),
+            });
+
+            var returnSumDataTTCP = listSumTTCP.GroupBy(x => new { x.iNamBaoCaoTu, x.iNamBaoCaoDen }).Select(x => new NH_QT_QuyetToanDuAnDataGiaiDoan
+            {
+                iNamBaoCaoDen = x.Key.iNamBaoCaoDen,
+                iNamBaoCaoTu = x.Key.iNamBaoCaoTu,
+                value = x.Sum(y => y.value),
+            });
+            var returnSumDataKPDC = listSumKPDC.GroupBy(x => new { x.iNamBaoCaoTu, x.iNamBaoCaoDen }).Select(x => new NH_QT_QuyetToanDuAnDataGiaiDoan
+            {
+                iNamBaoCaoDen = x.Key.iNamBaoCaoDen,
+                iNamBaoCaoTu = x.Key.iNamBaoCaoTu,
+                valueUSD = x.Sum(y => y.valueUSD),
+                valueVND = x.Sum(y => y.valueVND),
+            });
+
+            fr.AddTable<NH_QT_QuyetToanDuAnDataGiaiDoan>("sumDataQTDD", returnSumDataQTDD);
+            fr.AddTable<NH_QT_QuyetToanDuAnDataGiaiDoan>("sumDataTTCP", returnSumDataTTCP);
+            fr.AddTable<NH_QT_QuyetToanDuAnDataGiaiDoan>("sumDataKPDC", returnSumDataKPDC);
+
             fr.AddTable<NH_QT_QuyetToanDAHT_ChiTietData>("dt", data);
+            fr.AddTable<NH_QT_QuyetToanDuAnGiaiDoan>("dtColumn", listColumn);
+
             fr.AddTable<NH_QT_QuyetToanDuAnGiaiDoan>("lstGiaiDoan", lstGiaiDoan);
             fr.AddTable<NH_QT_QuyetToanDuAnGiaiDoan>("lstGiaiDoan2", lstGiaiDoan);
             fr.AddTable<NH_QT_QuyetToanDuAnGiaiDoan>("lstGiaiDoan3", lstGiaiDoan);
@@ -344,12 +476,30 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
             var fBold = Result.GetDefaultFormat;
             fBold.Font.Style = TFlxFontStyles.Bold;
             fBold.Font.Name = "Times New Roman";
-            fBold.Font.Size20 = 280;
+            fBold.Font.Size20 = 260;
+            fBold.HAlignment = THFlxAlignment.center;
+            fBold.VAlignment = TVFlxAlignment.center;
+
+            var fBoldMauBaoCao = Result.GetDefaultFormat;
+            fBoldMauBaoCao.Font.Style = TFlxFontStyles.Bold;
+            fBoldMauBaoCao.Font.Name = "Times New Roman";
+            fBoldMauBaoCao.Font.Size20 = 260;
+            fBoldMauBaoCao.HAlignment = THFlxAlignment.right;
+            fBoldMauBaoCao.VAlignment = TVFlxAlignment.center;
 
             var fItalic = Result.GetDefaultFormat;
             fItalic.Font.Style = TFlxFontStyles.Italic;
             fItalic.Font.Name = "Times New Roman";
-            fItalic.Font.Size20 = 280;
+            fItalic.Font.Size20 = 240;
+            fItalic.HAlignment = THFlxAlignment.right;
+            fItalic.VAlignment = TVFlxAlignment.center;
+
+            var fItalicTieuDe2 = Result.GetDefaultFormat;
+            fItalicTieuDe2.Font.Style = TFlxFontStyles.Italic;
+            fItalicTieuDe2.Font.Name = "Times New Roman";
+            fItalicTieuDe2.Font.Size20 = 260;
+            fItalicTieuDe2.HAlignment = THFlxAlignment.center;
+            fItalicTieuDe2.VAlignment = TVFlxAlignment.center;
 
             var ApplyFormat = new TFlxApplyFormat();
             ApplyFormat.SetAllMembers(false);
@@ -357,30 +507,27 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
             var ApplyFormatBold = new TFlxApplyFormat();
             ApplyFormatBold.SetAllMembers(false);
             ApplyFormatBold.Font.SetAllMembers(true);
+            ApplyFormatBold.HAlignment = true;
+            ApplyFormatBold.VAlignment = true;
             TCellAddress Cell = null;
             //tìm dòng cuối cùng của bảng
             Cell = Result.Find("Cộng", null, Cell, false, true, true, false);
             //set border cho bảng
             Result.SetCellFormat(9, 2, Cell.Row, 13 + lstGiaiDoan.Count() * 5, bBorder, ApplyFormat, false);
-            Result.SetCellValue(Cell.Row + 5, 10 + lstGiaiDoan.Count() * 5, "Ngày … Tháng … Năm");
 
-            Result.SetCellValue(Cell.Row + 6, 10 + lstGiaiDoan.Count() * 5, "THỦ TRƯỞNG ĐƠN VỊ");
-            Result.SetCellFormat(Cell.Row + 6, 10 + lstGiaiDoan.Count() * 5, Cell.Row + 6, 10 + lstGiaiDoan.Count() * 5, fBold, ApplyFormatBold, false);
-            
-            Result.SetCellValue(3, 10 + lstGiaiDoan.Count() * 5, "Mẫu số 05/QT-QNH");
-            Result.SetCellFormat(3, 10 + lstGiaiDoan.Count() * 5, 2, 10 + lstGiaiDoan.Count() * 5, fBold, ApplyFormatBold, false);
+            Result.SetCellValue(3, 13 + lstGiaiDoan.Count() * 5, "Mẫu số 05/QT-QNH");
+            Result.SetCellFormat(3, 13 + lstGiaiDoan.Count() * 5, 3, 13 + lstGiaiDoan.Count() * 5, fBoldMauBaoCao, ApplyFormatBold, false);
 
-            Result.SetCellValue(8, 10 + lstGiaiDoan.Count() * 5, "Đơn vị tính: "+ donViUSD.Label + " / "+ donViVND.Label);
-            Result.SetCellFormat(8, 10 + lstGiaiDoan.Count() * 5, 8, 10 + lstGiaiDoan.Count() * 5, fItalic, ApplyFormatBold, false);
+            Result.SetCellValue(8, 13 + lstGiaiDoan.Count() * 5, "Đơn vị tính: " + donViUSD.Label + " / " + donViVND.Label);
+            Result.SetCellFormat(8, 13 + lstGiaiDoan.Count() * 5, 8, 13 + lstGiaiDoan.Count() * 5, fItalic, ApplyFormatBold, false);
 
-            Result.SetCellValue(3, (13 + lstGiaiDoan.Count() * 5)/2, txtTieuDe1);
+            Result.SetCellValue(3, (13 + lstGiaiDoan.Count() * 5) / 2, txtTieuDe1.ToUpper());
             Result.SetCellFormat(3, (13 + lstGiaiDoan.Count() * 5) / 2, 3, (13 + lstGiaiDoan.Count() * 5) / 2, fBold, ApplyFormatBold, false);
 
             Result.SetCellValue(4, (13 + lstGiaiDoan.Count() * 5) / 2, txtTieuDe2);
-            Result.SetCellFormat(4, (13 + lstGiaiDoan.Count() * 5) / 2, 4, (13 + lstGiaiDoan.Count() * 5) / 2, fBold, ApplyFormatBold, false);
+            Result.SetCellFormat(4, (13 + lstGiaiDoan.Count() * 5) / 2, 4, (13 + lstGiaiDoan.Count() * 5) / 2, fItalicTieuDe2, ApplyFormatBold, false);
 
-            //Result.InsertVPageBreak(15 + lstGiaiDoan.Count() * 5);
-            //Result.InsertVPageBreak(Cell.Row + 17);
+
 
             return Result;
         }
@@ -593,7 +740,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                         fKeHoach_TTCP_USD = chuongTrinh.fKeHoach_TTCP_USD,
                         iNamBaoCaoTu = chuongTrinh.iNamBaoCaoTu,
                         iNamBaoCaoDen = chuongTrinh.iNamBaoCaoDen,
-                        bIsTittle = true
+                        bIsTittle = true,
+                        sLevel = 0,
                     };
                     listResult.Add(newObj);
                     var getListDuAn = listData.Where(x => x.iID_KHCTBQP_NhiemVuChiID == chuongTrinh.iID_KHCTBQP_NhiemVuChiID && x.iID_DuAnID != null).ToList();
@@ -627,6 +775,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                                 fQuyetToanDuocDuyet_Tong_VND = getListDuAn.Sum(x => x.fQuyetToanDuocDuyet_Tong_VND),
                                 iNamBaoCaoTu = chuongTrinh.iNamBaoCaoTu,
                                 iNamBaoCaoDen = chuongTrinh.iNamBaoCaoDen,
+                                sLevel = 1,
                             };
                             listResult.Add(newObjHopDongDuAn);
                             listResult.AddRange(returnLoaiChi(isPrint, true, getListDuAn.Where(x => x.iID_DuAnID == hopDongDuAn.iID_DuAnID).ToList()));
@@ -650,6 +799,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                             iNamBaoCaoTu = chuongTrinh.iNamBaoCaoTu,
                             iNamBaoCaoDen = chuongTrinh.iNamBaoCaoDen,
                             bIsTittle = true,
+                            sLevel = 1,
                         };
                         listResult.Add(newObjHopDong);
                         listResult.AddRange(returnLoaiChi(isPrint, true, getListHopDong));
@@ -673,6 +823,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                             fQuyetToanDuocDuyet_Tong_VND = getListNone.Sum(x => x.fQuyetToanDuocDuyet_Tong_VND),
                             iNamBaoCaoTu = chuongTrinh.iNamBaoCaoTu,
                             iNamBaoCaoDen = chuongTrinh.iNamBaoCaoDen,
+                            sLevel = 1,
                         };
                         listResult.Add(newObjKhac);
                         listResult.AddRange(returnLoaiChi(isPrint, false, getListNone));
@@ -681,7 +832,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
             }
             return listResult;
         }
-        public List<NH_QT_QuyetToanDAHT_ChiTietData> returnLoaiChi( bool isPrint, bool idDuAn, List<NH_QT_QuyetToanDAHT_ChiTietData> list)
+        public List<NH_QT_QuyetToanDAHT_ChiTietData> returnLoaiChi(bool isPrint, bool idDuAn, List<NH_QT_QuyetToanDAHT_ChiTietData> list)
         {
             List<NH_QT_QuyetToanDAHT_ChiTietData> returnData = new List<NH_QT_QuyetToanDAHT_ChiTietData>();
             var listLoaiChiPhi = list.Select(x => new { x.iLoaiNoiDungChi }).Distinct().OrderBy(x => x.iLoaiNoiDungChi)
@@ -725,6 +876,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                             fQuyetToanDuocDuyet_Tong_VND = listHopDong.Sum(x => x.fQuyetToanDuocDuyet_Tong_VND),
                             iNamBaoCaoTu = nameHopDong.iNamBaoCaoTu,
                             iNamBaoCaoDen = nameHopDong.iNamBaoCaoDen,
+                            sLevel = 2,
                         };
                         returnData.Add(newObjHopDongDuAn);
                         listHopDong.ForEach(x =>
@@ -743,6 +895,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                             x.sumQTDDVND = a.sumQTDDVND;
                             x.fSoSanhKinhPhi_USD = x.sumKPDCUSD - x.sumQTDDUSD;
                             x.fSoSanhKinhPhi_VND = x.sumKPDCVND - x.sumQTDDVND;
+                            x.sLevel = 3;
                             if (isPrint)
                             {
                                 x.fKeHoach_TTCP_USD = null;
@@ -771,6 +924,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                         x.sumQTDDVND = a.sumQTDDVND;
                         x.fSoSanhKinhPhi_USD = x.sumKPDCUSD - x.sumQTDDUSD;
                         x.fSoSanhKinhPhi_VND = x.sumKPDCVND - x.sumQTDDVND;
+                        x.sLevel = 3;
                         if (isPrint)
                         {
                             x.fKeHoach_TTCP_USD = null;

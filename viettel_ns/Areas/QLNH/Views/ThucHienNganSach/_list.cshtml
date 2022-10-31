@@ -45,7 +45,7 @@
             <th width="15%">@Html.DropDownList("iID_DonViID", (SelectList)(ViewBag.ListDonViQuanLy), new { @class = "form-control", @id = "iDonvi", @onchange = "ChangePage()" })</th>
             <th width="54%">
                 <button class="btn btn-info pull-right mr-10" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
-                <button class="btn btn-info pull-right mr-10 btn-print" data-ext="xls"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
+                <button class="btn btn-info pull-right mr-10" onclick="InBaoCaoModal()"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
                 <button class="btn btn-info pull-right mr-10" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
             </th>
         </tr>
@@ -378,8 +378,6 @@
     </div>
 }
 
-<input type="hidden" id="urlExport" value="@Url.Action("ExportExcelBaoCao")" />
-
 <script type="text/javascript">
     $(document).ready(function () {
         $("#tabTable").select2({ width: '100%', matcher: FilterInComboBox });
@@ -406,25 +404,25 @@
             });
         });
     });
-    $(".btn-print").click(function () {
-        var links = [];
-        var ext = $(this).data("ext");
-        var tabTable = $("#tabTable").val();
-        var iTuNam = $("#txtTuNam").val();
-        var iDenNam = $("#txtDenNam").val();
-        var iDonvi = $("#iDonvi").val();
-        var iQuyList = $("#iQuyList").val();
-        var iNam = $("#txtNam").val();
-        //var dvt = $("#dvt").val();
-        var url = $("#urlExport").val() +
-            "?ext=" + ext +
-            "&dvt=1000&to=1&tabTable=" + tabTable + "&iTuNam=" + iTuNam + "&iDenNam" + iDenNam + "&iDonvi=" + iDonvi + "&iQuyList=" + iQuyList + "&iNam=" + iNam;
+    //$(".btn-print").click(function () {
+    //    var links = [];
+    //    var ext = $(this).data("ext");
+    //    var tabTable = $("#tabTable").val();
+    //    var iTuNam = $("#txtTuNam").val();
+    //    var iDenNam = $("#txtDenNam").val();
+    //    var iDonvi = $("#iDonvi").val();
+    //    var iQuyList = $("#iQuyList").val();
+    //    var iNam = $("#txtNam").val();
+    //    //var dvt = $("#dvt").val();
+    //    var url = $("#urlExport").val() +
+    //        "?ext=" + ext +
+    //        "&dvt=1000&to=1&tabTable=" + tabTable + "&iTuNam=" + iTuNam + "&iDenNam" + iDenNam + "&iDonvi=" + iDonvi + "&iQuyList=" + iQuyList + "&iNam=" + iNam;
 
-        url = unescape(url);
-        links.push(url);
+    //    url = unescape(url);
+    //    links.push(url);
 
-        openLinks(links);
-    });
+    //    openLinks(links);
+    //});
 </script>
 
 <style>

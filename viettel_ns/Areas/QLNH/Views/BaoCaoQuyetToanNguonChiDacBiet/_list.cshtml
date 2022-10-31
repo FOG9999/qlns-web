@@ -12,13 +12,15 @@
         @Html.DropDownList("slbNamKeHoachFillter", (SelectList)ViewBag.ListNamKeHoach, new { @class = "form-control", @id = "slbNamKeHoachFillter" })
         <button class="btn btn-info pull-right mr-10 ml-10" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
         <div class="dropdown pull-right mr-10">
-            <button class="btn btn-info pull-right"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
-            <div class="dropdown-content list-group">
+            @*<button class="btn btn-info pull-right"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>*@
+            <button class="btn btn-warning pull-right" onclick="InBaoCaoModal()"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
+
+            @*<div class="dropdown-content list-group">
                 <a href="#" class="list-group-item list-group-item-action" onclick="ExportQTNguonChiDacBiet('xlsx');">Excel</a>
                 <a href="#" class="list-group-item list-group-item-action" onclick="ExportQTNguonChiDacBiet('pdf');">PDF</a>
-            </div>
+            </div>*@
         </div>
-        <button class="btn btn-info pull-right mr-10" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+        <button class="btn btn-info pull-right" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
     </div>
 </div>
 <div>

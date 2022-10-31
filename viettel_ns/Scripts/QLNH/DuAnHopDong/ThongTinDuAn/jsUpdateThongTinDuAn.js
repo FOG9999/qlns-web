@@ -278,6 +278,7 @@ function XoaDong(nutXoa) {
 
 function ChangeGiaTien(event, element, type, num) {
     ValidateInputFocusOut(event, element, type, num)
+    console.log(ValidateInputFocusOut)
     var dongHienTai = $(element).closest("tr"); //*khi bao dongHienTai, dong element the tr
 
     if ($(element).prop("readonly")) return;//*neu o element chi doc thi return

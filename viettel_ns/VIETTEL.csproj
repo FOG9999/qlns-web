@@ -606,6 +606,7 @@
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_get_list_kh5namdexuat_dieuchinh_chitiet.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_get_list_kh5namduocduyet_chitiet_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_get_list_khVonnamdexuat_dieuchinh_chitiet.sql" />
+    <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_get_pheduyet_tktcvatdt_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_khvu_dx_chiTiet_theo_idkhvu_dx.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_khvu_dx_getchitiettheoid.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_khv_getdata_kehoach_von_ung_tonghop_by_listkhvungids.sql" />
@@ -1848,6 +1849,10 @@
     </Content>
     <Content Include="Areas\QLVonDauTu\ReportExcelForm\KeHoachVonNam\rpt_BaoCao_KHNam_DonVi_Moi.xlsx" />
     <Content Include="Areas\QLNH\Views\DeNghiThanhToan\_modalDetail.cshtml" />
+    <Content Include="Areas\QLNH\Views\KinhPhiDuocCapTheoDonVi\PopupConfigBaoCaoPartial.cshtml" />
+    <Content Include="Areas\QLNH\Views\TongHopKinhPhiDuocCap\PopupConfigBaoCaoPartial.cshtml" />
+    <Content Include="Areas\QLNH\Views\BaoCaoQuyetToanNguonChiDacBiet\_modalReport.cshtml" />
+    <Content Include="Areas\QLNH\Views\ThucHienNganSach\_modalInBaoCao.cshtml" />
     <None Include="Areas\QuyetToan\Controllers\ReportController.cs1" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\Index.cshtml" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\_list.cshtml" />
@@ -6875,6 +6880,8 @@
     <Content Include="Areas\QLVonDauTu\ReportExcelForm\rpt_BaoCaoCapPhat.xlsx" />
     <Content Include="Report_ExcelFrom\QLNH\rpt_BaoCaoSoChuyenNamSau.xlsx" />
     <Content Include="Report_ExcelFrom\QLNH\rpt_BaoCaoKetLuanQuyetToan.xlsx" />
+    <Content Include="Report_ExcelFrom\QLNH\rpt_ThucHienNganSach_GiaiDoanTo2.xlsx" />
+    <Content Include="Report_ExcelFrom\QLNH\rpt_ThucHienNganSach_GiaiDoanTo1.xlsx" />
     <None Include="Report_ExcelFrom\VonDauTu\rpt_ThongTriQuyetToan.xls" />
     <None Include="Webh.Debug.config">
       <DependentUpon>Webh.config</DependentUpon>

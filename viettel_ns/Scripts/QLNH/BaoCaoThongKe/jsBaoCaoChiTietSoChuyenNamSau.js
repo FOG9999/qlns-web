@@ -46,13 +46,15 @@ function GetListData(iDonVi, iNamKeHoach) {
 function printBaoCao(ext) {
     var links = [];
     var url = "";
-    var txtTieuDe1 = $("#txtTieuDe1").val();
-    var txtTieuDe2 = $("#txtTieuDe2").val();
+    var txtTieuDe1 = $.trim($("#txtTieuDe1").val());
+    var txtTieuDe2 = $.trim($("#txtTieuDe2").val());
     var slbDonViVND = $("#slbDonViVND").val();
     var slbDonViUSD = $("#slbDonViUSD").val();
     var txtNamKeHoach = $("#txtNamKeHoach").val();
     var txtIdDonVi = $("#txtIdDonVi").val();
     var txtSTenDonVi = $("#txtSTenDonVi").val();
+    var sTenDonViCapTren = $.trim($("#txtDonViCapTren").val());
+    var sTenDonViCapDuoi = $.trim($("#txtDonViCapDuoi").val());
 
     var data = {};
     data.txtTieuDe1 = txtTieuDe1;
@@ -62,6 +64,8 @@ function printBaoCao(ext) {
     data.txtNamKeHoach = txtNamKeHoach;
     data.txtIdDonVi = txtIdDonVi;
     data.txtSTenDonVi = txtSTenDonVi;
+    data.sTenDonViCapTren = sTenDonViCapTren;
+    data.sTenDonViCapDuoi = sTenDonViCapDuoi;
 
 
     if (!ValidateDataPrint(data)) {
@@ -69,16 +73,18 @@ function printBaoCao(ext) {
     }
 
     url = $("#urlExportBCChiTiet").val() +
-        "?ext=" + ext + "&txtTieuDe1=" + txtTieuDe1
-        + "&txtTieuDe2=" + txtTieuDe2
+        "?ext=" + ext + "&txtTieuDe1=" + encodeURIComponent(txtTieuDe1)
+        + "&txtTieuDe2=" + encodeURIComponent(txtTieuDe2)
         + "&slbDonViVND=" + slbDonViVND
         + "&slbDonViUSD=" + slbDonViUSD
         + "&txtNamKeHoach=" + txtNamKeHoach
         + "&txtIdDonVi=" + txtIdDonVi
         + "&txtSTenDonVi=" + txtSTenDonVi
+        + "&sTenDonViCapTren=" + encodeURIComponent(sTenDonViCapTren)
+        + "&sTenDonViCapDuoi=" + encodeURIComponent(sTenDonViCapDuoi)
 
 
-    url = unescape(url);
+    //url = unescape(url);
     links.push(url);
 
     openLinks(links);
@@ -88,16 +94,22 @@ function ValidateDataPrint(data) {
     var Messages = [];
 
     if (data.txtTieuDe1 == null || data.txtTieuDe1 == "") {
-        Messages.push("Tiêu đề 1 chưa nhập !");
+        Messages.push("Chưa có thông tin về tiêu đề 1!");
     }
     if (data.txtTieuDe2 == null || data.txtTieuDe2 == "") {
-        Messages.push("Tiêu đề 2 chưa nhập !");
+        Messages.push("Chưa có thông tin về tiêu đề 2!");
     }
     if (data.slbDonViVND == null || data.slbDonViVND == 0) {
-        Messages.push("Đơn vị VND chưa chọn !");
+        Messages.push("Chưa chọn đơn vị VND!");
     }
     if (data.slbDonViUSD == null || data.slbDonViUSD == 0) {
-        Messages.push("Đơn vị USD chưa chọn !");
+        Messages.push("Chưa chọn đơn vị USD!");
+    }
+    if ($.trim(data.sTenDonViCapTren) == "") {
+        Messages.push("Chưa nhập đơn vị cấp trên!");
+    }
+    if ($.trim(data.sTenDonViCapDuoi) == "") {
+        Messages.push("Chưa nhập đơn vị!");
     }
 
     if (Messages.length > 0) {
@@ -114,6 +126,7 @@ function ValidateDataPrint(data) {
 
     return true;
 }
+
 function InBaoCaoModal() {
     var slbDonVi = $("#iDonViFillter").val();
     var slbNamKeHoach = $("#slbNamKeHoachFillter").val();
@@ -137,7 +150,6 @@ function InBaoCaoModal() {
             url: "/QLNH/BaoCaoSoChuyenNamSau/GetModalInBaoCao",
             data: { slbDonVi: slbDonVi, slbNamKeHoach: slbNamKeHoach },
             success: function (data) {
-                console.log(data)
                 $("#modalBCSoNamSau").modal("show")
                 $("#contentModalBaoCaoSoNamSau").empty().html(data);
                 $("#modalBCSoNamSauLabel").empty().html('Báo cáo chi tiết số chuyển năm sau');

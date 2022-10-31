@@ -95,7 +95,11 @@ function RenderNguonVon(lstNguonVon) {
 function RenderChiPhi(lstChiPhi) {
     var lstStrChiPhi = [];
     $.each(lstChiPhi, function (index, item) {
-        lstStrChiPhi.push("<tr data-id='" + item.iID_DuAn_ChiPhi + "' data-parent='" + item.iID_ChiPhi_Parent + "' data-fTienPheDuyetQDDT='" + item.fTienPheDuyetQDDT + "' data-iIDChiPhiID='" + item.iID_ChiPhiID + "'>");
+        lstStrChiPhi.push("<tr data-id='" + item.iID_DuAn_ChiPhi + "' data-parent='" + item.iID_ChiPhi_Parent + "' data-fTienPheDuyetQDDT='" + item.fTienPheDuyetQDDT + "' data-iIDChiPhiID='" + item.iID_ChiPhiID + "'");
+        if (!item.iID_ChiPhi_Parent) {
+            lstStrChiPhi.push(`style="font-weight: bold;"`);
+        }
+        lstStrChiPhi.push(">");
         lstStrChiPhi.push("<td>" + item.sMaOrder + "</td>");
         lstStrChiPhi.push("<td>" + item.sTenChiPhi + "</td>");
         lstStrChiPhi.push("<td style='text-align:right'>" + FormatNumber(item.fTienPheDuyetQDDT) + "</td>");

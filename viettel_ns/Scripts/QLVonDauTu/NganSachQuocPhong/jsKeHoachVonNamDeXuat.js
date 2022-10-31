@@ -333,8 +333,8 @@ function ImportKHVNDX() {
 }
 
 //Chi tiết kế hoạch vốn năm đề xuất
-function ChiTietKeHoachVonNamDeXuat(id, isDieuChinh) {
-    window.location.href = "/QLVonDauTu/KeHoachVonNamDeXuat/Detail?id=" + id + "&isDieuChinh=" + isDieuChinh;
+function ChiTietKeHoachVonNamDeXuat(id, isDieuChinh, isDetail) {
+    window.location.href = "/QLVonDauTu/KeHoachVonNamDeXuat/Detail?id=" + id + "&isDieuChinh=" + isDieuChinh + "&bIsDetail=" + isDetail;
 }
 
 function ChangeChungTu() {
@@ -371,7 +371,3 @@ function ChooseDuAn(key) {
     sessionStorage.setItem('DuAnChecked', JSON.stringify(data));
 }
 
-//Xem chi tiết kế hoạch vốn năm đề xuất
-function XemChiTietKeHoachVonNamDeXuat(id, isDieuChinh, isViewDetail) {
-    window.location.href = "/QLVonDauTu/KeHoachVonNamDeXuat/Detail?id=" + id + "&isDieuChinh=" + isDieuChinh + "&isViewDetail=" + isViewDetail;
-}

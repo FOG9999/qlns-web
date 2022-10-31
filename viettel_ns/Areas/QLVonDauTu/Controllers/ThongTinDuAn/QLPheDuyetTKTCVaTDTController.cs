@@ -57,7 +57,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         #region Event
         #region Index
         [HttpPost]
-        public ActionResult TimKiem(PagingInfo _paging, string sTenDuAn, string sSoQuyetDinh, DateTime? dPheduyetTuNgay, DateTime? dPheduyetDenNgay, Guid? sDonViQL, byte bIsTongDuToan)
+        public ActionResult TimKiem(PagingInfo _paging, string sTenDuAn, string sSoQuyetDinh, DateTime? dPheduyetTuNgay, DateTime? dPheduyetDenNgay, Guid? sDonViQL, byte bIsTongDuToan, string sTenDuToan)
         {
             if (sDonViQL.HasValue && sDonViQL.Value == Guid.Empty)
                 sDonViQL = null;
@@ -65,7 +65,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             //    dPheduyetDenNgay = dPheduyetDenNgay.Value.AddDays(1);
             VDTPheDuyetTKTCVaTDTViewModel vm = new VDTPheDuyetTKTCVaTDTViewModel();
             vm._paging = _paging;
-            vm.Items = _qLVonDauTuService.GetAllVDTPheDuyetTKTCVaTDT(ref vm._paging, Username, PhienLamViec.NamLamViec, bIsTongDuToan, sTenDuAn, sSoQuyetDinh, dPheduyetTuNgay, dPheduyetDenNgay, sDonViQL);
+            vm.Items = _qLVonDauTuService.GetAllVDTPheDuyetTKTCVaTDT(ref vm._paging, Username, PhienLamViec.NamLamViec, bIsTongDuToan, sTenDuAn, sSoQuyetDinh, dPheduyetTuNgay, dPheduyetDenNgay, sDonViQL, sTenDuToan);
             List<NS_DonVi> lstDonViQL = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
             lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = Constants.TAT_CA });
             ViewBag.ListDonViQL = lstDonViQL.ToSelectList("iID_Ma", "sTen");
@@ -129,13 +129,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         [HttpGet]
         public JsonResult GetChiPhiByDuToan(Guid iIdDuAnId, Guid? iIdDuToan = null, bool bIsDieuChinh = false)
         {
+
             List<VDT_DA_DuToan_ChiPhi_ViewModel> lstData = new List<VDT_DA_DuToan_ChiPhi_ViewModel>();
-            if (iIdDuToan == null || iIdDuToan == Guid.Empty || bIsDieuChinh == false)
+            if (iIdDuToan == null || iIdDuToan == Guid.Empty )
             {
                 lstData = _qLVonDauTuService.GetChiPhiTKTCTDTByDuAnId(iIdDuAnId);
             }
             else
-            {
+            {               
                 lstData = _qLVonDauTuService.GetListChiPhiTheoTKTC(iIdDuToan.Value).ToList();
             }
             //return Json(new { data = SortChiPhi(lstData) }, JsonRequestBehavior.AllowGet);

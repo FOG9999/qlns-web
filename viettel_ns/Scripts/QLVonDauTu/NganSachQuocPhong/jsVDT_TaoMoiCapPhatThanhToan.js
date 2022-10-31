@@ -1158,9 +1158,9 @@ function CheckTrungSoDeNghi() {
     var sSoDeNghi = $("#txtSoDeNghi").val().trim();
     var check = false;
     $.ajax({
-        url: "/QLVonDauTu/Common/KiemTraTrung",
+        url: "/QLVonDauTu/GiaiNganThanhToan/CheckTrungSoDeNghi",
         type: "POST",
-        data: { sTable: "VDT_TT_DeNghiThanhToan", sColumn: "sSoDeNghi", val: sSoDeNghi },
+        data: { val: sSoDeNghi },
         dataType: "json",
         async: false,
         cache: false,

@@ -67,7 +67,8 @@ namespace Viettel.Models.QLNH.QuyetToan
         public virtual double? value { get; set; }
         public virtual double? valueUSD { get; set; }
         public virtual double? valueVND { get; set; }
-
+        public virtual int iNamBaoCaoTu { get; set; }
+        public virtual int iNamBaoCaoDen { get; set; }
 
     }
     public partial class NH_QT_QuyetToanDAHT_ChiTietData : NH_QT_QuyetToanDAHT_ChiTiet
@@ -91,6 +92,8 @@ namespace Viettel.Models.QLNH.QuyetToan
         public virtual double? sumKPDCVND { get; set; }
         public virtual double? sumQTDDUSD { get; set; }
         public virtual double? sumQTDDVND { get; set; }
+        public int sLevel { get; set; }
+
         public int iGiaiDoanDen { get; set; }
         public int iGiaiDoanTu { get; set; }
         public List<NH_QT_QuyetToanDuAnDataGiaiDoan> listDataTTCP { get; set; }

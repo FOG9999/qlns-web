@@ -698,9 +698,9 @@ function CheckLoi(hopDong) {
 function CheckTrungSoHopDong(sSoHopDong) {
     var check = false;
     $.ajax({
-        url: "/QLVonDauTu/Common/KiemTraTrung",
+        url: "/QLVonDauTu/QLThongTinHopDong/CheckTrungSoHopDong",
         type: "POST",
-        data: { sTable: "NH_DA_HopDong", sColumn: "sSoHopDong", val: sSoHopDong },
+        data: { val: sSoHopDong },
         dataType: "json",
         async: false,
         cache: false,

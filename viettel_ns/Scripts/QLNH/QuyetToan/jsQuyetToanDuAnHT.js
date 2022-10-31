@@ -288,6 +288,8 @@ function printBaoCao(ext) {
     var links = [];
     var txtTieuDe1 = $("#txtTieuDe1").val();
     var txtTieuDe2 = $("#txtTieuDe2").val();
+    var txtDonViCapTren = $("#txtDonViCapTren").val();
+    var txtDonViCapDuoi = $("#txtDonViCapDuoi").val();
     var slbDonViUSD = $("#slbDonViUSD").val();
     var slbDonViVND = $("#slbDonViVND").val();
     var txtIDQuyetToan = $("#txtIDQuyetToan").val();
@@ -298,6 +300,9 @@ function printBaoCao(ext) {
     data.txtTieuDe2 = txtTieuDe2;
     data.slbDonViVND = slbDonViVND;
     data.slbDonViUSD = slbDonViUSD;
+    data.txtDonViCapTren = txtDonViCapTren;
+    data.txtDonViCapDuoi = txtDonViCapDuoi;
+
 
     if (!ValidateDataPrint(data)) {
         return false;
@@ -308,6 +313,8 @@ function printBaoCao(ext) {
         + "&txtTieuDe2=" + txtTieuDe2
         + "&slbDonViVND=" + slbDonViVND
         + "&slbDonViUSD=" + slbDonViUSD
+        + "&txtDonViCapTren=" + txtDonViCapTren
+        + "&txtDonViCapDuoi=" + txtDonViCapDuoi
         + "&txtIDQuyetToan=" + txtIDQuyetToan;
 
     url = unescape(url);

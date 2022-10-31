@@ -167,18 +167,18 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
 
                     new SheetColumn(columnName: "fLuyKeVonDaBoTriHetNam", header: cNameVonDaBoTriHetNam, columnWidth:120, align: "right", dataType: 1, isReadonly: true),
                     new SheetColumn(columnName: "fKeHoachVonDuocDuyetNamNay", header: "Kế hoạch vốn được giao", headerGroup: cNameKeHoachVonNam, headerGroupIndex: 2, columnWidth:120, align: "right", dataType: 1, isReadonly: true),
-                    new SheetColumn(columnName: "fVonKeoDaiCacNamTruoc", header: "Vốn kéo dài các năm trước", headerGroup: cNameKeHoachVonNam, headerGroupIndex: 2, columnWidth:120, align: "right", dataType: 1, isReadonly: isTongHop),
+                    new SheetColumn(columnName: "fVonKeoDaiCacNamTruoc", header: "Vốn kéo dài các năm trước", headerGroup: cNameKeHoachVonNam, headerGroupIndex: 2, columnWidth:120, align: "right", dataType: 1, isReadonly: bIsDetail),
 
-                    new SheetColumn(columnName: "fUocThucHien", header: cNameUocThucHien, columnWidth:170, align: "right", hasSearch: false, dataType: 1, isReadonly: isTongHop),
-                    new SheetColumn(columnName: "fUocThucHienDC", header: cNameUocThucHienDC, columnWidth:170, align: "right", hasSearch: false, dataType: 1, isReadonly: isTongHop, isHidden:!isDieuChinh),
+                    new SheetColumn(columnName: "fUocThucHien", header: cNameUocThucHien, columnWidth:170, align: "right", hasSearch: false, dataType: 1, isReadonly: bIsDetail),
+                    new SheetColumn(columnName: "fUocThucHienDC", header: cNameUocThucHienDC, columnWidth:170, align: "right", hasSearch: false, dataType: 1, isReadonly: bIsDetail, isHidden:!isDieuChinh),
 
                     //new SheetColumn(columnName: "fLuyKeVonDaBoTriHetNam", header: cNameVonDaBoTriHetNam, columnWidth:120, align: "right", dataType: 1, isReadonly: true),
 
-                    new SheetColumn(columnName: "fThuHoiVonUngTruoc", header: "Thu hồi vốn ứng trước", headerGroup: cNameNhuCauVonNam, headerGroupIndex: 2, columnWidth:120, align: "right", dataType: 1, isReadonly: isTongHop),
-                    new SheetColumn(columnName: "fThuHoiVonUngTruocDC", header: "Thu hồi vốn ứng trước (Sau điều chỉnh)", headerGroup: cNameNhuCauVonNam, headerGroupIndex: 2, columnWidth:120, align: "right", dataType: 1, isReadonly: isTongHop, isHidden:!isDieuChinh),
+                    new SheetColumn(columnName: "fThuHoiVonUngTruoc", header: "Thu hồi vốn ứng trước", headerGroup: cNameNhuCauVonNam, headerGroupIndex: 2, columnWidth:120, align: "right", dataType: 1, isReadonly: bIsDetail),
+                    new SheetColumn(columnName: "fThuHoiVonUngTruocDC", header: "Thu hồi vốn ứng trước (Sau điều chỉnh)", headerGroup: cNameNhuCauVonNam, headerGroupIndex: 2, columnWidth:120, align: "right", dataType: 1, isReadonly: bIsDetail, isHidden:!isDieuChinh),
 
-                    new SheetColumn(columnName: "fThanhToan", header: "Thanh toán", headerGroup: "Nhu cầu vốn năm 2020", headerGroupIndex: 2, columnWidth:120, align: "right", dataType: 1, isReadonly: isTongHop),
-                    new SheetColumn(columnName: "fThanhToanDC", header: "Thanh toán (Sau điều chỉnh)", headerGroup: "Nhu cầu vốn năm 2020", headerGroupIndex: 2, columnWidth:120, align: "right", dataType: 1, isReadonly: isTongHop, isHidden:!isDieuChinh),
+                    new SheetColumn(columnName: "fThanhToan", header: "Thanh toán", headerGroup: "Nhu cầu vốn năm 2020", headerGroupIndex: 2, columnWidth:120, align: "right", dataType: 1, isReadonly: bIsDetail),
+                    new SheetColumn(columnName: "fThanhToanDC", header: "Thanh toán (Sau điều chỉnh)", headerGroup: "Nhu cầu vốn năm 2020", headerGroupIndex: 2, columnWidth:120, align: "right", dataType: 1, isReadonly: bIsDetail, isHidden:!isDieuChinh),
                     
                     // cot khac
                     new SheetColumn(columnName: "iID_KeHoachVonNamDeXuatChiTietID", isHidden: true),

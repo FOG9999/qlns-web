@@ -94,11 +94,17 @@ function GetDanhSachGoiThau() {
     });
 }
 
+function isGuid(value) {
+    var regex = /[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}/i;
+    var match = regex.exec(value);
+    return match != null;
+}
+
 function GetListChungTu() {
     var iIdDuAnId = $("#iID_DuAnID").val();
     var iLoaiChungTu = $("#cbxLoaiChungTu").val();
     $("#lstChungTu").empty();
-    if (iIdDuAnId == null || iIdDuAnId == "") {
+    if (!isGuid(iIdDuAnId)) {
         $("#tblDanhSachNguonVon tbody").empty();
         $("#tblDanhSachChiPhi tbody").empty();
         return;
@@ -107,7 +113,7 @@ function GetListChungTu() {
         url: "/QLVonDauTu/KHLuaChonNhaThau/GetListChungTu",
         type: "GET",
         dataType: "html",
-        data: { iIdDuAnId: iIdDuAnId, iLoaiChungTu: iLoaiChungTu },
+        data: { iIdDuAnId: iIdDuAnId, iLoaiChungTu: iLoaiChungTu, iId_KHLCNhaThau: iIdKHLuaChonNhaThau },
         success: function (result) {
             if (result != null && result != "") {
                 $("#lstChungTu").html(result);
@@ -233,7 +239,8 @@ function GetAllGoiThauByKhlcntId() {
                 sItem.push("<td '><input type='text' class='form-control sThoiGianTCLCNT' 'text-right' value='" + item.sThoiGianTCLCNT + "'></td>");
                 sItem.push("<td>" + sCbxLoaiHD + "</td>");
                 sItem.push("<td '><input type='text' class='form-control iThoiGianThucHien' 'text-right' value='" + item.iThoiGianThucHien + "'></td>");
-                sItem.push("<td class='width-50 text-center'><button class='btn-detail'><i class='fa fa-eye fa-lg' aria-hidden='true' onclick=DetailGoiThau('" + item.iID_GoiThauID + "')></i></button><button class='btn-delete'><i class='fa fa-trash-o fa-lg' aria-hidden='true' onclick=DeleteGoiThau($(this))></i></button></td>");
+                //sItem.push("<td class='width-50 text-center'><button class='btn-detail'><i class='fa fa-eye fa-lg' aria-hidden='true' onclick=DetailGoiThau('" + item.iID_GoiThauID + "')></i></button><button class='btn-delete'><i class='fa fa-trash-o fa-lg' aria-hidden='true' onclick=DeleteGoiThau($(this))></i></button></td>");
+                sItem.push("<td class='width-50 text-center'><button class='btn-detail'><i class='fa fa-eye fa-lg' aria-hidden='true' onclick=ViewGoiThauDetail('" + item.iID_GoiThauID + "')></i></button><button class='btn-delete'><i class='fa fa-trash-o fa-lg' aria-hidden='true' onclick=DeleteGoiThau($(this))></i></button></td>");
                 sItem.push("</tr>");
             });
             $("#tblGoiThau").html(sItem.join(''));
@@ -534,7 +541,7 @@ function GetNguonVonGoiThauDetail(iIdGoiThau) {
             sItem.push("<td class='width-50 text-center'><input type='checkbox' class='ck_NguonVon' value='" + item.iID_NguonVonID + (indexInArrGoiThauNguonVon >= 0 ? '\' checked ' : '\'') + "></td>");
             sItem.push("<td class='sNoiDung'>" + item.sNoiDung + "</td>");
             sItem.push("<td class='fGiaTriPheDuyet text-right'>" + FormatNumber(item.fGiaTriPheDuyet) + "</td>");
-            sItem.push(`<td><input type=\'text\' ${indexInArrGoiThauNguonVon >= 0 ? "" : "disabled"} onkeyup=\'ValidateNumberKeyUp(this);\' onkeypress=\'return ValidateNumberKeyPress(this, event);\' class=\'fGiaTriGoiThau form-control\' style=\'text-align:right\' value=\'${indexInArrGoiThauNguonVon >= 0 ? (usingArrGoiThauNguonVon ? arrNguonVon[indexInArrGoiThauNguonVon].fTienGoiThau : arrNguonVon[indexInArrGoiThauNguonVon].fGiaTriGoiThau) : ""}\'/></td>`);
+            sItem.push(`<td><input type=\'text\' ${indexInArrGoiThauNguonVon >= 0 ? "" : "disabled"} onkeyup=\'ValidateNumberKeyUp(this);\' onkeypress=\'return ValidateNumberKeyPress(this, event);\' class=\'fGiaTriGoiThau form-control\' style=\'text-align:right\' value=\'${indexInArrGoiThauNguonVon >= 0 ? (usingArrGoiThauNguonVon ? FormatNumber(arrNguonVon[indexInArrGoiThauNguonVon].fTienGoiThau) : FormatNumber(arrNguonVon[indexInArrGoiThauNguonVon].fGiaTriGoiThau)) : ""}\'/></td>`);
             sItem.push("<td class='fGiaTriConLai text-right'>" + FormatNumber(getNguonVonForCurrentGoiThau(iIdGoiThau, item)) + "</td>");
             sItem.push("</tr>");
         }
@@ -1011,7 +1018,7 @@ function CheckHangMuc(item) {
         $(rowChiPhi).find(".fGiaTriGoiThau").prop("disabled", true);
     }
     $(rowChiPhi).find(".fGiaTriConLai").text(FormatNumber(fGiaTriPheDuyet - fTong));
-    CheckChiPhi(rowChiPhi.find(".ck_ChiPhi")[0]);
+    //CheckChiPhi(rowChiPhi.find(".ck_ChiPhi")[0]);
 
     itemsChungTuGoiThau[2] = $.map(itemsChungTuGoiThau[2], function (n) { return n.iID_ChiPhiID == $("#iIdChiPhiChoose").val() ? null : n });
     $.each($("#tblHangMucChinh tbody").find(".ck_HangMuc:checkbox:checked"), function (index, child) {

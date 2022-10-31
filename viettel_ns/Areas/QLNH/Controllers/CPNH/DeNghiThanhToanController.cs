@@ -467,7 +467,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
 
         [HttpPost]
         public ActionResult OnModalBaoCao(int type)
-        {
+        {   
+           
             if (type == 1)
             {
                 ViewBag.Title = "GIẤY ĐỀ NGHỊ THANH TOÁN KINH PHÍ TỪ NGUỒN DỰ TRỮ NGOẠI HỐI (CHI NGOẠI TỆ)";
@@ -490,20 +491,22 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
             }
 
             ViewBag.lstNSPhongBan = _qlnhService.GetAllNSPhongBan().ToSelectList("iID_MaPhongBan", "sMoTa");
-            return PartialView("_viewbaocao");
+            ViewBag.Type = type;
+            return PartialView("_viewbaocao",type);
         }
 
         [ValidateInput(false)]
-        public ActionResult ExportGiayDeNghiThanhToan(Guid? idThanhtoan, Guid? idPhongBan, string sNoiDung, int dvt = 1, int type = 1, string ext = "pdf")
+        public ActionResult ExportGiayDeNghiThanhToan(Guid? idThanhtoan, Guid? idPhongBan, string sNoiDung, string idDonVi, int dvt = 1, int type = 1, string ext = "pdf")
         {
             sNoiDung = HttpUtility.UrlDecode(sNoiDung);
-            ExcelFile xls = FileGiayDeNghiThanhToan(idThanhtoan, idPhongBan, sNoiDung, dvt, type);
+            idDonVi = HttpUtility.UrlDecode(idDonVi);
+            ExcelFile xls = FileGiayDeNghiThanhToan(idThanhtoan, idPhongBan, sNoiDung, idDonVi, dvt, type);
             string sFileName = "Giấy đề nghị thanh toán";
             sFileName = string.Format("{0}.{1}", sFileName, ext);
             return Print(xls, ext, sFileName);
         }
 
-        public ExcelFile FileGiayDeNghiThanhToan(Guid? idThanhtoan, Guid? idPhongBan, string sNoiDung = "", int dvt = 1, int type = 1)
+        public ExcelFile FileGiayDeNghiThanhToan(Guid? idThanhtoan, Guid? idPhongBan, string sNoiDung = "",string idDonVi = "" , int dvt = 1, int type = 1)
         {
             XlsFile Result = new XlsFile(true);
             string sTiTle = "";
@@ -578,6 +581,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
             fr.SetValue("fTongCTPheDuyetCapKyNay_VND", thanhtoan.fTongCTPheDuyetCapKyNay_VND);
             fr.SetValue("sTiTle", sTiTle);
             fr.SetValue("sNoiDung", sNoiDung);
+            fr.SetValue("idDonVi", idDonVi);
             fr.SetValue("fLuyKeVND", fLuyKeVND);
             fr.SetValue("fLuyKeUSD", fLuyKeUSD);
             fr.SetValue("dvt", dvt);
@@ -595,17 +599,19 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
         }
 
         [ValidateInput(false)]
-        public ActionResult ExportThongBaoChiNganSach(Guid? idPhongBan, int nam, int thang = 1, int quy = 1, string ext = "pdf", string lstIdThanhToan = "", string sNoiDung = "", string sCanCu = "", int dvt = 1)
+        public ActionResult ExportThongBaoChiNganSach(Guid? idPhongBan, int nam, int thang = 1, int quy = 1, string ext = "pdf", string lstIdThanhToan = "", string sNoiDung = "", string idDonVi = "", string idDonViCapDuoi = "", string sCanCu = "", int dvt = 1)
         {
             sNoiDung = HttpUtility.UrlDecode(sNoiDung);
+            idDonVi = HttpUtility.UrlDecode(idDonVi);
+            idDonViCapDuoi = HttpUtility.UrlDecode(idDonViCapDuoi);
             sCanCu = HttpUtility.UrlDecode(sCanCu);
-            ExcelFile xls = FileThongBaoChiNganSach(idPhongBan, nam, thang, quy, lstIdThanhToan, sNoiDung, sCanCu, dvt);
+            ExcelFile xls = FileThongBaoChiNganSach(idPhongBan, nam, thang, quy, lstIdThanhToan, sNoiDung, idDonVi, idDonViCapDuoi, sCanCu, dvt);
             string sFileName = "Giấy đề nghị thanh toán";
             sFileName = string.Format("{0}.{1}", sFileName, ext);
             return Print(xls, ext, sFileName);
         }
 
-        public ExcelFile FileThongBaoChiNganSach(Guid? idPhongBan, int? nam, int? thang, int? quy, string lstIdThanhToan, string sNoiDung, string sCanCu, int dvt)
+        public ExcelFile FileThongBaoChiNganSach(Guid? idPhongBan, int? nam, int? thang, int? quy, string lstIdThanhToan, string sNoiDung,string idDonVi,string idDonViCapDuoi, string sCanCu, int dvt)
         {
             XlsFile Result = new XlsFile(true);
             FlexCelReport fr = new FlexCelReport();
@@ -643,6 +649,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
             fr.SetValue("sPhongBan", phongban.sMoTa);
             fr.SetValue("sCanCu", sCanCu);
             fr.SetValue("sNoiDung", sNoiDung);
+            fr.SetValue("idDonVi", idDonVi);
+            fr.SetValue("idDonViCapDuoi", idDonViCapDuoi);
             fr.SetValue("dvt", dvt);
 
             fr.UseChuKy(Username)
@@ -652,16 +660,18 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
         }
 
         [ValidateInput(false)]
-        public ActionResult ExportThongBaoCapKinhPhi(string lstIdThanhToan, string tungay, string denngay, string sNoiDung, Guid? idquanly, int dvt = 1, string ext = "pdf", int type = 4)
+        public ActionResult ExportThongBaoCapKinhPhi(string lstIdThanhToan, string tungay, string denngay, string sNoiDung,string idDonVi,string idDonViCapDuoi, Guid? idquanly, int dvt = 1, string ext = "pdf", int type = 4)
         {
             sNoiDung = HttpUtility.UrlDecode(sNoiDung);
-            ExcelFile xls = FileThongBaoCapKinhPhi(lstIdThanhToan, tungay, denngay, sNoiDung, idquanly, dvt, type);
+            idDonVi = HttpUtility.UrlDecode(idDonVi);
+            idDonViCapDuoi = HttpUtility.UrlDecode(idDonViCapDuoi);
+            ExcelFile xls = FileThongBaoCapKinhPhi(lstIdThanhToan, tungay, denngay, sNoiDung,idDonVi, idDonViCapDuoi, idquanly, dvt, type);
             string sFileName = "Thông báo cấp kinh phí bằng ngoại tệ";
             sFileName = string.Format("{0}.{1}", sFileName, ext);
             return Print(xls, ext, sFileName);
         }
 
-        public ExcelFile FileThongBaoCapKinhPhi(string lstIdThanhToan, string tungay, string denngay, string sNoiDung, Guid? idquanly, int dvt = 1, int type = 4)
+        public ExcelFile FileThongBaoCapKinhPhi(string lstIdThanhToan, string tungay, string denngay, string sNoiDung, string idDonVi, string idDonViCapDuoi, Guid? idquanly, int dvt = 1, int type = 4)
         {
             XlsFile Result = new XlsFile(true);
             FlexCelReport fr = new FlexCelReport();
@@ -713,7 +723,9 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
             fr.SetValue("tungay", tungay);
             fr.SetValue("sPhongBan", phongban.sMoTa);
             fr.SetValue("denngay", denngay);
+            fr.SetValue("idDonViCapDuoi", idDonViCapDuoi);
             fr.SetValue("sNoiDung", sNoiDung);
+            fr.SetValue("idDonVi", idDonVi);
             fr.SetValue("dvt", dvt);
             fr.SetValue("fTongUSD", fTongUSD);
             fr.SetValue("fTongVND", fTongVND);

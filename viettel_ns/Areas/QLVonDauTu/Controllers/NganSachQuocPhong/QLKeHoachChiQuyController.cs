@@ -531,6 +531,18 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 }
             }
 
+            var dataKinhPhi = GetKinhPhi((int)objNhuCauChi.iNamKeHoach, Convert.ToString( objNhuCauChi.iID_DonViQuanLyID), (int)objNhuCauChi.iID_NguonVonID, (int)objNhuCauChi.iQuy);
+
+            string tempQuyTruocGiaiNgan = String.Format("{0:0,0}", dataKinhPhi.fQuyTruocChuaGiaiNgan);
+            string tempQuyNayDuocCap = String.Format("{0:0,0}", dataKinhPhi.fQuyNayDuocCap);
+            string tempGiaiNganQuyNay = String.Format("{0:0,0}", dataKinhPhi.fGiaiNganQuyNay);
+            string tempChuaGiaiNganChuyenQuySau = String.Format("{0:0,0}", dataKinhPhi.fChuaGiaiNganChuyenQuySau);
+
+            if (tempQuyTruocGiaiNgan == "00") { tempQuyTruocGiaiNgan = "0"; }
+            if (tempQuyNayDuocCap == "00") { tempQuyNayDuocCap = "0"; }
+            if (tempGiaiNganQuyNay == "00") { tempGiaiNganQuyNay = "0"; }
+            if (tempChuaGiaiNganChuyenQuySau == "00") { tempChuaGiaiNganChuyenQuySau = "0"; }
+
 
             XlsFile Result = new XlsFile(true);
             Result.Open(Server.MapPath(sFilePath));
@@ -541,6 +553,11 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             fr.SetValue("iNam", objNhuCauChi.iNamKeHoach);
             fr.SetValue("sTenNguonVon", objNhuCauChi.sNguonVon);
             fr.SetValue("sNgayThangNam", string.Format("Ngày {0} tháng {1} năm {2}", DateTime.Now.ToString("dd"), DateTime.Now.ToString("MM"), DateTime.Now.ToString("yyyy")));
+            fr.SetValue("soKinhPhi1", tempQuyTruocGiaiNgan);
+            fr.SetValue("soKinhPhi2", tempQuyNayDuocCap);
+            fr.SetValue("soKinhPhi3", tempGiaiNganQuyNay);
+            fr.SetValue("soKinhPhi4", tempChuaGiaiNganChuyenQuySau);
+
             fr.AddTable<NcNhuCauChi_ChiTiet>("Items", lstNhuCauChiChiTiet);
             fr.UseChuKy(Username)
                 .UseChuKyForController(sControlName)

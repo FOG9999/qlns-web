@@ -82,34 +82,19 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             return PartialView("_list", vm);
         }
 
-        public ActionResult ExportExcelBaoCao(string ext = "xls", int dvt = 1, int to = 1, int? iQuyList = null, int? iNam = null, Guid? iDonvi = null)
+        public ActionResult ExportExcelBaoCao(string ext = "xls", int dvt = 1, int to = 1, int? iQuyList = null, int? iNam = null, Guid? iDonvi = null, string tenBaoCao = null, string dvCapTren = null, string dvCapDuoi = null)
         {
-            //if (Request.QueryString["dTuNgay"].ToString() + "" == "")
-            //{
-            //    dTuNgay = null;
-            //}
-            //else
-            //{
-            //    dTuNgay = Convert.ToDateTime(Request.QueryString["dTuNgay"]);
-            //}
-            //if (Request.QueryString["dDenNgay"].ToString() + "" == "")
-            //{
-            //    dDenNgay = null;
-            //}
-            //else
-            //{
-            //    dDenNgay = Convert.ToDateTime(Request.QueryString["dDenNgay"]);
-            //}
+
             NS_DonVi lstDonViQuanLy = _cpnhService.GetDonviListByYear(PhienLamViec.NamLamViec).ToList().Where(x => x.iID_Ma == iDonvi).FirstOrDefault();
             var DonVi = lstDonViQuanLy != null ? lstDonViQuanLy.sTen + " - " + lstDonViQuanLy.sMoTa : "";
             string fileName = string.Format("{0}.{1}", "BaoCaoKinhPhiDuocCapTheoDonVi", ext);
             List<CPNHThucHienNganSach_Model> list = _cpnhService.getListKinhPhiDuocCapTheoDonViModels(iQuyList, iNam, iDonvi).ToList();
             ExcelFile xls = null;
-            xls = TaoFileBaoCao1(dvt, to, list, iQuyList, iNam, DonVi);
+            xls = TaoFileBaoCao1(dvt, to, list, iQuyList, iNam, DonVi, tenBaoCao, dvCapTren, dvCapDuoi);
             return Print(xls, ext, fileName);
         }
 
-        public ExcelFile TaoFileBaoCao1(int dvt = 1, int to = 1 , List<CPNHThucHienNganSach_Model> list = null , int? iQuyList = null, int? iNam = null, string DonVi = null)
+        public ExcelFile TaoFileBaoCao1(int dvt = 1, int to = 1 , List<CPNHThucHienNganSach_Model> list = null , int? iQuyList = null, int? iNam = null, string DonVi = null, string tenBaoCao = null, string dvCapTren = null, string dvCapDuoi = null)
         {
             XlsFile Result = new XlsFile(true);
             Result.Open(Server.MapPath(sFilePathBaoCao1));
@@ -127,7 +112,10 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                 iNam = 0,
                 DonVi = DonVi,
                 TuNgay = iQuyList,
-                DenNgay = iNam
+                DenNgay = iNam,
+                tenBaoCao = tenBaoCao,
+                dvCapTren = dvCapTren,
+                dvCapDuoi = dvCapDuoi
             });
             fr.UseChuKy(Username)
                 .UseChuKyForController(sControlName)

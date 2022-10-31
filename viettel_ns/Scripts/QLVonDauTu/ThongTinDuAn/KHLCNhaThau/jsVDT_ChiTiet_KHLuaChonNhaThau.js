@@ -234,7 +234,7 @@ function DisplayNguonVonChiPhiModal(iID_DuToanID, idDisplayNguonVon, idDisplayCh
 
     // update gia tri goi thau
     arrNguonVonModal.forEach(function (nv) {
-        var objGoiThauNguonVon = arrGoiThauNguonVon.find(function (x) { return x.iID_DuToanID == iID_DuToanID && x.iID_GoiThauID == iID_GoiThauID_select && x.iID_NguonVonID == nv.iID_NguonVonID });
+        var objGoiThauNguonVon = arrGoiThauNguonVon.find(function (x) { return x.iID_GoiThauID == iID_GoiThauID_select && x.iID_NguonVonID == nv.iID_NguonVonID });
         if (objGoiThauNguonVon != undefined) {
             nv.fTienGoiThau = objGoiThauNguonVon.fTienGoiThau;
             nv.bChecked = 1
@@ -333,21 +333,30 @@ function EventCheckboxDuToan() {
 var iIDChiPhiDetail = "";
 function ViewDetail(iidChiPhi) {
     iIDChiPhiDetail = iidChiPhi;
-    var objDuToan = arrDuToan.find(function (x) { return x.iID_DuToanID == iID_DuToanID_select });
+    var objDuToan;
+    if (selectedLoaiChungTu == 1) {
+        objDuToan = arrDuToan.find(function (x) { return x.iID_DuToanID == iID_DuToanID_select });
+    }
+    else if (selectedLoaiChungTu == 2) {
+        objDuToan = arrDuToan.find(function (x) { return x.iID_QDDauTuID == iID_DuToanID_select });
+    }
+    else {
+        objDuToan = arrDuToan.find(function (x) { return x.iID_ChuTruongDauTuID == iID_DuToanID_select });
+    }
+    
     if (objDuToan != undefined) {
-        var arrHangMucDisplay = objDuToan.ListHangMuc.filter(function (x) { return x.iID_ChiPhiID == iidChiPhi });
+        var arrHangMucDisplay = objDuToan.ListHangMuc.filter(function (x) { return x.iID_DuAn_ChiPhi == iidChiPhi });
 
         arrHangMucDisplay.forEach(function (hm) {
             var objGoiThauHangMuc = arrGoiThauHangMuc.find(function (x) {
-                return x.iID_GoiThauID == iID_GoiThauID_select && x.iID_HangMucID == hm.Id
-                    && x.iID_DuToanID == iID_DuToanID_select && x.iID_ChiPhiID == iidChiPhi
+                return x.iID_GoiThauID == iID_GoiThauID_select && x.iID_HangMucID == hm.iID_HangMucID
             });
             if (objGoiThauHangMuc != undefined)
                 hm.bChecked = 1;
         })
 
         var columns = [
-            { sField: "Id", bKey: true },
+            { sField: "iID_HangMucID", bKey: true },
             { sField: "iID_ParentID", bParentKey: true },
             { sTitle: "", sField: "bChecked", sType: "checkbox", sTextAlign: "center", iWidth: "5%" },
             { sTitle: "Hạng mục", sField: "sTenHangMuc", iWidth: "70%", sTextAlign: "left", bHaveIcon: 0, iMain: 1 },
@@ -450,8 +459,8 @@ function VeDanhSachGoiThau() {
         dongMoi += "<td class='r_fGiaGoiThau sotien' align='right'>" + x.fTienTrungThau + "</td>";
         dongMoi += "<td class='r_HinhThucLuaChonNhaThau'>" + x.sHinhThucChonNhaThau + "</td>";
         dongMoi += "<td class='r_PhuongThucChonNhaThau'>" + x.sPhuongThucDauThau + "</td>";
+        dongMoi += "<td class='r_ThoiGianBatDau'>" + x.sThoiGianTCLCNT + "</td>";
         dongMoi += "<td class='r_LoaiHopDong'>" + x.sHinhThucHopDong + "</td>";
-        dongMoi += "<td>" + (x.iThoiGianThucHien ? x.iThoiGianThucHien : ' ') + "</td>";
         dongMoi += "<td class='r_iThoiGianThucHien sotien' align='right'>" + (x.iThoiGianThucHien ? x.iThoiGianThucHien : ' ') + "</td>";
 
         html += dongMoi;
@@ -473,7 +482,7 @@ function SuKienDbClickDongTable() {
         var rDuToanID = selectedDuToan;
 
         iID_GoiThauID_select = rGoiThauID;
-        iID_DuToanID_select = rDuToanID;
+        iID_DuToanID_select = selectedDuToan;
 
         DisplayNguonVonChiPhiModal(rDuToanID, TBL_DANH_SACH_NGUON_VON_MODAL, TBL_DANH_SACH_CHI_PHI_MODAL);
 

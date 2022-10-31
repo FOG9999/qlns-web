@@ -201,7 +201,7 @@ namespace Viettel.Services
         /// <param name="sMaDonViQL">Mã đơn vị</param>
         /// <returns></returns>
         IEnumerable<VDT_DA_DuToan_ViewModel> GetAllVDTPheDuyetTKTCVaTDT(ref PagingInfo _paging, string sUserLogin, int iNamLamViec, byte bIsTongDuToan, string sTenDuAn = "", string sSoQuyetDinh = "", DateTime? dPheDuyetTuNgay = null,
-            DateTime? dPheDuyetDenNgay = null, Guid? sMaDonViQL = null);
+            DateTime? dPheDuyetDenNgay = null, Guid? sMaDonViQL = null,string sTenDuToan = "");
 
         /// <summary>
         /// Lấy danh sách dự án theo đơn vị và loại quyết định
@@ -1355,7 +1355,7 @@ namespace Viettel.Services
         List<VDT_DA_GoiThau_HangMuc> GetListGoiThauHangMucByGoiThauID(Guid iID_GoiThauID);
         IEnumerable<VDT_DA_DuAn> LayDuAnByIdMaDonViQuanLY(Guid iID_DonViQuanLyID);
         IEnumerable<VDT_DA_DuAn> LayDuAnTaoMoiKHLCNT(string iIdMaDonViQuanLy, int iLoaiChungTu);
-        IEnumerable<VDTKHLCNhaThauChungTuViewModel> GetChungTuByDuAnAndLoaiChungTu(Guid iIdDuAnId, int iLoaiChungTu);
+        IEnumerable<VDTKHLCNhaThauChungTuViewModel> GetChungTuByDuAnAndLoaiChungTu(Guid iIdDuAnId, int iLoaiChungTu, string iID_KHLCNT);
         List<VDTKHLCNTDetailViewModel> GetChungTuDetailByListChungTuId(List<Guid> lstChungTuId, int iLoaiChungTu);
         List<VDTKHLCNTDetailViewModel> GetChungTuDetailByKHLCNTId(Guid iId);
         List<VDT_DM_DuAn_ChiPhi> GetListDuAnChiPhis(Guid? iId_ChiPhiID);
@@ -2617,7 +2617,7 @@ namespace Viettel.Services
 
         #region Thông tin dự án - QL phê duyệt TKTC & TDT
         public IEnumerable<VDT_DA_DuToan_ViewModel> GetAllVDTPheDuyetTKTCVaTDT(ref PagingInfo _paging, string sUserLogin, int iNamLamViec, byte bIsTongDuToan, string sTenDuAn = "", string sSoQuyetDinh = "", DateTime? dPheDuyetTuNgay = null,
-            DateTime? dPheDuyetDenNgay = null, Guid? sMaDonViQL = null)
+            DateTime? dPheDuyetDenNgay = null, Guid? sMaDonViQL = null,string sTenDuToan ="")
         {
             using (var conn = _connectionFactory.GetConnection())
             {
@@ -2630,6 +2630,7 @@ namespace Viettel.Services
                 lstParam.Add("dPheDuyetDenNgay", dPheDuyetDenNgay);
                 lstParam.Add("sMaDonViQL", sMaDonViQL);
                 lstParam.Add("bIsTongDuToan", bIsTongDuToan);
+                lstParam.Add("sTenDuToan", sTenDuToan);
                 lstParam.Add("CurrentPage", _paging.CurrentPage);
                 lstParam.Add("ItemsPerPage", _paging.ItemsPerPage);
                 lstParam.Add("iToTalItem", dbType: DbType.Int32, direction: ParameterDirection.Output);
@@ -2825,7 +2826,7 @@ namespace Viettel.Services
         {
             try
             {
-                var sql = FileHelpers.GetSqlQuery("vdt_get_pheduyet_tktcvatdt_byid.sql");
+                var sql = FileHelpers.GetSqlQuery("vdt_get_pheduyet_tktcvatdt_by_id.sql");
                 using (var conn = _connectionFactory.GetConnection())
                 {
                     var item = conn.QueryFirstOrDefault<VDT_DA_DuToan_ViewModel>(sql,
@@ -15201,9 +15202,10 @@ namespace Viettel.Services
             }
         }
 
-        public IEnumerable<VDTKHLCNhaThauChungTuViewModel> GetChungTuByDuAnAndLoaiChungTu(Guid iIdDuAnId, int iLoaiChungTu)
+        public IEnumerable<VDTKHLCNhaThauChungTuViewModel> GetChungTuByDuAnAndLoaiChungTu(Guid iIdDuAnId, int iLoaiChungTu, string iID_KHLCNT)
         {
             var sql = FileHelpers.GetSqlQuery("vdt_khlcnt_get_chungtu_by_duan.sql");
+            Guid idKHLCNT = iID_KHLCNT == "" ? Guid.Empty : Guid.Parse(iID_KHLCNT);
 
             using (var conn = _connectionFactory.GetConnection())
             {
@@ -15211,7 +15213,8 @@ namespace Viettel.Services
                     param: new
                     {
                         iIdDuAnId,
-                        iLoaiChungTu
+                        iLoaiChungTu,
+                        idKHLCNT
                     },
                     commandType: System.Data.CommandType.Text);
             }

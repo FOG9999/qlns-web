@@ -463,6 +463,12 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             }
         }
 
+        public JsonResult CheckTrungSoHopDong(string val)
+        {
+            bool status = _qLVonDauTuService.KiemTraTrung("NH_DA_HopDong", "sSoHopDong", val);
+            return Json(status, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public JsonResult Xoa(string id)
         {

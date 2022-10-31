@@ -366,7 +366,7 @@ function RefreshImport() {
 }
 
 function LoadDataExcel() {
-    if (!daFileImport()) {
+    if (!ValidateFileImport()) {
         return false;
     }
 

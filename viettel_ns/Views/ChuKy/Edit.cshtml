@@ -2,7 +2,6 @@
 @{
     ViewBag.Title = L("NS.ChuKy.Edit");
     int popup = ViewBag.IsPopup;
-
     if (popup == 1)
     {
         Layout = "~/Views/Shared/_LayoutEmpty.cshtml";
@@ -11,6 +10,7 @@
 <div class="container">
     <div class="panel panel-danger">
         <input type="hidden" id="isClosed" value="@ViewBag.IsClosed" />
+        <input type="hidden" id="isQLThongTriThanhToan" value="@ViewBag.isQLThongTriThanhToan" />
         <div class="panel-heading">
             <i class="fa fa-edit"></i>
             @ViewBag.Title.ToUpper()
@@ -88,8 +88,8 @@
                         <span class="text-muted">(Mặc định: Trưởng phòng B3)</span>
                     </div>
                 </div>
-
-                <div class="form-group">
+            
+                <div class="form-group grChuKy2">
                     <div class="col-sm-4">
                     </div>
                     <div class="col-sm-4">
@@ -138,6 +138,12 @@
         let isClosed = $("#isClosed").val();
         if (isClosed == '1') {
             window.close();
+        };
+
+        var isQLThongTriThanhToan = $("#isQLThongTriThanhToan").val();
+        if (isQLThongTriThanhToan == "true") {
+            $(".grChuKy2").css("display", "none");
         }
+
     </script>
 }

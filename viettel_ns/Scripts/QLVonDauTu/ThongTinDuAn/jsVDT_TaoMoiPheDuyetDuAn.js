@@ -20,7 +20,9 @@ $(document).ready(function () {
     LoadDataComboBoxNguonVon();
     EventChangeDuAn();
     EventChangeDonViQuanLy();
-
+    $("#modal-listdetailchiphi").on('hidden.bs.modal', function () {
+        arrHangMucTemp = [];
+    })
     Event();
 
 
@@ -301,6 +303,11 @@ function SetListDataChiPhiDefaultAjax(resp) {
 }
 
 function DetailChiPhi(nutDetail) {
+    if (arrHasValue(arrHangMucSave) && !arrHasValue(arrHangMucTemp)) {
+        console.log(arrHangMucSave);
+        console.log(arrHangMucTemp);
+        arrHangMucTemp = arrHangMucSave;
+    }
     var dongChiPhiHienTai = $(nutDetail).closest("tr");
     var giaTriChiPhi = $(dongChiPhiHienTai).find(".txtGiaTriChiPhi").val();
     var tenChiPhi = $(dongChiPhiHienTai).find(".r_TenChiPhi").val();
@@ -350,7 +357,11 @@ function LoadViewHangMuc(data) {
     for (var i = 0; i < data.length; i++) {
         var dongMoi = "";
         if (data[i].isDelete == true) {
-            dongMoi += "<tr style='cursor: pointer;' class='parent error-row' data-xoa='1' data-id='" + data[i].id + "' data-iidduanchiphi='" + data[i].iID_DuAn_ChiPhi + "'>";
+            dongMoi += "<tr style='cursor: pointer;' class='";
+            if (data[i].iID_ParentID == null) {
+                dongMoi += " parent ";
+            }
+            dongMoi += "error-row' data-xoa='1' data-id='" + data[i].id + "' data-iidduanchiphi='" + data[i].iID_DuAn_ChiPhi + "'>";
             dongMoi += "<td class='r_STT width-100'>" + data[i].sMaOrder + "</td>";
             dongMoi += "<td class='r_sTenHangMuc'><input type='text'  onblur='UpdateHangMuc(this)' class='form-control txtTenHangMuc' value='" + data[i].sTenHangMuc + "'/></td>"
             dongMoi += "<td><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh(data[i].iID_LoaiCongTrinhID) + "</div></td>";
@@ -366,7 +377,11 @@ function LoadViewHangMuc(data) {
 
             dongMoi += "</td></tr>";
         } else {
-            dongMoi += "<tr style='cursor: pointer;' class='parent' data-id='" + data[i].id + "' data-iidduanchiphi='" + data[i].iID_DuAn_ChiPhi + "'>";
+            dongMoi += "<tr style='cursor: pointer;'";
+            if (data[i].iID_ParentID == null) {
+                dongMoi += " class='parent' ";
+            }
+            dongMoi += "data-id='" + data[i].id + "' data-iidduanchiphi='" + data[i].iID_DuAn_ChiPhi + "'>";
             dongMoi += "<td class='r_STT width-100'>" + data[i].sMaOrder + "</td><input type='hidden' class='r_HangMucID' value='" + data[i].iID_HangMucID + "'/>";
             dongMoi += "<td class='r_sTenHangMuc'><input type='text' onblur='UpdateHangMuc(this)' class='form-control txtTenHangMuc' value='" + data[i].sTenHangMuc + "'/></td>"
             dongMoi += "<td><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh(data[i].iID_LoaiCongTrinhID) + "</div></td>";
@@ -394,7 +409,8 @@ function CalculateTienConLaiHangMuc() {
     //var result = giaTriChiPhi;
     var result = 0;
 
-    var arrHMParent = arrHangMucSave.filter(function (x) { return (x.iID_ParentID == "" || x.iID_ParentID == null) && x.iID_DuAn_ChiPhi == chiPhiDuAnId });
+    //var arrHMParent = arrHangMucSave.filter(function (x) { return (x.iID_ParentID == "" || x.iID_ParentID == null) && x.iID_DuAn_ChiPhi == chiPhiDuAnId });
+    var arrHMParent = arrHangMucTemp.filter(function (x) { return (x.iID_ParentID == "" || x.iID_ParentID == null) && x.iID_DuAn_ChiPhi == chiPhiDuAnId });
     if (arrHasValue(arrHMParent)) {
         arrHMParent.forEach(x => {
             if (x.fTienPheDuyet != null || x.fTienPheDuyet != "") {
@@ -449,7 +465,6 @@ function UpdateHangMuc(nutCreateHangMuc) {
     if (objHangMuc.sTenHangMuc) {
         arrHangMucTemp.push(objHangMuc);
     }
-    console.log(arrHangMucTemp);
     CalculateDataHangMucByChiPhi(objHangMuc.iID_QDDauTu_DM_HangMucID);
     CalculateTienConLaiHangMuc();
 
@@ -512,11 +527,11 @@ function GetHangMucTheoChuTruongDauTu(id) {
             }
         }
     });
-    if (arrHasValue(arrHangMucTemp)) {
-        arrHangMucTemp.forEach(x => {
-            arrHangMucSave.push(x);
-        })
-    }
+    //if (arrHasValue(arrHangMucTemp)) {
+    //    arrHangMucTemp.forEach(x => {
+    //        arrHangMucSave.push(x);
+    //    })
+    //}
 }
 
 function LoadDataComboBoxLoaiCongTrinh() {
@@ -597,7 +612,6 @@ function ThemMoiHangMuc() {
         sTenHangMuc: "",
         sMaOrder: objInfoDongMoi.sMaOrder
     });
-
     ShowHideButtonChiPhi();
 
     $(".txtTenHangMuc").keyup(function (event) {
@@ -613,7 +627,9 @@ function ThemMoiHangMucCon(nutThem) {
     var idHangMucHienTai = $(dongHienTai).attr("data-id");
     //var objHangMucHienTai = arrHangMucSave.filter(x => x.id == idHangMucHienTai)[0];
     var objHangMucHienTai = arrHangMucTemp.filter(x => x.id == idHangMucHienTai)[0];
-
+    if (!objHangMucHienTai) {
+        console.log(arrHangMucTemp);
+    }
     var objInfoDongMoi = TaoMaOrderHangMucMoi(objHangMucHienTai.iID_QDDauTu_DM_HangMucID);
     var hangMucId = uuidv4();
     var iIdDuAnChiPhi = $("#txtIIdDuAnChiPhi").val();
@@ -717,7 +733,6 @@ function TaoMaOrderHangMucMoi(parentId) {
             indexRow = arrHangMucOrder.findLastIndex(x => x.sMaOrder.startsWith(sMaOrderLast));
         }
     }
-    console.log({ sMaOrder, indexRow });
     return {
         sMaOrder: sMaOrder,
         indexRow: indexRow
@@ -725,18 +740,19 @@ function TaoMaOrderHangMucMoi(parentId) {
 }
 
 function CalculateDataHangMucByChiPhi(itemId) {
-    var objItem = arrHangMucSave.find(x => x.iID_QDDauTu_DM_HangMucID == itemId);
+    var objItem = arrHangMucTemp.find(x => x.iID_QDDauTu_DM_HangMucID == itemId);
     if (objItem == undefined || objItem.iID_ParentID == "" || objItem.iID_ParentID == null) {
         return;
     }
-    var objParentItem = arrHangMucSave.find(x => x.iID_QDDauTu_DM_HangMucID == objItem.iID_ParentID);
-    var arrChildSameParent = arrHangMucSave.filter(function (x) { return x.iID_ParentID == objItem.iID_ParentID && x.iID_ParentID != "" && (x.isDelete == undefined || x.isDelete == false) });
+    var objParentItem = arrHangMucTemp.find(x => x.iID_QDDauTu_DM_HangMucID == objItem.iID_ParentID);
+    var arrChildSameParent = arrHangMucTemp.filter(function (x) { return x.iID_ParentID == objItem.iID_ParentID && x.iID_ParentID != "" && (x.isDelete == undefined || x.isDelete == false) });
     if (arrHasValue(arrChildSameParent)) {
         CalculateTotalParentHangMuc(objParentItem, arrChildSameParent);
     }
 
     if (objParentItem.iID_ParentID != "" && objParentItem.iID_ParentID != null) {
-        CalculateDataHangMucByChiPhi(objParentItem.iID_QDDauTu_DM_HangMucID, arrHangMuc);
+        //CalculateDataHangMucByChiPhi(objParentItem.iID_QDDauTu_DM_HangMucID, arrHangMuc);
+        CalculateDataHangMucByChiPhi(objParentItem.iID_QDDauTu_DM_HangMucID);
     }
 }
 
@@ -749,8 +765,8 @@ function CalculateTotalParentHangMuc(objParentItem, arrChild) {
     $("#tblHangMucChinh [data-id='" + objParentItem.id + "']").find('.txtHanMucDauTu').val(FormatNumber(result));
     objParentItem.fTienPheDuyet = result;
     objParentItem.iID_DuAn_ChiPhi = arrChild[0].iID_DuAn_ChiPhi;
-    arrHangMucSave = arrHangMucSave.filter(x => x.id != objParentItem.id);
-    arrHangMucSave.push(objParentItem);
+    arrHangMucTemp = arrHangMucTemp.filter(x => x.id != objParentItem.id);
+    arrHangMucTemp.push(objParentItem);
 }
 
 

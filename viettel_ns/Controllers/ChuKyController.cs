@@ -61,7 +61,7 @@ namespace VIETTEL.Controllers
                 };
             }
             var vm = entity.MapTo<ChuKyViewModel>();
-
+            ViewBag.isQLThongTriThanhToan = c == "QLThongTriThanhToan" ? "true" : "false";
             setViewBag(popup);
             return View(vm);
         }

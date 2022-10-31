@@ -1,11 +1,16 @@
 ﻿@using Viettel.Domain.DomainModel
-@using Viettel.Models.QLNH.QuyetToan
+@using Viettel.Models.CPNH
 
 <div class="modal-body">
     <div class="form-group row">
         <input type="hidden" id="txtNamKeHoach" value="@ViewBag.iNamKeHoach" />
-        <input type="hidden" id="txtIdDonVi" value="@ViewBag.iIdDonVi" />
-        <input type="hidden" id="txtSTenDonVi" value="@ViewBag.sTenDonVi" />
+        <input type="hidden" id="txtPrintsTenDonVi" value="@ViewBag.sTenDonVi" />
+        <input type="hidden" id="txtPrinttabTable" value="@ViewBag.tabTable" />
+        <input type="hidden" id="txtPrintiTuNam" value="@ViewBag.iTuNam" />
+        <input type="hidden" id="txtPrintiDenNam" value="@ViewBag.iDenNam" />
+        <input type="hidden" id="txtPrintiDonvi" value="@ViewBag.iDonvi" />
+        <input type="hidden" id="txtPrintiQuyList" value="@ViewBag.iQuyList" />
+        <input type="hidden" id="txtPrintiNam" value="@ViewBag.iNam" />
 
         <div class="col-sm-12">
             <label for="txtTieuDe1">Tiêu đề 1</label>
@@ -80,34 +85,48 @@
             </div>
         </div>
     </div>
-
-</div>
-@Html.Partial("_ui_chuky")
-<div class="modal-footer">
-    <div class="text-center">
-        <button class="btn-mvc" id="btnChuKy"><i class="fa fa-file-excel"></i>Sửa chữ ký</button>
-        <button class="btn-mvc btn-mvc-green btn-print" onclick="printBaoCao('pdf')"><span>Xuất file PDF</span></button>
-        <button class="btn-mvc btn-mvc-green btn-print" onclick="printBaoCao('xlsx')"><span>Xuất file Excel</span></button>
-        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Đóng</span></button>
-    </div>
-</div>
-<input type="hidden" id="urlExportBCChiTiet" value="@Url.Action("ExportFile", "BaoCaoSoChuyenNamSau")" />
-<style>
-    .ml-0 {
-        margin-left: 0 !important;
+    @if (ViewBag.tabTable == 2)
+    {
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <div>
+                    <input type="checkbox" id="chkInToMot" autocomplete="off" /> <label for="chkInMotTo">  In tờ một</label>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div>
+                    <input type="checkbox" id="chkInToHai" autocomplete="off" /> <label for="chkInMotTo">  In tờ hai</label>
+                </div>
+            </div>
+        </div>
     }
 
-    .w-100 {
-        width: 100%;
-    }
+            @Html.Partial("_ui_chuky")
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button class="btn-mvc" id="btnChuKy"><i class="fa fa-file-excel"></i>Sửa chữ ký</button>
+                    <button class="btn-mvc btn-mvc-green btn-print" onclick="printBaoCao('pdf')"><span>Xuất file PDF</span></button>
+                    <button class="btn-mvc btn-mvc-green btn-print" onclick="printBaoCao('xlsx')"><span>Xuất file Excel</span></button>
+                    <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Đóng</span></button>
+                </div>
+            </div>
+            <input type="hidden" id="urlExport" value="@Url.Action("ExportExcelBaoCao", "ThucHienNganSach")" />
+            <style>
+                .ml-0 {
+                    margin-left: 0 !important;
+                }
+
+                .w-100 {
+                    width: 100%;
+                }
 
 
 
-    .d-flex {
-        display: flex
-    }
+                .d-flex {
+                    display: flex
+                }
 
-    .justify-content-center {
-        justify-content: center
-    }
-</style>
+                .justify-content-center {
+                    justify-content: center
+                }
+            </style>

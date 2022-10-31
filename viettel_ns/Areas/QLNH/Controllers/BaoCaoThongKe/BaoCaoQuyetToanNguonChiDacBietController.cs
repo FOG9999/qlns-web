@@ -56,15 +56,20 @@ namespace VIETTEL.Areas.QLNH.Controllers.BaoCaoThongKe
             return PartialView("_list", vm);
         }
 
-        public ActionResult ExportQuyetToanNguonChiDacBiet(int? iNamKeHoach, string ext = "xlsx")
+        public ActionResult ExportQuyetToanNguonChiDacBiet(string txtTieuDe1, string txtTieuDe2, string sTenDonViCapTren, string sTenDonViCapDuoi, int txtNamKeHoach, string ext = "xlsx")
         {
-            ExcelFile xls = FileBaoCaoQuyetToanNguonChiDacBiet(iNamKeHoach);
+            txtTieuDe1 = HttpUtility.UrlDecode(txtTieuDe1);
+            txtTieuDe2 = HttpUtility.UrlDecode(txtTieuDe2);
+            sTenDonViCapTren = HttpUtility.UrlDecode(sTenDonViCapTren);
+            sTenDonViCapDuoi = HttpUtility.UrlDecode(sTenDonViCapDuoi);
+
+            ExcelFile xls = FileBaoCaoQuyetToanNguonChiDacBiet(txtTieuDe1, txtTieuDe2, sTenDonViCapTren, sTenDonViCapDuoi, txtNamKeHoach);
             string sFileName = "Báo cáo quyết toán thuộc các nguồn chi đặc biệt";
             sFileName = string.Format("{0}.{1}", sFileName, ext);
             return Print(xls, ext, sFileName);
         }
 
-        private ExcelFile FileBaoCaoQuyetToanNguonChiDacBiet(int? iNamKeHoach)
+        private ExcelFile FileBaoCaoQuyetToanNguonChiDacBiet(string txtTieuDe1, string txtTieuDe2, string sTenDonViCapTren, string sTenDonViCapDuoi, int? iNamKeHoach)
         {
             XlsFile Result = new XlsFile(true);
             string sFilePathBaoCaoQuyetToanNguonChiDacBiet = "/Report_ExcelFrom/QLNH/rpt_QuyetToan_NguonChiDacBiet.xlsx";
@@ -101,9 +106,16 @@ namespace VIETTEL.Areas.QLNH.Controllers.BaoCaoThongKe
             }).ToList();
 
             fr.AddTable<NH_QTND_NguonChiDacBiet_ExportModel>("dt", listExportQTND);
-            fr.SetValue("year", iNamKeHoach.HasValue ? iNamKeHoach.Value.ToString() : string.Empty);
+            fr.SetValue(new
+            {
+                txtTieuDe1 = txtTieuDe1?.ToUpper(),
+                txtTieuDe2 = txtTieuDe2,
+                year = iNamKeHoach?.ToString(),
+                sTenDonViCapTren = sTenDonViCapTren?.ToUpper(),
+                sTenDonViCapDuoi = sTenDonViCapDuoi?.ToUpper()
+            });
 
-            fr.UseForm(this).Run(Result);
+            fr.UseChuKy(Username).UseChuKyForController("BaoCaoQuyetToanNguonChiDacBiet").UseForm(this).Run(Result);
 
             return Result;
         }
@@ -123,6 +135,13 @@ namespace VIETTEL.Areas.QLNH.Controllers.BaoCaoThongKe
                 listNam.Add(namKeHoachOpt);
             }
             return listNam;
+        }
+
+        [HttpPost]
+        public ActionResult GetModalInBaoCao(int slbNamKeHoach)
+        {
+            ViewBag.iNamKeHoach = slbNamKeHoach;
+            return PartialView("_modalReport");
         }
     }
 }

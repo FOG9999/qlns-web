@@ -463,7 +463,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
         }
 
         #region Kế hoạch vốn năm đề xuất chi tiết
-        public ActionResult Detail(Guid id, bool isDieuChinh, bool bIsDetail = false, bool isViewDetail = false)
+        public ActionResult Detail(Guid id, bool isDieuChinh, bool bIsDetail = false)
         {
             VDT_KHV_KeHoachVonNam_DeXuat data = _qLVonDauTuService.GetKeHoachVonNamDeXuatById(id);
             KeHoachVonNamDeXuatChiTietGridViewModel vm = new KeHoachVonNamDeXuatChiTietGridViewModel
@@ -474,8 +474,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             TempData["isDieuChinh"] = isDieuChinh;
             TempData["BIsDetail"] = bIsDetail;
             TempData.Keep("lstDuAnID");
-            ViewBag.BIsDetail = bIsDetail;
-            ViewBag.IsViewDetail = isViewDetail;
+            ViewBag.BIsDetail = bIsDetail ? "true" : "false";
             return View(vm);
         }
 

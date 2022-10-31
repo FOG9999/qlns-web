@@ -26,6 +26,34 @@
                     </div>
                 </div>
             </div>
+            @if (ViewBag.type == 1 || ViewBag.type == 2)
+            {
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <label>Đơn vị cấp trên <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idDonVi" class="form-control" maxlength="100" autocomplete="off" />
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <label>Đơn vị cấp trên <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idDonVi" class="form-control" maxlength="100" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Đơn vị <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idDonViCapDuoi" class="form-control" maxlength="100" autocomplete="off" />
+                        </div>
+                    </div>
+                </div>
+            }
             <div class="form-group row" id="iphong">
                 <div class="col-sm-6 ">
                     <label for="iID_MaPhongBan">Phòng <span class="require">*</span> </label>

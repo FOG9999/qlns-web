@@ -116,9 +116,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         }
 
         [HttpGet]
-        public ActionResult GetListChungTu(Guid iIdDuAnId, int iLoaiChungTu)
+        public ActionResult GetListChungTu(Guid iIdDuAnId, int iLoaiChungTu, string iId_KHLCNhaThau)
         {
-            var data = _iQLVonDauTuService.GetChungTuByDuAnAndLoaiChungTu(iIdDuAnId, iLoaiChungTu);
+            var data = _iQLVonDauTuService.GetChungTuByDuAnAndLoaiChungTu(iIdDuAnId, iLoaiChungTu, iId_KHLCNhaThau);
 
             var phuongThucLuaChonNT = new List<SelectListItem>();
             var hinhThucChonNT = new List<SelectListItem>();

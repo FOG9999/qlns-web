@@ -25,24 +25,26 @@ function formatNumber(n) {
 
 function ChangePage(iCurrentPage = 1) {
     var sTenDuAn = $("#txtDuAn").val();
+    var sTenDuToan = $("#txtDuToan").val();
     var sSoQuyetDinh = $("#txtSoQuyetDinh").val();
     var dPheduyetTuNgay = $("#txtTuNgayPheDuyet").val();
     var dPheduyetDenNgay = $("#txtDenNgayPheDuyet").val();
     var sDonViQL = $("#txtDonViQL").val();
     var bIsTongDuToan = checkTongDuToan;
-    GetListData(sTenDuAn, sSoQuyetDinh, dPheduyetTuNgay, dPheduyetDenNgay, sDonViQL, bIsTongDuToan, iCurrentPage);
+    GetListData(sTenDuAn, sSoQuyetDinh, dPheduyetTuNgay, dPheduyetDenNgay, sDonViQL, bIsTongDuToan, sTenDuToan, iCurrentPage);
 }
 
-function GetListData(sTenDuAn, sSoQuyetDinh, dPheduyetTuNgay, dPheduyetDenNgay, sDonViQL, bIsTongDuToan, iCurrentPage) {
+function GetListData(sTenDuAn, sSoQuyetDinh, dPheduyetTuNgay, dPheduyetDenNgay, sDonViQL, bIsTongDuToan, sTenDuToan, iCurrentPage) {
     _paging.CurrentPage = iCurrentPage;
     $.ajax({
         type: "POST",
         dataType: "html",
         url: sUrlListView,
-        data: { sTenDuAn: sTenDuAn, sSoQuyetDinh: sSoQuyetDinh, dPheduyetTuNgay: dPheduyetTuNgay, dPheduyetDenNgay: dPheduyetDenNgay, sDonViQL: sDonViQL, bIsTongDuToan: bIsTongDuToan, _paging: _paging },
+        data: { sTenDuAn: sTenDuAn, sSoQuyetDinh: sSoQuyetDinh, dPheduyetTuNgay: dPheduyetTuNgay, dPheduyetDenNgay: dPheduyetDenNgay, sDonViQL: sDonViQL, bIsTongDuToan: bIsTongDuToan, sTenDuToan: sTenDuToan, _paging: _paging },
         success: function (data) {
             $("#lstDataView").html(data);
             $("#txtDuAn").val(sTenDuAn);
+            $("#txtDuToan").val(sTenDuToan);
             $("#txtSoQuyetDinh").val(sSoQuyetDinh);
             $("#txtTuNgayPheDuyet").val(dPheduyetTuNgay);
             $("#txtDenNgayPheDuyet").val(dPheduyetDenNgay);

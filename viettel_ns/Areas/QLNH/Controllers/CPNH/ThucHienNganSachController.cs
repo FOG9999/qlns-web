@@ -23,12 +23,48 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
     public class ThucHienNganSachController : FlexcelReportController
     {
         private readonly ICPNHService _cpnhService = CPNHService.Default;
+        private readonly INganSachService _nganSachService = NganSachService.Default;
         private readonly IQLNguonNganSachService _nnsService = QLNguonNganSachService.Default;
         private const string sFilePathBaoCao1 = "/Report_ExcelFrom/QLNH/rpt_ThucHienNganSach.xlsx";
-        private const string sFilePathBaoCao2 = "/Report_ExcelFrom/QLNH/rpt_ThucHienNganSach_GiaiDoan.xlsx";
+        private const string sFilePathBaoCaoTo1 = "/Report_ExcelFrom/QLNH/rpt_ThucHienNganSach_GiaiDoanTo1.xlsx";
+        private const string sFilePathBaoCaoTo2 = "/Report_ExcelFrom/QLNH/rpt_ThucHienNganSach_GiaiDoanTo2.xlsx";
         private int _columnCountBC1 = 7;
         private const string sControlName = "ThucHienNganSach";
 
+        public List<Dropdown_SelectValue> lstDonViVND = new List<Dropdown_SelectValue>()
+            {
+                new Dropdown_SelectValue()
+                {
+                    Value = 1,
+                    Label = "Đồng"
+                },
+                 new Dropdown_SelectValue()
+                {
+                    Value = 1000,
+                    Label = "Nghìn đồng"
+                }, new Dropdown_SelectValue()
+                {
+                    Value = 1000000000,
+                    Label = "Tỉ đồng"
+                }
+            };
+        public List<Dropdown_SelectValue> lstDonViUSD = new List<Dropdown_SelectValue>()
+            {
+                new Dropdown_SelectValue()
+                {
+                    Value = 1,
+                    Label = "USD"
+                },
+                 new Dropdown_SelectValue()
+                {
+                    Value = 1000,
+                    Label = "Nghìn USD"
+                }, new Dropdown_SelectValue()
+                {
+                    Value = 1000000000,
+                    Label = "Tỉ USD"
+                }
+            };
         // GET: QLVonDauTu/QLDMTyGia
         public ActionResult Index()
         {
@@ -105,24 +141,77 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             return PartialView("_list", vm);
         }
 
-        public ActionResult ExportExcelBaoCao(string ext = "xls", int dvt = 1, int to = 1, int tabTable = 1, int iTuNam = 2022, int iDenNam = 2022, Guid? iDonvi = null, int iQuyList = 0, int iNam = 2022)
+        [HttpPost]
+        public ActionResult GetModalInBaoCao(int tabTable = 1, int iTuNam = 2022, int iDenNam = 2022, Guid? iDonvi = null, int iQuyList = 0, int iNam = 2022)
         {
+            lstDonViVND.Insert(0, new Dropdown_SelectValue { Value = 0, Label = "--Chọn đơn vị VND--" });
+            ViewBag.ListDVVND = lstDonViVND;
+
+
+            lstDonViUSD.Insert(0, new Dropdown_SelectValue { Value = 0, Label = "--Chọn đơn vị USD--" });
+            ViewBag.ListDVUSD = lstDonViUSD;
+
+            var donvi = _nganSachService.GetDonViById(PhienLamViec.NamLamViec.ToString(), iDonvi.ToString());
+            ViewBag.sTenDonVi = donvi != null ? iDonvi != Guid.Empty ? donvi.iID_MaDonVi + "-" + donvi.sTen : "Tất cả đơn vị" : string.Empty;
+            ViewBag.tabTable = tabTable;
+            ViewBag.iTuNam = iTuNam;
+            ViewBag.iDenNam = iDenNam;
+            ViewBag.iDonvi = iDonvi;
+            ViewBag.iQuyList = iQuyList;
+            ViewBag.iNam = iNam;
+
+            return PartialView("_modalInBaoCao");
+        }
+        public ActionResult ExportExcelBaoCao(
+            string ext = "xls",
+            int dvt = 1,
+            string txtTieuDe1 = "",
+            string txtTieuDe2 = "",
+            string sTenDonViCapTren = "",
+            string sTenDonViCapDuoi = "",
+            int? slbDonViUSD = 1,
+            int? slbDonViVND = 1,
+            int? iInMotTo = 0,
+            int to = 1, int tabTable = 1,
+            int iTuNam = 2022, int iDenNam = 2022,
+            Guid? iDonvi = null, int iQuyList = 0,
+            int iNam = 2022,
+            int InToHai = 1)
+        {
+            txtTieuDe1 = HttpUtility.UrlDecode(txtTieuDe1);
+            txtTieuDe2 = HttpUtility.UrlDecode(txtTieuDe2);
+            sTenDonViCapTren = HttpUtility.UrlDecode(sTenDonViCapTren);
+            sTenDonViCapDuoi = HttpUtility.UrlDecode(sTenDonViCapDuoi);
+
             string fileName = string.Format("{0}.{1}", "BaoCaoTinhHinhThucHienNganSach", ext);
             List<CPNHThucHienNganSach_Model> list = _cpnhService.getListThucHienNganSachModels(tabTable, iTuNam, iDenNam, iDonvi, iQuyList, iNam).ToList();
             ExcelFile xls = null;
             if (tabTable == 1 )
             {
-                xls = TaoFileBaoCao1(dvt, to , list, tabTable);
+                xls = TaoFileBaoCao1(dvt, to , list, tabTable, iQuyList, iNam, txtTieuDe1, txtTieuDe2, sTenDonViCapTren, sTenDonViCapDuoi, slbDonViUSD , slbDonViVND);
             }
             else
             {
-                xls = TaoFileBaoCao2(dvt, to , list, tabTable);
+                if (iInMotTo == 1 || (iInMotTo == 3 && InToHai == 1))
+                {
+                    to = 1;
+                }
+                else if (iInMotTo == 2 || (iInMotTo == 3 && InToHai == 2))
+                {
+                    to = 2;
+                }
+                xls = TaoFileBaoCao2(dvt, to , list, tabTable, iTuNam, iDenNam, txtTieuDe1, txtTieuDe2,
+                    sTenDonViCapTren, sTenDonViCapDuoi, slbDonViUSD, slbDonViVND, iInMotTo, InToHai);
             }
             return Print(xls, ext, fileName);
         }
 
-        public ExcelFile TaoFileBaoCao1(int dvt = 1, int to = 1 , List<CPNHThucHienNganSach_Model> list = null , int tabTable = 1)
+        public ExcelFile TaoFileBaoCao1(int dvt = 1, int to = 1 , List<CPNHThucHienNganSach_Model> list = null , 
+            int tabTable = 1, int iQuyList = 1, int? iNam = 1, string txtTieuDe1 = "", string txtTieuDe2 = "",
+            string sTenDonViCapTren = "", string sTenDonViCapDuoi = "", int? slbDonViUSD = 1, int? slbDonViVND = 1)
         {
+            string sDonViTinh = (slbDonViUSD == 1 ? "USD" : slbDonViUSD == 1000 ? "Nghìn USD" : "Triệu USD") + 
+                            " / " + (slbDonViVND == 1 ? "VND" : slbDonViVND == 1000 ? "Nghìn VND" : "Triệu VND");
             XlsFile Result = new XlsFile(true);
             Result.Open(Server.MapPath(sFilePathBaoCao1));
             FlexCelReport fr = new FlexCelReport();
@@ -134,8 +223,13 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             {
                 dvt = dvt.ToStringDvt(),
                 To = to,
-                iQuy = 0,
-                iNam = 0
+                iQuy = iQuyList,
+                iNam = iNam,
+                txtTieuDe1 = txtTieuDe1,
+                txtTieuDe2 = txtTieuDe2,
+                sTenDonViCapTren = sTenDonViCapTren,
+                sTenDonViCapDuoi = sTenDonViCapDuoi,
+                sDonViTinh = sDonViTinh
             });
             fr.UseChuKy(Username)
                 .UseChuKyForController(sControlName)
@@ -144,10 +238,21 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
 
             return Result;
         }
-        public ExcelFile TaoFileBaoCao2(int dvt = 1, int to = 1, List<CPNHThucHienNganSach_Model> list = null, int tabTable = 1)
+        public ExcelFile TaoFileBaoCao2(int dvt = 1, int to = 1, List<CPNHThucHienNganSach_Model> list = null, int tabTable = 1,
+            int iTuNam = 1, int? iDenNam = 1, string txtTieuDe1 = "", string txtTieuDe2 = "",
+            string sTenDonViCapTren = "", string sTenDonViCapDuoi = "", int? slbDonViUSD = 1, int? slbDonViVND = 1, int? iInMotTo = 1 , int InToHai = 1)
         {
+            string sDonViTinh = (slbDonViUSD == 1 ? "USD" : slbDonViUSD == 1000 ? "Nghìn USD" : "Triệu USD") +
+                            " / " + (slbDonViVND == 1 ? "VND" : slbDonViVND == 1000 ? "Nghìn VND" : "Triệu VND");
             XlsFile Result = new XlsFile(true);
-            Result.Open(Server.MapPath(sFilePathBaoCao2));
+            if (iInMotTo == 1 || (iInMotTo == 3 && InToHai == 1))
+            {
+                Result.Open(Server.MapPath(sFilePathBaoCaoTo1));
+            }else if (iInMotTo == 2 || (iInMotTo == 3 && InToHai == 2))
+            {
+                Result.Open(Server.MapPath(sFilePathBaoCaoTo2));
+            }
+                
             FlexCelReport fr = new FlexCelReport();
             List<CPNHThucHienNganSach_Model> getlistGiaiDoan = list.Where(x => x.iGiaiDoanTu != 0 && x.iGiaiDoanDen != 0).OrderBy(x => x.iGiaiDoanTu).OrderBy(x => x.iGiaiDoanDen).ToList();
             List<ThucHienNganSach_GiaiDoan_Model> lstGiaiDoan = getlistGiaiDoan
@@ -163,72 +268,101 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             var listColumn = new List<ThucHienNganSach_GiaiDoan_Model>();
             if (lstGiaiDoan != null)
             {
-                var countColumn = 10 + lstGiaiDoan.Count() + (lstGiaiDoan.Count() * 4);
-                for (var i = 1; i <= countColumn; i++)
+                if (to == 1)
                 {
-                    var startColumn1 = 3 + lstGiaiDoan.Count() + 1;
-                    var startColumn2 = startColumn1 + (lstGiaiDoan.Count() * 2) + 2;
-                    var startColumn3 = startColumn2 + (lstGiaiDoan.Count() * 2) + 2;
+                    var countColumn = 5 + lstGiaiDoan.Count() + (lstGiaiDoan.Count() * 2);
+                    for (var i = 1; i <= countColumn; i++)
+                    {
+                        var startColumn1 = 3 + lstGiaiDoan.Count() + 1;
+                        var startColumn2 = startColumn1 + (lstGiaiDoan.Count() * 2) + 2;
 
-                    if (i == 3)
-                    {
-                        ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
-                        var nowColumn = i.ToString() + " =";
-                        for (var j = 1; j <= lstGiaiDoan.Count(); j++)
+                        if (i == 3)
                         {
-                            nowColumn += (i + j).ToString() + " +";
+                            ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
+                            var nowColumn = i.ToString() + " =";
+                            for (var j = 1; j <= lstGiaiDoan.Count(); j++)
+                            {
+                                nowColumn += (i + j).ToString() + " +";
+                            }
+                            SoBC.sGiaiDoan = nowColumn.Remove(nowColumn.Length - 1);
+                            listColumn.Add(SoBC);
                         }
-                        SoBC.sGiaiDoan = nowColumn.Remove(nowColumn.Length - 1);
-                        listColumn.Add(SoBC);
-                    }
-                    else if (i == startColumn1 || i == startColumn1 + 1 || i == startColumn2 || i == startColumn2 + 1)
-                    {
-                        ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
-                        var nowColumn = i.ToString() + " =";
-                        for (var j = 1; j <= lstGiaiDoan.Count(); j++)
+                        else if (i == startColumn1 || i == startColumn1 + 1 || i == startColumn2 || i == startColumn2 + 1)
                         {
-                            nowColumn += (i + (j * 2)).ToString() + " +";
+                            ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
+                            var nowColumn = i.ToString() + " =";
+                            for (var j = 1; j <= lstGiaiDoan.Count(); j++)
+                            {
+                                nowColumn += (i + (j * 2)).ToString() + " +";
+                            }
+                            SoBC.sGiaiDoan = nowColumn.Remove(nowColumn.Length - 1);
+                            listColumn.Add(SoBC);
                         }
-                        SoBC.sGiaiDoan = nowColumn.Remove(nowColumn.Length - 1);
-                        listColumn.Add(SoBC);
-                    }
-                    else if (i == startColumn3)
-                    {
-                        ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
-                        var nowColumn = i.ToString() + " =" + startColumn1.ToString() + " -" + startColumn2.ToString();
-                        SoBC.sGiaiDoan = nowColumn;
-                        listColumn.Add(SoBC);
-                    }
-                    else if (i == startColumn3 + 1)
-                    {
-                        ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
-                        var nowColumn = i.ToString() + " =" + (startColumn1 + 1).ToString() + " -" + (startColumn2 + 1).ToString();
-                        SoBC.sGiaiDoan = nowColumn;
-                        listColumn.Add(SoBC);
-                    }
-                    else if (i == countColumn)
-                    {
-                        ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
-                        var nowColumn = i.ToString() + " =" + 3 + " -" + (startColumn1).ToString();
-                        SoBC.sGiaiDoan = nowColumn;
-                        listColumn.Add(SoBC);
-                    }
-                    else
-                    {
-                        ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
-                        SoBC.sGiaiDoan = i.ToString();
-                        listColumn.Add(SoBC);
+                        else
+                        {
+                            ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
+                            SoBC.sGiaiDoan = i.ToString();
+                            listColumn.Add(SoBC);
+                        }
                     }
                 }
+                else if (to == 2)
+                {
+                    var countColumnTo1 = 5 + lstGiaiDoan.Count() + (lstGiaiDoan.Count() * 2);
+                    var countColumn = 5 + (lstGiaiDoan.Count() * 2);
 
+                    for (var i = 1; i <= countColumn; i++)
+                    {
+                        var startColumn1 = 3 + lstGiaiDoan.Count() + 1;
+                        var startColumn2 = startColumn1 + (lstGiaiDoan.Count() * 2) + 2;
+                        var startColumn3 = startColumn2 + (lstGiaiDoan.Count() * 2) + 2;
+
+                        if (i == 1 || i == 2)
+                        {
+                            ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
+                            var nowColumn = (countColumnTo1 + i).ToString() + " =";
+                            for (var j = 1; j <= lstGiaiDoan.Count(); j++)
+                            {
+                                nowColumn += (countColumnTo1 + i + (j * 2)).ToString() + " +";
+                            }
+                            SoBC.sGiaiDoan = nowColumn.Remove(nowColumn.Length - 1);
+                            listColumn.Add(SoBC);
+                        }
+                        else if (i + countColumnTo1 == startColumn3 + 1)
+                        {
+                            ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
+                            var nowColumn = (countColumnTo1 + i).ToString() + " =" + (startColumn1 + 1).ToString() + " -" + (startColumn2 + 1).ToString();
+                            SoBC.sGiaiDoan = nowColumn;
+                            listColumn.Add(SoBC);
+                        }
+                        else if (i == countColumn)
+                        {
+                            ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
+                            var nowColumn = (countColumnTo1 + i).ToString() + " =" + 3 + " -" + (startColumn1).ToString();
+                            SoBC.sGiaiDoan = nowColumn;
+                            listColumn.Add(SoBC);
+                        }
+                        else
+                        {
+                            ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
+                            SoBC.sGiaiDoan = (i + countColumnTo1).ToString();
+                            listColumn.Add(SoBC);
+                        }
+                    }
+                }
             }
 
             fr.SetValue(new
             {
                 dvt = dvt.ToStringDvt(),
                 To = to,
-                iQuy = 0,
-                iNam = 0,
+                iTuNam = iTuNam,
+                iDenNam = iDenNam,
+                txtTieuDe1 = txtTieuDe1,
+                txtTieuDe2 = txtTieuDe2,
+                sTenDonViCapTren = sTenDonViCapTren,
+                sTenDonViCapDuoi = sTenDonViCapDuoi,
+                sDonViTinh = sDonViTinh
             });
             fr.AddTable<CPNHThucHienNganSach_Model>("dt", listData);
             fr.AddTable<ThucHienNganSach_GiaiDoan_Model>("listColumn", listColumn);
@@ -239,25 +373,58 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             .UseChuKyForController(sControlName)
             .UseForm(this).Run(Result);
 
-            var col1 = 6 + lstGiaiDoan.Count();
-            var col2 = col1 + ((lstGiaiDoan.Count() + 1) * 2);
-            Result.MergeCells(6, 6, 6, col1);
-            Result.MergeCells(6, col1 + 1, 6, col1 + ((lstGiaiDoan.Count() + 1) * 2));
-            Result.MergeCells(6, col2 + 1, 6, col2 + ((lstGiaiDoan.Count() + 1) * 2));
-            //tạo border format
-            var b = Result.GetDefaultFormat;
-            b.Borders.Left.Style = TFlxBorderStyle.Thin;
-            b.Borders.Right.Style = TFlxBorderStyle.Thin;
-            b.Borders.Top.Style = TFlxBorderStyle.Thin;
-            b.Borders.Bottom.Style = TFlxBorderStyle.Thin;
-            var ApplyFormat = new TFlxApplyFormat();
-            ApplyFormat.SetAllMembers(false);
-            ApplyFormat.Borders.SetAllMembers(true);
-            TCellAddress Cell = null;
-            //tìm dòng cuối cùng của bảng
-            Cell = Result.Find("Cộng", null, Cell, false, true, true, false);
-            //set border cho bảng
-            Result.SetCellFormat(6, 2, 8+ listData.Count(), 13 + lstGiaiDoan.Count() * 5, b, ApplyFormat, false);
+            if (to == 1)
+            {
+                var countColumn = 5 + lstGiaiDoan.Count() + (lstGiaiDoan.Count() * 2);
+                Result.MergeCells(1, 3, 1, 2 + countColumn);
+                Result.MergeCells(2, 3, 2, 2 + countColumn);
+                Result.MergeCells(3, 3, 3, 2 + countColumn);
+                Result.MergeCells(3, 3, 3, 2 + countColumn);
+                Result.MergeCells(5, 3, 5, 2 + countColumn);
+                var col1 = 5 + lstGiaiDoan.Count();
+                var col2 = col1 + ((lstGiaiDoan.Count() + 1) * 2);
+                Result.MergeCells(6, 5, 6, col1);
+                Result.MergeCells(6, col1 + 1, 6, col1 + ((lstGiaiDoan.Count() + 1) * 2));
+                //tạo border format
+                var b = Result.GetDefaultFormat;
+                //b.Borders.Left.Style = TFlxBorderStyle.Thin;
+                //b.Borders.Right.Style = TFlxBorderStyle.Thin;
+                //b.Borders.Top.Style = TFlxBorderStyle.Thin;
+                //b.Borders.Bottom.Style = TFlxBorderStyle.Thin;
+                var ApplyFormat = new TFlxApplyFormat();
+                ApplyFormat.SetAllMembers(false);
+                //ApplyFormat.Borders.SetAllMembers(true);
+                TCellAddress Cell = null;
+                //tìm dòng cuối cùng của bảng
+                Cell = Result.Find("Cộng", null, Cell, false, true, true, false);
+                //set border cho bảng
+                Result.SetCellFormat(6, 1, 9 + listData.Count(), 7 + lstGiaiDoan.Count() * 3, b, ApplyFormat, false);
+            }
+            else if (to == 2)
+            {
+                var countColumn = 5 + (lstGiaiDoan.Count() * 2);
+                Result.MergeCells(1, 3, 1, 2 + countColumn);
+                Result.MergeCells(2, 3, 2, 2 + countColumn);
+                Result.MergeCells(3, 3, 3, 2 + countColumn);
+                Result.MergeCells(3, 3, 3, 2 + countColumn);
+                Result.MergeCells(5, 3, 5, 2 + countColumn);
+                var col1 = 2 + ((lstGiaiDoan.Count() + 1) * 2);
+                Result.MergeCells(6, 3, 6, col1);
+                //tạo border format
+                var b = Result.GetDefaultFormat;
+                b.Borders.Left.Style = TFlxBorderStyle.Thin;
+                b.Borders.Right.Style = TFlxBorderStyle.Thin;
+                b.Borders.Top.Style = TFlxBorderStyle.Thin;
+                b.Borders.Bottom.Style = TFlxBorderStyle.Thin;
+                var ApplyFormat = new TFlxApplyFormat();
+                ApplyFormat.SetAllMembers(false);
+                //ApplyFormat.Borders.SetAllMembers(true);
+                TCellAddress Cell = null;
+                //tìm dòng cuối cùng của bảng
+                Cell = Result.Find("Cộng", null, Cell, false, true, true, false);
+                //set border cho bảng
+                Result.SetCellFormat(6, 1, 9 + listData.Count(), 7 + lstGiaiDoan.Count() * 3, b, ApplyFormat, false);
+            }
 
             return Result;
         }

@@ -3,7 +3,7 @@ DECLARE @iIdMaDonViQuanLy nvarchar(100)
 DECLARE @iNamLamViec int
 DECLARE @iIDNguonVonID int
 DECLARE @dNgayLap date
-
+DECLARE @checkQDDT int
 
 --DECLARE @sMaDuAn nvarchar(100)
 --DECLARE @sTenDuAn nvarchar(100)
@@ -41,7 +41,25 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 		WHERE bActive = 1 
 			AND tmp.iID_DuAnID IS NULL 
 			AND dt.iID_NguonVonID = @iIDNguonVonID 
-			AND CAST(tbl.dNgayQuyetDinh as DATE) <= CAST(@dNgayLap as DATE)
+			AND CAST(tbl.dNgayQuyetDinh as DATE) <= CAST(@dNgayLap as DATE);
+
+		-- trường hợp dự án được chọn không có trong quyết định đầu tư.
+		set @checkQDDT = (select count(*) from #tmpQDDT);
+		IF(@checkQDDT > 0)
+		BEGIN
+			iNSERT INTO #tmpQDDT(iID_DuAnID,fTongMucDauTuPheDuyet, sChuDauTu)
+			SELECT DISTINCT da.iID_DuAnID, 0 as fTongMucDauTuPheDuyet,dmcdt.sTenCDT as sChuDauTu FROM VDT_DA_DuAn da
+			left join DM_ChuDauTu dmcdt on dmcdt.ID = da.iID_ChuDauTuID
+			 cross join #tmpQDDT tm
+			WHERE tm.iID_DuAnID NOT IN (SELECT * FROM dbo.f_split(@lstDuAnID)) AND da.iID_DuAnID IN (SELECT * FROM dbo.f_split(@lstDuAnID))
+		END
+		ELSE
+		BEGIN
+			iNSERT INTO #tmpQDDT(iID_DuAnID,fTongMucDauTuPheDuyet, sChuDauTu)
+			SELECT DISTINCT da.iID_DuAnID, 0 as fTongMucDauTuPheDuyet,dmcdt.sTenCDT as sChuDauTu FROM VDT_DA_DuAn da
+			left join DM_ChuDauTu dmcdt on dmcdt.ID = da.iID_ChuDauTuID
+			WHERE  da.iID_DuAnID IN (SELECT * FROM dbo.f_split(@lstDuAnID))
+		END
 	END
 
 	SELECT DISTINCT tmp.iID_DuAnID INTO #tmpDuAnChuyenTiep
@@ -185,11 +203,6 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 	AND (ISNULL(@sLoaiDuAn,'') = '' OR (CASE WHEN dact.iID_DuAnID IS NULL THEN N'Mở mới' ELSE N'Chuyển tiếp' END) LIKE N'%'+@sLoaiDuAn+'%')
 	AND (ISNULL(@sThoiGianThucHien,'') = '' OR tmp.sThoiGianThucHien LIKE N'%'+@sThoiGianThucHien+'%')
 	AND (ISNULL(@sChuDauTu,'') = '' OR tmp.sChuDauTu LIKE N'%'+@sChuDauTu+'%')
-
-
-	select * from #tmpLCTCDT
-
-		select * from #tmp
 
 	DROP TABLE #tmp
 	DROP TABLE #tmpVonBoTriNam

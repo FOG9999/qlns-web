@@ -73,6 +73,12 @@ namespace Viettel.Models.CPNH
         public IEnumerable<CPNHNhuCauChiQuy_ChiTiet_Model> ListNCCQChiTiet { get; set; }
         //public string sDonViQuanLy { get; set; }
     }
+
+    public class Dropdown_SelectValue
+    {
+        public int? Value { get; set; }
+        public string Label { get; set; }
+    }
     public class Dropdown_ByYear_ThucHienNganSach
     {
         public int Value { get; set; }

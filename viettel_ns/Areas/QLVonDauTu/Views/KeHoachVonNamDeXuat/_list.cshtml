@@ -96,27 +96,27 @@
                         </td>
                     }
 
-                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@(pageIndex + index)</td>
+                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)', true)">@(pageIndex + index)</td>
 
-                    <td align="left" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@item.sSoQuyetDinh</td>
+                    <td align="left" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)',true)">@item.sSoQuyetDinh</td>
 
-                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@item.dNgayQuyetDinh.ToString("dd/MM/yyyy")</td>
+                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)',true)">@item.dNgayQuyetDinh.ToString("dd/MM/yyyy")</td>
 
-                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@item.iNamKeHoach</td>
+                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)',true)">@item.iNamKeHoach</td>
 
-                    <td align="left" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@item.sTenNguonVon</td>
+                    <td align="left" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)',true)">@item.sTenNguonVon</td>
 
-                    <td align="left" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@item.sTenDonVi</td>
+                    <td align="left" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)',true)">@item.sTenDonVi</td>
 
-                    <td align="right" class="sotien" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@(item.fThuHoiVonUngTruoc.HasValue ? item.fThuHoiVonUngTruoc.Value.ToString("###,###") : "0")</td>
+                    <td align="right" class="sotien" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)',true)">@(item.fThuHoiVonUngTruoc.HasValue ? item.fThuHoiVonUngTruoc.Value.ToString("###,###") : "0")</td>
 
-                    <td align="right" class="sotien" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@(item.fThanhToan.HasValue ? item.fThanhToan.Value.ToString("###,###") : "0")</td>
+                    <td align="right" class="sotien" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)', true)">@(item.fThanhToan.HasValue ? item.fThanhToan.Value.ToString("###,###") : "0")</td>
 
-                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">@item.sDieuChinhTuSKH</td>
+                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)',true)">@item.sDieuChinhTuSKH</td>
 
-                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">(@item.iSoLanDieuDieuChinh)</td>
+                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)',true)">(@item.iSoLanDieuDieuChinh)</td>
 
-                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)')">
+                    <td align="center" onclick="ChiTietKeHoachVonNamDeXuat('@item.iID_KeHoachVonNamDeXuatID', '@Html.Raw(item.isDieuChinh)',true)">
                         @if (item.iKhoa.HasValue && item.iKhoa.Value)
                         {
                             <span style="font-size: 2rem !important;"><i class="fa fa-lock"></i></span>

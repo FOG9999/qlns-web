@@ -16,6 +16,7 @@ using System.IO;
 using System.Collections.ObjectModel;
 using Viettel.Models.QLNguonNganSach;
 using VIETTEL.Helpers;
+using VIETTEL.Flexcel;
 
 namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 {
@@ -24,6 +25,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
         IQLVonDauTuService _iQLVonDauTuService = QLVonDauTuService.Default;
         INganSachService _iNganSachService = NganSachService.Default;
         private const string sFilePath = "/Report_ExcelFrom/VonDauTu/rpt_ThongTri_Danhsach.xls";
+        private const string sControlName = "QLThongTriThanhToan";
+
 
         // GET: QLVonDauTu/QLThongTriThanhToan
         public ActionResult Index()
@@ -566,6 +569,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             fr.SetValue("Ngay", string.Format("Ngày {0} tháng {1} năm {2}", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year));
             fr.SetValue("TongChiTieu", lstChiTiet.Sum(n => n.FSoTien));
             fr.SetValue("TienBangChu", DataHelper.NumberToText(lstChiTiet.Sum(n => n.FSoTien), true));
+            fr.UseChuKy(Username)
+                        .UseChuKyForController(sControlName)
+                        .UseForm(this);
             fr.AddTable("Items", lstChiTiet);
 
 
@@ -648,6 +654,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             fr.SetValue("TongChiTieu", lstChiTiet.Sum(n => n.FSoTien));
             fr.SetValue("TienBangChu", DataHelper.NumberToText(lstChiTiet.Sum(n => n.FSoTien), true));
             fr.AddTable("Items", lstChiTiet);
+            fr.UseChuKy(Username)
+                .UseChuKyForController(sControlName)
+                .UseForm(this);
 
 
             switch (objThongTri.iLoaiThongTri)

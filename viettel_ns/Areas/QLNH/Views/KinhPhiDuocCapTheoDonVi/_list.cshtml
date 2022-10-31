@@ -10,26 +10,26 @@
         </div>
     </div>
 </div>
-<input type="hidden" id="IDTable"/>
+<input type="hidden" id="IDTable" />
 <table class="table table-bordered" id="tblFromTimkiemKinhPhiDuocCapTheoDonVi">
     <thead class="header-search">
         <tr>
             <th width="25%">
                 @*<div style="display: flex">
-            <div class='input-group date'>
-                <input type="text" id="txtTuNgay" autocomplete="off" class="form-control gr_search txtDate" placeholder="dd/MM/yyyy" />
-                <span class="btn-default input-group-addon">
-                    <i class="fa fa-calendar" aria-hidden="true"></i>
-                </span>
-            </div>
-            <span style="margin: 8px 5px 0px 5px;">-</span>
-            <div class='input-group date'>
-                <input type="text" id="txtDenNgay" autocomplete="off" class="form-control gr_search txtDate" placeholder="dd/MM/yyyy" />
-                <span class="btn-default input-group-addon">
-                    <i class="fa fa-calendar" aria-hidden="true"></i>
-                </span>
-            </div>
-        </div>*@
+                        <div class='input-group date'>
+                            <input type="text" id="txtTuNgay" autocomplete="off" class="form-control gr_search txtDate" placeholder="dd/MM/yyyy" />
+                            <span class="btn-default input-group-addon">
+                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <span style="margin: 8px 5px 0px 5px;">-</span>
+                        <div class='input-group date'>
+                            <input type="text" id="txtDenNgay" autocomplete="off" class="form-control gr_search txtDate" placeholder="dd/MM/yyyy" />
+                            <span class="btn-default input-group-addon">
+                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                    </div>*@
                 <div style="display: flex">
                     <div style="width:50%">
                         @Html.DropDownList("iQuy", (SelectList)(ViewBag.ListQuyTypes), new { @class = "form-control", @id = "iQuyList", @onchange = "ChangePage()" })
@@ -43,7 +43,7 @@
             <th width="15%">@Html.DropDownList("iID_DonViID", (SelectList)(ViewBag.ListDonViQuanLy), new { @class = "form-control", @id = "iDonvi", @onchange = "ChangePage()" })</th>
             <th width="81%">
                 <button class="btn btn-info pull-right mr-10" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
-                <button class="btn btn-info pull-right mr-10 btn-print" data-ext="xls"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
+                <button class="btn btn-info pull-right mr-10 btn-primary" onclick="$('#configBaocao').modal('show');"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
                 <button class="btn btn-info pull-right mr-10" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
             </th>
         </tr>
@@ -145,6 +145,19 @@
 </div>
 
 <input type="hidden" id="urlExport" value="@Url.Action("ExportExcelBaoCao")" />
+<!-- Modal in bao cao -->
+<div class="modal fade configBaocao" id="configBaocao" tabindex="-1" role="dialog" aria-labelledby="configBaocao" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-center" id=""></h3>
+            </div>
+            <div id="" style="overflow: hidden; padding: 0 20px 0 20px; max-height: 700px">
+                @Html.Partial("PopupConfigBaoCaoPartial")
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -179,10 +192,13 @@
         var dTuNgay = $("#txtTuNgay").val();
         var dDenNgay = $("#txtDenNgay").val();
         var iDonvi = $("#iDonvi").val();
+        var tenBaoCao = $("#txtTieuDe").val();
+        var dvCapTren = $("#txtDonViCapTren").val(); 
+        var dvCapDuoi = $("#txtDonViCapDuoi").val();
         //var dvt = $("#dvt").val();
         var url = $("#urlExport").val() +
             "?ext=" + ext +
-            "&dvt=1000&to=1&iQuyList=" + iQuyList + "&iNam=" + iNam + "&iDonvi=" + iDonvi;
+            "&dvt=1000&to=1&iQuyList=" + iQuyList + "&iNam=" + iNam + "&iDonvi=" + iDonvi + "&tenBaoCao=" + tenBaoCao + "&dvCapTren=" + dvCapTren + "&dvCapDuoi=" + dvCapDuoi;
         url = unescape(url);
         links.push(url);
 
@@ -205,15 +221,15 @@
         z-index: 1;
     }
 
-    .dropdown-content button {
-        color: black;
-        text-decoration: none;
-        display: block;
-    }
+        .dropdown-content button {
+            color: black;
+            text-decoration: none;
+            display: block;
+        }
 
-    .dropdown-content a:hover {
-        background-color: #ff6002
-    }
+        .dropdown-content a:hover {
+            background-color: #ff6002
+        }
 
     .dropdown:hover .dropdown-content {
         display: block;
@@ -222,9 +238,11 @@
     .dropdown:hover .dropbtn {
         background-color: #ff6002;
     }
-    .font-bold{
-        font-weight:bold;
+
+    .font-bold {
+        font-weight: bold;
     }
+
     .font-bold-red {
         font-weight: bold;
         color: #e85c5c;

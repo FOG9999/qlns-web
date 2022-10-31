@@ -152,8 +152,6 @@ function UnFormatNumber(value) {
         value = value.replace(/\,/gi, "")
     }
     //obj.value = obj.value.replace(/,/gi, ""); //hàm ban đầu
-
-    console.log("kiemtraso: " + value);
     return value;
 }
 

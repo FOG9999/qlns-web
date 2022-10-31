@@ -8,7 +8,7 @@
     <div class="col-sm-7" style="display:flex;padding-left:0px;">
         <label class="control-label">Báo cáo đề nghị chi tiết số chuyển năm sau theo từng hợp đồng, dự án theo đơn vị, B quản lý </label>
     </div>
-    <div class="col-sm-5" style="display:flex">
+    <div class="col-sm-5" style="display:flex; padding-right: 0 !important;">
         <select id="slbNamKeHoachFillter" name="slbNamKeHoachFillter" class="form-control mr-10">
             @if (ViewBag.ListNamKeHoach != null)
             {
@@ -28,8 +28,8 @@
             }
         </select>
         <button class="btn btn-info pull-right mr-10" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
-        <button class="btn btn-info pull-right mr-10" onclick="InBaoCaoModal()">In báo cáo</button>
-        <button class="btn btn-info pull-right mr-10" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+        <button class="btn btn-warning pull-right mr-10" onclick="InBaoCaoModal()"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
+        <button class="btn btn-info pull-right" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
     </div>
 
 </div>

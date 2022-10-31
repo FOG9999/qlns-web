@@ -1,12 +1,11 @@
-﻿@using Viettel.Domain.DomainModel
+﻿
+@using Viettel.Domain.DomainModel
 @using Viettel.Models.QLNH.QuyetToan
 
 <div class="modal-body">
-    <div class="form-group row">
-        <input type="hidden" id="txtNamKeHoach" value="@ViewBag.iNamKeHoach" />
-        <input type="hidden" id="txtIdDonVi" value="@ViewBag.iIdDonVi" />
-        <input type="hidden" id="txtSTenDonVi" value="@ViewBag.sTenDonVi" />
+    <input type="hidden" id="txtNamKeHoach" value="@ViewBag.iNamKeHoach" />
 
+    <div class="form-group row">
         <div class="col-sm-12">
             <label for="txtTieuDe1">Tiêu đề 1</label>
             @Helpers.Required()
@@ -44,42 +43,6 @@
             </div>
         </div>
     </div>
-    <div class="form-group row">
-        <div class="col-sm-6">
-            <div>
-                <label for="slbDonViUSD">Đơn vị tính (USD)</label>
-                @Helpers.Required()
-                <div>
-                    <select id="slbDonViUSD" name="slbDonViUSD" class="form-control">
-                        @if (ViewBag.ListDVUSD != null)
-                        {
-                            foreach (var donViUSD in (List<Dropdown_SelectValue>)ViewBag.ListDVUSD)
-                            {
-                                <option value="@donViUSD.Value">@Html.Raw(donViUSD.Label)</option>
-                            }
-                        }
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div>
-                <label for="slbDonViVND">Đơn vị tính (VND)</label>
-                @Helpers.Required()
-                <div>
-                    <select id="slbDonViVND" name="slbDonViVND" class="form-control">
-                        @if (ViewBag.ListDVVND != null)
-                        {
-                            foreach (var donViVND in (List<Dropdown_SelectValue>)ViewBag.ListDVVND)
-                            {
-                                <option value="@donViVND.Value">@Html.Raw(donViVND.Label)</option>
-                            }
-                        }
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
 
 </div>
 @Html.Partial("_ui_chuky")
@@ -91,7 +54,7 @@
         <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Đóng</span></button>
     </div>
 </div>
-<input type="hidden" id="urlExportBCChiTiet" value="@Url.Action("ExportFile", "BaoCaoSoChuyenNamSau")" />
+<input type="hidden" id="urlExportBCChiTiet" value="@Url.Action("ExportQuyetToanNguonChiDacBiet", "BaoCaoQuyetToanNguonChiDacBiet")" />
 <style>
     .ml-0 {
         margin-left: 0 !important;

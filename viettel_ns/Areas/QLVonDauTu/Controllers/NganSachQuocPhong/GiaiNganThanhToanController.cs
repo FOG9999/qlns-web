@@ -375,17 +375,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
         public JsonResult Luu(VDTThongTriModel model, bool? bReloadChiTiet, List<Guid> lstGuidChecked)
         {
             bool status = false;
-            //List<string> messages =new List<string>();
             if (model != null && !string.IsNullOrEmpty(model.sMaNguonVon))
             {
-                //if (model.sMaThongTri != null)
-                //{
-                //    if (model.sMaThongTri.Length > 50)
-                //    {
-                //        messages.Add("Mã thông tri vượt 50 ký tự");
-                //    }
-                //}
-
                 var lstNguonVon = _vdtService.LayNguonVon();
                 if (lstNguonVon != null && lstNguonVon.Any(n => n.iID_MaNguonNganSach == int.Parse(model.sMaNguonVon)))
                 {
@@ -927,6 +918,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 //    .ToDictionary(n => (n.Key.Id.ToString() + "\t" + n.Key.PhanLoai.ToString()), n => n.Sum(k => (k.LenhChi ?? 0)));
             }
             return Json(new { bIsComplete = true, lstDeNghiTamUngNamTruoc = lstDeNghiTamUngNamTruoc, lstDeNghiTamUngNamNay = lstDeNghiTamUngNamNay }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult CheckTrungSoDeNghi(string val)
+        {
+            bool status = _vdtService.KiemTraTrung("VDT_TT_DeNghiThanhToan", "sSoDeNghi", val);
+            return Json(status, JsonRequestBehavior.AllowGet);
         }
 
         #endregion
