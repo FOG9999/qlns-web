@@ -32,7 +32,7 @@
                 <input type="text" id="txtsLoaiChuDauTu" class="form-control" value="@Html.Raw(Html.Encode(Model.sLoai))" maxlength="50" autocomplete="off" />
             </div>
             <div class="col-sm-6">
-                <label for="iID_ChuDauTuChaIDModal">Chủ đầu tư cha</label>
+                <label for="iID_ChuDauTuChaIDModal">Đơn vị cấp trên</label>
                 @Html.DropDownList("iID_ChuDauTuChaIDModal", new SelectList(ViewBag.ListChuDauTuCha, "Value", "Text", Model.Id_Parent), new { @class = "form-control", @id = "iID_ChuDauTuChaIDModal" })
             </div>
         </div>

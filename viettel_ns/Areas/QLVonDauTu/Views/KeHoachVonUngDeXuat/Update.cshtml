@@ -16,6 +16,7 @@
                 <input type="hidden" id="sTongHop" value="@ViewBag.lstIdTongHop" />
                 <input type="hidden" id="Id" value="@Model.Id">
                 <input type="hidden" id="sMaDonVi" value="@Model.iID_MaDonViQuanLy" />
+                <input type="hidden" id="isDieuChinh" value="@ViewBag.isDieuChinh" />
 
                 <div class="header-create-update">
                     <span>
@@ -172,6 +173,8 @@
                 // GetlstDuAnByMaDonVi();
 
             }
+            if ($("#isDieuChinh").val() == "true")
+                isDieuChinh = true;
             GetDonViQuanLy();
 
             if (!bIsTongHop) {
@@ -185,8 +188,8 @@
                 } else {
                     GetDataDetail();
                 }
-                $("#iNamKeHoach").attr('disabled', true);
-                $("#iId_NguonVon").attr('disabled', true);
+                //$("#iNamKeHoach").attr('disabled', true);
+                //$("#iId_NguonVon").attr('disabled', true);
             }
 
             var isShowing = false;

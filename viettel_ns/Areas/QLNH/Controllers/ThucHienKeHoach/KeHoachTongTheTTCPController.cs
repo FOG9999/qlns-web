@@ -9,9 +9,11 @@ using Viettel.Domain.DomainModel;
 using Viettel.Models.QLNH;
 using Viettel.Models.Shared;
 using Viettel.Services;
+using VIETTEL.Areas.QLNH.Models.DuAnHopDong.KeHoachTongTheTTCP;
 using VIETTEL.Common;
 using VIETTEL.Controllers;
 using VIETTEL.Helpers;
+using VIETTEL.Models;
 
 namespace VIETTEL.Areas.QLNH.Controllers.ThucHienKeHoach
 {
@@ -119,16 +121,17 @@ namespace VIETTEL.Areas.QLNH.Controllers.ThucHienKeHoach
 
                 // Lưu giá trị Kế hoạch TTCP
                 ViewBag.KHTongTheTTCP = JsonConvert.SerializeObject(input);
+                TempData["KHTongTheTTCP"] = input;
                 // Get lookup phòng ban
                 ViewBag.LookupPhongBan = _qlnhService.getLookupPhongBan().ToList();
             }
 
             // Lấy thông tin TTCP and NVC
-            var result = _qlnhService.GetDetailKeHoachTongTheTTCP(state, state == "CREATE" || (state == "ADJUST" && isUseLastTTCP) ? input.iID_ParentID : input.ID, input.iID_BQuanLyID);
-            result.State = state;
-
+            NH_KHTongTheTTCP_NVCViewModel result;
             if (state == "DETAIL")
             {
+                result = _qlnhService.GetDetailKeHoachTongTheTTCP(state, state == "CREATE" || (state == "ADJUST" && isUseLastTTCP) ? input.iID_ParentID : input.ID, input.iID_BQuanLyID, "", "");
+                result.State = state;
                 // Nếu trạng thái là xem chi tiết thì hiển thị view chi tiết, không được chỉnh sửa.
                 result.IsEdit = false;
 
@@ -136,9 +139,12 @@ namespace VIETTEL.Areas.QLNH.Controllers.ThucHienKeHoach
                 var lstPhongBan = _qlnhService.getLookupPhongBan().ToList();
                 lstPhongBan.Insert(0, new LookupDto<Guid, string> { Id = Guid.Empty, DisplayName = "-- Chọn B quản lý --" });
                 ViewBag.LookupPhongBan = lstPhongBan.ToSelectList("Id", "DisplayName");
+                return View(result);
             }
             else
             {
+                result = _qlnhService.GetDetailKeHoachTongTheTTCP(state, state == "CREATE" || (state == "ADJUST" && isUseLastTTCP) ? input.iID_ParentID : input.ID, input.iID_BQuanLyID, "", "");
+                result.State = state;
                 // Nếu trạng thái là thêm mới, sửa, điều chỉnh thì hiển thị view chi tiết edit, được chỉnh sửa. Cập nhật thêm 1 số thông đã chỉnh sửa ở màn trước.
                 result.IsEdit = true;
                 result.iLoai = input.iLoai;
@@ -147,20 +153,28 @@ namespace VIETTEL.Areas.QLNH.Controllers.ThucHienKeHoach
                 result.iNamKeHoach = input.iNamKeHoach;
                 result.sSoKeHoach = input.sSoKeHoach;
                 result.dNgayKeHoach = input.dNgayKeHoach;
+                KeHoachTongTheTTCPChiTietGridViewModel KHTTGridView = new KeHoachTongTheTTCPChiTietGridViewModel();
+                KHTTGridView.NH_KHTongTheTTCP_NVCViewModel = result;
+                KHTTGridView.NH_KHTongTheTTCPModel = input;
+                KHTTGridView.IsUseLastTTCP = isUseLastTTCP;
+                return PartialView("_sheet", KHTTGridView);
             }
-
-            return View(result);
         }
 
         // Lưu data TTCP and NVC
-        public ActionResult SaveKHTongTheTTCP(List<NH_KHTongTheTTCP_NhiemVuChiDto> lstNhiemVuChis, string keHoachTongTheTTCP, string state)
+        public ActionResult SaveKHTongTheTTCP(List<NH_KHTongTheTTCP_NhiemVuChiDto> lstNhiemVuChis, string state)
         {
-            keHoachTongTheTTCP = HttpUtility.HtmlDecode(keHoachTongTheTTCP);
             foreach (var item in lstNhiemVuChis)
             {
                 item.sTenNhiemVuChi = HttpUtility.HtmlDecode(item.sTenNhiemVuChi);
             }
-            var khct = JsonConvert.DeserializeObject<NH_KHTongTheTTCP>(keHoachTongTheTTCP);
+
+            if (TempData["KHTongTheTTCP"] != null)
+            {
+                TempData.Keep("KHTongTheTTCP");
+            }
+
+            var khct = (NH_KHTongTheTTCP)TempData["KHTongTheTTCP"];
             return Json(new { 
                 result = _qlnhService.SaveKHTongTheTTCP(lstNhiemVuChis, khct, state)
             });
@@ -362,5 +376,30 @@ namespace VIETTEL.Areas.QLNH.Controllers.ThucHienKeHoach
         }
 
         #endregion
+
+        public ActionResult SheetFrame(string state, Guid? KHTTCP_ID, Guid? iID_BQuanLyID, string sTenNhiemVuChi, string sTenPhongBan, string filter = null)
+        {
+            var filters = filter == null ? Request.QueryString.ToDictionary() : JsonConvert.DeserializeObject<Dictionary<string, string>>(filter);
+            var sheet = new KeHoachTongTheTTCP_ChiTIet_SheetTable(state, KHTTCP_ID, iID_BQuanLyID, sTenNhiemVuChi, sTenPhongBan, filters);
+            var kHTongTheTTCP_NVCViewModel = _qlnhService.GetDetailKeHoachTongTheTTCP(state, KHTTCP_ID, iID_BQuanLyID, sTenNhiemVuChi, sTenPhongBan);
+            kHTongTheTTCP_NVCViewModel.State = state;
+            var vm = new KeHoachTongTheTTCPChiTietGridViewModel
+            {
+                Sheet = new SheetViewModel(
+                   bang: sheet,
+                   filters: sheet.Filters,
+                   urlPost: Url.Action("Save", "KeHoachTongTheTTCP", new { area = "QLNH" }),
+                   urlGet: Url.Action("SheetFrame", "KeHoachTongTheTTCP", new { area = "QLNH" })
+                   ),
+                NH_KHTongTheTTCP_NVCViewModel = kHTongTheTTCP_NVCViewModel
+
+            };
+            if (TempData["KHTongTheTTCP"] != null)
+            {
+                TempData.Keep("KHTongTheTTCP");
+            }
+            vm.Sheet.AvaiableKeys = new Dictionary<string, string>();
+            return PartialView("_sheetFrame", vm);
+        }
     }
 }

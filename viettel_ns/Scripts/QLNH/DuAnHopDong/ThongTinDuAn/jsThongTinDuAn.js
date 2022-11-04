@@ -36,7 +36,6 @@ $(document).ready(function ($) {
         dropdownAutoWidth: true,
         matcher: FilterInComboBox
     });
-    
 });
 function ResetChangePage(iCurrentPage = 1) {
     GetListData("", "", GUID_EMPTY, GUID_EMPTY, GUID_EMPTY, GUID_EMPTY, iCurrentPage);
@@ -264,7 +263,7 @@ function GetDataDuAn() {
     data.sKhoiCong = $("<div/>").text($.trim($("#txtThoiGianThucHienTu").val())).html();
     data.sKetThuc = $("<div/>").text($.trim($("#txtThoiGianThucHienDen").val())).html();
     data.iID_TiGiaID = $("#slbTiGia").val() == GUID_EMPTY ? null : $("#slbTiGia").val();
-    data.sMaNgoaiTeKhac = $("#slbMaNgoaiTeKhac").val() == GUID_EMPTY ? null : $("<div/>").text($("#slbMaNgoaiTeKhac").find("option:selected").data("mangoaitekhac")).html();
+    data.sMaNgoaiTeKhac = $("#slbMaNgoaiTeKhac").val() == GUID_EMPTY ? null : null : $("#slbMaNgoaiTeKhac").val();
     data.sGiaTriUSD = UnFormatNumber($("<div/>").text($.trim($("#txtHopDongUSD").val())).html());
     data.sGiaTriVND = UnFormatNumber($("<div/>").text($.trim($("#txtHopDongVND").val())).html());
     data.sGiaTriEUR = UnFormatNumber($("<div/>").text($.trim($("#txtHopDongEUR").val())).html());
@@ -275,10 +274,11 @@ function GetDataDuAn() {
 
 function ValidateData(data) {
     var Title = 'Lỗi thêm mới/chỉnh sửa thông tin dự án';
+    let state = this.CURRENT_STATE;
     var Messages = [];
 
-    if (data.sMaDuAn == null || data.sMaDuAn == "") {
-        Messages.push("Mã dự án chưa nhập !");
+    if ((data.sMaDuAn == null || data.sMaDuAn == "") && state != "CREATE") {
+        Messages.push("Chưa có thông tin mã dự án !");
     }
     if ($.trim($("#txtMaDuAn").val()) != "" && $.trim($("#txtMaDuAn").val()).length > 100) {
         Messages.push("Mã dự án vượt quá 100 kí tự !");
@@ -291,9 +291,6 @@ function ValidateData(data) {
     }
     if (data.iID_TiGiaID == null || data.iID_TiGiaID == GUID_EMPTY) {
         Messages.push("Tỉ giá chưa chọn !");
-    }
-    if (data.sSoQuyetDinhDauTu == null || data.sSoQuyetDinhDauTu == "") {
-        Messages.push("Số quyết định đầu tư chưa nhập !");
     }
     if ($.trim($("#txtSoDuToanTu").val()) != "" && $.trim($("#txtSoDuToanTu").val()).length > 100) {
         Messages.push("Sổ dự toán vượt quá 100 kí tự !");

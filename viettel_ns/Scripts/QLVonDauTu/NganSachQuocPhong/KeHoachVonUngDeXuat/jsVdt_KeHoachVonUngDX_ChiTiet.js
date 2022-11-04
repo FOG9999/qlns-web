@@ -2,6 +2,7 @@
 var isUpdate = false;
 var GUID_EMPTY = '00000000-0000-0000-0000-000000000000';
 var EMPTY = "";
+var isDieuChinh = false;
 $(document).ready(function () {
     iIDKHVN = $("#iID_KeHoachUngID").val();
     var update = $("#idUpdate").val();
@@ -42,13 +43,14 @@ function GetDataChiTietTable() {
         obj.sTenDuAn = $(item).find(".c_sTenDuAn").text();
         obj.fTongMucDauTu = $(item).find(".c_fTongMucDauTu").text() != 0 ? UnFormatNumber($(item).find(".c_fTongMucDauTu").text()) : 0;
         obj.fGiaTriDeNghi = $(item).find(".ctxt_sfGiaTriDeNghi").val() != 0 ? UnFormatNumber($(item).find(".ctxt_sfGiaTriDeNghi").val()) : 0;
+        obj.fGiaTriDeNghiDC = $(item).find(".ctxt_sfGiaTriDeNghiDC").val() != 0 ? UnFormatNumber($(item).find(".ctxt_sfGiaTriDeNghiDC").val()) : 0;
         obj.sGhiChu = $(item).find(".ctxt_sGhiChu").val();
         var bIsDelete = $(this).hasClass("error-row");
         obj.IsDelete = bIsDelete;
         if (obj.iID_KeHoachUngID == undefined || obj.iID_KeHoachUngID == null || obj.iID_KeHoachUngID == "" || obj.iID_KeHoachUngID == GUID_EMPTY) {
             obj.iID_KeHoachUngID = iIDKHVN;
         }
-        if (!(obj.fGiaTriDeNghi == undefined || obj.fGiaTriDeNghi == null || obj.fGiaTriDeNghi == EMPTY)) {
+        if (!((obj.fGiaTriDeNghi == undefined || obj.fGiaTriDeNghi == null || obj.fGiaTriDeNghi == EMPTY) && (obj.fGiaTriDeNghiDC == undefined || obj.fGiaTriDeNghiDC == null || obj.fGiaTriDeNghiDC == EMPTY))) {
             lstChiTiet.push(obj);
         }
     });
@@ -57,15 +59,18 @@ function GetDataChiTietTable() {
 
 function SaveKVUCT() {
     var dataChiTiet = GetDataChiTietTable();
-    var Title = "";
-    var Messages = [];
+    var dieuchinh = $("#txtIsDieuChinh").val();
+    if (dieuchinh == "true") {
+        isDieuChinh = true;
+    }
     $.ajax({
         type: "POST",
         url: "/QLVonDauTu/KeHoachVonUngDeXuat/KeHoachVonUngChiTietSave",
         data: {
             listdata: dataChiTiet,
             isUpdate: isUpdate,
-            iID_KeHoachUngID: iIDKHVN
+            iID_KeHoachUngID: iIDKHVN,
+            isDieuChinh: isDieuChinh
         },
         success: function (r) {
             if (r.status) {

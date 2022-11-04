@@ -67,42 +67,66 @@
                             <p class="label-sua">@Html.Raw(Model.sSoHopDong)</p>
                         </div>
                         <div class="col-sm-3">
+                            <label for="dNgayHopDong">Tên hợp đồng</label>
+                            <p class="label-sua">@Html.Raw(Model.sTenHopDong)</p>
+                        </div>
+
+                        <div class="col-sm-3">
                             <label for="dNgayHopDong">Ngày lập</label>
                             <p class="label-sua">@Html.Raw(Model.dNgayHopDong.ToString("dd/MM/yyyy"))</p>
                         </div>
-
                         <div class="col-sm-3">
-                            <label for="dKhoiCongDuKien">Ngày khởi công dự kiến</label>
-                            <p class="label-sua">@(Model.dKhoiCongDuKien.HasValue ? Model.dKhoiCongDuKien.Value.ToString("dd/MM/yyyy") : "")</p>
-                        </div>
-                        <div class="col-sm-3">
-                            <label for="dKetThucDuKien">Ngày kết thúc dự kiến</label>
-                            <p class="label-sua">@(Model.dKetThucDuKien.HasValue ? Model.dKetThucDuKien.Value.ToString("dd/MM/yyyy") : "")</p>
+                            <label for="dKetThucDuKien">TG Thực hiện(ngày)</label>
+                            <p class="label-sua">@(Model.iThoiGianThucHien)</p>
                         </div>
                     </div>
-
-                    <div class="form-group row">
-                        <div class="col-sm-3">
-                            <label for="iThoiGianThucHien">TG thực hiện (ngày)</label>
-                            <p class="label-sua" class="sotien">@Html.Raw(Model.iThoiGianThucHien)</p>
-                        </div>
-                        <div class="col-sm-3">
-                            <label for="txtDonViQuanLy">Phân loại</label>
-                            <p class="label-sua">@Html.Raw(Model.sTenLoaiHopDong)</p>
-                        </div>
-                        <div class="col-sm-3">
-                            <label for="sHinhThucHopDong">HT hợp đồng</label>
-                            <p class="label-sua">@Html.Raw(Model.sHinhThucHopDong)</p>
-                        </div>
-                        <div class="col-sm-3">
-                            <label for="fGiaTriHopDong">Giá trị hợp đồng</label>
-                            <p class="label-sua" class="sotien">@Html.Raw(Model.fTienHopDong.GetValueOrDefault().ToString("###,###"))</p>
-                        </div>
+                    @*************@
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                        <label for="iThoiGianThucHien">Phân Loại</label>
+                        <p class="label-sua" >@Html.Raw(Model.sTenLoaiHopDong)</p>
                     </div>
+                    <div class="col-sm-3">
+                        <label for="dKhoiCongDuKien">Thời gian bắt đầu</label>
+                        <p class="label-sua">@(Model.dKhoiCongDuKien.HasValue ? Model.dKhoiCongDuKien.Value.ToString("dd/MM/yyyy") : "")</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <label for="dKetThucDuKien">Thời gian kết thúc</label>
+                        <p class="label-sua">@(Model.dKetThucDuKien.HasValue ? Model.dKetThucDuKien.Value.ToString("dd/MM/yyyy") : "")</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <label for="dThoiGianTu">Thời gian bảo lãnh hợp đồng từ</label>
+                        <p class="label-sua">@Html.Raw(Model.dThoiGianBaoLanhHopDongTu.HasValue ? Model.dThoiGianBaoLanhHopDongTu.Value.ToString("dd/MM/yyyy") : string.Empty)</p>
+                    </div>
+                </div>
+                    @*************@
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                        <label for="dThoiGianDen">Thời gian bảo lãnh hợp đồng đến</label>
+                        <p class="label-sua">@Html.Raw(Model.dThoiGianBaoLanhHopDongDen.HasValue ? Model.dThoiGianBaoLanhHopDongDen.Value.ToString("dd/MM/yyyy") : string.Empty)</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <label for="sHinhThucHopDong">HT hợp đồng</label>
+                        <p class="label-sua">@Html.Raw(Model.sHinhThucHopDong)</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <label for="fGiaTriHopDong">Giá trị hợp đồng</label>
+                        <p class="label-sua" class="sotien">@Html.Raw(Model.fTienHopDong.GetValueOrDefault().ToString("###,###"))</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <label for="iThoiGianThucHien">Nội dung hợp đồng</label>
+                        <p class="label-sua sNoiDungHD">@Html.Raw(Model.NoiDungHopDong)</p>
+                    </div>
+                </div>
+                    @*************@
                     <div class="form-group row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-6">
                             <label for="txtTenNhaThau">Nhà thầu thực hiện</label>
                             <p class="label-sua">@Html.Raw(Model.sTenNhaThau)</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="txtTenNhaThau">Số tài khoản nhà thầu</label>
+                            <p class="label-sua">@Html.Raw(Model.sSoTaiKhoan)</p>
                         </div>
                     </div>
                 </div>

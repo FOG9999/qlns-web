@@ -638,7 +638,7 @@ function txtONhapDuLieu_OnFocus(txt) {
                         return false;
                     },                  
                     focus: function (event, ui) {
-                        $(txt).val(ui.item.value);
+                        $(txt).val(ui.item.showLabel ? ui.item.label : ui.item.value);
                     },
                     delay: 100,
                     minLength: 0

@@ -69,7 +69,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
         public ActionResult Index()
         {
             CPNHThucHienNganSach_ModelPaging vm = new CPNHThucHienNganSach_ModelPaging();
-            List<CPNHThucHienNganSach_Model> list = _cpnhService.getListThucHienNganSachModels(1, DateTime.Now.Year, DateTime.Now.Year  ,null, 1, DateTime.Now.Year).ToList();
+            List<CPNHThucHienNganSach_Model> list = _cpnhService.getListThucHienNganSachModels(1, DateTime.Now.Year, DateTime.Now.Year  ,null, 1, DateTime.Now.Year, 1 , 1).ToList();
             List<CPNHThucHienNganSach_Model> getlistGiaiDoan = list.Where(x => x.iGiaiDoanTu != 0 && x.iGiaiDoanDen != 0).OrderBy(x => x.iGiaiDoanDen).OrderBy(x => x.iGiaiDoanTu).ToList();
             List<ThucHienNganSach_GiaiDoan_Model> lstGiaiDoan = getlistGiaiDoan
                     .GroupBy(x => new { x.iGiaiDoanTu, x.iGiaiDoanDen }).Select(x => x.First())
@@ -107,7 +107,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
         public ActionResult ThucHienNganSachSearch(int tabTable, int iTuNam, int iDenNam, Guid? iDonvi, int iQuyList, int iNam)
         {
             CPNHThucHienNganSach_ModelPaging vm = new CPNHThucHienNganSach_ModelPaging();
-            List<CPNHThucHienNganSach_Model> list = _cpnhService.getListThucHienNganSachModels(tabTable, iTuNam, iDenNam, iDonvi, iQuyList, iNam).ToList();
+            List<CPNHThucHienNganSach_Model> list = _cpnhService.getListThucHienNganSachModels(tabTable, iTuNam, iDenNam, iDonvi, iQuyList, iNam, 1, 1).ToList();
             List<CPNHThucHienNganSach_Model> getlistGiaiDoan = list.Where(x => x.iGiaiDoanTu != 0 && x.iGiaiDoanDen != 0).OrderBy(x => x.iGiaiDoanDen).OrderBy(x => x.iGiaiDoanTu).ToList();
             List<ThucHienNganSach_GiaiDoan_Model> lstGiaiDoan = getlistGiaiDoan
                     .GroupBy(x => new { x.iGiaiDoanTu, x.iGiaiDoanDen }).Select(x => x.First())
@@ -178,13 +178,13 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             int iNam = 2022,
             int InToHai = 1)
         {
-            txtTieuDe1 = HttpUtility.UrlDecode(txtTieuDe1);
-            txtTieuDe2 = HttpUtility.UrlDecode(txtTieuDe2);
+            txtTieuDe1 = HttpUtility.UrlDecode(txtTieuDe1).ToUpper();
+            txtTieuDe2 = HttpUtility.UrlDecode(txtTieuDe2).ToUpper();
             sTenDonViCapTren = HttpUtility.UrlDecode(sTenDonViCapTren);
             sTenDonViCapDuoi = HttpUtility.UrlDecode(sTenDonViCapDuoi);
 
             string fileName = string.Format("{0}.{1}", "BaoCaoTinhHinhThucHienNganSach", ext);
-            List<CPNHThucHienNganSach_Model> list = _cpnhService.getListThucHienNganSachModels(tabTable, iTuNam, iDenNam, iDonvi, iQuyList, iNam).ToList();
+            List<CPNHThucHienNganSach_Model> list = _cpnhService.getListThucHienNganSachModels(tabTable, iTuNam, iDenNam, iDonvi, iQuyList, iNam, slbDonViUSD != null ? slbDonViUSD.Value : 1, slbDonViVND != null ? slbDonViVND.Value : 1).ToList();
             ExcelFile xls = null;
             if (tabTable == 1 )
             {

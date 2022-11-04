@@ -31,6 +31,7 @@ $(document).ready(function () {
     $("#idNoiDungHopDong").keyup(function (event) {
         ValidateMaxLength(this, 300);
     });
+    ChangeNhaThau();
 });
 
 function DinhDangSo() {
@@ -756,6 +757,10 @@ function Save() {
     hopDong.sHinhThucHopDong = $("#sHinhThucHopDong").val();
     hopDong.fTienHopDong = parseFloat(UnFormatNumber($("#fGiaTriHopDong").val()));
     hopDong.NoiDungHopDong = $("#idNoiDungHopDong").val();
+    hopDong.sSoTaiKhoan = $("#sStkNhaThau").val();
+    hopDong.sNganHang = $("#sNganHang").val();
+    hopDong.dThoiGianBaoLanhHopDongTu = $("#dBaoLanhHDTu").val();
+    hopDong.dThoiGianBaoLanhHopDongDen = $("#dBaoLanhHDDen").val();
     //Thông tin gói thầu
     hopDong.iID_NhaThauThucHienID = $("#iID_NhaThauID").val();
 
@@ -799,4 +804,25 @@ function CaculatorGiaTriHopDong() {
             fTong += parseFloat(fGiaTriPheDuyet);
     });
     $("#fGiaTriHopDong").val(FormatNumber(fTong));
+}
+
+function ChangeNhaThau() {
+    $("#iID_NhaThauID").change(function () {
+        var iID_NhaThauID = $("#iID_NhaThauID option:selected").val();
+        $.ajax({
+            url: "/QLVonDauTu/QLThongTinHopDong/GetSoTaiKhoanNhaThauByIdNhaThau",
+            type: "POST",
+            data: { iID_NhaThauID: iID_NhaThauID },
+            dataType: "json",
+            cache: false,
+            success: function (data) {
+                if (data != null && data != "") {
+                    $("#sStkNhaThau").val(data.data);
+                }
+            },
+            error: function (data) {
+
+            }
+        })
+    });
 }

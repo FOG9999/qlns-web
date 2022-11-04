@@ -68,12 +68,61 @@ function ChangeSelectChuongTrinh() {
 }
 
 function ExportChenhLechTiGia(fileType) {
+    if (!ValidateBaoCao()) {
+        return false;
+    }
     var iDonVi = $("#slbDonVi").val();
     var iChuongTrinh = $("#slbChuongTrinh").val();
     var iHopDong = $("#slbHopDong").val();
     var url = "/QLNH/ChenhLechTiGiaHoiDoai/ExportChenhLechTiGia?iDonVi=" + iDonVi
-        + "&iChuongTrinh=" + iChuongTrinh + "&iHopDong=" + iHopDong + "&ext=" + fileType;
+        + "&iChuongTrinh=" + iChuongTrinh
+        + "&iHopDong=" + iHopDong
+        + "&tieude1=" + encodeURIComponent($.trim($("#txtTieuDe1").val()))
+        + "&tieude2=" + encodeURIComponent($.trim($("#txtTieuDe2").val()))
+        + "&tieude3=" + encodeURIComponent($.trim($("#txtTieuDe3").val()))
+        + "&tendonvicaptren=" + encodeURIComponent($.trim($("#txtDonViCapTren").val()))
+        + "&tendonvi=" + encodeURIComponent($.trim($("#txtDonVi").val()))
+        + "&ext=" + fileType;
     var arrLink = [];
     arrLink.push(url);
     openLinks(arrLink);
+}
+
+function OpenModalBaoCao() {
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/ChenhLechTiGiaHoiDoai/OpenModalBaoCao",
+        success: function (data) {
+            $('#modalChenhLechTiGia').modal('toggle');
+            $('#modalChenhLechTiGia').modal('show');
+            $("#modalChenhLechTiGia").html(data);
+        }
+    });
+}
+
+function ValidateBaoCao() {
+    var Title = 'Lỗi hạng mục chưa nhập trên báo cáo';
+    var Messages = [];
+
+    if ($.trim($("#txtDonViCapTren").val()) == "") {
+        Messages.push("Đơn vị cấp trên chưa được nhập!");
+    }
+
+    if ($.trim($("#txtDonVi").val()) == "") {
+        Messages.push("Đơn vị chưa được nhập!");
+    }
+
+    if (Messages.length > 0) {
+        $.ajax({
+            type: "POST",
+            url: "/Modal/OpenModal",
+            data: { Title: Title, Messages: Messages, Category: ERROR },
+            success: function (data) {
+                $("#divModalConfirm").html(data);
+            }
+        });
+        return false;
+    }
+
+    return true;
 }

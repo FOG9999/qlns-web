@@ -70,6 +70,7 @@ namespace Viettel.Models.QLVonDauTu
         public double? fGiaTriQuyetToan { get; set; }
         public string sMaDuAn { get; set; }
         public string sTenDuAn { get; set; }
+        public string iSTT { get; set; }
         public string sGiaTriThamTra
         {
             get

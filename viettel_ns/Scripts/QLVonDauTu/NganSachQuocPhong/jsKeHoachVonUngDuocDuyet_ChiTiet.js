@@ -7,6 +7,7 @@ var lstDetail = [];
 var lstMucLucNganSach = [];
 var id = GUID_EMPTY;
 var isUpdate = false;
+var isDieuChinh = false;
 
 var iID_NganhID = GUID_EMPTY;
 var iID_KeHoachUng = GUID_EMPTY;
@@ -17,6 +18,8 @@ $(document).ready(function () {
         isUpdate = true;
     }
     iID_KeHoachUng = $(".iIdKHVonUng").val();
+    if ($(".isDieuChinh").val() == "true")
+        isDieuChinh = true;
 });
 
 function GetDataChiTietTable() {
@@ -39,7 +42,9 @@ function GetDataChiTietTable() {
         obj.fTongMucDauTu = UnFormatNumber($(item).find(".txt_sTongMucDauTu").text()) != 0 ? UnFormatNumber($(item).find(".txt_sTongMucDauTu").text()) : 0;
         obj.fGiaTriDeNghi = UnFormatNumber($(item).find(".txt_sGiaTriDeNghi").text()) != 0 ? UnFormatNumber($(item).find(".txt_sGiaTriDeNghi").text()) : 0;
         obj.fCapPhatTaiKhoBac = UnFormatNumber($(item).find(".txt_fGiaTriCapKhoBac").val()) != 0 ? UnFormatNumber($(item).find(".txt_fGiaTriCapKhoBac").val()) : 0;
+        obj.fCapPhatTaiKhoBacDC = UnFormatNumber($(item).find(".txt_fGiaTriCapKhoBacDC").val()) != 0 ? UnFormatNumber($(item).find(".txt_fGiaTriCapKhoBacDC").val()) : 0;
         obj.fCapPhatBangLenhChi = UnFormatNumber($(item).find(".txt_fGiaTriCaplenhChi").val()) != 0 ? UnFormatNumber($(item).find(".txt_fGiaTriCaplenhChi").val()) : 0;
+        obj.fCapPhatBangLenhChiDC = UnFormatNumber($(item).find(".txt_fGiaTriCaplenhChiDC").val()) != 0 ? UnFormatNumber($(item).find(".txt_fGiaTriCaplenhChiDC").val()) : 0;
         obj.sGhiChu = $(item).find(".txt_sGhiChu").val();
         obj.sTrangThaiDuAnDangKy = $(item).find("#sTrangThaiDuAnDangKy").val();
         if (isUpdate) {
@@ -113,7 +118,8 @@ function Save() {
         data: {
             listData: listObjSave,
             isUpdate: isUpdate,
-            iId_KeHoachUngID: iID_KeHoachUng
+            iId_KeHoachUngID: iID_KeHoachUng,
+            isDieuChinh: isDieuChinh
         },
         success: function (r) {
             if (r.status) {

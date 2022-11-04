@@ -84,6 +84,12 @@ function ValidateDataPrint(data) {
     if (data.txtTieuDe2 == null || data.txtTieuDe2 == "") {
         Messages.push("Tiêu đề 2 chưa nhập !");
     }
+    if (data.txtDonViCapTren == null || data.txtDonViCapTren == "") {
+        Messages.push("Đơn vị cấp trên chưa nhập !");
+    }
+    if (data.txtDonVi == null || data.txtDonVi == "") {
+        Messages.push("Đơn vị chưa nhập !");
+    }
     if (data.slbDonViVND == null || data.slbDonViVND == 0) {
         Messages.push("Đơn vị VND chưa chọn !");
     }
@@ -187,15 +193,19 @@ function ChangeVoucher() {
 function printBaoCao(ext) {
     var links = [];
     var url = "";
-    var txtTieuDe1 = $("#txtTieuDe1").val();
-    var txtTieuDe2 = $("#txtTieuDe2").val();
+    var txtTieuDe1 = $.trim($("#txtTieuDe1").val());
+    var txtTieuDe2 = $.trim($("#txtTieuDe2").val());
+    var txtDonViCapTren = $.trim($("#txtDonViCapTren").val());
+    var txtDonVi = $.trim($("#txtDonVi").val());
     var slbDonViVND = $("#slbDonViVND").val();
     var slbDonViUSD = $("#slbDonViUSD").val();
     var txtIDQuyetToan = $("#txtIDQuyetToan").val();
-
+    
     var data = {};
     data.txtTieuDe1 = txtTieuDe1;
     data.txtTieuDe2 = txtTieuDe2;
+    data.txtDonViCapTren = txtDonViCapTren;
+    data.txtDonVi = txtDonVi;
     data.slbDonViVND = slbDonViVND;
     data.slbDonViUSD = slbDonViUSD;
 
@@ -204,13 +214,14 @@ function printBaoCao(ext) {
     }
 
     url = $("#urlExportBCChiTiet").val() +
-        "?ext=" + ext + "&txtTieuDe1=" + txtTieuDe1
-        + "&txtTieuDe2=" + txtTieuDe2
+        "?ext=" + ext + "&txtTieuDe1=" + encodeURIComponent(txtTieuDe1)
+        + "&txtTieuDe2=" + encodeURIComponent(txtTieuDe2)
+        + "&txtDonViCapTren=" + encodeURIComponent(txtDonViCapTren)
+        + "&txtDonVi=" + encodeURIComponent(txtDonVi)
         + "&slbDonViVND=" + slbDonViVND
         + "&slbDonViUSD=" + slbDonViUSD
         + "&txtIDQuyetToan=" + txtIDQuyetToan;
 
-    url = unescape(url);
     links.push(url);
 
     openLinks(links);

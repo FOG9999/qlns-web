@@ -8,24 +8,25 @@
     <div class="col-sm-8" style="display:flex;padding-left:0px;">
         <label class="control-label">Báo cáo đề nghị tổng hợp số chuyển năm sau theo từng hợp đồng, dự án toàn quân</label>
     </div>
-    <div style="display:flex">
-        <select id="slbNamKeHoachFillter" name="slbNamKeHoachFillter" class="form-control mr-10">
-            @if (ViewBag.ListNamKeHoach != null)
-            {
-                foreach (var namKeHoach in (List<Dropdown_SelectValue>)ViewBag.ListNamKeHoach)
+    <div style="display:flex;justify-content:flex-end;padding-right:0;flex-wrap:wrap;">
+        <div class="mr-10">
+            <select id="slbNamKeHoachFillter" name="slbNamKeHoachFillter" class="form-control">
+                @if (ViewBag.ListNamKeHoach != null)
                 {
-                    <option value="@namKeHoach.Value">@Html.Raw(Html.Encode(namKeHoach.Label))</option>
+                    foreach (var namKeHoach in (List<Dropdown_SelectValue>)ViewBag.ListNamKeHoach)
+                    {
+                        <option value="@namKeHoach.Value">@Html.Raw(Html.Encode(namKeHoach.Label))</option>
+                    }
                 }
-            }
-        </select>
+            </select>
+        </div>
         <button class="btn btn-info pull-right mr-10" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
-        <button class="btn btn-info pull-right mr-10" onclick="InBaoCaoModal()">In báo cáo</button>
-        <button class="btn btn-info pull-right mr-10" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+        <button class="btn btn-warning pull-right mr-10" onclick="InBaoCaoModal()"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
+        <button class="btn btn-info pull-right" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
     </div>
-
 </div>
 <div style="overflow-x:auto">
-    <table class="table table-bordered table-update" id="tbListChiTietQuyetToanNienDo">
+    <table class="table table-bordered table-update tr-hover" id="tbListChiTietQuyetToanNienDo">
         <thead>
 
             <tr>
@@ -143,12 +144,7 @@
     </div>*@
 <script type="text/javascript">
     $(document).ready(function () {
-        $("tr").hover(function () {
-            $(this).css("background-color", "#e7f8fe");
-        }, function () {
-            $(this).css("background-color", "");
-        });
+        $("#slbNamKeHoachFillter").select2({ width: '100%', matcher: FilterInComboBox });
     });
-
 </script>
 

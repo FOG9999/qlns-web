@@ -4,6 +4,7 @@ var ERROR = 1;
 var isInsert = true;
 var isDelete = false;
 var isTongHop = false;
+var isDieuChinh = false;
 
 
 //================= Index =============================//
@@ -229,20 +230,28 @@ function GetDataDetail() {
     if (!(id == GUID_EMPTY || id == "" || id == undefined || id == null)) {
         isInsert = false;
     }
+
     var sMaDonVi = $("#iID_DonViQuanLyID :selected").val();
-    if (id != guidEmpty) {
-        if (!bIsTongHop)
-            $("#iID_DonViQuanLyID").attr('disabled', true);
+    if (isDieuChinh) {
+        $("#iID_DonViQuanLyID").attr('disabled', true);
         $("#iNamKeHoach").attr('disabled', true);
         $("#iId_NguonVon").attr('disabled', true);
-        $("#dNgayDeNghi").attr('disabled', true);
-        $(".create_thdt span.input-group-addon").hide();
+
     } else {
-        if (!bIsTongHop)
-            $("#iID_DonViQuanLyID").attr('disabled', false);
-        $("#iNamKeHoach").attr('disabled', false);
-        $("#iId_NguonVon").attr('disabled', false);
-        $("#dNgayDeNghi").attr('disabled', false);
+        if (id != guidEmpty) {
+            if (!bIsTongHop)
+                $("#iID_DonViQuanLyID").attr('disabled', true);
+            $("#iNamKeHoach").attr('disabled', true);
+            $("#iId_NguonVon").attr('disabled', true);
+            $("#dNgayDeNghi").attr('disabled', true);
+            $(".create_thdt span.input-group-addon").hide();
+        } else {
+            if (!bIsTongHop)
+                $("#iID_DonViQuanLyID").attr('disabled', false);
+            $("#iNamKeHoach").attr('disabled', false);
+            $("#iId_NguonVon").attr('disabled', false);
+            $("#dNgayDeNghi").attr('disabled', false);
+        }
     }
 
     $.ajax({
@@ -715,13 +724,15 @@ function ValidateData() {
         $("#btnSave").attr('disabled', false);
         return false;
     }
-    CheckDupicateSoQuyetDinh()
     return true;
 }
 
 function CheckDupicateSoQuyetDinh() {
     var iID_KeHoachUngID = $("#Id").val();
+    if (isDieuChinh)
+        iID_KeHoachUngID = GUID_EMPTY;
     var sSoQuyetDinh = $("#sSoDeNghi").val();
+    var check = false;
     $.ajax({
         url: "/QLVonDauTu/KeHoachVonUngDeXuat/CheckExistSoQuyetDinh",
         type: "POST",
@@ -731,10 +742,11 @@ function CheckDupicateSoQuyetDinh() {
         success: function (result) {
             if (result.status) {
                 alert("Đã tồn tại số đề nghị " + sSoQuyetDinh + " .");
-            }
-            return !result.status;
+                check = true;
+            }       
         }
     });
+    return check;
 }
 
 
@@ -749,29 +761,37 @@ function Insert() {
     })
     if (!ValidateData()) {
         return;
-    } else {
+    } else {    
         EventCheckbox();
+    } 
+    
+    if (CheckDupicateSoQuyetDinh()) {
+        return false;
     }
     if ($("#sTongHop").val().length != 0) {
         isTongHop = true;
     }
-
     $.ajax({
         url: "/QLVonDauTu/KeHoachVonUngDeXuat/QLKeHoachVonUngDxSave",
         type: "POST",
         data: {
             data: objDeXuat,
             lstData: selectedDuAn,
-            isInsert: isInsert
+            isInsert: isInsert,
+            isDieuChinh: isDieuChinh
         },
         dataType: "json",
         async: false,
         success: function (result) {
             if (result.status) {
                 var messAlert = "Cập nhật dữ liệu thành công.";
-                if (objDeXuat.Id == GUID_EMPTY)
-                    messAlert = "Tạo mới dữ liệu thành công.";
+                if (result.isDieuChinh) {
+                    messAlert = "Điều chỉnh dữ liệu thành công.";
+                } else {
+                    if (result.isinsert)
+                        messAlert = "Tạo mới dữ liệu thành công.";
 
+                }
                 alert(messAlert);
                 //if (result.isinsert) {
                 //    window.location.href = "/QLVonDauTu/KeHoachVonUngDeXuat/Update/" + result.ID;
@@ -788,7 +808,7 @@ function Insert() {
                     },
                     success: function (data) {
                         if (data.status) {
-                            window.location.href = "/QLVonDauTu/KeHoachVonUngDeXuat/DetailChiTiet?idKHVU=" + result.ID + "&isUpdate=" + !result.isinsert + "&isTongHop=" + isTongHop;
+                            window.location.href = "/QLVonDauTu/KeHoachVonUngDeXuat/DetailChiTiet?idKHVU=" + result.ID + "&isUpdate=" + !result.isinsert + "&isTongHop=" + isTongHop + "&isDieuChinh=" + isDieuChinh;
 
                         } else {
                             alert("Chưa có dự án");
@@ -905,4 +925,10 @@ function ExportKHVUDeXuat(id) {
             }
         }
     });
+}
+
+// Dieu chinh KehoachVonUngDX
+
+function DieuChinhKHVU(id, isDieuChinh) {
+    location.href = "/QLVonDauTu/KeHoachVonUngDeXuat/Update?id=" + id + "&isDieuChinh=" + isDieuChinh;
 }

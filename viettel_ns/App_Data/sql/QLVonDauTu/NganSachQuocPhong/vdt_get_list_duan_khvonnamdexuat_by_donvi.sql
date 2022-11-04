@@ -1,4 +1,7 @@
-﻿SELECT da.iID_DuAnID, da.sMaDuAn, da.sTenDuAn INTO #tmp
+﻿--DECLARE @iIdMaDonViQuanLy nvarchar(50) ='220'
+--DECLARE @iNamKeHoach int =2022
+
+ SELECT da.iID_DuAnID, da.sMaDuAn, da.sTenDuAn INTO #tmp
 FROM VDT_DA_DuAn da
 WHERE da.iID_MaDonViThucHienDuAnID = @iIdMaDonViQuanLy AND (da.iID_DuAnID IN (SELECT ctdt.iID_DuAnID FROM VDT_KHV_KeHoach5Nam_ChiTiet ctdt))
 
@@ -12,6 +15,7 @@ SELECT tmp.iID_DuAnID, tmp.sMaDuAn, tmp.sTenDuAn,
 (CASE WHEN dact.iID_DuAnID IS NULL THEN N'Mở mới' ELSE N'Chuyển tiếp' END) as sTenLoaiDuAn
 FROM #tmp as tmp
 LEFT JOIN #tmpDuAnChuyenTiep as dact on tmp.iID_DuAnID = dact.iID_DuAnID
+where tmp.iID_DuAnID not in (select iID_DuAnID from VDT_QT_QuyetToan)
 
 DROP TABLE #tmp
 DROP TABLE #tmpDuAnChuyenTiep

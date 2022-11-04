@@ -1,0 +1,24 @@
+﻿<div class="modal-body">
+    <div class="form-group row">
+        <div class="col-sm-6">
+            <label>Đơn vị cấp trên</label>
+            @Helpers.Required()
+        <input type="text" class="form-control" value="" id="DonViCapTren" maxlength="250"/>
+        </div>
+        <div class="col-sm-6">
+            <label>Đơn vị </label>
+            @Helpers.Required()
+            <input type="text"  class="form-control"  value="" id="DonVi" maxlength="250"/>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+        <div style="text-align : center">
+            <a class="btn-mvc" id="btnChuKy"><i class="fa fa-file-excel"></i>Sửa chữ ký</a>
+            <button class="btn btn-default" onclick="ViewInBaoCao()"><i class="fa fa-file-pdf-o" aria-hidden="true"></i><span>Xuất file PDF</span></button>
+            <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Đóng</span></button>
+        </div>
+</div>
+
+    @Html.Partial("_ui_chuky")
+

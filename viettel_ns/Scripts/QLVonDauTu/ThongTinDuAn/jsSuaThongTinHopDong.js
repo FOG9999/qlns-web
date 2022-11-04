@@ -10,6 +10,7 @@ $(document).ready(function () {
     else
         $("#cboLoaiHopDong").val(HOP_DONG_KINH_TE);
   //  DinhDangSo();
+
     GetListNhaThau();
     LoadGoiThauDb();
     SetArrChiPhi();
@@ -31,6 +32,8 @@ $(document).ready(function () {
     $("#idNoiDungHopDong").keyup(function (event) {
         ValidateMaxLength(this, 300);
     });
+     ChangeNhaThau();
+  
 });
 
 function DinhDangSo() {
@@ -545,7 +548,7 @@ function CreateDropDownNhaThau(nhathauId) {
     var html = '';
     arrNhaThau.forEach(function (x) {
         if (x.iID_NhaThauID == nhathauId) {
-            html += '<option selected value = "' + x.iID_NhaThauID + '">' + x.STenNhaThau + '</option>';
+            html += '<option selected value = "' + x.iID_NhaThauID + ' ">' + x.STenNhaThau + '</option>';
         } else {
             html += '<option value = "' + x.iID_NhaThauID + '">' + x.STenNhaThau + '</option>';
         }
@@ -712,6 +715,10 @@ function Save() {
     hopDong.sHinhThucHopDong = $("#sHinhThucHopDong").val();
     hopDong.fTienHopDong = parseFloat(UnFormatNumber($("#fGiaTriHopDong").val()));
     hopDong.NoiDungHopDong = $("#idNoiDungHopDong").val();
+    hopDong.sSoTaiKhoan = $("#sStkNhaThau").val();
+    hopDong.sNganHang = $("#sNganHang").val();
+    hopDong.dThoiGianBaoLanhHopDongTu = $("#dBaoLanhHDTu").val();
+    hopDong.dThoiGianBaoLanhHopDongDen = $("#dBaoLanhHDDen").val();
     //Thông tin gói thầu
     hopDong.iID_NhaThauThucHienID = $("#iID_NhaThauID").val();
 
@@ -821,4 +828,24 @@ function CaculatorGiaTriHopDong() {
     $("#fGiaTriHopDong").val(FormatNumber(fTong));
 }
 
+function ChangeNhaThau() {
+    $("#iID_NhaThauID").change( function () {
+        var iID_NhaThauID = $("#iID_NhaThauID option:selected").val();
+        $.ajax({
+            url: "/QLVonDauTu/QLThongTinHopDong/GetSoTaiKhoanNhaThauByIdNhaThau",
+            type: "POST",
+            data: { iID_NhaThauID: iID_NhaThauID },
+            dataType: "json",
+            cache: false,
+            success: function (data) {
+                if (data != null && data != "") {
+                    $("#sStkNhaThau").val(data.data);
+                }
+            },
+            error: function (data) {
+
+            }
+        })
+    });
+}
 

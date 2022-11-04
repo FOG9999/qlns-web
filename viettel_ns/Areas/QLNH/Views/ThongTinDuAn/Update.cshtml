@@ -56,9 +56,9 @@
             <select id="slbBQuanLy" name="slbBQuanLy" class="form-control">
                 @if (ViewBag.ListPhongBan != null)
                 {
-                    foreach (var donvi in (List<NS_PhongBan>)ViewBag.ListPhongBan)
+                    foreach (var phongban in (List<NS_PhongBan>)ViewBag.ListPhongBan)
                     {
-                        <option value="@donvi.iID_MaPhongBan" @(Model.ThongTinDuAnDetail.iID_BQuanLyID == donvi.iID_MaPhongBan ? "selected" : string.Empty)>@Html.Raw(Html.Encode(donvi.sTen))</option>
+                        <option value="@phongban.iID_MaPhongBan" @(Model.ThongTinDuAnDetail.iID_BQuanLyID == phongban.iID_MaPhongBan ? "selected" : string.Empty)>@Html.Raw(Html.Encode(phongban.sTen))</option>
                     }
                 }
             </select>
@@ -66,16 +66,15 @@
         <div class="col-sm-3">
             <label for="slbDonVi">Đơn vị</label>
             @Helpers.Required()
-            <select id="slbDonVi" name="slbDonVi" class="form-control" onchange="ChangeDVSelect()">
-                @if (ViewBag.ListDonVi != null)
+        <select id="slbDonVi" name="slbDonVi" class="form-control" onchange="ChangeDVSelect()">
+            @if (ViewBag.ListDonVi != null)
+            {
+                foreach (var donvi in (List<NS_DonVi>)ViewBag.ListDonVi)
                 {
-                    foreach (var donvi in (List<NS_DonVi>)ViewBag.ListDonVi)
-                    {
-                        <option value="@donvi.iID_Ma" @(Model.ThongTinDuAnDetail.iID_DonViID == donvi.iID_Ma ? "selected" : string.Empty) data-madonvi="@Html.Raw(Html.Encode(donvi.iID_MaDonVi))">@Html.Raw(Html.Encode(donvi.sTen))</option>
-
-                    }
+                    <option value="@donvi.iID_Ma" @(Model.ThongTinDuAnDetail.iID_DonViID == donvi.iID_Ma ? "selected" : string.Empty) data-madonvi="@Html.Raw(Html.Encode(donvi.iID_MaDonVi))">@Html.Raw(Html.Encode(donvi.sTen))</option>
                 }
-            </select>
+            }
+        </select>
         </div>
         <div class="col-sm-3">
             <label for="slbChuongTrinh">Tên chương trình</label>
@@ -95,36 +94,37 @@
         <h4 class="color-text-red">Thông tin dự án:</h4>
         <hr class='color-background-red' />
         <div class="form-group row">
-            <div class="col-sm-3">
-                <label for="txtMaDuAn">Mã dự án</label>
-                @Helpers.Required()
-                <div><input type="text" id="txtMaDuAn" class="form-control" value="@Html.Raw(Html.Encode(Model.ThongTinDuAnDetail.sMaDuAn))" maxlength="100" autocomplete="off" /></div>
-            </div>
-            <div class="col-sm-3">
+            @if (ViewBag.State != "CREATE")
+            {
+                <div class="col-sm-3">
+                    <label for="txtMaDuAn">Mã dự án</label>
+                    @Helpers.Required()
+                    <div><input readonly type="text" id="txtMaDuAn" class="form-control" value="@Html.Raw(Html.Encode(Model.ThongTinDuAnDetail.sMaDuAn))" maxlength="100" autocomplete="off" /></div>
+                </div>
+            }
+            <div class="col-sm-6">
                 <label for="txtTenDuAn">Tên dự án</label>
-                @Helpers.Required()
-                <div><input type="text" id="txtTenDuAn" class="form-control" value="@Html.Raw(Html.Encode(Model.ThongTinDuAnDetail.sTenDuAn))" autocomplete="off" /></div>
+                <textarea style="max-width: 100% ; max-height: 10%" id="txtTenDuAn" class="form-control" autocomplete="off">@Html.Raw(Html.Encode(Model.ThongTinDuAnDetail.sTenDuAn))</textarea>
             </div>
             <div class="col-sm-3">
                 <label for="txtSoChuTruongDauTu ">Số chủ trương đầu tư</label>
                 <div><input type="text" id="txtSoChuTruongDauTu" class="form-control" value="@Html.Raw(Html.Encode(Model.ThongTinDuAnDetail.sSoChuTruongDauTu))" maxlength="100" autocomplete="off" /></div>
             </div>
-            <div class="col-sm-3">
-                <label for="txtNgayBanHanhCTDT ">Ngày ban hành chủ trương đầu tư</label>
-                <div class='input-group date'>
-                    <input id="txtNgayBanHanhCTDT" class="form-control txtDate" autocomplete="off" placeholder="dd/MM/yyyy"
-                           value="@(Model.ThongTinDuAnDetail.dNgayChuTruongDauTu.HasValue ? Model.ThongTinDuAnDetail.dNgayChuTruongDauTu.Value.ToString("dd/MM/yyyy") : string.Empty)" />
-                    <span class="btn-default input-group-addon">
-                        <i class="fa fa-calendar" aria-hidden="true"></i>
-                    </span>
-                </div>
-            </div>
         </div>
     </div>
     <div class="form-group row">
         <div class="col-sm-3">
-            <label for="txtSoQuyetDinhDauTu ">Sổ quyết định đầu tư</label>
-            @Helpers.Required()
+            <label for="txtNgayBanHanhCTDT ">Ngày ban hành chủ trương đầu tư</label>
+            <div class='input-group date'>
+                <input id="txtNgayBanHanhCTDT" class="form-control txtDate" autocomplete="off" placeholder="dd/MM/yyyy"
+                       value="@(Model.ThongTinDuAnDetail.dNgayChuTruongDauTu.HasValue ? Model.ThongTinDuAnDetail.dNgayChuTruongDauTu.Value.ToString("dd/MM/yyyy") : string.Empty)" />
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <label for="txtSoQuyetDinhDauTu ">Quyết định phê duyệt dự án</label>
             <div><input type="text" id="txtSoQuyetDinhDauTu" class="form-control" value="@Html.Raw(Html.Encode(Model.ThongTinDuAnDetail.sSoQuyetDinhDauTu))" maxlength="100" autocomplete="off" /></div>
         </div>
         <div class="col-sm-3">
@@ -138,18 +138,8 @@
             </div>
         </div>
         <div class="col-sm-3">
-            <label for="txtSoDuToanTu ">Số Dự toán</label>
+            <label for="txtSoDuToanTu ">Số quyết định Thiết kế chi tiết Tổng dự toán</label>
             <div><input type="text" id="txtSoDuToanTu" class="form-control" value="@Html.Raw(Html.Encode(Model.ThongTinDuAnDetail.sSoDuToan))" maxlength="100" autocomplete="off" /></div>
-        </div>
-        <div class="col-sm-3">
-            <label for="txtNgayBanHanhDuToan ">Ngày ban hành Dự toán</label>
-            <div class='input-group date'>
-                <input id="txtNgayBanHanhDuToan" class="form-control txtDate" autocomplete="off" placeholder="dd/MM/yyyy"
-                       value="@(Model.ThongTinDuAnDetail.dNgayDuToan.HasValue ? Model.ThongTinDuAnDetail.dNgayDuToan.Value.ToString("dd/MM/yyyy") : string.Empty)" />
-                <span class="btn-default input-group-addon">
-                    <i class="fa fa-calendar" aria-hidden="true"></i>
-                </span>
-            </div>
         </div>
     </div>
     <div class="form-group row">
@@ -160,11 +150,7 @@
                 {
                     foreach (var chudautu in (List<DM_ChuDauTu>)ViewBag.ListChuDauTu)
                     {
-                        <option value="@chudautu.ID" @(Model.ThongTinDuAnDetail.iID_ChuDauTuID == chudautu.ID ? "selected" : string.Empty)
-                            data-machudautu="@Html.Raw(Html.Encode(chudautu.sId_CDT))"
-                        >
-                            @Html.Raw(Html.Encode(chudautu.sTenCDT))
-                        </option>
+                        <option value="@chudautu.ID" @(Model.ThongTinDuAnDetail.iID_ChuDauTuID == chudautu.ID ? "selected" : string.Empty) data-machudautu="@Html.Raw(Html.Encode(chudautu.sId_CDT))">@Html.Raw(Html.Encode(chudautu.sTenCDT))</option>
                     }
                 }
             </select>
@@ -217,16 +203,23 @@
                 {
                     foreach (var tigiachitiet in (List<NH_DM_TiGia_ChiTiet>)ViewBag.ListTiGiaChiTiet)
                     {
-                        <option value="@tigiachitiet.ID" data-mangoaitekhac="@Html.Raw(Html.Encode(tigiachitiet.sMaTienTeQuyDoi))"
-                                @(Model.ThongTinDuAnDetail.iID_TiGia_ChiTietID.HasValue && Model.ThongTinDuAnDetail.iID_TiGia_ChiTietID.Value == tigiachitiet.ID ? "selected" : string.Empty)>
+                        <option value="@tigiachitiet.ID" @(Model.ThongTinDuAnDetail.iID_TiGia_ChiTietID.HasValue && Model.ThongTinDuAnDetail.iID_TiGia_ChiTietID.Value == tigiachitiet.ID ? "selected" : string.Empty)>
                             @Html.Raw(Html.Encode(tigiachitiet.sMaTienTeQuyDoi))
                         </option>
                     }
                 }
             </select>
-
         </div>
-        <div class="col-sm-3">&nbsp;</div>
+        <div class="col-sm-3">
+            <label for="txtNgayBanHanhDuToan ">Ngày ban hành Dự toán</label>
+            <div class='input-group date'>
+                <input id="txtNgayBanHanhDuToan" class="form-control txtDate" autocomplete="off" placeholder="dd/MM/yyyy"
+                       value="@(Model.ThongTinDuAnDetail.dNgayDuToan.HasValue ? Model.ThongTinDuAnDetail.dNgayDuToan.Value.ToString("dd/MM/yyyy") : string.Empty)" />
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
         <div class="col-sm-3">&nbsp;</div>
     </div>
     <div class="form-group row">

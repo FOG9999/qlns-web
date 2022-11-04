@@ -60,9 +60,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             return PartialView("_partialListKeHoachVonUngDuocDuyet", dataKHVU);
         }
 
-        public ActionResult CreateNew(Guid? id)
+        public ActionResult CreateNew(Guid? id, bool isDieuChinh = false)
         {
             ViewBag.LstNguonVon = CommonFunction.GetDataDropDownNguonNganSach();
+            ViewBag.isDieuChinh = isDieuChinh ? "true" : "false";
 
             VDTQLKeHoachVonUngDuocDuyetModel data = new VDTQLKeHoachVonUngDuocDuyetModel();
             if (id.HasValue)
@@ -97,7 +98,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             _iQLVonDauTuService.InsertTongHopNguonDauTu_Tang(LOAI_CHUNG_TU.KE_HOACH_VON_UNG, (int)TypeExecute.Delete, id);
 
             if (!_iQLVonDauTuService.deleteKHVUChiTiet(id)) return false;
-            if (!_iQLVonDauTuService.deleteKHVU(id)) return false;
+            if (!_iQLVonDauTuService.deleteKHVU(id, Username)) return false;
             return true;
         }
 
@@ -108,11 +109,22 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             return View(dataView);
         }
 
-        public JsonResult QLKeHoachVonUngSave(VDTQLKeHoachVonUngDuocDuyetModel data, string id = null)
+        public JsonResult QLKeHoachVonUngSave(VDTQLKeHoachVonUngDuocDuyetModel data, string id = null, bool isDieuChinh = false)
         {
-            if (CheckExistSoQuyetDinh(data.dataKHVU.Id, data.dataKHVU.sSoQuyetDinh))
+            if (isDieuChinh)
             {
-                return Json(new { status = true, messError = string.Format("Số quyết định {0} đã tồn tại.", data.dataKHVU.sSoQuyetDinh) }, JsonRequestBehavior.AllowGet);
+                if (CheckExistSoQuyetDinh(null, data.dataKHVU.sSoQuyetDinh))
+                {
+                    return Json(new { status = true, messError = string.Format("Số quyết định {0} đã tồn tại.", data.dataKHVU.sSoQuyetDinh) }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                if (CheckExistSoQuyetDinh(data.dataKHVU.Id, data.dataKHVU.sSoQuyetDinh))
+                {
+                    return Json(new { status = true, messError = string.Format("Số quyết định {0} đã tồn tại.", data.dataKHVU.sSoQuyetDinh) }, JsonRequestBehavior.AllowGet);
+                }
+
             }
 
             ConvertMucLucNganSach(data.listKHVUChiTiet);
@@ -123,83 +135,114 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 var trans = conn.BeginTransaction();
                 bool isUpdate = false;
                 Guid iID = Guid.Empty;
-                if (data.dataKHVU.Id == Guid.Empty)
+                var config = _iNganSachService.GetCauHinh(Username);
+                int iMaNamNS = config.iID_MaNamNganSach;
+                var entityParent = conn.Get<VDT_KHV_KeHoachVonUng>(data.dataKHVU.Id, trans);
+
+
+                #region Dieu chinh ke hoach von ung duoc duyet
+                if (isDieuChinh)
                 {
-                    #region Them moi VDT_KHV_KeHoachVonUng
-                    var config = _iNganSachService.GetCauHinh(Username);
-                    int iMaNamNS = config.iID_MaNamNganSach;
+                    var entity = new VDT_KHV_KeHoachVonUng();
+                    entity.MapFrom(data.dataKHVU);
 
-                    var entityKHVU = new VDT_KHV_KeHoachVonUng();
-                    entityKHVU.MapFrom(data.dataKHVU);
-
-                    if (data.listKHVUChiTiet != null && data.listKHVUChiTiet.Count() > 0)
-                        entityKHVU.fGiaTriUng = data.listKHVUChiTiet.Where(x => x.isDelete == false).Sum(x => x.fCapPhatBangLenhChi) + data.listKHVUChiTiet.Where(x => x.isDelete == false).Sum(x => x.fCapPhatTaiKhoBac);
-
-                    entityKHVU.sUserCreate = Username;
-                    entityKHVU.dDateCreate = DateTime.Now;
-                    conn.Insert(entityKHVU, trans);
-
-                    iID = entityKHVU.Id;
-                    id = entityKHVU.Id.ToString();
-                    #endregion
-
-                    #region Them moi VDT_KHV_KeHoachVonUng_ChiTiet
                     //if (data.listKHVUChiTiet != null && data.listKHVUChiTiet.Count() > 0)
-                    //{
-                    //    for (int i = 0; i < data.listKHVUChiTiet.Count(); i++)
-                    //    {
-                    //        var entityKHVUChiTiet = new VDT_KHV_KeHoachVonUng_ChiTiet();
-                    //        entityKHVUChiTiet.MapFrom(data.listKHVUChiTiet.ToList()[i]);
-                    //        if (data.listKHVUChiTiet.ToList()[i].isDelete)
-                    //        {
-                    //            entityKHVUChiTiet.fCapPhatTaiKhoBac = 0;
-                    //            entityKHVUChiTiet.fCapPhatBangLenhChi = 0;
-                    //        }
+                    //    entityKHVU.fGiaTriUng = data.listKHVUChiTiet.Where(x => x.isDelete == false).Sum(x => x.fCapPhatBangLenhChi) + data.listKHVUChiTiet.Where(x => x.isDelete == false).Sum(x => x.fCapPhatTaiKhoBac);
+                    entity.Id = Guid.NewGuid();
+                    entity.bActive = true;
+                    entity.bIsGoc = false;
+                    entity.iID_ParentID = entityParent.Id;
+                    entity.sUserCreate = Username;
+                    entity.dDateCreate = DateTime.Now;
+                    conn.Insert(entity, trans);
 
-                    //        entityKHVUChiTiet.iID_KeHoachUngID = entityKHVU.Id;
-                    //        conn.Insert(entityKHVUChiTiet, trans);
-                    //    }
-                    //}
-                    #endregion
-                }
-
-                else
-                {
-                    #region Sua KHVU
-                    isUpdate = true;
-                    var entity = conn.Get<VDT_KHV_KeHoachVonUng>(data.dataKHVU.Id, trans);
-                    entity.sSoQuyetDinh = data.dataKHVU.sSoQuyetDinh;
-                    entity.iID_NhomQuanLyID = data.dataKHVU.iID_NhomQuanLyID;
-                    if (data.listKHVUChiTiet != null && data.listKHVUChiTiet.Count() > 0)
-                        entity.fGiaTriUng = data.listKHVUChiTiet.Where(x => x.isDelete == false).Sum(x => x.fCapPhatBangLenhChi) + data.listKHVUChiTiet.Where(x => x.isDelete == false).Sum(x => x.fCapPhatTaiKhoBac);
-                    entity.sUserUpdate = Username;
-                    entity.dDateUpdate = DateTime.Now;
-                    conn.Update(entity, trans);
+                    entityParent.bActive = false;
+                    entityParent.dDateUpdate = DateTime.Now;
+                    entityParent.sUserUpdate = Username;
+                    conn.Update<VDT_KHV_KeHoachVonUng>(entityParent, trans);
 
                     iID = entity.Id;
-                    id = iID.ToString();
-                    #endregion
+                    id = entity.Id.ToString();
+                }
+                #endregion
+                else
+                {
+                    if (data.dataKHVU.Id == Guid.Empty)
+                    {
+                        #region Them moi VDT_KHV_KeHoachVonUng
 
-                    #region Them moi VDT_KHV_KeHoachVonUng_ChiTiet
-                    //delete all KHVUChiTiet
-                    //_iQLVonDauTuService.deleteKHVUChiTiet(data.dataKHVU.Id);
-                    ////insert new
-                    //if (data.listKHVUChiTiet != null && data.listKHVUChiTiet.Count() > 0)
-                    //{
-                    //    for (int i = 0; i < data.listKHVUChiTiet.Count(); i++)
-                    //    {
-                    //        var entityKHVUChiTiet = new VDT_KHV_KeHoachVonUng_ChiTiet();
-                    //        entityKHVUChiTiet.MapFrom(data.listKHVUChiTiet.ToList()[i]);
-                    //        if (data.listKHVUChiTiet.ToList()[i].isDelete)
-                    //        {
-                    //            entityKHVUChiTiet.fCapPhatTaiKhoBac = 0;
-                    //            entityKHVUChiTiet.fCapPhatBangLenhChi = 0;
-                    //        }
-                    //        entityKHVUChiTiet.iID_KeHoachUngID = data.dataKHVU.Id;
-                    //        conn.Insert(entityKHVUChiTiet, trans);
-                    //    }
-                    //}
-                    #endregion
+                        var entity = new VDT_KHV_KeHoachVonUng();
+                        entity.MapFrom(data.dataKHVU);
+
+                        //if (data.listKHVUChiTiet != null && data.listKHVUChiTiet.Count() > 0)
+                        //    entityKHVU.fGiaTriUng = data.listKHVUChiTiet.Where(x => x.isDelete == false).Sum(x => x.fCapPhatBangLenhChi) + data.listKHVUChiTiet.Where(x => x.isDelete == false).Sum(x => x.fCapPhatTaiKhoBac);
+                        entity.bIsGoc = true;
+                        entity.bActive = true;
+                        entity.sUserCreate = Username;
+                        entity.dDateCreate = DateTime.Now;
+                        conn.Insert(entity, trans);
+
+                        iID = entity.Id;
+                        id = entity.Id.ToString();
+                        #endregion
+
+                        #region Them moi VDT_KHV_KeHoachVonUng_ChiTiet
+                        //if (data.listKHVUChiTiet != null && data.listKHVUChiTiet.Count() > 0)
+                        //{
+                        //    for (int i = 0; i < data.listKHVUChiTiet.Count(); i++)
+                        //    {
+                        //        var entityKHVUChiTiet = new VDT_KHV_KeHoachVonUng_ChiTiet();
+                        //        entityKHVUChiTiet.MapFrom(data.listKHVUChiTiet.ToList()[i]);
+                        //        if (data.listKHVUChiTiet.ToList()[i].isDelete)
+                        //        {
+                        //            entityKHVUChiTiet.fCapPhatTaiKhoBac = 0;
+                        //            entityKHVUChiTiet.fCapPhatBangLenhChi = 0;
+                        //        }
+
+                        //        entityKHVUChiTiet.iID_KeHoachUngID = entityKHVU.Id;
+                        //        conn.Insert(entityKHVUChiTiet, trans);
+                        //    }
+                        //}
+                        #endregion
+                    }
+                    else
+                    {
+                        #region sửa kế hoạch vốn ứng được duyệt
+                        isUpdate = true;
+                        //var entity = conn.Get<VDT_KHV_KeHoachVonUng>(data.dataKHVU.Id, trans);
+                        entityParent.sSoQuyetDinh = data.dataKHVU.sSoQuyetDinh;
+                        entityParent.iID_NhomQuanLyID = data.dataKHVU.iID_NhomQuanLyID;
+                        if (data.listKHVUChiTiet != null && data.listKHVUChiTiet.Count() > 0)
+                            entityParent.fGiaTriUng = data.listKHVUChiTiet.Where(x => x.isDelete == false).Sum(x => x.fCapPhatBangLenhChi) + data.listKHVUChiTiet.Where(x => x.isDelete == false).Sum(x => x.fCapPhatTaiKhoBac);
+                        entityParent.sUserUpdate = Username;
+                        entityParent.dDateUpdate = DateTime.Now;
+                        conn.Update<VDT_KHV_KeHoachVonUng>(entityParent, trans);
+
+                        iID = entityParent.Id;
+                        id = iID.ToString();
+                        #endregion
+
+                        #region Them moi VDT_KHV_KeHoachVonUng_ChiTiet
+                        //delete all KHVUChiTiet
+                        //_iQLVonDauTuService.deleteKHVUChiTiet(data.dataKHVU.Id);
+                        ////insert new
+                        //if (data.listKHVUChiTiet != null && data.listKHVUChiTiet.Count() > 0)
+                        //{
+                        //    for (int i = 0; i < data.listKHVUChiTiet.Count(); i++)
+                        //    {
+                        //        var entityKHVUChiTiet = new VDT_KHV_KeHoachVonUng_ChiTiet();
+                        //        entityKHVUChiTiet.MapFrom(data.listKHVUChiTiet.ToList()[i]);
+                        //        if (data.listKHVUChiTiet.ToList()[i].isDelete)
+                        //        {
+                        //            entityKHVUChiTiet.fCapPhatTaiKhoBac = 0;
+                        //            entityKHVUChiTiet.fCapPhatBangLenhChi = 0;
+                        //        }
+                        //        entityKHVUChiTiet.iID_KeHoachUngID = data.dataKHVU.Id;
+                        //        conn.Insert(entityKHVUChiTiet, trans);
+                        //    }
+                        //}
+                        #endregion
+                    }
                 }
 
                 // commit to db
@@ -362,7 +405,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 
         }
 
-        public ActionResult Detail(Guid iID_KeHoachUngID, bool isUpdate)
+        public ActionResult Detail(Guid iID_KeHoachUngID, bool isUpdate, bool isDieuChinh = false)
         {
             //var data = TempData["ListIdDuAn"];
             var data = new VDTQLKeHoachVonUngDuocDuyetViewModel();
@@ -372,6 +415,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             TempData.Keep("iId_KHVUDX_ID");
             ViewBag.iID_KeHoachUngID = iID_KeHoachUngID;
             ViewBag.isUpdate = 0;
+            ViewBag.isDieuChinh = isDieuChinh ? "true" : "false";
+            ViewBag.isDieuChinhParrent = "false";
+
             if (isUpdate)
             {
                 ViewBag.isUpdate = 1;
@@ -383,39 +429,72 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 return View("Detail", data);
             }
             var listDuAnIds = new HashSet<Guid>(lstChungTuIds).ToList();
+            var listDataChiTiet = new List<VdtKhvKeHoachVonUngChiTietModel>();
 
-            //dataTaoMoi
-            var listDataChiTiet = _iQLVonDauTuService.GetKHVUDuocDuyetChiTietByIdAndListDuAnIds(iID_KeHoachUngID, listDuAnIds, iId_KHVUDX_ID).ToList();
-            if (listDataChiTiet.Any())
+            if (isDieuChinh)
             {
-                //dataUpdate
-                foreach (var item in listDataChiTiet)
+                var entity = _iQLVonDauTuService.GetKHVUDuocDuyetById(iID_KeHoachUngID);
+                if (entity != null && !entity.bIsGoc)
                 {
-                    listDuAnIds.RemoveAll(x => x == item.iID_DuAnID);
+                    ViewBag.isDieuChinhParrent = "true";
                 }
-
-                if (listDuAnIds.Any())
-                {
-                    var dataUpdate = _iQLVonDauTuService.GetKHVUDuocDuyetChiTietByIdAndListDuAnIds(null, listDuAnIds, iId_KHVUDX_ID).ToList();
-                    listDataChiTiet.AddRange(dataUpdate);
-                }
-
+                listDataChiTiet = _iQLVonDauTuService.GetKHVUDuocDuyetChiTietByIdAndListDuAnIds(entity.iID_ParentID, listDuAnIds, iId_KHVUDX_ID).ToList();
                 if (listDataChiTiet.Any())
                 {
-                    data.listKHVUChiTiet = listDataChiTiet;
-                    data.dataKHVU = _iQLVonDauTuService.GetKHVUDuocDuyetById(iID_KeHoachUngID);
+                    //dataUpdate neu chua tich het du an
+                    foreach (var item in listDataChiTiet)
+                    {
+                        listDuAnIds.RemoveAll(x => x == item.iID_DuAnID);
+                    }
+
+                    if (listDuAnIds.Any())
+                    {
+                        var dataUpdate = _iQLVonDauTuService.GetKHVUDuocDuyetChiTietByIdAndListDuAnIds(null, listDuAnIds, iId_KHVUDX_ID).ToList();
+                        listDataChiTiet.AddRange(dataUpdate);
+                    }
+
+                    if (listDataChiTiet.Any())
+                    {
+                        data.listKHVUChiTiet = listDataChiTiet;
+                        data.dataKHVU = _iQLVonDauTuService.GetKHVUDuocDuyetById(iID_KeHoachUngID);
+                    }
                 }
             }
             else
             {
-                return View("Detail", data);
+                //dataChiTiet
+                listDataChiTiet = _iQLVonDauTuService.GetKHVUDuocDuyetChiTietByIdAndListDuAnIds(iID_KeHoachUngID, listDuAnIds, iId_KHVUDX_ID).ToList();
+                if (listDataChiTiet.Any())
+                {
+                    //dataUpdate neu chua tich het du an
+                    foreach (var item in listDataChiTiet)
+                    {
+                        listDuAnIds.RemoveAll(x => x == item.iID_DuAnID);
+                    }
+
+                    if (listDuAnIds.Any())
+                    {
+                        var dataUpdate = _iQLVonDauTuService.GetKHVUDuocDuyetChiTietByIdAndListDuAnIds(null, listDuAnIds, iId_KHVUDX_ID).ToList();
+                        listDataChiTiet.AddRange(dataUpdate);
+                    }
+
+                    if (listDataChiTiet.Any())
+                    {
+                        data.listKHVUChiTiet = listDataChiTiet;
+                        data.dataKHVU = _iQLVonDauTuService.GetKHVUDuocDuyetById(iID_KeHoachUngID);
+                    }
+                }
+                else
+                {
+                    return View("Detail", data);
+                }
             }
 
             return View("Detail", data);
         }
 
         [HttpPost]
-        public ActionResult KeHoachVonUngDuocDuyetChiTietSave(List<VdtKhvKeHoachVonUngChiTietModel> listData, bool isUpdate, Guid? iId_KeHoachUngID)
+        public ActionResult KeHoachVonUngDuocDuyetChiTietSave(List<VdtKhvKeHoachVonUngChiTietModel> listData, bool isUpdate, Guid? iId_KeHoachUngID, bool isDieuChinh = false)
         {
             if (!listData.Any())
             {
@@ -423,25 +502,49 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             }
             else
             {
-                if (isUpdate)
+                if (isDieuChinh)
                 {
-                    if (!_iQLVonDauTuService.KehoachVonUngDuocDuyetCtSave(listData, isUpdate, iId_KeHoachUngID))
+                    if (!_iQLVonDauTuService.KehoachVonUngDuocDuyetCtSave(listData, isUpdate, iId_KeHoachUngID, isDieuChinh))
                     {
-                        return Json(new { status = false, desc = "Cập nhật kế hoạch vốn ứng được duyệt chi tiết thất bại!" });
+                        return Json(new { status = false, desc = "Điều chỉnh kế hoạch vốn ứng được duyệt chi tiết thất bại!" });
                     }
                 }
-                if (!_iQLVonDauTuService.KehoachVonUngDuocDuyetCtSave(listData, isUpdate, iId_KeHoachUngID))
+                else
                 {
-                    return Json(new { status = false, desc = "Thêm mới kế hoạch vốn ứng được duyệt chi tiết thất bại!" });
+                    if (isUpdate)
+                    {
+                        if (!_iQLVonDauTuService.KehoachVonUngDuocDuyetCtSave(listData, isUpdate, iId_KeHoachUngID))
+                        {
+                            return Json(new { status = false, desc = "Cập nhật kế hoạch vốn ứng được duyệt chi tiết thất bại!" });
+                        }
+                    }
+                    else
+                    {
+                        if (!_iQLVonDauTuService.KehoachVonUngDuocDuyetCtSave(listData, isUpdate, iId_KeHoachUngID))
+                        {
+                            return Json(new { status = false, desc = "Thêm mới kế hoạch vốn ứng được duyệt chi tiết thất bại!" });
+                        }
+                    }
+
                 }
 
             }
-            if (isUpdate)
+
+            if (isDieuChinh)
             {
-                return Json(new { status = true, desc = "Cập nhật kế hoạch vốn ứng được duyệt chi tiết thành công!" });
+                return Json(new { status = true, desc = "Điều chỉnh kế hoạch vốn ứng được duyệt chi tiết thành công!" });
 
             }
-            return Json(new { status = true, desc = "Thêm mới kế hoạch vốn ứng được duyệt chi tiết thành công!" });
+            else
+            {
+                if (isUpdate)
+                {
+                    return Json(new { status = true, desc = "Cập nhật kế hoạch vốn ứng được duyệt chi tiết thành công!" });
+
+                }
+                return Json(new { status = true, desc = "Thêm mới kế hoạch vốn ứng được duyệt chi tiết thành công!" });
+            }
+
         }
 
         #endregion

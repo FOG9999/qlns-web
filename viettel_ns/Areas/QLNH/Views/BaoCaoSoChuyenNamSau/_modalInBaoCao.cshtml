@@ -5,7 +5,7 @@
     <div class="form-group row">
         <input type="hidden" id="txtNamKeHoach" value="@ViewBag.iNamKeHoach" />
         <input type="hidden" id="txtIdDonVi" value="@ViewBag.iIdDonVi" />
-        <input type="hidden" id="txtSTenDonVi" value="@ViewBag.sTenDonVi" />
+        <input type="hidden" id="txtSTenDonVi" value="@Html.Raw(Html.Encode(ViewBag.sTenDonVi))" />
 
         <div class="col-sm-12">
             <label for="txtTieuDe1">Tiêu đề 1</label>
@@ -55,7 +55,7 @@
                         {
                             foreach (var donViUSD in (List<Dropdown_SelectValue>)ViewBag.ListDVUSD)
                             {
-                                <option value="@donViUSD.Value">@Html.Raw(donViUSD.Label)</option>
+                                <option value="@donViUSD.Value">@Html.Raw(Html.Encode(donViUSD.Label))</option>
                             }
                         }
                     </select>
@@ -72,7 +72,7 @@
                         {
                             foreach (var donViVND in (List<Dropdown_SelectValue>)ViewBag.ListDVVND)
                             {
-                                <option value="@donViVND.Value">@Html.Raw(donViVND.Label)</option>
+                                <option value="@donViVND.Value">@Html.Raw(Html.Encode(donViVND.Label))</option>
                             }
                         }
                     </select>
@@ -92,6 +92,12 @@
     </div>
 </div>
 <input type="hidden" id="urlExportBCChiTiet" value="@Url.Action("ExportFile", "BaoCaoSoChuyenNamSau")" />
+<script>
+    $(document).ready(function () {
+        $("#slbDonViUSD").select2({ width: '100%', matcher: FilterInComboBox });
+        $("#slbDonViVND").select2({ width: '100%', matcher: FilterInComboBox });
+    });
+</script>
 <style>
     .ml-0 {
         margin-left: 0 !important;
@@ -100,8 +106,6 @@
     .w-100 {
         width: 100%;
     }
-
-
 
     .d-flex {
         display: flex

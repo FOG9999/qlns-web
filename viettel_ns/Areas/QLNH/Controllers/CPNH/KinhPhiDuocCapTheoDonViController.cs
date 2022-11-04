@@ -84,6 +84,9 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
 
         public ActionResult ExportExcelBaoCao(string ext = "xls", int dvt = 1, int to = 1, int? iQuyList = null, int? iNam = null, Guid? iDonvi = null, string tenBaoCao = null, string dvCapTren = null, string dvCapDuoi = null)
         {
+            tenBaoCao = HttpUtility.UrlDecode(HttpUtility.HtmlDecode(tenBaoCao));
+            dvCapTren = HttpUtility.UrlDecode(HttpUtility.HtmlDecode(dvCapTren));
+            dvCapDuoi = HttpUtility.UrlDecode(HttpUtility.HtmlDecode(dvCapDuoi));
 
             NS_DonVi lstDonViQuanLy = _cpnhService.GetDonviListByYear(PhienLamViec.NamLamViec).ToList().Where(x => x.iID_Ma == iDonvi).FirstOrDefault();
             var DonVi = lstDonViQuanLy != null ? lstDonViQuanLy.sTen + " - " + lstDonViQuanLy.sMoTa : "";

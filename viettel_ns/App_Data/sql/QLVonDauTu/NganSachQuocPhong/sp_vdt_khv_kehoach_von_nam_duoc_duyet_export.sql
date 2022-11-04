@@ -13,7 +13,7 @@ begin
 	left join VDT_DA_DuAn_HangMuc dahm on da.iID_DuAnID = dahm.iID_DuAnID
 	where ctct.iID_KeHoachVonNam_DuocDuyetID in (select * from dbo.f_split(@lstId))
 	and (((da.iID_LoaiCongTrinhID is not null) or (dahm.iID_LoaiCongTrinhID is not null)) and ctct.iID_KeHoachVonNam_DuocDuyetID in (select * from dbo.f_split(@lstId)))
-	and ctct.iLoaiDuAn = 1
+	--and ctct.iLoaiDuAn = 1
 
 
 	select tbl_sum.* into #tmp_tbl_kmc from (
@@ -120,7 +120,7 @@ inner join VDT_DA_DuAn da on da.iID_DuAnID = ctct.iID_DuAnID
 left join VDT_DA_DuAn_HangMuc dahm on da.iID_DuAnID = dahm.iID_DuAnID
 where ctct.iID_KeHoachVonNam_DuocDuyetID in (select * from dbo.f_split(@lstId))
 and (((da.iID_LoaiCongTrinhID is not null) or (dahm.iID_LoaiCongTrinhID is not null)) and ctct.iID_KeHoachVonNam_DuocDuyetID in (select * from dbo.f_split(@lstId)))
-and ctct.iLoaiDuAn = 2
+--and ctct.iLoaiDuAn = 2
 
 select tbl_sum.* into #tmp_tbl_kct from (
 

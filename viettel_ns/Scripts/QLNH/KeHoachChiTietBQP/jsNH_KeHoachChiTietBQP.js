@@ -169,17 +169,17 @@ function ValidateData(data, text) {
             Messages.push("Chưa có thông tin về giai đoạn đến, vui lòng nhập giai đoạn đến.");
         }
         if (data.iID_KHTongTheTTCPID == GUID_EMPTY || $.trim(data.iID_KHTongTheTTCPID) == '') {
-            Messages.push("Chưa có thông tin về kế hoạch tổng thể TTCP phê duyệt, vui lòng chọn kế hoạch tổng thể TTCP phê duyệt.");
+            Messages.push("Chưa có thông tin về quyết định tổng thể TTCP phê duyệt, vui lòng chọn quyết định tổng thể TTCP phê duyệt.");
         }
     } else if (data.iLoai == 2) {
         if ($.trim(data.iNamKeHoach) == '') {
-            Messages.push("Chưa có thông tin về năm kế hoạch, vui lòng nhập năm kế hoạch.");
+            Messages.push("Chưa có thông tin về năm quyết định, vui lòng nhập năm quyết định.");
         }
         if ((data.iID_ParentID == GUID_EMPTY || $.trim(data.iID_ParentID) == '') && (data.iLoaiTTCP != 2)) {
             Messages.push("Chưa có thông tin về kế hoạch chi tiết BQP cha, vui lòng chọn kế hoạch chi tiết BQP cha.");
         }
         if (data.iID_KHTongTheTTCPID == GUID_EMPTY || $.trim(data.iID_KHTongTheTTCPID) == '') {
-            Messages.push("Chưa có thông tin về kế hoạch tổng thể TTCP phê duyệt, vui lòng chọn kế hoạch tổng thể TTCP phê duyệt.");
+            Messages.push("Chưa có thông tin về quyết định tổng thể TTCP phê duyệt, vui lòng chọn quyết định tổng thể TTCP phê duyệt.");
         }
         if (data.iLoaiTTCP != 2) {
             if ((data.iID_ParentID != GUID_EMPTY && $.trim(data.iID_ParentID) != '') && data.iNamKeHoach) {
@@ -193,7 +193,7 @@ function ValidateData(data, text) {
             Messages.push("Chưa có thông tin về kế hoạch chi tiết BQP cha, vui lòng chọn kế hoạch chi tiết BQP cha.");
         }
         if (data.iID_KHTongTheTTCPID == GUID_EMPTY || $.trim(data.iID_KHTongTheTTCPID) == '') {
-            Messages.push("Chưa có thông tin về kế hoạch tổng thể TTCP phê duyệt, vui lòng chọn kế hoạch tổng thể TTCP phê duyệt.");
+            Messages.push("Chưa có thông tin về quyết định tổng thể TTCP phê duyệt, vui lòng chọn quyết định tổng thể TTCP phê duyệt.");
         }
         if ($.trim(data.iGiaiDoanTu) == '') {
             Messages.push("Chưa có thông tin về giai đoạn từ, vui lòng nhập giai đoạn từ.");
@@ -221,10 +221,10 @@ function ValidateData(data, text) {
 
     // Check số kế hoạch
     if ($.trim($("#txtSoKeHoach").val()) == '') {
-        Messages.push("Chưa có thông tin về số kế hoạch, vui lòng nhập số kế hoạch.");
+        Messages.push("Chưa có thông tin về số quyết định, vui lòng nhập số quyết định.");
     }
     if ($.trim($("#txtSoKeHoach").val()) != "" && $.trim($("#txtSoKeHoach").val()).length > 100) {
-        Messages.push("Số kế hoạch nhập quá 100 kí tự, vui lòng nhập lại số kế hoạch.");
+        Messages.push("Số quyết định nhập quá 100 kí tự, vui lòng nhập lại số quyết định.");
     }
 
     // Check ngày kế hoạch
@@ -1047,8 +1047,6 @@ function CalcListTiGia(type, listInput) {
         url: '/QLNH/KeHoachChiTietBQP/CalcListMoneyByTiGia',
         async: false,
         success: function (data) {
-
-            let listSTTReSum = [];
             // Gán lại giá trị và tính lại tổng
             data.result.forEach(x => {
                 let money = FormatNumber(x.dResult);
@@ -1075,7 +1073,7 @@ function ValidateNhiemVuChi(lstNvc, text) {
 
     // Check bảng nhiệm vụ chi đã có data.
     if (lstNvc.length == 0) {
-        Messages.push("Kế hoạch hiện tại chưa có chương trình, nhiệm vụ chi. Vui lòng thêm chương trình, nhiệm vụ chi.");
+        Messages.push("Quyết định hiện tại chưa có chương trình, nhiệm vụ chi. Vui lòng thêm chương trình, nhiệm vụ chi.");
     }
 
     lstNvc.forEach(x => {

@@ -64,6 +64,40 @@ namespace Viettel.Models.QLVonDauTu
                 return this.fSumCapPhatBangLenhChi.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN"));
             }
         }
+        public double? fSumCapPhatTaiKhoBacDC
+        {
+            get
+            {
+                double? sum = 0;
+                if (listKHVUChiTiet != null && listKHVUChiTiet.Any())
+                    sum = listKHVUChiTiet.Sum(x => x.fCapPhatTaiKhoBacDC);
+                return sum;
+            }
+        }
+        public string sSumCapPhatTaiKhoBacDC
+        {
+            get
+            {
+                return this.fSumCapPhatTaiKhoBacDC.HasValue ? this.fSumCapPhatTaiKhoBacDC.Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : string.Empty;
+            }
+        }
+        public double? fSumCapPhatBangLenhChiDC
+        {
+            get
+            {
+                double? sum = 0;
+                if (listKHVUChiTiet != null && listKHVUChiTiet.Any())
+                    sum = listKHVUChiTiet.Sum(x => x.fCapPhatBangLenhChiDC);
+                return sum;
+            }
+        }
+        public string sSumCapPhatBangLenhChiDC
+        {
+            get
+            {
+                return this.fSumCapPhatBangLenhChiDC.HasValue ? this.fSumCapPhatBangLenhChiDC.Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")): string.Empty;
+            }
+        }
     }
 
     public class VDTKhvkeHoachVonUngViewModel : VDT_KHV_KeHoachVonUng

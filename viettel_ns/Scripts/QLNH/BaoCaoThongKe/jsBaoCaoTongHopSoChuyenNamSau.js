@@ -23,15 +23,19 @@ function GetListData(iNamKeHoach) {
 function printBaoCao(ext) {
     var links = [];
     var url = "";
-    var txtTieuDe1 = $("#txtTieuDe1").val();
-    var txtTieuDe2 = $("#txtTieuDe2").val();
+    var txtTieuDe1 = $.trim($("#txtTieuDe1").val());
+    var txtTieuDe2 = $.trim($("#txtTieuDe2").val());
     var slbDonViVND = $("#slbDonViVND").val();
     var slbDonViUSD = $("#slbDonViUSD").val();
     var txtNamKeHoach = $("#txtNamKeHoach").val();
+    var txtDonViCapTren = $.trim($("#txtDonViCapTren").val());
+    var txtDonVi = $.trim($("#txtDonVi").val());
 
     var data = {};
     data.txtTieuDe1 = txtTieuDe1;
     data.txtTieuDe2 = txtTieuDe2;
+    data.txtDonViCapTren = txtDonViCapTren;
+    data.txtDonVi = txtDonVi;
     data.slbDonViVND = slbDonViVND;
     data.slbDonViUSD = slbDonViUSD;
 
@@ -40,13 +44,13 @@ function printBaoCao(ext) {
     }
 
     url = $("#urlExportBCChiTiet").val() +
-        "?ext=" + ext + "&txtTieuDe1=" + txtTieuDe1
-        + "&txtTieuDe2=" + txtTieuDe2
+        "?ext=" + ext + "&txtTieuDe1=" + encodeURIComponent(txtTieuDe1)
+        + "&txtTieuDe2=" + encodeURIComponent(txtTieuDe2)
+        + "&txtDonViCapTren=" + encodeURIComponent(txtDonViCapTren)
+        + "&txtDonVi=" + encodeURIComponent(txtDonVi)
         + "&slbDonViVND=" + slbDonViVND
         + "&slbDonViUSD=" + slbDonViUSD
         + "&txtNamKeHoach=" + txtNamKeHoach;
-
-    url = unescape(url);
     links.push(url);
 
     openLinks(links);
@@ -87,7 +91,7 @@ function InBaoCaoModal() {
     //alert error
     if (slbNamKeHoach == 0) {
         var Title = 'Vui lòng chọn năm kế hoạch';
-        var Error = "Bạn phải chọn 1 năm kế hoạch mới được In báo cáo!"
+        var Error = "Bạn phải chọn 1 năm kế hoạch mới được in báo cáo!"
         $.ajax({
             type: "POST",
             url: "/Modal/OpenModal",

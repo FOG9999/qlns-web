@@ -1,0 +1,128 @@
+﻿#,Tracker,Status,Priority,Severity,Subject,Assignee,Updated,Author,Description,Last notes
+31787,Bug,New,Normal,Major,[web] [Tình hình thực hiện dự án] Lọc theo đơn vị + dự án -> chưa lên dữ liệu,thangnd54,2022-10-28 17:41,thuvk,"",""
+31785,Bug,New,Normal,Major,[quyết toán] [Đề nghị quyết toán dự án hoàn thành] không import được chứng từ,thangnd54,2022-11-01 15:00,thuvk,"",""
+31499,Bug,Reopen,Normal,Major,[web] [Phê duyệt dự án] màn thêm mới không thêm được hạng mục con,thangnd54,2022-11-01 15:00,thuvk,"1. login http://10.60.108.246:8090/ > Phê duyệt dự án > Thêm mới > Mở chi tiết 1 chi phí
+TT:
+--> Thêm mới được hạng mục, Không thêm mới được hạng mục con
+MM:
+--> Cho phép thêm mới hạng mục con. HM cha in đậm","Khai báo HM TB1 = 12 tỷ -> khai báo thêm các HM con
+HM con cấp 1: TB1.1
+HM con cấp 2: 1.1.1 = 5ty
+--> GT HM cha không tự update lại = SUM (GT các HM con)"
+30808,Bug,Reopen,Normal,Major,[web] [Phê duyệt dự án] Không xóa được HM trong chi phí,thangnd54,2022-10-24 16:26,thuvk,"1. login http://10.60.108.246:8090/ > phê duyệt dự án > Chỉnh sửa 1 bản ghi > mở thông tin chi phí có HM > Xóa HM
+TT:
+--> Không xóa được HM
+MM:
+--> Xóa HM thành công","Khi xóa HM -> lưu -> mở lại -> không thể thêm mới Hm cha + Hm con
+Giá trị phê duyệt tính sai -> không update dữ liệu mới"
+31618,Bug,Confirm,Normal,Major,[web] [KHLCNT] Hiển thị sai thông tin nguồn vốn của gói thầu,thangnd54,2022-10-31 17:29,thuvk,"1. login http://10.60.108.246:8090/ > KHLCNT > Xem chứng từ QD04 (dự án 04)
+TT:
+--> Gói thầu 04 XD: Giá trị tổng chi phí thực tế chỉ có 16.954.000.384
+--> Tích chọn full các giá trị hạng mục -> GT chi phí hiển thị 16.954.000.384 -> nhập giá trị nguồn vốn (vùng thông tin nguồn vốn: 17 tỷ) -> lưu
+--> Quay lại xem chi tiết giá trị nguồn vốn tự động lưu thành 16.999.999.488
+MM:
+--> Lưu giá trị ""Giá gói thầu"" vào trường fTienTrungThau (giá trị nguồn vốn = giá gói thầu)",k tái hiện được
+30687,Bug,Confirm,Normal,Major,[web] [chủ trương đầu tư] GT tổng mức phê duyệt lấy sai đối với KHTH được duyệt có bản ghi điều chỉnh,thangnd54,2022-10-12 08:04,thuvk,"1. login http://10.60.108.246:8090/ > Chủ trương đầu tư
+2. Thêm mới -> chọn lữ đoàn 144 - dự án 144
+TT:
+--> Tạo KHTH được duyệt gốc là 5 tỷ 2
+--> Điều chỉnh KHTH được duyệt và giá trị phê duyệt vẫn là 5 tỷ 2
+--> Tạo chủ trương:  Tổng mức đầu tư phê duyệt hiển thị là 10 tỷ 4 -> hiển thị sai. Phải lấy giá trị bản ghi active mới nhất
+MM:
+--> Lấy giá trị bản ghi điều chỉnh/Sửa mới nhất. Không phải lấy GT tổng của bản điều chỉnh và gốc",""
+31742,Bug,Deploy Waiting,Normal,Major,[web] [thông tri] Không hiển thị thông tin dự án theo mlsn đã phê duyệt ở màn thực hiện thanh toán,thangnd54,2022-11-01 14:59,thuvk,"1. login http://10.60.108.246:8090/ > Cấp phát thanh toán > Thôngtri
+2. Xem thông tri có mã 2610
+TT:
+--> Không hiển thị thông tin dự án
+MM:
+--> Hiển thị thông tin dự án theo mlns được duyệt",""
+31731,Bug,Deploy Waiting,Normal,Major,[web] [Thực hiện thanh toán] Chỉnh sửa bản ghi -> không hiển thị vùng Thông tin thanh toán,thangnd54,2022-11-01 11:22,thuvk,"1. login http://10.60.108.246:8090/ Cấp phát thanh toán > Thực hiện thanh toán 
+2. chỉnh sửa 1 bản ghi
+TT:
+--> Vùng thông tin thanh toán không hiển thị. Trước đó đã nhập thông tin cho phần này. Xem chi tiết có hiển thị
+MM:
+--> Hiển thị thông tin vùng thong tin thanh toán -> cho phép sửa",""
+31394,Bug,Resolved,High,Major,[web] [KHLCNT] Dự toán 1 đã phê duyệt hết Giá trị nguồn vốn + Chi phí khi tạo KHLCNT -> Tạo chứng từ mới ở màn KHLCNT vẫn còn hiển thị dự toán 1,thangnd54,2022-11-01 08:34,thuvk,"1. login http://10.60.108.246:8090/ > dự án 05 tạo 2 dự toán 05-1 và 05-2
+2. Tạo mới KHLCNT cho dự án 05 ->  với điều kiện Phê duyệt hết nguồn vốn dự toán 05-1
+3. Tạo tiếp KHLCNT cho dự án 05
+TT:
+--> Dự toán 05-1 đã phê duyệt hết số tiền trong nguồn vốn nhưng vẫn hiển thị trong danh sách dự toán 
+MM:
+--> Khi tạo KHLCNT, vùng danh sách dự toán. Nếu dự toán nào đã được phê duyệt hết tiền thì sẽ không còn hiển thị nữa","Chọn đơn vị  + dự án  + Căn cứ là TKTC-TDT-> HT không list danh sách dự toán đã tạo
+chọn căn cứ là Phê duyệt dự án + Chủ trương -> Không list ra HM + chi phí đã tạo
+"
+31390,Bug,Resolved,Normal,Major,[web] [KHLCNT] Không xem được chi tiết gói thầu ,thangnd54,2022-11-01 08:34,thuvk,"1. login http://10.60.108.246:8090/  > KHLCNT
+2. Xem chi tiết 1 chứng từ -> Nhấn click vào gói thầu để xem chi tiết (QD-05-01)
+TT:
+--> Không xem được danh sách CP và HM chọn cho gói thầu
+--> Đối với dự án lập nhiều dự toán -> Xem chi tiết dự toán đó chưa được tích chọn 
+MM:
+--> Kích đúp vào gói thầu -> HT chuyển hướng đến màn ""Thông tin gói thầu chi tiết""
+--> Dự toán phải được tích chọn",""
+31259,Bug,Resolved,Normal,Major,[web] [Thông tin hợp đồng] Cộng sai giá trị chi phí,thangnd54,2022-11-01 15:00,thuvk,"1. login http://10.60.156.177:8080/ > Thông tin hợp đồng
+2. Thêm mới -> cục bản đồ > dự án 09
+3. Chọn gói thầu 01 XD-> mở chi tiết chi phí > Chi tiết HM -> Tích chọn all các HM
+TT:
+--> ô giá trị chi phí  = 4.177.000.064 (tính sai - HT cộng cả GT HM1 - Trong khi HM1 là HM cha của HM 1-1, 1-2, 1-3)
+MM:
+--> GT chi phí = Sum(Hạng mục)
+",""
+31232,Bug,Resolved,Normal,Major,[web] [KHLCNT] Lấy sai giá trị Phê duyệt khi chọn căn cứ là TKTC-TDT,thangnd54,2022-10-28 10:57,thuvk,"1. login > KHLCNT > Chọn căn cứ là Thiết kết TC - TDT > cục bản đồ > Dự án 09
+TT:
+--> Giá trị tổng mức phê duyệt hiển thị 45 tỷ
+--> Giá trị phê duyệt ở amfn TKTC-TDT chỉ phê duyệt 44,5 tỷ
+MM:
+--> Căn cứ theo chứng từ nào thì lấy dữ liệu theo chứng từ đó
+VDT_DA_DuToan",Không hiển thị GT phê duyệt khi chọn căn cứ là TKTC-TDT
+30533,Bug,Resolved,Normal,Major,[web] [KHVN DD] Nhập giá trị phân bổ DB không lưu,thangnd54,2022-10-11 18:09,thuvk,"1. login http://10.60.108.246:8090/ > Kế hoạch vốn > Kế hoạch vốn năm được duyệt
+2. Thêm mới -> cục bản đồ -> Năm 2021 -> lưu -> hiển thị màn chi tiết của dự án K58
+3. Nhập giá trị vào cột Kế hoạch phân bổ năm -> Lưu
+TT:
+--> HT lưu - Trong db không lưu
+--> Giá trị Kế hoạch phân bổ năm ngoài màn hình danh sách không hiển thị
+MM:
+--> Lư dữ liệu vào VDT_KHV_PhanBoVon_DonVi_PheDuyet.fGiaTrPhanBo
+--> Cột Kế hoạch phân bổ năm bên ngoài cũng phải hiển thị giá trị",""
+30531,Bug,Resolved,Normal,Major,[web] [KHVN DD] Không điều chỉnh được chứng từ ,thangnd54,2022-10-11 18:09,thuvk,"1. login http://10.60.108.246:8090/ > Kế hoạch vốn > KHVN DD
+2. chọn 1 chứng từ > Điều chỉnh
+TT:
+--> HT điều hướng đến màn lỗi
+MM:
+--> Cho phép điều chỉnh chứng từ",""
+30529,Bug,Resolved,Normal,Major,[web] [KHVN - DX] In báo cáo tổng hợp -> Không hiển thị đủ danh sách chứng từ tổng hợp,thangnd54,2022-10-07 15:17,thuvk,"1. login http://10.60.108.246:8090/ > Kế hoạch vốn -> KHVN DX
+2. Chọn in báo cáo > in báo cáo tổng hợp 
+3. Chọn cục bản đồ - năm 2021
+TT:
+--> Danh sách chứng từ k hiển thị đủ
+MM:
+--> hiển thị đủ danh sách chứng từ ở màn chứng từ tổng hợp theo năm và đơn vị ",""
+30520,Bug,Resolved,Normal,Major,[web] [Thông tin hợp đồng] Không hiển thị GT chi phí (thông tin phụ lục chi phí) + giá trị (thông tin gói thầu),thangnd54,2022-10-11 18:07,thuvk,"1. login http://10.60.108.246:8090/ > Quản lý dự án > thông tin hợp đồng > Thêm mới
+2. chọn gói thầu > Chọn chi phí
+TTT:
+--> GT chi phí (thông tin phụ lục chi phí) + giá trị (thông tin gói thầu) không được tính
+MM:
+--> GT chi phí = GT được duyệt khi tích chọn chi phí hoặc CP có Hạng mục (CP con) thì = tổng các Hm (CP con) được chọn
+--> giá trị (thông tin gói thầu) Hiển thị Tổng cái GT CP, HM được chọn",""
+30506,Bug,Resolved,Normal,Major,[web] [KHLCNT]  Lỗi: Chọn căn cứ là chủ trương đầu tư -> HT hiển thị giá trị các chi phí phê duyệt ở màn PDDA,thangnd54,2022-10-11 18:07,thuvk,"1. login http://10.60.108.246:8090/ > Quản lý dự án > KHLCNT
+2. Thêm mới > Chọn căn cứ là chủ trương đầu tư
+TT:
+--> Vùng danh sách chi phí đang hiển thị các chi phí + giá trị được nhập ở màn phê duyệt DA
+MM:
+--> Khi chọn căn cứ là chủ trương đầu tư: chỉ hiển thị giá trị nguồn vốn phê duyệt ở màn chủ trương
+--> Hiển thị 7 giá trị chi phí mặc đinh với giá trị phê duyệt = 0
+--> TH chủ trương có nhập HM -> Không lấy GT HM này. Đây chỉ là căn cứ cho màn PDDA",""
+29955,Bug,Resolved,High,Major,"[Cấp phát thanh toán] Thực hiện thanh toán: Màn danh sách cột ""Giá trị thanh toán trong nước"" chưa hiển thị data, chưa xóa được bản ghi",thangnd54,2022-09-22 08:08,xoantt1,"",nhầm tên cột -> Giá trị thu hồi trong nước
+29940,Bug,Resolved,Normal,Major,"[Thông tin dự án] Phê duyệt TKCT TDT: Sau khi thêm mới hạng mục cho chi phí, nhấn xem lại thì không hiển thị  + không thêm mới được hạng mục ",thangnd54,2022-10-07 17:08,xoantt1,"",""
+29933,Bug,Resolved,High,Major,"[Thông tin dự án] Kế hoạch trung hạn được duyệt/Chọn dự án/Danh mục dự án: Sau khi thêm mới và lưu lại bị mất thông tin Nguồn vốn, Loại công trình (DB không lưu)",thangnd54,2022-09-28 08:18,xoantt1,"",""
+27488,Bug,Resolved,High,"","[web] [Kế hoạch lựa chọn nhà thầu] Không hiển thị giá gói thầu + tạo 2 gói thầu, Khi chọn 1 nguồn vốn và chi phí cho gói thầu 1, tạo gói thầu 2, HT vẫn hiển thị thông tin nguồn vốn và chi phí chọn cho gói thầu 1 ",thangnd54,2022-07-13 18:38,thuvk,"1. login http://10.60.156.177:8080/(tlb10/123456a@)
+2. Thực hiện đầu tư > Kế hoạch lựa chọn nhà thầu > Thêm mới > Phần danh sách gói thầu, tạo 2 gói thầu
+TT:
+--> tiến hành tạo 2 gói thầu 
+   Gói 1: nguồn vốn: NSNN, Chi phí xây dựng, hạng mục 1.1 -> Lưu -> Hệ thống không lưu giữ liệu vừa tạo, không hiển thị giá trị gói thầu.
+   Gói 2: Hệ thống không trừ đi nguồn vốn và chi phí vừa chọn cho gói thầu 1
+MM:
+--> Các thông tin về nguồn vốn và chi phí được chọn cho gói thầu 1 sẽ không hiển thị cho gói thầu 2.
+(fix HT như flie 2906-13)
+","bug: 
+Không nhập được tên gói thầu
+Chỉnh lại theo ảnh note"

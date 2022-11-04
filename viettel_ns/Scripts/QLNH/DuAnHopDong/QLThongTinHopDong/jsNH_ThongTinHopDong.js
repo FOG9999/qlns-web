@@ -6,6 +6,41 @@ function ResetChangePage(iCurrentPage = 1) {
     GetListData("", GUID_EMPTY, "", GUID_EMPTY, GUID_EMPTY, "", "", GUID_EMPTY, iCurrentPage);
 }
 
+function ToogleRow(e) {
+    let tdElement = $(e);
+    let trElement = tdElement.closest('tr');
+    let id = tdElement.data('id');
+    let index = trElement.index();
+    let hasValue = tdElement.data('ishaschild');
+    let sTenHopDong = $.trim($("#txtTenHopDongFilter").val()); 
+    let iDonvi = $("#iDonVi").val(); 
+    let iChuongTrinh = $("#iChuongTrinh").val(); 
+    let iDuAn = $("#iDuAn").val(); 
+    let sSoHopDong = $.trim($("#txtSoHopDongFilter").val()); 
+    let sNgayKyHopDong = $.trim($("#txtNgayKyHopDongFilter").val()); 
+    let iLoaiHopDong = $.trim($("#iLoaiHopDong").val());
+
+    // Nếu đã lấy data thì chỉ ẩn hiên thôi, chưa có data thì lấy data.
+    if (!hasValue) {
+        $.ajax({
+            type: "POST",
+            data: { id: id, sTenHopDong: sTenHopDong, iDonvi: iDonvi, iChuongTrinh: iChuongTrinh, iDuAn: iDuAn, sSoHopDong: sSoHopDong, sNgayKyHopDong: sNgayKyHopDong, iLoaiHopDong: iLoaiHopDong },
+            url: '/QLNH/QLThongTinHopDong/GetListHopDongById',
+            success: function (rs) {
+                if (rs != null) {
+                    tdElement.data('ishaschild', true);
+
+                    // Add row
+                    $("#tbodyListHopDong tr").eq(index).after(rs.datas);
+                    trElement.siblings('.child-' + id).fadeToggle();
+                }
+            }
+        });
+    } else {
+        trElement.siblings('.child-' + id).fadeToggle();
+    }
+}
+
 function ChangePage(iCurrentPage = 1) {
     var sTenHopDong = $("<div/>").text($.trim($("#txtTenHopDongFilter").val())).html();
     var iDonVi = $("#iDonVi").val();
@@ -119,9 +154,12 @@ function ChangeSelectDonVi(element) {
                     $("#slbChuongTrinh" + index).select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
                     $("#slbDuAn" + index).empty().html(data.htmlDA);
                     $("#slbDuAn" + index).select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
+                    $("#slbGoiThau" + index).empty().html(data.htmlGT);
+                    $("#slbGoiThau" + index).select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
                 } else {
                     $("#iChuongTrinh").empty().html(data.htmlCT);
                     $("#iDuAn").empty().html(data.htmlDA);
+                    $("#iGoiThau").empty().html(data.htmlGT);
                     $("#iChuongTrinh").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
                     $("#iDuAn").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
                 }
@@ -156,7 +194,6 @@ function ChangeSelectChuongTrinh(element) {
         }
     });
 }
-
 function ChangeSelectLoai(element) {
     var index = $(element).data("index");
     var loaiVal = $(element).val();

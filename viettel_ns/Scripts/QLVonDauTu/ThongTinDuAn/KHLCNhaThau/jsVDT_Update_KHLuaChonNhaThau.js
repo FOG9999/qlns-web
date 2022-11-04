@@ -33,6 +33,8 @@ $(document).ready(function () {
 
 $("#cbxLoaiChungTu").change(() => {
     GetListChungTu();
+    $('#iID_DonViQuanLyID').val('').trigger('change');
+    $("#cbxChuDauTu").val('').trigger('change');
 })
 
 
@@ -353,7 +355,6 @@ getCanCu(iLoaiChungTu = $("#cbxLoaiChungTu").val());
 
 function GetDuAn() {
     $("#tblGoiThau").html('');
-    ChooseDuAn();
 
     lstDuAn = [];
     $("#iID_DuAnID").html("<option value='' data-sMaDuAn='' data-fTongMucDauTu='0' data-iIDMaCDT=''>--Chọn--</option>");
@@ -397,12 +398,15 @@ function getTMDTPheDuyet() {
 function ChooseDuAn() {
     $("#fTongMucDauTuPheDuyet").val(0);
     var iIdDuAn = $("#iID_DuAnID option:selected").val();
-    if (iIdDuAn != undefined) {
+    if (iIdDuAn != undefined && iIdDuAn != '') {
         $("#cbxChuDauTu").val($("#iID_DuAnID").find(':selected').data("iidmacdt"));
 
         // đây là lấy theo thông tin dự án (ftongmucdautu)
         //$("#fTongMucDauTuPheDuyet").val(FormatNumber($("#iID_DuAnID").find(':selected').data("ftongmucdautu")));
 
+        GetListChungTu();
+    } else {
+        $("#cbxChuDauTu").val('').trigger('change');
         GetListChungTu();
     }
 }

@@ -52,6 +52,7 @@ namespace Viettel.Models.QLNH
     public class NH_KHTongTheTTCP_NhiemVuChiDto : NH_KHTongTheTTCP_NhiemVuChi
     {
         public virtual string sGiaTri { get; set; }
+        public virtual bool isAdd { get; set; }
     }
 
     public class LookupKHTTCP

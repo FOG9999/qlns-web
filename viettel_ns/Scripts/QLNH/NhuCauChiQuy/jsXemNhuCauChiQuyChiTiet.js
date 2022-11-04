@@ -361,7 +361,7 @@ function GetNgoaiUSDTable() {
         obj.fChiNgoaiTeUSD = $(item).find(".txtChingoaiteUSD").val();
         obj.fChiTrongNuocVND = $(item).find(".txtChiTrongnuocVND").val();
         obj.isDelete = bIsDelete;
-        obj.iID_HopDongID = $(item).find(".selectHopDong select").val();
+        obj.iID_HopDongID = $(item).find(".selectHopDong").val();
         obj.sNoiDung = $(item).find(".txtNoidung").val();
         if (obj.fChiNgoaiTeUSD == null || obj.fChiNgoaiTeUSD == "") {
             obj.fChiNgoaiTeUSD = 0;

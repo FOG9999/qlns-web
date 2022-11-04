@@ -44,7 +44,7 @@ function GetListData2(sDonVi2, iCurrentPage, changeTable) {
     });
 }
 function GetListData(sDonVi, sDuAn, sHopDong, iCurrentPage, changeTable) {
-    let state = $("#tbListBaoCaoTaiSan2").is(":hidden");
+    let state = $("#tbListBaoCaoTaiSan1").is(":hidden");
     _paging.CurrentPage = iCurrentPage;
     $.ajax({
         type: "POST",

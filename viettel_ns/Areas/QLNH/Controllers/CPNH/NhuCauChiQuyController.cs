@@ -137,13 +137,13 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
         {
             CPNHNhuCauChiQuy_Model data = new CPNHNhuCauChiQuy_Model();
             List<CPNHNhuCauChiQuy_Model> lstVoucherTypes = new List<CPNHNhuCauChiQuy_Model>()
-                {
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "--Chọn quý--", iQuy = 0},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 1", iQuy = 1},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 2", iQuy = 2},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 3", iQuy = 3},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 4", iQuy = 4}
-                };
+            {
+                new CPNHNhuCauChiQuy_Model(){SQuyTypes = "--Chọn quý--", iQuy = 0},
+                new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 1", iQuy = 1},
+                new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 2", iQuy = 2},
+                new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 3", iQuy = 3},
+                new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 4", iQuy = 4}
+            };
             ViewBag.ListQuyTypes = lstVoucherTypes.ToSelectList("iQuy", "SQuyTypes");
             List<NS_PhongBan> lstPhongBanQuanLy = _cpnhService.GetBQuanlyList().ToList();
             lstPhongBanQuanLy.Insert(0, new NS_PhongBan { iID_MaPhongBan = Guid.Empty, sMoTa = "--Chọn phòng ban--" });
@@ -334,10 +334,10 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
         }
 
         [HttpPost]
-        public JsonResult GetHopDongAll()
+        public JsonResult GetHopDongAll(Guid? iID_DonViID, Guid? iID_BQuanLyID)
         {
             var result = new List<dynamic>();
-            var listModel = _cpnhService.GetListHopDong().ToList();
+            var listModel = _cpnhService.GetListHopDong(iID_DonViID, iID_BQuanLyID).ToList();
             if (listModel != null && listModel.Any())
             {
                 foreach (var item in listModel)
@@ -692,24 +692,27 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                 return PartialView("_modelUpdateGeneral", data);
             }
         }
-        public ActionResult ExportExcelBaoCao(string ext = "pdf", int dvt = 1, int to = 1, Guid? iGui = null, string iloai = "" ,Guid? iDonvi = null, int iQuy = 0, int iNam = 0 , int iUSD = 0 , int iVND = 0)
+        public ActionResult ExportExcelBaoCao(string sDonViCapTren, string sDonViCapDuoi, string ext = "pdf", int dvt = 1, int to = 1, Guid? iGui = null, string iloai = "" ,Guid? iDonvi = null, int iQuy = 0, int iNam = 0 , int iUSD = 0 , int iVND = 0)
         {
             string fileName = string.Format("{0}.{1}", "Bao_Cao_Nhu_Cau_Chi_Quy", ext);
             if (iloai == "1")
             {
-                ExcelFile xls = TaoFileBaoCao1(dvt, to, iGui, iDonvi, iQuy, iNam);
+                ExcelFile xls = TaoFileBaoCao1(sDonViCapTren, sDonViCapDuoi, dvt, to, iGui, iDonvi, iQuy, iNam);
                 return Print(xls, ext, fileName);
             }
             else if (iloai == "2")
             {
-                ExcelFile xls = TaoFileBaoCao2(dvt, to, iGui, iDonvi, iQuy, iNam , iUSD , iVND);
+                ExcelFile xls = TaoFileBaoCao2(sDonViCapTren, sDonViCapDuoi, dvt, to, iGui, iDonvi, iQuy, iNam , iUSD , iVND);
                 return Print(xls, ext, fileName);
             }
             return null;
         }
 
-        public ExcelFile TaoFileBaoCao1(int dvt = 1, int to = 1, Guid? iGui = null, Guid? iDonvi = null, int iQuy = 0, int iNam = 0)
+        public ExcelFile TaoFileBaoCao1(string sDonViCapTren, string sDonViCapDuoi, int dvt = 1, int to = 1, Guid? iGui = null, Guid? iDonvi = null, int iQuy = 0, int iNam = 0)
         {
+            sDonViCapTren = HttpUtility.UrlDecode(sDonViCapTren);
+            sDonViCapDuoi = HttpUtility.UrlDecode(sDonViCapDuoi);
+
             var Gui = _cpnhService.GetPhongBanID((Guid)iGui);
             var Donvi = _cpnhService.GetPhongBanID((Guid)iDonvi);
             var sGui = "";
@@ -796,6 +799,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                 iQuy = iQuy,
                 sKinhGui = sGui,
                 sDonvi = sDonvi,
+                sDonViCapTren = sDonViCapTren.ToUpper(),
+                sDonViCapDuoi = sDonViCapDuoi.ToUpper()
             });
             fr.UseChuKy(Username)
                 .UseChuKyForController(sControlName)
@@ -810,8 +815,11 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             return Result;
         }
 
-        public ExcelFile TaoFileBaoCao2(int dvt = 1, int to = 1, Guid? iGui = null, Guid? iDonvi = null, int iQuy = 0, int iNam = 0 , int iUSD = 0 , int iVND = 0)
+        public ExcelFile TaoFileBaoCao2(string sDonViCapTren, string sDonViCapDuoi, int dvt = 1, int to = 1, Guid? iGui = null, Guid? iDonvi = null, int iQuy = 0, int iNam = 0 , int iUSD = 0 , int iVND = 0)
         {
+            sDonViCapTren = HttpUtility.UrlDecode(sDonViCapTren);
+            sDonViCapDuoi = HttpUtility.UrlDecode(sDonViCapDuoi);
+
             var sDvTinhUSD = "";
             var sDvTinhVND = "";
             if (iUSD == 1) { sDvTinhUSD = "Nghìn "; }
@@ -920,7 +928,9 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                 sKinhGui = sGui,
                 sDonvi = sDonvi,
                 sDvTinhUSD = sDvTinhUSD,
-                sDvTinhVND = sDvTinhVND
+                sDvTinhVND = sDvTinhVND,
+                sDonViCapTren = sDonViCapTren.ToUpper(),
+                sDonViCapDuoi = sDonViCapDuoi.ToUpper()
             });
             fr.UseChuKy(Username)
                 .UseChuKyForController(sControlName)

@@ -285,6 +285,17 @@ function layData() {
     $("#sMaNguonVon").val(psMaNguonVon);
     $("#iNamNganSach").val(piNamNganSach);
     $("#sMoTa").val(psMoTa);
+
+    FilterSelectList();
+}
+
+function removeCurrentActibveTab() {
+    $('.tab-pane').each((index, x) => {
+        if (x.classList.contains('active')) {
+            console.log('xxx')
+            x.classList.remove('active')
+        }
+    })
 }
 
 function layChiTiet() {
@@ -296,6 +307,7 @@ function layChiTiet() {
         dataType: "json",
         cache: false,
         success: function (data) {
+            removeCurrentActibveTab();
             if (data != null && data != "") {
                 var bIsActive = false;
                 //var temp = Html.Raw(x.FSoTien == 0 ? "" : x.FSoTien.ToString("###,###"));

@@ -32,13 +32,14 @@
         </div>
         <div class="col-sm-1"></div>
         <div class="col-sm-3">
-            <div class="dropdown pull-right">
+            @*<div class="dropdown pull-right">
                 <button class="btn btn-info pull-right"><i class="fa fa-print" aria-hidden="true"></i>Export</button>
                 <div class="dropdown-content list-group">
                     <a href="#" class="list-group-item list-group-item-action" onclick="ExportChenhLechTiGia('xlsx');">Excel</a>
                     <a href="#" class="list-group-item list-group-item-action" onclick="ExportChenhLechTiGia('pdf');">PDF</a>
                 </div>
-            </div>
+            </div>*@
+            <button class="btn btn-warning pull-right" onclick="OpenModalBaoCao();"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
             <button class="btn btn-info pull-right mr-10" onclick="ResetChangePage();"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
             <button class="btn btn-info pull-right mr-10" onclick="ChangePage();"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
         </div>
@@ -200,7 +201,7 @@
         $("#slbHopDong").select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
     });
 </script>
-<style>
+@*<style>
     .dropdown {
         position: relative;
     }
@@ -214,5 +215,5 @@
     .dropdown:hover .dropdown-content {
         display: block;
     }
-</style>
+</style>*@
 

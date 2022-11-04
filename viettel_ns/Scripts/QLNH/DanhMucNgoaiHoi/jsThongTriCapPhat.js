@@ -443,6 +443,12 @@ function ChoiceCheckboxRow() {
 }
 
 function ViewInBaoCao() {
+    var DonViCapTren = encodeURIComponent($.trim($('#DonViCapTren').val()));
+    var DonVi = encodeURIComponent($.trim($('#DonVi').val()));
+    var checkdata = [];
+    checkdata.DonViCapTren = DonViCapTren;
+    checkdata.DonVi = DonVi;
+    CheckValidateFormBaoCao(checkdata);
     arr_error = [];
     var arrLink = [];
     var arrIdThongTri= [];
@@ -452,10 +458,14 @@ function ViewInBaoCao() {
             arrIdThongTri.push($(tr).data('idthongtri'));
         }
     });
-    if (arrIdThongTri.length > 0) {
+    if (CheckValidateFormBaoCao(checkdata).length>0) {
+        arr_error.push(CheckValidateFormBaoCao(checkdata));
+        showErr(CONFIRM);
+    }
+    else if (arrIdThongTri.length > 0) {
         for (i = 0; i < arrIdThongTri.length; i++) {
             var idThongTri = arrIdThongTri[i];
-            arrLink.push("/QLNH/ThongTriCapPhat/ExportBaoCaoThongTriCapPhat?idThongTri=" + idThongTri);
+            arrLink.push("/QLNH/ThongTriCapPhat/ExportBaoCaoThongTriCapPhat?idThongTri=" + idThongTri + "&donvicaptren=" + DonViCapTren + "&donvi=" + DonVi);
         }
         openLinks(arrLink);
     }
@@ -463,4 +473,64 @@ function ViewInBaoCao() {
         arr_error.push("Chưa chọn thông tri cấp phát");
         showErr(CONFIRM);
     }
+}
+
+function OpenPopupInBaoCao() {
+    arr_error = [];
+    var arrIdThongTri = [];
+    $("#tblListThongTriCapPhat tbody tr").each(function (index, tr) {
+        var checkbox = $(tr).find('.itemcheckbox');
+        if ($(checkbox).is(":checked")) {
+            arrIdThongTri.push($(tr).data('idthongtri'));
+        }
+    });
+    if (arrIdThongTri.length == 0)
+         {
+            arr_error.push("Chưa chọn thông tri cấp phát");
+            showErr(CONFIRM);
+        }
+    else
+     {
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            url: "/QLNH/ThongTriCapPhat/UpdateChuKy",
+            success: function (data) {
+                $("#contentModalChiTietThanhToan").html(data);
+                $("#modalChiTietThanhToanLabel").html('Báo cáo Thông tri cấp phát');
+                $("#iModalChiTietThanhToan").modal('show');
+            }
+        });
+    }
+}
+function CheckValidateFormBaoCao(data) {
+    arr_error = [];
+    var Title = 'Lỗi thêm mới/chỉnh sửa tài sản';
+    var Messages = [];
+    if(data.DonViCapTren == null || data.DonViCapTren == "") {
+        arr_error.push('Đơn vị cấp trên không được để trống!');
+    }
+     if (data.DonVi == null || data.DonVi == "") {
+        arr_error.push('Đơn vị không được để trống!!');
+    }
+     if (data.DonVi.length > 250) {
+        arr_error.push('Đơn vị cấp trên  không được nhập quá nhập quá 250 kí tự!');
+    }
+     if (data.DonViCapTren.length > 250) {
+        arr_error.push('Đơn vị không được nhập quá 250 kí tự!');
+    }
+
+    if (Messages.length > 0) {
+        $.ajax({
+            type: "POST",
+            url: "/Modal/OpenModal",
+            data: { Title: Title, Messages: Messages, Category: ERROR },
+            success: function (data) {
+                $("#divModalConfirm").html(data);
+            }
+        });
+        return false;
+    }
+
+    return (true, arr_error);
 }

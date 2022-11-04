@@ -390,6 +390,20 @@ namespace VIETTEL.Controllers
             }
             return null;
         }
+
+        [Authorize]
+        public JsonResult GetCustomList(string Truong, string GiaTri, string DSGiaTri)
+        {
+            if (Truong == "sTenPhongBan")
+            {
+                return get_DanhSachBQuanLy(GiaTri, DSGiaTri);
+            }
+            else if (Truong.StartsWith("sTenDonVi"))
+            {
+                return get_DanhSachDonViCustom(GiaTri);
+            }
+            return null;
+        }
         private JsonResult get_DanhSachLoaiST(String GiaTri)
         {
             int i = 0;
@@ -760,6 +774,48 @@ namespace VIETTEL.Controllers
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 
+        private JsonResult get_DanhSachDonViCustom(String GiaTri)
+        {
+            String MaND = User.Identity.Name;
+            List<Object> list = new List<Object>();
+
+            String DK = String.Format("iTrangThai=1 AND iNamLamViec_DonVi=@iNamLamViec AND iID_MaDonVi IN (SELECT iID_MaDonVi FROM NS_NguoiDung_DonVi WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec AND sMaNguoiDung=@sMaNguoiDung) ");
+            String SQL = String.Format("SELECT TOP 10 iID_Ma, iID_MaDonVi, sTen FROM NS_DonVi WHERE {0} AND (iID_MaDonVi LIKE @iID_MaDonVi OR sTen like @sTen) ORDER BY iID_MaDonVi", DK);
+            SqlCommand cmd = new SqlCommand(SQL);
+            cmd.Parameters.AddWithValue("@iID_MaDonVi", GiaTri + "%");
+            cmd.Parameters.AddWithValue("@sTen", "%" + GiaTri + "%");
+            cmd.Parameters.AddWithValue("@sMaNguoiDung", MaND);
+            cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(MaND));
+            DataTable dt = Connection.GetDataTable(cmd);
+            cmd.Dispose();
+            if (dt.Rows.Count == 0)
+            {
+                //Trong trường hợp không tìm ra dữ liệu sẽ hiển thị tất cả
+                dt.Dispose();
+                DK = String.Format("iTrangThai=1 AND iNamLamViec_DonVi=@iNamLamViec AND iID_MaDonVi IN (SELECT iID_MaDonVi FROM NS_NguoiDung_DonVi WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec AND sMaNguoiDung=@sMaNguoiDung) ");
+                SQL = String.Format("SELECT TOP 10 iID_Ma, iID_MaDonVi, sTen FROM NS_DonVi WHERE {0}  ORDER BY iID_MaDonVi", DK);
+                cmd = new SqlCommand(SQL);
+                cmd.Parameters.AddWithValue("@sMaNguoiDung", MaND);
+                cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(MaND));
+                dt = Connection.GetDataTable(cmd);
+                cmd.Dispose();
+            }
+            int i;
+            for (i = 0; i < dt.Rows.Count; i++)
+            {
+                Object item = new
+                {
+                    value = String.Format("{0}", dt.Rows[i]["iID_Ma"]),
+                    label = String.Format("{0} - {1}", dt.Rows[i]["iID_MaDonVi"], dt.Rows[i]["sTen"]),
+                    showLabel = true
+                };
+                list.Add(item);
+            }
+            dt.Dispose();
+
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
+
         // Danh sách đơn vị thực hiện dự án
         private JsonResult get_DanhSachDonViThucHienDuAn(String GiaTri)
         {
@@ -1008,6 +1064,40 @@ ORDER BY sLNS");
 
             return Json(list, JsonRequestBehavior.AllowGet);
         }
+
+        private JsonResult get_DanhSachBQuanLy(string GiaTri, string DSGiaTri)
+        {
+            List<Object> list = new List<Object>();
+            String SQL = String.Format("SELECT iID_MaPhongBan, CONCAT(sTen, IIF(sMoTa = '', '', CONCAT(' - ', sMoTa))) AS DisplayName FROM NS_PhongBan WHERE iTrangThai=1 AND sTen LIKE @sTen ORDER BY sTen");
+            SqlCommand cmd = new SqlCommand(SQL);
+            cmd.Parameters.AddWithValue("@sTen", "%" + GiaTri + "%");
+            DataTable dt = Connection.GetDataTable(cmd);
+            cmd.Dispose();
+            if (dt.Rows.Count == 0)
+            {
+                //Trong trường hợp không tìm ra dữ liệu sẽ hiển thị tất cả
+                dt.Dispose();
+                SQL = String.Format("SELECT iID_MaPhongBan, CONCAT(sTen, IIF(sMoTa = '', '', CONCAT(' - ', sMoTa))) AS DisplayName FROM NS_PhongBan WHERE iTrangThai=1 ORDER BY sTen");
+                cmd = new SqlCommand(SQL);
+                dt = Connection.GetDataTable(cmd);
+                cmd.Dispose();
+            }
+            int i;
+            for (i = 0; i < dt.Rows.Count; i++)
+            {
+                Object item = new
+                {
+                    value = String.Format("{0}", dt.Rows[i]["iID_MaPhongBan"]),
+                    label = String.Format("{0}", dt.Rows[i]["DisplayName"]),
+                    showLabel = true
+                };
+                list.Add(item);
+            }
+            dt.Dispose();
+
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
+
         private JsonResult get_DanhSachLoaiTaiSan(String GiaTri)
         {
             List<Object> list = new List<Object>();
@@ -2398,6 +2488,90 @@ AND tk.iID_MaTaiKhoanDanhMucChiTiet=ct.iID_MaTaiKhoanDanhMucChiTiet  ORDER BY ct
                 return get_GiaTriNguonNganSach(GiaTri);
             }
             return null;
+        }
+
+        [Authorize]
+        public JsonResult GetCusTomGiaTri(String Truong, String GiaTri, String DSGiaTri)
+        {
+            if (Truong == "sTenPhongBan")
+            {
+                return get_GiaTriBanQuanLy(GiaTri);
+            }
+            else if (Truong == "sTenDonViCoTen")
+            {
+                return get_GiaTriDonViCustom(GiaTri);
+            }
+            return null;
+        }
+
+        private JsonResult get_GiaTriBanQuanLy(string giaTri)
+        {
+            Object item = new
+            {
+                value = "",
+                label = ""
+            };
+            List<Object> list = new List<Object>();
+            String SQL = String.Format("SELECT iID_MaPhongBan, CONCAT(sTen, IIF(sMoTa = '', '', CONCAT(' - ', sMoTa))) AS DisplayName FROM NS_PhongBan WHERE iTrangThai=1 AND sTen LIKE @sTen ORDER BY sTen");
+            SqlCommand cmd = new SqlCommand(SQL);
+            cmd.Parameters.AddWithValue("@sTen", "%" + giaTri + "%");
+            DataTable dt = Connection.GetDataTable(cmd);
+            cmd.Dispose();
+            if (dt.Rows.Count == 0)
+            {
+                //Trong trường hợp không tìm ra dữ liệu sẽ hiển thị tất cả
+                dt.Dispose();
+                SQL = String.Format("SELECT iID_MaPhongBan, CONCAT(sTen, IIF(sMoTa = '', '', CONCAT(' - ', sMoTa))) AS DisplayName FROM NS_PhongBan WHERE iTrangThai=1 ORDER BY sTen");
+                cmd = new SqlCommand(SQL);
+                dt = Connection.GetDataTable(cmd);
+                cmd.Dispose();
+            }
+            int i;
+            for (i = 0; i < dt.Rows.Count; i++)
+            {
+                item = new
+                {
+                    value = String.Format("{0}", dt.Rows[i]["iID_MaPhongBan"]),
+                    label = String.Format("{0}", dt.Rows[i]["DisplayName"]),
+                    showLabel = true
+                };
+                list.Add(item);
+            }
+            dt.Dispose();
+            return Json(item, JsonRequestBehavior.AllowGet);
+        }
+
+        private JsonResult get_GiaTriDonViCustom(String GiaTri)
+        {
+            Object item = new
+            {
+                value = "",
+                label = "",
+                code = ""
+            };
+            if (!String.IsNullOrEmpty(GiaTri))
+            {
+                String MaND = User.Identity.Name;
+                String DK = "iTrangThai=1 AND iNamLamViec_DonVi=@iNamLamViec AND iID_MaDonVi IN (SELECT iID_MaDonVi FROM NS_NguoiDung_DonVi WHERE iTrangThai=1 AND iNamLamViec=@iNamLamViec AND sMaNguoiDung=@sMaNguoiDung) AND ";
+                String SQL = String.Format("SELECT TOP 1 iID_Ma, iID_MaDonVi, sTen FROM NS_DonVi WHERE {0} (iID_MaDonVi LIKE @iID_MaDonVi) ORDER BY iID_MaDonVi", DK);
+                SqlCommand cmd = new SqlCommand(SQL);
+                cmd.Parameters.AddWithValue("@iID_MaDonVi", GiaTri + "%");
+                cmd.Parameters.AddWithValue("@sMaNguoiDung", MaND);
+                cmd.Parameters.AddWithValue("@iNamLamViec", ReportModels.LayNamLamViec(MaND));
+                DataTable dt = Connection.GetDataTable(cmd);
+                cmd.Dispose();
+                if (dt.Rows.Count > 0)
+                {
+                    item = new
+                    {
+                        value = String.Format("{0}", dt.Rows[0]["iID_Ma"]),
+                        label = String.Format("{0} - {1}", dt.Rows[0]["iID_MaDonVi"], dt.Rows[0]["sTen"]),
+                        code = String.Format("{0}", dt.Rows[0]["iID_MaDonVi"])
+                    };
+                }
+                dt.Dispose();
+            }
+            return Json(item, JsonRequestBehavior.AllowGet);
         }
 
         private JsonResult get_TenPhongBan(string giaTri)

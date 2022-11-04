@@ -4657,9 +4657,9 @@ namespace Viettel.Domain.DomainModel
 		public virtual string sID_MaNguoiDungSua { get; set; }
 	}
 
-    /// <summary>
-    /// A class which represents the VDT_KHV_KeHoachVonUng_DX table.
-    /// </summary>
+	/// <summary>
+	/// A class which represents the VDT_KHV_KeHoachVonUng_DX table.
+	/// </summary>
 	/*[Table("VDT_KHV_KeHoachVonUng_DX")]*/
 	public partial class VDT_KHV_KeHoachVonUng_DX
 	{
@@ -4686,7 +4686,11 @@ namespace Viettel.Domain.DomainModel
 		public virtual string sTongHop { get; set; }
 		public virtual bool? bKhoa { get; set; }
 		public virtual Guid? iID_TonghopParent { get; set; }
-	}
+		public virtual Guid? iID_ParentID { get; set; }
+		public virtual bool bActive { get; set; }
+		public virtual bool bIsGoc { get; set; }
+
+    }
 
     /// <summary>
     /// A class which represents the TCDN_DN table.
@@ -4892,13 +4896,15 @@ namespace Viettel.Domain.DomainModel
 		public virtual string sGhiChu { get; set; }
 		public virtual Guid? iID_DonViQuanLyID { get; set; }
 		public virtual string iID_MaDonViQuanLy { get; set; }
-	}
+        public virtual double? fGiaTriDeNghiDC { get; set; }
+
+    }
 
     /// <summary>
     /// A class which represents the TCDN_DN_Quanly table.
     /// </summary>
-	/*[Table("TCDN_DN_Quanly")]*/
-	public partial class TCDN_DN_Quanly
+    /*[Table("TCDN_DN_Quanly")]*/
+    public partial class TCDN_DN_Quanly
 	{
 		[Key]
 		public virtual Guid iID_MaQuanLy { get; set; }
@@ -5197,6 +5203,9 @@ namespace Viettel.Domain.DomainModel
 		public virtual int? iID_NguonVonID { get; set; }
 		public virtual Guid? iID_LoaiNguonVonID { get; set; }
 		public virtual Guid? iID_KeHoachVonUngDeXuatID { get; set; }
+		public virtual Guid? iID_ParentID { get; set; }
+		public virtual bool bActive { get; set; }
+		public virtual bool bIsGoc { get; set; }
 	}
 
     /// <summary>
@@ -5523,13 +5532,17 @@ namespace Viettel.Domain.DomainModel
 		public virtual string NG { get; set; }
 		public virtual string TNG { get; set; }
 		public virtual string sGhiChu { get; set; }
-	}
+        public virtual double? fCapPhatTaiKhoBacDC { get; set; }
+        public virtual double? fCapPhatBangLenhChiDC { get; set; }
+
+
+    }
 
     /// <summary>
     /// A class which represents the TCDN_DonViThanhVien table.
     /// </summary>
-	/*[Table("TCDN_DonViThanhVien")]*/
-	public partial class TCDN_DonViThanhVien
+    /*[Table("TCDN_DonViThanhVien")]*/
+    public partial class TCDN_DonViThanhVien
 	{
 		[Key]
 		public virtual int iID_Ma { get; set; }
@@ -8195,13 +8208,16 @@ namespace Viettel.Domain.DomainModel
 		public virtual string NoiDungHopDong { get; set; }
 		public virtual int? iLanDieuChinh { get; set; }
 		public virtual string sTenHopDong { get; set; }
-	}
+        public virtual DateTime? dThoiGianBaoLanhHopDongTu { get; set; }
+        public virtual DateTime? dThoiGianBaoLanhHopDongDen { get; set; }
+
+    }
 
     /// <summary>
     /// A class which represents the KT_GiaiThichSoDu table.
     /// </summary>
-	/*[Table("KT_GiaiThichSoDu")]*/
-	public partial class KT_GiaiThichSoDu
+    /*[Table("KT_GiaiThichSoDu")]*/
+    public partial class KT_GiaiThichSoDu
 	{
 		[Key]
 		public virtual Guid iID_MaGiaiThich { get; set; }

@@ -105,8 +105,11 @@
             var time = (date >= 10 ? date : "0" + date) + "/" + (month >= 10 ? month : "0" + month) + "/" + dt.getFullYear();
             $("#iDenNgay").val(time);
 
+
+            $("#idDuAn").change(function () {
+                GetBaoCao();
+            });
+
         })
     </script>
 }
-
-

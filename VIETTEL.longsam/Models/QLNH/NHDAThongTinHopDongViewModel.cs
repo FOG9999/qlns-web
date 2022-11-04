@@ -18,6 +18,7 @@ namespace Viettel.Models.QLNH
         public string sTenChuongTrinh { get; set; }
         public string sTenLoaiHopDong { get; set; }
         public string sTenNhaThau { get; set; }
+        public string sTenGoiThau { get; set; }
         public string sTenTiGia { get; set; }
         public string sSoLanDieuChinh { get; set; }
         public string sDieuChinhTu { get; set; }

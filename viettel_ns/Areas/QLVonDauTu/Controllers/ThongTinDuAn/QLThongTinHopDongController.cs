@@ -581,5 +581,11 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             
             return list.Count > 0;
         }
+        
+        public JsonResult GetSoTaiKhoanNhaThauByIdNhaThau(Guid? iID_NhaThauID)
+        {         
+            var data = _qLVonDauTuService.GetSoTaiKhoanNhaThauByIdNhaThau(iID_NhaThauID);
+            return Json(new { data = data},JsonRequestBehavior.AllowGet);
+        }
     }
 }

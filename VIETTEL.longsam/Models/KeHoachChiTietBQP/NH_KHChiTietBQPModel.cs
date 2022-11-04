@@ -81,6 +81,7 @@ namespace Viettel.Models.KeHoachChiTietBQP
         public virtual Guid? iID_KHTTTTCP_NhiemVuChiID { get; set; }
         public virtual Guid? iID_ParentID { get; set; }
         public virtual bool bIsTTCP { get; set; }
+        public virtual bool isAdd { get; set; }
     }
 
     public class NH_DM_TiGia_ChiTiet_ViewModel

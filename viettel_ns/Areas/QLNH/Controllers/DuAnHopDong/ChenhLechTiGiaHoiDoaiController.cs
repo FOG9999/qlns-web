@@ -21,6 +21,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
     {
         private readonly IQLNHService _qlnhService = QLNHService.Default;
         private readonly INganSachService _nganSachService = NganSachService.Default;
+        private const string sControlName = "ChenhLechTiGiaHoiDoai";
+        private readonly string TITLE_FIRST_DEFAULT_VALUE = "BÁO CÁO CHÊNH LỆCH TỈ GIÁ HỐI ĐOÁI THEO HỢP ĐỒNG CỦA NGUỒN QUỸ DỰ TRỮ NGOẠI HỐI";
 
         // GET: QLNH/ChenhLechTiGiaHoiDoai
         public ActionResult Index()
@@ -111,17 +113,33 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
             return Json(htmlHD.ToString(), JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ExportChenhLechTiGia(Guid? iDonVi, Guid? iChuongTrinh, Guid? iHopDong, string ext = "xlsx")
+        [HttpPost]
+        public ActionResult OpenModalBaoCao()
         {
+            ViewBag.Title = "BÁO CÁO CHÊNH LỆCH TỈ GIÁ HỐI ĐOÁI";
+            ViewBag.TieuDe1 = TITLE_FIRST_DEFAULT_VALUE;
+            return PartialView("_reportModal");
+        }
+
+        [ValidateInput(false)]
+        public ActionResult ExportChenhLechTiGia(Guid? iDonVi, Guid? iChuongTrinh, Guid? iHopDong, string tieude1, string tieude2, string tieude3, string tendonvicaptren, string tendonvi, string ext = "xlsx")
+        {
+            tieude1 = HttpUtility.UrlDecode(tieude1);
+            tieude2 = HttpUtility.UrlDecode(tieude2);
+            tieude3 = HttpUtility.UrlDecode(tieude3);
+            tendonvicaptren = HttpUtility.UrlDecode(tendonvicaptren);
+            tendonvi = HttpUtility.UrlDecode(tendonvi);
+
             ExcelFile xls = FileBaoCaoChenhLech(iDonVi == Guid.Empty ? null : iDonVi
                                             , iChuongTrinh == Guid.Empty ? null : iChuongTrinh
-                                            , iHopDong == Guid.Empty ? null : iHopDong);
+                                            , iHopDong == Guid.Empty ? null : iHopDong
+                                            , tieude1, tieude2, tieude3, tendonvicaptren, tendonvi);
             string sFileName = "Báo cáo chênh lệch tỉ giá hối đoái";
             sFileName = string.Format("{0}.{1}", sFileName, ext);
             return Print(xls, ext, sFileName);
         }
 
-        private ExcelFile FileBaoCaoChenhLech(Guid? iDonVi, Guid? iChuongTrinh, Guid? iHopDong)
+        private ExcelFile FileBaoCaoChenhLech(Guid? iDonVi, Guid? iChuongTrinh, Guid? iHopDong, string tieude1, string tieude2, string tieude3, string tendonvicaptren, string tendonvi)
         {
             XlsFile Result = new XlsFile(true);
             string sFilePathBaoCaoChenhLechTiGia = "/Report_ExcelFrom/QLNH/rpt_ChenhLechTiGiaHoiDoai.xlsx";
@@ -148,18 +166,13 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
             }).ToList();
 
             fr.AddTable<ChenhLechTiGiaExportModel>("dt", lstChenhLechTiGia);
-            if (iDonVi == null || iDonVi == Guid.Empty)
-            {
-                fr.SetValue("sTenDonVi", "Cục Tài Chính");
-            }
-            else
-            {
-                var donvi = _nganSachService.GetDonViById(PhienLamViec.NamLamViec.ToString(), iDonVi.ToString());
-                string sTenDonVi = donvi != null ? donvi.sTen : string.Empty;
-                fr.SetValue("sTenDonVi", sTenDonVi);
-            }
+            fr.SetValue("sTenDonViCapTren", tendonvicaptren);
+            fr.SetValue("sTenDonViCapDuoi", tendonvi);
+            fr.SetValue("TieuDe1", tieude1.IsEmpty("") ? TITLE_FIRST_DEFAULT_VALUE : tieude1);
+            fr.SetValue("TieuDe2", tieude2);
+            fr.SetValue("TieuDe3", tieude3);
 
-            fr.UseForm(this).Run(Result);
+            fr.UseChuKy(Username).UseChuKyForController(sControlName).UseForm(this).Run(Result);
 
             return Result;
         }

@@ -13,6 +13,7 @@ using Viettel.Services;
 using VIETTEL.Controllers;
 using VIETTEL.Helpers;
 using VIETTEL.Flexcel;
+using System.Web;
 
 namespace VIETTEL.Areas.QLNH.Controllers.BaoCaoThongKe
 {
@@ -22,6 +23,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.BaoCaoThongKe
         private readonly IQLNHService _qlnhService = QLNHService.Default;
         private readonly INganSachService _nganSachService = NganSachService.Default;
         private const string sFilePathBaoCao = "/Report_ExcelFrom/QLNH/rpt_BaoCaoSoChuyenNamSau.xlsx";
+        private const string sControlName = "BaoCaoTongHopSoChuyenNamSau";
+
         public List<Dropdown_SelectValue> lstDonViVND = new List<Dropdown_SelectValue>()
             {
                 new Dropdown_SelectValue()
@@ -86,13 +89,18 @@ namespace VIETTEL.Areas.QLNH.Controllers.BaoCaoThongKe
             return PartialView("_baoCaoDetail", vm);
         }
 
-        public ActionResult ExportFile(string txtTieuDe1, string txtTieuDe2, Guid? txtIdDonVi, int txtNamKeHoach, int? slbDonViUSD, int? slbDonViVND, string ext = "xlsx", int to = 1)
+        [ValidateInput(false)]
+        public ActionResult ExportFile(string txtTieuDe1, string txtTieuDe2, string txtDonViCapTren, string txtDonVi, Guid? txtIdDonVi, int txtNamKeHoach, int? slbDonViUSD, int? slbDonViVND, string ext = "xlsx", int to = 1)
         {
+            txtTieuDe1 = HttpUtility.UrlDecode(txtTieuDe1);
+            txtTieuDe2 = HttpUtility.UrlDecode(txtTieuDe2);
+            txtDonViCapTren = HttpUtility.UrlDecode(txtDonViCapTren);
+            txtDonVi = HttpUtility.UrlDecode(txtDonVi);
             string fileName = string.Format("{0}.{1}", "Bao cao chi tiet so chuyen nam sau nam" + txtNamKeHoach, ext);
-            ExcelFile xls = TaoFileExel(txtTieuDe1, txtTieuDe2, txtNamKeHoach, slbDonViUSD, slbDonViVND, to);
+            ExcelFile xls = TaoFileExel(txtTieuDe1, txtTieuDe2, txtDonViCapTren, txtDonVi, txtNamKeHoach, slbDonViUSD, slbDonViVND, to);
             return Print(xls, ext, fileName);
         }
-        public ExcelFile TaoFileExel(string txtTieuDe1, string txtTieuDe2, int iNamKeHoach, int? slbDonViUSD, int? slbDonViVND, int to = 1)
+        public ExcelFile TaoFileExel(string txtTieuDe1, string txtTieuDe2, string txtDonViCapTren, string txtDonVi, int iNamKeHoach, int? slbDonViUSD, int? slbDonViVND, int to = 1)
         {
             var donViVND = lstDonViVND.Find(x => x.Value == slbDonViVND);
             var donViUSD = lstDonViUSD.Find(x => x.Value == slbDonViUSD);
@@ -105,12 +113,14 @@ namespace VIETTEL.Areas.QLNH.Controllers.BaoCaoThongKe
             fr.SetValue(new
             {
                 To = to,
-                txtTieuDe1 = txtTieuDe1,
+                txtTieuDe1 = txtTieuDe1.ToUpper(),
                 txtTieuDe2 = txtTieuDe2,
                 donViUSD = donViUSD.Label,
                 donViVND = donViVND.Label,
                 txtDonVi = "",
-                txtNam = "Năm:  " + iNamKeHoach.ToString()
+                txtNam = "Năm:  " + iNamKeHoach.ToString(),
+                txtDonViCapTren = txtDonViCapTren.ToUpper(),
+                txtDonViCapDuoi = txtDonVi.ToUpper()
             });
             //fr.SetValue("iTongSoNgayDieuTri", iTongSoNgayDieuTri.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")));
             foreach (var item in data)
@@ -119,7 +129,9 @@ namespace VIETTEL.Areas.QLNH.Controllers.BaoCaoThongKe
             }
             fr.AddTable<NH_QT_QuyetToanNienDo_ChiTietData>("dt", data);
 
-            fr.UseForm(this).Run(Result);
+            fr.UseChuKy(Username)
+              .UseChuKyForController(sControlName)
+              .UseForm(this).Run(Result);
 
             return Result;
         }

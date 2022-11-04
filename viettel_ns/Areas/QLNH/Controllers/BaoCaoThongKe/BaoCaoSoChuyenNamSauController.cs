@@ -67,8 +67,9 @@ namespace VIETTEL.Areas.QLNH.Controllers.BaoCaoThongKe
         {
             NH_QT_QuyetToanNienDo_ChiTietView vm = new NH_QT_QuyetToanNienDo_ChiTietView();
             vm.ListDetailQuyetToanNienDo = new List<NH_QT_QuyetToanNienDo_ChiTietData>();
-            List<NS_DonVi> lstDonViQL = _qlnhService.GetDonviList(PhienLamViec.NamLamViec).ToList();
-            lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = "--Chọn đơn vị--" });
+
+            List<NS_DonVi> lstDonViQL = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec, false, false).ToList();
+            lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = "--Chọn đơn vị--" });
             ViewBag.ListDonVi = lstDonViQL;
 
             List<Dropdown_SelectValue> lstNamKeHoach = GetListNamKeHoach();
@@ -87,7 +88,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.BaoCaoThongKe
             ViewBag.ListDVUSD = lstDonViUSD;
 
             var donvi = _nganSachService.GetDonViById(PhienLamViec.NamLamViec.ToString(), slbDonVi.ToString());
-            ViewBag.sTenDonVi = donvi != null ? donvi.iID_MaDonVi + "-" + donvi.sTen : string.Empty;
+            ViewBag.sTenDonVi = donvi != null ? donvi.iID_MaDonVi + " - " + donvi.sTen : string.Empty;
             ViewBag.iIdDonVi = slbDonVi;
 
             ViewBag.iNamKeHoach = slbNamKeHoach;
@@ -158,8 +159,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.BaoCaoThongKe
         public ActionResult TimKiem(Guid? iDonVi, int? iNamKeHoach)
         {
             NH_QT_QuyetToanNienDo_ChiTietView vm = new NH_QT_QuyetToanNienDo_ChiTietView();
-            List<NS_DonVi> lstDonViQL = _qlnhService.GetDonviList(PhienLamViec.NamLamViec).ToList();
-            lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = "--Chọn đơn vị--" });
+            List<NS_DonVi> lstDonViQL = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec, false, false).ToList();
+            lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = "--Chọn đơn vị--" });
             ViewBag.ListDonVi = lstDonViQL;
 
             List<Dropdown_SelectValue> lstNamKeHoach = GetListNamKeHoach();

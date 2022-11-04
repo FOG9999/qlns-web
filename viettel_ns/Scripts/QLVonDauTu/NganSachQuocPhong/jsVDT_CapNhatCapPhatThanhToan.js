@@ -58,6 +58,7 @@ $(document).ready(function () {
                 success: function (data) {
                     if (data != null && data != "") {
                         $("#drpDuAn").html(data);
+                        $('#drpDuAn').val($('#iID_DuAnId').val());
                         $("#drpDuAn").trigger("change");
                     }
                 },
@@ -75,6 +76,9 @@ $(document).ready(function () {
         GetDetailHopDong();
         GetDataDropdownNhaThau();
         LoadLuyKeThanhToan();
+
+        LoadPheDuyetChiTiet();
+        recalculateTyLeThanhToan();
     });
 
     $("#drpDuAn").change(function (e) {
@@ -106,21 +110,23 @@ $(document).ready(function () {
 
     $("#drpDonViQuanLy").val(iID_DonViQuanLyIDOld);
 
-    setTimeout(function () {
-        $("#iID_ChuDauTuID").trigger("change");
-        setTimeout(function () {
-            $("#drpDuAn").val(iID_DuAnIdOld).trigger("change");
-            setTimeout(function () {
-                $("#drpHopDong").val(iID_HopDongIdOld).trigger("change");
-                setTimeout(function () {
-                    //$("#drpNguonNganSach").val(iID_NguonVonIDOld).trigger("change");
-                    LoadPheDuyetChiTiet();
-                    recalculateTyLeThanhToan();
-                }, 200);
-            }, 200);
+    $("#iID_ChuDauTuID").trigger("change");
+
+    //setTimeout(function () {
+    //    $("#iID_ChuDauTuID").trigger("change");
+    //    setTimeout(function () {
+    //        $("#drpDuAn").val(iID_DuAnIdOld).trigger("change");
+    //        setTimeout(function () {
+    //            $("#drpHopDong").val(iID_HopDongIdOld).trigger("change");
+    //            setTimeout(function () {
+    //                //$("#drpNguonNganSach").val(iID_NguonVonIDOld).trigger("change");
+    //                LoadPheDuyetChiTiet();
+    //                recalculateTyLeThanhToan();
+    //            }, 200);
+    //        }, 200);
             
-        }, 200);
-    }, 200);
+    //    }, 200);
+    //}, 200);
     $("#drpLoaiThanhToan").val(iLoaiThanhToanOld);
     if (iCoQuanThanhToanOld == 1) {
         $("#drpCoQuanThanhToan").val(iCoQuanThanhToanOld)

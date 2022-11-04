@@ -79,45 +79,19 @@
                 <th>Ngoại tệ khác</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tbodyListGoiThau">
             @{
-                int index = 0;
                 foreach (NH_DA_GoiThauModel item in Model.Items)
                 {
-                    index++;
-                    <tr>
-                        <td align="center">@(pageIndex + index)</td>
-                        <td align="left">@Html.Raw(Html.Encode(item.sTenGoiThau))</td>
-                        <td align="left">@Html.Raw(Html.Encode(item.sTenDonVi))</td>
-                        <td align="left">@Html.Raw(Html.Encode(item.sTenChuongTrinh))</td>
-                        <td align="left">@Html.Raw(Html.Encode(item.sTenDuAn))</td>
-                        <td align="center">@Html.Raw(Html.Encode(item.sLoai))</td>
-                        <td align="center">@Html.Raw(Html.Encode(item.iThoiGianThucHien))</td>
-                        <td align="right">@(item.fGiaTriUSD.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
-                        <td align="right">@(item.fGiaTriVND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fGiaTriVND.Value).ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
-                        <td align="right">@(item.fGiaTriEUR.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriEUR.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
-                        <td align="right">@(item.fGiaTriNgoaiTeKhac.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriNgoaiTeKhac.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
-                        <td align="center">@item.sSoLanDieuChinh</td>
-                        @if (item.iLanDieuChinh == 0)
-                        {
-                            <td align="center">@Html.Raw(Html.Encode(item.sDieuChinhTu))</td>
-                        }
-                        else
-                        {
-                            <td align="center" class="text-underline text-primary" role="button" onclick="OpenPackageInfoDetail('@item.iID_ParentAdjustID')">@Html.Raw(Html.Encode(item.sDieuChinhTu))</td>
-                        }
-                        <td align="center" style="padding:0;">
-                            @if (item.bIsActive)
-                            {
-                                <button type="button" class="btn-adjust" title="Điều chỉnh" onclick="OpenPackageInfo('@item.ID', true)"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>
-                            }
-                            <button type="button" class="btn-detail" title="Xem chi tiết" onclick="OpenPackageInfoDetail('@item.ID')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
-                            @if (item.bIsActive)
-                            {
-                                <button type="button" class="btn-edit" title="Sửa" onclick="OpenPackageInfo('@item.ID', false)"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
-                                <button type="button" class="btn-delete" title="Xóa" onclick="Xoa('@item.ID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
-                            }
-                        </td>
+                    <tr style="background-color:white;">
+                        <td align="left" colspan="7" style="color: #ff0000; cursor: pointer" onclick="ToogleRow(this)" data-id="@item.iID_KHCTBQP_ChuongTrinhID" data-ishaschild="false">Chương trình: @Html.Raw(Html.Encode(item.sTenChuongTrinh))</td>
+                        <td align="right" style="color: #ff0000">@(item.fGiaTriUSD.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td align="right" style="color: #ff0000">@(item.fGiaTriVND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fGiaTriVND.Value).ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                        <td align="right" style="color: #ff0000">@(item.fGiaTriEUR.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriEUR.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td align="right" style="color: #ff0000">@(item.fGiaTriNgoaiTeKhac.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriNgoaiTeKhac.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td align="right" style="color: #ff0000"></td>
+                        <td align="right" style="color: #ff0000"></td>
+                        <td align="right" style="color: #ff0000"></td>
                     </tr>
                 }
             }

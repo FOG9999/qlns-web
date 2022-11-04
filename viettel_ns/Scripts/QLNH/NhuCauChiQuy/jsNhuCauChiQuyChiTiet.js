@@ -183,9 +183,12 @@ function CapNhatCotSttChiQuy(idBang) {
 
 
 function LoadDataHopDong() {
+    IDDonVi = $("#IDDonVi").val();
+    IDBQuanLy = $("#IDBQuanLy").val();
     $.ajax({
         url: "/QLNH/NhuCauChiQuy/GetHopDongAll",
         type: "POST",
+        data: { iID_DonViID: IDDonVi, iID_BQuanLyID: IDBQuanLy},
         dataType: "json",
         cache: false,
         async: false,
@@ -342,7 +345,7 @@ function GetNgoaiUSDTable() {
         obj.fChiNgoaiTeUSD = $(item).find(".txtChingoaiteUSD").val();
         obj.fChiTrongNuocVND = $(item).find(".txtChiTrongnuocVND").val();
         obj.isDelete = bIsDelete;
-        obj.iID_HopDongID = $(item).find(".selectHopDong select").val();
+        obj.iID_HopDongID = $(item).find(".selectHopDong").val();
         obj.sNoiDung = $(item).find(".txtNoidung").val();
         if (obj.fChiNgoaiTeUSD == null || obj.fChiNgoaiTeUSD == "") {
             obj.fChiNgoaiTeUSD = 0;
@@ -427,7 +430,7 @@ function LoadDataViewChitiet() {
 function ValidateBeforeSave(data) {
     var message = [];
     var title = 'Lỗi lưu nhu cầu chi quý chi tiết';
-    var ListNCCQChiTiet = data.ListNCCQChiTiet;
+    var ListNCCQChiTiet = data.ListNCCQChiTiet.filter(x => x.isDelete == false);
     if (ListNCCQChiTiet.length == 0) {
         message.push("Vui lòng thêm nội dung chi hoặc hợp đồng.");
     }
@@ -480,10 +483,20 @@ function Luu() {
             if (resp == null || resp.status == false) {
                 popupModal("Lỗi lưu dữ liệu nhu cầu chi quý chi tiết", [resp.message], ERROR);
                 return;
-            } else {
+            }
+            else {
                 bIsSaveSuccess = true;
-                popupModal("Thông báo", "Lưu dữ liệu thành công", ERROR);
-                window.location.href = "/QLNH/NhuCauChiQuy";
+                $.ajax({
+                    type: "POST",
+                    url: "/Modal/OpenModal",
+                    data: { Title: "Thông báo", Messages: "Lưu dữ liệu thành công", Category: ERROR },
+                    success: function (data) {
+                        $("#divModalConfirm").html(data);
+                        $('#confirmModal').on('hidden.bs.modal', function () {
+                            window.location.href = "/QLNH/NhuCauChiQuy";
+                        });
+                    }
+                });
             }
         }
     })

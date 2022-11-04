@@ -201,7 +201,7 @@ namespace Viettel.Services
         /// <param name="sMaDonViQL">Mã đơn vị</param>
         /// <returns></returns>
         IEnumerable<VDT_DA_DuToan_ViewModel> GetAllVDTPheDuyetTKTCVaTDT(ref PagingInfo _paging, string sUserLogin, int iNamLamViec, byte bIsTongDuToan, string sTenDuAn = "", string sSoQuyetDinh = "", DateTime? dPheDuyetTuNgay = null,
-            DateTime? dPheDuyetDenNgay = null, Guid? sMaDonViQL = null,string sTenDuToan = "");
+            DateTime? dPheDuyetDenNgay = null, Guid? sMaDonViQL = null, string sTenDuToan = "");
 
         /// <summary>
         /// Lấy danh sách dự án theo đơn vị và loại quyết định
@@ -291,6 +291,7 @@ namespace Viettel.Services
         IEnumerable<HangMucInfoModel> GetThongTinHangMucAllByHopDongId(Guid iIdHopDongId);
         IEnumerable<HangMucInfoModel> GetThongTinDieuChinhHangMucAllByHopDongId(Guid iIdHopDongId);
         void DeleteHopDongDetail(Guid iIdHopDongID);
+        string GetSoTaiKhoanNhaThauByIdNhaThau(Guid? iID_NhaThauID);
         #endregion
 
         #region thong tin du an
@@ -810,7 +811,7 @@ namespace Viettel.Services
         IEnumerable<VDTKeHoachVonUngInfoModel> GetAllKHVUDuocDuyet(ref PagingInfo _paging, int iNamLamViec, string sSoQuyetDinh = null, DateTime? dNgayQuyetDinhFrom = null, DateTime? dNgayQuyetDinhTo = null, int? iNamKeHoach = null, int? iIdNguonVon = null, string iID_MaDonViQuanLyID = null);
         IEnumerable<VdtKhvKeHoachVonUngChiTietModel> GetKHVUChiTietList(Guid? iID_KeHoachUngID);
         bool deleteKHVUChiTiet(Guid iID_KeHoachUngID);
-        bool deleteKHVU(Guid iID_KeHoachUngID);
+        bool deleteKHVU(Guid iID_KeHoachUngID, string username);
         VDTKeHoachVonUngDuocDuyetViewModel GetKHVUById(Guid iID_KeHoachUngID, int iNamLamViec);
         bool CheckExistSoQuyetDinh(Guid? iID_KeHoachUngID, string sSoQuyetDinh);
         IEnumerable<VDT_KHV_KeHoachVonUng_DX> GetKeHoachVonUngDeXuatInVonUngDuocDuyetScreen(string iIdMaDonVi, int iNamKeHoach, DateTime dNgayLap);
@@ -818,7 +819,7 @@ namespace Viettel.Services
         VDTKhvkeHoachVonUngViewModel GetKHVUDuocDuyetById(Guid? iID_KeHoachUngID);
         Guid CheckExistXauNoiMaAndGetIdNganh(int iNamLamViec, string sXauNoiMa);
         bool CheckDuplicateXauNoiMa(int iNamLamViec, string sXauNoiMa);
-        bool KehoachVonUngDuocDuyetCtSave(List<VdtKhvKeHoachVonUngChiTietModel> listData, bool isUpdate, Guid? iId_KeHoachUngID);
+        bool KehoachVonUngDuocDuyetCtSave(List<VdtKhvKeHoachVonUngChiTietModel> listData, bool isUpdate, Guid? iId_KeHoachUngID, bool isDieuChinh = false);
         IEnumerable<VdtKhvKeHoachVonUngChiTietModel> KehoachVonUngDuocDuyetChiTietExport(Guid? iIDKeHoachVonUngID);
 
         #endregion
@@ -1367,7 +1368,7 @@ namespace Viettel.Services
         /// <param name="sSoQuyetDinh"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        bool CheckExitsSoQuyetDinhKHLCNT(string sSoQuyetDinh,Guid? id);
+        bool CheckExitsSoQuyetDinhKHLCNT(string sSoQuyetDinh, Guid? id);
         #endregion
 
         #region Cap phat thanh toan
@@ -1634,7 +1635,7 @@ namespace Viettel.Services
             (ref PagingInfo _paging, string sSoQuyetDinh = null, DateTime? dNgayQuyetDinhFrom = null, DateTime? dNgayQuyetDinhTo = null,
             int? iNamKeHoach = null, int? iIdNguonVon = null, string iID_MaDonViQuanLyID = null);
         bool CheckExistSoDeNghiKHVNDX(Guid? iID_KeHoachUngID, string sSoDeNghi);
-        bool deleteKHVUDX(Guid iID_KeHoachUngID);
+        bool deleteKHVUDX(Guid iID_KeHoachUngID, string username);
         bool deleteKHVUDXChiTiet(Guid iID_KeHoachUngID);
         IEnumerable<VdtKhcKeHoachVonUngDeXuatChiTietModel> GetDuAnInVonUngDeXuatByCondition(string sMaDonVi = null, DateTime? dNgayDeNghi = null, string sTongHop = null);
         IEnumerable<VdtKhcKeHoachVonUngDeXuatChiTietModel> GetDuAnInVonUngDeXuatByIdDonVi(string sMaDonVi = null);
@@ -1656,7 +1657,7 @@ namespace Viettel.Services
         /// <param name="isUpdate"> flag phan biet la them moi hay edit </param>
         /// <param name="lstidDuAn"></param>
         /// <returns></returns>
-        bool SaveKHVNCT(List<VdtKhcKeHoachVonUngDeXuatChiTietModel> listData, bool isUpdate, Guid iID_KeHoachUngID);
+        bool SaveKHVNCT(List<VdtKhcKeHoachVonUngDeXuatChiTietModel> listData, bool isUpdate, Guid iID_KeHoachUngID, bool isDieuChinh = false);
 
         /// <summary>
         /// GEt kế hoạch vốn ứng đề xuất  theo IDKHVUDX
@@ -2617,7 +2618,7 @@ namespace Viettel.Services
 
         #region Thông tin dự án - QL phê duyệt TKTC & TDT
         public IEnumerable<VDT_DA_DuToan_ViewModel> GetAllVDTPheDuyetTKTCVaTDT(ref PagingInfo _paging, string sUserLogin, int iNamLamViec, byte bIsTongDuToan, string sTenDuAn = "", string sSoQuyetDinh = "", DateTime? dPheDuyetTuNgay = null,
-            DateTime? dPheDuyetDenNgay = null, Guid? sMaDonViQL = null,string sTenDuToan ="")
+            DateTime? dPheDuyetDenNgay = null, Guid? sMaDonViQL = null, string sTenDuToan = "")
         {
             using (var conn = _connectionFactory.GetConnection())
             {
@@ -2871,13 +2872,13 @@ namespace Viettel.Services
                     {
                         return null;
                     }
-                    if(loaiChungTu == 1)
+                    if (loaiChungTu == 1)
                     {
                         item.ListNguonVon = GetListNguonVonTheoTKTC(iID_DuToanID);
                         item.ListChiPhi = GetListChiPhiTheoTKTC(iID_DuToanID);
                         item.ListHangMuc = GetListHangMucTheoTKTC(iID_DuToanID);
                     }
-                    else if(loaiChungTu == 2)
+                    else if (loaiChungTu == 2)
                     {
                         item.ListNguonVon = GetListNguonVonTheoQDDT(iID_DuToanID);
                         item.ListChiPhi = GetListChiPhiTheoQDDT(iID_DuToanID);
@@ -3196,7 +3197,7 @@ namespace Viettel.Services
                 {
 
                     var item = conn.Query<VDT_DA_DuToan_ChiPhi_ViewModel>(sql,
-                        param: new {},
+                        param: new { },
                         commandType: CommandType.Text);
 
                     return item;
@@ -6292,20 +6293,45 @@ namespace Viettel.Services
                 return r >= 0;
             }
         }
-        public bool deleteKHVU(Guid iID_KeHoachUngID)
+        public bool deleteKHVU(Guid iID_KeHoachUngID, string username)
         {
-            var sql = "delete VDT_KHV_KeHoachVonUng where Id = @iID_KeHoachUngID ";
-            using (var conn = _connectionFactory.GetConnection())
+
+            try
             {
-                var r = conn.Execute(
-                    sql,
-                    param: new
+                var sql = "delete VDT_KHV_KeHoachVonUng where Id = @iID_KeHoachUngID ";
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    conn.Open();
+                    var trans = conn.BeginTransaction();
+
+                    var entity = conn.Get<VDT_KHV_KeHoachVonUng>(iID_KeHoachUngID, trans);
+                    if (entity != null && entity.iID_ParentID != null)
                     {
-                        iID_KeHoachUngID
-                    },
-                    commandType: CommandType.Text);
-                return r > 0;
+                        var entityChild = conn.Get<VDT_KHV_KeHoachVonUng>(entity.iID_ParentID, trans);
+                        entityChild.bActive = true;
+                        entityChild.sUserCreate = username;
+                        entityChild.dDateUpdate = DateTime.Now;
+                        conn.Update<VDT_KHV_KeHoachVonUng>(entityChild, trans);
+                    }
+
+                    var r = conn.Execute(
+                        sql,
+                        param: new
+                        {
+                            iID_KeHoachUngID
+                        },
+                        commandType: CommandType.Text, transaction: trans);
+                    trans.Commit();
+                    conn.Close();
+
+                    return r > 0;
+                }
             }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return false;
         }
         public VDTKeHoachVonUngDuocDuyetViewModel GetKHVUById(Guid iID_KeHoachUngID, int iNamLamViec)
         {
@@ -7291,6 +7317,33 @@ namespace Viettel.Services
                 return null;
             }
         }
+
+        public string GetSoTaiKhoanNhaThauByIdNhaThau(Guid? iID_NhaThauID)
+        {
+            try
+            {
+                using (var conn = _connectionFactory.GetConnection())
+                {
+
+                    var sql = "SELECT sSoTaiKhoan FROM VDT_DM_NhaThau WHERE iID_NhaThauID = @iID_NhaThauID;";
+                    var item = conn.QueryFirstOrDefault<string>(sql,
+                        param: new
+                        {
+                            iID_NhaThauID = iID_NhaThauID,
+
+                        },
+                        commandType: CommandType.Text
+                    );
+                    return string.IsNullOrEmpty(item) ? string.Empty : item;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return string.Empty;
+        }
+
         #endregion
 
         #region Báo cáo quyết toán niên độ 
@@ -15265,7 +15318,7 @@ namespace Viettel.Services
                         sSoQuyetDinh,
                         id
                     },
-                    commandType: CommandType.Text );
+                    commandType: CommandType.Text);
                 return count == 0 ? false : true;
             }
         }
@@ -15282,7 +15335,7 @@ namespace Viettel.Services
         {
             try
             {
-                var sql = "SELECT * FROM VDT_DA_DuAn WHERE iID_MaCDT = @sId_CDT AND iID_DonViQuanLyID=@sId_DonViQuanLy";
+                var sql = "SELECT * FROM VDT_DA_DuAn WHERE iID_MaCDT = @sId_CDT AND (@sId_DonViQuanLy is null or iID_DonViQuanLyID=@sId_DonViQuanLy)";
 
                 using (var conn = _connectionFactory.GetConnection())
                 {
@@ -16683,20 +16736,35 @@ namespace Viettel.Services
             return false;
         }
 
-        public bool deleteKHVUDX(Guid iID_KeHoachUngID)
+        public bool deleteKHVUDX(Guid iID_KeHoachUngID, string username)
         {
             try
             {
                 var sql = "delete VDT_KHV_KeHoachVonUng_DX where Id = @iID_KeHoachUngID ";
                 using (var conn = _connectionFactory.GetConnection())
                 {
+                    conn.Open();
+                    var trans = conn.BeginTransaction();
+
+                    var entity = conn.Get<VDT_KHV_KeHoachVonUng_DX>(iID_KeHoachUngID, trans);
+                    if (entity != null && entity.iID_ParentID != null)
+                    {
+                        var entityChild = conn.Get<VDT_KHV_KeHoachVonUng_DX>(entity.iID_ParentID, trans);
+                        entityChild.bActive = true;
+                        entityChild.sUserCreate = "username";
+                        entityChild.dDateUpdate = DateTime.Now;
+                        conn.Update<VDT_KHV_KeHoachVonUng_DX>(entityChild, trans);
+                    }
+
                     var r = conn.Execute(
                         sql,
                         param: new
                         {
                             iID_KeHoachUngID
                         },
-                        commandType: CommandType.Text);
+                        commandType: CommandType.Text, transaction: trans);
+                    trans.Commit();
+
                     return r >= 0;
                 }
             }
@@ -17047,7 +17115,7 @@ namespace Viettel.Services
             return null;
         }
 
-        public bool SaveKHVNCT(List<VdtKhcKeHoachVonUngDeXuatChiTietModel> listData, bool isUpdate, Guid iID_KeHoachUngID)
+        public bool SaveKHVNCT(List<VdtKhcKeHoachVonUngDeXuatChiTietModel> listData, bool isUpdate, Guid iID_KeHoachUngID, bool isDieuChinh = false)
         {
             try
             {
@@ -17058,8 +17126,11 @@ namespace Viettel.Services
                     var listDataChiTiet = new List<VDT_KHV_KeHoachVonUng_DX_ChiTiet>();
                     var listDataChiTietIsDelete = new List<VDT_KHV_KeHoachVonUng_DX_ChiTiet>();
                     var entityKHV = conn.Get<VDT_KHV_KeHoachVonUng_DX>(iID_KeHoachUngID, trans);
+                    if (entityKHV == null) return false;
                     entityKHV.fGiaTriUng = 0;
-                    if (!isUpdate)
+
+                    #region Chứng từ điều chỉnh
+                    if (isDieuChinh)
                     {
                         if (listData.Any())
                         {
@@ -17070,7 +17141,18 @@ namespace Viettel.Services
                                     var data = new VDT_KHV_KeHoachVonUng_DX_ChiTiet();
                                     data.Id = Guid.NewGuid();
                                     data.iID_DuAnID = item.iID_DuAnID;
-                                    data.fGiaTriDeNghi = item.fGiaTriDeNghi;
+                                    if (item.fGiaTriDeNghi == null && item.fGiaTriDeNghiDC.HasValue)
+                                    {
+                                        data.fGiaTriDeNghi = item.fGiaTriDeNghiDC;
+                                        data.fGiaTriDeNghiDC = item.fGiaTriDeNghiDC;
+
+                                    }
+                                    else
+                                    {
+                                        data.fGiaTriDeNghi = item.fGiaTriDeNghi;
+                                        data.fGiaTriDeNghiDC = item.fGiaTriDeNghiDC;
+                                    }
+
                                     data.iID_KeHoachUngID = iID_KeHoachUngID;
                                     data.sGhiChu = item.sGhiChu;
                                     listDataChiTiet.Add(data);
@@ -17080,58 +17162,144 @@ namespace Viettel.Services
                             //listDataChiTiet.MapFrom(listData.Where(x => x.isDelete = false));
                             conn.Insert<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(listDataChiTiet, trans);
                             // update fGiatriUng to KHVUngDeXuat
-                            entityKHV.fGiaTriUng = listDataChiTiet.Sum(x => x.fGiaTriDeNghi);
+                            entityKHV.fGiaTriUng = listDataChiTiet.Sum(x => x.fGiaTriDeNghiDC);
                             conn.Update<VDT_KHV_KeHoachVonUng_DX>(entityKHV, trans);
-
                         }
                     }
+                    #endregion
                     else
                     {
-                        if (listData.Any())
+                        #region Thêm mới chi tiết.
+                        if (!isUpdate)
                         {
-                            //listDataChiTiet.MapFrom(listData.Where(x => x.isDelete = false));
-                            //listDataChiTietIsDelete.MapFrom(listData.Where(x => x.isDelete = true));
-
-                            // save nhung dataChiTiet
-                            foreach (var item in listData)
+                            if (listData.Any())
                             {
-                                if (item.Id == new Guid())
+                                foreach (var item in listData)
                                 {
                                     if (item.isDelete == false)
                                     {
                                         var data = new VDT_KHV_KeHoachVonUng_DX_ChiTiet();
-                                        data.Id = new Guid();
+                                        data.Id = Guid.NewGuid();
                                         data.iID_DuAnID = item.iID_DuAnID;
                                         data.fGiaTriDeNghi = item.fGiaTriDeNghi;
                                         data.iID_KeHoachUngID = iID_KeHoachUngID;
                                         data.sGhiChu = item.sGhiChu;
                                         listDataChiTiet.Add(data);
-                                        entityKHV.fGiaTriUng += item.fGiaTriDeNghi;
-                                    }
-                                    conn.Insert<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(listDataChiTiet, trans);
-                                }
-                                else
-                                {
-                                    if (item.isDelete == true)
-                                    {
-                                        var entityDelete = conn.Get<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(item.Id, trans);
-                                        conn.Delete<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(entityDelete, trans);
-                                        //entityKHV.fGiaTriUng -= item.fGiaTriDeNghi;
-                                    }
-                                    else
-                                    {
-                                        var entity = conn.Get<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(item.Id, trans);
-                                        entity.fGiaTriDeNghi = item.fGiaTriDeNghi;
-                                        entity.sGhiChu = item.sGhiChu;
-
-                                        conn.Update<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(item, trans);
-                                        entityKHV.fGiaTriUng += item.fGiaTriDeNghi;
                                     }
 
                                 }
+                                //listDataChiTiet.MapFrom(listData.Where(x => x.isDelete = false));
+                                conn.Insert<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(listDataChiTiet, trans);
+                                // update fGiatriUng to KHVUngDeXuat
+                                entityKHV.fGiaTriUng = listDataChiTiet.Sum(x => x.fGiaTriDeNghi);
                                 conn.Update<VDT_KHV_KeHoachVonUng_DX>(entityKHV, trans);
+
                             }
                         }
+                        #endregion
+
+                        #region update chi tiết
+                        else
+                        {
+                            // update dieu chinh
+                            if (entityKHV != null && entityKHV.bIsGoc == false)
+                            {
+                                if (listData.Any())
+                                {
+                                    //listDataChiTiet.MapFrom(listData.Where(x => x.isDelete = false));
+                                    //listDataChiTietIsDelete.MapFrom(listData.Where(x => x.isDelete = true));
+
+                                    // save nhung dataChiTiet
+                                    foreach (var item in listData)
+                                    {
+                                        if (item.Id == new Guid())
+                                        {
+                                            if (item.isDelete == false)
+                                            {
+                                                var data = new VDT_KHV_KeHoachVonUng_DX_ChiTiet();
+                                                data.Id = Guid.NewGuid();
+                                                data.iID_DuAnID = item.iID_DuAnID;
+                                                data.fGiaTriDeNghi = item.fGiaTriDeNghi;
+                                                data.iID_KeHoachUngID = iID_KeHoachUngID;
+                                                data.sGhiChu = item.sGhiChu;
+                                                listDataChiTiet.Add(data);
+                                                entityKHV.fGiaTriUng += item.fGiaTriDeNghi;
+                                            }
+                                            conn.Insert<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(listDataChiTiet, trans);
+                                        }
+                                        else
+                                        {
+                                            if (item.isDelete == true)
+                                            {
+                                                var entityDelete = conn.Get<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(item.Id, trans);
+                                                conn.Delete<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(entityDelete, trans);
+                                                //entityKHV.fGiaTriUng -= item.fGiaTriDeNghi;
+                                            }
+                                            else
+                                            {
+                                                var entity = conn.Get<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(item.Id, trans);
+                                                entity.fGiaTriDeNghiDC = item.fGiaTriDeNghi;
+                                                entity.sGhiChu = item.sGhiChu;
+
+                                                conn.Update<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(entity, trans);
+                                                entityKHV.fGiaTriUng += item.fGiaTriDeNghi;
+                                            }
+
+                                        }
+                                        conn.Update<VDT_KHV_KeHoachVonUng_DX>(entityKHV, trans);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (listData.Any())
+                                {
+                                    //listDataChiTiet.MapFrom(listData.Where(x => x.isDelete = false));
+                                    //listDataChiTietIsDelete.MapFrom(listData.Where(x => x.isDelete = true));
+
+                                    // save nhung dataChiTiet
+                                    foreach (var item in listData)
+                                    {
+                                        if (item.Id == new Guid())
+                                        {
+                                            if (item.isDelete == false)
+                                            {
+                                                var data = new VDT_KHV_KeHoachVonUng_DX_ChiTiet();
+                                                data.Id = Guid.NewGuid();
+                                                data.iID_DuAnID = item.iID_DuAnID;
+                                                data.fGiaTriDeNghi = item.fGiaTriDeNghi;
+                                                data.iID_KeHoachUngID = iID_KeHoachUngID;
+                                                data.sGhiChu = item.sGhiChu;
+                                                listDataChiTiet.Add(data);
+                                                entityKHV.fGiaTriUng += item.fGiaTriDeNghi;
+                                            }
+                                            conn.Insert<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(listDataChiTiet, trans);
+                                        }
+                                        else
+                                        {
+                                            if (item.isDelete == true)
+                                            {
+                                                var entityDelete = conn.Get<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(item.Id, trans);
+                                                conn.Delete<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(entityDelete, trans);
+                                                //entityKHV.fGiaTriUng -= item.fGiaTriDeNghi;
+                                            }
+                                            else
+                                            {
+                                                var entity = conn.Get<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(item.Id, trans);
+                                                entity.fGiaTriDeNghi = item.fGiaTriDeNghi;
+                                                entity.sGhiChu = item.sGhiChu;
+
+                                                conn.Update<VDT_KHV_KeHoachVonUng_DX_ChiTiet>(item, trans);
+                                                entityKHV.fGiaTriUng += item.fGiaTriDeNghi;
+                                            }
+
+                                        }
+                                        conn.Update<VDT_KHV_KeHoachVonUng_DX>(entityKHV, trans);
+                                    }
+                                }
+                            }
+                        }
+                        #endregion
                     }
                     trans.Commit();
                 }
@@ -17439,7 +17607,7 @@ namespace Viettel.Services
             }
         }
 
-        public bool KehoachVonUngDuocDuyetCtSave(List<VdtKhvKeHoachVonUngChiTietModel> listData, bool isUpdate, Guid? iId_KeHoachUngID)
+        public bool KehoachVonUngDuocDuyetCtSave(List<VdtKhvKeHoachVonUngChiTietModel> listData, bool isUpdate, Guid? iId_KeHoachUngID, bool isDieuChinh = false)
         {
             try
             {
@@ -17448,74 +17616,24 @@ namespace Viettel.Services
                     conn.Open();
                     var trans = conn.BeginTransaction();
                     var listDataChiTiet = new List<VDT_KHV_KeHoachVonUng_ChiTiet>();
+                    var entityParent = new VDT_KHV_KeHoachVonUng();
                     if ((listData != null && listData.Count() > 0) && iId_KeHoachUngID != null)
                     {
-                        var entityParent = conn.Get<VDT_KHV_KeHoachVonUng>(iId_KeHoachUngID, trans);
-                        entityParent.fGiaTriUng = listData.Where(x => x.isDelete == false).Sum(x => x.fCapPhatBangLenhChi) + listData.Where(x => x.isDelete == false).Sum(x => x.fCapPhatTaiKhoBac);
+                        entityParent = conn.Get<VDT_KHV_KeHoachVonUng>(iId_KeHoachUngID, trans);
+
+                        if (isDieuChinh)
+                        {
+                            entityParent.fGiaTriUng = listData.Where(x => x.isDelete == false).Sum(x => x.fCapPhatBangLenhChiDC) + listData.Where(x => x.isDelete == false).Sum(x => x.fCapPhatTaiKhoBacDC);
+                        }
+                        else
+                        {
+                            entityParent.fGiaTriUng = listData.Where(x => x.isDelete == false).Sum(x => x.fCapPhatBangLenhChi) + listData.Where(x => x.isDelete == false).Sum(x => x.fCapPhatTaiKhoBac);
+                        }
                         conn.Update<VDT_KHV_KeHoachVonUng>(entityParent, trans);
                     }
-                    if (isUpdate)
-                    {
-                        foreach (var item in listData)
-                        {
-                            if (item.id == new Guid())
-                            {
-                                if (item.isDelete == false)
-                                {
-                                    var entity = new VDT_KHV_KeHoachVonUng_ChiTiet();
-                                    entity.Id = Guid.NewGuid();
-                                    entity.iID_DuAnID = item.iID_DuAnID;
-                                    entity.iID_MucID = item.iID_NganhID;
-                                    entity.iID_TietMucID = item.iID_NganhID;
-                                    entity.iID_TieuMucID = item.iID_NganhID;
-                                    entity.iID_NganhID = item.iID_NganhID;
-                                    entity.iID_KeHoachUngID = item.iID_KeHoachUngID;
-                                    entity.fCapPhatTaiKhoBac = item.fCapPhatTaiKhoBac;
-                                    entity.fCapPhatBangLenhChi = item.fCapPhatBangLenhChi;
-                                    entity.LNS = item.sLNS;
-                                    entity.L = item.sL;
-                                    entity.K = item.sK;
-                                    entity.M = item.sM;
-                                    entity.TM = item.sTM;
-                                    entity.TTM = item.sTTM;
-                                    entity.NG = item.sNG;
-                                    entity.sGhiChu = item.sGhiChu;
-                                    entity.sTrangThaiDuAnDangKy = item.sTrangThaiDuAnDangKy;
-                                    listDataChiTiet.Add(entity);
-                                }
-                                conn.Insert<VDT_KHV_KeHoachVonUng_ChiTiet>(listDataChiTiet, trans);
 
-                            }
-                            else
-                            {
-                                if (item.isDelete == true)
-                                {
-                                    conn.Delete<VDT_KHV_KeHoachVonUng_ChiTiet>(item.id, trans);
-                                }
-                                else
-                                {
-                                    var entityOld = conn.Get<VDT_KHV_KeHoachVonUng_ChiTiet>(item.id, trans);
-                                    entityOld.iID_MucID = item.iID_NganhID;
-                                    entityOld.iID_TietMucID = item.iID_NganhID;
-                                    entityOld.iID_TieuMucID = item.iID_NganhID;
-                                    entityOld.iID_NganhID = item.iID_NganhID;
-                                    entityOld.fCapPhatTaiKhoBac = item.fCapPhatTaiKhoBac;
-                                    entityOld.fCapPhatBangLenhChi = item.fCapPhatBangLenhChi;
-                                    entityOld.LNS = item.sLNS;
-                                    entityOld.L = item.sL;
-                                    entityOld.K = item.sK;
-                                    entityOld.M = item.sM;
-                                    entityOld.TM = item.sTM;
-                                    entityOld.TTM = item.sTTM;
-                                    entityOld.NG = item.sNG;
-                                    entityOld.sGhiChu = item.sGhiChu;
-                                    conn.Update<VDT_KHV_KeHoachVonUng_ChiTiet>(entityOld, trans);
-
-                                }
-                            }
-                        }
-                    }
-                    else
+                    #region Dieu chinh ke hoach von ung duoc duyet 
+                    if (isDieuChinh)
                     {
                         if (listData.Any())
                         {
@@ -17531,6 +17649,8 @@ namespace Viettel.Services
                                     entity.iID_TieuMucID = item.iID_NganhID;
                                     entity.iID_NganhID = item.iID_NganhID;
                                     entity.iID_KeHoachUngID = item.iID_KeHoachUngID;
+                                    entity.fCapPhatTaiKhoBacDC = item.fCapPhatTaiKhoBacDC;
+                                    entity.fCapPhatBangLenhChiDC = item.fCapPhatBangLenhChiDC;
                                     entity.fCapPhatTaiKhoBac = item.fCapPhatTaiKhoBac;
                                     entity.fCapPhatBangLenhChi = item.fCapPhatBangLenhChi;
                                     entity.LNS = item.sLNS;
@@ -17548,10 +17668,182 @@ namespace Viettel.Services
 
                             //Save dataChiTiet
                             conn.Insert<VDT_KHV_KeHoachVonUng_ChiTiet>(listDataChiTiet, trans);
+
+                        }
+                    }
+                    #endregion
+                    else
+                    {
+                        if (isUpdate)
+                        {
+                            #region sua dieu chinh ke hoach von ung duoc duyet chi tiet
+                            if (entityParent != null && entityParent.bIsGoc == false)
+                            {
+                                foreach (var item in listData)
+                                {
+                                    if (item.id == new Guid())
+                                    {
+                                        if (item.isDelete == false)
+                                        {
+                                            var entity = new VDT_KHV_KeHoachVonUng_ChiTiet();
+                                            entity.Id = Guid.NewGuid();
+                                            entity.iID_DuAnID = item.iID_DuAnID;
+                                            entity.iID_MucID = item.iID_NganhID;
+                                            entity.iID_TietMucID = item.iID_NganhID;
+                                            entity.iID_TieuMucID = item.iID_NganhID;
+                                            entity.iID_NganhID = item.iID_NganhID;
+                                            entity.iID_KeHoachUngID = item.iID_KeHoachUngID;
+                                            entity.fCapPhatTaiKhoBacDC = item.fCapPhatTaiKhoBac;
+                                            entity.fCapPhatBangLenhChiDC = item.fCapPhatBangLenhChi;
+                                            entity.LNS = item.sLNS;
+                                            entity.L = item.sL;
+                                            entity.K = item.sK;
+                                            entity.M = item.sM;
+                                            entity.TM = item.sTM;
+                                            entity.TTM = item.sTTM;
+                                            entity.NG = item.sNG;
+                                            entity.sGhiChu = item.sGhiChu;
+                                            entity.sTrangThaiDuAnDangKy = item.sTrangThaiDuAnDangKy;
+                                            listDataChiTiet.Add(entity);
+                                        }
+                                        conn.Insert<VDT_KHV_KeHoachVonUng_ChiTiet>(listDataChiTiet, trans);
+
+                                    }
+                                    else
+                                    {
+                                        if (item.isDelete == true)
+                                        {
+                                            conn.Delete<VDT_KHV_KeHoachVonUng_ChiTiet>(item.id, trans);
+                                        }
+                                        else
+                                        {
+                                            var entityOld = conn.Get<VDT_KHV_KeHoachVonUng_ChiTiet>(item.id, trans);
+                                            entityOld.iID_MucID = item.iID_NganhID;
+                                            entityOld.iID_TietMucID = item.iID_NganhID;
+                                            entityOld.iID_TieuMucID = item.iID_NganhID;
+                                            entityOld.iID_NganhID = item.iID_NganhID;
+                                            entityOld.fCapPhatTaiKhoBacDC = item.fCapPhatTaiKhoBac;
+                                            entityOld.fCapPhatBangLenhChiDC = item.fCapPhatBangLenhChi;
+                                            entityOld.LNS = item.sLNS;
+                                            entityOld.L = item.sL;
+                                            entityOld.K = item.sK;
+                                            entityOld.M = item.sM;
+                                            entityOld.TM = item.sTM;
+                                            entityOld.TTM = item.sTTM;
+                                            entityOld.NG = item.sNG;
+                                            entityOld.sGhiChu = item.sGhiChu;
+                                            conn.Update<VDT_KHV_KeHoachVonUng_ChiTiet>(entityOld, trans);
+
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion
+                            else
+                            {
+                                #region sua ke hoach von ung duoc duyet chi tiet
+                                foreach (var item in listData)
+                                {
+                                    if (item.id == new Guid())
+                                    {
+                                        if (item.isDelete == false)
+                                        {
+                                            var entity = new VDT_KHV_KeHoachVonUng_ChiTiet();
+                                            entity.Id = Guid.NewGuid();
+                                            entity.iID_DuAnID = item.iID_DuAnID;
+                                            entity.iID_MucID = item.iID_NganhID;
+                                            entity.iID_TietMucID = item.iID_NganhID;
+                                            entity.iID_TieuMucID = item.iID_NganhID;
+                                            entity.iID_NganhID = item.iID_NganhID;
+                                            entity.iID_KeHoachUngID = item.iID_KeHoachUngID;
+                                            entity.fCapPhatTaiKhoBac = item.fCapPhatTaiKhoBac;
+                                            entity.fCapPhatBangLenhChi = item.fCapPhatBangLenhChi;
+                                            entity.LNS = item.sLNS;
+                                            entity.L = item.sL;
+                                            entity.K = item.sK;
+                                            entity.M = item.sM;
+                                            entity.TM = item.sTM;
+                                            entity.TTM = item.sTTM;
+                                            entity.NG = item.sNG;
+                                            entity.sGhiChu = item.sGhiChu;
+                                            entity.sTrangThaiDuAnDangKy = item.sTrangThaiDuAnDangKy;
+                                            listDataChiTiet.Add(entity);
+                                        }
+                                        conn.Insert<VDT_KHV_KeHoachVonUng_ChiTiet>(listDataChiTiet, trans);
+
+                                    }
+                                    else
+                                    {
+                                        if (item.isDelete == true)
+                                        {
+                                            conn.Delete<VDT_KHV_KeHoachVonUng_ChiTiet>(item.id, trans);
+                                        }
+                                        else
+                                        {
+                                            var entityOld = conn.Get<VDT_KHV_KeHoachVonUng_ChiTiet>(item.id, trans);
+                                            entityOld.iID_MucID = item.iID_NganhID;
+                                            entityOld.iID_TietMucID = item.iID_NganhID;
+                                            entityOld.iID_TieuMucID = item.iID_NganhID;
+                                            entityOld.iID_NganhID = item.iID_NganhID;
+                                            entityOld.fCapPhatTaiKhoBac = item.fCapPhatTaiKhoBac;
+                                            entityOld.fCapPhatBangLenhChi = item.fCapPhatBangLenhChi;
+                                            entityOld.LNS = item.sLNS;
+                                            entityOld.L = item.sL;
+                                            entityOld.K = item.sK;
+                                            entityOld.M = item.sM;
+                                            entityOld.TM = item.sTM;
+                                            entityOld.TTM = item.sTTM;
+                                            entityOld.NG = item.sNG;
+                                            entityOld.sGhiChu = item.sGhiChu;
+                                            conn.Update<VDT_KHV_KeHoachVonUng_ChiTiet>(entityOld, trans);
+
+                                        }
+                                    }
+                                }
+                                #endregion
+                            }
+                        }
+                        else
+                        {
+                            #region Them moi ke hoach von ung duoc duyet chi tiet
+                            if (listData.Any())
+                            {
+                                foreach (var item in listData)
+                                {
+                                    if (item.isDelete == false)
+                                    {
+                                        var entity = new VDT_KHV_KeHoachVonUng_ChiTiet();
+                                        entity.Id = Guid.NewGuid();
+                                        entity.iID_DuAnID = item.iID_DuAnID;
+                                        entity.iID_MucID = item.iID_NganhID;
+                                        entity.iID_TietMucID = item.iID_NganhID;
+                                        entity.iID_TieuMucID = item.iID_NganhID;
+                                        entity.iID_NganhID = item.iID_NganhID;
+                                        entity.iID_KeHoachUngID = item.iID_KeHoachUngID;
+                                        entity.fCapPhatTaiKhoBac = item.fCapPhatTaiKhoBac;
+                                        entity.fCapPhatBangLenhChi = item.fCapPhatBangLenhChi;
+                                        entity.LNS = item.sLNS;
+                                        entity.L = item.sL;
+                                        entity.K = item.sK;
+                                        entity.M = item.sM;
+                                        entity.TM = item.sTM;
+                                        entity.TTM = item.sTTM;
+                                        entity.NG = item.sNG;
+                                        entity.sGhiChu = item.sGhiChu;
+                                        entity.sTrangThaiDuAnDangKy = item.sTrangThaiDuAnDangKy;
+                                        listDataChiTiet.Add(entity);
+                                    }
+                                }
+
+                                //Save dataChiTiet
+                                conn.Insert<VDT_KHV_KeHoachVonUng_ChiTiet>(listDataChiTiet, trans);
+                            }
+                            #endregion
                         }
                     }
                     trans.Commit();
                 }
+
             }
             catch (Exception ex)
             {
@@ -18515,7 +18807,7 @@ namespace Viettel.Services
                 {
                     conn.Open();
                     var items = conn.Query<string>(sql);
-                    if(items.ToList().Count > 0)
+                    if (items.ToList().Count > 0)
                     {
                         return true;
                     }

@@ -90,6 +90,24 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                        <label for="slbGoiThau">Tên gói thầu</label>
+                            @Helpers.Required()
+                            <select id="slbGoiThau" name="slbGoiThau" class="form-control">
+                                @if (ViewBag.ListGoiThau != null)
+                                {
+                                    foreach (var goithau in (List<NH_DA_GoiThau>)ViewBag.ListGoiThau)
+                                    {
+                                        <option value="@goithau.ID" @(Model.iID_DonViID == goithau.iID_DonViID ? "selected" : string.Empty)>@Html.Raw(Html.Encode(goithau.sTenGoiThau))</option>
+                                    }
+                                }
+                            </select>
+                    </div>
+                    <div class="col-sm-3">&nbsp;</div>
+                    <div class="col-sm-3">&nbsp;</div>
+                    <div class="col-sm-3">&nbsp;</div>
+                </div>
                 <div class="form-group">
                     <h4 class="color-text-red">Thông tin hợp đồng:</h4>
                     <hr class="color-background-red" />

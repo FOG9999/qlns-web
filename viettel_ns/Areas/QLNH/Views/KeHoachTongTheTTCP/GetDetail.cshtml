@@ -21,7 +21,7 @@
             </select>
         </div>
         <div id="formParrentID" class="col-sm-4 invisible">
-            <label for="iID_ParentID">Số kế hoạch tổng thể TTCP cha</label>
+            <label for="iID_ParentID">Số quyết định tổng thể TTCP giai đoạn</label>
             @Helpers.Required()
             @if (ViewBag.State == "UPDATE")
             {
@@ -43,7 +43,7 @@
                     </select>
                     <span class="btn-default input-group-addon @(ViewBag.ParentIsActive ? "disabled" : "")"
                           style="@(ViewBag.ParentIsActive ? "background-color: #eee" : "")"
-                          title="@(!ViewBag.ParentIsActive ? "Sử dụng bản mới nhất của kế hoạch tổng thể TTCP này?" : "")"
+                          title="@(!ViewBag.ParentIsActive ? "Sử dụng bản mới nhất của quyết định tổng thể TTCP này?" : "")"
                           onclick="UpdateParentTTCP('@Model.iID_ParentID')">
                         <i class="fa fa-angle-double-up" aria-hidden="true"></i>
                     </span>
@@ -82,7 +82,7 @@
 
 
     <div class="chao-banner1">
-        <label>Kế hoạch tổng thể Thủ tưởng Chính phủ phê duyệt theo giai đoạn</label>
+        <label>Quyết định tổng thể Thủ tưởng Chính phủ phê duyệt theo giai đoạn</label>
     </div>
     <hr class="bg-gray" />
     <div class="form-group row">

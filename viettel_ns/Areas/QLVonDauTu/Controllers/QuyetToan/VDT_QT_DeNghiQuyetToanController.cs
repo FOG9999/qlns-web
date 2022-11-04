@@ -175,6 +175,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
         public JsonResult GetListChiPhiHangMucTheoDuAn(Guid? iIdDuToanId, Guid? iIdDeNghiQuyetToan = null)
         {
             List<VDT_DA_DuToan_ChiPhi_ViewModel> listChiPhi = new List<VDT_DA_DuToan_ChiPhi_ViewModel>();
+            List<VDT_DA_DuToan_ChiPhi_ViewModel> listChiPhiParent = new List<VDT_DA_DuToan_ChiPhi_ViewModel>();
             List<VDT_DA_DuToan_HangMuc_ViewModel> listHangMuc = new List<VDT_DA_DuToan_HangMuc_ViewModel>();
             if (iIdDuToanId != null && iIdDuToanId != Guid.Empty)
             {
@@ -215,7 +216,77 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                     }
                 }
             }
-            return Json(new { lstChiPhi = listChiPhi, lstHangMuc = listHangMuc }, JsonRequestBehavior.AllowGet);
+
+            if (listChiPhi.Any())
+            {
+                // update iSTT chi phi con, insert chiphi con theo chi phi cha
+
+                listChiPhiParent = listChiPhi.Where(x => x.iID_ChiPhi_Parent is null).ToList();
+                var listAllChild = listChiPhi.Except(listChiPhiParent).ToList();
+                Dictionary<string, List<Guid?>> dicChiPhi = listChiPhiParent.GroupBy(x => x.iID_DuAn_ChiPhi.ToString()).ToDictionary(x => x.Key, x => x.Select(y => y.iID_DuAn_ChiPhi).ToList());
+                List<VDT_DA_DuToan_ChiPhi_ViewModel> listAllChiPhiChild = new List<VDT_DA_DuToan_ChiPhi_ViewModel>();
+                foreach (var key in dicChiPhi.Keys)
+                {
+                    Guid iID_ChiPhi_Parrent = (Guid)dicChiPhi[key].ToList().FirstOrDefault();
+                    var listChild = listAllChild.Where(x => x.iID_ChiPhi_Parent == iID_ChiPhi_Parrent).Distinct().OrderBy(x => x.sTenChiPhi);
+                    var index = 0;
+                    if (listChild.Any())
+                    {
+                        foreach (var item in listChild)
+                        {
+                            index++;
+                            listAllChild.Remove(item);
+                            item.iSTT = String.Concat(listChiPhi.Where(x => x.iID_DuAn_ChiPhi == iID_ChiPhi_Parrent).First().iSTT, "-", index);
+                            listAllChiPhiChild.Add(item);
+                        }
+                        listChiPhiParent.InsertRange(listChiPhiParent.IndexOf(listChiPhi.Where(x => x.iID_DuAn_ChiPhi == iID_ChiPhi_Parrent).First()) + 1, listAllChiPhiChild);
+                        //listAllChild.Except(listChild);
+
+                    }
+                }
+
+                if (listAllChild.Any())
+                {
+                    RecursiveChiPhi(listChiPhiParent, listAllChild, listChiPhi);
+                }
+
+            }
+
+            return Json(new { lstChiPhi = listChiPhiParent, lstHangMuc = listHangMuc }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        // ham de quy update iSTT chi phi con, insert chiphi con theo chi phi cha
+        private void RecursiveChiPhi(List<VDT_DA_DuToan_ChiPhi_ViewModel> lstParent, List<VDT_DA_DuToan_ChiPhi_ViewModel> lstChild, List<VDT_DA_DuToan_ChiPhi_ViewModel> lstAll)
+        {
+
+            var listIds = lstChild.Select(x => x.iID_ChiPhi_Parent).Distinct().ToList();
+            List<VDT_DA_DuToan_ChiPhi_ViewModel> listAllChiPhiChild = new List<VDT_DA_DuToan_ChiPhi_ViewModel>();
+            var index = 0;
+
+            foreach (var parent in listIds)
+            {
+                var listChild = lstChild.Where(x => x.iID_ChiPhi_Parent == parent).ToList();
+                if (listChild.Any())
+                {
+                    foreach (var item in listChild)
+                    {
+                        index++;
+                        lstChild.Remove(item);
+                        item.iSTT = String.Concat(lstAll.Where(x => x.iID_DuAn_ChiPhi == parent).First().iSTT, "-", index);
+                        listAllChiPhiChild.Add(item);
+                    }
+
+                    lstParent.InsertRange(lstParent.IndexOf(lstAll.Where(x => x.iID_DuAn_ChiPhi == parent).First()) + 1, listChild);
+
+                }
+
+                //lstChild.Except(listChild);
+            }
+            if (lstChild.Any())
+            {
+                RecursiveChiPhi(lstParent, lstChild, lstAll);
+            }
         }
 
         [HttpPost]
@@ -746,8 +817,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                     }
                 }
 
-                return Json(new { bIsComplete = true, dataImportChiPhiKhac = dataImportChiPhiKhac, dataImportTaiSan = dataImportTaiSan, listChiPhi = listChiPhi, 
-                    listNguonVon = dataImportNguonVon.FirstOrDefault().listNguonVon }, JsonRequestBehavior.AllowGet);
+                return Json(new
+                {
+                    bIsComplete = true,
+                    dataImportChiPhiKhac = dataImportChiPhiKhac,
+                    dataImportTaiSan = dataImportTaiSan,
+                    listChiPhi = listChiPhi,
+                    listNguonVon = dataImportNguonVon.FirstOrDefault().listNguonVon
+                }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

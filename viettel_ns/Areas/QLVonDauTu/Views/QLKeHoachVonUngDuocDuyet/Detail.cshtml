@@ -3,6 +3,19 @@
 @{
     ViewBag.Title = "Xem thông tin kế hoạch vốn ứng";
     Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+    var dieuChinh = ViewBag.isDieuChinh;
+    var isDieuChinh = false;
+    if (dieuChinh == "true")
+    {
+        isDieuChinh = true;
+    }
+
+    var dieuChinhPr = ViewBag.isDieuChinhParrent;
+    var isDieuChinhParent = false;
+    if (dieuChinhPr == "true")
+    {
+        isDieuChinhParent = true;
+    }
 }
 
 @section Styles{
@@ -24,6 +37,7 @@
                     <span>Xem thông tin kế hoạch vốn ứng</span>
                     <input type="hidden" class="iIdKHVonUng" value="@ViewBag.iID_KeHoachUngID" />
                     <input type="hidden" class="isUpdate" value="@ViewBag.isUpdate" />
+                    <input type="hidden" class="isDieuChinh" value="@ViewBag.isDieuChinh" />
                 </div>
                 @*Thông tin nội dung*@
                 <div class="form-group">
@@ -89,8 +103,28 @@
                                                 <th width="3%">NG</th>
                                                 <th width="8%" class="text-right">Tổng mức đầu tư</th>
                                                 <th width="7%" class="text-right">Giá trị đề nghị</th>
-                                                <th width="10%" class="text-right">Cấp phát tại kho bạc</th>
-                                                <th width="10%" class="text-right">Cấp phát bằng lệnh chi</th>
+                                                @if (isDieuChinh)
+                                                {
+                                                    <th width="5%" class="text-right">Cấp phát tại kho bạc</th>
+                                                    <th width="5%" class="text-right">Cấp phát tại kho bạc (sau điều chỉnh)</th>
+                                                }
+                                                else
+                                                {
+                                                    <th width="10%" class="text-right">Cấp phát tại kho bạc</th>
+
+                                                }
+
+                                                @if (isDieuChinh)
+                                                {
+                                                    <th width="5%" class="text-right">Cấp phát bằng lệnh chi</th>
+                                                    <th width="5%" class="text-right">Cấp phát bằng lệnh chi (sau điều chỉnh)</th>
+
+                                                }
+                                                else
+                                                {
+                                                    <th width="10%" class="text-right">Cấp phát bằng lệnh chi</th>
+                                                }
+
                                                 <th width="15%"> Ghi chú</th>
                                             </tr>
                                         </thead>
@@ -111,13 +145,48 @@
                                                     <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sNG" autocomplete="off" value="@item.sNG"></td>
                                                     <td class="text-right txt_sTongMucDauTu">@item.sTongMucDauTu</td>
                                                     <td class="text-right txt_sGiaTriDeNghi">@item.sGiaTriDeNghi</td>
-                                                    <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCapKhoBac" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.sCapPhatTaiKhoBac))"></td>
-                                                    <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCaplenhChi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.sCapPhatBangLenhChi))"></td>
+                                                    @if (isDieuChinh)
+                                                    {
+                                                        if (isDieuChinhParent)
+                                                        {
+                                                            <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCapKhoBac" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fCapPhatTaiKhoBacDC.HasValue ? item.sCapPhatTaiKhoBacDC : item.sCapPhatTaiKhoBac))" disabled></td>
+                                                            <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCapKhoBacDC" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.sCapPhatTaiKhoBacDC))"></td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCapKhoBac" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.sCapPhatTaiKhoBac))" ></td>
+                                                            <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCapKhoBacDC" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.sCapPhatTaiKhoBacDC))"></td>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCapKhoBac" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fCapPhatTaiKhoBacDC.HasValue ? item.fCapPhatTaiKhoBacDC : item.fCapPhatTaiKhoBac))"></td>
+
+                                                    }
+                                                    @if (isDieuChinh)
+                                                    {
+                                                        if (isDieuChinhParent)
+                                                        {
+                                                            <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCaplenhChi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fCapPhatBangLenhChiDC.HasValue ? item.sCapPhatBangLenhChiDC : item.sCapPhatBangLenhChi))" disabled></td>
+                                                            <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCaplenhChiDC" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.sCapPhatBangLenhChiDC))"></td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCaplenhChi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.sCapPhatBangLenhChi))" ></td>
+                                                            <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCaplenhChiDC" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.sCapPhatBangLenhChiDC))"></td>
+                                                        }
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCaplenhChi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fCapPhatBangLenhChiDC.HasValue ? item.sCapPhatBangLenhChiDC:item.sCapPhatBangLenhChi))"></td>
+
+                                                    }
                                                     <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: left" type="text" class="form-control txt_sGhiChu" value="@item.sGhiChu" style="width:100% ; justify-content:end"></td>
                                                 </tr>
                                             }
                                         </tbody>
-                                        <tfoot>
+                                        @*<tfoot>
                                             <tr>
                                                 <th width="7%"></th>
                                                 <th width="15%"></th>
@@ -130,11 +199,32 @@
                                                 <th width="3%"></th>
                                                 <th width="8%" id="txtSumTongMucDauTu" class="text-right">@Model.sSumTongMucDauTu</th>
                                                 <th width="7%" class="text-right"></th>
-                                                <th width="10%" id="txtSumCapPhatTaiKhoBac" class="text-right">@Model.sSumCapPhatTaiKhoBac</th>
-                                                <th width="10%" id="txtSumCapPhatBangLenhChi" class="text-right">@Model.sSumCapPhatBangLenhChi</th>
+                                                @if (isDieuChinh)
+                                                {
+                                                    <th width="5%" id="txtSumCapPhatTaiKhoBac" class="text-right">@Model.sSumCapPhatTaiKhoBac</th>
+                                                    <th width="5%" id="txtSumCapPhatTaiKhoBac" class="text-right">@Model.sSumCapPhatTaiKhoBacDC</th>
+
+                                                }
+                                                else
+                                                {
+                                                    <th width="10%" id="txtSumCapPhatTaiKhoBac" class="text-right">@Model.sSumCapPhatTaiKhoBac</th>
+
+                                                }
+
+                                                @if (isDieuChinh)
+                                                {
+                                                    <th width="5%" id="txtSumCapPhatBangLenhChi" class="text-right">@Model.sSumCapPhatBangLenhChi</th>
+                                                    <th width="5%" id="txtSumCapPhatBangLenhChi" class="text-right">@Model.sSumCapPhatBangLenhChiDC</th>
+
+                                                }
+                                                else
+                                                {
+                                                    <th width="10%" id="txtSumCapPhatBangLenhChi" class="text-right">@Model.sSumCapPhatBangLenhChi</th>
+
+                                                }
                                                 <th width="15%"></th>
                                             </tr>
-                                        </tfoot>
+                                        </tfoot>*@
                                     </table>
                                 </div>
                             </div>

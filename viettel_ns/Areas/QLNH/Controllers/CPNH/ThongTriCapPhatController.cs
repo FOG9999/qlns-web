@@ -23,6 +23,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
         private readonly ICPNHService _cpnhService = CPNHService.Default;
         private const string sFilePathGiayThongTriCapPhatNgoaiTe= "/Report_ExcelFrom/QLNH/rpt_GiayThongTriCapPhat_NgoaiTe.xlsx";
         private const string sFilePathGiayThongTriCapPhatNguyenTe= "/Report_ExcelFrom/QLNH/rpt_GiayThongTriCapPhat_NguyenTe.xlsx";
+        private const string sControlName = "ThongTriCapPhat";
+
 
         // GET: QLNH/ThongTriCapPhat
         public ActionResult Index()
@@ -196,15 +198,18 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             return PartialView("_modalDelete", model);
         }
 
-        public ActionResult ExportBaoCaoThongTriCapPhat(Guid? idThongTri, string ext = "pdf")
+        [ValidateInput(false)]
+        public ActionResult ExportBaoCaoThongTriCapPhat(Guid? idThongTri, string ext = "pdf" , string donvicaptren = "", string donvi = "")
         {
-            ExcelFile xls = FileThongTriCapPhatNgoaiTe(idThongTri);
+            donvicaptren = HttpUtility.UrlDecode(donvicaptren);
+            donvi = HttpUtility.UrlDecode(donvi);
+            ExcelFile xls = FileThongTriCapPhatNgoaiTe(idThongTri, donvicaptren, donvi);
             string sFileName = "Thông tri cấp phát kinh phí bằng ngoại tệ";
             sFileName = string.Format("{0}.{1}", sFileName, ext);
-            return Print(xls, ext, sFileName);
+            return Print(xls, ext, sFileName );
         }
 
-        public ExcelFile FileThongTriCapPhatNgoaiTe(Guid? idThongTri)
+        public ExcelFile FileThongTriCapPhatNgoaiTe(Guid? idThongTri, string donvicaptren,string donvi)
         {
             XlsFile Result = new XlsFile(true);
             FlexCelReport fr = new FlexCelReport();
@@ -221,7 +226,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                 sTiTle = "THÔNG TRI CẤP KINH PHÍ BẰNG NỘI TỆ";
             }
             int iNam = model.iNamThongTri;
-            string sDonVi = model.sTenDonvi;
+            string sDonVi = model.sTen;
+            string soThongTri = model.sSoThongTri;
             List<ThongTriBaoCaoModel> lst = _qlnhService.ExportBaoCaoThongTriCapPhat(idThongTri).Select(x => new ThongTriBaoCaoModel
             {
                 sM = x.sM,
@@ -242,12 +248,21 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             fr.SetValue("sTiTle", sTiTle);
             fr.SetValue("iNam", iNam);
             fr.SetValue("sDonVi", sDonVi);
+            fr.SetValue("sSoThongTri", soThongTri);
             fr.SetValue("fTongPheDuyet_USD", fTongPheDuyet_USD);
             fr.SetValue("fTongPheDuyet_VND", fTongPheDuyet_VND);
             fr.SetValue("sTongPheDuyet_VND", CommonFunction.NumberToText(fTongPheDuyet_VND.HasValue ? (double)fTongPheDuyet_VND.Value : 0));
-
-            fr.UseForm(this).Run(Result);
+            fr.SetValue("sDonViCapTren", donvicaptren);
+            fr.SetValue("sDonViCapDuoi", donvi);
+            fr.UseChuKy(Username)
+             .UseChuKyForController(sControlName)
+             .UseForm(this).Run(Result);
             return Result;
+        }
+        [HttpPost]
+        public ActionResult UpdateChuKy()
+        {
+            return PartialView("_modalGetpopupBaoCao");
         }
     }
     

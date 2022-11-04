@@ -47,6 +47,7 @@ namespace Viettel.Models.QLVonDauTu
         public bool bActive { get; set; }
         public int? Loai { get; set; }
         public string STT { get; set; }
+        public double? fGiaTriDeNghi { get;set; }
     }
 
     public class VDTKHVPhanBoVonDonViPheDuyetExport

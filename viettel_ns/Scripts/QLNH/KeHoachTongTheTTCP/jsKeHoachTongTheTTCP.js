@@ -121,11 +121,11 @@ function OpenModal(id, state) {
         success: function (data) {
             $("#contentModalKHTTCP").empty().html(data);
             if (state == 'CREATE') {
-                $("#modalKHTTCPLabel").empty().html('Thêm mới kế hoạch tổng thể Thủ tướng Chính phủ');
+                $("#modalKHTTCPLabel").empty().html('Thêm mới quyết định tổng thể Thủ tướng Chính phủ');
             } else if (state == 'UPDATE') {
-                $("#modalKHTTCPLabel").empty().html('Sửa kế hoạch tổng thể Thủ tướng Chính phủ');
+                $("#modalKHTTCPLabel").empty().html('Sửa quyết định tổng thể Thủ tướng Chính phủ');
             } else {
-                $("#modalKHTTCPLabel").empty().html('Điều chỉnh kế hoạch tổng thể Thủ tướng Chính phủ');
+                $("#modalKHTTCPLabel").empty().html('Điều chỉnh quyết định tổng thể Thủ tướng Chính phủ');
             }
         }
     });
@@ -650,9 +650,9 @@ function SaveDetail() {
 
 // Confirm xóa
 function ConfirmDelete(id, sNam, sSoKeHoach) {
-    var Title = 'Xác nhận xóa kế hoạch tổng thể TTCP phê duyệt';
+    var Title = 'Xác nhận xóa quyết định tổng thể TTCP phê duyệt';
     var Messages = [];
-    Messages.push('Bạn có chắc chắn muốn xóa kế hoạch tổng thể: ' + $("<div/>").text(sSoKeHoach).html() + ' - ' + sNam + '?');
+    Messages.push('Bạn có chắc chắn muốn xóa quyết định tổng thể: ' + $("<div/>").text(sSoKeHoach).html() + ' - ' + sNam + '?');
     var FunctionName = "Delete('" + id + "')";
     $.ajax({
         type: "POST",
@@ -776,10 +776,10 @@ function ValidateTTCP(data, text) {
         if (data.iLoai == 3) {
             // Check theo giai đoạn con, nếu giai đoạn từ nhỏ hơn fromDate || giai đoạn từ lớn hơn toDate thì lỗi.
             if (data.iGiaiDoanTu - data.fromYear < 0 || data.iGiaiDoanTu - data.toYear > 0) {
-                Messages.push("Giai đoạn từ không nằm trong giai đoạn của kế hoạch tổng thể TTCP cha.");
+                Messages.push("Giai đoạn từ không nằm trong giai đoạn của quyết định tổng thể TTCP cha.");
             }
             if (data.iGiaiDoanDen - data.fromYear < 0 || data.iGiaiDoanDen - data.toYear > 0) {
-                Messages.push("Giai đoạn đến không nằm trong giai đoạn của kế hoạch tổng thể TTCP cha.");
+                Messages.push("Giai đoạn đến không nằm trong giai đoạn của quyết định tổng thể TTCP cha.");
             }
         }
     }
@@ -788,7 +788,7 @@ function ValidateTTCP(data, text) {
     if (data.iLoai == 2 && hasValueNamKH && hasValueTTCPParent) {
         // Check theo năm
         if (data.iNamKeHoach - data.fromYear < 0 || data.iNamKeHoach - data.toYear > 0) {
-            Messages.push("Năm kế hoạch không nằm trong giai đoạn của kế hoạch tổng thể TTCP cha.");
+            Messages.push("Năm kế hoạch không nằm trong giai đoạn của quyết định tổng thể TTCP cha.");
         }
     }
 

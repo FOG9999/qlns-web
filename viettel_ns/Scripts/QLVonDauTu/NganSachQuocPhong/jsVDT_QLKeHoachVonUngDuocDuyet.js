@@ -6,16 +6,28 @@ var lstDetail = [];
 var lstMucLucNganSach = [];
 var id;
 var isUpdate = false;
+var isDieuChinh = false;
 
 $(document).ready(function () {
     if (window.location.href.indexOf('CreateNew') > 0) {
         id = $("#id").val();
         if (id != GUID_EMPTY) {
-            $("#iID_DonViQuanLyID").attr('disabled', true);
-            $("#dNgayQuyetDinh").attr('disabled', true);
-            $("#iNamKeHoach").attr('disabled', true);
-            $("#iId_NguonVon").attr('disabled', true);
-            $("#iId_KeHoachVonUng").attr('disabled', true);
+            if ($("#isDieuChinh").val() == "true") {
+                isDieuChinh = true;
+                $("#iID_DonViQuanLyID").attr('disabled', true);
+                $("#dNgayQuyetDinh").attr('disabled', false);
+                $("#iNamKeHoach").attr('disabled', true);
+                $("#iId_NguonVon").attr('disabled', true);
+                $("#iId_KeHoachVonUng").attr('disabled', true);
+
+            } else {
+                $("#iID_DonViQuanLyID").attr('disabled', true);
+                $("#dNgayQuyetDinh").attr('disabled', true);
+                $("#iNamKeHoach").attr('disabled', true);
+                $("#iId_NguonVon").attr('disabled', true);
+                $("#iId_KeHoachVonUng").attr('disabled', true);
+            }
+
 
             GetDataDetailById();
 
@@ -413,6 +425,11 @@ function GetItemKHVU(id) {
 
 function BtnCreateDataClick() {
     window.location.href = "/QLVonDauTu/QLKeHoachVonUngDuocDuyet/CreateNew/";
+}
+
+function BtnDieuChinh(id, flagDieuChinh) {
+    isDieuChinh = flagDieuChinh;
+    window.location.href = "/QLVonDauTu/QLKeHoachVonUngDuocDuyet/CreateNew?id=" + id + "&isDieuChinh=" + isDieuChinh;
 }
 
 function DeleteItemKHVU(id) {
@@ -824,16 +841,20 @@ function Insert() {
     $.ajax({
         url: "/QLVonDauTu/QLKeHoachVonUngDuocDuyet/QLKeHoachVonUngSave",
         type: "POST",
-        data: { data: objDuocDuyet },
+        data: { data: objDuocDuyet, isDieuChinh: isDieuChinh },
         dataType: "json",
         async: false,
         success: function (result) {
             if (result.status) {
                 var messAlert = "Tạo mới dữ liệu thành công.";
+                if (isDieuChinh) {
+                    messAlert = "Điều chỉnh dữ liệu thành công.";
 
-                if (!(id == GUID_EMPTY || id == undefined || id == "" || id == null)) {
-                    messAlert = "Cập nhật dữ liệu thành công.";
-                    isUpdate = true;
+                } else {
+                    if (!(id == GUID_EMPTY || id == undefined || id == "" || id == null)) {
+                        messAlert = "Cập nhật dữ liệu thành công.";
+                        isUpdate = true;
+                    }
                 }
                 alert(messAlert);
                 $.ajax({
@@ -846,7 +867,7 @@ function Insert() {
                     },
                     success: function (data) {
                         if (data.status) {
-                            window.location.href = "/QLVonDauTu/QLKeHoachVonUngDuocDuyet/Detail?iID_KeHoachUngID=" + result.ID + "&isUpdate=" + isUpdate;
+                            window.location.href = "/QLVonDauTu/QLKeHoachVonUngDuocDuyet/Detail?iID_KeHoachUngID=" + result.ID + "&isUpdate=" + isUpdate + "&isDieuChinh=" + isDieuChinh;
 
                         } else {
                             alert("Không có dữ liệu.");

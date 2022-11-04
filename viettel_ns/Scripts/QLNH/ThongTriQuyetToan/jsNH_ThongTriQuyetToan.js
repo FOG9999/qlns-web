@@ -407,6 +407,9 @@ function ExportReport(ext) {
     var data = {};
     data.sDonViTienTe = $("#sDonViTienTe").val();
     data.id = $("#hIdThongTriQuyetToan").val();
+    data.txtDonViCapTren = $.trim($("#txtDonViCapTren").val());
+    data.txtDonVi = $.trim($("#txtDonVi").val());
+    data.txtTieuDe = $.trim($("#txtTieuDe").val());
 
     if (!ValidateDataPrint(data)) {
         return;
@@ -414,9 +417,11 @@ function ExportReport(ext) {
 
     url = $("#urlExportReport").val() +
         "?ext=" + ext + "&id=" + data.id
+        + "&txtTieuDe=" + encodeURIComponent(data.txtTieuDe)
+        + "&txtDonViCapTren=" + encodeURIComponent(data.txtDonViCapTren)
+        + "&txtDonVi=" + encodeURIComponent(data.txtDonVi)
         + "&sDonViTienTe=" + data.sDonViTienTe;
 
-    url = unescape(url);
     links.push(url);
 
     openLinks(links);
@@ -426,7 +431,15 @@ function ExportReport(ext) {
 function ValidateDataPrint(data) {
     var Title = 'Lỗi in báo cáo thông tri quyết toán!';
     var Messages = [];
-
+    if (data.txtTieuDe == null || data.txtTieuDe == "") {
+        Messages.push("Tiêu đề chưa nhập !");
+    }
+    if (data.txtDonViCapTren == null || data.txtDonViCapTren == "") {
+        Messages.push("Đơn vị cấp trên chưa nhập !");
+    }
+    if (data.txtDonVi == null || data.txtDonVi == "") {
+        Messages.push("Đơn vị chưa nhập !");
+    }
     if (data.sDonViTienTe.trim() == '') {
         Messages.push("Vui lòng chọn đơn vị tiền tệ!");
     }

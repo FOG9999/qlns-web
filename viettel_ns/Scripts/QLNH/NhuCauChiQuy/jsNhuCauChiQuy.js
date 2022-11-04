@@ -18,14 +18,22 @@ $(document).ready(function ($) {
 });
 
 function LoadDataHopDong() {
+    IDDonVi = $("#IDDonVi").val();
+    IDBQuanLy = $("#IDBQuanLy").val();
     $.ajax({
         url: "/QLNH/NhuCauChiQuy/GetHopDongAll",
         type: "POST",
+        data: { iID_DonViID: IDDonVi, iID_BQuanLyID: IDBQuanLy},
         dataType: "json",
         cache: false,
-        success: function (result) {
-            if (result && result.status == true && result.data) {
-                arr_DataHopDong = result.data;
+        async: false,
+        success: function (data) {
+            if (data.status == false) {
+                return;
+            }
+
+            if (data.data != null) {
+                arr_DataHopDong = data.data;
             }
         }
     });
@@ -576,7 +584,7 @@ function GetNgoaiUSDTable() {
         obj.fChiNgoaiTeUSD = $(item).find(".txtChingoaiteUSD").val();
         obj.fChiTrongNuocVND = $(item).find(".txtChiTrongnuocVND").val();
         obj.isDelete = bIsDelete;
-        obj.iID_HopDongID = $(item).find(".selectHopDong select").val();
+        obj.iID_HopDongID = $(item).find(".selectHopDong").val();
         obj.sNoidung = $(item).find(".txtNoidung").val();
         if (obj.fChiNgoaiTeUSD == null || obj.fChiNgoaiTeUSD == "") {
             obj.fChiNgoaiTeUSD = 0;

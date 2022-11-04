@@ -21,7 +21,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
         // GET: QLNH/BaoCaoTinhHinhThucHienDuAn
         private readonly IQLNHService _qlnhService = QLNHService.Default;
         private readonly INganSachService _nganSachService = NganSachService.Default;
-        private const string sFilePathChiTiett = "/Report_ExcelFrom/QLNH/rpt_BaoCaoTinhHinhThucHienDuAn.xlsx";
+        private const string sFilePathChiTiet = "/Report_ExcelFrom/QLNH/rpt_BaoCaoTinhHinhThucHienDuAn.xlsx";
 
         public ActionResult Index()
         {
@@ -78,6 +78,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
             return PartialView("_list", vm);
         }
 
+        [ValidateInput(false)]
         public ActionResult ExportGiayDeNghiThanhToan(string ext = "xlsx", Guid? iID_DuAnID = null, string dBatDau = "", string dKetThuc = "")
         {
             dBatDau = HttpUtility.UrlDecode(dBatDau ?? "");
@@ -149,7 +150,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
             double Sumgn = model.Sumgn;
 
             XlsFile Result = new XlsFile(true);
-            Result.Open(Server.MapPath(sFilePathChiTiett));
+            Result.Open(Server.MapPath(sFilePathChiTiet));
             FlexCelReport fr = new FlexCelReport();
             fr.SetValue(new
             {

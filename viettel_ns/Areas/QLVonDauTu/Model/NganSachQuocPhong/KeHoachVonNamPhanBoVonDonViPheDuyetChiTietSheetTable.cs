@@ -149,8 +149,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 new SheetColumn(columnName: "sLoaiDuAn", header: "Loại dự án", columnWidth:198, align: "left", hasSearch: true, isReadonly: true),
                 new SheetColumn(columnName: "sTenLoaiCongTrinh", header: "Loại công trình", columnWidth:198, align: "left", hasSearch: false, isReadonly: true),
                 new SheetColumn(columnName: "sTenDonViThucHienDuAn", header: "Đơn vị thực hiện dự án", columnWidth:298, align: "left", hasSearch: true, isReadonly: true),
+                new SheetColumn(columnName: "fGiaTriDeNghi", header: "Giá trị đề nghị", columnWidth:198, align: "right", dataType: 1, hasSearch: false, isReadonly: true ),
                 new SheetColumn(columnName: "fGiaTriPhanBo", header: "Kế hoạch phân bổ năm", columnWidth:198, align: "right", dataType: 1, hasSearch: false, isReadonly: false ),
-                new SheetColumn(columnName: "sGhiChu", header: "Ghi chú", columnWidth:398, align: "left", hasSearch: false, isReadonly: false),
+                new SheetColumn(columnName: "sGhiChu", header: "Ghi chú", columnWidth:200, align: "left", hasSearch: false, isReadonly: false),
 
                 new SheetColumn(columnName: "fGiaTriThuHoi", header: "Giá trị phân bổ thu hồi", isHidden: true, isReadonly: true ),
                 new SheetColumn(columnName: "iID_DonViTienTeID", header: "ID đơn vị tiền tệ", isHidden: true, isReadonly: true ),

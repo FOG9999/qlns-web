@@ -41,7 +41,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.TinhHinhThucHienDuAn
             {
                 for (int i = 0; i < lstDonVi.Count; i++)
                 {
-                    htmlDuAn.AppendFormat("<option value='{0}'>{1}</option>", lstDonVi[i].iID_Ma, HttpUtility.HtmlEncode(lstDonVi[i].sTen));
+                    htmlDuAn.AppendFormat("<option value='{0}' data-id='{1}'>{2}</option>", lstDonVi[i].iID_Ma, lstDonVi[i].iID_MaDonVi, HttpUtility.HtmlEncode(lstDonVi[i].sTen));
                 }
             }
             return Json(new { htmlCT = htmlDuAn.ToString() }, JsonRequestBehavior.AllowGet);

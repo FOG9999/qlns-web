@@ -14,6 +14,8 @@ using VIETTEL.Controllers;
 using VIETTEL.Helpers;
 using VIETTEL.Flexcel;
 using System.Web;
+using VTS.QLNS.CTC.App.Service.UserFunction;
+using static VTS.QLNS.CTC.App.Service.UserFunction.FormatNumber;
 
 namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
 {
@@ -627,14 +629,19 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
             }
             return returnData;
         }
-        public ActionResult ExportFile(string txtTieuDe1, string txtTieuDe2, string txtIDQuyetToan, int? slbDonViUSD, int? slbDonViVND, string ext = "xlsx", int to = 1)
+        [ValidateInput(false)]
+        public ActionResult ExportFile(string txtTieuDe1, string txtTieuDe2, string txtDonViCapTren, string txtDonVi, string txtIDQuyetToan, int? slbDonViUSD, int? slbDonViVND, string ext = "xlsx", int to = 1)
         {
+            txtTieuDe1 = HttpUtility.UrlDecode(txtTieuDe1);
+            txtTieuDe2 = HttpUtility.UrlDecode(txtTieuDe2);
+            txtDonViCapTren = HttpUtility.UrlDecode(txtDonViCapTren);
+            txtDonVi = HttpUtility.UrlDecode(txtDonVi);
             var a = getQuyetToanDonVi(txtIDQuyetToan);
             string fileName = string.Format("{0}.{1}", "Quyet toan nien do nam" + a[0].quyetToanNienDo.iNamKeHoach, ext);
-            ExcelFile xls = TaoFileExel(txtTieuDe1, txtTieuDe2, a, slbDonViUSD, slbDonViVND, to);
+            ExcelFile xls = TaoFileExel(txtTieuDe1, txtTieuDe2, txtDonViCapTren, txtDonVi, a, slbDonViUSD, slbDonViVND, to);
             return Print(xls, ext, fileName);
         }
-        public ExcelFile TaoFileExel(string txtTieuDe1, string txtTieuDe2, List<NH_QT_QuyetToanNienDoByDonVi> quyetToanNienDoDetail, int? slbDonViUSD, int? slbDonViVND, int to = 1)
+        public ExcelFile TaoFileExel(string txtTieuDe1, string txtTieuDe2, string txtDonViCapTren, string txtDonVi, List<NH_QT_QuyetToanNienDoByDonVi> quyetToanNienDoDetail, int? slbDonViUSD, int? slbDonViVND, int to = 1)
         {
             var donViVND = lstDonViVND.Find(x => x.Value == slbDonViVND);
             var donViUSD = lstDonViUSD.Find(x => x.Value == slbDonViUSD);
@@ -643,14 +650,17 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
             XlsFile Result = new XlsFile(true);
             Result.Open(Server.MapPath(sFilePathBaoCao));
             FlexCelReport fr = new FlexCelReport();
-
+            FormatNumber formatNumber = new FormatNumber(1, ExportType.EXCEL);
+            fr.SetUserFunction("FormatNumber", formatNumber);
             fr.SetValue(new
             {
                 To = to,
-                txtTieuDe1 = txtTieuDe1,
+                txtTieuDe1 = txtTieuDe1.ToUpper(),
                 txtTieuDe2 = txtTieuDe2,
                 donViUSD = donViUSD.Label,
                 donViVND = donViVND.Label,
+                txtDonViCapTren = txtDonViCapTren.ToUpper(),
+                txtDonVi = txtDonVi.ToUpper()
 
             });
             //fr.SetValue("iTongSoNgayDieuTri", iTongSoNgayDieuTri.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")));

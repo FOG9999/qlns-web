@@ -254,6 +254,10 @@
     <Compile Include="Areas\QLNH\Controllers\QuyetToan\BaoCaoKetLuanQuyetToanController.cs" />
     <Compile Include="Areas\QLNH\Controllers\ThucHienKeHoach\KeHoachTongTheTTCPController.cs" />
     <Compile Include="Areas\QLNH\Controllers\DuAnHopDong\ThongTinDuAnController.cs" />
+    <Compile Include="Areas\QLNH\Models\DuAnHopDong\KeHoachChiTietBQP\KeHoachChiTietBQPGridViewModel.cs" />
+    <Compile Include="Areas\QLNH\Models\DuAnHopDong\KeHoachChiTietBQP\KeHoachChiTietBQP_SheetTable.cs" />
+    <Compile Include="Areas\QLNH\Models\DuAnHopDong\KeHoachTongTheTTCP\KeHoachTongTheTTCPChiTietGridViewModel.cs" />
+    <Compile Include="Areas\QLNH\Models\DuAnHopDong\KeHoachTongTheTTCP\KeHoachTongTheTTCP_ChiTIet_SheetTable.cs" />
     <Compile Include="Areas\QLNH\QLNHAreaRegistration.cs" />
     <Compile Include="Areas\QLVonDauTu\Controllers\BaoCao\BaoCaoDieuChinhKeHoachController.cs" />
     <Compile Include="Areas\QLVonDauTu\Controllers\Component\AttachmentController.cs" />
@@ -1849,10 +1853,16 @@
     </Content>
     <Content Include="Areas\QLVonDauTu\ReportExcelForm\KeHoachVonNam\rpt_BaoCao_KHNam_DonVi_Moi.xlsx" />
     <Content Include="Areas\QLNH\Views\DeNghiThanhToan\_modalDetail.cshtml" />
+    <Content Include="Areas\QLNH\Views\ChenhLechTiGiaHoiDoai\_reportModal.cshtml" />
     <Content Include="Areas\QLNH\Views\KinhPhiDuocCapTheoDonVi\PopupConfigBaoCaoPartial.cshtml" />
     <Content Include="Areas\QLNH\Views\TongHopKinhPhiDuocCap\PopupConfigBaoCaoPartial.cshtml" />
+    <Content Include="Areas\QLNH\Views\ThongTriCapPhat\_modalGetpopupBaoCao.cshtml" />
     <Content Include="Areas\QLNH\Views\BaoCaoQuyetToanNguonChiDacBiet\_modalReport.cshtml" />
     <Content Include="Areas\QLNH\Views\ThucHienNganSach\_modalInBaoCao.cshtml" />
+    <Content Include="Areas\QLNH\Views\KeHoachTongTheTTCP\_sheet.cshtml" />
+    <Content Include="Areas\QLNH\Views\KeHoachChiTietBQP\_sheet.cshtml" />
+    <Content Include="Areas\QLNH\Views\KeHoachTongTheTTCP\_sheetFrame.cshtml" />
+    <Content Include="Areas\QLNH\Views\KeHoachChiTietBQP\_sheetFrame.cshtml" />
     <None Include="Areas\QuyetToan\Controllers\ReportController.cs1" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\Index.cshtml" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\_list.cshtml" />
@@ -4740,7 +4750,13 @@
     <Content Include="Report_Views\QuyetToan\rptTongHopQuanSoTangGiamTheoDonVi_48.aspx" />
     <Content Include="ScriptDatabase\StoreChange\proc_get_all_kehoachvonnamdexuat_paging2.sql" />
     <Content Include="ScriptDatabase\StoreChange\proc_get_all_kehoachvonnamduocduyet_paging.sql" />
+    <Content Include="ScriptDatabase\StoreChange\proc_get_all_thietkethicong_tongdutoan_paging_test.sql" />
     <Content Include="ScriptDatabase\StoreChange\proc_get_all_thongtri_quyettoan_paging.sql" />
+    <Content Include="ScriptDatabase\StoreChange\proc_get_all_vdt_kehoachvonungdx_paging.sql" />
+    <Content Include="ScriptDatabase\StoreChange\proc_get_all_vdt_kehoachvonung_paging.sql" />
+    <Content Include="ScriptDatabase\StoreChange\proc_vdt_khv_getdatakhvuduocduyet_chitiet.sql" />
+    <Content Include="ScriptDatabase\StoreChange\sp_vdt_rpt_tinh_hinh_thuc_hien_du_an.sql" />
+    <Content Include="ScriptDatabase\StoreChange\them_sua_cot_trong_bang_KeHoachVonUng_DeXuat_DuocDuyet.sql" />
     <Content Include="Scripts\DanhMuc\jsImPortDMDonViBHXH.js" />
     <Content Include="Scripts\DanhMuc\jsDMLoaiCongTrinh.js" />
     <Content Include="Scripts\DanhMuc\jsDMNguon.js" />
@@ -4822,6 +4838,8 @@
     <Content Include="Scripts\QLNguonNganSach\QLGiaoDuToan\TongHopDuToanNSNam.js" />
     <Content Include="Scripts\QLNguonNganSach\QLGiaoDuToan\TongHopDuToanBaoCao4Partial.js" />
     <Content Include="Scripts\QLNguonNganSach\QLGiaoDuToan\TongHopDuToanPartial.js" />
+    <Content Include="Scripts\QLNH\KeHoachTongTheTTCP\jsKeHoachTongTheTTCP_Table.js" />
+    <Content Include="Scripts\QLNH\KeHoachChiTietBQP\jsNH_KeHoachChiTietBQP_Table.js" />
     <Content Include="Scripts\QLNH\KhoiTaoCapPhat\jsKhoiTaoCapPhat.js" />
     <Content Include="Scripts\QLNH\KhoiTaoCapPhat\jsUpdateChiTietKTCapPhat.js" />
     <Content Include="Scripts\QLNH\KhoiTaoCapPhat\jsUpdateKhoiTaoCapPhat.js" />

@@ -56,6 +56,7 @@ $(document).ready(function () {
     $("#slbNhaThau").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
     $("#slbMaNgoaiTeKhac").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
     $("#slbTiGia").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+    $("#slbGoiThau").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
 
     if ($("#slbLoai").val() == 0 || $("#slbLoai").val() == 2 || $("#slbLoai").val() == 4) {
         $("#divTenDuAn").hide();
@@ -106,9 +107,11 @@ function ChangeDonViSelect() {
             if (data) {
                 $("#slbChuongTrinh").empty().html(data.htmlCT);
                 $("#slbDuAn").empty().html(data.htmlDA);
+                $("#slbGoiThau").empty().html(data.htmlGT);
 
                 $("#slbChuongTrinh").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
                 $("#slbDuAn").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbGoiThau").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
             }
         }
     });

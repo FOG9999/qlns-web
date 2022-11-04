@@ -175,7 +175,6 @@ function Bang_onDblClick(h, c) {
 var Bang_curH = -1;
 var Bang_curC = -1;
 function Bang_txtONhapDuLieu_Autocomplete_onSource(txt, request, response) {
-    console.log('Bang_txt nhập dữ liệu..............');
     var TenHam = Bang_ID + '_txtONhapDuLieu_Autocomplete_onSource';
     var fn = window[TenHam];
     if (typeof fn == 'function') {
@@ -219,9 +218,7 @@ function Bang_txtONhapDuLieu_Autocomplete_onSource(txt, request, response) {
             $.getJSON(url, { Truong: Truong, GiaTri: request.term, DSGiaTri: Bang_GhepGiaTriCuabLoaiTinhChat }, response);
         }
         else if (Truong == "sTenDonVi_BaoDam") {
-            console.log(request.term);
             $.getJSON(url, { Truong: Truong, GiaTri: request.term }, response);
-
         }
         else if (Truong == "sMaNguonCha") {
             $.getJSON(url, { Truong: Truong, GiaTri: request.term, DSGiaTri: Bang_GhepGiaTriCuaTruong("sMaNguonCha", "iID_Nguon") }, response);
@@ -243,6 +240,12 @@ function Bang_txtONhapDuLieu_Autocomplete_onSource(txt, request, response) {
         }
         else if (Truong == "sDonViThucHienDuAn") {
             $.getJSON(url, { Truong: Truong, GiaTri: request.term, DSGiaTri: Bang_GhepGiaTriCuaTruong("sTenDonVi", "iID_MaDonVi") }, response);
+        }
+        else if (Truong == "sTenPhongBan") {
+            $.getJSON(url, { Truong: Truong, GiaTri: request.term, DSGiaTri: Bang_GhepGiaTriCuaTruong("sTenPhongBan", "iID_BQuanLyID") }, response);
+        }
+        else if (Truong == "sTenDonVi") {
+            $.getJSON(url, { Truong: Truong, GiaTri: request.term, DSGiaTri: Bang_GhepGiaTriCuaTruong("sTenDonVi", "iID_DonViID") }, response);
         }
         else {
             $.getJSON(url, { Truong: Truong, GiaTri: request.term }, response);
@@ -976,6 +979,13 @@ function Bang_onCellAfterEdit(h, c) {
                 if (item != null) {
                     Bang_GanGiaTriThatChoO(h, c, item.label);
                     //Gán trường ẩn
+                    if (TruongGan == "sMaPhongBan" && Bang_arrCSMaCot[TruongGan] == undefined) {
+                        TruongGan = "iID_BQuanLyID";
+                    }
+                    if (Truong == "sTenDonViCoTen" && Bang_arrCSMaCot[Truong] == undefined) {
+                        TruongGan = "iID_DonViID";
+                        Bang_GanGiaTriThatChoO(h, Bang_arrCSMaCot["iID_MaDonVi"], item.code);
+                    }
                     csGan = Bang_arrCSMaCot[TruongGan];
                     Bang_GanGiaTriThatChoO(h, csGan, item.value);
                 }

@@ -60,6 +60,75 @@
                     @Html.DropDownList("iID_MaPhongBan", (SelectList)(ViewBag.lstNSPhongBan), "--Chọn phòng ban--", new { @class = "form-control", @id = "iID_MaPhongBan" })
                 </div>
             </div>
+            @if (ViewBag.type == 1 || ViewBag.type == 2)
+            {
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <label>Tiêu đề 1 <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idtieude1" class="form-control" maxlength="100" autocomplete="off" value="GIẤY ĐỀ NGHỊ THANH TOÁN " />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Tiêu đề 2 <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idtieude2" class="form-control" maxlength="100" autocomplete="off" value="KINH PHÍ TỪ NGUỒN QUỸ DỰ TRỮ NGOẠI HỐI" />
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (ViewBag.type == 3)
+            {
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <label>Tiêu đề 1 <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idtieude1" class="form-control" maxlength="100" autocomplete="off" value="THÔNG BÁO " />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Tiêu đề 2 <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idtieude2" class="form-control" maxlength="100" autocomplete="off" value="Chi ngân sách từ nguồn quỹ dự trữ ngoại hối" />
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (ViewBag.type == 4)
+            {
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <label>Tiêu đề 1 <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idtieude1" class="form-control" maxlength="100" autocomplete="off" value="THÔNG BÁO " />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Tiêu đề 2 <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idtieude2" class="form-control" maxlength="100" autocomplete="off" value="CẤP KINH PHÍ BẰNG NGOẠI TỆ TỪ NGUỒN QUỸ DỰ TRỮ NGOẠI HỐI" />
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <label>Tiêu đề 1 <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idtieude1" class="form-control" maxlength="100" autocomplete="off" value="THÔNG BÁO " />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Tiêu đề 2 <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idtieude2" class="form-control" maxlength="100" autocomplete="off" value="CẤP KINH PHÍ CHI TRONG NƯỚC TỪ NGUỒN QUỸ DỰ TRỮ NGOẠI HỐI" />
+                        </div>
+                    </div>
+                </div>
+            }
+
             <div class="form-group row" id="inoidung">
                 <div class="col-sm-12">
                     <label for="drpNoidung">Kính gửi <span class="require">*</span> </label>

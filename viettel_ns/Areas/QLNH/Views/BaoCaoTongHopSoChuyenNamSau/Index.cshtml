@@ -31,7 +31,7 @@
 
 
 @*Modal*@
-<div class="modal fade modalBCTHSoChuyenNamSau" id="modalBCTHSoChuyenNamSau" tabindex="-1" role="dialog" aria-labelledby="modalBCTHSoChuyenNamSauLabel" aria-hidden="true">
+<div class="modal fade modalBCTHSoChuyenNamSau" id="modalBCTHSoChuyenNamSau" role="dialog" aria-labelledby="modalBCTHSoChuyenNamSauLabel" aria-hidden="true">
     <div class="modal-dialog" role="document" style="width:80%">
         <div class="modal-content">
             <div class="modal-header">
@@ -47,12 +47,10 @@
 </div>
 @section Scripts{
     <script src="~/Scripts/QLNH/BaoCaoThongKe/jsBaoCaoTongHopSoChuyenNamSau.js"></script>
-
     <script>
-            var sUrlListView = "";
-            $(document).ready(function () {
-                sUrlListView = '@Url.Action("TimKiem", "BaoCaoTongHopSoChuyenNamSau")';
-                });
+        var sUrlListView = "";
+        $(document).ready(function () {
+            sUrlListView = '@Url.Action("TimKiem", "BaoCaoTongHopSoChuyenNamSau")';
+        });
     </script>
-
 }

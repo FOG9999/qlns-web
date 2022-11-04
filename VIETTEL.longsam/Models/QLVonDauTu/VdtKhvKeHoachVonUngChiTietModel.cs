@@ -43,6 +43,7 @@ namespace Viettel.Models.QLVonDauTu
                 return this.fTongMucDauTu.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN"));
             }
         }
+        public double? fCapPhatTaiKhoBacDC { get; set; }
         public double fCapPhatTaiKhoBac { get; set; }
         public string sCapPhatTaiKhoBac
         {
@@ -51,12 +52,27 @@ namespace Viettel.Models.QLVonDauTu
                 return this.fCapPhatTaiKhoBac.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN"));
             }
         }
+        public string sCapPhatTaiKhoBacDC
+        {
+            get
+            {
+                return this.fCapPhatTaiKhoBacDC.HasValue ? fCapPhatTaiKhoBacDC.Value .ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : string.Empty;
+            }
+        }
         public double fCapPhatBangLenhChi { get; set; }
+        public double? fCapPhatBangLenhChiDC { get; set; }
         public string sCapPhatBangLenhChi
         {
             get
             {
                 return this.fCapPhatBangLenhChi.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN"));
+            }
+        }
+        public string sCapPhatBangLenhChiDC
+        {
+            get
+            {
+                return this.fCapPhatBangLenhChiDC.HasValue ? fCapPhatBangLenhChiDC.Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")): string.Empty;
             }
         }
         public string sGhiChu { get; set; }

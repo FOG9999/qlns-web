@@ -167,7 +167,9 @@ function GetListChiPhiHangMuc(iIdDuToan) {
 
 function DrawTableChiPhiHangMuc() {
     var html = "";
+    var index = 0;
     arrChiPhi.forEach(function (itemCp) {
+        index++;
         var arrChiPhiChild = arrChiPhi.filter(x => x.iID_ChiPhi_Parent == itemCp.iID_DuAn_ChiPhi);
         var arrHangMucByChiPhi = arrHangMuc.filter(x => x.iID_DuAn_ChiPhi == itemCp.iID_DuAn_ChiPhi);
         var disabled = "", isBold = "";
@@ -175,8 +177,8 @@ function DrawTableChiPhiHangMuc() {
             isBold = "font-weight: bold;";
             disabled = "disabled";
         }
-        html += "<tr data-loai='1' style='" + isBold+"' data-id='" + itemCp.iID_DuAn_ChiPhi + "' data-parentid='" + itemCp.iID_ChiPhi_Parent+"'>";
-        html += "<td class='stt'></td>";
+        html += "<tr data-loai='1' style='" + isBold + "' data-id='" + itemCp.iID_DuAn_ChiPhi + "' data-parentid='" + itemCp.iID_ChiPhi_Parent + "'>";
+        html += "<td class='stt'>" + itemCp.iSTT + "</td>";
         html += "<td>Chi phí</td>";
         html += "<td>" + itemCp.sTenChiPhi + "</td>";
         html += "<td class='text-right'>" + itemCp.sTienPheDuyet + "</td>";
@@ -197,9 +199,10 @@ function DrawTableChiPhiHangMuc() {
                 if (arrHangMucChild != null && arrHangMucChild.length > 0) {
                     isBold = "font-weight: bold;";
                     disabled = "disabled";
-                }
-                html += "<tr style='" + isBold+"' data-loai='2' data-id='" + itemHm.iID_HangMucID + "' data-parentid='" + itemHm.iID_ParentID + "' data-chiphi='" + itemHm.iID_DuAn_ChiPhi + "'>";
-                html += "<td class='stt'></td>";
+                };
+                //var indexChild = "";
+                html += "<tr style='" + isBold + "' data-loai='2' data-id='" + itemHm.iID_HangMucID + "' data-parentid='" + itemHm.iID_ParentID + "' data-chiphi='" + itemHm.iID_DuAn_ChiPhi + "'>";
+                html += "<td class='stt'>" + itemCp.iSTT +"-"+ itemHm.smaOrder + "</td>";
                 html += "<td style='font-style: italic'>Hạng mục</td>";
                 html += "<td style='font-style: italic'>" + itemHm.sTenHangMuc + "</td>";
                 html += "<td class='text-right'>" + itemHm.sTienPheDuyet + "</td>";

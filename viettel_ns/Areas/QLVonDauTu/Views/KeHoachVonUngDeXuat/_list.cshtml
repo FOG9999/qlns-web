@@ -49,11 +49,13 @@
     </th>
     <th width="8%"> <input type="text" class="form-control clearable yearFormat" id="iNamKeHoach" autocomplete="off" /></th>
     <th width="15%">@Html.DropDownList("iId_NguonVon", (SelectList)(ViewBag.LstNguonVon), "--Tất cả--", new { @class = "form-control", @id = "iId_NguonVon" })</th>
-    <th width="15%">
+    <th width="10%">
         @Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), "--Tất cả--", new { @class = "form-control", @id = "iID_DonViQuanLyID" })
     </th>
-    <th width="15%"></th>
-    <th width="6%"></th>
+    <th width="10%"></th>
+    <th width="10%"></th>
+    <th width="5%"></th>
+    <th width="5%"></th>
     <th width="7%">
         <button class="btn btn-info" onclick="SearchData()"><i class="fa fa-search" aria-hidden="true"></i> Tìm kiếm</button>
     </th>
@@ -65,10 +67,12 @@
     <th width="15%">Ngày đề nghị</th>
     <th width="8%">Năm kế hoạch</th>
     <th width="15%">Nguồn vốn</th>
-    <th width="15%">Đơn vị</th>
-    <th width="15%">Kế hoạch vốn ứng đề xuất</th>
-    <th width="6%">Trạng thái</th>
-    <th width="">Thao tác</th>
+    <th width="10%">Đơn vị</th>
+    <th width="10%">Kế hoạch vốn ứng đề xuất</th>
+    <th width="10%">Điều chỉnh từ SKH</th>
+    <th width="5%">Số lần điều chỉnh</th>
+    <th width="5%">Trạng thái</th>
+    <th width="7%">Thao tác</th>
     </thead>
     <tbody id="">
         @{
@@ -92,6 +96,8 @@
                     <td align="left">@item.sTenNguonVon</td>
                     <td align="left">@item.sTenDonVi</td>
                     <td align="right"><span class="fGiaTriUng">@(item.fGiaTriUng.HasValue ? item.fGiaTriUng.Value.ToString("###,###") : "0")</span></td>
+                    <td align="center">@item.sDieuChinhTuSKH</td>
+                    <td align="center">(@item.iSoLanDieuChinh)</td>
                     <td align="center">
                         @if (item.bKhoa.HasValue && item.bKhoa.Value)
                         {
@@ -102,9 +108,18 @@
                         <button type="button" class="btn-detail"><i class="fa fa-eye fa-lg" aria-hidden="true" onclick="location.href='@Url.Action("Detail", "KeHoachVonUngDeXuat", new {id = item.Id })'"></i></button>
                         @if (item.bKhoa == null || (item.bKhoa.HasValue && !item.bKhoa.Value))
                         {
-                            <button class="btn-edit"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true" onclick="GetItemKHVU('@item.Id')"></i></button>
-                            <button class="btn-delete"><i class="fa fa-trash-o fa-lg" aria-hidden="true" onclick="DeleteItemKHVU('@item.Id', '@item.sSoDeNghi')"></i></button>
-                            <button type="button" class="btn-file" onclick="ExportKHVUDeXuat('@item.Id')"><i class="fa fa-trash-o fa-file" aria-hidden="true"></i></button>
+                            if (item.bActive == true)
+                            {
+                                <button class="btn-edit"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true" onclick="GetItemKHVU('@item.Id')"></i></button>
+                                <button class="btn-delete"><i class="fa fa-trash-o fa-lg" aria-hidden="true" onclick="DeleteItemKHVU('@item.Id', '@item.sSoDeNghi')"></i></button>
+                                <button type="button" class="btn-detail" onclick="DieuChinhKHVU('@item.Id', 'true')"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>
+
+                            }
+                            else
+                            {
+                                <button type="button" class="btn-file" onclick="ExportKHVUDeXuat('@item.Id')"><i class="fa fa-trash-o fa-file" aria-hidden="true"></i></button>
+
+                            }
 
                         }
                         @if (item.bKhoa.HasValue && item.bKhoa.Value)

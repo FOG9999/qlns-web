@@ -6,7 +6,7 @@
 <div id="NhuCauChiQuy">
     <div class="tooltip-header-search">
         <div class="col-sm-8 col-md-8 col-lg-8" style="display:flex;padding-left:0px;">
-            <label class="control-label">Báo cáo đối chiếu tổng hợp số liệu kinh phí thực hiện cấp phát thanh toán toàn quân </label>
+            <label class="control-label">Báo cáo đối chiếu tổng hợp số liệu kinh phí thực hiện cấp phát thanh toán toàn quân</label>
         </div>
     </div>
 </div>
@@ -29,14 +29,14 @@
                                 <i class="fa fa-calendar" aria-hidden="true"></i>
                             </span>
                         </div>
-                    </div>*@
+                </div>*@
                 <div style="display: flex">
                     <div style="width:50%">
-                        @Html.DropDownList("iQuy", (SelectList)(ViewBag.ListQuyTypes), new { @class = "form-control", @id = "iQuyList", @onchange = "ChangePage()" })
+                        @Html.DropDownList("iQuyList", (SelectList)(ViewBag.ListQuyTypes), new { @class = "form-control", @id = "iQuyList", @onchange = "ChangePage()" })
                     </div>
                     <span style="margin: 8px 5px 0px 5px;">-</span>
                     <div style="width:50%">
-                        @Html.DropDownList("Value", new SelectList(ViewBag.ListYear, "Value", "Text", ViewBag.YearNow), new { @class = "form-control", @id = "txtNam", @onchange = "ChangePage()" })
+                        @Html.DropDownList("txtNam", new SelectList(ViewBag.ListYear, "Value", "Text", ViewBag.YearNow), new { @class = "form-control", @id = "txtNam", @onchange = "ChangePage()" })
                     </div>
                 </div>
             </th>
@@ -184,26 +184,29 @@
                 if (!isShowing) ValidateInputFocusOut(event, this, 3);
             }, 0);
         });
-    });
-    $(".btn-print").click(function () {
-        var links = [];
-        var ext = $(this).data("ext");
-        var iQuyList = $("#iQuyList").val();
-        var iNam = $("#txtNam").val();
-        var dTuNgay = $("#txtTuNgay").val();
-        var dDenNgay = $("#txtDenNgay").val();
-        var iDonvi = $("#iDonvi").val();
-        var tenBaoCao = $("#txtTieuDe").val();
-        var dvCapTren = $("#txtDonViCapTren").val();
-        var dvCapDuoi = $("#txtDonViCapDuoi").val();
-        //var dvt = $("#dvt").val();
-        var url = $("#urlExport").val() +
-            "?ext=" + ext +
-            "&dvt=1000&to=1&iQuyList=" + iQuyList + "&iNam=" + iNam + "&iDonvi=" + iDonvi + "&tenBaoCao=" + tenBaoCao + "&dvCapTren=" + dvCapTren + "&dvCapDuoi=" + dvCapDuoi;
-        url = unescape(url);
-        links.push(url);
 
-        openLinks(links);
+        $(".btn-print").click(function () {
+            var links = [];
+            var ext = $(this).data("ext");
+            var iQuyList = $("#iQuyList").val();
+            var iNam = $("#txtNam").val();
+            var iDonvi = $("#iDonvi").val();
+            var tenBaoCao = encodeURIComponent($("<div/>").text($.trim($("#txtTieuDe").val())).html());
+            var dvCapTren = encodeURIComponent($("<div/>").text($.trim($("#txtDonViCapTren").val())).html());
+            var dvCapDuoi = encodeURIComponent($("<div/>").text($.trim($("#txtDonViCapDuoi").val())).html());
+            var url = $("#urlExport").val() +
+                "?ext=" + ext +
+                "&dvt=1000&to=1" +
+                "&iQuyList=" + iQuyList +
+                "&iNam=" + iNam +
+                "&iDonvi=" + iDonvi +
+                "&tenBaoCao=" + tenBaoCao +
+                "&dvCapTren=" + dvCapTren +
+                "&dvCapDuoi=" + dvCapDuoi;
+            links.push(url);
+
+            openLinks(links);
+        });
     });
 </script>
 
@@ -222,15 +225,15 @@
         z-index: 1;
     }
 
-        .dropdown-content button {
-            color: black;
-            text-decoration: none;
-            display: block;
-        }
+    .dropdown-content button {
+        color: black;
+        text-decoration: none;
+        display: block;
+    }
 
-        .dropdown-content a:hover {
-            background-color: #ff6002
-        }
+    .dropdown-content a:hover {
+        background-color: #ff6002
+    }
 
     .dropdown:hover .dropdown-content {
         display: block;

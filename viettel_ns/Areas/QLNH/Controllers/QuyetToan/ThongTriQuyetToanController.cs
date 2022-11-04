@@ -420,33 +420,38 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
         }
 
         // Export report
-        public ActionResult ExportFile(Guid id, string sDonViTienTe = "USD", string ext = "xlsx")
+        [ValidateInput(false)]
+        public ActionResult ExportFile(Guid id, string txtTieuDe, string txtDonViCapTren, string txtDonVi, string sDonViTienTe = "USD", string ext = "xlsx")
         {
             // Lấy thông tin thông tri
             var ttqt = _qlnhService.GetThongTinQuyetToanById(id);
             var ttqt_ct = _qlnhService.GetListThongTriQuyetToanChiTietByTTQTId(id).ToList();
+            txtTieuDe = HttpUtility.UrlDecode(txtTieuDe);
+            txtDonViCapTren = HttpUtility.UrlDecode(txtDonViCapTren);
+            txtDonVi = HttpUtility.UrlDecode(txtDonVi);
             string fileName = string.Format("{0} {1}.{2}", "Báo cáo thông tri quyết toán năm ", ttqt.iNamThongTri, ext);
-            ExcelFile xls = TaoFileExel(ttqt, ttqt_ct, sDonViTienTe);
+            ExcelFile xls = TaoFileExel(ttqt, ttqt_ct, txtTieuDe, txtDonViCapTren, txtDonVi, sDonViTienTe);
             return Print(xls, ext, fileName);
         }
 
         // Tạo file report
-        public ExcelFile TaoFileExel(NH_QT_ThongTriQuyetToanModel ttqt, List<NH_QT_ThongTriQuyetToan_ChiTietModel> ttqt_ct, string sDonViTienTe)
+        public ExcelFile TaoFileExel(NH_QT_ThongTriQuyetToanModel ttqt, List<NH_QT_ThongTriQuyetToan_ChiTietModel> ttqt_ct, string txtTieuDe, string txtDonViCapTren, string txtDonVi, string sDonViTienTe)
         {
             XlsFile Result = new XlsFile(true);
             Result.Open(Server.MapPath(sFilePathBaoCao));
             FlexCelReport fr = new FlexCelReport();
-
             var tongtien = sDonViTienTe == "USD" ? ttqt.fThongTri_USD : ttqt.fThongTri_VND;
-
             fr.SetValue(new
             {
                 sSoThongTri = ttqt.sSoThongTri,
                 sLoaiThongTri = ttqt.iLoaiThongTri == 2 ? "Giảm quyết toán" : "Quyết toán",
-                sTenDonVi = ttqt.sTenDonVi,
+                sTenDonVi = ttqt.sTenDonVi.Split('-')[1].Trim(),
                 sTongTien = sDonViTienTe == "VND" ? DomainModel.CommonFunction.TienRaChu(tongtien.HasValue ? (long)tongtien : 0) : "",
                 fTongTien = tongtien.HasValue ? DomainModel.CommonFunction.DinhDangSo(tongtien.Value.ToString("0.00" + new string('#', 397), CultureInfo.InvariantCulture)) : string.Empty,
-                iNamThongTri = ttqt.iNamThongTri
+                iNamThongTri = ttqt.iNamThongTri,
+                txtDonViCapTren = txtDonViCapTren.ToUpper(),
+                txtDonVi = txtDonVi.ToUpper(),
+                txtTieuDe = txtTieuDe
             });
 
             //fr.SetValue("iTongSoNgayDieuTri", iTongSoNgayDieuTri.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")));

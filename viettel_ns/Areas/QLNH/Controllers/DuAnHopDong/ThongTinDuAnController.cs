@@ -33,19 +33,19 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
             vm.Items = qlnhService.getListThongTinDuAnModels(ref vm._paging);
 
             List<NS_PhongBan> llstThongTinDuAn = qlnhService.GetLookupQuanLy().ToList();
-            llstThongTinDuAn.Insert(0, new NS_PhongBan { iID_MaPhongBan = Guid.Empty, sTen = "--Chọn--" });
+            llstThongTinDuAn.Insert(0, new NS_PhongBan { iID_MaPhongBan = Guid.Empty, sTen = "--Chọn B quán lý--" });
             ViewBag.ListPhongBan = llstThongTinDuAn;
 
             List<NS_DonVi> lstDonViQuanLy = qlnhService.GetLookupThongTinDonVi().ToList();
-            lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = "--Chọn--" });
+            lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = "--Chọn đơn vị--" });
             ViewBag.ListDonVi = lstDonViQuanLy;
 
             List<DM_ChuDauTu> listChuDauTu = qlnhService.GetLookupChuDauTu().ToList();
-            listChuDauTu.Insert(0, new DM_ChuDauTu { ID = Guid.Empty, sTenCDT = "--Chọn--" });
+            listChuDauTu.Insert(0, new DM_ChuDauTu { ID = Guid.Empty, sTenCDT = "--Chọn chủ đầu tư--" });
             ViewBag.ListChuDauTu = listChuDauTu;
 
             List<NH_DM_PhanCapPheDuyet> listDmPhanCapPheDuyet = qlnhService.GetLookupThongTinDuAn().ToList();
-            listDmPhanCapPheDuyet.Insert(0, new NH_DM_PhanCapPheDuyet { ID = Guid.Empty, sTen = "--Chọn--" });
+            listDmPhanCapPheDuyet.Insert(0, new NH_DM_PhanCapPheDuyet { ID = Guid.Empty, sTen = "--Chọn phân cấp phê duyệt--" });
             vm.ListDanhMucPCPD = listDmPhanCapPheDuyet;
             return View(vm);
         }
@@ -109,15 +109,15 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
                 ViewBag.HtmlTienTe = GetHtmlTienteQuyDoi(tiGiaChiTietList, tiGia.sMaTienTeGoc, data.iID_TiGia_ChiTietID, data.sMaNgoaiTeKhac);
             }
             List<NS_PhongBan> llstThongTinDuAn = qlnhService.GetLookupQuanLy().ToList();
-            llstThongTinDuAn.Insert(0, new NS_PhongBan { iID_MaPhongBan = Guid.Empty, sTen = "--Chọn--" });
+            llstThongTinDuAn.Insert(0, new NS_PhongBan { iID_MaPhongBan = Guid.Empty, sTen = "--Chọn B quản lý--" });
             ViewBag.ListPhongBan = llstThongTinDuAn;
 
             List<DM_ChuDauTu> listChuDauTu = qlnhService.GetLookupChuDauTu().ToList();
-            listChuDauTu.Insert(0, new DM_ChuDauTu { ID = Guid.Empty, sTenCDT = "--Chọn--" });
+            listChuDauTu.Insert(0, new DM_ChuDauTu { ID = Guid.Empty, sTenCDT = "--Chọn chủ đầu tư--" });
             ViewBag.ListChuDauTu = listChuDauTu;
 
             List<NH_DM_PhanCapPheDuyet> listDmPhanCapPheDuyet = qlnhService.GetLookupThongTinDuAn().ToList();
-            listDmPhanCapPheDuyet.Insert(0, new NH_DM_PhanCapPheDuyet { ID = Guid.Empty, sTen = "--Chọn--" });
+            listDmPhanCapPheDuyet.Insert(0, new NH_DM_PhanCapPheDuyet { ID = Guid.Empty, sTen = "--Chọn phân cấp phê duyệt--" });
             ViewBag.ListDanhMucPCPD = listDmPhanCapPheDuyet;
 
             List<NH_DM_TiGia> lstTiGia = qlnhService.GetNHDMTiGiaList().ToList();
@@ -125,7 +125,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
             ViewBag.ListTiGia = lstTiGia;
 
             List<NH_KHChiTietBQP_NhiemVuChiModel> listChiTieBQL = qlnhService.GetNHKeHoachChiTietBQPNhiemVuChiListDuAn().ToList();
-            listChiTieBQL.Insert(0, new NH_KHChiTietBQP_NhiemVuChiModel { ID = Guid.Empty, sSoKeHoachBQP = "--Chọn--" });
+            listChiTieBQL.Insert(0, new NH_KHChiTietBQP_NhiemVuChiModel { ID = Guid.Empty, sSoKeHoachBQP = "--Chọn kế hoạch chi tiết BQP--" });
             ViewBag.ListBQP = listChiTieBQL;
 
             List<NH_DM_TiGia_ChiTiet> lstTiGiaChiTiet = qlnhService.GetNHDMTiGiaChiTietList(null).ToList();
@@ -133,11 +133,11 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
             ViewBag.ListTiGiaChiTiet = lstTiGiaChiTiet;
 
             List<NS_DonVi> lstDonViQuanLy = qlnhService.GetLookupThongTinDonVi().ToList();
-            lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = "--Chọn--" });
+            lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = "--Chọn đơn vị--" });
             ViewBag.ListDonVi = lstDonViQuanLy;
 
             List<NH_KHChiTietBQP_NhiemVuChi> lstct = qlnhService.GetListCTbyDV(vm.ThongTinDuAnDetail.iID_DonViID).ToList();
-            lstct.Insert(0, new NH_KHChiTietBQP_NhiemVuChi { iID_KHTTTTCP_NhiemVuChiID = Guid.Empty, sTenNhiemVuChi = "--Chọn--" });
+            lstct.Insert(0, new NH_KHChiTietBQP_NhiemVuChi { iID_KHTTTTCP_NhiemVuChiID = Guid.Empty, sTenNhiemVuChi = "--Chọn chương trình--" });
             ViewBag.ListChuongTrinh = lstct;
 
             return PartialView("Update", vm);
@@ -147,12 +147,12 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
         {
             List<NS_DonVi> lstDonVi = qlnhService.GetListDonViToBQP(id).ToList();
             StringBuilder htmlDonVi = new StringBuilder();
-            htmlDonVi.AppendFormat("<option value='{0}' selected>{1}</option>", Guid.Empty, "--Chọn--");
+            htmlDonVi.AppendFormat("<option value='{0}' selected>{1}</option>", Guid.Empty, "--Chọn đơn vị--");
             if (lstDonVi != null && lstDonVi.Count > 0)
             {
                 for (int i = 0; i < lstDonVi.Count; i++)
                 {
-                    htmlDonVi.AppendFormat("<option value='{0}'>{1}</option>", lstDonVi[i].iID_Ma, WebUtility.HtmlEncode(lstDonVi[i].iID_MaDonVi + " - " + lstDonVi[i].sTen));
+                    htmlDonVi.AppendFormat("<option value='{0}' data-madonvi={1}>{2}</option>", lstDonVi[i].iID_Ma, lstDonVi[i].iID_MaDonVi, WebUtility.HtmlEncode(lstDonVi[i].iID_MaDonVi + " - " + lstDonVi[i].sTen));
                 }
             }
             return Json(new { htmlDV = htmlDonVi.ToString() }, JsonRequestBehavior.AllowGet);
@@ -163,7 +163,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
         {
             List<NH_KHChiTietBQP_NhiemVuChi> lstChuongTrinh = qlnhService.GetListCTbyDV(id, idBQP).ToList();
             StringBuilder htmlChuongTrinh = new StringBuilder();
-            htmlChuongTrinh.AppendFormat("<option value='{0}' selected>{1}</option>", Guid.Empty, "--Chọn--");
+            htmlChuongTrinh.AppendFormat("<option value='{0}' selected>{1}</option>", Guid.Empty, "--Chọn chương trình--");
             if (lstChuongTrinh != null && lstChuongTrinh.Count > 0)
             {
                 for (int i = 0; i < lstChuongTrinh.Count; i++)
@@ -178,7 +178,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
         {
             List<NHDAThongTinDuAnModel> lstBQP = qlnhService.GetListBQPToNHC(id).ToList();
             StringBuilder htmlBQP = new StringBuilder();
-            htmlBQP.AppendFormat("<option value='{0}' selected>{1}</option>", Guid.Empty, "--Chọn--");
+            htmlBQP.AppendFormat("<option value='{0}' selected>{1}</option>", Guid.Empty, "--Chọn kế hoạch tổng thể BQP--");
             if (lstBQP != null && lstBQP.Count > 0)
             {
                 for (int i = 0; i < lstBQP.Count; i++)
@@ -1590,9 +1590,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
             {
                 return Json(new { bIsComplete = false, sMessError = "Không cập nhật được dữ liệu !" }, JsonRequestBehavior.AllowGet);
             }
-
             data.iID_MaDonVi = HttpUtility.HtmlDecode(data.iID_MaDonVi);
-            data.sMaDuAn = HttpUtility.HtmlDecode(data.sMaDuAn);
+            data.sMaChuDauTu = HttpUtility.HtmlDecode(data.sMaChuDauTu);
             data.sTenDuAn = HttpUtility.HtmlDecode(data.sTenDuAn);
             data.sSoChuTruongDauTu = HttpUtility.HtmlDecode(data.sSoChuTruongDauTu);
             data.sSoQuyetDinhDauTu = HttpUtility.HtmlDecode(data.sSoQuyetDinhDauTu);
@@ -1600,14 +1599,23 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
             data.sKhoiCong = HttpUtility.HtmlDecode(data.sKhoiCong);
             data.sKetThuc = HttpUtility.HtmlDecode(data.sKetThuc);
             data.sMaNgoaiTeKhac = HttpUtility.HtmlDecode(data.sMaNgoaiTeKhac);
-            data.sMaChuDauTu = HttpUtility.HtmlDecode(data.sMaChuDauTu);
 
-            List<NH_DA_DuAn> lstDuAn = qlnhService.GetThongTinDuAnDuAnList(null).ToList();
-            var checkExistMaDuAn = lstDuAn.FirstOrDefault(x => x.sMaDuAn.ToUpper().Equals(data.sMaDuAn.ToUpper()) && x.ID != data.ID);
-            if (checkExistMaDuAn != null)
+            List<NH_DA_DuAn> lstma = new List<NH_DA_DuAn>();
+            lstma = qlnhService.GetMaDuAn(data.iID_MaDonVi, data.sMaChuDauTu);
+            int checkma = 0;
+            if (lstma.Count() != 0)
             {
-                return Json(new { bIsComplete = false, sMessError = "Mã dự án đã tồn tại!" }, JsonRequestBehavior.AllowGet);
+                foreach (var item in lstma)
+                {
+                    var a = item.sMaDuAn.Split('/');
+                    int b = Int32.Parse(a[a.Length - 1]);
+                    if (b > checkma)
+                    {
+                        checkma = b;
+                    }
+                }
             }
+            data.sMaDuAn = HttpUtility.HtmlDecode(data.iID_MaDonVi) + "/" + HttpUtility.HtmlDecode(data.sMaChuDauTu) + "/" + (checkma + 1);
 
             if (!qlnhService.SaveThongTinDuAn(data, Username, state, dataTableChiPhi, oldId))
             {

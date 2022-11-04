@@ -3,8 +3,9 @@ DECLARE @iIdPhanBoVonDeXuat uniqueidentifier set @iIdPhanBoVonDeXuat = null
 DECLARE @iNamLamViec int
 
 --#DECLARE#--
+--#DECLARE#--
 select iID_DuAnID, MAX(iID_PhanBoVon_DonVi_PheDuyet_ID) as iID_PhanBoVon_DonVi_PheDuyet_ID, MAX(sTenDuAn) as sTenDuAn, MAX(sLoaiDuAn) as sLoaiDuAn, MAX(sTenLoaiCongTrinh) as sTenLoaiCongTrinh, MAX(iID_LoaiCongTrinh) as iID_LoaiCongTrinh, MAX(sTenDonViThucHienDuAn) as sTenDonViThucHienDuAn, 
-MAX(fGiaTriPhanBo) as fGiaTriPhanBo, MAX(iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID) as iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID, MAX(iID_Parent) as iID_Parent, MAX(sGhiChu) as sGhiChu from
+MAX(fGiaTriPhanBo) as fGiaTriDeNghi,MAX(fGiaTriPhanBo) as fGiaTriPhanBo, MAX(iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID) as iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID, MAX(iID_Parent) as iID_Parent, MAX(sGhiChu) as sGhiChu from
 (
 	select ct.iID_DuAnID, ct.iID_PhanBoVon_DonVi_PheDuyet_ID, da.sTenDuAn, 
 		case 
@@ -15,6 +16,7 @@ MAX(fGiaTriPhanBo) as fGiaTriPhanBo, MAX(iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID
 	null as sTenLoaiCongTrinh,
 	ct.iID_LoaiCongTrinh,
 	dv.sTen as sTenDonViThucHienDuAn,
+	ct.fGiaTriPhanBo as fGiaTriDeNghi,
 	ct.fGiaTriPhanBo as fGiaTriPhanBo,
 	ct.Id as iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID,
 	ct.iId_Parent,
@@ -38,6 +40,7 @@ MAX(fGiaTriPhanBo) as fGiaTriPhanBo, MAX(iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID
 	lct.sTenLoaiCongTrinh,
 	lct.iID_LoaiCongTrinh,
 	dv.sTen as sTenDonViThucHienDuAn,
+	null as fGiaTriDeNghi,
 	null as fGiaTriPhanBo,
 	null as iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID,
 	null as iID_Parent,
@@ -77,6 +80,7 @@ where
 	lct.sTenLoaiCongTrinh,
 	ct.iID_LoaiCongTrinh,
 	dv.sTen as sTenDonViThucHienDuAn,
+	ct.fGiaTriPhanBo as fGiaTriDeNghi, 
 	ct.fGiaTriPhanBo, 
 	ct.Id as iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID,
 	ct.iId_Parent,
@@ -89,5 +93,6 @@ where
 
 ) as data
 Group by iID_DuAnID
+
 
 

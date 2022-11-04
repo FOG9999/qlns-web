@@ -44,6 +44,15 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                        <label for="slbGoiThau">Tên gói thầu</label>
+                        <div>@Html.Raw(Html.Encode(Model.sTenGoiThau))</div>
+                    </div>
+                    <div class="col-sm-3">&nbsp;</div>
+                    <div class="col-sm-3">&nbsp;</div>
+                    <div class="col-sm-3">&nbsp;</div>
+                </div>
                 <div class="form-group">
                     <h4 class="color-text-red">Thông tin hợp đồng:</h4>
                     <hr class="color-background-red" />
@@ -119,10 +128,10 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group text-center">
-                <button class="btn btn-back" onclick="Cancel()"><i class="fa fa-arrow-left" aria-hidden="true"></i><span>Quay lại</span></button>
+                <div class="form-group text-center">
+                    <button class="btn btn-back" onclick="Cancel()"><i class="fa fa-arrow-left" aria-hidden="true"></i><span>Quay lại</span></button>
+                </div>
             </div>
-        </div>
     </div>
 </div>
 <script>

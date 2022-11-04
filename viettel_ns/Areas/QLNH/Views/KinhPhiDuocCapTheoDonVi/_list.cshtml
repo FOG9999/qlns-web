@@ -41,7 +41,7 @@
                 </div>
             </th>
             <th width="15%">@Html.DropDownList("iID_DonViID", (SelectList)(ViewBag.ListDonViQuanLy), new { @class = "form-control", @id = "iDonvi", @onchange = "ChangePage()" })</th>
-            <th width="81%">
+            <th width="60%">
                 <button class="btn btn-info pull-right mr-10" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
                 <button class="btn btn-info pull-right mr-10 btn-primary" onclick="$('#configBaocao').modal('show');"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
                 <button class="btn btn-info pull-right mr-10" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
@@ -162,6 +162,9 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $("#iDonvi").select2({ width: '100%', matcher: FilterInComboBox });
+        $("#iQuyList").select2({ width: '100%', matcher: FilterInComboBox });
+        $("#txtNam").select2({ width: '100%', matcher: FilterInComboBox });
+
         $('.date').datepicker({
             todayBtn: "linked",
             keyboardNavigation: false,
@@ -176,33 +179,24 @@
             ValidateInputKeydown(event, this, 3);
         });
 
-        $("#tblNhuCauChiQuy .gr_search").each(function (index, value) {
-            $(this).keypress(function (e) {
-                if (e.which == 13) {//Enter key pressed
-                    ChangePage();
-                }
-            });
-        });
-    });
-    $(".btn-print").click(function () {
-        var links = [];
-        var ext = $(this).data("ext");
-        var iQuyList = $("#iQuyList").val();
-        var iNam = $("#txtNam").val();
-        var dTuNgay = $("#txtTuNgay").val();
-        var dDenNgay = $("#txtDenNgay").val();
-        var iDonvi = $("#iDonvi").val();
-        var tenBaoCao = $("#txtTieuDe").val();
-        var dvCapTren = $("#txtDonViCapTren").val(); 
-        var dvCapDuoi = $("#txtDonViCapDuoi").val();
-        //var dvt = $("#dvt").val();
-        var url = $("#urlExport").val() +
-            "?ext=" + ext +
-            "&dvt=1000&to=1&iQuyList=" + iQuyList + "&iNam=" + iNam + "&iDonvi=" + iDonvi + "&tenBaoCao=" + tenBaoCao + "&dvCapTren=" + dvCapTren + "&dvCapDuoi=" + dvCapDuoi;
-        url = unescape(url);
-        links.push(url);
+        $(".btn-print").click(function () {
+            var links = [];
+            var ext = $(this).data("ext");
+            var iQuyList = $("#iQuyList").val();
+            var iNam = $("#txtNam").val();
+            var iDonvi = $("#iDonvi").val();
+            var tenBaoCao = encodeURIComponent($("<div/>").text($.trim($("#txtTieuDe").val())).html());
+            var dvCapTren = encodeURIComponent($("<div/>").text($.trim($("#txtDonViCapTren").val())).html());
+            var dvCapDuoi = encodeURIComponent($("<div/>").text($.trim($("#txtDonViCapDuoi").val())).html());
 
-        openLinks(links);
+            var url = $("#urlExport").val() +
+                "?ext=" + ext +
+                "&dvt=1000&to=1&iQuyList=" + iQuyList + "&iNam=" + iNam + "&iDonvi=" + iDonvi + "&tenBaoCao=" + tenBaoCao + "&dvCapTren=" + dvCapTren + "&dvCapDuoi=" + dvCapDuoi;
+
+            links.push(url);
+
+            openLinks(links);
+        });
     });
 </script>
 
@@ -221,15 +215,15 @@
         z-index: 1;
     }
 
-        .dropdown-content button {
-            color: black;
-            text-decoration: none;
-            display: block;
-        }
+    .dropdown-content button {
+        color: black;
+        text-decoration: none;
+        display: block;
+    }
 
-        .dropdown-content a:hover {
-            background-color: #ff6002
-        }
+    .dropdown-content a:hover {
+        background-color: #ff6002
+    }
 
     .dropdown:hover .dropdown-content {
         display: block;

@@ -17,6 +17,7 @@ using DomainModel;
 using VIETTEL.Models.QLNH;
 using VIETTEL.Models;
 using Viettel.Models.QLNH;
+using VIETTEL.Areas.QLNH.Models.DuAnHopDong.KeHoachChiTietBQP;
 
 namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
 {
@@ -86,15 +87,23 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
         }
 
         // Lưu
-        public ActionResult SaveKeHoachChiTietBQP(List<NH_KHChiTietBQP_NhiemVuChiCreateDto> lstNhiemVuChis, string keHoachChiTietBQP, string state)
+        //public ActionResult SaveKeHoachChiTietBQP(List<NH_KHChiTietBQP_NhiemVuChiCreateDto> lstNhiemVuChis, string keHoachChiTietBQP, string state)
+        public ActionResult SaveKeHoachChiTietBQP(List<NH_KHChiTietBQP_NhiemVuChiCreateDto> lstNhiemVuChis, string state)
         {
-            keHoachChiTietBQP = HttpUtility.HtmlDecode(keHoachChiTietBQP);
+            //keHoachChiTietBQP = HttpUtility.HtmlDecode(keHoachChiTietBQP);
             foreach(var item in lstNhiemVuChis)
             {
                 item.iID_MaDonVi = HttpUtility.HtmlDecode(item.iID_MaDonVi);
                 item.sTenNhiemVuChi = HttpUtility.HtmlDecode(item.sTenNhiemVuChi);
             }
-            var khct = JsonConvert.DeserializeObject<NH_KHChiTietBQP>(keHoachChiTietBQP);
+
+            var kHChiTietBQP = TempData["KHChiTietBQP"];
+            if (kHChiTietBQP != null)
+            {
+                TempData.Keep("KHChiTietBQP");
+            }
+            //var khct = JsonConvert.DeserializeObject<NH_KHChiTietBQP>(keHoachChiTietBQP);
+            var khct = (NH_KHChiTietBQP)kHChiTietBQP;
             return Json(new {
                 result = _qlnhService.SaveKHBQP(lstNhiemVuChis, khct, state)
             });
@@ -115,7 +124,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
             }
         }
 
-        public Boolean DeleteKeHoachChiTietBQP(Guid id)
+        public bool DeleteKeHoachChiTietBQP(Guid id)
         {
             return _qlnhService.DeleteKHBQP(id);
         }
@@ -168,10 +177,11 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
                 }
 
                 ViewBag.KHChiTietBQP = JsonConvert.SerializeObject(input);
+                TempData["KHChiTietBQP"] = input;
                 ViewBag.LookupDonVi = _qlnhService.GetDonviListByYear(PhienLamViec.NamLamViec).ToList();
             }
 
-            var result = _qlnhService.GetDetailKeHoachChiTietBQP(state, input.iID_KHTongTheTTCPID, input.ID, input.iID_BQuanLyID, input.iID_DonViID, isUseLastTTCP);
+            NH_KHChiTietBQP_NVCViewModel result = _qlnhService.GetDetailKeHoachChiTietBQP(state, input.iID_KHTongTheTTCPID, input.ID, input.iID_BQuanLyID, input.iID_DonViID, "", "", "", isUseLastTTCP);
             result.State = state;
 
             if (state == "DETAIL")
@@ -186,6 +196,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
                 var lstPhongBan = _qlnhService.getLookupPhongBan().ToList();
                 lstPhongBan.Insert(0, new LookupDto<Guid, string> { Id = Guid.Empty, DisplayName = "-- Chọn B quản lý --" });
                 ViewBag.LookupPhongBan = lstPhongBan.ToSelectList("Id", "DisplayName");
+
+                return View(result);
             }
             else
             {
@@ -209,10 +221,39 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
                     ViewBag.ListTiGiaChiTiet = new List<NH_DM_TiGia_ChiTiet_ViewModel>();
                     ViewBag.IsVNDToUSD = false;
                 }
-                
-            }
 
-            return View(result);
+                KeHoachChiTietBQPGridViewModel khChiTietGridViewModel = new KeHoachChiTietBQPGridViewModel();
+                khChiTietGridViewModel.KHChiTietBQP_NVC = result;
+                khChiTietGridViewModel.IsUseLastTTCP = isUseLastTTCP;
+                khChiTietGridViewModel.NH_KHChiTietBQPModel = input;
+                khChiTietGridViewModel.iID_TiGiaID = input.iID_TiGiaID;
+                return View("_sheet", khChiTietGridViewModel);
+            }
+        }
+
+        public ActionResult SheetFrame(string state, Guid? KHTTCP_ID, Guid? KHBQP_ID, Guid? iID_BQuanLyID, Guid? iID_DonViID, bool isUseLastTTCP, bool IsVNDToUSD, Guid? iID_TiGiaID, string sTenNhiemVuChi, string sTenPhongBan, string sTenDonVi, string filter = null)
+        {
+            var filters = filter == null ? Request.QueryString.ToDictionary() : JsonConvert.DeserializeObject<Dictionary<string, string>>(filter);
+            var sheet = new KeHoachChiTietBQP_SheetTable(state, KHTTCP_ID, KHBQP_ID, iID_BQuanLyID, iID_DonViID, isUseLastTTCP, iID_TiGiaID, sTenNhiemVuChi, sTenPhongBan, sTenDonVi, filters);
+            NH_KHChiTietBQP_NVCViewModel KHChiTietBQP = _qlnhService.GetDetailKeHoachChiTietBQP(state, KHTTCP_ID, KHBQP_ID, iID_BQuanLyID, iID_DonViID, sTenNhiemVuChi, sTenPhongBan, sTenDonVi, isUseLastTTCP);
+            KHChiTietBQP.State = state;
+            var vm = new KeHoachChiTietBQPGridViewModel
+            {
+                Sheet = new SheetViewModel(
+                   bang: sheet,
+                   filters: sheet.Filters,
+                   urlPost: Url.Action("Save", "KeHoachChiTietBQP", new { area = "QLNH" }),
+                   urlGet: Url.Action("SheetFrame", "KeHoachChiTietBQP", new { area = "QLNH" })
+                ),
+                KHChiTietBQP_NVC = KHChiTietBQP
+            };
+            vm.Sheet.AvaiableKeys = new Dictionary<string, string>();
+            ViewBag.IsVNDToUSD = IsVNDToUSD;
+            if (TempData["KHChiTietBQP"] != null)
+            {
+                TempData.Keep("KHChiTietBQP");
+            }
+            return View("_sheetFrame", vm);
         }
 
         // Lấy lookup đơn vị, tỉ giá màn chi tiết

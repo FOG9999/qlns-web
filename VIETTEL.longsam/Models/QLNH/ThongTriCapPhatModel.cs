@@ -32,6 +32,7 @@ namespace Viettel.Models.QLNH
             }
         public string sIdThanhToans { get; set; }
         public string sTenDonvi { get; set; }
+        public string sTen { get; set; }
         public string sLoaiThongTri { get; set; }
         public string sLoaiNoiDung { get; set; }
 
@@ -111,7 +112,8 @@ namespace Viettel.Models.QLNH
         public string sTTM { get; set; }
         public string sNG { get; set; }
         public string sTenNoiDungChi { get; set; }
-
+        public string sDonViCapTren { get; set; }
+        public string sDonVi { get; set; }
         public decimal? fPheDuyetCapKyNay_USD { get; set; }
         public decimal? fPheDuyetCapKyNay_VND { get; set; }
     }

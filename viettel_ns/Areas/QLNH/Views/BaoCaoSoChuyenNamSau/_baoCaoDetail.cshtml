@@ -8,33 +8,36 @@
     <div class="col-sm-7" style="display:flex;padding-left:0px;">
         <label class="control-label">Báo cáo đề nghị chi tiết số chuyển năm sau theo từng hợp đồng, dự án theo đơn vị, B quản lý </label>
     </div>
-    <div class="col-sm-5" style="display:flex; padding-right: 0 !important;">
-        <select id="slbNamKeHoachFillter" name="slbNamKeHoachFillter" class="form-control mr-10">
-            @if (ViewBag.ListNamKeHoach != null)
-            {
-                foreach (var namKeHoach in (List<Dropdown_SelectValue>)ViewBag.ListNamKeHoach)
+    <div class="col-sm-5" style="display:flex;justify-content:flex-end;padding-right:0;flex-wrap:wrap;">
+        <div class="mr-10">
+            <select id="slbNamKeHoachFillter" name="slbNamKeHoachFillter" class="form-control">
+                @if (ViewBag.ListNamKeHoach != null)
                 {
-                    <option value="@namKeHoach.Value">@Html.Raw(Html.Encode(namKeHoach.Label))</option>
+                    foreach (var namKeHoach in (List<Dropdown_SelectValue>)ViewBag.ListNamKeHoach)
+                    {
+                        <option value="@namKeHoach.Value">@Html.Raw(Html.Encode(namKeHoach.Label))</option>
+                    }
                 }
-            }
-        </select>
-        <select id="iDonViFillter" name="iDonVi" class="form-control mr-10">
-            @if (ViewBag.ListDonVi != null)
-            {
-                foreach (var donvi in (List<NS_DonVi>)ViewBag.ListDonVi)
+            </select>
+        </div>
+        <div class="mr-10">
+            <select id="iDonViFillter" name="iDonViFillter" class="form-control">
+                @if (ViewBag.ListDonVi != null)
                 {
-                    <option value="@donvi.iID_Ma" data-madonvi="@donvi.iID_MaDonVi">@Html.Raw(Html.Encode(donvi.iID_MaDonVi) + '-' + Html.Encode(donvi.sTen))</option>
+                    foreach (var donvi in (List<NS_DonVi>)ViewBag.ListDonVi)
+                    {
+                        <option value="@donvi.iID_Ma" data-madonvi="@Html.Raw(Html.Encode(donvi.iID_MaDonVi))">@Html.Raw(Html.Encode(donvi.sMoTa))</option>
+                    }
                 }
-            }
-        </select>
+            </select>
+        </div>
         <button class="btn btn-info pull-right mr-10" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
         <button class="btn btn-warning pull-right mr-10" onclick="InBaoCaoModal()"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
         <button class="btn btn-info pull-right" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
     </div>
-
 </div>
 <div style="overflow-x:auto">
-    <table class="table table-bordered table-update" id="tbListChiTietQuyetToanNienDo">
+    <table class="table table-bordered table-update tr-hover" id="tbListChiTietQuyetToanNienDo">
         <thead>
 
             <tr>
@@ -101,10 +104,6 @@
                         <td align="center" hidden data-getname="iID_ThanhToan_ChiTietID" data-getvalue="@item.iID_ThanhToan_ChiTietID"></td>
                         <td align="center" hidden data-getname="iID_ParentID" data-getvalue="@item.iID_ParentID"></td>
 
-
-
-
-
                         <td align="left" class="@(item.bIsTittle == true ? "f-wBold" : string.Empty)  frozenCol"> @Html.Raw(Html.Encode(item.STT))@(item.STT!=null?",":string.Empty) @Html.Raw(Html.Encode(item.sTenNoiDungChi))</td>
 
                         @*<td align="center" data-getname="fHopDong_USD" data-getvalue="@item.fHopDong_USD">@item.iCurrentId</td>
@@ -152,12 +151,8 @@
     </div>*@
 <script type="text/javascript">
     $(document).ready(function () {
-        $("tr").hover(function () {
-            $(this).css("background-color", "#e7f8fe");
-        }, function () {
-            $(this).css("background-color", "");
-        });
+        $("#slbNamKeHoachFillter").select2({ width: '100%', matcher: FilterInComboBox });
+        $("#iDonViFillter").select2({ width: '100%', matcher: FilterInComboBox });
     });
-
 </script>
 

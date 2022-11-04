@@ -94,6 +94,10 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             //{
             //    dDenNgay = Convert.ToDateTime(Request.QueryString["dDenNgay"]);
             //}
+            tenBaoCao = HttpUtility.UrlDecode(HttpUtility.HtmlDecode(tenBaoCao));
+            dvCapTren = HttpUtility.UrlDecode(HttpUtility.HtmlDecode(dvCapTren));
+            dvCapDuoi = HttpUtility.UrlDecode(HttpUtility.HtmlDecode(dvCapDuoi));
+
             NS_DonVi lstDonViQuanLy = _cpnhService.GetDonviListByYear(PhienLamViec.NamLamViec).ToList().Where(x => x.iID_Ma == iDonvi).FirstOrDefault();
             var DonVi = lstDonViQuanLy != null ? lstDonViQuanLy.sTen + " - " + lstDonViQuanLy.sMoTa : "";
             string fileName = string.Format("{0}.{1}", "BaoCaoTongHopKinhPhiDuocCap", ext);

@@ -1,11 +1,23 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage" %>
-
+﻿<%@ Page Title="" Language="C#"  Inherits="System.Web.Mvc.ViewPage" %>
 <%@ Import Namespace="VIETTEL.Models" %>
-<asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
-	<%=ConfigurationManager.AppSettings["TitleView"]%>
-</asp:Content>
 
-<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+<!DOCTYPE html>
+<script src="/Scripts/js/jquery-3.1.0.min.js" />
+    <script src="/Scripts/js/jquery-ui.min.js" />
+    <script src="/Scripts/js/jquery.unobtrusive-ajax.min.js"/>
+    <script src="/Scripts/js/bootstrap.js"/>
+    <script src="/Scripts/js/jquery.validate.min.js"/>
+    <script src="/Scripts/js/jquery.validate.unobtrusive.min.js"/>
+    <script src="/content/plugins/sweetalert2/sweetalert2.min.js"/>
+    <script src="/Scripts/js/js_ui.js"/>
+    <script src="/Scripts/js/js_app.js"/>
+    <script src="/Scripts/js/js_layout.js"/>
+    <script src="/Scripts/js/js_TableHelper.js"/>
+    <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.js"/>
+    <script src="/Scripts/plugins/datapicker/bootstrap-datepicker.vi.js"/>
+    <script src="/Scripts/js/select2.min.js"/>
+    <script src="/Scripts/js/js_editor.js"/>
+
     <script type="text/javascript">
         $(document).ready(function () {
             $('#dvText').show();
@@ -40,11 +52,11 @@
     %>
 
 	<script type="text/javascript">
-	    $(function () {
-	        $.get('<%=HamRiengModels.SSODomain%>/user/RequestToken?callback=?', {},
-				function (ssodata) {
-				    // get url to logon page in case this operation fails
-				    var logonPage = '<%=Url.Action("LogOn", "Account", new { ReturnUrl = strURL}) %>';
+        $(function () {
+            $.get('<%=HamRiengModels.SSODomain%>/user/RequestToken?callback=?', {},
+                function (ssodata) {
+                    // get url to logon page in case this operation fails
+                    var logonPage = '<%=Url.Action("LogOn", "Account", new { ReturnUrl = strURL}) %>';
 				    if (ssodata.Status == 'SUCCESS') {
 				        // get target url for successful authentication
 				        var redirect = '<%=strURL%>';
@@ -53,23 +65,22 @@
 
 				        // verify the token is genuine
 				        $.post('<%=Url.Action("Authenticate", "Account", new { ReturnUrl = strURL}) %>',
-							{ token: ssodata.Token, createPersistentCookie: false },
-								function (data) {
-								    // redirect user based on result
-								    if (data.result == 'SUCCESS')
-								        document.location = redirect;
-								    else
-								        document.location = logonPage;
-								    // just regular json here
-								}, 'json');
-				    } else {
-				        // user needs to logon to SSO service
-				        document.location = logonPage;
-				    }
-				    // tell jQuery to use JSONP 
-				}, 'jsonp');
-	    });
-		
-	</script>
+                            { token: ssodata.Token, createPersistentCookie: false },
+                            function (data) {
+                                // redirect user based on result
+                                if (data.result == 'SUCCESS')
+                                    document.location = redirect;
+                                else
+                                    document.location = logonPage;
+                                // just regular json here
+                            }, 'json');
+                    } else {
+                        // user needs to logon to SSO service
+                        document.location = logonPage;
+                    }
+                    // tell jQuery to use JSONP 
+                }, 'jsonp');
+        });
 
-</asp:Content>
+    </script>
+

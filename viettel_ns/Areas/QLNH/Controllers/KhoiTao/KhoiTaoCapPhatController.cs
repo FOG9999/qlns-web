@@ -128,7 +128,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.KhoiTao
         public JsonResult GetHopDongAll()
         {
             var result = new List<dynamic>();
-            var listModel = _cpnhService.GetListHopDong().ToList();
+            var listModel = _qlnhService.GetListHopDong().ToList();
             if (listModel != null && listModel.Any())
             {
                 foreach (var item in listModel)

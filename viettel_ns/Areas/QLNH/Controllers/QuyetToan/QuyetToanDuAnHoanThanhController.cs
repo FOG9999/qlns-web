@@ -150,12 +150,33 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
             data.sMoTa = HttpUtility.HtmlDecode(data.sMoTa);
             data.iID_MaDonVi = HttpUtility.HtmlDecode(data.iID_MaDonVi);
 
-            var returnData = _qlnhService.SaveQuyetToanDuAnHT(data, Username);
-            if (!returnData.IsReturn)
+            //Check unique
+            QuyetToan_QuyetToanDuAnModel vm = new QuyetToan_QuyetToanDuAnModel();
+            vm._paging.CurrentPage = 1;
+            var listData = _qlnhService.GetListQuyetToanDuAnHT(ref vm._paging, null, null, null, null, null, 0);
+            bool bIsTonTai = false;
+            foreach (var item in listData)
             {
-                return Json(new { bIsComplete = false, sMessError = "Không cập nhật được dữ liệu !" }, JsonRequestBehavior.AllowGet);
+                if(item.iNamBaoCaoTu == data.iNamBaoCaoTu && item.iNamBaoCaoDen == data.iNamBaoCaoDen && item.iID_DonViID == data.iID_DonViID && item.ID != data.ID)
+                {
+                    bIsTonTai = true;
+                    break;
+                }
             }
-            return Json(new { bIsComplete = true, dataID = returnData.QuyetToanDuAnHTData.ID }, JsonRequestBehavior.AllowGet);
+
+            if (!bIsTonTai)
+            {
+                var returnData = _qlnhService.SaveQuyetToanDuAnHT(data, Username);
+                if (!returnData.IsReturn)
+                {
+                    return Json(new { bIsComplete = false, sMessError = "Không cập nhật được dữ liệu !" }, JsonRequestBehavior.AllowGet);
+                }
+                return Json(new { bIsComplete = true, dataID = returnData.QuyetToanDuAnHTData.ID }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { bIsComplete = false, sMessError = "Đơn vị và năm báo cáo này đã tồn tại !" }, JsonRequestBehavior.AllowGet);
+            }
         }
         [HttpPost]
         public JsonResult Xoa(string id)
@@ -198,7 +219,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                 if (data.iID_DonViID != null)
                 {
                     var donVi = lstDonViQL.Find(x => x.iID_Ma == data.iID_DonViID);
-                    data.sTenDonVi += donVi.iID_MaDonVi + "-" + donVi.sTen;
+                    data.sTenDonVi += donVi.iID_MaDonVi + " - " + donVi.sTen;
                 }
                 stringId += id + ",";
                 list.Add(data);
@@ -246,8 +267,6 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                 var tiGia = _qlnhService.GetNHDMTiGiaList(data.iID_TiGiaID).FirstOrDefault();
                 data.sTenTiGia = tiGia != null ? tiGia.sTenTiGia : string.Empty;
             }
-
-
 
             return PartialView("_modalDetail", data);
         }
@@ -531,6 +550,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
 
             return Result;
         }
+
         [HttpPost]
         public JsonResult GetListDonvi()
         {
@@ -549,6 +569,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
             }
             return Json(new { status = true, data = result });
         }
+
         [HttpPost]
         public JsonResult GetListDropDownNamBaoCao()
         {
@@ -567,6 +588,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
             }
             return Json(new { status = true, data = result });
         }
+
         public ActionResult Detail(string id, bool edit)
         {
             NH_QT_QuyetToanDAHT_ChiTietView vm = new NH_QT_QuyetToanDAHT_ChiTietView();
@@ -601,6 +623,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
 
             return View(vm);
         }
+
         [HttpPost]
         public ActionResult GetListTongHopQuyetToan(string sSoDeNghi, DateTime? dNgayDeNghi, Guid? iDonVi, int? iNamBaoCaoTu, int? iNamBaoCaoDen)
         {
@@ -610,6 +633,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
 
             return Json(new { data = ListTongHopQuyetToan }, JsonRequestBehavior.AllowGet);
         }
+
         public List<NH_QT_QuyetToanDuAnByDonVi> getQuyetToanDonVi(string id)
         {
             var quyetToanDuAnDetail = _qlnhService.GetThongTinQuyetToanDuAnHTById(new Guid(id));
@@ -714,7 +738,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                 {
                     var newObjDonVi = new NH_QT_QuyetToanDAHT_ChiTietData()
                     {
-                        sTenNoiDungChi = qtdv.donVi.iID_MaDonVi + '-' + qtdv.donVi.sTen,
+                        sTenNoiDungChi = qtdv.donVi.iID_MaDonVi + " - " + qtdv.donVi.sTen,
                         bIsTittle = true
                     };
                     listResult.Add(newObjDonVi);
@@ -832,7 +856,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
             }
             return listResult;
         }
-        public List<NH_QT_QuyetToanDAHT_ChiTietData> returnLoaiChi(bool isPrint, bool idDuAn, List<NH_QT_QuyetToanDAHT_ChiTietData> list)
+        public List<NH_QT_QuyetToanDAHT_ChiTietData> returnLoaiChi( bool isPrint, bool idDuAn, List<NH_QT_QuyetToanDAHT_ChiTietData> list)
         {
             List<NH_QT_QuyetToanDAHT_ChiTietData> returnData = new List<NH_QT_QuyetToanDAHT_ChiTietData>();
             var listLoaiChiPhi = list.Select(x => new { x.iLoaiNoiDungChi }).Distinct().OrderBy(x => x.iLoaiNoiDungChi)
@@ -936,6 +960,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
             }
             return returnData;
         }
+
         [HttpPost]
         public JsonResult SaveDetail(List<NH_QT_QuyetToanDAHT_ChiTiet> data)
         {
@@ -963,6 +988,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
             ViewBag.IDQuyetToan = listId[0];
             return PartialView("_modalInBaoCao");
         }
+
         [HttpPost]
         public JsonResult SaveTongHop(NH_QT_QuyetToanDAHT data, string listId)
         {
@@ -981,6 +1007,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
             }
             return Json(new { bIsComplete = true }, JsonRequestBehavior.AllowGet);
         }
+
         public List<Dropdown_QuyetToanDAHT> GetListNamKeHoach()
         {
             List<Dropdown_QuyetToanDAHT> listNam = new List<Dropdown_QuyetToanDAHT>();
@@ -997,6 +1024,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
             }
             return listNam;
         }
+
         private string convertLetter(int input)
         {
             StringBuilder res = new StringBuilder((input - 1).ToString());
@@ -1004,6 +1032,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
                 res[j] += (char)(17); // '0' is 48, 'A' is 65
             return res.ToString();
         }
+
         private string convertLaMa(decimal num)
         {
             string strRet = string.Empty;

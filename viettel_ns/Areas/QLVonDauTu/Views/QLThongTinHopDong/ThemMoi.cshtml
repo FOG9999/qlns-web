@@ -107,7 +107,7 @@
                             @Html.DropDownList("iID_LoaiHopDongID", (SelectList)(ViewBag.ListPhanLoaiHopDong), new { @class = "form-control", @id = "iID_LoaiHopDongID" })
                         </div>
                         <div class="col-sm-3">
-                            <label for="dKhoiCongDuKien">Ngày khởi công dự kiến</label>
+                            <label for="dKhoiCongDuKien">Thời gian bắt đầu</label>
                             <div class='input-group date'>
                                 <input type='text' class="form-control dateFormat startDate" value="@ViewBag.dThoiGianBatDauDuKien" name="dKhoiCongDuKien" id="dKhoiCongDuKien" autocomplete="off" />
                                 <span class="btn-default input-group-addon">
@@ -116,7 +116,7 @@
                             </div>
                         </div>
                         <div class="col-sm-3">
-                            <label for="dKetThucDuKien">Ngày kết thúc dự kiến</label>
+                            <label for="dKetThucDuKien">Thời gian kết thúc</label>
                             <div class='input-group date'>
                                 <input type='text' class="form-control dateFormat endDate" value="@ViewBag.dThoiGianKetThucDuKien" name="dKetThucDuKien" id="dKetThucDuKien" autocomplete="off" />
                                 <span class="btn-default input-group-addon">
@@ -126,13 +126,32 @@
                         </div>
 
                         <div class="col-sm-3">
-                            <label for="sHinhThucHopDong">HT hợp đồng</label>
-                            <input type="text" id="sHinhThucHopDong" class="form-control" value="" name="sHinhThucHopDong" maxlength="500" autocomplete="off" />
+                            <label for="dBaoLanhHDTu">Thời gian bảo lãnh hợp đồng từ</label>
+                            <div class='input-group date'>
+                                <input type='text' class="form-control dateFormat startDate" value="" name="dBaoLanhHDTu" id="dBaoLanhHDTu" autocomplete="off" />
+                                <span class="btn-default input-group-addon">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                </span>
+                            </div>
                         </div>
 
                     </div>
 
                     <div class="form-group row">
+
+                        <div class="col-sm-3">
+                            <label for="dBaoLanhHDDen">Thời gian bảo lãnh hợp đồng đến</label>
+                            <div class='input-group date'>
+                                <input type='text' class="form-control dateFormat endDate" value="" name="dBaoLanhHDDen" id="dBaoLanhHDDen" autocomplete="off" />
+                                <span class="btn-default input-group-addon">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="sHinhThucHopDong">HT hợp đồng</label>
+                            <input type="text" id="sHinhThucHopDong" class="form-control" value="" name="sHinhThucHopDong" maxlength="500" autocomplete="off" />
+                        </div>
                         <div class="col-sm-3">
                             <label for="fGiaTriHopDong">Giá trị hợp đồng</label>
                             @Helpers.Required()
@@ -144,10 +163,20 @@
                             <label for="dKhoiCongDuKien">Nội dung hợp đồng</label>
                             <input type="text" id="NoiDungHopDong" class="form-control" value="" name="NoiDungHopDong" maxlength="500" autocomplete="off" />
                         </div>
-                        <div class="col-sm-3">
+
+                    </div>
+
+                    <div class="form-group row">
+
+                        <div class="col-sm-6">
                             <label for="dKetThucDuKien">Nhà thầu đại diện</label>
                             @Html.DropDownList("iID_NhaThauID", (SelectList)(ViewBag.ListNhaThau), new { @class = "form-control", @id = "iID_NhaThauID" })
                         </div>
+                        <div class="col-sm-6" divSoTK>
+                            <label for="dKetThucDuKien">Số tài khoản nhà thầu</label>
+                            <input type="text" id="sStkNhaThau" class="form-control" value="" name="sStkNhaThau" maxlength="500" autocomplete="off" disabled />
+                        </div>
+
                     </div>
                     @*<div class="form-group row">
                             <div class="col-sm-3">

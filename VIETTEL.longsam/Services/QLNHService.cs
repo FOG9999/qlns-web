@@ -19,6 +19,7 @@ using System.Globalization;
 using DomainModel;
 using Viettel.Models.QLNH.QuyetToan.ChuyenQuyetToan;
 using Viettel.Models.QLNH.KhoiTao;
+using System.Web;
 
 namespace Viettel.Services
 {
@@ -47,6 +48,9 @@ namespace Viettel.Services
         #region QLNH - Thông tin hợp đồng
         IEnumerable<NH_DA_HopDongModel> GetAllNHThongTinHopDong(ref PagingInfo _paging, DateTime? dNgayHopDong,
             Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHopDong, string sSoHopDong);
+
+        IEnumerable<NH_DA_HopDongModel> GetAllNHThongTinHopDongById(Guid Id, DateTime? dNgayHopDong,
+Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHopDong, string sSoHopDong);
         NH_DA_HopDongModel GetThongTinHopDongById(Guid iId);
         bool SaveThongTinHopDong(NH_DA_HopDong data, bool isDieuChinh, string userName);
         bool DeleteThongTinHopDong(Guid iId);
@@ -58,6 +62,7 @@ namespace Viettel.Services
         IEnumerable<NH_DM_TiGia_ChiTiet> GetNHDMTiGiaChiTietList(Guid? iDTiGia, bool isMaNgoaiTeKhac = true);
         IEnumerable<NH_KHChiTietBQP_NhiemVuChi> GetNHNhiemVuChiTietTheoDonViId(string maDonVi, Guid? donViID);
         IEnumerable<NH_DA_DuAn> GetNHDuAnTheoKHCTBQPChuongTrinhId(Guid? chuongTrinhID);
+        IEnumerable<NH_DA_GoiThau> GetGoiThauTheoCT(Guid? donViID = null);
         bool SaveImportThongTinHopDong(List<NH_DA_HopDong> contractList);
         #endregion
 
@@ -86,12 +91,12 @@ namespace Viettel.Services
         Boolean SaveKHBQP(List<NH_KHChiTietBQP_NhiemVuChiCreateDto> lstNhiemVuChis, NH_KHChiTietBQP khct, string state);
         NH_KHChiTietBQPModel GetKeHoachChiTietBQPById(Guid id);
         Boolean DeleteKHBQP(Guid id);
-        NH_KHChiTietBQP_NVCViewModel GetDetailKeHoachChiTietBQP(string state, Guid? KHTTCP_ID, Guid? KHBQP_ID, Guid? iID_BQuanLyID, Guid? iID_DonViID, bool isUseLastTTCP = false);
-        
+        NH_KHChiTietBQP_NVCViewModel GetDetailKeHoachChiTietBQP(string state, Guid? KHTTCP_ID, Guid? KHBQP_ID, Guid? iID_BQuanLyID, Guid? iID_DonViID, string sTenNhiemVuChi, string sTenPhongBan, string sTenDonVi, bool isUseLastTTCP = false);
+
         List<NH_DM_TiGia_ChiTiet_ViewModel> GetTiGiaChiTietByTiGiaId(Guid KHBQP_ID);
-        
+
         IEnumerable<NS_DonVi> GetDonviListByYear(int namLamViec = 0);
-        
+
         IEnumerable<NH_KHChiTietBQP_NVCModel> GetListBQPNhiemVuChiById(Guid id, string sTenNhiemVuChi, Guid? iID_BQuanLyID, Guid? iID_DonViID);
 
         IEnumerable<LookupKHBQP> getLookupKHBQPByKHTTCPId(Guid id);
@@ -109,7 +114,7 @@ namespace Viettel.Services
         NH_QT_QuyetToanNienDoReturnData SaveQuyetToanNienDo(NH_QT_QuyetToanNienDo data, string userName);
         bool SaveTongHop(NH_QT_QuyetToanNienDo data, string userName, string listId);
         IEnumerable<NS_DonVi> GetDonviList(int? iNamLamViec);
-        NH_QT_QuyetToanNienDoChiTietReturnData SaveQuyetToanNienDoDetail(List<NH_QT_QuyetToanNienDo_ChiTiet> data, string userName,bool isAddOrUpdate, Guid idQuyetToan);
+        NH_QT_QuyetToanNienDoChiTietReturnData SaveQuyetToanNienDoDetail(List<NH_QT_QuyetToanNienDo_ChiTiet> data, string userName, bool isAddOrUpdate, Guid idQuyetToan);
 
         bool DeleteQuyetToanNienDo(Guid iId);
         bool LockOrUnLockQuyetToanNienDo(Guid id, bool isLockOrUnLock);
@@ -149,7 +154,7 @@ namespace Viettel.Services
         IEnumerable<NH_DM_NhaThau> GetAllDMNhaThau();
         IEnumerable<ThongTinThanhToanModel> GetAllThongTinThanhToanPaging(ref PagingInfo _paging, Guid? iID_DonVi,
             string sSoDeNghi, DateTime? dNgayDeNghi, int? iLoaiNoiDungChi, int? iLoaiDeNghi,
-            Guid? iID_ChuDauTuID, Guid? iID_KHCTBQP_NhiemVuChiID, int? iQuyKeHoach,int? iNamKeHoach, int? iNamNganSach,
+            Guid? iID_ChuDauTuID, Guid? iID_KHCTBQP_NhiemVuChiID, int? iQuyKeHoach, int? iNamKeHoach, int? iNamNganSach,
             int? iCoQuanThanhToan, Guid? iID_NhaThauID, int? iTrangThai);
         ThongTinThanhToanModel GetThongTinThanhToanByID(Guid? id);
         IEnumerable<ThanhToanChiTietViewModel> GetThongTinThanhToanChiTietById(Guid? iDThanhToan);
@@ -171,7 +176,7 @@ namespace Viettel.Services
         bool DeleteKeHoachTTCP(Guid id);
         NH_KHTongTheTTCPViewModel getListKHTongTheTTCP(PagingInfo _paging, string sSoKeHoach, DateTime? dNgayBanHanh, int? from, int? to);
         IEnumerable<LookupKHTTCP> getLookupKHTTCPByStage();
-        NH_KHTongTheTTCP_NVCViewModel GetDetailKeHoachTongTheTTCP(string state, Guid? KHTTCP_ID, Guid? iID_BQuanLyID);
+        NH_KHTongTheTTCP_NVCViewModel GetDetailKeHoachTongTheTTCP(string state, Guid? KHTTCP_ID, Guid? iID_BQuanLyID, string sTenNhiemVuChi, string sTenPhongBan);
         #endregion
 
         #region QLNH - Kế hoạch chi tiết TTCP
@@ -201,12 +206,13 @@ namespace Viettel.Services
         IEnumerable<NS_DonVi> GetLookupThongTinDonVi();
         IEnumerable<DM_ChuDauTu> GetLookupChuDauTu();
         IEnumerable<NH_DA_DuAn> GetThongTinDuAnDuAnList(Guid? id = null);
+        List<NH_DA_DuAn> GetMaDuAn(string iID_MaDonVi, string sMaChuDauTu);
         IEnumerable<DM_ChuDauTu> GetLookupChuDauTuu();
         IEnumerable<NH_DM_ChiPhi> GetLookupChiPhi();
         IEnumerable<NH_KHChiTietBQP_NhiemVuChiModel> GetNHKeHoachChiTietBQPNhiemVuChiListDuAn(Guid? id = null);
         IEnumerable<NS_DonVi> GetListDonViToBQP(Guid? id = null);
         IEnumerable<NHDAThongTinDuAnModel> GetListBQPToNHC(Guid? id = null);
-
+        //IEnumerable<NH_DA_DuAn> GetMaDuAn(Guid? IdDonVi = null, Guid? IdCDT = null);
         IEnumerable<NH_KHChiTietBQP_NhiemVuChi> GetListCTbyDV(Guid? id = null, Guid? idBQP = null);
         bool SaveThongTinDuAn(NHDAThongTinDuAnModel data, string username, string state, List<NH_DA_DuAn_ChiPhiDto> dataTableChiPhi, Guid? oldId);
         IEnumerable<NH_KHChiTietBQP_NhiemVuChi> GetListChuongTrinh();
@@ -224,7 +230,7 @@ namespace Viettel.Services
         IEnumerable<NHDAThongTinDuAnModel> getListTongHopDuAnModels(ref PagingInfo _paging, Guid? iID_BQuanLyID = null, Guid? iID_DonViID = null);
         List<NHDAThongTinDuAnModel> getListTongHopDuAn_BaoCaoModels(Guid? iID_BQuanLyID = null, Guid? iID_DonViID = null);
 
-        
+
         //NHDAThongTinDuAnModel GetThongTinDuAnById(Guid iId);
 
         //bool DeleteThongTinDuAn(Guid iId);
@@ -279,7 +285,7 @@ namespace Viettel.Services
         bool LockOrUnLockQuyetToanDuAnHT(Guid id, bool isLockOrUnLock);
         bool SaveTongHopQuyetToanDAHT(NH_QT_QuyetToanDAHT data, string userName, string listId);
         IEnumerable<NH_QT_QuyetToanDAHT_ChiTietData> GetDetailQuyetToanDuAnDetail(int? iNamBaoCaoTu, int? iNamBaoCaoDen, Guid? iIDDonVi, Guid? iIDQuyetToan, int? donViTinhUSD, int? donViTinhVND);
-        IEnumerable<NH_QT_QuyetToanDAHT_ChiTietData> GetDetailQuyetToanDuAnCreate(int? iNamBaoCaoTu, int? iNamBaoCaoDen, Guid? iIDDonVi,  int? donViTinhUSD, int? donViTinhVND);
+        IEnumerable<NH_QT_QuyetToanDAHT_ChiTietData> GetDetailQuyetToanDuAnCreate(int? iNamBaoCaoTu, int? iNamBaoCaoDen, Guid? iIDDonVi, int? donViTinhUSD, int? donViTinhVND);
         NH_QT_QuyetToanDAHTChiTietReturnData SaveQuyetToanDuAnDetail(List<NH_QT_QuyetToanDAHT_ChiTiet> data, string userName);
         IEnumerable<NH_QT_QuyetToanDAHTData> GetListTongHopQuyetToanDAHT(string sSodenghi = "", DateTime? dNgaydenghi = null, Guid? iDonvi = null, int? iNamBaoCaoTu = null, int? iNamBaoCaoDen = null);
         #endregion
@@ -329,6 +335,8 @@ namespace Viettel.Services
         #region QLNH - Thông tin gói thầu
         IEnumerable<NH_DA_GoiThauModel> GetAllNHThongTinGoiThau(ref PagingInfo _paging, string sTenGoiThau,
             Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, int? iLoai, int? iThoiGianThucHien);
+        IEnumerable<NH_DA_GoiThauModel> GetAllNHThongTinGoiThauById(Guid id, string sTenGoiThau,
+        Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, int? iLoai, int? iThoiGianThucHien);
         NH_DA_GoiThauModel GetThongTinGoiThauById(Guid id);
         IEnumerable<NH_DM_LoaiTienTe> GetNHDMLoaiTienTeByCode(string maTienTe);
         IEnumerable<NH_DM_HinhThucChonNhaThau> GetNHDMHinhThucChonNhaThauList(Guid? id = null);
@@ -388,6 +396,7 @@ namespace Viettel.Services
 
         bool DeleteKhoiTaoCapPhat(Guid iId);
         IEnumerable<NH_DM_TiGia_ChiTiet> GetNHDMTiGiaChiTiet(Guid? iDTiGia, bool isMaNgoaiTeKhac = true);
+        IEnumerable<NH_DA_HopDong> GetListHopDong();
         NH_KT_KhoiTaoCapPhat_ChiTietReturnData SaveKhoiTaoCapPhatDetail(List<NH_KT_KhoiTaoCapPhat_ChiTiet> data, List<NH_KT_KhoiTaoCapPhat_ChiTiet> dataDelete, string userName);
         #endregion
 
@@ -743,9 +752,29 @@ namespace Viettel.Services
                 lstParam.Add("ItemsPerPage", _paging.ItemsPerPage);
                 lstParam.Add("iToTalItem", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-                var items = conn.Query<NH_DA_HopDongModel>("proc_get_all_nh_da_tthopdong_paging", lstParam,
+                var items = conn.Query<NH_DA_HopDongModel>("proc_get_all_nh_da_tthopdong_paging_demo", lstParam,
                     commandType: CommandType.StoredProcedure);
                 _paging.TotalItems = lstParam.Get<int>("iToTalItem");
+                return items;
+            }
+        }
+
+        public IEnumerable<NH_DA_HopDongModel> GetAllNHThongTinHopDongById(Guid Id, DateTime? dNgayHopDong,
+    Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHopDong, string sSoHopDong)
+        {
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                DynamicParameters lstParam = new DynamicParameters();
+                lstParam.Add("dNgayHopDong", dNgayHopDong);
+                lstParam.Add("iDonVi", iDonVi);
+                lstParam.Add("iChuongTrinh", Id);
+                lstParam.Add("iDuAn", iDuAn);
+                lstParam.Add("iLoaiHopDong", iLoaiHopDong);
+                lstParam.Add("sTenHopDong", sTenHopDong);
+                lstParam.Add("sSoHopDong", sSoHopDong);
+
+                var items = conn.Query<NH_DA_HopDongModel>("proc_get_all_nh_da_tthopdong", lstParam,
+                    commandType: CommandType.StoredProcedure);
                 return items;
             }
         }
@@ -761,7 +790,25 @@ namespace Viettel.Services
                 return item;
             }
         }
-
+        public IEnumerable<NH_DA_GoiThau> GetGoiThauTheoCT(Guid? ID = null)
+        {
+            StringBuilder query = new StringBuilder();
+            query.AppendLine("SELECT DISTINCT GT.* FROM NH_DA_GoiThau GT ");
+            DynamicParameters lstPrams = new DynamicParameters();
+            if (ID.HasValue)
+            {
+                query.AppendLine("JOIN NH_DA_HopDong hd ON hd.iID_DonViID = GT.iID_DonViID");
+                query.AppendLine("WHERE hd.iID_DonViID = @ID ");
+                lstPrams.Add("ID", ID.Value);
+            }
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var items = conn.Query<NH_DA_GoiThau>(query.ToString(),
+                  param: lstPrams,
+                  commandType: CommandType.Text);
+                return items;
+            }
+        }
         public bool SaveThongTinHopDong(NH_DA_HopDong data, bool isDieuChinh, string userName)
         {
             SqlTransaction trans = null;
@@ -1016,7 +1063,15 @@ namespace Viettel.Services
                 return items;
             }
         }
-
+        public IEnumerable<NH_DA_HopDong> GetListHopDong()
+        {
+            var sql = "SELECT * FROM NH_DA_HopDong ORDER BY ID;";
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var items = conn.Query<NH_DA_HopDong>(sql);
+                return items;
+            }
+        }
         public IEnumerable<NH_KHChiTietBQP_NhiemVuChi> GetNHNhiemVuChiTietTheoDonViId(string maDonVi, Guid? donViID)
         {
             StringBuilder query = new StringBuilder();
@@ -1352,7 +1407,7 @@ namespace Viettel.Services
         }
 
         // Lấy danh sách nhiệm vụ chi
-        public NH_KHTongTheTTCP_NVCViewModel GetDetailKeHoachTongTheTTCP(string state, Guid? KHTTCP_ID, Guid? iID_BQuanLyID)
+        public NH_KHTongTheTTCP_NVCViewModel GetDetailKeHoachTongTheTTCP(string state, Guid? KHTTCP_ID, Guid? iID_BQuanLyID, string sTenNhiemVuChi, string sTenPhongBan)
         {
             using (var conn = _connectionFactory.GetConnection())
             {
@@ -1386,7 +1441,8 @@ namespace Viettel.Services
                     var lstPrams = new DynamicParameters();
                     lstPrams.Add("KHTTCP_ID", KHTTCP_ID.Value);
                     lstPrams.Add("iID_BQuanLyID", iID_BQuanLyID);
-
+                    lstPrams.Add("sTenNhiemVuChi", sTenNhiemVuChi);
+                    lstPrams.Add("sTenPhongBan", sTenPhongBan);
                     result.Items = conn.Query<NH_KHTongTheTTCP_NVCModel>("sp_get_detail_KeHoachTongTheTTCP", lstPrams, commandType: CommandType.StoredProcedure).ToList();
                 }
                 else if ((state == "UPDATE" || state == "ADJUST") && KHTTCP_ID.HasValue && KHTTCP_ID != Guid.Empty)
@@ -1394,6 +1450,8 @@ namespace Viettel.Services
                     // Lấy các nhiệm vụ chi TTCP cha
                     var lstPrams = new DynamicParameters();
                     lstPrams.Add("KHTTCP_ID", KHTTCP_ID.Value);
+                    lstPrams.Add("sTenNhiemVuChi", sTenNhiemVuChi);
+                    lstPrams.Add("sTenPhongBan", sTenPhongBan);
                     result.Items = conn.Query<NH_KHTongTheTTCP_NVCModel>("sp_get_detail_KeHoachTongTheTTCP", lstPrams, commandType: CommandType.StoredProcedure).ToList();
                 }
 
@@ -1573,7 +1631,7 @@ namespace Viettel.Services
                         {
                             var nvc = new NH_KHTongTheTTCP_NhiemVuChi();
                             nvc.iID_KHTongTheID = khtt.ID;
-                            nvc.sTenNhiemVuChi = nvcDto.sTenNhiemVuChi;
+                            nvc.sTenNhiemVuChi = HttpUtility.HtmlDecode(nvcDto.sTenNhiemVuChi);
                             nvc.iID_BQuanLyID = nvcDto.iID_BQuanLyID;
                             nvc.fGiaTri = double.TryParse(nvcDto.sGiaTri, NumberStyles.Float, new CultureInfo("en-US"), out double gtusd) ? gtusd : (double?)null;
                             nvc.sMaThuTu = nvcDto.sMaThuTu;
@@ -1645,7 +1703,7 @@ namespace Viettel.Services
                         khctGoc.iGiaiDoanDen = khtt.iGiaiDoanDen;
                         khctGoc.iNamKeHoach = khtt.iNamKeHoach;
                         khctGoc.iID_ParentID = khtt.iID_ParentID;
-                        khctGoc.sSoKeHoach = khtt.sSoKeHoach;
+                        khctGoc.sSoKeHoach = HttpUtility.HtmlDecode(khtt.sSoKeHoach);
                         khctGoc.dNgayKeHoach = khtt.dNgayKeHoach;
                         khctGoc.sMoTaChiTiet = khtt.sMoTaChiTiet;
                         khctGoc.dNgaySua = khtt.dNgaySua;
@@ -1661,64 +1719,89 @@ namespace Viettel.Services
 
                         // Convert data nhiệm vụ chi
                         var lstNVCUpdate = new List<NH_KHTongTheTTCP_NhiemVuChi>();
+                        var lstNVCAdd = new List<NH_KHTongTheTTCP_NhiemVuChi>();
+                        double fTongGiaTri = 0;
                         foreach (var nvcDto in lstNhiemVuChis)
                         {
                             var nvc = new NH_KHTongTheTTCP_NhiemVuChi();
                             nvc.ID = nvcDto.ID;
                             nvc.iID_KHTongTheID = khctGoc.ID;
-                            nvc.sTenNhiemVuChi = nvcDto.sTenNhiemVuChi;
+                            nvc.sTenNhiemVuChi = HttpUtility.HtmlDecode(nvcDto.sTenNhiemVuChi);
                             nvc.iID_BQuanLyID = nvcDto.iID_BQuanLyID;
                             nvc.fGiaTri = double.TryParse(nvcDto.sGiaTri, NumberStyles.Float, new CultureInfo("en-US"), out double gtusd) ? gtusd : (double?)null;
                             nvc.sMaThuTu = nvcDto.sMaThuTu;
                             nvc.iID_ParentID = nvcDto.iID_ParentID;
-                            lstNVCUpdate.Add(nvc);
-                        }
-
-                        // Check có ID thì update, ko có ID thì insert vào.
-                        foreach (var nvc in lstNVCUpdate)
-                        {
-                            if (nvc.ID != Guid.Empty)
+                            if (!nvcDto.iID_ParentID.HasValue)
+                            {
+                                fTongGiaTri += nvc.fGiaTri.HasValue ? nvc.fGiaTri.Value : 0;
+                            }
+                            if (nvcDto.isAdd)
+                            {
+                                conn.Insert(nvc, trans);
+                                //lstNVCAdd.Add(nvc);
+                            }
+                            else
                             {
                                 conn.Update(nvc, trans);
                                 lstIdNVC.Remove(nvc.ID);
                             }
-                            else
-                            {
-                                // Nếu đã có parentID thì insert luôn
-                                if (nvc.iID_ParentID.HasValue)
-                                {
-                                    conn.Insert(nvc, trans);
-                                }
-                                else if (!nvc.iID_ParentID.HasValue)
-                                {
-                                    // Nếu chưa có parentId thì tìm thằng cha để insert thằng cha trước
-                                    var indexOfDot = nvc.sMaThuTu.LastIndexOf(".");
-                                    if (indexOfDot == -1)
-                                    {
-                                        // Nếu không có thằng cha thì insert luôn.
-                                        conn.Insert(nvc, trans);
-                                    }
-                                    else
-                                    {
-                                        // Lấy mã thứ tự của bản ghi cha.
-                                        var sttParentNvc = nvc.sMaThuTu.Substring(0, indexOfDot);
-                                        // Tìm bản ghi cha
-                                        var parent = lstNVCUpdate.FirstOrDefault(x => x.sMaThuTu == sttParentNvc);
-                                        // Nếu tìm không thấy thằng cha thì insert luôn
-                                        if (parent == null)
-                                        {
-                                            conn.Insert(nvc, trans);
-                                        }
-                                        else
-                                        {
-                                            // Nếu tìm thấy thằng cha thì ném vào đệ quy để check xem nó đã được insert hay chưa rồi lấy id của thằng cha.
-                                            nvc.iID_ParentID = GetIdKHTHTTCPNhiemVuChiParent(conn, trans, parent, ref lstNVCUpdate);
-                                            conn.Insert(nvc, trans);
-                                        }
-                                    }
-                                }
-                            }
                         }
+                        khctGoc.fTongGiaTri = fTongGiaTri;
+                        conn.Update(khctGoc, trans);
+                        //if (lstNVCAdd.Count > 0)
+                        //{
+                        //    conn.Insert(lstNVCAdd, trans);
+                        //}
+                        //if (lstNVCUpdate.Count > 0)
+                        //{
+                        //    conn.Update(lstNVCUpdate, trans);
+                        //}
+
+                        //// Check có ID thì update, ko có ID thì insert vào.
+                        //foreach (var nvc in lstNVCUpdate)
+                        //{
+                        //    if (nvc.ID != Guid.Empty)
+                        //    {
+                        //        conn.Update(nvc, trans);
+                        //        lstIdNVC.Remove(nvc.ID);
+                        //    }
+                        //    else
+                        //    {
+                        //        // Nếu đã có parentID thì insert luôn
+                        //        if (nvc.iID_ParentID.HasValue)
+                        //        {
+                        //            conn.Insert(nvc, trans);
+                        //        }
+                        //        else if (!nvc.iID_ParentID.HasValue)
+                        //        {
+                        //            // Nếu chưa có parentId thì tìm thằng cha để insert thằng cha trước
+                        //            var indexOfDot = nvc.sMaThuTu.LastIndexOf(".");
+                        //            if (indexOfDot == -1)
+                        //            {
+                        //                // Nếu không có thằng cha thì insert luôn.
+                        //                conn.Insert(nvc, trans);
+                        //            }
+                        //            else
+                        //            {
+                        //                // Lấy mã thứ tự của bản ghi cha.
+                        //                var sttParentNvc = nvc.sMaThuTu.Substring(0, indexOfDot);
+                        //                // Tìm bản ghi cha
+                        //                var parent = lstNVCUpdate.FirstOrDefault(x => x.sMaThuTu == sttParentNvc);
+                        //                // Nếu tìm không thấy thằng cha thì insert luôn
+                        //                if (parent == null)
+                        //                {
+                        //                    conn.Insert(nvc, trans);
+                        //                }
+                        //                else
+                        //                {
+                        //                    // Nếu tìm thấy thằng cha thì ném vào đệ quy để check xem nó đã được insert hay chưa rồi lấy id của thằng cha.
+                        //                    nvc.iID_ParentID = GetIdKHTHTTCPNhiemVuChiParent(conn, trans, parent, ref lstNVCUpdate);
+                        //                    conn.Insert(nvc, trans);
+                        //                }
+                        //            }
+                        //        }
+                        //    }
+                        //}
 
                         // Còn những thằng nào dư ra thì delete
                         foreach (var idDelete in lstIdNVC)
@@ -1729,17 +1812,17 @@ namespace Viettel.Services
                         }
 
                         // Sau khi insert thì tính tổng giá trị của BQP
-                        double fTongGiaTri = 0;
-                        foreach (var nvc in lstNVCUpdate)
-                        {
-                            if (!nvc.iID_ParentID.HasValue)
-                            {
-                                fTongGiaTri += nvc.fGiaTri.HasValue ? nvc.fGiaTri.Value : 0;
-                            }
-                        }
+                        //double fTongGiaTri = 0;
+                        //foreach (var nvc in lstNVCUpdate)
+                        //{
+                        //    if (!nvc.iID_ParentID.HasValue)
+                        //    {
+                        //        fTongGiaTri += nvc.fGiaTri.HasValue ? nvc.fGiaTri.Value : 0;
+                        //    }
+                        //}
 
-                        khctGoc.fTongGiaTri = fTongGiaTri;
-                        conn.Update(khctGoc, trans);
+                        //khctGoc.fTongGiaTri = fTongGiaTri;
+                        //conn.Update(khctGoc, trans);
                     }
 
                     trans.Commit();
@@ -2067,7 +2150,7 @@ namespace Viettel.Services
             return dt;
         }
 
-        public NH_QT_QuyetToanNienDoChiTietReturnData SaveQuyetToanNienDoDetail(List<NH_QT_QuyetToanNienDo_ChiTiet> listData, string userName,bool isAddOrUpdate,Guid idQuyetToan)
+        public NH_QT_QuyetToanNienDoChiTietReturnData SaveQuyetToanNienDoDetail(List<NH_QT_QuyetToanNienDo_ChiTiet> listData, string userName, bool isAddOrUpdate, Guid idQuyetToan)
         {
             NH_QT_QuyetToanNienDoChiTietReturnData dt = new NH_QT_QuyetToanNienDoChiTietReturnData();
             try
@@ -2103,10 +2186,10 @@ namespace Viettel.Services
                     dt.IsReturn = true;
                     trans.Commit();
 
-                    InsertNHTongHop_Tang(conn, trans, "QUYET_TOAN", isAddOrUpdate ? 2 : 1, idQuyetToan,null);
-                    InsertNHTongHop_Giam(conn, trans, "QUYET_TOAN", isAddOrUpdate ? 2 : 1, idQuyetToan,null);
+                    InsertNHTongHop_Tang(conn, trans, "QUYET_TOAN", isAddOrUpdate ? 2 : 1, idQuyetToan, null);
+                    InsertNHTongHop_Giam(conn, trans, "QUYET_TOAN", isAddOrUpdate ? 2 : 1, idQuyetToan, null);
 
-                    InsertNHTongHop_Giam(conn, trans, "QTND", isAddOrUpdate ? 2 : 1, idQuyetToan,null);
+                    InsertNHTongHop_Giam(conn, trans, "QTND", isAddOrUpdate ? 2 : 1, idQuyetToan, null);
                     return dt;
                 }
             }
@@ -2441,7 +2524,8 @@ namespace Viettel.Services
                         datactts.ID = id;
                         datactts.dNgayTao = DateTime.Now;
                         conn.Insert(datactts, trans);
-                        if(datats != null) {
+                        if (datats != null)
+                        {
                             foreach (var item in datats)
                             {
                                 item.iID_ChungTuTaiSanID = id;
@@ -2510,7 +2594,7 @@ namespace Viettel.Services
 
                     foreach (var item in data)
                     {
-                        if (item.ID != Guid.Empty )
+                        if (item.ID != Guid.Empty)
                         {
                             var index = taiSanIds.FindIndex(x => x == item.ID);
                             conn.Update<NH_DM_LoaiTaiSan>(item, trans);
@@ -2552,7 +2636,7 @@ namespace Viettel.Services
                 {
                     conn.Open();
                     List<NH_DA_DuAn> duAnList = new List<NH_DA_DuAn>();
-                    if (id==null ||id == Guid.Empty)
+                    if (id == null || id == Guid.Empty)
                     {
                         duAnList = conn.Query<NH_DA_DuAn>("SELECT ID, sTenDuAn FROM NH_DA_DuAn WHERE bIsActive = 1").ToList();
                     }
@@ -2582,9 +2666,9 @@ namespace Viettel.Services
                     {
                         hopDongList = conn.Query<NH_DA_HopDong>("SELECT ID, sTenHopDong FROM NH_DA_HopDong WHERE bIsActive = 1").ToList();
                     }
-                    else 
+                    else
                     {
-                        hopDongList = conn.Query<NH_DA_HopDong>("SELECT ID, sTenHopDong FROM NH_DA_HopDong WHERE bIsActive = 1 AND iID_DonViID=@ID", new { ID = id }).ToList(); 
+                        hopDongList = conn.Query<NH_DA_HopDong>("SELECT ID, sTenHopDong FROM NH_DA_HopDong WHERE bIsActive = 1 AND iID_DonViID=@ID", new { ID = id }).ToList();
                     }
                     return hopDongList;
                 }
@@ -3398,7 +3482,50 @@ namespace Viettel.Services
 
             return null;
         }
+        public IEnumerable<NH_KHChiTietBQP_NhiemVuChi> GetListCTbyDV(Guid? id = null, Guid? idBQP = null)
+        {
+            StringBuilder query = new StringBuilder();
+            query.AppendLine("SELECT DISTINCT a.ID,a.sTenNhiemVuChi,a.iID_DonViID,a.iID_KHChiTietID FROM NH_KHChiTietBQP_NhiemVuChi a ");
+            DynamicParameters lstPrams = new DynamicParameters();
+            if (id.HasValue)
+            {
+                query.AppendLine("WHERE a.iID_DonViID = @ID ");
+                lstPrams.Add("ID", id.Value);
+                if (idBQP.HasValue)
+                {
+                    query.Append(" AND a.iID_KHChiTietID = @IDBQP ");
+                    lstPrams.Add("IDBQP", idBQP.Value);
+                }
+            }
 
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var items = conn.Query<NH_KHChiTietBQP_NhiemVuChi>(query.ToString(),
+                    param: lstPrams,
+                    commandType: CommandType.Text);
+                return items;
+            }
+        }
+        public List<NH_DA_DuAn> GetMaDuAn(string iID_MaDonVi, string sMaChuDauTu)
+        {
+            try
+            {
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    DynamicParameters lstPrams = new DynamicParameters();
+                    lstPrams.Add("iID_MaDonVi", iID_MaDonVi);
+                    lstPrams.Add("sMaChuDauTu", sMaChuDauTu);
+                    var items = conn.Query<NH_DA_DuAn>("proc_get_all_getMaDuAn_paging", lstPrams, commandType: CommandType.StoredProcedure).ToList();
+                    return items;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+                return null;
+            }
+
+        }
         public IEnumerable<NH_DA_DuAn> GetThongTinDuAnDuAnList(Guid? id = null)
         {
             StringBuilder query = new StringBuilder();
@@ -3446,7 +3573,7 @@ namespace Viettel.Services
         public IEnumerable<NS_DonVi> GetLookupThongTinDonVi()
         {
             StringBuilder query = new StringBuilder();
-            query.Append(" select dv.iID_Ma ,concat(iID_MaDonVi, ' - ', sTen) as sTen from NS_DonVi dv");
+            query.Append(" select dv.iID_Ma ,dv.iID_MaDonVi,concat(iID_MaDonVi, ' - ', sTen) as sTen from NS_DonVi dv");
             using (var conn = _connectionFactory.GetConnection())
             {
                 var items = conn.Query<NS_DonVi>(query.ToString(),
@@ -3510,32 +3637,6 @@ namespace Viettel.Services
                 return items;
             }
         }
-
-        public IEnumerable<NH_KHChiTietBQP_NhiemVuChi> GetListCTbyDV(Guid? id = null, Guid? idBQP = null)
-        {
-            StringBuilder query = new StringBuilder();
-            query.AppendLine("SELECT DISTINCT a.ID,a.sTenNhiemVuChi,a.iID_DonViID,a.iID_KHChiTietID FROM NH_KHChiTietBQP_NhiemVuChi a ");
-            DynamicParameters lstPrams = new DynamicParameters();
-            if (id.HasValue)
-            {
-                query.AppendLine("WHERE a.iID_DonViID = @ID ");
-                lstPrams.Add("ID", id.Value);
-                if (idBQP.HasValue)
-                {
-                    query.Append(" AND a.iID_KHChiTietID = @IDBQP ");
-                    lstPrams.Add("IDBQP", idBQP.Value);
-                }
-            }
-
-            using (var conn = _connectionFactory.GetConnection())
-            {
-                var items = conn.Query<NH_KHChiTietBQP_NhiemVuChi>(query.ToString(),
-                    param: lstPrams,
-                    commandType: CommandType.Text);
-                return items;
-            }
-        }
-
         public List<NH_DA_DuAn_ChiPhiModel> getListChiPhiTTDuAn(Guid? ID, string state)
         {
             try
@@ -3582,7 +3683,6 @@ namespace Viettel.Services
                 return items;
             }
         }
-
         public IEnumerable<NH_DM_ChiPhi> GetLookupChiPhi()
         {
             try
@@ -3629,6 +3729,7 @@ namespace Viettel.Services
                         foreach (var item in dataTableChiPhi)
                         {
                             var newCp = new NH_DA_DuAn_ChiPhi();
+                            
                             newCp.iID_DuAnID = entity.ID;
                             newCp.iID_ChiPhiID = item.iID_ChiPhiID;
                             newCp.fGiaTriEUR = double.TryParse(item.HopDongEUR, NumberStyles.Float, new CultureInfo("en-US"), out double feur) ? feur : (double?)null;
@@ -3783,7 +3884,7 @@ namespace Viettel.Services
         public IEnumerable<DM_ChuDauTu> GetLookupChuDauTu()
         {
             StringBuilder query = new StringBuilder();
-            query.Append("select distinct cdt.ID ,concat(cdt.sId_CDT, ' - ', cdt.sTenCDT) as sTenCDT from DM_ChuDauTu cdt left join NH_DA_DuAn da on cdt.ID = da.iID_ChuDauTuID ");
+            query.Append("select distinct cdt.ID,cdt.sId_CDT,concat(cdt.sId_CDT, ' - ', cdt.sTenCDT) as sTenCDT from DM_ChuDauTu cdt left join NH_DA_DuAn da on cdt.ID = da.iID_ChuDauTuID");
             using (var conn = _connectionFactory.GetConnection())
             {
                 var items = conn.Query<DM_ChuDauTu>(query.ToString(), commandType: CommandType.Text);
@@ -4012,9 +4113,9 @@ namespace Viettel.Services
                         {
                             var nvc = new NH_KHChiTietBQP_NhiemVuChi();
                             nvc.iID_KHChiTietID = khct.ID;
-                            nvc.sTenNhiemVuChi = nvcDto.sTenNhiemVuChi;
+                            nvc.sTenNhiemVuChi = HttpUtility.HtmlDecode(nvcDto.sTenNhiemVuChi);
                             nvc.iID_BQuanLyID = nvcDto.iID_BQuanLyID;
-                            nvc.iID_MaDonVi = nvcDto.iID_MaDonVi;
+                            nvc.iID_MaDonVi = HttpUtility.HtmlDecode(nvcDto.iID_MaDonVi);
                             nvc.iID_DonViID = nvcDto.iID_DonViID;
                             nvc.fGiaTriUSD = double.TryParse(nvcDto.fGiaTriUSD, NumberStyles.Float, new CultureInfo("en-US"), out double gtusd) ? gtusd : (double?)null;
                             nvc.fGiaTriVND = double.TryParse(nvcDto.fGiaTriVND, NumberStyles.Float, new CultureInfo("en-US"), out double gtvnd) ? gtvnd : (double?)null;
@@ -4095,7 +4196,7 @@ namespace Viettel.Services
                         khctGoc.iID_ParentID = khct.iID_ParentID;
                         khctGoc.iID_KHTongTheTTCPID = khct.iID_KHTongTheTTCPID;
                         khctGoc.iID_TiGiaID = khct.iID_TiGiaID;
-                        khctGoc.sSoKeHoach = khct.sSoKeHoach;
+                        khctGoc.sSoKeHoach = HttpUtility.HtmlDecode(khct.sSoKeHoach);
                         khctGoc.dNgayKeHoach = khct.dNgayKeHoach;
                         khctGoc.sMoTaChiTiet = khct.sMoTaChiTiet;
                         khctGoc.dNgaySua = khct.dNgaySua;
@@ -4111,14 +4212,18 @@ namespace Viettel.Services
 
                         // Convert data nhiệm vụ chi
                         var lstNVCUpdate = new List<NH_KHChiTietBQP_NhiemVuChi>();
+                        var lstNVCAdd = new List<NH_KHTongTheTTCP_NhiemVuChi>();
+                        double fTongGiaTriUSD = 0;
+                        double fTongGiaTriVND = 0;
+
                         foreach (var nvcDto in lstNhiemVuChis)
                         {
                             var nvc = new NH_KHChiTietBQP_NhiemVuChi();
                             nvc.ID = nvcDto.ID;
                             nvc.iID_KHChiTietID = khctGoc.ID;
-                            nvc.sTenNhiemVuChi = nvcDto.sTenNhiemVuChi;
+                            nvc.sTenNhiemVuChi = HttpUtility.HtmlDecode(nvcDto.sTenNhiemVuChi);
                             nvc.iID_BQuanLyID = nvcDto.iID_BQuanLyID;
-                            nvc.iID_MaDonVi = nvcDto.iID_MaDonVi;
+                            nvc.iID_MaDonVi = HttpUtility.HtmlDecode(nvcDto.iID_MaDonVi);
                             nvc.iID_DonViID = nvcDto.iID_DonViID;
                             nvc.fGiaTriUSD = double.TryParse(nvcDto.fGiaTriUSD, NumberStyles.Float, new CultureInfo("en-US"), out double gtusd) ? gtusd : (double?)null;
                             nvc.fGiaTriVND = double.TryParse(nvcDto.fGiaTriVND, NumberStyles.Float, new CultureInfo("en-US"), out double gtvnd) ? gtvnd : (double?)null;
@@ -4126,26 +4231,42 @@ namespace Viettel.Services
                             nvc.iID_KHTTTTCP_NhiemVuChiID = nvcDto.iID_KHTTTTCP_NhiemVuChiID;
                             nvc.bIsTTCP = nvcDto.bIsTTCP;
                             nvc.iID_ParentID = nvcDto.iID_ParentID;
-                            lstNVCUpdate.Add(nvc);
-                        }
 
-                        // Check có ID thì update, ko có ID thì insert vào.
-                        foreach (var nvc in lstNVCUpdate)
-                        {
-                            if (nvc.ID != Guid.Empty)
+                            if (!nvcDto.iID_ParentID.HasValue)
+                            {
+                                fTongGiaTriUSD += nvc.fGiaTriUSD.HasValue ? nvc.fGiaTriUSD.Value : 0;
+                                fTongGiaTriVND += nvc.fGiaTriVND.HasValue ? nvc.fGiaTriVND.Value : 0;
+                            }
+                            if (nvcDto.isAdd)
+                            {
+                                conn.Insert(nvc, trans);
+                                //lstNVCAdd.Add(nvc);
+                            }
+                            else
                             {
                                 conn.Update(nvc, trans);
                                 lstIdNVC.Remove(nvc.ID);
                             }
-                            else
-                            {
-                                if (!nvc.iID_ParentID.HasValue)
-                                {
-                                    nvc.iID_ParentID = GetIdKHBQPNhiemVuChiParent(conn, trans, nvc, ref lstNVCUpdate);
-                                }
-                                conn.Insert(nvc, trans);
-                            }
+                            //lstNVCUpdate.Add(nvc);
                         }
+
+                        // Check có ID thì update, ko có ID thì insert vào.
+                        //foreach (var nvc in lstNVCUpdate)
+                        //{
+                        //    if (nvc.ID != Guid.Empty)
+                        //    {
+                        //        conn.Update(nvc, trans);
+                        //        lstIdNVC.Remove(nvc.ID);
+                        //    }
+                        //    else
+                        //    {
+                        //        if (!nvc.iID_ParentID.HasValue)
+                        //        {
+                        //            nvc.iID_ParentID = GetIdKHBQPNhiemVuChiParent(conn, trans, nvc, ref lstNVCUpdate);
+                        //        }
+                        //        conn.Insert(nvc, trans);
+                        //    }
+                        //}
 
                         // Còn những thằng nào dư ra thì delete
                         foreach (var idDelete in lstIdNVC)
@@ -4156,16 +4277,16 @@ namespace Viettel.Services
                         }
 
                         // Sau khi insert thì tính tổng giá trị của BQP
-                        double fTongGiaTriUSD = 0;
-                        double fTongGiaTriVND = 0;
-                        foreach (var nvc in lstNVCUpdate)
-                        {
-                            if (!nvc.iID_ParentID.HasValue)
-                            {
-                                fTongGiaTriUSD += nvc.fGiaTriUSD.HasValue ? nvc.fGiaTriUSD.Value : 0;
-                                fTongGiaTriVND += nvc.fGiaTriVND.HasValue ? nvc.fGiaTriVND.Value : 0;
-                            }
-                        }
+                        //double fTongGiaTriUSD = 0;
+                        //double fTongGiaTriVND = 0;
+                        //foreach (var nvc in lstNVCUpdate)
+                        //{
+                        //    if (!nvc.iID_ParentID.HasValue)
+                        //    {
+                        //        fTongGiaTriUSD += nvc.fGiaTriUSD.HasValue ? nvc.fGiaTriUSD.Value : 0;
+                        //        fTongGiaTriVND += nvc.fGiaTriVND.HasValue ? nvc.fGiaTriVND.Value : 0;
+                        //    }
+                        //}
 
                         khctGoc.fTongGiaTriUSD = fTongGiaTriUSD;
                         khctGoc.fTongGiaTriVND = fTongGiaTriVND;
@@ -4184,7 +4305,7 @@ namespace Viettel.Services
 
             return false;
         }
-        
+
         public NH_KHChiTietBQPModel GetKeHoachChiTietBQPById(Guid id)
         {
             using (var conn = _connectionFactory.GetConnection())
@@ -4193,7 +4314,7 @@ namespace Viettel.Services
                 return conn.QueryFirstOrDefault<NH_KHChiTietBQPModel>(query, new { Id = id }, commandType: CommandType.Text);
             }
         }
-        
+
         public Boolean DeleteKHBQP(Guid id)
         {
             try
@@ -4224,8 +4345,8 @@ namespace Viettel.Services
 
             return false;
         }
-        
-        public NH_KHChiTietBQP_NVCViewModel GetDetailKeHoachChiTietBQP(string state, Guid? KHTTCP_ID, Guid? KHBQP_ID, Guid? iID_BQuanLyID, Guid? iID_DonViID, bool isUseLastTTCP)
+
+        public NH_KHChiTietBQP_NVCViewModel GetDetailKeHoachChiTietBQP(string state, Guid? KHTTCP_ID, Guid? KHBQP_ID, Guid? iID_BQuanLyID, Guid? iID_DonViID, string sTenNhiemVuChi, string sTenPhongBan, string sTenDonVi, bool isUseLastTTCP)
         {
             using (var conn = _connectionFactory.GetConnection())
             {
@@ -4273,6 +4394,9 @@ namespace Viettel.Services
                     lstPrams.Add("KHBQP_ID", KHBQP_ID.Value);
                     lstPrams.Add("iID_BQuanLyID", iID_BQuanLyID);
                     lstPrams.Add("iID_DonViID", iID_DonViID);
+                    lstPrams.Add("sTenNhiemVuChi", sTenNhiemVuChi);
+                    lstPrams.Add("sTenPhongBan", sTenPhongBan);
+                    lstPrams.Add("sTenDonVi", sTenDonVi);
 
                     result.Items = conn.Query<NH_KHChiTietBQP_NVCModel>("sp_get_detail_KeHoachChiTietBQP", lstPrams, commandType: CommandType.StoredProcedure).ToList();
                 }
@@ -4298,6 +4422,9 @@ namespace Viettel.Services
                     {
                         var lstPrams = new DynamicParameters();
                         lstPrams.Add("KHBQP_ID", KHBQP_ID.Value);
+                        lstPrams.Add("sTenNhiemVuChi", sTenNhiemVuChi);
+                        lstPrams.Add("sTenPhongBan", sTenPhongBan);
+                        lstPrams.Add("sTenDonVi", sTenDonVi);
                         result.Items = conn.Query<NH_KHChiTietBQP_NVCModel>("sp_get_detail_KeHoachChiTietBQP", lstPrams, commandType: CommandType.StoredProcedure).ToList();
                     }
                 }
@@ -4305,7 +4432,7 @@ namespace Viettel.Services
                 return result;
             }
         }
-        
+
         public IEnumerable<LookupDto<Guid, string>> getLookupPhongBan()
         {
             using (var connection = _connectionFactory.GetConnection())
@@ -4315,7 +4442,7 @@ namespace Viettel.Services
                 return connection.Query<LookupDto<Guid, string>>(query, commandType: CommandType.Text);
             }
         }
-        
+
         public List<NH_DM_TiGia_ChiTiet_ViewModel> GetTiGiaChiTietByTiGiaId(Guid iID_TiGiaID)
         {
             using (var connection = _connectionFactory.GetConnection())
@@ -4327,7 +4454,7 @@ namespace Viettel.Services
                 return connection.Query<NH_DM_TiGia_ChiTiet_ViewModel>(query, new { Id = iID_TiGiaID }, commandType: CommandType.Text).ToList();
             }
         }
-        
+
         public IEnumerable<NH_KHChiTietBQP_NVCModel> GetListBQPNhiemVuChiById(Guid id, string sTenNhiemVuChi, Guid? iID_BQuanLyID, Guid? iID_DonViID)
         {
             using (var connection = _connectionFactory.GetConnection())
@@ -4341,7 +4468,7 @@ namespace Viettel.Services
                 return connection.Query<NH_KHChiTietBQP_NVCModel>("sp_get_all_BQPNhiemVuChiById", lstPrams, commandType: CommandType.StoredProcedure);
             }
         }
-        
+
         public IEnumerable<LookupKHBQP> getLookupKHBQPByKHTTCPId(Guid id)
         {
             using (var connection = _connectionFactory.GetConnection())
@@ -4480,14 +4607,14 @@ namespace Viettel.Services
 
                 var items = conn.Query<NH_TT_ThanhToanViewModel>("proc_get_all_baocao_tinhhinhthuchien_duan_paging", lstPrams,
                     commandType: CommandType.StoredProcedure);
-                double Sum=0;
-                double Sumgn=0;
+                double Sum = 0;
+                double Sumgn = 0;
                 if (items.Any())
                 {
-                     Sum = items.FirstOrDefault().fGiaTriDuocCap_USD;
-                     Sumgn = items.FirstOrDefault().fGiaTriTTTU_USD;
+                    Sum = items.FirstOrDefault().fGiaTriDuocCap_USD;
+                    Sumgn = items.FirstOrDefault().fGiaTriTTTU_USD;
                 }
-                
+
                 //foreach (var item in items)
                 //{
                 //    if (item.iCoQuanThanhToan.HasValue)
@@ -4682,7 +4809,7 @@ namespace Viettel.Services
         {
             using (var conn = _connectionFactory.GetConnection())
             {
-                var sql = "select tt.ID as ID, tt.sSoThongTri as sSoThongTri, tt.dNgayLap as dNgayLap, tt.dNgayTao as dNgayTao , CONCAT(dv.iID_MaDonVi, '-', dv.sTen) as sTenDonvi, tt.iNamThongTri as iNamThongTri,"
+                var sql = "select tt.ID as ID, tt.sSoThongTri as sSoThongTri, tt.dNgayLap as dNgayLap, tt.dNgayTao as dNgayTao , CONCAT(dv.iID_MaDonVi, '-', dv.sTen) as sTenDonvi, dv.sTen,tt.iNamThongTri as iNamThongTri,"
                     + " tt.fThongTri_USD as fThongTri_USD, tt.fThongTri_VND as fThongTri_VND, tt.iID_DonViID as iID_DonViID, tt.iLoaiThongTri as iLoaiThongTri, tt.iLoaiNoiDungChi as iLoaiNoiDungChi,  "
                     + " case when tt.iLoaiThongTri  = 1 then N'Thông tri cấp kinh phí'"
                     + " when tt.iLoaiThongTri  = 2 then N'Thông tri thanh toán'"
@@ -5616,7 +5743,8 @@ namespace Viettel.Services
                             sb.AppendLine("dNgaySua=@dNgaySua,sID_MaNguoiDungSua=@sID_MaNguoiDungSua,sIPSua=@sIPSua ");
                             sb.AppendLine("WHERE iID_MaNguonNganSach=@iID_MaNguonNganSach ");
                             conn.Execute(sb.ToString(),
-                                new {
+                                new
+                                {
                                     sTen = entity.sTen,
                                     iTrangThai = entity.iTrangThai,
                                     iSTT = entity.iSTT,
@@ -5685,9 +5813,27 @@ namespace Viettel.Services
                 lstParam.Add("ItemsPerPage", _paging.ItemsPerPage);
                 lstParam.Add("iToTalItem", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-                var items = conn.Query<NH_DA_GoiThauModel>("proc_get_all_nh_da_ttgoithau_paging", lstParam,
+                var items = conn.Query<NH_DA_GoiThauModel>("proc_get_all_nh_da_ttgoithau_paging_demo", lstParam,
                     commandType: CommandType.StoredProcedure);
                 _paging.TotalItems = lstParam.Get<int>("iToTalItem");
+                return items;
+            }
+        }
+        public IEnumerable<NH_DA_GoiThauModel> GetAllNHThongTinGoiThauById(Guid id, string sTenGoiThau,
+            Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, int? iLoai, int? iThoiGianThucHien)
+        {
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                DynamicParameters lstParam = new DynamicParameters();
+                lstParam.Add("sTenGoiThau", sTenGoiThau);
+                lstParam.Add("iDonVi", iDonVi);
+                lstParam.Add("iChuongTrinh", id);
+                lstParam.Add("iDuAn", iDuAn);
+                lstParam.Add("iLoai", iLoai);
+                lstParam.Add("iThoiGianThucHien", iThoiGianThucHien);
+
+                var items = conn.Query<NH_DA_GoiThauModel>("proc_get_all_nh_da_ttgoithau", lstParam,
+                    commandType: CommandType.StoredProcedure);
                 return items;
             }
         }
@@ -6536,7 +6682,7 @@ namespace Viettel.Services
                             return dt;
                         }
                         conn.Insert(entity, trans);
-                        dt.KhoiTaoCapPhatData = entity;                        
+                        dt.KhoiTaoCapPhatData = entity;
                     }
                     else
                     {
@@ -6637,7 +6783,7 @@ namespace Viettel.Services
                                 return dt;
                             }
 
-                            if(entity.iID_DuAnID != data.iID_DuAnID
+                            if (entity.iID_DuAnID != data.iID_DuAnID
                                 || entity.iID_HopDongID != data.iID_HopDongID
                                 || entity.fLuyKeKinhPhiDuocCap_USD != data.fLuyKeKinhPhiDuocCap_USD
                                 || entity.fLuyKeKinhPhiDuocCap_VND != data.fLuyKeKinhPhiDuocCap_VND
@@ -6663,7 +6809,7 @@ namespace Viettel.Services
 
                             conn.Update(entity, trans);
                             dt.KhoiTaoCapPhatChiTietData = entity;
-                            
+
                         }
                     }
 
@@ -6769,7 +6915,7 @@ namespace Viettel.Services
                     var data = ConvertDataToTableDefined("t_tbl_nh_tonghop", lstData);
 
                     using (var cmd1 = new SqlCommand("sp_insert_nhtonghop", conn))
-                    {                        
+                    {
                         cmd1.Parameters.AddWithValue("@iIDChungTu", iIDChungTu);
                         cmd1.Parameters.AddWithValue("@sLoai", sLoai);
                         cmd1.CommandType = CommandType.StoredProcedure;
@@ -6788,7 +6934,7 @@ namespace Viettel.Services
                 AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
             }
         }
-        
+
         /// <summary>
         /// convert list to table defined
         /// </summary>

@@ -18,7 +18,7 @@ namespace Viettel.Services
         IEnumerable<CPNHNhuCauChiQuy_Model> getListNhuCauChiQuyModels(ref PagingInfo _paging,
             string sSoDeNghi = "", DateTime? dNgayDeNghi = null, Guid? iID_BQuanLyID = null,
             Guid? iID_DonViID = null, int? iQuy = 0, int? iNamKeHoach = 0, int? tabIndex = 0);
-        IEnumerable<CPNHThucHienNganSach_Model> getListThucHienNganSachModels(int tabTable, int iTuNam, int iDenNam, Guid? iDonvi, int iQuyList, int iNam);
+        IEnumerable<CPNHThucHienNganSach_Model> getListThucHienNganSachModels(int tabTable, int iTuNam, int iDenNam, Guid? iDonvi, int iQuyList, int iNam, int slbDonViUSD, int slbDonViVND);
         IEnumerable<CPNHThucHienNganSach_Model> getListKinhPhiDuocCapTheoDonViModels(int? iQuy, int? iNam, Guid? iDonvi);
         IEnumerable<CPNHNhuCauChiQuy_Model> getListNhuCauChiQuyModelsBaoCao(ref PagingInfo _paging,
             string sSoDeNghi = "", DateTime? dNgayDeNghi = null, Guid? iID_BQuanLyID = null,
@@ -37,7 +37,7 @@ namespace Viettel.Services
         NH_NhuCauChiQuy NhuCauChiQuyTongHopSave(NH_NhuCauChiQuy data, List<CPNHNhuCauChiQuy_Model> lstItem, string sUsername);
         Boolean DeleteNhuCauChiQuy(Guid iId);
         NS_PhongBan GetPhongBanID(Guid? ID);
-        IEnumerable<NH_DA_HopDong> GetListHopDong();
+        IEnumerable<NH_DA_HopDong> GetListHopDong(Guid? iID_DonViID, Guid? iID_BQuanLyID);
         IEnumerable<CPNHNhuCauChiQuy_ChiTiet_Model> GetListNhucauchiquyChitiet(Guid? iDonvi , int iQuy , int iNam);
         IEnumerable<CPNHNhuCauChiQuy_ChiTiet_Model> GetListNhucauchiquyChitietBaoCao2(int iUSD , int iVND, Guid? iDonvi, int iQuy, int iNam);
         bool LockOrUnLockNhuCauChiQuy(Guid id, bool isLockOrUnLock);
@@ -97,7 +97,7 @@ namespace Viettel.Services
             }
         }
 
-        public IEnumerable<CPNHThucHienNganSach_Model> getListThucHienNganSachModels(int tabTable, int iTuNam, int iDenNam, Guid? iDonvi, int iQuyList, int iNam)
+        public IEnumerable<CPNHThucHienNganSach_Model> getListThucHienNganSachModels(int tabTable, int iTuNam, int iDenNam, Guid? iDonvi, int iQuyList, int iNam, int slbDonViUSD, int slbDonViVND)
         {
             using (var conn = _connectionFactory.GetConnection())
             {
@@ -108,6 +108,8 @@ namespace Viettel.Services
                 lstPrams.Add("iDonvi", iDonvi);
                 lstPrams.Add("iQuyList", iQuyList);
                 lstPrams.Add("iNam", iNam);
+                lstPrams.Add("iTUSD", slbDonViUSD);
+                lstPrams.Add("iTVND", slbDonViVND);
 
                 var items = conn.Query<CPNHThucHienNganSach_Model>("proc_get_all_cpnh_Thuchienngansach", lstPrams, commandType: CommandType.StoredProcedure);
                 return items;
@@ -244,7 +246,6 @@ namespace Viettel.Services
             var iNamKeHoach = iNam;
             var sql =
                 @"
-                
                 SELECT DISTINCT NCCQ.ID, NCCQ.sSoDeNghi, NCCQ.dNgayDeNghi , NCCQ.iID_BQuanLyID, NCCQ.iID_DonViID, NCCQ.iNamKeHoach, NCCQ.iQuy, NCCQ.iID_TiGiaID, 
                 NCCQ.fTongChiNgoaiTeUSD, NCCQ.fTongChiNgoaiTeVND, NCCQ.fTongChiTrongNuocVND, NCCQ.fTongChiTrongNuocUSD, NCCQ.iID_ParentAdjustID, NCCQ.iID_GocID,
                 NCCQ.iLanDieuChinh,NCCQ.bIsKhoa,NCCQ.iID_TongHopID,NCCQ.sTongHop,
@@ -308,10 +309,7 @@ namespace Viettel.Services
 
                 Select db.* ,ROW_NUMBER() OVER (ORDER BY db.iID_TongHopID) AS sSTT from  #db  db
                 DROP TABLE #tmp
-                DROP TABLE #db
-
-
-";
+                DROP TABLE #db";
 
             using (var conn = _connectionFactory.GetConnection())
             {
@@ -324,7 +322,6 @@ namespace Viettel.Services
                          iID_DonViID,
                          iQuy,
                          iNamKeHoach
-
                      },
                      commandType: CommandType.Text
                  );
@@ -336,9 +333,9 @@ namespace Viettel.Services
         public IEnumerable<NS_DonVi> GetDonviListByYear(int namLamViec = 0)
         {
             var sql =
-                @"SELECT DISTINCT b.iID_MaDonVi, b.sTen, (b.iID_MaDonVi + ' - ' + b.sTen) as sMoTa, b.iID_Ma
+                @"SELECT DISTINCT b.iID_MaDonVi, b.sTen, CONCAT(b.iID_MaDonVi, ' - ', b.sTen) AS sMoTa, b.iID_Ma
                 FROM ns_donvi b
-                Where b.iNamLamViec_DonVi = @namLamViec
+                WHERE b.iNamLamViec_DonVi = @namLamViec AND b.iTrangThai = 1
                 ORDER BY iID_MaDonVi";
 
             using (var conn = _connectionFactory.GetConnection())
@@ -659,12 +656,12 @@ namespace Viettel.Services
             return false;
         }
 
-        public IEnumerable<NH_DA_HopDong> GetListHopDong()
+        public IEnumerable<NH_DA_HopDong> GetListHopDong(Guid? iID_DonViID, Guid? iID_BQuanLyID)
         {
-            var sql = "SELECT * FROM NH_DA_HopDong ORDER BY ID;";
+            var sql = "SELECT * FROM NH_DA_HopDong Where iID_BQuanLyID = @iID_BQuanLyID and iID_DonViID = @iID_DonViID ORDER BY sTenHopDong;";
             using (var conn = _connectionFactory.GetConnection())
             {
-                var items = conn.Query<NH_DA_HopDong>(sql);
+                var items = conn.Query<NH_DA_HopDong>(sql, param: new { iID_BQuanLyID, iID_DonViID });
                 return items;
             }
         }

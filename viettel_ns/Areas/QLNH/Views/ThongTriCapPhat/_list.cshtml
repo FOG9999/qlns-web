@@ -12,7 +12,7 @@
     </div>
     <div class="col-sm-9 col-md-9 col-lg-9"></div>
     <button class="btn btn-primary pull-right mr-10" onclick="onModal()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
-    <button class="btn btn-warning pull-right mr-10" onclick="ViewInBaoCao()"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
+    <button class="btn btn-warning pull-right mr-10" onclick="OpenPopupInBaoCao()"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
     <button class="btn btn-info pull-right mr-10" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
 </div>
 
@@ -27,7 +27,7 @@
             <th width="15%"><input placeholder="Mã thông tri" class="form-control gr_search smathongtri" id="imathongtrisearch" maxlength="100" title="Mã thông tri" /></th>
             <th width="10%">
                 <div class='input-group date'>
-                    <input type='text' class="form-control" value="" id="ingaytaosearch gr_search" autocomplete="off" title="Ngày lập" placeholder="dd/MM/yyyy"/>
+                    <input type='text' class="form-control" value="" id="ingaytaosearch gr_search" autocomplete="off" title="Ngày lập" placeholder="dd/MM/yyyy" />
                     <span class="btn-default input-group-addon">
                         <i class="fa fa-calendar" aria-hidden="true"></i>
                     </span>

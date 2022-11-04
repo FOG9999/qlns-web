@@ -204,11 +204,14 @@ function onInBaoCao(type_xuatbaocao) {
         var idPhongBan = $('#iID_MaPhongBan').val();
         var sNoiDung = encodeURIComponent($.trim($('#sNoiDung').val()));
         var idDonVi = encodeURIComponent($.trim($('#idDonVi').val()));
+        var tieuDe1 = encodeURIComponent($.trim($('#idtieude1').val()));
+        var tieuDe2 = encodeURIComponent($.trim($('#idtieude2').val()));
+
         var dvt = $('#iDonViTinh').val();
         if (type_baocao == 1 || type_baocao == 2) {
             for (i = 0; i < arrIdDeNghiThanhToan.length; i++) {
                 var idThanhtoan = arrIdDeNghiThanhToan[i];
-                arrLink.push("/QLNH/DeNghiThanhToan/ExportGiayDeNghiThanhToan?idThanhtoan=" + idThanhtoan + "&idPhongBan=" + idPhongBan + "&sNoiDung=" + sNoiDung + "&idDonVi=" + idDonVi
+                arrLink.push("/QLNH/DeNghiThanhToan/ExportGiayDeNghiThanhToan?idThanhtoan=" + idThanhtoan + "&idPhongBan=" + idPhongBan + "&sNoiDung=" + sNoiDung + "&idDonVi=" + idDonVi + "&tieuDe1=" + tieuDe1 + "&tieuDe2=" + tieuDe2
                     + "&dvt=" + dvt + "&type=" + type_baocao + "&ext=" + type_xuatbaocao);
             }
         }
@@ -216,22 +219,26 @@ function onInBaoCao(type_xuatbaocao) {
             var lstIdThanhToan = arrIdDeNghiThanhToan.join(',');
             var sCanCu = encodeURIComponent($.trim($('#iCanCu').val()));
             var idDonViCapDuoi = encodeURIComponent($.trim($('#idDonViCapDuoi').val()));
+            var tieuDe1 = encodeURIComponent($.trim($('#idtieude1').val()));
+            var tieuDe2 = encodeURIComponent($.trim($('#idtieude2').val()));
             var thang = $('#ithang').val();
             var quy = $('#iquy').val();
             var nam = $('#inam').val();
 
             arrLink.push("/QLNH/DeNghiThanhToan/ExportThongBaoChiNganSach?idPhongBan=" + idPhongBan + "&nam=" + nam + "&thang=" + thang + "&quy=" + quy + "&ext=" + type_xuatbaocao
-                + "&lstIdThanhToan=" + lstIdThanhToan + "&sNoiDung=" + sNoiDung + "&idDonVi=" + idDonVi + "&idDonViCapDuoi=" + idDonViCapDuoi + "&sCanCu=" + sCanCu + "&dvt=" + dvt);
+                + "&lstIdThanhToan=" + lstIdThanhToan + "&sNoiDung=" + sNoiDung + "&idDonVi=" + idDonVi + "&tieuDe1=" + tieuDe1 + "&tieuDe2=" + tieuDe2 + "&idDonViCapDuoi=" + idDonViCapDuoi + "&sCanCu=" + sCanCu + "&dvt=" + dvt);
         }
         if (type_baocao == 4 || type_baocao == 5) {
             var lstIdThanhToan = arrIdDeNghiThanhToan.join(',');
             var sCanCu = encodeURIComponent($.trim($('#iCanCu').val()));
+            var tieuDe1 = encodeURIComponent($.trim($('#idtieude1').val()));
+            var tieuDe2 = encodeURIComponent($.trim($('#idtieude2').val()));
             var idDonViCapDuoi = encodeURIComponent($.trim($('#idDonViCapDuoi').val()));
             var dtungay = $('#itungay').val();
             var ddenngay = $('#idenngay').val();
             var iquanly = $('#iID_QuanLy').val();
 
-            arrLink.push("/QLNH/DeNghiThanhToan/ExportThongBaoCapKinhPhi?lstIdThanhToan=" + lstIdThanhToan + "&tungay=" + dtungay + "&denngay=" + ddenngay + "&sNoiDung=" + sNoiDung + "&idDonVi=" + idDonVi + "&idDonViCapDuoi=" + idDonViCapDuoi
+            arrLink.push("/QLNH/DeNghiThanhToan/ExportThongBaoCapKinhPhi?lstIdThanhToan=" + lstIdThanhToan + "&tungay=" + dtungay + "&denngay=" + ddenngay + "&sNoiDung=" + sNoiDung + "&idDonVi=" + idDonVi + "&idDonViCapDuoi=" + idDonViCapDuoi + "&tieuDe1=" + tieuDe1 + "&tieuDe2=" + tieuDe2
                 + "&idquanly=" + iquanly + "&dvt=" + dvt + "&ext=" + type_xuatbaocao + "&type=" + type_baocao);
         }
 

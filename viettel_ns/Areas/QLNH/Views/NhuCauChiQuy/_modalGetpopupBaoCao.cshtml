@@ -13,19 +13,26 @@
             <h4> Theo HĐ 2501 Mẫu số 01/NCKP-QNH</h4>
         }
     }
-    <div>
-
-    </div>
     <div class="form-group row">
         <div class="col-sm-6">
-            <label for="txtsMaTienTeGoc">Kính gửi</label>
+            <label for="iBQuanlyKinhGui">Kính gửi</label>
             @Helpers.Required()
             @Html.DropDownList("iID_BQuanLyID", (SelectList)(ViewBag.ListBQuanLy), new { @class = "form-control", @id = "iBQuanlyKinhGui" })
         </div>
         <div class="col-sm-6">
-            <label for="txtsMaTienTeGoc">Đơn vị gửi</label>
+            <label for="iBQuanlyDonvi">Đơn vị gửi</label>
             @Helpers.Required()
             @Html.DropDownList("iID_BQuanLyID", (SelectList)(ViewBag.ListBQuanLy), new { @class = "form-control", @id = "iBQuanlyDonvi" })
+        </div>
+        <div class="mt-4 col-sm-6">
+            <label for="txtsMaTienTeGoc">Đơn vị cấp trên</label>
+            @Helpers.Required()
+            <input type="text" class="form-control clearable gr_search" id="txtDonViCapTren"/>
+        </div>
+        <div class="mt-4 col-sm-6">
+            <label for="txtsMaTienTeGoc">Đơn vị</label>
+            @Helpers.Required()
+            <input type="text" class="form-control clearable gr_search" id="txtDonViCapDuoi"/>
         </div>
         <div class="mt-4 col-sm-6">
             <label for="txtsMaTienTeGoc">Chọn quý</label>
@@ -33,27 +40,27 @@
             @Html.DropDownList("iQuy", (SelectList)(ViewBag.ListQuyTypes), new { @class = "form-control", @id = "iQuyListBaoCao" })
         </div>
         <div class="mt-4 col-sm-6">
-            <label for="txtsMaTienTeGoc">Năm</label>
+            <label for="txtnamBaoCao">Năm</label>
             @Helpers.Required()
-            <input type="text" class="form-control clearable gr_search" id="txtnamBaoCao" maxlength="4"/>
+            <input type="text" class="form-control clearable gr_search" id="txtnamBaoCao" maxlength="4" />
         </div>
         @{
             if (@ViewBag.iloai == "2")
             {
                 <div class="col-sm-6 mt-4">
-                    <label for="txtsMaTienTeGoc">Đơn vị tính USD</label>
+                    <label for="iUSD">Đơn vị tính USD</label>
                     @Html.DropDownList("iDVTinh", (SelectList)(ViewBag.ListDVTinh), new { @class = "form-control", @id = "iUSD" })
                 </div>
                 <div class="col-sm-6 mt-4">
-                    <label for="txtsMaTienTeGoc">Đơn vị tính VNĐ</label>
+                    <label for="iVND">Đơn vị tính VNĐ</label>
                     @Html.DropDownList("iDVTinh", (SelectList)(ViewBag.ListDVTinh), new { @class = "form-control", @id = "iVND" })
                 </div>
             }
         }
     </div>
     <div class="modal-footer">
-        <div style="text-align : center">
-            <a class="btn-mvc" id="btnChuKy"><i class="fa fa-file-excel"></i>Sửa chữ ký</a>
+        <div style="text-align: center;">
+            <a class="btn-mvc" id="btnChuKy">Sửa chữ ký</a>
             <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf">Xuất file PDF</a>
             <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls">Xuất file Excel</a>
             <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Đóng</span></button>
@@ -64,6 +71,12 @@
 
 <script>
     $(document).ready(function () {
+        $("#iBQuanlyKinhGui").select2({ width: '100%', matcher: FilterInComboBox });
+        $("#iBQuanlyDonvi").select2({ width: '100%', matcher: FilterInComboBox });
+        $("#iQuyListBaoCao").select2({ width: '100%', matcher: FilterInComboBox });
+        $("#iUSD").select2({ width: '100%', matcher: FilterInComboBox });
+        $("#iVND").select2({ width: '100%', matcher: FilterInComboBox });
+
         $("#txtnamBaoCao").keydown(function (event) {
             ValidateInputKeydown(event, this, 1);
         }).blur(function (event) {
@@ -79,6 +92,8 @@
             var iloai = $("#iloai").val();
             var iUSD = $("#iUSD").val();
             var iVND = $("#iVND").val();
+            var sDonViCapTren = encodeURIComponent($("#txtDonViCapTren").val());
+            var sDonViCapDuoi = encodeURIComponent($("#txtDonViCapDuoi").val());
             //var dvt = $("#dvt").val();
             var Title = 'Lỗi thêm mới/chỉnh sửa nhu cầu chi quý';
             var Messages = [];
@@ -95,6 +110,12 @@
             if (iQuyList == null || iQuyList == "0" || iQuyList == "") {
                 Messages.push("Chưa chọn quý!");
             }
+            if (sDonViCapTren + "" == "") {
+                Messages.push("Chưa nhập đơn vị cấp trên !");
+            }
+            if (sDonViCapDuoi + "" == "") {
+                Messages.push("Chưa nhập đơn vị !");
+            }
 
             if (Messages.length > 0) {
                 $.ajax({
@@ -109,9 +130,8 @@
             }
             var url = $("#urlExport").val() +
                 "?ext=" + ext +
-                "&dvt=1000&iGui=" + iBQuanlyKinhGui + "&iloai=" + iloai + "&iDonvi=" + iBQuanlyDonvi + "&iQuy=" + iQuyList + "&iNam=" + nam + "&iUSD=" + iUSD + "&iVND=" + iVND;
+                "&dvt=1000&iGui=" + iBQuanlyKinhGui + "&iloai=" + iloai + "&iDonvi=" + iBQuanlyDonvi + "&iQuy=" + iQuyList + "&iNam=" + nam + "&iUSD=" + iUSD + "&iVND=" + iVND + "&sDonViCapTren=" + sDonViCapTren + "&sDonViCapDuoi=" + sDonViCapDuoi;
 
-            url = unescape(url);
             links.push(url);
 
             openLinks(links);

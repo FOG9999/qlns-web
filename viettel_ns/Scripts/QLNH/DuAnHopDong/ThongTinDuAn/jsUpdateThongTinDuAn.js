@@ -131,7 +131,7 @@ function ChangeDVSelect() {
     $.ajax({
         type: "POST",
         url: "/QLNH/ThongTinDuAn/GetChuongTrinhTheoDV",
-        data: { id: id, idBQP: idBQP },
+        data: { id: id, idBQP: idBQP},
         success: function (data) {
             if (data) {
                 $("#slbChuongTrinh").empty().html(data.htmlCT);

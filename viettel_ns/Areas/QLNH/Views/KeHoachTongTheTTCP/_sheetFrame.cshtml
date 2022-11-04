@@ -1,0 +1,104 @@
+﻿@model VIETTEL.Areas.QLNH.Models.DuAnHopDong.KeHoachTongTheTTCP.KeHoachTongTheTTCPChiTietGridViewModel
+@{
+    Layout = "~/Views/shared/sheet/_LayoutSheetFrame.cshtml";
+}
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/sheet.css">
+    <style>
+        #sTenNhiemVuChi{
+            margin-left: 102px;
+        }
+        #state, #KHTTCP_ID{
+            display: none !important;
+        }
+    </style>
+}
+<input type="hidden" value="@Model.NH_KHTongTheTTCP_NVCViewModel.State" id="currentState" />
+<input type="hidden" value="@Model.NH_KHTongTheTTCP_NVCViewModel.ID" id="hKHTTId" />
+
+@Html.Partial("_SheetSearch", Model.Sheet)
+@Html.Partial("_SheetEditor", Model.Sheet)
+@section Scripts{
+    @Html.Partial("_SheetScript")
+    <script src="~/Scripts/QLNH/KeHoachTongTheTTCP/jsKeHoachTongTheTTCP_Table.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            Bang_Url_getDanhSach = '@Url.Action("GetCustomList", "Public", new { area = "" })';
+            Bang_Url_getGiaTri = '@Url.Action("GetCustomGiaTri", "Public", new { area = "" })';
+            BangDuLieu_DuocSuaChiTiet = '@Model.Sheet.Table.IsEditable';
+
+            if (BangDuLieu_DuocSuaChiTiet) {
+                Bang_keys.fnSetFocus(null, null);
+            }
+
+            setActiveHC();
+        });
+
+        document.addEventListener('keydown', eventKey);
+        function eventKey(e) {
+            if (e != null && e != undefined) {
+                if (e.key == "F1") {
+                    var h = Bang_keys.Row();
+                    var c = Bang_keys.Col() - Bang_nC_Fixed;
+                    if (h == null) {
+                        BangDuLieu_onKeypress_F1_NoRow(0, undefined);
+                    } else {
+                        BangDuLieu_onKeypress_F1_NoRow(h, c);
+                    }
+                }
+                if (e.key == "F2") {
+                    var h = Bang_keys.Row();
+                    var c = Bang_keys.Col() - Bang_nC_Fixed;
+                    if (h == null) {
+                        BangDuLieu_onKeypress_F2_NoRow(0, undefined);
+                    } else {
+                        BangDuLieu_onKeypress_F2_NoRow(h, c);
+                    }
+                }
+                if (e.key == "F10") {
+                    KHTT_TTCP_BangDuLieu_Save();
+                }
+
+                if (e.key == "F9") {
+                    BangDuLieu_onKeypress_F9();
+                }
+            }
+        }
+
+        setActiveHC = () => {
+            for (h = 0; h < Bang_nH; h++) {
+                var dataInputIndex = {
+                    sSTTIndex: -1,
+                    sTenNhiemVuChiIndex: -1,
+                    sTenPhongBanIndex: -1,
+                    fGiaTriIndex: -1,
+                    bIsHasChildIndex: -1
+                };
+                for (c = 0; c < Bang_nC; c++) {
+                    var sKey = Bang_arrMaCot[c];
+                    if (sKey == "sSTT") {
+                        dataInputIndex.sSTTIndex = c;
+                    }
+                    else if (sKey == "sTenNhiemVuChi") {
+                        dataInputIndex.sTenNhiemVuChiIndex = c;
+                    }
+                    else if (sKey == "sTenPhongBan") {
+                        dataInputIndex.sTenPhongBanIndex = c;
+                    }
+                    else if (sKey == "fGiaTri") {
+                        dataInputIndex.fGiaTriIndex = c;
+                    }
+                    else if (sKey == "bIsHasChild") {
+                        dataInputIndex.bIsHasChildIndex = c;
+                    }
+                }
+                var bIsHasChild = Bang_arrGiaTri[h][dataInputIndex["bIsHasChildIndex"]];
+                Bang_arrEdit[h][dataInputIndex["sSTTIndex"]] = false;
+                Bang_arrEdit[h][dataInputIndex["sTenNhiemVuChiIndex"]] = true;
+                Bang_arrEdit[h][dataInputIndex["sTenPhongBanIndex"]] = true;
+                Bang_arrEdit[h][dataInputIndex["fGiaTriIndex"]] = !(bIsHasChild == "True");
+            }
+        }
+    </script>
+}

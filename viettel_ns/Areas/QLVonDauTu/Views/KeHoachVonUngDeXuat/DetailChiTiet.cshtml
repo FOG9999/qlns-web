@@ -3,6 +3,20 @@
 
 @{
     Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+    var dieuChinh = ViewBag.isDieuChinh;
+    var isDieuChinh = false;
+    if (dieuChinh == "true")
+    {
+        isDieuChinh = true;
+    }
+
+    var dieuChinhPr = ViewBag.isDieuChinhParrent;
+    var isDieuChinhParent = false;
+    if (dieuChinhPr == "true")
+    {
+        isDieuChinhParent = true;
+    }
+
 }
 
 @section Styles{
@@ -28,6 +42,7 @@
             <input type="hidden" id="iID_KeHoachUngID" name="iID_KeHoachUngID" value="@ViewBag.iID_KeHoachUngID">
             <input type="hidden" id="idUpdate" name="isUpdate" value="@ViewBag.isUpdate">
             <input type="hidden" id="txtIsTongHop" name="isTongHop" value="@ViewBag.isTongHop">
+            <input type="hidden" id="txtIsDieuChinh" name="isDieuChinh" value="@ViewBag.isDieuChinh">
             <label for="txt_DonViQuanLy" class="">Đơn vị <span class="require">*</span>: </label>
             <label class="lbDonVi"></label>
             @*<select id="iID_DonViQuanLyID" class="form-control"></select>*@
@@ -82,6 +97,10 @@
     <th width="20%">Tên dự án</th>
     <th width="20%">Tổng mức đầu tư</th>
     <th width="20%">Giá trị đề nghị</th>
+    @if (isDieuChinh)
+    {
+        <th width="20%">Giá trị đề nghị(sau điều chỉnh)</th>
+    }
     <th width="30%">Ghi chú</th>
     </thead>
     <tbody>
@@ -98,7 +117,25 @@
                     <td align="left" class="c_sMaDuAn">@item.sMaDuAn</td>
                     <td align="center" class="c_sTenDuAn">@item.sTenDuAn</td>
                     <td align="right" class="c_fTongMucDauTu">@(item.fTongMucDauTu.ToString("###,###"))</td>
-                    <td align="left"> <input style="text-align: right" type="text" class="form-control clearable ctxt_sfGiaTriDeNghi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fGiaTriDeNghi))"></td>
+                    @if (isDieuChinh)
+                    {
+                        if (isDieuChinhParent)
+                        {
+                            <td align="left"> <input style="text-align: right" type="text" class="form-control clearable ctxt_sfGiaTriDeNghi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fGiaTriDeNghiDC.HasValue ? item.fGiaTriDeNghiDC : item.fGiaTriDeNghi))" disabled></td>
+                            <td align="left"> <input style="text-align: right" type="text" class="form-control clearable ctxt_sfGiaTriDeNghiDC" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="0"></td>
+                        }
+                        else
+                        {
+                            <td align="left"> <input style="text-align: right" type="text" class="form-control clearable ctxt_sfGiaTriDeNghi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fGiaTriDeNghi))" disabled></td>
+                            <td align="left"> <input style="text-align: right" type="text" class="form-control clearable ctxt_sfGiaTriDeNghiDC" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="0"></td>
+                        }
+                                     
+                    }
+                    else
+                    {
+                    <td align="left"> <input style="text-align: right" type="text" class="form-control clearable ctxt_sfGiaTriDeNghi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fGiaTriDeNghiDC.HasValue ? item.fGiaTriDeNghiDC : item.fGiaTriDeNghi))"></td>
+
+                    }
                     <td align="left"> <input style="text-align: left" type="text" class="form-control ctxt_sGhiChu" value="@item.sGhiChu" style="width:100% ; justify-content:end"></td>
                 </tr>
                 @*<td align="right"><span class="fGiaTriUng">@(item.fGiaTriUng.HasValue ? item.fGiaTriUng.Value.ToString("###,###") : "0")</span></td>*@

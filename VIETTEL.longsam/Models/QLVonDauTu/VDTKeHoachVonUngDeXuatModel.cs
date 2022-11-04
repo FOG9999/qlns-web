@@ -12,5 +12,7 @@ namespace Viettel.Models.QLVonDauTu
         public string sTenDonVi { get; set; }
         public string sTenNguonVon { get; set; }
         public double? fTienKeHoachVUDX { get; set; }
+        public int iSoLanDieuChinh { get; set; }
+        public string sDieuChinhTuSKH { get; set; }
     }
 }

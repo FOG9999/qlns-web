@@ -27,7 +27,7 @@
                     <th width="10%">
                         <input type="text" class="form-control clearable" id="sSoQuyetDinh" autocomplete="off" maxlength="50" />
                     </th>
-                    <th width="20%">
+                    <th width="15%">
                         <div style="display: flex">
                             <div class='input-group date' style="width:49%">
                                 <input type="text" id="dNgayQuyetDinhFrom" autocomplete="off" class="form-control dateFormat startDate" placeholder="dd/MM/yyyy" />
@@ -49,7 +49,9 @@
                     <th width="7%">
                         @Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), "--Tất cả--", new { @class = "form-control", @id = "iID_DonViQuanLyID" })
                     </th>
-                    <th width="15%"></th>
+                    <th width="10%"></th>
+                    <th width="10%"></th>
+                    <th width="5%"></th>
                     <th width="10%">
                         <button class="btn btn-info" onclick="SearchData()"><i class="fa fa-search" aria-hidden="true"></i> Tìm kiếm</button>
                     </th>
@@ -57,12 +59,14 @@
                     <thead>
                     <th width="5%">STT</th>
                     <th width="10%">Số kế hoạch</th>
-                    <th width="20%">Ngày lập</th>
+                    <th width="15%">Ngày lập</th>
                     <th width="8%">Năm kế hoạch</th>
                     <th width="15%">Nguồn vốn</th>
-                    <th width="15%">Đơn vị quản lý</th>
-                    <th width="15%">Kế hoạch vốn ứng được duyệt</th>
-                    <th width="7%">Thao tác</th>
+                    <th width="10%">Đơn vị quản lý</th>
+                    <th width="10%">Kế hoạch vốn ứng được duyệt</th>
+                    <th width="10%">Điều chỉnh từ SKH</th>
+                    <th width="5%">Số lần điều chỉnh</th>
+                    <th width="12%">Thao tác</th>
                     </thead>
                     <tbody id="lstDataView">
                         @Html.Partial("_partialListKeHoachVonUngDuocDuyet", Model)

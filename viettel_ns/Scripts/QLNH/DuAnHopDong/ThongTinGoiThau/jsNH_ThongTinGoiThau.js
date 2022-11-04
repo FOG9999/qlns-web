@@ -17,6 +17,40 @@ function ChangePage(iCurrentPage = 1) {
     GetListData(sTenGoiThau, iDonVi, maDonVi, iChuongTrinh, iDuAn, iLoai, iThoiGianThucHien, iCurrentPage);
 }
 
+function ToogleRow(e) {
+    let tdElement = $(e);
+    let trElement = tdElement.closest('tr');
+    let id = tdElement.data('id');
+    let index = trElement.index();
+    let hasValue = tdElement.data('ishaschild');
+    let sTenHopDong = $.trim($("#txtTenHopDongFilter").val());
+    let iDonvi = $("#iDonVi").val();
+    let iChuongTrinh = $("#iChuongTrinh").val();
+    let iDuAn = $("#iDuAn").val();
+    let iLoai = $("#iLoai").val(); 
+    let iThoiGianThucHien = $("#txtThoiGianThucHienFilter").val();
+
+    // Nếu đã lấy data thì chỉ ẩn hiên thôi, chưa có data thì lấy data.
+    if (!hasValue) {
+        $.ajax({
+            type: "POST",
+            data: { id: id, sTenHopDong: sTenHopDong, iDonvi: iDonvi, iChuongTrinh: iChuongTrinh, iDuAn: iDuAn, iLoai: iLoai, iThoiGianThucHien: iThoiGianThucHien },
+            url: '/QLNH/ThongTinGoiThau/GetListGoiThauById',
+            success: function (rs) {
+                if (rs != null) {
+                    tdElement.data('ishaschild', true);
+
+                    // Add row
+                    $("#tbodyListGoiThau tr").eq(index).after(rs.datas);
+                    trElement.siblings('.child-' + id).fadeToggle();
+                }
+            }
+        });
+    } else {
+        trElement.siblings('.child-' + id).fadeToggle();
+    }
+}
+
 function GetListData(sTenGoiThau, iDonVi, maDonVi, iChuongTrinh, iDuAn, iLoai, iThoiGianThucHien, iCurrentPage) {
     _paging.CurrentPage = iCurrentPage;
     $.ajax({

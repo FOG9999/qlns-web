@@ -16,6 +16,7 @@ using VIETTEL.Helpers;
 using System.Reflection;
 using VIETTEL.Areas.z.Models;
 using System.Data;
+using System.Net;
 
 namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
 {
@@ -30,6 +31,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
         {
             NHDAThongTinHopDongViewModel vm = new NHDAThongTinHopDongViewModel();
             vm._paging.CurrentPage = 1;
+            vm._paging.ItemsPerPage = 10;
             vm.Items = _qlnhService.GetAllNHThongTinHopDong(ref vm._paging, null, null, null, null, null, null, null);
 
             List<NS_DonVi> lstDonViQL = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec, true, false).ToList();
@@ -49,6 +51,57 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
             ViewBag.ListLoaiHopDong = lstLoaiHD.ToSelectList("ID", "sTenLoaiHopDong");
 
             return View(vm);
+        }
+
+
+        [HttpPost]
+        public ActionResult GetListHopDongById(Guid id, string sTenHopDong, Guid? iDonVi, string maDonVi, Guid? iChuongTrinh, Guid? iDuAn, string soHopDong, DateTime? ngayKyHopDong, Guid? iLoaiHopDong)
+        {
+            sTenHopDong = HttpUtility.HtmlDecode(sTenHopDong);
+            IEnumerable<NH_DA_HopDongModel> nhiemVuChiList = _qlnhService.GetAllNHThongTinHopDongById(id, ngayKyHopDong
+                , (iDonVi == Guid.Empty ? null : iDonVi)
+                , (iChuongTrinh == Guid.Empty ? null : iChuongTrinh)
+                , (iDuAn == Guid.Empty ? null : iDuAn)
+                , (iLoaiHopDong == Guid.Empty ? null : iLoaiHopDong)
+                , sTenHopDong, soHopDong);
+            StringBuilder htmlResult = new StringBuilder();
+            int index = 1;
+            foreach (NH_DA_HopDongModel item in nhiemVuChiList)
+            {
+                htmlResult.AppendLine("<tr class='child-" + id + "' style='display: none'>");
+                htmlResult.AppendLine("<td>"+index+++"</td>");
+                htmlResult.AppendLine("<td>" + HttpUtility.HtmlDecode(item.sTenHopDong) + "</td>");
+                htmlResult.AppendLine("<td>" + HttpUtility.HtmlDecode(item.sTenDonVi) + "</td>");
+                htmlResult.AppendLine("<td>" + HttpUtility.HtmlDecode(item.sTenChuongTrinh) + "</td>");
+                htmlResult.AppendLine("<td>" + HttpUtility.HtmlDecode(item.sTenDuAn) + "</td>");
+                htmlResult.AppendLine("<td>" + HttpUtility.HtmlDecode(item.sSoHopDong) + "</td>");
+                htmlResult.AppendLine("<td>" + HttpUtility.HtmlDecode(item.dNgayHopDong.ToString()) + "</td>");
+                htmlResult.AppendLine("<td>" + HttpUtility.HtmlDecode(item.sLoai) + "</td>");
+                htmlResult.AppendLine("<td align=right>" + HttpUtility.HtmlDecode(item.fGiaTriUSD.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty) + "</td>");
+                htmlResult.AppendLine("<td align=right>" + HttpUtility.HtmlDecode(item.fGiaTriVND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fGiaTriVND.Value).ToString(CultureInfo.InvariantCulture), 0) : string.Empty) + "</td>");
+                htmlResult.AppendLine("<td align=right>" + HttpUtility.HtmlDecode(item.fGiaTriEUR.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriEUR.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty) + "</td>");
+                htmlResult.AppendLine("<td align=right>" + HttpUtility.HtmlDecode(item.fGiaTriNgoaiTeKhac.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriNgoaiTeKhac.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty) + "</td>");
+                htmlResult.AppendLine("<td>" + HttpUtility.HtmlDecode(item.sSoLanDieuChinh) + "</td>");
+                htmlResult.AppendLine("<td>" + HttpUtility.HtmlDecode(item.sDieuChinhTu) + "</td>");
+                if (item.bIsActive)
+                {
+                    htmlResult.AppendLine("<td align=center style=padding: 0; >" 
+                        + "<button type='button' class='btn-adjust' title='Điều chỉnh' onclick = \"OpenContractInfo('"+ item.ID +"', true)\"><i class='fa fa-copy fa-lg' aria-hidden='true'></i></button>"
+                        + "<button type='button' class='btn-detail' title='Xem chi tiết' onclick = OpenContractInfoDetail('" + item.ID + "')><i class='fa fa-eye fa-lg' aria-hidden='true'></i></button>"
+                        + "<button type='button' class='btn-edit' title='Sửa' onclick = \"OpenContractInfo('"+ item.ID +"'"+", false)\"><i class='fa fa-pencil-square-o fa-lg' aria-hidden='true'></i></button>"
+                        + "<button type='button' class='btn-delete' title='Xóa' onclick = Xoa('"+ item.ID +"')><i class='fa fa-trash-o fa-lg' aria-hidden=true></i></button>"
+                        + "</td>");
+                }
+                else
+                {
+                    htmlResult.AppendLine("<td align=center style=padding: 0; >"
+                        + "<button type='button' class='btn-detail' title='Xem chi tiết' onclick = OpenContractInfoDetail('"+ item.ID +"')><i class='fa fa-eye fa-lg' aria-hidden='true'></i></button>"
+                        + "</td>");
+                }
+                htmlResult.AppendLine("</tr>");
+            }
+            index = 0;
+            return Json(new { datas = htmlResult.ToString() }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -108,9 +161,21 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
                     htmlDA.AppendFormat("<option value='{0}' data-bql='{2}'>{1}</option>", lstDuAn[i].ID, HttpUtility.HtmlEncode(lstDuAn[i].sTenDuAn), lstDuAn[i].iID_BQuanLyID);
                 }
             }
-            return Json(new { htmlCT = htmlChuongtrinh.ToString(), htmlDA = htmlDA.ToString() }, JsonRequestBehavior.AllowGet);
-        }
 
+            List<NH_DA_GoiThau> lstGoiThau = _qlnhService.GetGoiThauTheoCT(iDonVi).ToList();
+            StringBuilder htmlGoiThau = new StringBuilder();
+            htmlGoiThau.AppendFormat("<option value='{0}' selected>{1}</option>", Guid.Empty, "--Chọn gói thầu--");
+            if (lstGoiThau != null && lstGoiThau.Count > 0)
+            {
+                for (int i = 0; i < lstGoiThau.Count; i++)
+                {
+                    htmlGoiThau.AppendFormat("<option value='{0}'>{1}</option>", lstGoiThau[i].ID, WebUtility.HtmlEncode(lstGoiThau[i].sTenGoiThau));
+                }
+            }
+
+            return Json(new { htmlCT = htmlChuongtrinh.ToString(), htmlDA = htmlDA.ToString(), htmlGT= htmlGoiThau.ToString() }, JsonRequestBehavior.AllowGet);
+        }
+        
         [HttpPost]
         public JsonResult GetDuAnTheoChuongTrinh(Guid? iChuongTrinh)
         {
@@ -126,7 +191,6 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
             }
             return Json(htmlDA.ToString(), JsonRequestBehavior.AllowGet);
         }
-
         public ActionResult GetContractInfo(Guid? id, bool? isDieuChinh)
         {
             NH_DA_HopDongModel data = new NH_DA_HopDongModel();
@@ -151,7 +215,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
                     {
                         NH_DM_TiGia tiGia = _qlnhService.GetNHDMTiGiaList(data.iID_TiGiaID).ToList().FirstOrDefault();
                         List<NH_DM_TiGia_ChiTiet> tiGiaChiTietList = _qlnhService.GetNHDMTiGiaChiTietList(data.iID_TiGiaID, false).ToList();
-                        ViewBag.HtmlTienTe = GetHtmlTienteQuyDoi(tiGiaChiTietList, tiGia.sMaTienTeGoc, data.iID_TiGia_ChiTietID, data.sMaNgoaiTeKhac);
+                        if(ViewBag.HtmlTienTe != null)
+                            ViewBag.HtmlTienTe = GetHtmlTienteQuyDoi(tiGiaChiTietList, tiGia.sMaTienTeGoc, data.iID_TiGia_ChiTietID, data.sMaNgoaiTeKhac);
                     }
 
                     lstChuongTrinh = _qlnhService.GetNHNhiemVuChiTietTheoDonViId(data.iID_MaDonVi, data.iID_DonViID).ToList();
@@ -177,6 +242,10 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
                     lstTiGiaChiTiet = _qlnhService.GetNHDMTiGiaChiTietList(data.iID_TiGiaID).ToList();
                     lstTiGiaChiTiet.Insert(0, new NH_DM_TiGia_ChiTiet { ID = Guid.Empty, sMaTienTeQuyDoi = "--Chọn mã ngoại tệ khác--" });
                     ViewBag.ListTiGiaChiTiet = lstTiGiaChiTiet.ToSelectList("ID", "sMaTienTeQuyDoi", data.iID_TiGia_ChiTietID.ToString());
+
+                    List<NH_DA_GoiThau> lstGoiThau = _qlnhService.GetGoiThauTheoCT().ToList();
+                    lstGoiThau.Insert(0, new NH_DA_GoiThau { ID = Guid.Empty, sTenGoiThau = "--Chọn gói thầu--" });
+                    ViewBag.ListGoiThau = lstGoiThau;
                 }
                 else
                 {
@@ -208,6 +277,11 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
                 lstTiGiaChiTiet = _qlnhService.GetNHDMTiGiaChiTietList(null).ToList();
                 lstTiGiaChiTiet.Insert(0, new NH_DM_TiGia_ChiTiet { ID = Guid.Empty, sMaTienTeQuyDoi = "--Chọn mã ngoại tệ khác--" });
                 ViewBag.ListTiGiaChiTiet = lstTiGiaChiTiet.ToSelectList("ID", "sMaTienTeQuyDoi");
+
+                List<NH_DA_GoiThau> lstGoiThau = _qlnhService.GetGoiThauTheoCT().ToList();
+                lstGoiThau.Insert(0, new NH_DA_GoiThau { ID = Guid.Empty, sTenGoiThau = "--Chọn gói thầu--" });
+                ViewBag.ListGoiThau = lstGoiThau;
+
             }
 
             return View("_modalUpdate", data);
@@ -234,6 +308,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
                     data.sTenTiGia = tiGia != null ? tiGia.sTenTiGia : string.Empty;
                     var nhaThau = _qlnhService.GetNHDMNhaThauList(data.iID_NhaThauThucHienID).FirstOrDefault();
                     data.sTenNhaThau = nhaThau != null ? nhaThau.sTenNhaThau : string.Empty;
+                    var goiThau = _qlnhService.GetGoiThauTheoCT(data.iID_DonViID).FirstOrDefault();
+                    data.sTenGoiThau = goiThau != null ? goiThau.sTenGoiThau : string.Empty;
                 }
                 else
                 {
