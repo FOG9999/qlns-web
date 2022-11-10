@@ -193,6 +193,7 @@ function disabledDataDiff(event) {
     var tiGiaMa = getClass.slice(-3);
     var getParent = $(event).data("getparent");
     var getIdNhiemVuChi = $(event).closest("tr").find("td[data-getname='iID_KHCTBQP_NhiemVuChiID']").data("getvalue");
+    var loaiNoiDungChiId = $(event).data("getLoaiNDChi");
     event.value = event.value ?? "";
     //level 1: dự án
     //level 2: hợp đồng
@@ -267,7 +268,7 @@ function disabledDataDiff(event) {
         $(".table-update tbody tr").find("td[data-getid='" + getParent + "'][data-getclass='fThuaThieuKinhPhiTrongNam_USD']").html(FormatNumber(checkLyKeUSD, 2));
         $(".table-update tbody tr").find("td[data-getid='" + getParent + "'][data-getclass='fThuaThieuKinhPhiTrongNam_VND']").html(FormatNumber(checkLyKeVND, 0));
     } else {
-        //sum all level 3 của level 2 đấy còn value ko
+        //sum all level 4 của level 3 đấy còn value ko
 
         var check = $(".table-update tbody tr[data-rowsubmit='isData']").
             find("input[data-getparent='" + getParent + "'][data-getclass='" + getClass + "']").toArray()
@@ -289,7 +290,46 @@ function disabledDataDiff(event) {
         var sumGran = 0;
         var sumGranLuyeKeUSD = 0;
         var sumGranLuyeKeVND = 0;
-        //tính sum all level 2 cho level 1
+        //tính sum all level 3 cho level 2
+        $(".table-update tbody tr").find("input[data-getid='" + getParent + "'][data-getloaindchi='" + loaiNoiDungChiId + "'][data-getclass='" + getClass + "']").each(function () {
+            parrentId = $(this).data("getparent");
+            var isData = $(this).closest("tr").data("rowsubmit");
+            if (isData == "isNotData") {
+                $(this).next("span").html(tiGiaMa == "VND" ? FormatNumber(check, 0) : FormatNumber(check, 2))
+            }
+            $(this).val(tiGiaMa == "VND" ? FormatNumber(check, 0) : FormatNumber(check, 2));
+            $(".table-update tbody tr").find("input[data-getparent='" + parrentId + "'][data-getloaindchi='" + loaiNoiDungChiId + "'][data-getclass='" + getClass + "']").each(function () {
+                sumGran += parseFloat(allReplace($(this).val()))
+            })
+
+        })
+
+        $(".table-update tbody tr").find("td[data-getid='" + getParent + "'][data-getloaindchi='" + loaiNoiDungChiId + "'][data-getclass='fThuaThieuKinhPhiTrongNam_USD']").each(function () {
+            parrentId = $(this).data("getparent");
+            $(this).html(FormatNumber(checkLuyKeUSD, 2));
+
+            $(".table-update tbody tr").find("td[data-getparent='" + parrentId + "'][data-getloaindchi='" + loaiNoiDungChiId + "'][data-getclass='fThuaThieuKinhPhiTrongNam_USD']").each(function () {
+                sumGranLuyeKeUSD += parseFloat(allReplace($(this).html().replace(errorNull, "").trim()))
+            })
+        })
+        $(".table-update tbody tr").find("td[data-getid='" + getParent + "'][data-getloaindchi='" + loaiNoiDungChiId + "'][data-getclass='fThuaThieuKinhPhiTrongNam_VND']").each(function () {
+            parrentId = $(this).data("getparent");
+            $(this).html(FormatNumber(checkLuyKeVND, 0));
+            $(".table-update tbody tr").find("td[data-getparent='" + parrentId + "'][data-getloaindchi='" + loaiNoiDungChiId + "'][data-getclass='fThuaThieuKinhPhiTrongNam_VND']").each(function () {
+                sumGranLuyeKeVND += parseFloat(allReplace($(this).html().replace(errorNull, "").trim()))
+            })
+        })
+
+        //gán sum cho lv 2
+        $(".table-update tbody tr").find("input[data-getid='" + parrentId + "'][data-getloaindchi='" + loaiNoiDungChiId + "'][data-getclass='" + getClass + "']").val(tiGiaMa == "VND" ? FormatNumber(sumGran, 0) : FormatNumber(sumGran, 2));
+        var isDataRowCha = $(".table-update tbody tr").find("input[data-getid='" + parrentId + "'][data-getloaindchi='" + loaiNoiDungChiId + "'][data-getclass='" + getClass + "']").closest("tr").data("rowsubmit");
+        if (isDataRowCha == "isNotData") {
+            $(".table-update tbody tr").find("input[data-getid='" + parrentId + "'][data-getloaindchi='" + loaiNoiDungChiId + "'][data-getclass='" + getClass + "']").next("span").html(tiGiaMa == "VND" ? FormatNumber(sumGran, 0) : FormatNumber(sumGran, 2))
+        }
+        $(".table-update tbody tr").find("td[data-getid='" + parrentId + "'][data-getloaindchi='" + loaiNoiDungChiId + "'][data-getclass='fThuaThieuKinhPhiTrongNam_USD']").html(FormatNumber(sumGranLuyeKeUSD, 2));
+        $(".table-update tbody tr").find("td[data-getid='" + parrentId + "'][data-getloaindchi='" + loaiNoiDungChiId + "'][data-getclass='fThuaThieuKinhPhiTrongNam_VND']").html(FormatNumber(sumGranLuyeKeVND, 0));
+
+        //tính sum all level 3 cho level 1
         $(".table-update tbody tr").find("input[data-getid='" + getParent + "'][data-getclass='" + getClass + "']").each(function () {
             parrentId = $(this).data("getparent");
             var isData = $(this).closest("tr").data("rowsubmit");
@@ -358,6 +398,7 @@ function disabledDataDiff(event) {
 function sumTongTable(event) {
     var getParent = $(event).data("getparent");
     var getClass = $(event).data("getclass");
+    var loaiNoiDungChiId = $(event).data("getloaindchi");
     var getIdNhiemVuChi = $(event).closest("tr").find("td[data-getname='iID_KHCTBQP_NhiemVuChiID']").data("getvalue");
     event.value = event.value ?? "";
     var dongCha = $(".table-update tbody tr[data-getlevel='0'][data-getparentid='" + getIdNhiemVuChi + "']");
@@ -381,8 +422,7 @@ function sumTongTable(event) {
             return partialSum + parseFloat(allReplace($(a).html().replace(errorNull, "").trim()))
         }, 0);
 
-
-    //tính sum all level 2 cho level 1
+    //tính sum all level 4 cho level 3
     $(".table-update tbody tr").find("input[data-getid='" + getParent + "'][data-getclass='" + getClass + "']").each(function () {
         var isData = $(this).closest("tr").data("rowsubmit");
         if (isData == "isNotData") {

@@ -17,6 +17,8 @@ using System.Collections.ObjectModel;
 using Viettel.Models.QLNguonNganSach;
 using VIETTEL.Helpers;
 using VIETTEL.Flexcel;
+using static VTS.QLNS.CTC.App.Service.UserFunction.FormatNumber;
+using VTS.QLNS.CTC.App.Service.UserFunction;
 
 namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 {
@@ -609,7 +611,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             List<SelectListItem> lstDonViTinh = new List<SelectListItem>()
             {
                 new SelectListItem{Text=Constants.DonViTinh.TypeName.DONG,Value=((int)Constants.DonViTinh.Type.DONG).ToString()},
-                new SelectListItem{Text=Constants.DonViTinh.TypeName.NGHIN_DONG,Value=((int)Constants.DonViTinh.Type.NGHIN_DONG).ToString()},
+                new SelectListItem{Text=Constants.DonViTinh.TypeName.NGHIN_DONG,Value=((int)Constants.DonViTinh.Type.NGHIN_DONG_LOWER).ToString()},
                 new SelectListItem{Text=Constants.DonViTinh.TypeName.TRIEU_DONG,Value=((int)Constants.DonViTinh.Type.TRIEU_DONG).ToString()},
                 new SelectListItem{Text=Constants.DonViTinh.TypeName.TY_DONG,Value=((int)Constants.DonViTinh.Type.TY_DONG).ToString()}
             };
@@ -620,6 +622,12 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             return View("_xuatFilePDF");
         }
 
+        private int CheckDonViTinhIsNghinDong(int dvt = 1)
+        {
+            if (dvt == 1001) return 1000;
+            else return dvt;
+        }
+
         [HttpGet]
         public ActionResult ExportReportPDF(Guid id, string sTieuDeMot, string sTieuDeHai, int iDonViTinh)
         {
@@ -628,7 +636,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             var lstChiTiet = _iQLVonDauTuService.GetVdtThongTriChiTietById(id);
             if (lstChiTiet != null)
             {
-                lstChiTiet = lstChiTiet.Select(n => { n.FSoTien = n.FSoTien / iDonViTinh; return n; }).ToList();
+                lstChiTiet = lstChiTiet.Select(n => { n.FSoTien = n.FSoTien; return n; }).ToList();
             }
             var objDonViQuanLy = _iNganSachService.GetDonViByMaDonVi(PhienLamViec.iNamLamViec, PhienLamViec.iID_MaDonVi);
             string sDonViQuanLy = string.Empty;
@@ -642,6 +650,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             XlsFile Result = new XlsFile(true);
             FlexCelReport fr = new FlexCelReport();
 
+            FormatNumber formatNumber = new FormatNumber(CheckDonViTinhIsNghinDong(iDonViTinh), ExportType.PDF);
+            fr.SetUserFunction("FormatNumber", formatNumber);
+            fr.SetValue("DonViTinh", iDonViTinh.ToStringDvt()); // cho đơn vị "nghìn đồng"
             fr.SetValue("iNamKeHoach", objThongTri.iNamThongTri);
             fr.SetValue("Cap1", sDonViQuanLy);
             fr.SetValue("Cap2", string.Empty);

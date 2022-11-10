@@ -90,6 +90,10 @@ function ValidateData(data) {
         Messages.push("Giai đoạn đến chưa nhập !");
     }
 
+    if (data.iGiaiDoanTu % 5 != 1) {
+        Messages.push("Giai đoạn không hợp lệ.");
+    }
+
     var rowCount = Bang_nH;
     if (rowCount == 0) {
         Messages.push("Chưa có dữ liệu chi tiết để import !");

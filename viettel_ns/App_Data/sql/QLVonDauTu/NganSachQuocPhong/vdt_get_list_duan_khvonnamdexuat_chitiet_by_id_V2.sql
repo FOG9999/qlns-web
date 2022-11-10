@@ -44,15 +44,15 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 
 		-- trường hợp dự án được chọn không có trong quyết định đầu tư.
 		set @checkQDDT = (select count(*) from #tmpQDDT);
-		IF(@checkQDDT > 0)
-		BEGIN
-			iNSERT INTO #tmpQDDT(iID_DuAnID,fTongMucDauTuPheDuyet, sChuDauTu,iID_ChuDauTuID)
-			SELECT DISTINCT da.iID_DuAnID, 0 as fTongMucDauTuPheDuyet,dmcdt.sTenCDT as sChuDauTu, dmcdt.ID as iID_ChuDauTuID FROM VDT_DA_DuAn da
-			left join DM_ChuDauTu dmcdt on dmcdt.ID = da.iID_ChuDauTuID
-			 cross join #tmpQDDT tm
-			WHERE tm.iID_DuAnID NOT IN (SELECT * FROM dbo.f_split(@lstDuAnID)) AND da.iID_DuAnID IN (SELECT * FROM dbo.f_split(@lstDuAnID))
-		END
-		ELSE
+		IF(@checkQDDT <= 0)
+		--BEGIN
+		--	iNSERT INTO #tmpQDDT(iID_DuAnID,fTongMucDauTuPheDuyet, sChuDauTu,iID_ChuDauTuID)
+		--	SELECT DISTINCT da.iID_DuAnID, 0 as fTongMucDauTuPheDuyet,dmcdt.sTenCDT as sChuDauTu, dmcdt.ID as iID_ChuDauTuID FROM VDT_DA_DuAn da
+		--	left join DM_ChuDauTu dmcdt on dmcdt.ID = da.iID_ChuDauTuID
+		--	 cross join #tmpQDDT tm
+		--	WHERE tm.iID_DuAnID NOT IN (SELECT * FROM dbo.f_split(@lstDuAnID)) AND da.iID_DuAnID IN (SELECT * FROM dbo.f_split(@lstDuAnID))
+		--END
+		--ELSE
 		BEGIN
 			iNSERT INTO #tmpQDDT(iID_DuAnID,fTongMucDauTuPheDuyet, sChuDauTu,iID_ChuDauTuID)
 			SELECT DISTINCT da.iID_DuAnID, 0 as fTongMucDauTuPheDuyet,dmcdt.sTenCDT as sChuDauTu,dmcdt.ID as iID_ChuDauTuID  FROM VDT_DA_DuAn da

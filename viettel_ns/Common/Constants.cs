@@ -427,6 +427,7 @@ namespace VIETTEL.Common
             {
                 DONG = 1,
                 NGHIN_DONG = 1000,
+                NGHIN_DONG_LOWER = 1001,
                 TRIEU_DONG = 1000000,
                 TY_DONG = 1000000000,
             }

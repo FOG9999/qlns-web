@@ -500,11 +500,9 @@
                 element: function (settings, original) {
                     //var input = $('<input id="txtONhapDuLieu" class="input-right" onfocus="txtONhapDuLieu_OnFocus(this);" onkeyup="return ValidateNumberKeyUp(this);" />');
 
-                    var input = $('<input id="txtONhapDuLieu" class="input-right" onfocus="txtONhapDuLieu_OnFocus(this);" onkeyup="return ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" />');
+                    var input = $('<input id="txtONhapDuLieu" class="input-right" onfocus="txtONhapDuLieu_OnFocus(this);" onkeyup="return ValidateNumberKeyUp(this,false);" onkeydown="ValidateInputKeydown(event,this,2,true);" />');
                     input.attr('autocomplete', 'off');
                     $(this).append(input);
-
-                    //console.log(input);
                     return (input);
                 }
             },
@@ -636,9 +634,11 @@ function txtONhapDuLieu_OnFocus(txt) {
                     select: function (event, ui) {
                         Bang_txtONhapDuLieu_Autocomplete_onSelect(txt, event, ui);
                         return false;
-                    },                  
+                    },
                     focus: function (event, ui) {
                         $(txt).val(ui.item.showLabel ? ui.item.label : ui.item.value);
+
+                        event.preventDefault();
                     },
                     delay: 100,
                     minLength: 0
@@ -658,10 +658,9 @@ function txtONhapDuLieu_OnFocus(txt) {
 
             //Co nhap ky tu truoc la ky tu hien thi
             var KyTuVuaNhap = $(txt).attr('sKyTuVuaNhap');
-
-            console.log("set input:" + KyTuVuaNhap);
-
-            $(txt).val(KyTuVuaNhap);
+            if (!(Bang_arrType[c_DuLieu] == 1 && !/^[0-9]+$/.test(KyTuVuaNhap))) {
+                $(txt).val(KyTuVuaNhap);
+            }
 
             setSelectionRange(txt, 1, 1);
 

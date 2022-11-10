@@ -99,8 +99,8 @@ SELECT hangmuc.iID_DuAn_HangMucID as IdRow,
 		CAST('0' as bit) as bLaHangCha into #TEMP_ChiTiet
 from VDT_DA_DuAn_HangMuc hangmuc
 INNER JOIN VDT_DA_DuAn duan on hangmuc.iID_DuAnID = duan.iID_DuAnID
-LEFT JOIN NS_DonVi dv on duan.iID_MaDonViThucHienDuAnID = dv.iID_MaDonVi and dv.iNamLamViec_DonVi = @iNamLamViec
-LEFT JOIN DM_ChuDauTu dmcdt on duan.iID_MaCDT = dmcdt.sId_CDT and dmcdt.iNamLamViec = @iNamLamViec
+LEFT JOIN NS_DonVi dv on duan.iID_DonViThucHienDuAnID = dv.iID_Ma and dv.iNamLamViec_DonVi = @iNamLamViec
+LEFT JOIN DM_ChuDauTu dmcdt on duan.iID_ChuDauTuID = dmcdt.ID and dmcdt.iNamLamViec = @iNamLamViec
 LEFT JOIN VDT_DM_LoaiCongTrinh lct on hangmuc.iID_LoaiCongTrinhID = lct.iID_LoaiCongTrinh
 LEFT JOIN NS_NguonNganSach nns on hangmuc.iID_NguonVonID = nns.iID_MaNguonNganSach
 where 1 = 1

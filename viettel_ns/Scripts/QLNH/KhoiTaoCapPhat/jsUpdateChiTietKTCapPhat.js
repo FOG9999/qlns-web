@@ -177,8 +177,8 @@ function LoadDataViewChitiet() {
         for (var i = 0; i < data.length; i++) {
             var dongMoi = "";
             console.log(data[i])
-            dongMoi += "<tr style='cursor: pointer;' class='parent' name='" + (data[i].iID_DuAnID != undefined ? 'isDuAn' : 'isHopDong') + "' data-isdelete='false'>";
-            dongMoi += "<td><div class='" + (data[i].iID_DuAnID != undefined ? 'selectDuAn' : 'selectHopDong') + "'>" + (data[i].iID_DuAnID != undefined ? CreateHtmlSelectDuAn(data[i].iID_DuAnID) : CreateHtmlSelectHopDong(data[i].iID_HopDongID)) + "</div></td>";
+            dongMoi += "<tr style='cursor: pointer;' class='parent' name='" + (data[i].iID_HopDongID != undefined ? 'isHopDong' : 'isDuAn') + "' data-isdelete='false'>";
+            dongMoi += "<td><div class='" + (data[i].iID_HopDongID != undefined ? 'selectHopDong' : 'selectDuAn') + "'>" + (data[i].iID_HopDongID != undefined ? CreateHtmlSelectHopDong(data[i].iID_HopDongID) : CreateHtmlSelectDuAn(data[i].iID_DuAnID)) + "</div></td>";
             dongMoi += "<input type='hidden' class='form-control'  name='iID_KhoiTaoCapPhatID' value='" + data[i].iID_KhoiTaoCapPhatID + "'/>";
             dongMoi += "<input type='hidden' class='form-control'  name='ID' value='" + data[i].ID + "'/>";
 

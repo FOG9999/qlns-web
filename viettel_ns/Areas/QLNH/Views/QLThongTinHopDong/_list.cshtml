@@ -75,16 +75,16 @@
             @{
                 foreach (NH_DA_HopDongModel item in Model.Items)
                 {
-                        <tr style="background-color:white;">
-                            <td align="left" colspan="8" style="color: #ff0000; cursor: pointer" onclick="ToogleRow(this)" data-id="@item.iID_KHCTBQP_ChuongTrinhID" data-ishaschild="false">Chương trình: @Html.Raw(Html.Encode(item.sTenChuongTrinh))</td>
-                            <td align="right" style="color: #ff0000">@(item.fGiaTriUSD.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
-                            <td align="right" style="color: #ff0000">@(item.fGiaTriVND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fGiaTriVND.Value).ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
-                            <td align="right" style="color: #ff0000">@(item.fGiaTriEUR.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriEUR.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
-                            <td align="right" style="color: #ff0000">@(item.fGiaTriNgoaiTeKhac.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriNgoaiTeKhac.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
-                            <td align="right" style="color: #ff0000"></td>
-                            <td align="right" style="color: #ff0000"></td>
-                            <td align="right" style="color: #ff0000"></td>
-                        </tr>
+                    <tr style="background-color:white;">
+                        <td class="text-left" colspan="8" style="color:#ff0000;cursor:pointer;" onclick="ToggleRow(this);" data-id="@item.iID_KHCTBQP_ChuongTrinhID" data-ishaschild="false">Chương trình: @Html.Raw(Html.Encode(item.sTenChuongTrinh))</td>
+                        <td class="text-right" style="color: #ff0000">@(item.fGiaTriUSD.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td class="text-right" style="color: #ff0000">@(item.fGiaTriVND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fGiaTriVND.Value).ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                        <td class="text-right" style="color: #ff0000">@(item.fGiaTriEUR.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriEUR.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td class="text-right" style="color: #ff0000">@(item.fGiaTriNgoaiTeKhac.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriNgoaiTeKhac.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td class="text-right" style="color: #ff0000"></td>
+                        <td class="text-right" style="color: #ff0000"></td>
+                        <td class="text-right" style="color: #ff0000"></td>
+                    </tr>
                 }
             }
         </tbody>

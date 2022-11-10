@@ -25,7 +25,8 @@
                     @{
                         if (Model.Category == CONFIRM)
                         {
-                            <button class="btn btn-primary" onclick="SaveDetail(true)" data-dismiss="modal"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                            @*<button class="btn btn-primary" onclick="SaveDetail(true)" data-dismiss="modal"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>*@
+                            <button class="btn btn-primary" onclick="$('#sheet')[0].contentWindow.KHChiTietBQP_BangDuLieu_Save(true);" data-dismiss="modal"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
                         }
                     }
                 </div>

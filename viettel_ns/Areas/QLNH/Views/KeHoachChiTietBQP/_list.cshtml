@@ -65,24 +65,24 @@
             foreach (NH_KHChiTietBQPModel item in Model.Items)
             {
                 index++;
-                <tr>
-                    <td align="center">@(pageIndex + index)</td>
-                    <td align="left" colspan="2">@Html.Raw(Html.Encode(item.sNam))</td>
-                    <td align="left">@Html.Raw(Html.Encode(item.sSoKeHoach))</td>
-                    <td align="center">@(item.dNgayKeHoach.HasValue ? item.dNgayKeHoach.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
-                    <td align="left">@Html.Raw(!string.IsNullOrEmpty(Html.Encode(item.sMoTaChiTiet)) ? Html.Encode(item.sMoTaChiTiet).Replace("\n", "<br/>") : string.Empty)</td>
-                    <td align="right">@(item.fTongGiaTriUSD.HasValue ? CommonFunction.DinhDangSo(item.fTongGiaTriUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
-                    <td align="right">@(item.fTongGiaTriVND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fTongGiaTriVND.Value).ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
-                    <td align="center">(@Html.Raw(item.iLanDieuChinh))</td>
+                <tr style="cursor: pointer;">
+                    <td class="text-left" onclick="OpenModalDetail('@item.ID', 'DETAIL')">@(pageIndex + index)</td>
+                    <td class="text-left" colspan="2" onclick="OpenModalDetail('@item.ID', 'DETAIL')">@Html.Raw(Html.Encode(item.sNam))</td>
+                    <td class="text-left" onclick="OpenModalDetail('@item.ID', 'DETAIL')">@Html.Raw(Html.Encode(item.sSoKeHoach))</td>
+                    <td class="text-center" onclick="OpenModalDetail('@item.ID', 'DETAIL')">@(item.dNgayKeHoach.HasValue ? item.dNgayKeHoach.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                    <td class="text-left" onclick="OpenModalDetail('@item.ID', 'DETAIL')">@Html.Raw(!string.IsNullOrEmpty(Html.Encode(item.sMoTaChiTiet)) ? Html.Encode(item.sMoTaChiTiet).Replace("\n", "<br/>") : string.Empty)</td>
+                    <td class="text-right" onclick="OpenModalDetail('@item.ID', 'DETAIL')">@(item.fTongGiaTriUSD.HasValue ? CommonFunction.DinhDangSo(item.fTongGiaTriUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                    <td class="text-right" onclick="OpenModalDetail('@item.ID', 'DETAIL')">@(item.fTongGiaTriVND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fTongGiaTriVND.Value).ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                    <td class="text-center" onclick="OpenModalDetail('@item.ID', 'DETAIL')">(@Html.Raw(item.iLanDieuChinh))</td>
                     @if (item.iID_ParentAdjustID.HasValue)
                     {
-                        <td align="left" class="text-underline text-primary" role="button" onclick="OpenModalDetail('@item.iID_ParentAdjustID', 'DETAIL')">@Html.Raw(Html.Encode(item.sDieuChinhTu))</td>
+                        <td class="text-left text-underline text-primary" role="button" onclick="OpenModalDetail('@item.iID_ParentAdjustID', 'DETAIL')">@Html.Raw(Html.Encode(item.sDieuChinhTu))</td>
                     }
                     else
                     {
-                        <td align="left">@Html.Raw(Html.Encode(item.sDieuChinhTu))</td>
+                        <td class="text-left" onclick="OpenModalDetail('@item.ID', 'DETAIL')">@Html.Raw(Html.Encode(item.sDieuChinhTu))</td>
                     }
-                    <td align="center">
+                    <td class="text-center">
                         <button type="button" title="Điều chỉnh" class="@(!item.bIsActive ? "invisible" : "") btn-detail" onclick="OpenModal('@item.ID', 'ADJUST')" data-toggle="modal" data-target="#modalKHChiTietBQP"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>
                         <button type="button" title="Xem chi tiết" class="btn-detail" onclick="OpenModalDetail('@item.ID', 'DETAIL')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
                         <button type="button" title="Sửa" class="@(!item.bIsActive ? "invisible" : "") btn-edit" onclick="OpenModal('@item.ID', 'UPDATE')" data-toggle="modal" data-target="#modalKHChiTietBQP"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
@@ -95,8 +95,6 @@
 </table>
 
 @Html.BuildPagingButtons(Model._paging)
-
-<script src="~/Scripts/QLNH/KeHoachChiTietBQP/jsNH_KeHoachChiTietBQP.js" type="text/javascript"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {

@@ -147,9 +147,12 @@ function BangDuLieu_ThemHangMoi(h, hGiaTri, isSameLevel) {
     if (!isSameLevel) {
         Bang_arrLaHangCha[h - 1] = true;
         Bang_arrLaHangCha[rowPositionMaxStt] = false;
-    }
-    else {
-        Bang_arrLaHangCha[rowPositionMaxStt] = Bang_arrGiaTri[h - 1][Bang_arrCSMaCot["iID_ParentID"]] == "";
+    } else {
+        if (h == 0) {
+            Bang_arrLaHangCha[rowPositionMaxStt] = true;
+        } else {
+            Bang_arrLaHangCha[rowPositionMaxStt] = Bang_arrGiaTri[h - 1][Bang_arrCSMaCot["iID_ParentID"]] == "";
+        }
     }
     
     setActiveHC();
@@ -256,14 +259,13 @@ function DanhLaiSTT(parentID, Bang_arrGiaTriTemp, STTCha) {
 }
 
 function KHTT_TTCP_BangDuLieu_Save() {
-    //kiem tra ngay thang nhap tren luoi chi tiet
     if (!ValidateData()) {
         return false;
     }
     let state = $("#currentState").val();
     Bang_arrGiaTriTemp = Bang_arrGiaTri;
     DanhLaiSTT("", Bang_arrGiaTriTemp, "");
-    var Bang_arrGiaTriNew = new Array(2);
+    var Bang_arrGiaTriNew = new Array();
     var j = 0;
     for (var i = 0; i < Bang_arrGiaTriTemp.length; i++) {
         if (!Bang_arrHangDaXoa[i]) {
@@ -281,7 +283,7 @@ function KHTT_TTCP_BangDuLieu_Save() {
         rowData.sMaThuTu = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["sMaThuTu"]];
         rowData.sTenNhiemVuChi = $("<div/>").text($.trim(Bang_arrGiaTriNew[i][Bang_arrCSMaCot["sTenNhiemVuChi"]])).html();
         rowData.iID_BQuanLyID = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["iID_BQuanLyID"]];
-        rowData.sGiaTri = UnFormatNumber($.trim(Bang_arrGiaTriNew[i][Bang_arrCSMaCot["fGiaTri"]]).toString());
+        rowData.sGiaTri = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["fGiaTri"]];
         rowData.iID_ParentID = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["iID_ParentID"]];
         rowData.isAdd = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["isAdd"]];
         tableNhiemVuChi.push(rowData);
@@ -310,7 +312,7 @@ function KHTT_TTCP_BangDuLieu_Save() {
                     url: "/Modal/OpenModal",
                     data: { Title: Title, Messages: Messages, Category: ERROR },
                     success: function (data) {
-                        $("#divModalConfirm").html(data);
+                        window.parent.loadModal(data);
                     }
                 });
             }
@@ -368,7 +370,7 @@ function ValidateData() {
 }
 
 function BangDuLieu_onKeypress_F10() {
-    KHTT_TTCP_BangDuLieu_Save();
+    //KHTT_TTCP_BangDuLieu_Save();
 }
 
 function Bang_onKeypress_F(strKeyEvent) {

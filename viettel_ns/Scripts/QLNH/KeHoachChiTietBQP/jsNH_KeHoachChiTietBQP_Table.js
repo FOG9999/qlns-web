@@ -145,6 +145,7 @@ function BangDuLieu_ThemHangMoi(h, hGiaTri, isSameLevel) {
     Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["sTenNhiemVuChi"], '');
     Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["fGiaTriBQP_USD"], '');
     Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["fGiaTriBQP_VND"], '');
+    Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["fGiaTriTTCP_USD"], '');
     Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["bIsHasChild"], 'False');
     Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["bIsTTCP"], 'False');
     if (!isSameLevel) {
@@ -258,15 +259,16 @@ function DanhLaiSTT(parentID, Bang_arrGiaTriTemp, STTCha) {
     }
 }
 
-function KHChiTietBQP_BangDuLieu_Save() {
-    //kiem tra ngay thang nhap tren luoi chi tiet
-    if (!ValidateData()) {
-        return false;
+function KHChiTietBQP_BangDuLieu_Save(isConfirm = false) {
+    if (!isConfirm) {
+        if (!ValidateData()) return false;
+        if (!ConfirmGiaTriPheDuyet()) return false;
     }
+
     let state = $("#currentState").val();
     Bang_arrGiaTriTemp = Bang_arrGiaTri;
     DanhLaiSTT("", Bang_arrGiaTriTemp, "");
-    var Bang_arrGiaTriNew = new Array(2);
+    var Bang_arrGiaTriNew = new Array();
     var j = 0;
     for (var i = 0; i < Bang_arrGiaTriTemp.length; i++) {
         if (!Bang_arrHangDaXoa[i]) {
@@ -294,14 +296,13 @@ function KHChiTietBQP_BangDuLieu_Save() {
             rowData.hasDonVi = false;
         }
 
-        rowData.sGiaTri = UnFormatNumber($.trim(Bang_arrGiaTriNew[i][Bang_arrCSMaCot["fGiaTri"]]).toString());
         rowData.iID_ParentID = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["iID_ParentID"]];
         rowData.isAdd = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["isAdd"]];
 
-        rowData.fGiaTriUSD = UnFormatNumber($.trim(Bang_arrGiaTriNew[i][Bang_arrCSMaCot["fGiaTriBQP_USD"]]).toString());
-        rowData.fGiaTriVND = UnFormatNumber($.trim(Bang_arrGiaTriNew[i][Bang_arrCSMaCot["fGiaTriBQP_VND"]]).toString());
+        rowData.fGiaTriUSD = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["fGiaTriBQP_USD"]];
+        rowData.fGiaTriVND = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["fGiaTriBQP_VND"]];
         rowData.iID_KHTTTTCP_NhiemVuChiID = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["iID_KHTTTTCP_NhiemVuChiID"]];
-        rowData.fGiaTriTTCP_USD = UnFormatNumber(Bang_arrGiaTriNew[i][Bang_arrCSMaCot["fGiaTriTTCP_USD"]]);
+        rowData.fGiaTriTTCP_USD = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["fGiaTriTTCP_USD"]];
         tableNhiemVuChi.push(rowData);
     }
 
@@ -328,7 +329,7 @@ function KHChiTietBQP_BangDuLieu_Save() {
                     url: "/Modal/OpenModal",
                     data: { Title: Title, Messages: Messages, Category: ERROR },
                     success: function (data) {
-                        $("#divModalConfirm").html(data);
+                        window.parent.loadModal(data);
                     }
                 });
             }
@@ -342,8 +343,7 @@ function ValidateData() {
     var Title = 'Lỗi lưu kế hoạch chi tiết BQP';
     if (Bang_nH == 0) {
         sMessError.push("Quyết định hiện tại chưa có chương trình, nhiệm vụ chi. Vui lòng thêm chương trình, nhiệm vụ chi.");
-    }
-    else {
+    } else {
         for (var j = 0; j < Bang_nH; j++) {
             if (!Bang_arrHangDaXoa[j]) {
                 var sTen = Bang_LayGiaTri(j, "sTenNhiemVuChi");
@@ -351,17 +351,18 @@ function ValidateData() {
                     sChuongTrinh += Bang_arrGiaTri[j][Bang_arrCSMaCot["sMaThuTu"]] + ", ";
                 }
                 var fGiaTriVND = Bang_LayGiaTri(j, "fGiaTriBQP_VND");
-                if (fGiaTriVND == '' || parseFloat(fGiaTriVND) <= 0) {
+                if (fGiaTriVND == '' || parseFloat(noExponents(fGiaTriVND)) <= 0) {
                     sGiaTriVND += Bang_arrGiaTri[j][Bang_arrCSMaCot["sMaThuTu"]] + ", ";
                 }
 
                 var fGiaTriUSD = Bang_LayGiaTri(j, "fGiaTriBQP_USD");
-                if (fGiaTriUSD == '' || parseFloat(fGiaTriUSD) <= 0) {
+                if (fGiaTriUSD == '' || parseFloat(noExponents(fGiaTriUSD)) <= 0) {
                     sGiaTriUSD += Bang_arrGiaTri[j][Bang_arrCSMaCot["sMaThuTu"]] + ", ";
                 }
 
                 var iDDonVi = Bang_LayGiaTri(j, "iID_DonViID");
-                if ((iDDonVi == '' || iDDonVi == GUID_EMPTY) && Bang_LayGiaTri(j, "bIsTTCP") == "False") {
+                var bIsTTCP = Bang_LayGiaTri(j, "bIsTTCP");
+                if ((iDDonVi == '' || iDDonVi == GUID_EMPTY) && (bIsTTCP == "False" || (bIsTTCP == "True" && Bang_LayGiaTri(j, "bIsHasChild") == "False"))) {
                     sDonVi += Bang_arrGiaTri[j][Bang_arrCSMaCot["sMaThuTu"]] + ", ";
                 }
             }
@@ -370,17 +371,17 @@ function ValidateData() {
             sMessError.push('Hãy nhập tên chương trình, nhiệm vụ chi dòng số ' + sChuongTrinh.substring(0, sChuongTrinh.length - 2) + '.');
         }
         if (sDonVi != "") {
-            sMessError.push('Chương trình, nhiệm vụ chi dòng ' + sDonVi.substring(0, sDonVi.length - 2) + ' chưa có thông tin đơn vị.');
+            sMessError.push('Dòng ' + sDonVi.substring(0, sDonVi.length - 2) + ' chưa có thông tin đơn vị.');
         }
         if (sGiaTriUSD != "") {
-            sMessError.push('Chương trình, nhiệm vụ chi dòng ' + sGiaTriUSD.substring(0, sGiaTriUSD.length - 2) + ' chưa có thông tin giá trị BQP phê duyệt USD.');
+            sMessError.push('Dòng ' + sGiaTriUSD.substring(0, sGiaTriUSD.length - 2) + ' cần nhập thông tin giá trị BQP phê duyệt (USD).');
         }
         if (sGiaTriVND != "") {
-            sMessError.push('Chương trình, nhiệm vụ chi dòng ' + sGiaTriVND.substring(0, sGiaTriVND.length - 2) + ' chưa có thông tin giá trị BQP phê duyệt VND.');
+            sMessError.push('Dòng ' + sGiaTriVND.substring(0, sGiaTriVND.length - 2) + ' cần nhập thông tin giá trị BQP phê duyệt (VND).');
         }
     }
 
-    if (sMessError != null && sMessError != undefined && sMessError.length > 0) {
+    if (sMessError.length > 0) {
         $.ajax({
             type: "POST",
             url: "/Modal/OpenModal",
@@ -394,8 +395,50 @@ function ValidateData() {
     return true;
 }
 
+// Validate giá trị TTCP >= giá trị BQP.
+function ConfirmGiaTriPheDuyet() {
+    var lstSttInValid = [];
+    for (var j = 0; j < Bang_nH; j++) {
+        if (!Bang_arrHangDaXoa[j]) {
+            var bIsTTCP = Bang_LayGiaTri(j, "bIsTTCP");
+            var fGiaTriUSD = Bang_LayGiaTri(j, "fGiaTriBQP_USD");
+            if (bIsTTCP == "True") {
+                var fGiaTriTTCP_USD = Bang_LayGiaTri(j, "fGiaTriTTCP_USD") == "" ? 0 : Bang_LayGiaTri(j, "fGiaTriTTCP_USD");
+                fGiaTriUSD = fGiaTriUSD == "" ? 0 : fGiaTriUSD;
+                // Nếu giá trị bộ quốc phòng lớn hơn giá trị TTCP thì xác nhận có muốn tiếp tục lưu hay không?
+                if (parseFloat(noExponents(fGiaTriUSD)) - parseFloat(noExponents(fGiaTriTTCP_USD)) > 0) {
+                    lstSttInValid.push(Bang_LayGiaTri(j, "sMaThuTu"));
+                }
+            }
+        }
+    }
+    var stringSttAlert = "";
+    if (lstSttInValid.length > 0) {
+        // Nếu xác định có dòng không hợp lệ thì show confirm popup
+        stringSttAlert = lstSttInValid.join(', ');
+
+        var Title = 'Xác nhận lưu kế hoạch chi tiết Bộ Quốc Phòng phê duyệt';
+        var Messages = [];
+        Messages.push('Dòng ' + stringSttAlert + ' đang có giá trị BQP phê duyệt lớn hơn giá trị TTCP phê duyệt.');
+        Messages.push('Bạn có chắc chắn muốn lưu Kế hoạch chi tiết Bộ Quốc Phòng này?');
+
+        $.ajax({
+            type: "POST",
+            url: "/QLNH/KeHoachChiTietBQP/ShowModalConfirmSave",
+            data: { title: Title, messages: Messages },
+            success: function (data) {
+                window.parent.loadModal(data);
+            }
+        });
+        return false;
+    }
+
+    return true;
+}
+
+
 function BangDuLieu_onKeypress_F10() {
-    KHChiTietBQP_BangDuLieu_Save();
+    //KHChiTietBQP_BangDuLieu_Save();
 }
 
 function Bang_onKeypress_F(strKeyEvent) {

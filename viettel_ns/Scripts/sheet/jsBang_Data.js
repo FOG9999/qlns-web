@@ -530,11 +530,7 @@ function Bang_HamTruocKhiKetThuc(iAction) {
         Bang_DangLuuThongTin = true;
         Bang_ShowCloseDialog();
 
-
-        console.log("save1");
-
         if (document.getElementById("btnXacNhanGhi")) {
-            console.log("save2");
             ShowPopupThucHien();
 
             Bang_GanMangGiaTri_Bang_arrGiaTri();
@@ -542,7 +538,6 @@ function Bang_HamTruocKhiKetThuc(iAction) {
             document.getElementById("btnXacNhanGhi").click();
         }
     }
-    console.log("save3");
 
     return true;
 }

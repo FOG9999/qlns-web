@@ -43,7 +43,7 @@
             <div class="col-sm-6">
                 <label for="txtGiaiDoanDen">Giai đoạn đến</label>
                 @Helpers.Required()
-            <input type="number" id="iGiaiDoanDen" name="iGiaiDoanDen" class="form-control endYear" value="@Model.iGiaiDoanDen" maxlength="50" />
+            <input type="number" id="iGiaiDoanDen" name="iGiaiDoanDen" class="form-control endYear" value="@Model.iGiaiDoanDen" maxlength="50" disabled/>
             </div>
         </div>
         <div class="form-group row">
@@ -63,6 +63,13 @@
 
 <script>
     $(document).ready(function ($) {
+        $("#iGiaiDoanTu").change(function () {
+            if (this.value != "") {
+                $("#iGiaiDoanDen").val(parseInt(this.value) + 4);
+            } else {
+                $("#iGiaiDoanDen").val("");
+            }
+        });
         var inputGiaiDoanTu = $('#iGiaiDoanTu');
         inputGiaiDoanTu.on('keyup', function () {
             var key = event.keyCode || event.charCode;
@@ -102,7 +109,7 @@
 
             document.getElementById('iID_DonViQuanLyID').removeAttribute("disabled");
             document.getElementById('iGiaiDoanTu').removeAttribute("disabled");
-            document.getElementById('iGiaiDoanDen').removeAttribute("disabled");
+            //document.getElementById('iGiaiDoanDen').removeAttribute("disabled");
             document.getElementById('iLoai').removeAttribute("disabled");
         }
     });

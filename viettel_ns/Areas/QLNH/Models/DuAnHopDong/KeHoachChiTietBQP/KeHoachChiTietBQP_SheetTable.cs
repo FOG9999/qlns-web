@@ -136,10 +136,12 @@ namespace VIETTEL.Areas.QLNH.Models.DuAnHopDong.KeHoachChiTietBQP
             {
                 dtChiTiet.Rows[i]["IsVNDToUSD"] = isVNDtoUSD;
                 dtChiTiet.Rows[i]["TiGia"] = tiGia;
+                dtChiTiet.Rows[i]["fGiaTriTTCP_USD"] = dtChiTiet.Rows[i]["fGiaTriTTCP_USD"] != DBNull.Value && dtChiTiet.Rows[i]["fGiaTriTTCP_USD"] != null && dtChiTiet.Rows[i]["fGiaTriTTCP_USD"].ToString() != ""
+                        ? Convert.ToDouble(dtChiTiet.Rows[i]["fGiaTriTTCP_USD"]).ToString("0.00", new CultureInfo("en-US")) : "";
                 if (isVNDtoUSD)
                 {
                     money = Convert.ToString(dtChiTiet.Rows[i]["fGiaTriBQP_VND"]) != "" ? float.Parse(dtChiTiet.Rows[i]["fGiaTriBQP_VND"].ToString()) : 0F;
-                    dtChiTiet.Rows[i]["fGiaTriBQP_USD"] = (money * tiGia).ToString("0.00" + new string('#', 400), new CultureInfo("en-US"));
+                    dtChiTiet.Rows[i]["fGiaTriBQP_USD"] = (money * tiGia).ToString("0.00", new CultureInfo("en-US"));
                 }
                 else
                 {
@@ -202,7 +204,7 @@ namespace VIETTEL.Areas.QLNH.Models.DuAnHopDong.KeHoachChiTietBQP
                 new SheetColumn(columnName: "sTenPhongBan", header: "B Quản lý", hasSearch: true, columnWidth: 220, align: "left", isReadonly: true),
                 new SheetColumn(columnName: "sTenDonVi", header: "Đơn vị", hasSearch: true, columnWidth: 220, align: "left", dataType: 3, isReadonly: false),
                 new SheetColumn(columnName: "fGiaTriTTCP_USD", header: "Giá trị TTCP phê duyệt (USD)", columnWidth: 200, align: "right", isReadonly: true, dataType: 1),
-                new SheetColumn(columnName: "fGiaTriBQP_USD", header: "Giá trị BQP phê duyệt (USD)", columnWidth: 200, align: "right", isReadonly: false, dataType: 1),
+                new SheetColumn(columnName: "fGiaTriBQP_USD", header: "Giá trị BQP phê duyệt (USD)", columnWidth: 200, align: "right", isReadonly: false, dataType: 1, format: "2"),
                 new SheetColumn(columnName: "fGiaTriBQP_VND", header: "Giá trị BQP phê duyệt (VND)", columnWidth: 200, align: "right", isReadonly: false, dataType: 1),
 
                 // cot khac

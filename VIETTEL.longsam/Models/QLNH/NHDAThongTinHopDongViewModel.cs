@@ -48,6 +48,14 @@ namespace Viettel.Models.QLNH
                 return dNgayTao.HasValue ? dNgayTao.Value.ToString("dd/MM/yyyy") : string.Empty;
             }
         }
+
+        public string dNgayHopDongStr
+        {
+            get
+            {
+                return dNgayHopDong.HasValue ? dNgayHopDong.Value.ToString("dd/MM/yyyy") : string.Empty;
+            }
+        }
     }
 
     public class NHDAThongTinHopDongGiaTriTienTeModel

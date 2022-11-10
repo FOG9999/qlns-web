@@ -164,20 +164,30 @@ namespace VIETTEL.Areas.QLNH.Controllers.ThucHienKeHoach
         // Lưu data TTCP and NVC
         public ActionResult SaveKHTongTheTTCP(List<NH_KHTongTheTTCP_NhiemVuChiDto> lstNhiemVuChis, string state)
         {
-            foreach (var item in lstNhiemVuChis)
+            try
             {
-                item.sTenNhiemVuChi = HttpUtility.HtmlDecode(item.sTenNhiemVuChi);
-            }
+                foreach (var item in lstNhiemVuChis)
+                {
+                    item.sTenNhiemVuChi = HttpUtility.HtmlDecode(item.sTenNhiemVuChi);
+                }
 
-            if (TempData["KHTongTheTTCP"] != null)
+                var kHTongTheTTCP = TempData["KHTongTheTTCP"];
+                var khct = (NH_KHTongTheTTCP)kHTongTheTTCP;
+
+                if (kHTongTheTTCP != null)
+                {
+                    TempData.Keep("KHTongTheTTCP");
+                }
+                return Json(new
+                {
+                    result = _qlnhService.SaveKHTongTheTTCP(lstNhiemVuChis, khct, state)
+                });
+            }
+            catch(Exception ex)
             {
-                TempData.Keep("KHTongTheTTCP");
+                AppLog.LogError(this.GetType().Name, MethodBase.GetCurrentMethod().Name, ex.Message);
             }
-
-            var khct = (NH_KHTongTheTTCP)TempData["KHTongTheTTCP"];
-            return Json(new { 
-                result = _qlnhService.SaveKHTongTheTTCP(lstNhiemVuChis, khct, state)
-            });
+            return Json(new { result = false });
         }
 
         // Tìm kế hoạch TTCP đang active từ 1 id TTCP chưa active

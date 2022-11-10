@@ -719,11 +719,6 @@ function ValidateData(data) {
     if (data.sSodenghi == null || data.sSodenghi == "") {
         Messages.push("Chưa nhập số đề nghị");
     }
-    if (data.dNgaydenghi != null || data.dNgaydenghi != "") {
-        if (isValidDate(data.dNgaydenghi) == false) {
-            Messages.push("Chưa nhập đúng định dạng ngày dd/mm/yyyy !");
-        }
-    }
     if (data.iID_BQuanLyID == null || data.iID_BQuanLyID == GUID_EMPTY) {
         Messages.push("Chưa chọn ban quản lý !");
     }
@@ -748,15 +743,7 @@ function ValidateData(data) {
     //    Messages.push("Đã tồn tại mã nhà thầu !");
     //}
 
-    function isValidDate(s) {
-        // Assumes s is "dd/mm/yyyy"
-        if (! /^\d\d\/\d\d\/\d\d\d\d$/.test(s)) {
-            return false;
-        }
-        const parts = s.split('/').map((p) => parseInt(p, 10));
-        const d = new Date(parts[2], parts[1], parts[0]);
-        return d.getMonth() === parts[1] && d.getDate() === parts[0] && d.getFullYear() === parts[2];
-    }
+    
 
     if (Messages != null && Messages != undefined && Messages.length > 0) {
         $.ajax({
@@ -773,17 +760,22 @@ function ValidateData(data) {
     return true;
 }
 
+function isValidDate(s) {
+    // Assumes s is "dd/mm/yyyy"
+    if (! /^\d\d\/\d\d\/\d\d\d\d$/.test(s)) {
+        return false;
+    }
+    const parts = s.split('/').map((p) => parseInt(p, 10));
+    const d = new Date(parts[2], parts[1], parts[0]);
+    return d.getMonth() === parts[1] && d.getDate() === parts[0] && d.getFullYear() === parts[2];
+}
+
 function ValidateDataTongHop(data) {
     var Title = 'Lỗi thêm mới/chỉnh sửa nhu cầu chi quý';
     var Messages = [];
 
     if (data.sSodenghi == null || data.sSodenghi == "") {
         Messages.push("Chưa nhập số đề nghị");
-    }
-    if (data.dNgaydenghi != null || data.dNgaydenghi != "") {
-        if (isValidDate(data.dNgaydenghi) == false) {
-            Messages.push("Chưa nhập đúng định dạng ngày dd/mm/yyyy !");
-        }
     }
     if (Messages != null && Messages != undefined && Messages.length > 0) {
         $.ajax({

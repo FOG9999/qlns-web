@@ -87,6 +87,8 @@ function LoadDataComboboxDuToan(iIdDuToanId) {
                 $("#iIdDuToanId").select2({
                     data: resp.datas
                 });
+                GetDuLieuDuAn(resp.datas[0].id);
+                GetListChiPhiHangMuc(resp.datas[0].id);
             }
         }
     });
@@ -172,9 +174,9 @@ function GetDataNguonVon() {
     var lstData = [];
     $("#tblDanhSachNguonVon tbody tr").each(function (index, row) {
         var iIdNguonVonId = $(row).attr("data-id");
-        var fTienToTrinh = $(row).find(".txtTienCDTQuyetToan").val() == "" ? null : parseFloat(UnFormatNumber($(row).find(".txtTienCDTQuyetToan").val()));
+        //var fTienToTrinh = $(row).find(".txtTienCDTQuyetToan").val() == "" ? null : parseFloat(UnFormatNumber($(row).find(".txtTienCDTQuyetToan").val()));
         lstData.push({
-            fTienToTrinh: fTienToTrinh,
+            //fTienToTrinh: fTienToTrinh,
             iID_NguonVonID: iIdNguonVonId
         })
     })
@@ -265,6 +267,8 @@ function loadDataExcel() {
         return false;
     }
     var sumGiaTriDeNghiQuyetToan = 0;
+    var sumGiaTriQuyetToanAB = 0;
+    var sumGiaTriKiemToan = 0;
     var iIdDuToanId = $("#iIdDuToanId").val();
     var fileInput = document.getElementById('FileUpload');
     var file = fileInput.files[0];
@@ -297,8 +301,14 @@ function loadDataExcel() {
                         $('*[data-id="' + itemCpIp.iID_DuAn_ChiPhi + '"]').find('.txtChenhLechSoVoiKetQuaKiemToan').html(itemCpIp.sChenhLechSoVoiKetQuaKiemToan);
                     });
                     sumGiaTriDeNghiQuyetToan += itemCpIp.fGiaTriDeNghiQuyetToan;
+                    sumGiaTriQuyetToanAB += itemCpIp.fGiaTriQuyetToanAB;
+                    sumGiaTriKiemToan += itemCpIp.fGiaTriKiemToan;
                 })                
                 document.getElementById("txtGiaTriQuyetToan").value = sumGiaTriDeNghiQuyetToan;
+                $('*[data-id="' + "-1" + '"]').find('.txtTongGiaTriQuyetToanAB').html(FormatNumber(sumGiaTriQuyetToanAB));
+                $('*[data-id="' + "-1" + '"]').find('.txtTongKetQuaKiemToan').html(FormatNumber(sumGiaTriKiemToan));
+                $('*[data-id="' + "-1" + '"]').find('.txtTongCDTDeNghiQuyetToan').html(FormatNumber(sumGiaTriDeNghiQuyetToan));
+
                 r.listNguonVon.forEach(function (itemNvIp) {
                     $("#" + "tblDanhSachNguonVon" + " tbody tr").each(function (tr) {
                         $('*[data-id="' + itemNvIp.iID_NguonVonID + '"]').find('.txtTienCDTQuyetToan').val(itemNvIp.sTienCDTQuyetToan);
@@ -355,11 +365,12 @@ function GetDuLieuDuAn(iIdDuToan) {
             data: { iIdDuToanId: iIdDuToan, iIdDuAnId: $("#txt_DuAn").val() },
             success: function (resp) {
                 if (resp.status == true) {
-                    if (resp.data.sTenDuAn != null && resp.data.sTenDuAn != "") {
-                        $("#txt_TenDuAn").html(resp.data.sTenDuAn);
-                    }
+                    //if (resp.data.sTenDuAn != null && resp.data.sTenDuAn != "") {
+                    //    $("#txt_TenDuAn").html(resp.data.sTenDuAn);
+                    //}
                     if (resp.data.sTenChuDauTu != null && resp.data.sTenChuDauTu != "") {
-                        $("#txt_ChuDauTu").html("Chủ đầu tư: " + resp.data.sTenChuDauTu);
+                        /*$("#txt_ChuDauTu").html("Chủ đầu tư: " + resp.data.sTenChuDauTu);*/
+                        document.getElementById("txt_ChuDauTu").value = resp.data.sTenChuDauTu;
                     }
                     var html = "";
                     if (resp.lstNguonVon != null && resp.lstNguonVon.length > 0) {
@@ -367,11 +378,15 @@ function GetDuLieuDuAn(iIdDuToan) {
                             html += "<tr data-id='" + item.iID_NguonVonID + "'>";
                             html += "<td>" + item.sTenNguonVon + "</td>";
                             html += "<td class='text-right'>" + item.sTienPheDuyet + "</td>";
-                            html += "<td><input type='text' class='form-control txtTienCDTQuyetToan text-right' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>";
+                            //html += "<td><input type='text' class='form-control txtTienCDTQuyetToan text-right' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>";
                             html += "</tr>";
                         })
                     }
                     $("#tblDanhSachNguonVon tbody").html(html);
+                    if (resp.sKhoiCong != null && resp.sKetThuc) {
+                        document.getElementById("txtThoiGianKhoiCong").value = resp.sKhoiCong;
+                        document.getElementById("txtThoiGianHoanThanh").value = resp.sKetThuc;
+                    }
                 }
             }
         });
@@ -395,14 +410,29 @@ function GetListChiPhiHangMuc(iIdDuToan) {
                 if (resp.lstHangMuc != null && resp.lstHangMuc.length > 0) {
                     arrHangMuc = resp.lstHangMuc;
                 }
-                DrawTableChiPhiHangMuc();
+                DrawTableChiPhiHangMuc(resp.sumGiaTriQuyetToanAB, resp.sumKetQuaKiemToan, resp.sumCDTDeNghiQuyetToan);
             }
         });
     }
 }
 
-function DrawTableChiPhiHangMuc() {
+function DrawTableChiPhiHangMuc(sumGiaTriQuyetToanAB, sumKetQuaKiemToan, sumCDTDeNghiQuyetToan) {
     var html = "";
+
+    //them dong tong so
+    html += "<tr style='font-weight:bold' data-id='-1'>";
+    html += "<td></td>";
+    html += "<td>Tổng số</td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td class='text-right txtTongGiaTriQuyetToanAB'>" + sumGiaTriQuyetToanAB + "</td>";
+    html += "<td class='text-right txtTongKetQuaKiemToan'>" + sumKetQuaKiemToan + "</td>";
+    html += "<td class='text-right txtTongCDTDeNghiQuyetToan'>" + sumCDTDeNghiQuyetToan + "</td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "</tr>";
+
     arrChiPhi.forEach(function (itemCp) {
         var arrChiPhiChild = arrChiPhi.filter(x => x.iID_ChiPhi_Parent == itemCp.iID_DuAn_ChiPhi);
         var arrHangMucByChiPhi = arrHangMuc.filter(x => x.iID_DuAn_ChiPhi == itemCp.iID_DuAn_ChiPhi);
@@ -504,7 +534,11 @@ function changeGiaTri(input) {
         CalculateDataChiPhi(id);
     }
 
+    var sumGiaTriQuyetToanAB = 0;
+    var sumGiaTriKiemToan = 0;
     var sumGiaTriDeNghiQuyetToan = 0;
+    var fGiaTriQuyetToanAB = 0;
+    var fGiaTriKiemToan = 0;
     var fGiaTriDeNghiQuyetToan = 0;
     //$("#tblDanhSachChiTiet tbody tr").each(function (index, row) {
     //    fGiaTriDeNghiQuyetToan = $(row).find(".txtCDTDeNghiQuyetToan").val() == "" ? null : parseFloat(UnFormatNumber($(row).find(".txtCDTDeNghiQuyetToan").val()));
@@ -513,11 +547,20 @@ function changeGiaTri(input) {
     //document.getElementById("txtGiaTriQuyetToan").value = sumGiaTriDeNghiQuyetToan;
     $("#" + "tblDanhSachChiTiet" + " tbody tr").each(function (index, row) {
         if (($(row).filter("[data-loai='1']").find(".txtCDTDeNghiQuyetToan").val())) {
-            fGiaTriDeNghiQuyetToan = parseFloat(UnFormatNumber($(row).filter("[data-loai='1']").find(".txtCDTDeNghiQuyetToan").val()));
-            sumGiaTriDeNghiQuyetToan += fGiaTriDeNghiQuyetToan
+            fGiaTriQuyetToanAB = parseFloat(UnFormatNumber($(row).filter("[data-loai='1']").find(".txtGiaTriQuyetToanAB").val() == "" ? 0 : $(row).filter("[data-loai='1']").find(".txtGiaTriQuyetToanAB").val()));
+            fGiaTriKiemToan = parseFloat(UnFormatNumber($(row).filter("[data-loai='1']").find(".txtKetQuaKiemToan").val() == "" ? 0 : $(row).filter("[data-loai='1']").find(".txtKetQuaKiemToan").val()));
+            fGiaTriDeNghiQuyetToan = parseFloat(UnFormatNumber($(row).filter("[data-loai='1']").find(".txtCDTDeNghiQuyetToan").val() == "" ? 0 : $(row).filter("[data-loai='1']").find(".txtCDTDeNghiQuyetToan").val()));
+
+            sumGiaTriQuyetToanAB += fGiaTriQuyetToanAB;
+            sumGiaTriKiemToan += fGiaTriKiemToan;
+            sumGiaTriDeNghiQuyetToan += fGiaTriDeNghiQuyetToan;
         }
     });
     document.getElementById("txtGiaTriQuyetToan").value = sumGiaTriDeNghiQuyetToan;
+
+    $('*[data-id="' + "-1" + '"]').find('.txtTongGiaTriQuyetToanAB').html(FormatNumber(sumGiaTriQuyetToanAB));
+    $('*[data-id="' + "-1" + '"]').find('.txtTongKetQuaKiemToan').html(FormatNumber(sumGiaTriKiemToan));
+    $('*[data-id="' + "-1" + '"]').find('.txtTongCDTDeNghiQuyetToan').html(FormatNumber(sumGiaTriDeNghiQuyetToan));
 
     $(dongHienTai).find(".txtChenhLechSoVoiDuToan").html(FormatNumber(fChenhLenhSoVoiDuToan));
     $(dongHienTai).find(".txtChenhLechSoVoiQuyetToanAB").html(FormatNumber(fChenhLenhSoVoiQuyetToanAB));

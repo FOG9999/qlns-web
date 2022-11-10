@@ -263,7 +263,7 @@ function GetDataDuAn() {
     data.sKhoiCong = $("<div/>").text($.trim($("#txtThoiGianThucHienTu").val())).html();
     data.sKetThuc = $("<div/>").text($.trim($("#txtThoiGianThucHienDen").val())).html();
     data.iID_TiGiaID = $("#slbTiGia").val() == GUID_EMPTY ? null : $("#slbTiGia").val();
-    data.sMaNgoaiTeKhac = $("#slbMaNgoaiTeKhac").val() == GUID_EMPTY ? null : null : $("#slbMaNgoaiTeKhac").val();
+    data.sMaNgoaiTeKhac = $("#slbMaNgoaiTeKhac").val() == GUID_EMPTY ? null : $("#slbMaNgoaiTeKhac").val();
     data.sGiaTriUSD = UnFormatNumber($("<div/>").text($.trim($("#txtHopDongUSD").val())).html());
     data.sGiaTriVND = UnFormatNumber($("<div/>").text($.trim($("#txtHopDongVND").val())).html());
     data.sGiaTriEUR = UnFormatNumber($("<div/>").text($.trim($("#txtHopDongEUR").val())).html());

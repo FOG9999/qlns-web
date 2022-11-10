@@ -738,12 +738,12 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             int SttCha = 0;
             int SttChuongTrinh = 0;
             int Tong = 0;
-            Guid? idcha = null;
-            Guid? idchuongtrinh = null;
+            Guid? idcha = Guid.Empty;
+            Guid? idchuongtrinh = Guid.Empty;
             foreach (var item in listChitiet)
             {
                 Tong++;
-                if (item.ID_NhiemVuChi != idchuongtrinh && item.ID_NhiemVuChi != null)
+                if (item.ID_NhiemVuChi != idchuongtrinh /*&& item.ID_NhiemVuChi != null*/)
                 {
                     SttChuongTrinh++;
                     SttCha = 0;
@@ -753,9 +753,10 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                     DataCha.fChiTrongNuocVND = null;
                     DataCha.depth = convertLetter(SttChuongTrinh);
                     idchuongtrinh = item.ID_NhiemVuChi;
+                    DataCha.isBold = "1";
                     ListData.Add(DataCha);
                 }
-                if (item.iID_DonViID != idcha && item.iID_DonViID != null)
+                if (item.iID_DonViID != idcha/* && item.iID_DonViID != null*/)
                 {
                     SttCha++;
                     Stt = 0;
@@ -764,6 +765,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                     DataCha.fChiNgoaiTeUSD = null;
                     DataCha.fChiTrongNuocVND = null;
                     DataCha.depth = _cpnhService.GetSTTLAMA(SttCha);
+                    DataCha.isBold = "1";
                     idcha = item.iID_DonViID;
                     ListData.Add(DataCha);
                 }
@@ -783,10 +785,12 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                 if (Tong == listChitiet.Count)
                 {
                     CPNHNhuCauChiQuy_ChiTiet_Model DataCha = new CPNHNhuCauChiQuy_ChiTiet_Model();
-                    DataCha.Noidungchi = "Tổng Cộng: ";
+                    DataCha.Noidungchi = "Tổng cộng: ";
                     DataCha.fChiNgoaiTeUSD = listChitiet.Sum(x => x.fChiNgoaiTeUSD);
                     DataCha.fChiTrongNuocVND = listChitiet.Sum(x => x.fChiTrongNuocVND); ;
                     DataCha.depth = null;
+                    DataCha.isBold = "1";
+                    DataCha.isSum = "1";
                     ListData.Add(DataCha);
                 }
             }
@@ -854,24 +858,28 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             int SttCha = 0;
             int SttChuongTrinh = 0;
             int Tong = 0;
-            Guid? idcha = null;
-            Guid? idchuongtrinh = null;
+            Guid? idcha = Guid.Empty;
+            Guid? idchuongtrinh = Guid.Empty;
             foreach (var item in listChitiet)
             {
                 Tong++;
-                if (item.ID_NhiemVuChi != idchuongtrinh && item.ID_NhiemVuChi != null)
+                if (item.ID_NhiemVuChi != idchuongtrinh/* && item.ID_NhiemVuChi != null*/)
                 {
                     SttChuongTrinh++;
                     SttCha = 0;
                     CPNHNhuCauChiQuy_ChiTiet_Model DataCha = new CPNHNhuCauChiQuy_ChiTiet_Model();
+                    List<CPNHNhuCauChiQuy_ChiTiet_Model> ListDataCha = listChitiet.Where(x => x.ID_NhiemVuChi == item.ID_NhiemVuChi).ToList();
                     DataCha.Noidungchi = item.sTenNhiemVuChi;
                     DataCha.fChiNgoaiTeUSD = null;
+                    DataCha.GiaTriGaiDoanUSD = ListDataCha.Sum(x => x.GiaTriGaiDoanUSD) == 0 ? null : ListDataCha.Sum(x => x.GiaTriGaiDoanUSD);
+                    DataCha.GiaTriBQPUSD = ListDataCha.Sum(x => x.GiaTriBQPUSD) == 0 ? null : ListDataCha.Sum(x => x.GiaTriBQPUSD);
                     DataCha.fChiTrongNuocVND = null;
                     DataCha.depth = convertLetter(SttChuongTrinh);
+                    DataCha.isBold = "1";
                     idchuongtrinh = item.ID_NhiemVuChi;
                     ListData.Add(DataCha);
                 }
-                if (item.iID_DonViID != idcha && item.iID_DonViID != null)
+                if (item.iID_DonViID != idcha /*&& item.iID_DonViID != null*/)
                 {
                     SttCha++;
                     Stt = 0;
@@ -880,13 +888,14 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                     DataCha.fChiNgoaiTeUSD = null;
                     DataCha.fChiTrongNuocVND = null;
                     DataCha.depth = _cpnhService.GetSTTLAMA(SttCha);
+                    DataCha.isBold = "1";
                     idcha = item.iID_DonViID;
                     ListData.Add(DataCha);
                 }
                 Stt++;
                 item.depth = SttCha + "." + Stt;
 
-                if (item.iID_HopDongID == null || item.iID_HopDongID == Guid.Empty)
+                if (item.iID_HopDongID == null /*|| item.iID_HopDongID == Guid.Empty*/)
                 {
                     item.Noidungchi = item.sNoiDung;
                 }
@@ -894,12 +903,14 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                 {
                     item.Noidungchi = item.sTenHopDong;
                 }
+                item.GiaTriGaiDoanUSD = null;
+                item.GiaTriBQPUSD = null;
                 ListData.Add(item);
 
                 if (Tong == listChitiet.Count)
                 {
                     CPNHNhuCauChiQuy_ChiTiet_Model DataCha = new CPNHNhuCauChiQuy_ChiTiet_Model();
-                    DataCha.Noidungchi = "Tổng Cộng: ";
+                    DataCha.Noidungchi = "Tổng cộng: ";
                     DataCha.GiaTriHopDongUSD = listChitiet.Sum(x => x.GiaTriHopDongUSD); 
                     DataCha.GiaTriHopDongVND = listChitiet.Sum(x => x.GiaTriHopDongVND);
                     DataCha.GiaTriGaiDoanUSD = listChitiet.Sum(x => x.GiaTriGaiDoanUSD);
@@ -915,6 +926,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                     DataCha.fChiNgoaiTeUSDTyGia = listChitiet.Sum(x => x.fChiNgoaiTeUSDTyGia);
                     DataCha.fChiTrongNuocVNDTyGia = listChitiet.Sum(x => x.fChiTrongNuocVNDTyGia);
                     DataCha.depth = null;
+                    DataCha.isBold = "1";
+                    DataCha.isSum = "1";
                     ListData.Add(DataCha);
                 }
             }

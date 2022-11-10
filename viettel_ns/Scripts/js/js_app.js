@@ -357,16 +357,19 @@ function setInputFilter(textbox, inputFilter, errMsg, typeCheck, isFormat) {
  *                    type=3 --> loại nhập ngày tháng năm (ngăn cách bằng dấu "/")
  *                    type=4 --> loại nhập số nguyên có dấu
  *                    type=5 --> loại nhập số thập phân có dấu (ngăn cách bằng dấu phẩy)
+ * @param {boolean} useEnter : Check xem có sử dụng phím Enter hay không?
  */
-function ValidateInputKeydown(event, textbox, type) {
+function ValidateInputKeydown(event, textbox, type, useEnter) {
     var charCode = (event.which) ? event.which : event.keyCode;
     var arrSpecialChar = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")"];
+    useEnter = (useEnter == null || useEnter == undefined) ? false : useEnter;
     var checkKey = (charCode < 48 || (charCode > 57 && charCode < 96) || charCode > 105 || $.inArray(event.key, arrSpecialChar) !== -1)
                     && charCode != 8 // backspace
                     && charCode != 9 // tab
                     && charCode != 37 // left arrow
                     && charCode != 39 // right arrow
                     && charCode != 46 // nút delete
+                    && !(useEnter && charCode == 13) // Enter
                     && !(event.shiftKey && charCode == 9) // shift + tab
                     && !(event.shiftKey && charCode == 37) // shift + left arrow
                     && !(event.shiftKey && charCode == 38) // shift + top arrow

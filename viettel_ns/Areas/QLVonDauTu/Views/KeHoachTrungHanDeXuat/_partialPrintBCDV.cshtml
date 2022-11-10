@@ -34,7 +34,7 @@
             <div class="col-sm-6">
                 <label for="txtGiaiDoanDen">Giai đoạn đến</label>
                 @Helpers.Required()
-                <input type="number" id="iGiaiDoanDen_DV" name="iGiaiDoanDen" class="form-control endYear" value="@Model.iGiaiDoanDen" maxlength="50" />
+                <input type="number" id="iGiaiDoanDen_DV" name="iGiaiDoanDen" class="form-control endYear" value="@Model.iGiaiDoanDen" maxlength="50" disabled/>
             </div>
             <div class="col-sm-6">
                 <label for="txt_DonViTinh">Đơn vị tính</label>
@@ -52,10 +52,21 @@
                 @{
                     foreach (var item in Model.lstDMNguonNganSach)
                     {
-                        <tr style="cursor: pointer">
-                            <td align="center"><input type="checkbox" name="cb_NguonVonModal" class="cb_NguonVonModal" value="@item.iID_MaNguonNganSach" /></td>
-                            <td align="left">@item.sTen</td>
-                        </tr>
+                        if(item.iID_MaNguonNganSach == 1)
+                        {
+                            <tr style="cursor: pointer">
+                                <td align="center"><input type="checkbox" name="cb_NguonVonModal" class="cb_NguonVonModal" value="@item.iID_MaNguonNganSach" checked/></td>
+                                <td align="left">@item.sTen</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr style="cursor: pointer">
+                                <td align="center"><input type="checkbox" name="cb_NguonVonModal" class="cb_NguonVonModal" value="@item.iID_MaNguonNganSach" /></td>
+                                <td align="left">@item.sTen</td>
+                            </tr>
+                        }
+                        
                     }
 
 

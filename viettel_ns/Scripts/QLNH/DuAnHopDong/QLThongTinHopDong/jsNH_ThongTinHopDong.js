@@ -6,17 +6,17 @@ function ResetChangePage(iCurrentPage = 1) {
     GetListData("", GUID_EMPTY, "", GUID_EMPTY, GUID_EMPTY, "", "", GUID_EMPTY, iCurrentPage);
 }
 
-function ToogleRow(e) {
+function ToggleRow(e) {
     let tdElement = $(e);
     let trElement = tdElement.closest('tr');
     let id = tdElement.data('id');
     let index = trElement.index();
     let hasValue = tdElement.data('ishaschild');
-    let sTenHopDong = $.trim($("#txtTenHopDongFilter").val()); 
+    let sTenHopDong = $("<div/>").text($.trim($("#txtTenHopDongFilter").val())).html();
     let iDonvi = $("#iDonVi").val(); 
     let iChuongTrinh = $("#iChuongTrinh").val(); 
     let iDuAn = $("#iDuAn").val(); 
-    let sSoHopDong = $.trim($("#txtSoHopDongFilter").val()); 
+    let sSoHopDong = $("<div/>").text($.trim($("#txtSoHopDongFilter").val())).html();
     let sNgayKyHopDong = $.trim($("#txtNgayKyHopDongFilter").val()); 
     let iLoaiHopDong = $.trim($("#iLoaiHopDong").val());
 
@@ -48,7 +48,7 @@ function ChangePage(iCurrentPage = 1) {
     var iChuongTrinh = $("#iChuongTrinh").val();
     var iDuAn = $("#iDuAn").val();
     var soHopDong = $("<div/>").text($.trim($("#txtSoHopDongFilter").val())).html();
-    var ngayKyHopDong = $("<div/>").text($.trim($("#txtNgayKyHopDongFilter").val())).html();
+    var ngayKyHopDong = $.trim($("#txtNgayKyHopDongFilter").val());
     var iLoaiHopDong = $("#iLoaiHopDong").val();
     GetListData(sTenHopDong, iDonVi, maDonVi, iChuongTrinh, iDuAn, soHopDong, ngayKyHopDong, iLoaiHopDong, iCurrentPage);
 }

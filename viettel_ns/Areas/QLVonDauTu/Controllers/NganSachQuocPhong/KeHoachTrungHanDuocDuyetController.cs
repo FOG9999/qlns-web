@@ -125,8 +125,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 }
                 else
                 {
-                    data.iGiaiDoanTu = DateTime.Now.Year;
-                    data.iGiaiDoanDen = DateTime.Now.Year + 4;
+                    //data.iGiaiDoanTu = DateTime.Now.Year;
+                    //data.iGiaiDoanDen = DateTime.Now.Year + 4;
+                    data.iGiaiDoanTu = _iQLVonDauTuService.FindCurrentPeriod(PhienLamViec.NamLamViec);
+                    data.iGiaiDoanDen = data.iGiaiDoanTu + 4;
                 }
                 ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
                 ViewBag.ListVoucherTypes = CreateVoucherTypes().ToSelectList("iLoai", "SVoucherTypes");
@@ -460,8 +462,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             IEnumerable<VDT_DM_DonViThucHienDuAn> lstDonViThucHienDuAn = _danhMucService.GetListDonViThucHienDuAn();
             vm.lstDonViThucHienDuAn = lstDonViThucHienDuAn;
             vm.lstDonViQuanLy = lstDonViQuanLy;
-            vm.iGiaiDoanTu = DateTime.Now.Year;
-            vm.iGiaiDoanDen = DateTime.Now.Year + 4;
+            //vm.iGiaiDoanTu = DateTime.Now.Year;
+            //vm.iGiaiDoanDen = DateTime.Now.Year + 4;
+            vm.iGiaiDoanTu = _iQLVonDauTuService.FindCurrentPeriod(PhienLamViec.NamLamViec);
+            vm.iGiaiDoanDen = vm.iGiaiDoanTu + 4;
 
             ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
             ViewBag.ListNguonNganSach = lstDMNguonNganSach.ToSelectList("iID_MaNguonNganSach", "sTen");

@@ -366,8 +366,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 }
                 else if (!id.HasValue && !isAggregate)
                 {
-                    data.iGiaiDoanTu = DateTime.Now.Year;
-                    data.iGiaiDoanDen = DateTime.Now.Year + 4;
+                    //data.iGiaiDoanTu = DateTime.Now.Year;
+                    //data.iGiaiDoanDen = DateTime.Now.Year + 4;
+                    data.iGiaiDoanTu = _iQLVonDauTuService.FindCurrentPeriod(PhienLamViec.NamLamViec);
+                    data.iGiaiDoanDen = data.iGiaiDoanTu + 4;
                 }
 
                 if (isAggregate)
@@ -1250,8 +1252,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
         {
             KeHoach5NamDeXuatChiTietGridViewModel vm = new KeHoach5NamDeXuatChiTietGridViewModel();
             VDT_KHV_KeHoach5Nam_DeXuat KH5NamDeXuat = new VDT_KHV_KeHoach5Nam_DeXuat();
-            KH5NamDeXuat.iGiaiDoanTu = DateTime.Now.Year;
-            KH5NamDeXuat.iGiaiDoanDen = DateTime.Now.Year + 4;
+            //KH5NamDeXuat.iGiaiDoanTu = DateTime.Now.Year;
+            //KH5NamDeXuat.iGiaiDoanDen = DateTime.Now.Year + 4;
+            KH5NamDeXuat.iGiaiDoanTu = _iQLVonDauTuService.FindCurrentPeriod(PhienLamViec.NamLamViec);
+            KH5NamDeXuat.iGiaiDoanDen = KH5NamDeXuat.iGiaiDoanTu + 4;
             vm.KH5NamDeXuat = KH5NamDeXuat;
 
             //ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
@@ -1977,8 +1981,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             IEnumerable<VDT_DM_DonViThucHienDuAn> lstDonViThucHienDuAn = _danhMucService.GetListDonViThucHienDuAn();
             vm.lstDonViThucHienDuAn = lstDonViThucHienDuAn;
             vm.lstDonViQuanLy = lstDonViQuanLy;
-            vm.iGiaiDoanTu = DateTime.Now.Year;
-            vm.iGiaiDoanDen = DateTime.Now.Year + 4;
+            //vm.iGiaiDoanTu = DateTime.Now.Year;
+            //vm.iGiaiDoanDen = DateTime.Now.Year + 4;
+            vm.iGiaiDoanTu = _iQLVonDauTuService.FindCurrentPeriod(PhienLamViec.NamLamViec);
+            vm.iGiaiDoanDen = vm.iGiaiDoanTu + 4;
 
             ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
 

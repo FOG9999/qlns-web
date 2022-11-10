@@ -17,13 +17,13 @@ function ChangePage(iCurrentPage = 1) {
     GetListData(sTenGoiThau, iDonVi, maDonVi, iChuongTrinh, iDuAn, iLoai, iThoiGianThucHien, iCurrentPage);
 }
 
-function ToogleRow(e) {
+function ToggleRow(e) {
     let tdElement = $(e);
     let trElement = tdElement.closest('tr');
     let id = tdElement.data('id');
     let index = trElement.index();
     let hasValue = tdElement.data('ishaschild');
-    let sTenHopDong = $.trim($("#txtTenHopDongFilter").val());
+    let sTenGoiThau = $("<div/>").text($.trim($("#txtTenGoiThauFilter").val())).html();
     let iDonvi = $("#iDonVi").val();
     let iChuongTrinh = $("#iChuongTrinh").val();
     let iDuAn = $("#iDuAn").val();
@@ -34,7 +34,7 @@ function ToogleRow(e) {
     if (!hasValue) {
         $.ajax({
             type: "POST",
-            data: { id: id, sTenHopDong: sTenHopDong, iDonvi: iDonvi, iChuongTrinh: iChuongTrinh, iDuAn: iDuAn, iLoai: iLoai, iThoiGianThucHien: iThoiGianThucHien },
+            data: { id: id, sTenGoiThau: sTenGoiThau, iDonvi: iDonvi, iChuongTrinh: iChuongTrinh, iDuAn: iDuAn, iLoai: iLoai, iThoiGianThucHien: iThoiGianThucHien },
             url: '/QLNH/ThongTinGoiThau/GetListGoiThauById',
             success: function (rs) {
                 if (rs != null) {

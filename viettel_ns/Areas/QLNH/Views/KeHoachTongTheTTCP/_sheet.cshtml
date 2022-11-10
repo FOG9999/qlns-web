@@ -50,12 +50,9 @@
     </div>
 </div>
 <hr id="hr-split" />
-<div id="ajax-div">
-</div>
-@* Modal confirm *@
-<div id="divModalConfirm">
+<div id="ajax-div"></div>
+<div id="divModalMessage"></div>
 
-</div>
 <script type="text/javascript">
     $(".btn-save").click(function () {
         $("#sheet")[0].contentWindow.KHTT_TTCP_BangDuLieu_Save();
@@ -76,6 +73,6 @@
     }
 
     function loadModal(data) {
-        $("#divModalConfirm").html(data);
+        $("#divModalMessage").empty().html(data);
     }
 </script>

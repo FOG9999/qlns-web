@@ -42,7 +42,7 @@
                 <div class="col-sm-3">
                     <label for="txtGiaiDoanDen">Giai đoạn đến</label>
                     @Helpers.Required()
-                    <input type="number" id="iGiaiDoanDen" name="iGiaiDoanDen" class="form-control" value="@Model.KH5NamDeXuat.iGiaiDoanDen" maxlength="50" />
+                    <input type="number" id="iGiaiDoanDen" name="iGiaiDoanDen" class="form-control" value="@Model.KH5NamDeXuat.iGiaiDoanDen" maxlength="50" disabled/>
                 </div>
                 <div class="col-sm-3" id="dvLct">
                     <label for="txt_ChungTu">Loại công trình</label>
@@ -102,7 +102,7 @@
             if (value == "1") {
                 document.getElementById('iID_DonViQuanLyID').removeAttribute("disabled");
                 document.getElementById('iGiaiDoanTu').removeAttribute("disabled");
-                document.getElementById('iGiaiDoanDen').removeAttribute("disabled");
+                //document.getElementById('iGiaiDoanDen').removeAttribute("disabled");
                 document.getElementById('ValueItemCt').removeAttribute("disabled");
                 document.getElementById('iID_KeHoach5Nam_DeXuatIDDx').setAttribute("disabled", "disabled");
                 document.getElementById('dvVoucher').style.visibility = 'collapse';

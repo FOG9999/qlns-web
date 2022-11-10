@@ -380,77 +380,77 @@ function OpenModalDetail(data, state, isFilter = false) {
     CURRENT_STATE = state;
 
     // Tính tỉ giá nếu là update, create, adjust
-    if (CURRENT_STATE != 'DETAIL') {
+    //if (CURRENT_STATE != 'DETAIL') {
 
-        // Lấy thông tin tỉ giá
-        $.ajax({
-            type: "POST",
-            url: "/QLNH/KeHoachChiTietBQP/GetDataLookupDetail",
-            data: { iID_TiGiaID: data.iID_TiGiaID },
-            async: false,
-            success: function (result) {
-                lstDonVi = result.ListDonVi;
-                lstTiGiaChiTiet = result.ListTiGiaChiTiet;
-            }
-        });
+    //    // Lấy thông tin tỉ giá
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/QLNH/KeHoachChiTietBQP/GetDataLookupDetail",
+    //        data: { iID_TiGiaID: data.iID_TiGiaID },
+    //        async: false,
+    //        success: function (result) {
+    //            lstDonVi = result.ListDonVi;
+    //            lstTiGiaChiTiet = result.ListTiGiaChiTiet;
+    //        }
+    //    });
 
-        // Check thông tin tỉ giá, điều kiện action
-        let fromUSD = lstTiGiaChiTiet.find(x => $.trim(x.sMaTienTeGoc).toUpperCase() == 'USD');
-        let fromVND = lstTiGiaChiTiet.find(x => $.trim(x.sMaTienTeGoc).toUpperCase() == 'VND');
+    //    // Check thông tin tỉ giá, điều kiện action
+    //    let fromUSD = lstTiGiaChiTiet.find(x => $.trim(x.sMaTienTeGoc).toUpperCase() == 'USD');
+    //    let fromVND = lstTiGiaChiTiet.find(x => $.trim(x.sMaTienTeGoc).toUpperCase() == 'VND');
 
-        // Nếu mã tiền tệ gốc là USD thì enable input USD, disable VND và ngược lại.
-        if (fromUSD) {
-            let toVND = lstTiGiaChiTiet.find(x => $.trim(x.sMaTienTeQuyDoi).toUpperCase() == 'VND');
-            $(".inpuFromUSD").prop('disabled', false);
-            $(".inpuFromVND").prop('disabled', true);
-            isVNDtoUSD = false;
+    //    // Nếu mã tiền tệ gốc là USD thì enable input USD, disable VND và ngược lại.
+    //    if (fromUSD) {
+    //        let toVND = lstTiGiaChiTiet.find(x => $.trim(x.sMaTienTeQuyDoi).toUpperCase() == 'VND');
+    //        $(".inpuFromUSD").prop('disabled', false);
+    //        $(".inpuFromVND").prop('disabled', true);
+    //        isVNDtoUSD = false;
 
-            // Nếu có mã tiền tệ quy đổi là VND thì tính tỉ giá, không có thì mặc định là 0
-            if (toVND) {
-                tiGia = toVND.fTiGia;
-            } else {
-                tiGia = 0;
-            }
-        } else if (fromVND) {
-            let toUSD = lstTiGiaChiTiet.find(x => $.trim(x.sMaTienTeQuyDoi).toUpperCase() == 'USD');
-            $(".inpuFromUSD").prop('disabled', true);
-            $(".inpuFromVND").prop('disabled', false);
-            isVNDtoUSD = true;
-            if (toUSD) {
-                tiGia = toUSD.fTiGia;
-            } else {
-                tiGia = 0;
-            }
-        } else {
-            // Nếu mã tiền tệ khác USD hoặc VND thì kiểm tra xem mã tiền tệ quy đổi có báo gồm VND và USD không? Nếu có thì tính tỉ giá.
-            $(".inpuFromUSD").prop('disabled', false);
-            $(".inpuFromVND").prop('disabled', true);
-            isVNDtoUSD = false;
-            let toUSD = lstTiGiaChiTiet.find(x => $.trim(x.sMaTienTeQuyDoi).toUpperCase() == 'USD');
-            if (toUSD) {
-                let toVND = lstTiGiaChiTiet.find(x => $.trim(x.sMaTienTeQuyDoi).toUpperCase() == 'VND');
-                if (toVND) {
-                    tiGia = toVND.fTiGia / toUSD.fTiGia;
-                } else {
-                    tiGia = 0;
-                }
-            } else {
-                tiGia = 0;
-            }
-        }
-    }
+    //        // Nếu có mã tiền tệ quy đổi là VND thì tính tỉ giá, không có thì mặc định là 0
+    //        if (toVND) {
+    //            tiGia = toVND.fTiGia;
+    //        } else {
+    //            tiGia = 0;
+    //        }
+    //    } else if (fromVND) {
+    //        let toUSD = lstTiGiaChiTiet.find(x => $.trim(x.sMaTienTeQuyDoi).toUpperCase() == 'USD');
+    //        $(".inpuFromUSD").prop('disabled', true);
+    //        $(".inpuFromVND").prop('disabled', false);
+    //        isVNDtoUSD = true;
+    //        if (toUSD) {
+    //            tiGia = toUSD.fTiGia;
+    //        } else {
+    //            tiGia = 0;
+    //        }
+    //    } else {
+    //        // Nếu mã tiền tệ khác USD hoặc VND thì kiểm tra xem mã tiền tệ quy đổi có báo gồm VND và USD không? Nếu có thì tính tỉ giá.
+    //        $(".inpuFromUSD").prop('disabled', false);
+    //        $(".inpuFromVND").prop('disabled', true);
+    //        isVNDtoUSD = false;
+    //        let toUSD = lstTiGiaChiTiet.find(x => $.trim(x.sMaTienTeQuyDoi).toUpperCase() == 'USD');
+    //        if (toUSD) {
+    //            let toVND = lstTiGiaChiTiet.find(x => $.trim(x.sMaTienTeQuyDoi).toUpperCase() == 'VND');
+    //            if (toVND) {
+    //                tiGia = toVND.fTiGia / toUSD.fTiGia;
+    //            } else {
+    //                tiGia = 0;
+    //            }
+    //        } else {
+    //            tiGia = 0;
+    //        }
+    //    }
+    //}
 
-    // Khi đã có tỉ giá và lấy được view thì tính lại giá trị theo tỉ giá.
-    if (CURRENT_STATE == 'UPDATE' || CURRENT_STATE == 'ADJUST') {
-        let oldTiGia = $("#hiID_TiGiaID").val();
-        if (oldTiGia != data.iID_TiGiaID) {
-            if (isVNDtoUSD) {
-                CalcListTiGia('VND', $("input.inputFromVND:not(:disabled)"));
-            } else {
-                CalcListTiGia('VND', $("input.inputFromUSD:not(:disabled)"));
-            }
-        }
-    }
+    //// Khi đã có tỉ giá và lấy được view thì tính lại giá trị theo tỉ giá.
+    //if (CURRENT_STATE == 'UPDATE' || CURRENT_STATE == 'ADJUST') {
+    //    let oldTiGia = $("#hiID_TiGiaID").val();
+    //    if (oldTiGia != data.iID_TiGiaID) {
+    //        if (isVNDtoUSD) {
+    //            CalcListTiGia('VND', $("input.inputFromVND:not(:disabled)"));
+    //        } else {
+    //            CalcListTiGia('VND', $("input.inputFromUSD:not(:disabled)"));
+    //        }
+    //    }
+    //}
 }
 
 // Set data lookup BQP cha theo TTCP id.

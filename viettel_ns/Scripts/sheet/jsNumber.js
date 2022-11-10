@@ -54,7 +54,7 @@ function ValidateNumberKeyPress(field, e) {
 }
 
 //Hàm chỉnh lại định dạng số ngay sau khi bấm số vào
-function ValidateNumberKeyUp(field) {
+function ValidateNumberKeyUp(field, clearZero) {
     if (jsNumber_oldValue == field.value) {
         //jsNumber_oldValue = "";
         return true;
@@ -99,7 +99,7 @@ function ValidateNumberKeyUp(field) {
         bCoDau1000 = parseInt(bCoDau1000);
     }
     var DangNhap = true;
-    field.value = FormatNumber(field.value, -1, bCoDau1000, DangNhap);
+    field.value = FormatNumber(field.value, -1, bCoDau1000, DangNhap, clearZero);
     fdlen = field.value.length - fdlen;
 
     setSelectionRange(field, caretPos + fdlen, caretPos + fdlen);
@@ -217,7 +217,7 @@ function UnFormatNumber(value) {
 
 
 //Định dạng số nhập vào
-function FormatNumber(fnum, nToFixed, bCoDau1000, DangNhap) {
+function FormatNumber(fnum, nToFixed, bCoDau1000, DangNhap, clearZero) {
     if (typeof DangNhap == "undefined") {
         DangNhap = false;
     }
@@ -288,8 +288,8 @@ function FormatNumber(fnum, nToFixed, bCoDau1000, DangNhap) {
     if (lastChar == ',') snum = snum.substr(0, snum.length - 1);
     /*end*/
 
-
-    if (snum == "0" && fnum.length <= 1)
+    clearZero = clearZero == undefined ? true : clearZero;
+    if (snum == "0" && fnum.length <= 1 && clearZero)
         snum = '';
 
 

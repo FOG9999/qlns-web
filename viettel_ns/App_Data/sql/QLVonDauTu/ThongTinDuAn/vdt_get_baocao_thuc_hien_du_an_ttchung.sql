@@ -44,7 +44,7 @@ concat(qddt.sKhoiCong, '-',qddt.sKetThuc) as sThoiGianThucHien,
 	select Sum(qddt_nv.fTienPheDuyet) as fNguonNganSachQuocPhong
 	from VDT_DA_QDDauTu_NguonVon as qddt_nv
 	inner join VDT_DA_QDDauTu as qddt on qddt_nv.iID_QDDauTuID = qddt.iID_QDDauTuID
-	where qddt_nv.iID_NguonVonID = 1 
+	where qddt_nv.iID_NguonVonID = 1  and da.iID_DuAnID = qddt.iID_DuAnID
 	group by qddt_nv.iID_QDDauTu_NguonVonID
 
 )as fNguonNganSachQuocPhong

@@ -202,6 +202,10 @@ function ValidateData(data) {
         Messages.push("Giai đoạn đến chưa nhập.");
     }
 
+    if (data.iGiaiDoanTu % 5 != 1) {
+        Messages.push("Giai đoạn không hợp lệ.");
+    }
+
     if (Messages != null && Messages != undefined && Messages.length > 0) {
         $.ajax({
             type: "POST",

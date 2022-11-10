@@ -1726,6 +1726,7 @@ namespace Viettel.Services
         /// <param name="tableName"></param>
         /// <returns></returns>
         bool CheckExistSoQuyetDinhShare(string propertyName, string tableName, string checkVal);
+        int FindCurrentPeriod(int namLamViec);
     }
 
 
@@ -18093,7 +18094,7 @@ namespace Viettel.Services
 
         public IEnumerable<VDT_DA_DuToan> GetAllDuToanIdByDuAnId(Guid iID_DuAnID)
         {
-            var sql = "select * from VDT_DA_DuToan where iID_DuAnID = @iID_DuAnID and bActive = 1";
+            var sql = "select * from VDT_DA_DuToan where iID_DuAnID = @iID_DuAnID and bActive = 1 order by dDateCreate desc";
 
             using (var conn = _connectionFactory.GetConnection())
             {
@@ -18819,6 +18820,20 @@ namespace Viettel.Services
             {
                 AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
                 return false;
+            }
+        }
+
+        public int FindCurrentPeriod(int namLamViec)
+        {
+            int phanDu = namLamViec % 5;
+            int phanNguyen = namLamViec / 5;
+            if (phanDu == 0)
+            {
+                return (phanNguyen - 1) * 5 + 1;
+            }
+            else
+            {
+                return phanNguyen * 5 + 1;
             }
         }
         #endregion

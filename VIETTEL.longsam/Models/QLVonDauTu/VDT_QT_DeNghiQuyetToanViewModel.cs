@@ -99,6 +99,9 @@ namespace Viettel.Models.QLVonDauTu
                 return dThoiGianHoanThanh.HasValue ? dThoiGianHoanThanh.Value.ToString("dd/MM/yyyy") : string.Empty;
             }
         }
+
+        public string sThoiGianKhoiCongDuAn { get; set; }
+        public string sThoiGianHoanThanhDuAn { get; set; }
     }
 
     public class VDTDuToanNguonVonModel: VDT_DA_DuToan_Nguonvon

@@ -52,20 +52,25 @@
                                 <input type="hidden" style="display:none" id="txt_DuToan_Value" value="@Model.iID_DuToanID">
                                 <select class="form-control" style="width:100%" id="iIđuToanId"></select>
                             </div>
+                            <div class="col-sm-6">
+                                <label for="txt_ChuDauTu" class="">Chủ đầu tư</label>
+                                <input type="text" id="txt_ChuDauTu" class="form-control" autocomplete="off" disabled value="@Model.sTenChuDauTu"/>
+                            </div>
                         </div>
 
-                        <div class="form-group row">
+                        @*<div class="form-group row">
                             <div class="col-sm-12">
                                 <p id="txt_TenDuAn">@Model.sTenDuAn</p>
                                 <p id="txt_ChuDauTu">Chủ đầu tư: @Model.sTenChuDauTu</p>
                             </div>
-                        </div>
+                        </div>*@
 
                         <div class="form-group row">
                             <div class="col-sm-6">
                                 <label for="txtThoiGianKhoiCong" class="">Thời gian khởi công</label>
                                 <div class='input-group date'>
-                                    <input type='text' required class="form-control startDate dateFormat" placeholder="dd/MM/yyyy" id="txtThoiGianKhoiCong" value="@Model.sThoiGianKhoiCong" autocomplete="off" />
+                                    @*<input type='text' required class="form-control startDate dateFormat" placeholder="dd/MM/yyyy" id="txtThoiGianKhoiCong" value="@Model.sThoiGianKhoiCong" autocomplete="off" />*@
+                                    <input type='text' class="form-control col-sm-2 requireInput startYear" id="txtThoiGianKhoiCong" autocomplete="off" disabled />
                                     <span class="btn-default input-group-addon">
                                         <i class="fa fa-calendar" aria-hidden="true"></i>
                                     </span>
@@ -74,7 +79,8 @@
                             <div class="col-sm-6">
                                 <label for="txtThoiGianHoanThanh" class="">Thời gian hoàn thành</label>
                                 <div class='input-group date'>
-                                    <input type='text' required class="form-control endDate dateFormat" placeholder="dd/MM/yyyy" id="txtThoiGianHoanThanh" value="@Model.sThoiGianHoanThanh" autocomplete="off" />
+                                    @*<input type='text' required class="form-control endDate dateFormat" placeholder="dd/MM/yyyy" id="txtThoiGianHoanThanh" value="@Model.sThoiGianHoanThanh" autocomplete="off" />*@
+                                    <input type='text' class="form-control col-sm-2 requireInput endYear" id="txtThoiGianHoanThanh" autocomplete="off" disabled />
                                     <span class="btn-default input-group-addon">
                                         <i class="fa fa-calendar" aria-hidden="true"></i>
                                     </span>
@@ -134,7 +140,7 @@
                                         <tr>
                                             <th width="45%">Nguồn vốn</th>
                                             <th width="25%" class="text-right">Giá trị phê duyệt</th>
-                                            <th class="text-right">Chủ đầu tư đề nghị quyết toán</th>
+                                            @*<th class="text-right">Chủ đầu tư đề nghị quyết toán</th>*@
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -145,7 +151,7 @@
                                                 <tr data-id="@item.iID_NguonVonID">
                                                     <td align="">@item.sTenNguonVon</td>
                                                     <td class="text-right">@item.sTienPheDuyet</td>
-                                                    <td><input type='text' class='form-control txtTienCDTQuyetToan text-right' value="@item.sTienToTrinh" onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>
+                                                    @*<td><input type='text' class='form-control txtTienCDTQuyetToan text-right' value="@item.sTienToTrinh" onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>*@
                                                 </tr>
                                             }
                                         }

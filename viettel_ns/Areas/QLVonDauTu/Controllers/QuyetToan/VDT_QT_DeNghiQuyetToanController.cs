@@ -25,6 +25,7 @@ using VIETTEL.Flexcel;
 using VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong;
 using VIETTEL.Areas.z.Models;
 using System.Data;
+using System.Globalization;
 
 namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
 {
@@ -74,6 +75,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
         [HttpGet]
         public ActionResult Create()
         {
+            ViewBag.dNgayDeNghi = DateTime.Now.ToString("dd/MM/yyyy");
             return View();
         }
 
@@ -138,7 +140,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             var listModel = _vdtService.GetListAllDuAn(idDonVi, iIdDeNghiQuyetToanId);
             if (listModel != null && listModel.Any())
             {
-                result.Add(new { id = string.Empty, text = "--Chọn--" });
+                if(listModel.Count() != 1)
+                {
+                    result.Add(new { id = string.Empty, text = "--Chọn--" });
+                }                
                 foreach (var item in listModel)
                 {
                     result.Add(new { id = item.iID_DuAnID, text = item.sTenDuAn });
@@ -152,7 +157,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
         {
             VDT_QT_DeNghiQuyetToanGetDuAnModel result = _vdtService.GetDuLieuDuAnById(iIdDuAnId, Username);
             List<VDTDuToanNguonVonModel> lstNguonVon = _vdtService.GetListDuToanNguonVonByDuToanId(iIdDuToanId);
-            return Json(new { status = true, data = result, lstNguonVon = lstNguonVon });
+            string sKhoiCong = _vdtService.GetPheDuyetTKTCvaTDTByID(Guid.Parse(iIdDuToanId)).sKhoiCong;
+            string sKetThuc = _vdtService.GetPheDuyetTKTCvaTDTByID(Guid.Parse(iIdDuToanId)).sKetThuc;
+            return Json(new { status = true, data = result, lstNguonVon = lstNguonVon, sKhoiCong = sKhoiCong, sKetThuc = sKetThuc });
         }
 
         [HttpPost]
@@ -161,14 +168,15 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             var result = new List<dynamic>();
             var data = _vdtService.GetAllDuToanIdByDuAnId(iIdDuAnId);
             if (data != null && data.Any())
-            {
-                result.Add(new { id = string.Empty, text = "--Chọn--" });
+            {                               
                 foreach (var item in data)
                 {
                     result.Add(new { id = item.iID_DuToanID, text = item.sSoQuyetDinh });
                 }
             }
-            return Json(new { datas = result }, JsonRequestBehavior.AllowGet);
+            string sKhoiCong = _vdtService.GetPheDuyetTKTCvaTDTByID(data.FirstOrDefault().iID_DuToanID).sKhoiCong;
+            string sKetThuc = _vdtService.GetPheDuyetTKTCvaTDTByID(data.FirstOrDefault().iID_DuToanID).sKetThuc;
+            return Json(new { datas = result, sKhoiCong = sKhoiCong, sKetThuc = sKetThuc }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -252,7 +260,11 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
 
             }
 
-            return Json(new { lstChiPhi = listChiPhiParent, lstHangMuc = listHangMuc }, JsonRequestBehavior.AllowGet);
+            var sumGiaTriQuyetToanAB = listChiPhi.Sum(x => x.fGiaTriQuyetToanAB).HasValue ? listChiPhi.Sum(x => x.fGiaTriQuyetToanAB).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            var sumKetQuaKiemToan = listChiPhi.Sum(x => x.fGiaTriKiemToan).HasValue ? listChiPhi.Sum(x => x.fGiaTriKiemToan).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            var sumCDTDeNghiQuyetToan = listChiPhi.Sum(x => x.fGiaTriDeNghiQuyetToan).HasValue ? listChiPhi.Sum(x => x.fGiaTriDeNghiQuyetToan).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+
+            return Json(new { lstChiPhi = listChiPhiParent, lstHangMuc = listHangMuc, sumGiaTriQuyetToanAB = sumGiaTriQuyetToanAB, sumKetQuaKiemToan = sumKetQuaKiemToan, sumCDTDeNghiQuyetToan = sumCDTDeNghiQuyetToan }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -784,7 +796,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
         public ActionResult ImportDNQT()
         {
             DeNghiQuyetToanChiTietModel vm = new DeNghiQuyetToanChiTietModel();
-            
+            ViewBag.dNgayDeNghi = DateTime.Now.ToString("dd/MM/yyyy");
+
             return View(vm);
         }
 
@@ -801,7 +814,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                 IEnumerable<VDT_QT_DeNghiQuyetToanViewModel> dataImportChiPhiKhac = excel_result(chiPhi, 1);
                 IEnumerable<VDT_QT_DeNghiQuyetToanViewModel> dataImportTaiSan = excel_result(taiSan, 2);
                 IEnumerable<VDT_QT_DeNghiQuyetToanViewModel> dataImportChiPhi = excel_result(chiPhi, 3);
-                IEnumerable<VDT_QT_DeNghiQuyetToanViewModel> dataImportNguonVon = excel_result(nguonVon, 4);
+                //IEnumerable<VDT_QT_DeNghiQuyetToanViewModel> dataImportNguonVon = excel_result(nguonVon, 4);
                 List<VDT_DA_DuToan_ChiPhi_ViewModel> listChiPhi = _vdtService.GetListChiPhiTheoTKTC(Guid.Parse(iIdDuToanId)).ToList();
                 List<VDTDuToanNguonVonModel> listNguonVon = _vdtService.GetListDuToanNguonVonByDuToanId(iIdDuToanId);
                 foreach (var item in listChiPhi)
@@ -823,7 +836,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                     dataImportChiPhiKhac = dataImportChiPhiKhac,
                     dataImportTaiSan = dataImportTaiSan,
                     listChiPhi = listChiPhi,
-                    listNguonVon = dataImportNguonVon.FirstOrDefault().listNguonVon
+                    //listNguonVon = dataImportNguonVon.FirstOrDefault().listNguonVon
                 }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -848,10 +861,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             var items = dt.AsEnumerable();
             var listChiPhi = new List<VDT_DA_DuToan_ChiPhi_ViewModel>();
             var listNguonVon = new List<VDTDuToanNguonVonModel>();
-            if (loai == 1)           //lay chi phi
+            if (loai == 1)           //lay chi phi khac
             {
-                var fChiPhiThietHai = items.ToList()[6].Field<string>(3);
-                var fChiPhiKhongTaoNenTaiSan = items.ToList()[7].Field<string>(3);
+                var fChiPhiThietHai = items.ToList()[5].Field<string>(5);
+                var fChiPhiKhongTaoNenTaiSan = items.ToList()[6].Field<string>(5);
                 var e = new VDT_QT_DeNghiQuyetToanViewModel
                 {
                     fChiPhiThietHai = Convert.ToDouble(fChiPhiThietHai),
@@ -860,27 +873,27 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                 dataImport.Add(e);
             } else if (loai == 2)           //lay tai san
             {
-                var fTaiSanDaiHanThuocCDTQuanLy = items.ToList()[6].Field<string>(3);
-                var fTaiSanDaiHanDonViKhacQuanLy = items.ToList()[6].Field<string>(4);
-                var fTaiSanNganHanThuocCDTQuanLy = items.ToList()[7].Field<string>(3);
-                var fTaiSanNganHanDonViKhacQuanLy = items.ToList()[7].Field<string>(4);
+                var fTaiSanDaiHanThuocCDTQuanLy = items.ToList()[5].Field<string>(5);
+                var fTaiSanDaiHanDonViKhacQuanLy = items.ToList()[5].Field<string>(6);
+                //var fTaiSanNganHanThuocCDTQuanLy = items.ToList()[7].Field<string>(3);
+                //var fTaiSanNganHanDonViKhacQuanLy = items.ToList()[7].Field<string>(4);
                 var e = new VDT_QT_DeNghiQuyetToanViewModel
                 {
                     fTaiSanDaiHanThuocCDTQuanLy = Convert.ToDouble(fTaiSanDaiHanThuocCDTQuanLy),
                     fTaiSanDaiHanDonViKhacQuanLy = Convert.ToDouble(fTaiSanDaiHanDonViKhacQuanLy),
-                    fTaiSanNganHanThuocCDTQuanLy = Convert.ToDouble(fTaiSanNganHanThuocCDTQuanLy),
-                    fTaiSanNganHanDonViKhacQuanLy = Convert.ToDouble(fTaiSanNganHanDonViKhacQuanLy)
+                    //fTaiSanNganHanThuocCDTQuanLy = Convert.ToDouble(fTaiSanNganHanThuocCDTQuanLy),
+                    //fTaiSanNganHanDonViKhacQuanLy = Convert.ToDouble(fTaiSanNganHanDonViKhacQuanLy)
                 };
                 dataImport.Add(e);
-            } else if(loai == 3) 
+            } else if(loai == 3)        //lay chi phi chinh
             {
-                for(var i = 13; i < items.Count(); i++)
+                for(var i = 11; i < items.Count(); i++)
                 {
                     DataRow r = items.ToList()[i];
-                    var sTenChiPhi = r.Field<string>(1);
-                    var fGiaTriDeNghiQuyetToan = r.Field<string>(4);
-                    var fGiaTriQuyetToanAB = r.Field<string>(5);
-                    var fGiaTriKiemToan = r.Field<string>(6);  
+                    var sTenChiPhi = r.Field<string>(3);
+                    var fGiaTriDeNghiQuyetToan = r.Field<string>(6);
+                    var fGiaTriQuyetToanAB = r.Field<string>(7);
+                    var fGiaTriKiemToan = r.Field<string>(8);  
                     var e = new VDT_DA_DuToan_ChiPhi_ViewModel
                     {
                         sTenChiPhi = sTenChiPhi,
@@ -891,14 +904,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                     listChiPhi.Add(e);
                 }
                 dataImport.Add(new VDT_QT_DeNghiQuyetToanViewModel { listChiPhi = listChiPhi });
-            } else if(loai == 4)
+            } else if(loai == 4)        //lay nguon von
             {
-                for(var i = 6; i < items.Count(); i++)
+                for(var i = 5; i < items.Count(); i++)
                 {
                     DataRow r = items.ToList()[i];
-                    var sTenNguonVon = r.Field<string>(1);
-                    var iID_NguonVonID = r.Field<string>(2);
-                    var fTienCDTQuyetToan = r.Field<string>(6);
+                    var sTenNguonVon = r.Field<string>(3);
+                    var iID_NguonVonID = r.Field<string>(4);
+                    var fTienCDTQuyetToan = r.Field<string>(8);
                     var e = new VDTDuToanNguonVonModel
                     {
                         sTenNguonVon = sTenNguonVon,

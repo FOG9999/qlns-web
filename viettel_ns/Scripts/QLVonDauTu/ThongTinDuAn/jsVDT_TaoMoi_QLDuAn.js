@@ -103,6 +103,7 @@ function LuuDuAn() {
 
         duAn.iID_DuAnID = $("#iID_DuAnID").val();
         duAn.iID_DonViQuanLyID = $("#iID_DonViQuanLyID").val();
+        duAn.iID_DonViThucHienDuAnID = $("#iID_DonViQuanLyID").val();
         duAn.sTenDuAn = $.trim($("#sTenDuAn").val());
         duAn.sMaDuAn = $("#sMaDuAn").val();
         duAn.iID_ChuDauTuID = $("#iID_ChuDauTuID").val();

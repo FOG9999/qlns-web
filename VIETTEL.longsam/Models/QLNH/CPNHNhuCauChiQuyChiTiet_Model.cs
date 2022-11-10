@@ -44,6 +44,8 @@ namespace Viettel.Models.CPNH
         public virtual double? KinhPhiDaChiToYUSD { get; set; }
         public virtual double? KinhPhiDaChiToYVND { get; set; }
         public string Noidungchi { get; set; }
+        public string isBold { get; set; }
+        public string isSum { get; set; }
 
     }
 }

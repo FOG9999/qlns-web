@@ -1863,6 +1863,7 @@
     <Content Include="Areas\QLNH\Views\KeHoachChiTietBQP\_sheet.cshtml" />
     <Content Include="Areas\QLNH\Views\KeHoachTongTheTTCP\_sheetFrame.cshtml" />
     <Content Include="Areas\QLNH\Views\KeHoachChiTietBQP\_sheetFrame.cshtml" />
+    <Content Include="Areas\QLVonDauTu\Views\VDT_QT_DeNghiQuyetToan\_sheetImport.cshtml" />
     <None Include="Areas\QuyetToan\Controllers\ReportController.cs1" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\Index.cshtml" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\_list.cshtml" />

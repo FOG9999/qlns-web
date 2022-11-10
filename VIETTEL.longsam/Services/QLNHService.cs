@@ -88,9 +88,9 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
         IEnumerable<LookupDto<Guid, string>> getLookupKHBQP();
         IEnumerable<LookupKHTTCP> getLookupKHTTCP();
         IEnumerable<LookupDto<Guid, string>> getLookupPhongBan();
-        Boolean SaveKHBQP(List<NH_KHChiTietBQP_NhiemVuChiCreateDto> lstNhiemVuChis, NH_KHChiTietBQP khct, string state);
+        bool SaveKHBQP(List<NH_KHChiTietBQP_NhiemVuChiCreateDto> lstNhiemVuChis, NH_KHChiTietBQP khct, string state);
         NH_KHChiTietBQPModel GetKeHoachChiTietBQPById(Guid id);
-        Boolean DeleteKHBQP(Guid id);
+        bool DeleteKHBQP(Guid id);
         NH_KHChiTietBQP_NVCViewModel GetDetailKeHoachChiTietBQP(string state, Guid? KHTTCP_ID, Guid? KHBQP_ID, Guid? iID_BQuanLyID, Guid? iID_DonViID, string sTenNhiemVuChi, string sTenPhongBan, string sTenDonVi, bool isUseLastTTCP = false);
 
         List<NH_DM_TiGia_ChiTiet_ViewModel> GetTiGiaChiTietByTiGiaId(Guid KHBQP_ID);
@@ -180,7 +180,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
         #endregion
 
         #region QLNH - Kế hoạch chi tiết TTCP
-        Boolean SaveKHTongTheTTCP(List<NH_KHTongTheTTCP_NhiemVuChiDto> lstNhiemVuChis, NH_KHTongTheTTCP khtt, string state);
+        bool SaveKHTongTheTTCP(List<NH_KHTongTheTTCP_NhiemVuChiDto> lstNhiemVuChis, NH_KHTongTheTTCP khtt, string state);
         IEnumerable<NH_KHTongTheTTCP_NhiemVuChi_Parent> Get_KHCT_TTCP_GetListOfParent(Guid khtt_id, Guid program_id);
         IEnumerable<NH_KHTongTheTTCP_NhiemVuChi> Get_KHCT_TTCP_GetListProgramByPlanID(Guid khtt_id);//Lấy ds chương trình
         IEnumerable<NH_KHTongTheTTCP_NhiemVuChi> Get_KHCT_TTCP_GetListMissionByPlanIdAndProgramId(Guid khtt_id, Guid program_id);//Lấy ds nhiệm vụ chi
@@ -212,7 +212,6 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
         IEnumerable<NH_KHChiTietBQP_NhiemVuChiModel> GetNHKeHoachChiTietBQPNhiemVuChiListDuAn(Guid? id = null);
         IEnumerable<NS_DonVi> GetListDonViToBQP(Guid? id = null);
         IEnumerable<NHDAThongTinDuAnModel> GetListBQPToNHC(Guid? id = null);
-        //IEnumerable<NH_DA_DuAn> GetMaDuAn(Guid? IdDonVi = null, Guid? IdCDT = null);
         IEnumerable<NH_KHChiTietBQP_NhiemVuChi> GetListCTbyDV(Guid? id = null, Guid? idBQP = null);
         bool SaveThongTinDuAn(NHDAThongTinDuAnModel data, string username, string state, List<NH_DA_DuAn_ChiPhiDto> dataTableChiPhi, Guid? oldId);
         IEnumerable<NH_KHChiTietBQP_NhiemVuChi> GetListChuongTrinh();
@@ -752,7 +751,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 lstParam.Add("ItemsPerPage", _paging.ItemsPerPage);
                 lstParam.Add("iToTalItem", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-                var items = conn.Query<NH_DA_HopDongModel>("proc_get_all_nh_da_tthopdong_paging_demo", lstParam,
+                var items = conn.Query<NH_DA_HopDongModel>("proc_get_all_nh_da_tthopdong_paging_index", lstParam,
                     commandType: CommandType.StoredProcedure);
                 _paging.TotalItems = lstParam.Get<int>("iToTalItem");
                 return items;
@@ -1591,7 +1590,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
         #region QLNH - Kế hoạch chỉ tiết TTCP
 
         // Lưu Kế hoạch
-        public Boolean SaveKHTongTheTTCP(List<NH_KHTongTheTTCP_NhiemVuChiDto> lstNhiemVuChis, NH_KHTongTheTTCP khtt, string state)
+        public bool SaveKHTongTheTTCP(List<NH_KHTongTheTTCP_NhiemVuChiDto> lstNhiemVuChis, NH_KHTongTheTTCP khtt, string state)
         {
             try
             {
@@ -1631,7 +1630,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                         {
                             var nvc = new NH_KHTongTheTTCP_NhiemVuChi();
                             nvc.iID_KHTongTheID = khtt.ID;
-                            nvc.sTenNhiemVuChi = HttpUtility.HtmlDecode(nvcDto.sTenNhiemVuChi);
+                            nvc.sTenNhiemVuChi = nvcDto.sTenNhiemVuChi;
                             nvc.iID_BQuanLyID = nvcDto.iID_BQuanLyID;
                             nvc.fGiaTri = double.TryParse(nvcDto.sGiaTri, NumberStyles.Float, new CultureInfo("en-US"), out double gtusd) ? gtusd : (double?)null;
                             nvc.sMaThuTu = nvcDto.sMaThuTu;
@@ -1703,7 +1702,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                         khctGoc.iGiaiDoanDen = khtt.iGiaiDoanDen;
                         khctGoc.iNamKeHoach = khtt.iNamKeHoach;
                         khctGoc.iID_ParentID = khtt.iID_ParentID;
-                        khctGoc.sSoKeHoach = HttpUtility.HtmlDecode(khtt.sSoKeHoach);
+                        khctGoc.sSoKeHoach = khtt.sSoKeHoach;
                         khctGoc.dNgayKeHoach = khtt.dNgayKeHoach;
                         khctGoc.sMoTaChiTiet = khtt.sMoTaChiTiet;
                         khctGoc.dNgaySua = khtt.dNgaySua;
@@ -1726,7 +1725,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                             var nvc = new NH_KHTongTheTTCP_NhiemVuChi();
                             nvc.ID = nvcDto.ID;
                             nvc.iID_KHTongTheID = khctGoc.ID;
-                            nvc.sTenNhiemVuChi = HttpUtility.HtmlDecode(nvcDto.sTenNhiemVuChi);
+                            nvc.sTenNhiemVuChi = nvcDto.sTenNhiemVuChi;
                             nvc.iID_BQuanLyID = nvcDto.iID_BQuanLyID;
                             nvc.fGiaTri = double.TryParse(nvcDto.sGiaTri, NumberStyles.Float, new CultureInfo("en-US"), out double gtusd) ? gtusd : (double?)null;
                             nvc.sMaThuTu = nvcDto.sMaThuTu;
@@ -1852,6 +1851,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 return item;
             }
         }
+
         public IEnumerable<NH_KHTongTheTTCP_NhiemVuChi> Get_KHCT_TTCP_GetListProgramByPlanID(Guid khtt_id)//Lấy ds chương trình
         {
             var sql = @"SELECT *
@@ -1863,6 +1863,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 return item;
             }
         }
+
         public IEnumerable<NH_KHTongTheTTCP_NhiemVuChi> Get_KHCT_TTCP_GetListMissionByPlanIdAndProgramId(Guid khtt_id, Guid program_id)//Lấy ds nhiệm vụ chi
         {
             var sql = @"SELECT *
@@ -1874,6 +1875,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 return item;
             }
         }
+
         public NH_KHTongTheTTCP_NhiemVuChi GetNhiemVuChiById(Guid ID)
         {
             try
@@ -1892,6 +1894,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 return null;
             }
         }
+
         public IEnumerable<NH_KHTongTheTTCP_BQL> GetListDM_BQL()
         {
             var sql = @"select iID_MaPhongBan as BQuanLyID, 
@@ -1904,6 +1907,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 return item;
             }
         }
+
         public IEnumerable<NH_KHTongTheTTCP_SoKeHoach> GetListKHTT_ActiveWithNumber()
         {
             var sql = @"select ID KHTTCP_ID, 
@@ -1916,6 +1920,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 return item;
             }
         }
+
         public bool SaveKeHoachTTCP_NVC(NH_KHTongTheTTCP_NhiemVuChi data, string sUsername)
         {
             try
@@ -4073,7 +4078,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
             }
         }
 
-        public Boolean SaveKHBQP(List<NH_KHChiTietBQP_NhiemVuChiCreateDto> lstNhiemVuChis, NH_KHChiTietBQP khct, string state)
+        public bool SaveKHBQP(List<NH_KHChiTietBQP_NhiemVuChiCreateDto> lstNhiemVuChis, NH_KHChiTietBQP khct, string state)
         {
             try
             {
@@ -4113,9 +4118,9 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                         {
                             var nvc = new NH_KHChiTietBQP_NhiemVuChi();
                             nvc.iID_KHChiTietID = khct.ID;
-                            nvc.sTenNhiemVuChi = HttpUtility.HtmlDecode(nvcDto.sTenNhiemVuChi);
+                            nvc.sTenNhiemVuChi = nvcDto.sTenNhiemVuChi;
                             nvc.iID_BQuanLyID = nvcDto.iID_BQuanLyID;
-                            nvc.iID_MaDonVi = HttpUtility.HtmlDecode(nvcDto.iID_MaDonVi);
+                            nvc.iID_MaDonVi = nvcDto.iID_MaDonVi;
                             nvc.iID_DonViID = nvcDto.iID_DonViID;
                             nvc.fGiaTriUSD = double.TryParse(nvcDto.fGiaTriUSD, NumberStyles.Float, new CultureInfo("en-US"), out double gtusd) ? gtusd : (double?)null;
                             nvc.fGiaTriVND = double.TryParse(nvcDto.fGiaTriVND, NumberStyles.Float, new CultureInfo("en-US"), out double gtvnd) ? gtvnd : (double?)null;
@@ -4196,7 +4201,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                         khctGoc.iID_ParentID = khct.iID_ParentID;
                         khctGoc.iID_KHTongTheTTCPID = khct.iID_KHTongTheTTCPID;
                         khctGoc.iID_TiGiaID = khct.iID_TiGiaID;
-                        khctGoc.sSoKeHoach = HttpUtility.HtmlDecode(khct.sSoKeHoach);
+                        khctGoc.sSoKeHoach = khct.sSoKeHoach;
                         khctGoc.dNgayKeHoach = khct.dNgayKeHoach;
                         khctGoc.sMoTaChiTiet = khct.sMoTaChiTiet;
                         khctGoc.dNgaySua = khct.dNgaySua;
@@ -4221,9 +4226,9 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                             var nvc = new NH_KHChiTietBQP_NhiemVuChi();
                             nvc.ID = nvcDto.ID;
                             nvc.iID_KHChiTietID = khctGoc.ID;
-                            nvc.sTenNhiemVuChi = HttpUtility.HtmlDecode(nvcDto.sTenNhiemVuChi);
+                            nvc.sTenNhiemVuChi = nvcDto.sTenNhiemVuChi;
                             nvc.iID_BQuanLyID = nvcDto.iID_BQuanLyID;
-                            nvc.iID_MaDonVi = HttpUtility.HtmlDecode(nvcDto.iID_MaDonVi);
+                            nvc.iID_MaDonVi = nvcDto.iID_MaDonVi;
                             nvc.iID_DonViID = nvcDto.iID_DonViID;
                             nvc.fGiaTriUSD = double.TryParse(nvcDto.fGiaTriUSD, NumberStyles.Float, new CultureInfo("en-US"), out double gtusd) ? gtusd : (double?)null;
                             nvc.fGiaTriVND = double.TryParse(nvcDto.fGiaTriVND, NumberStyles.Float, new CultureInfo("en-US"), out double gtvnd) ? gtvnd : (double?)null;
@@ -4315,7 +4320,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
             }
         }
 
-        public Boolean DeleteKHBQP(Guid id)
+        public bool DeleteKHBQP(Guid id)
         {
             try
             {
@@ -5813,7 +5818,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 lstParam.Add("ItemsPerPage", _paging.ItemsPerPage);
                 lstParam.Add("iToTalItem", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-                var items = conn.Query<NH_DA_GoiThauModel>("proc_get_all_nh_da_ttgoithau_paging_demo", lstParam,
+                var items = conn.Query<NH_DA_GoiThauModel>("proc_get_all_nh_da_ttgoithau_paging_index", lstParam,
                     commandType: CommandType.StoredProcedure);
                 _paging.TotalItems = lstParam.Get<int>("iToTalItem");
                 return items;
@@ -6627,7 +6632,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
             query.Append("SELECT ktcpct.*,da.sMaDuAn + ' - ' + da.sTenDuAn as sTenDuAn , hd.sSoHopDong + ' - ' + hd.sTenHopDong as sTenHopDong " +
                 "FROM NH_KT_KhoiTaoCapPhat_ChiTiet ktcpct" +
                 " left join NH_DA_DuAn da on ktcpct.iID_DuAnID = da.ID" +
-                " left join NH_DA_HopDong hd on ktcpct.iID_HopDongID = hd.ID WHERE iID_KhoiTaoCapPhatID = @iId");
+                " left join NH_DA_HopDong hd on ktcpct.iID_HopDongID = hd.ID WHERE ktcpct.iID_KhoiTaoCapPhatID = @iId");
             using (var conn = _connectionFactory.GetConnection())
             {
                 var item = conn.Query<NH_KT_KhoiTaoCapPhat_ChiTietData>(query.ToString(),

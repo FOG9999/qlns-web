@@ -89,6 +89,10 @@ function LoadDataComboboxDuToan(iIđuAnId) {
                 $("#iIđuToanId").val(iIdDuToan).trigger("change");
                 GetListChiPhiHangMuc(iIdDuToan);
             }
+            if (resp.sKhoiCong != null && resp.sKetThuc) {
+                document.getElementById("txtThoiGianKhoiCong").value = resp.sKhoiCong;
+                document.getElementById("txtThoiGianHoanThanh").value = resp.sKetThuc;
+            }
         }
     });
 }
@@ -115,7 +119,7 @@ function GetDuLieuDuAn(idDuAn) {
                             html += "<tr data-id='" + item.iID_NguonVonID + "'>";
                             html += "<td>" + item.sTenNguonVon + "</td>";
                             html += "<td>" + item.sTienPheDuyet + "</td>";
-                            html += "<td><input type='text' class='form-control txtTienCDTQuyetToan text-right' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>";
+                            //html += "<td><input type='text' class='form-control txtTienCDTQuyetToan text-right' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>";
                             html += "</tr>";
                         })
                     }
@@ -164,14 +168,29 @@ function GetListChiPhiHangMuc(iIdDuToan) {
                 if (resp.lstHangMuc != null && resp.lstHangMuc.length > 0) {
                     arrHangMuc = resp.lstHangMuc;
                 }
-                DrawTableChiPhiHangMuc();
+                DrawTableChiPhiHangMuc(resp.sumGiaTriQuyetToanAB, resp.sumKetQuaKiemToan, resp.sumCDTDeNghiQuyetToan);
             }
         });
     }
 }
 
-function DrawTableChiPhiHangMuc() {
+function DrawTableChiPhiHangMuc(sumGiaTriQuyetToanAB, sumKetQuaKiemToan, sumCDTDeNghiQuyetToan) {
     var html = "";
+
+    //them dong tong so
+    html += "<tr style='font-weight:bold' data-id='-1'>";
+    html += "<td></td>";
+    html += "<td>Tổng số</td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td class='text-right txtTongGiaTriQuyetToanAB'>" + sumGiaTriQuyetToanAB + "</td>";
+    html += "<td class='text-right txtTongKetQuaKiemToan'>" + sumKetQuaKiemToan + "</td>";
+    html += "<td class='text-right txtTongCDTDeNghiQuyetToan'>" + sumCDTDeNghiQuyetToan + "</td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "</tr>";
+
     arrChiPhi.forEach(function (itemCp) {
         var arrChiPhiChild = arrChiPhi.filter(x => x.iID_ChiPhi_Parent == itemCp.iID_DuAn_ChiPhi);
         var arrHangMucByChiPhi = arrHangMuc.filter(x => x.iID_DuAn_ChiPhi == itemCp.iID_DuAn_ChiPhi);
@@ -263,9 +282,9 @@ function GetDataNguonVon() {
     var lstData = [];
     $("#tblDanhSachNguonVon tbody tr").each(function (index, row) {
         var iIdNguonVonId = $(row).attr("data-id");
-        var fTienToTrinh = $(row).find(".txtTienCDTQuyetToan").val() == "" ? null : parseFloat(UnFormatNumber($(row).find(".txtTienCDTQuyetToan").val()));
+        //var fTienToTrinh = $(row).find(".txtTienCDTQuyetToan").val() == "" ? null : parseFloat(UnFormatNumber($(row).find(".txtTienCDTQuyetToan").val()));
         lstData.push({
-            fTienToTrinh: fTienToTrinh,
+            //fTienToTrinh: fTienToTrinh,
             iID_NguonVonID: iIdNguonVonId
         })
     })
@@ -421,10 +440,17 @@ function changeGiaTri(input) {
     }
 
     var sumGiaTriDeNghiQuyetToan = 0;
+    var sumGiaTriQuyetToanAB = 0;
+    var sumKetQuaKiemToan = 0;
     arrChiPhi.forEach(x => {
         sumGiaTriDeNghiQuyetToan += x.fGiaTriDeNghiQuyetToan;
+        sumGiaTriQuyetToanAB += x.fGiaTriQuyetToanAB;
+        sumKetQuaKiemToan += x.fGiaTriKiemToan;
     });
     document.getElementById("txtGiaTriQuyetToan").value = sumGiaTriDeNghiQuyetToan;
+    $('*[data-id="' + "-1" + '"]').find('.txtTongGiaTriQuyetToanAB').html(FormatNumber(sumGiaTriQuyetToanAB));
+    $('*[data-id="' + "-1" + '"]').find('.txtTongKetQuaKiemToan').html(FormatNumber(sumKetQuaKiemToan));
+    $('*[data-id="' + "-1" + '"]').find('.txtTongCDTDeNghiQuyetToan').html(FormatNumber(sumGiaTriDeNghiQuyetToan));
 
     $(dongHienTai).find(".txtChenhLechSoVoiDuToan").html(FormatNumber(fChenhLenhSoVoiDuToan));
     $(dongHienTai).find(".txtChenhLechSoVoiQuyetToanAB").html(FormatNumber(fChenhLenhSoVoiQuyetToanAB));

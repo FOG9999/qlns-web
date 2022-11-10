@@ -18,6 +18,7 @@ using VIETTEL.Models.QLNH;
 using VIETTEL.Models;
 using Viettel.Models.QLNH;
 using VIETTEL.Areas.QLNH.Models.DuAnHopDong.KeHoachChiTietBQP;
+using System.Reflection;
 
 namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
 {
@@ -90,23 +91,33 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
         //public ActionResult SaveKeHoachChiTietBQP(List<NH_KHChiTietBQP_NhiemVuChiCreateDto> lstNhiemVuChis, string keHoachChiTietBQP, string state)
         public ActionResult SaveKeHoachChiTietBQP(List<NH_KHChiTietBQP_NhiemVuChiCreateDto> lstNhiemVuChis, string state)
         {
-            //keHoachChiTietBQP = HttpUtility.HtmlDecode(keHoachChiTietBQP);
-            foreach(var item in lstNhiemVuChis)
+            try
             {
-                item.iID_MaDonVi = HttpUtility.HtmlDecode(item.iID_MaDonVi);
-                item.sTenNhiemVuChi = HttpUtility.HtmlDecode(item.sTenNhiemVuChi);
-            }
+                //keHoachChiTietBQP = HttpUtility.HtmlDecode(keHoachChiTietBQP);
+                foreach (var item in lstNhiemVuChis)
+                {
+                    item.iID_MaDonVi = HttpUtility.HtmlDecode(item.iID_MaDonVi);
+                    item.sTenNhiemVuChi = HttpUtility.HtmlDecode(item.sTenNhiemVuChi);
+                }
 
-            var kHChiTietBQP = TempData["KHChiTietBQP"];
-            if (kHChiTietBQP != null)
-            {
-                TempData.Keep("KHChiTietBQP");
+                var kHChiTietBQP = TempData["KHChiTietBQP"];
+                //var khct = JsonConvert.DeserializeObject<NH_KHChiTietBQP>(keHoachChiTietBQP);
+                var khct = (NH_KHChiTietBQP)kHChiTietBQP;
+
+                if (kHChiTietBQP != null)
+                {
+                    TempData.Keep("KHChiTietBQP");
+                }
+                return Json(new
+                {
+                    result = _qlnhService.SaveKHBQP(lstNhiemVuChis, khct, state)
+                });
             }
-            //var khct = JsonConvert.DeserializeObject<NH_KHChiTietBQP>(keHoachChiTietBQP);
-            var khct = (NH_KHChiTietBQP)kHChiTietBQP;
-            return Json(new {
-                result = _qlnhService.SaveKHBQP(lstNhiemVuChis, khct, state)
-            });
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return Json(new { result = false });
         }
 
         // Get chi tiết tỉ giá theo id

@@ -122,6 +122,7 @@
                         <tr style="cursor: pointer" class="row-select "
                             data-rowsubmit="@(item.bIsData == true ? "isData" : "isNotData")" data-getlevel="@item.sLevel"
                             data-getparentid="@item.iID_KHCTBQP_NhiemVuChiID"
+                            data-getloaindchi="@item.iLoaiNoiDungChi"
                             data-getsumid="@item.iSum">
                             <td align="center" hidden data-getname="ID" data-getvalue="@item.ID"></td>
                             <td align="center" hidden data-getname="iID_KHCTBQP_NhiemVuChiID" data-getvalue="@item.iID_KHCTBQP_NhiemVuChiID"></td>
@@ -263,10 +264,10 @@
                                        value="@(item.fDeNghiQTNamNay_USD.HasValue ? CommonFunction.DinhDangSo(item.fDeNghiQTNamNay_USD.Value.ToString("0.00" + new string('#', 397), CultureInfo.InvariantCulture),2) : string.Empty)"
                                        name="fDeNghiQTNamNay_USD"
                                        data-getgrandparent="@item.iID_KHCTBQP_NhiemVuChiID"
-                                       class="form-control" data-getclass="KpqtUSD" data-getlevel="@item.sLevel" data-getid="@item.iCurrentId" data-getparent="@item.iParentId" autocomplete="off"
+                                       class="form-control" data-getclass="KpqtUSD" data-getlevel="@item.sLevel" data-getloaindchi="@item.iLoaiNoiDungChi" data-getid="@item.iCurrentId" data-getparent="@item.iParentId" autocomplete="off"
                                        onkeydown="ValidateInputKeydown(event, this, 2)"
                                        onblur="onBlurSum(event, this, 2, 2)" />
-                                @(ViewBag.IsEdit ? "" : item.fDeNghiQTNamNay_USD.HasValue ? CommonFunction.DinhDangSo(item.fDeNghiQTNamNay_USD.Value,2) : string.Empty)
+                                @(ViewBag.IsEdit && (item.sLevel == "0" || item.sLevel == "4") ? "" : item.fDeNghiQTNamNay_USD.HasValue ? CommonFunction.DinhDangSo(item.fDeNghiQTNamNay_USD.Value,2) : string.Empty)
                                 <span></span>
                             </td>
                             <td align="right">
@@ -274,10 +275,10 @@
                                        value="@(item.fDeNghiQTNamNay_VND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fDeNghiQTNamNay_VND.Value).ToString(),0) : string.Empty)"
                                        name="fDeNghiQTNamNay_VND" class="form-control"
                                        data-getgrandparent="@item.iID_KHCTBQP_NhiemVuChiID"
-                                       data-getclass="KpqtVND" data-getlevel="@item.sLevel" data-getid="@item.iCurrentId" data-getparent="@item.iParentId" autocomplete="off"
+                                       data-getclass="KpqtVND" data-getlevel="@item.sLevel" data-getloaindchi="@item.iLoaiNoiDungChi" data-getid="@item.iCurrentId" data-getparent="@item.iParentId" autocomplete="off"
                                        onkeydown="ValidateInputKeydown(event, this, 1)"
                                        onblur="onBlurSum(event, this, 2)" />
-                                @(ViewBag.IsEdit ? "" : item.fDeNghiQTNamNay_VND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fDeNghiQTNamNay_VND.Value).ToString(CultureInfo.InvariantCulture),0) : string.Empty)
+                                @(ViewBag.IsEdit && (item.sLevel == "0" || item.sLevel == "4") ? "" : item.fDeNghiQTNamNay_VND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fDeNghiQTNamNay_VND.Value).ToString(CultureInfo.InvariantCulture),0) : string.Empty)
                                 <span></span>
                             </td>
 
@@ -286,21 +287,21 @@
                                        value="@(item.fDeNghiChuyenNamSau_USD.HasValue ? CommonFunction.DinhDangSo(item.fDeNghiChuyenNamSau_USD.Value.ToString("0.00" + new string('#', 397), CultureInfo.InvariantCulture),2) : string.Empty)"
                                        name="fDeNghiChuyenNamSau_USD" data-getclass="KpdnUSD"
                                        data-getgrandparent="@item.iID_KHCTBQP_NhiemVuChiID"
-                                       class="form-control" data-getlevel="@item.sLevel" data-getid="@item.iCurrentId" data-getparent="@item.iParentId" autocomplete="off"
+                                       class="form-control" data-getlevel="@item.sLevel" data-getloaindchi="@item.iLoaiNoiDungChi" data-getid="@item.iCurrentId" data-getparent="@item.iParentId" autocomplete="off"
                                        onkeydown="ValidateInputKeydown(event, this, 2)"
                                        onblur="onBlurSum(event, this, 2, 2)" />
-                                @(ViewBag.IsEdit ? "" : item.fDeNghiChuyenNamSau_USD.HasValue ? CommonFunction.DinhDangSo(item.fDeNghiChuyenNamSau_USD.Value.ToString("0.00" + new string('#', 397), CultureInfo.InvariantCulture),2) : string.Empty)
+                                @(ViewBag.IsEdit && (item.sLevel == "0" || item.sLevel == "4") ? "" : item.fDeNghiChuyenNamSau_USD.HasValue ? CommonFunction.DinhDangSo(item.fDeNghiChuyenNamSau_USD.Value.ToString("0.00" + new string('#', 397), CultureInfo.InvariantCulture),2) : string.Empty)
                                 <span></span>
                             </td>
                             <td align="right">
-                                <input type="@(ViewBag.IsEdit && item.bIsData == true ? "text" : "hidden")"
+                                <input type="@(ViewBag.IsEdit && item.bIsData == true? "text" : "hidden")"
                                        value="@(item.fDeNghiChuyenNamSau_VND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fDeNghiChuyenNamSau_VND.Value).ToString(CultureInfo.InvariantCulture),0) : string.Empty)"
                                        name="fDeNghiChuyenNamSau_VND" data-getclass="KpdnVND"
                                        data-getgrandparent="@item.iID_KHCTBQP_NhiemVuChiID"
-                                       class="form-control" data-getlevel="@item.sLevel" data-getid="@item.iCurrentId" data-getparent="@item.iParentId" autocomplete="off"
+                                       class="form-control" data-getlevel="@item.sLevel" data-getloaindchi="@item.iLoaiNoiDungChi" data-getid="@item.iCurrentId" data-getparent="@item.iParentId" autocomplete="off"
                                        onkeydown="ValidateInputKeydown(event, this, 1)"
                                        onblur="onBlurSum(event, this, 2)" />
-                                @(ViewBag.IsEdit ? "" : item.fDeNghiChuyenNamSau_VND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fDeNghiChuyenNamSau_VND.Value).ToString(CultureInfo.InvariantCulture),0) : string.Empty)
+                                @(ViewBag.IsEdit && (item.sLevel == "0" || item.sLevel == "4") ? "" : item.fDeNghiChuyenNamSau_VND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fDeNghiChuyenNamSau_VND.Value).ToString(CultureInfo.InvariantCulture),0) : string.Empty)
                                 <span></span>
                             </td>
 
@@ -323,10 +324,10 @@
                                        value="@(item.fThuaNopNSNN_USD.HasValue ? CommonFunction.DinhDangSo(item.fThuaNopNSNN_USD.Value.ToString("0.00" + new string('#', 397), CultureInfo.InvariantCulture),2) : string.Empty)"
                                        name="fThuaNopNSNN_USD"
                                        data-getgrandparent="@item.iID_KHCTBQP_NhiemVuChiID"
-                                       class="form-control" data-getclass="KpnsnnUSD" data-getlevel="@item.sLevel" data-getid="@item.iCurrentId" data-getparent="@item.iParentId" autocomplete="off"
+                                       class="form-control" data-getclass="KpnsnnUSD" data-getlevel="@item.sLevel" data-getloaindchi="@item.iLoaiNoiDungChi" data-getid="@item.iCurrentId" data-getparent="@item.iParentId" autocomplete="off"
                                        onkeydown="ValidateInputKeydown(event, this, 2)"
                                        onblur="onBlurSum(event, this, 2, 2)" />
-                                @(ViewBag.IsEdit ? "" : item.fThuaNopNSNN_USD.HasValue ? CommonFunction.DinhDangSo(item.fThuaNopNSNN_USD.Value.ToString("0.00" + new string('#', 397), CultureInfo.InvariantCulture),2) : string.Empty)
+                                @(ViewBag.IsEdit && (item.sLevel == "0" || item.sLevel == "4") ? "" : item.fThuaNopNSNN_USD.HasValue ? CommonFunction.DinhDangSo(item.fThuaNopNSNN_USD.Value.ToString("0.00" + new string('#', 397), CultureInfo.InvariantCulture),2) : string.Empty)
                                 <span></span>
                             </td>
                             <td align="right">
@@ -334,10 +335,10 @@
                                        value="@(item.fThuaNopNSNN_VND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fThuaNopNSNN_VND.Value).ToString(CultureInfo.InvariantCulture),0) : string.Empty)"
                                        name="fThuaNopNSNN_VND"
                                        data-getgrandparent="@item.iID_KHCTBQP_NhiemVuChiID"
-                                       class="form-control" data-getclass="KpnsnnVND" data-getlevel="@item.sLevel" data-getid="@item.iCurrentId" data-getparent="@item.iParentId" autocomplete="off"
+                                       class="form-control" data-getclass="KpnsnnVND" data-getlevel="@item.sLevel" data-getloaindchi="@item.iLoaiNoiDungChi" data-getid="@item.iCurrentId" data-getparent="@item.iParentId" autocomplete="off"
                                        onkeydown="ValidateInputKeydown(event, this, 1)"
                                        onblur="onBlurSum(event, this, 2)" />
-                                @(ViewBag.IsEdit ? "" : item.fThuaNopNSNN_VND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fThuaNopNSNN_VND.Value).ToString(CultureInfo.InvariantCulture),0) : string.Empty)
+                                @(ViewBag.IsEdit && (item.sLevel == "0" || item.sLevel == "4") ? "" : item.fThuaNopNSNN_VND.HasValue ? CommonFunction.DinhDangSo(Math.Round(item.fThuaNopNSNN_VND.Value).ToString(CultureInfo.InvariantCulture),0) : string.Empty)
                                 <span></span>
                             </td>
 

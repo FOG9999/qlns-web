@@ -1060,7 +1060,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             XlsFile Result = new XlsFile(true);
             Result.Open(Server.MapPath(dataReport.iLoaiThanhToan == (int)PaymentTypeEnum.Type.THANH_TOAN ? sFilePath_GiayDeNghiCoQuanThanhToan_ThanhToan : sFilePath_GiayDeNghiCoQuanThanhToan_TamUng));
 
-            FormatNumber formatNumber = new FormatNumber(dvt, ext == "pdf" ? ExportType.PDF : ExportType.EXCEL);
+            FormatNumber formatNumber = new FormatNumber(CheckDonViTinhIsNghinDong(dvt), ext == "pdf" ? ExportType.PDF : ExportType.EXCEL);
             fr.SetUserFunction("FormatNumber", formatNumber);
             fr.SetValue("DonViTinh", dvt.ToStringDvt()); // cho đơn vị "nghìn đồng"
             fr.SetValue("TenDuAn", dataReport.TenDuAn);
@@ -1095,7 +1095,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             else
                 fr.SetValue("SNgayBangKlht", String.Format("ngày {0} tháng {0} năm {0}", "..."));
             fr.SetValue("FLuyKeGiaTriNghiemThuKlht", dataReport.fLuyKeGiaTriNghiemThuKLHT);
-            fr.SetValue("FTongThanhToan", (dataReport.fGiaTriThanhToanTN + dataReport.fGiaTriThanhToanNN));
+            fr.SetValue("FTongThanhToan", dataReport.fGiaTriThanhToanTN + dataReport.fGiaTriThanhToanNN);
             fr.SetValue("sTongThanhToan", DomainModel.CommonFunction.TienRaChu((long)((dataReport.fGiaTriThanhToanTN + dataReport.fGiaTriThanhToanNN))));
             fr.SetValue("FThuHoiTamUng", (dataReport.fGiaTriThuHoiUngTruocTN + dataReport.fGiaTriThuHoiUngTruocNN + dataReport.fGiaTriThuHoiTN + dataReport.fGiaTriThuHoiNN));
             fr.SetValue("ThuHoiTN", (dataReport.fGiaTriThuHoiUngTruocTN + dataReport.fGiaTriThuHoiTN));
@@ -1139,13 +1139,19 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 _vdtService.LoadGiaTriThanhToan(dataReport.iCoQuanThanhToan.Value, dataReport.dNgayDeNghi.Value, dataReport.bThanhToanTheoHopDong.Value, iIdChungTu.ToString(), dataReport.iID_NguonVonID.Value, dataReport.iNamKeHoach.Value,
                     ref luyKeTTTN, ref luyKeTTNN, ref luyKeTUTN, ref luyKeTUNN, ref luyKeTUUngTruocTN, ref luyKeTUUngTruocNN);
             }
-            fr.SetValue("LuyKeTN", (dataReport.fLuyKeThanhToanTN + dataReport.fLuyKeTUChuaThuHoiKhacTN + dataReport.fLuyKeTUChuaThuHoiTN) / dvt);
-            fr.SetValue("LuyKeNN", (dataReport.fLuyKeThanhToanNN + dataReport.fLuyKeTUChuaThuHoiNN + dataReport.fLuyKeTUChuaThuHoiKhacNN) / dvt);
+            fr.SetValue("LuyKeTN", (dataReport.fLuyKeThanhToanTN + dataReport.fLuyKeTUChuaThuHoiKhacTN + dataReport.fLuyKeTUChuaThuHoiTN) / CheckDonViTinhIsNghinDong(dvt));
+            fr.SetValue("LuyKeNN", (dataReport.fLuyKeThanhToanNN + dataReport.fLuyKeTUChuaThuHoiNN + dataReport.fLuyKeTUChuaThuHoiKhacNN) / CheckDonViTinhIsNghinDong(dvt));
 
             fr.UseChuKy(Username)
                  .UseChuKyForController(sControlName)
                  .UseForm(this).Run(Result);
             return Result;
+        }
+
+        private int CheckDonViTinhIsNghinDong(int dvt = 1)
+        {
+            if (dvt == 1001) return 1000;
+            else return dvt;
         }
         #endregion
     }
