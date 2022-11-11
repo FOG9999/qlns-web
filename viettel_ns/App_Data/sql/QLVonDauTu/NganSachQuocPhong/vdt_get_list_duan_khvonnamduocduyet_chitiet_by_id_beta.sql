@@ -4,7 +4,7 @@ DECLARE @iNamLamViec int
 
 --#DECLARE#--
 --#DECLARE#--
-select iID_DuAnID, MAX(iID_PhanBoVon_DonVi_PheDuyet_ID) as iID_PhanBoVon_DonVi_PheDuyet_ID, MAX(sTenDuAn) as sTenDuAn, MAX(sLoaiDuAn) as sLoaiDuAn, MAX(sTenLoaiCongTrinh) as sTenLoaiCongTrinh, MAX(iID_LoaiCongTrinh) as iID_LoaiCongTrinh, MAX(sTenDonViThucHienDuAn) as sTenDonViThucHienDuAn, 
+select iID_DuAnID, MAX(iID_PhanBoVon_DonVi_PheDuyet_ID) as iID_PhanBoVon_DonVi_PheDuyet_ID, MAX(sTenDuAn) as sTenDuAn, MAX(sLoaiDuAn) as sLoaiDuAn, MAX(sTenLoaiCongTrinh) as sTenLoaiCongTrinh, MAX(iID_LoaiCongTrinh) as iID_LoaiCongTrinh,MIN(iID_DonViQuanLyID) as iID_DonViQuanLyID, MIN(sTenDonViThucHienDuAn) as sTenDonViThucHienDuAn, 
 MAX(fGiaTriPhanBo) as fGiaTriDeNghi,MAX(fGiaTriPhanBo) as fGiaTriPhanBo, MAX(iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID) as iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID, MAX(iID_Parent) as iID_Parent, MAX(sGhiChu) as sGhiChu from
 (
 	select ct.iID_DuAnID, ct.iID_PhanBoVon_DonVi_PheDuyet_ID, da.sTenDuAn, 
@@ -15,6 +15,7 @@ MAX(fGiaTriPhanBo) as fGiaTriDeNghi,MAX(fGiaTriPhanBo) as fGiaTriPhanBo, MAX(iID
 		end as sLoaiDuAn,
 	null as sTenLoaiCongTrinh,
 	ct.iID_LoaiCongTrinh,
+	dv.iID_Ma as iID_DonViQuanLyID,
 	dv.sTen as sTenDonViThucHienDuAn,
 	ct.fGiaTriPhanBo as fGiaTriDeNghi,
 	ct.fGiaTriPhanBo as fGiaTriPhanBo,
@@ -39,6 +40,7 @@ MAX(fGiaTriPhanBo) as fGiaTriDeNghi,MAX(fGiaTriPhanBo) as fGiaTriPhanBo, MAX(iID
 	end as sLoaiDuAn,
 	lct.sTenLoaiCongTrinh,
 	lct.iID_LoaiCongTrinh,
+	dv.iID_Ma as iID_DonViQuanLyID,
 	dv.sTen as sTenDonViThucHienDuAn,
 	null as fGiaTriDeNghi,
 	null as fGiaTriPhanBo,
@@ -79,6 +81,7 @@ where
 		end as sLoaiDuAn,
 	lct.sTenLoaiCongTrinh,
 	ct.iID_LoaiCongTrinh,
+	dv.iID_Ma as iID_DonViQuanLyID,
 	dv.sTen as sTenDonViThucHienDuAn,
 	ct.fGiaTriPhanBo as fGiaTriDeNghi, 
 	ct.fGiaTriPhanBo, 

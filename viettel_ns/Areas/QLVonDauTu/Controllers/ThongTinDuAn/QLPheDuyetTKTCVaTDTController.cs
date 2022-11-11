@@ -28,8 +28,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             vm._paging.CurrentPage = 1;
             vm.Items = _qLVonDauTuService.GetAllVDTPheDuyetTKTCVaTDT(ref vm._paging, Username, PhienLamViec.NamLamViec, Constants.TONG_DU_TOAN).OrderByDescending(x => x.dDateCreate);
             List<NS_DonVi> lstDonViQL = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
-            lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = Constants.TAT_CA });
-            ViewBag.ListDonViQL = lstDonViQL.ToSelectList("iID_Ma", "sTen");
+            lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = Constants.TAT_CA });
+            ViewBag.ListDonViQL = lstDonViQL.ToSelectList("iID_Ma", "sMoTa");
             return View(vm);
         }
 
@@ -48,6 +48,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                 ViewBag.title = "Tạo mới thông tin phê duyệt TKTC&TDT'";
             else
                 ViewBag.title = "Cập nhật thông tin phê duyệt TKTC&TDT";
+
+  
+            if(!id.HasValue || id == Guid.Empty)
+            {
+                data.bLaTongDuToan = true;
+            }
+
             ViewBag.ItemsDuToanType = new SelectList(GetCbxLoaiDuToan(), "Value", "Text", (data.bLaTongDuToan ? 1 : 0));
             ViewBag.sNgayQuyetDinhDefault = data.dNgayQuyetDinh.HasValue ? data.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy") : DateTime.Now.ToString("dd/MM/yyyy");
             return View(data);
@@ -67,8 +74,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             vm._paging = _paging;
             vm.Items = _qLVonDauTuService.GetAllVDTPheDuyetTKTCVaTDT(ref vm._paging, Username, PhienLamViec.NamLamViec, bIsTongDuToan, sTenDuAn, sSoQuyetDinh, dPheduyetTuNgay, dPheduyetDenNgay, sDonViQL, sTenDuToan);
             List<NS_DonVi> lstDonViQL = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
-            lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = Constants.TAT_CA });
-            ViewBag.ListDonViQL = lstDonViQL.ToSelectList("iID_Ma", "sTen");
+            lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = Constants.TAT_CA });
+            ViewBag.ListDonViQL = lstDonViQL.ToSelectList("iID_Ma", "sMoTa");
             return PartialView("_partialList", vm);
         }
 
@@ -100,7 +107,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         public JsonResult GetCbxDonViQuanLy()
         {
             List<NS_DonVi> lstDonViQL = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
-            string sCbxData = string.Join(",", lstDonViQL.Select(n => string.Format("<option value='{0}' data-iIdDonVi='{1}'>{2}</option>", n.iID_MaDonVi, n.iID_Ma.ToString(), n.sTen)));
+            string sCbxData = string.Join(",", lstDonViQL.Select(n => string.Format("<option value='{0}' data-iIdDonVi='{1}'>{2}</option>", n.iID_MaDonVi, n.iID_Ma.ToString(), n.sMoTa)));
             return Json(new { data = sCbxData }, JsonRequestBehavior.AllowGet);
         }
 

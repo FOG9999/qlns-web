@@ -1052,7 +1052,7 @@ namespace Viettel.Services
         VDT_ThongTriFilterResultModel GetDataThongTriQuyetToanTheoFilter(VDT_ThongTriFilterModel model, string sUserName);
         bool SaveThongTri(VDT_ThongTriFilterModel aModel, string sUserName);
 
-        bool InsertThongTriThanhToan(VDTThongTriModel model, string sUserName, List<Guid> lstGuidChecked);
+        Dictionary<bool,Guid> InsertThongTriThanhToan(VDTThongTriModel model, string sUserName, List<Guid> lstGuidChecked);
         VDT_ThongTriViewModel GetThongTriById(string id);
         bool DeleteThongTri(string id);
         bool CheckExistMaThongTri(string id, string sMaThongTri);
@@ -1068,6 +1068,9 @@ namespace Viettel.Services
             string sMaNguonVon, DateTime? dNgayLapGanNhat, string sMaLoaiCongTrinh);
         void InsertListThongTriChiTiet(Guid iIdThongTri, List<VDT_ThongTri_ChiTiet> lstData);
         VDT_ThongTri FindThongTriById(Guid iIdThongTri);
+
+        IEnumerable<VdtThongTriChiTietQuery> GetVdtThongTriChiTietByListIdDeNghiThanhToan(List<Guid> iIds);
+
         #endregion
 
         #region Vốn đầu tư - Khởi tạo dự án chuyển tiếp
@@ -7202,7 +7205,7 @@ namespace Viettel.Services
 		                CAST((dacp.iID_DuAn_ChiPhi) AS VARCHAR(MAX)) AS MaOrDer 
 		                from VDT_DA_GoiThau_ChiPhi gtcp 
 		                inner join VDT_DM_DuAn_ChiPhi dacp ON gtcp.iID_ChiPhiID = dacp.iID_DuAn_ChiPhi 
-		                where gtcp.iID_GoiThauID = 'd2999ec1-0645-462b-8b0e-44fc0b80db35' AND  
+		                where gtcp.iID_GoiThauID = @iIdGoiThau AND  
 		                dacp.iID_ChiPhi_Parent is null
 		                order by IThuTu, MaOrDer";
 
@@ -10609,9 +10612,16 @@ namespace Viettel.Services
         /// <param name="model"></param>
         /// <param name="sUserName"></param>
         /// <returns></returns>
-        public bool InsertThongTriThanhToan(VDTThongTriModel model, string sUserName, List<Guid> lstGuidChecked)
+        public Dictionary<bool,Guid> InsertThongTriThanhToan(VDTThongTriModel model, string sUserName, List<Guid> lstGuidChecked)
         {
             VDT_ThongTri modelNew;
+            var iID = Guid.Empty;
+
+            Dictionary<bool, Guid> result = new Dictionary<bool, Guid>();
+            var status = false;
+
+            result.Add(status, iID);
+
             try
             {
                 using (var conn = ConnectionFactory.Default.GetConnection())
@@ -10624,7 +10634,7 @@ namespace Viettel.Services
 
                         var loaiThongTri = LayLoaiThongTriTheoKieuThongTri((int)Constants.KIEU_LOAI_THONG_TRI.THANH_TOAN);
                         if (loaiThongTri == null)
-                            return false;
+                            return result;
 
                         string sMaNhomQuanLy = string.Empty;
                         if (int.Parse(model.sMaNguonVon) == (int)Constants.NS_NGUON_NGAN_SACH.NS_QUOC_PHONG)
@@ -10662,6 +10672,7 @@ namespace Viettel.Services
 
                         conn.Insert(entity, trans);
                         modelNew = entity;
+                        iID = entity.iID_ThongTriID;
                         #endregion
                     }
                     else
@@ -10669,7 +10680,7 @@ namespace Viettel.Services
                         #region Sua VDT_ThongTri
                         var entity = conn.Get<VDT_ThongTri>(model.iID_ThongTriID, trans);
                         if (entity == null)
-                            return false;
+                            return result;
                         entity.sMaThongTri = model.sMaThongTri;
                         entity.sNguoiLap = model.sNguoiLap;
                         entity.sTruongPhong = model.sTruongPhong;
@@ -10680,6 +10691,7 @@ namespace Viettel.Services
                         conn.Update(entity, trans);
 
                         modelNew = entity;
+                        iID = entity.iID_ThongTriID;
                         #endregion
                     }
 
@@ -10691,8 +10703,9 @@ namespace Viettel.Services
             catch (Exception ex)
             {
                 AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
-                return false;
+                return result;
             }
+
             if (modelNew != null)
             {
 
@@ -10708,7 +10721,6 @@ namespace Viettel.Services
                             var entity = conn.Get<VDT_TT_DeNghiThanhToan>(deNgheThanhToanId, trans);
                             entity.iID_ThongTriThanhToanID = modelNew.iID_ThongTriID;
                             conn.Update(entity, trans);
-
                         });
                         trans.Commit();
                     }
@@ -10716,10 +10728,13 @@ namespace Viettel.Services
                 catch (Exception ex)
                 {
                     AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
-                    return false;
+                    return result;
                 }
             }
-            return true;
+
+            result.Remove(status);
+            result.Add(true, iID);
+            return result;
         }
 
 
@@ -11073,6 +11088,22 @@ namespace Viettel.Services
                 return items;
             }
         }
+
+        public IEnumerable<VdtThongTriChiTietQuery> GetVdtThongTriChiTietByListIdDeNghiThanhToan(List<Guid> iIds)
+        {
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                conn.Open();
+                var parameters = new DynamicParameters();
+                parameters.Add("listIds", string.Join(",", iIds.Select(n => n.ToString())));
+                string sql = @"EXECUTE dbo.proc_vdt_getthongtrithanhtoan_byiddenghithanhtoan @listIds";
+                var data = conn.Query<VdtThongTriChiTietQuery>(sql, parameters);
+                if (data == null) return new List<VdtThongTriChiTietQuery>();
+                return data.ToList();
+            }
+
+        }
+
 
         #region Khoitao
         /// <summary>

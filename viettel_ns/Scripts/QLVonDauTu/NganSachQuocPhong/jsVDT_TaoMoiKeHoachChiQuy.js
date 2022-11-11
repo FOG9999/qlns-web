@@ -166,11 +166,11 @@ function GetListChiTiet() {
     $("#" + TBL_DANH_SACH + " tbody tr").each(function () {
         var iID_DuAnId = $(this).find(".r_iID_DuAnID").val();
         var iID_LoaiCongTrinhId = $(this).find(".r_iID_LoaiCongTrinhId").val();
-        var fGiaTriDeNghi = parseInt($(this).find(".r_sGiaTriDeNghi").text() == "" ? 0 : UnFormatNumber($(this).find(".r_sGiaTriDeNghi").text()));
+        var fGiaTriDeNghi = parseInt($(this).find(".r_sGiaTriDeNghi").val() == "" ? 0 : UnFormatNumber($(this).find(".r_sGiaTriDeNghi").val()));
         var sGhiChu = $(this).find(".r_sGhiChu").text();
         var sLoaiThanhToan = $(this).find(".r_sLoaiThanhToan").text();
 
-        if ($(this).find(".r_sGiaTriDeNghi").text() != "" && fGiaTriDeNghi > 0) {
+        if ($(this).find(".r_sGiaTriDeNghi").val() != "" && fGiaTriDeNghi > 0) {
             lstData.push({
                 iID_DuAnId: iID_DuAnId,
                 iID_LoaiCongTrinhId: iID_LoaiCongTrinhId,

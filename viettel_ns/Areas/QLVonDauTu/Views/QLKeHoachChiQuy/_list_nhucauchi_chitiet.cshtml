@@ -4,25 +4,27 @@
     int index = 1;
     foreach (var item in Model)
     {
-        <tr>
-            @*<td align="center">@index</td>*@
-            <td align="left" class="r_sLoaiThanhToan">@item.sLoaiThanhToan</td>
-            <td align="left" class="r_sTenDuAn">@item.sTenDuAn</td>
-            <input type="hidden" class="r_iID_DuAnID" value="@item.iID_DuAnId" />
-            <input type="hidden" class="r_iID_LoaiCongTrinhId" value="@item.iID_LoaiCongTrinhId" />
-            <td align="right" class="r_sKeHoachVonNam">@item.sKeHoachVonNam</td>
-            <td align="right" class="r_sTongQuyTruoc">@item.sTongQuyTruoc</td>
-            <td align="right" class="r_sThanhToanKLHTQuyTruoc">@item.sThanhToanKLHTQuyTruoc</td>
-            <td align="right" class="r_sThanhToanTamUngQuyTruoc">@item.sThanhToanTamUngQuyTruoc</td>
-            <td align="right" class="r_sTongQuyNay">@item.sTongQuyNay</td>
-            <td align="right" class="r_sThanhToanKLHTQuyNay">@item.sThanhToanKLHTQuyNay</td>
-            <td align="right" class="r_sThuHoiUng">@item.sThuHoiUng</td>
-            <td align="right" class="r_sThanhToanTamUngQuyNay">@item.sThanhToanTamUngQuyNay</td>
-            <td align="right" class="r_sSoConGiaiNganNam">@item.sSoConGiaiNganNam</td>
-            <td align="right" class="r_sGiaTriDeNghi sotien" contenteditable="true">@item.sGiaTriDeNghi</td>
-            <td align="left" class="r_sGhiChu" contenteditable="true">@item.sGhiChu</td>
-        </tr>
+    <tr>
+        @*<td align="center">@index</td>*@
+        <td align="left" class="r_sLoaiThanhToan">@item.sLoaiThanhToan</td>
+        <td align="left" class="r_sTenDuAn">@item.sTenDuAn</td>
+        <input type="hidden" class="r_iID_DuAnID" value="@item.iID_DuAnId" />
+        <input type="hidden" class="r_iID_LoaiCongTrinhId" value="@item.iID_LoaiCongTrinhId" />
+        <td align="right" class="r_sKeHoachVonNam">@item.sKeHoachVonNam</td>
+        <td align="right" class="r_sTongQuyTruoc">@item.sTongQuyTruoc</td>
+        <td align="right" class="r_sThanhToanKLHTQuyTruoc">@item.sThanhToanKLHTQuyTruoc</td>
+        <td align="right" class="r_sThanhToanTamUngQuyTruoc">@item.sThanhToanTamUngQuyTruoc</td>
+        <td align="right" class="r_sTongQuyNay">@item.sTongQuyNay</td>
+        <td align="right" class="r_sThanhToanKLHTQuyNay">@item.sThanhToanKLHTQuyNay</td>
+        <td align="right" class="r_sThuHoiUng">@item.sThuHoiUng</td>
+        <td align="right" class="r_sThanhToanTamUngQuyNay">@item.sThanhToanTamUngQuyNay</td>
+        <td align="right" class="r_sSoConGiaiNganNam">@item.sSoConGiaiNganNam</td>
+        @* <td align="right" class="r_sGiaTriDeNghi sotien" contenteditable="true" onkeyup="OnKeyupValidateNumber(this);" onkeypress="KeyPressValidateNumber()"; >@item.sGiaTriDeNghi</td>*@ 
+        <td align="right"> <input class="r_sGiaTriDeNghi sotien" style="border:none; background: none;height: 30px; text-align: right" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" value="@item.sGiaTriDeNghi" /> </td>
+        <td align="left" class="r_sGhiChu" contenteditable="true">@item.sGhiChu</td>
+    </tr>
         index++;
     }
 }
 <script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>
+<script type="text/javascript" src="~/Scripts/js/js_app.js"></script>

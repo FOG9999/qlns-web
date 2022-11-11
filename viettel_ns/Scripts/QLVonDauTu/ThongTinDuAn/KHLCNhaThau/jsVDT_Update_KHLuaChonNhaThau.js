@@ -10,7 +10,7 @@ var itemsChungTuGoiThau = [[], [], []];
 var lstChungTuGoiThau = []; // sử dụng để update cho tất cả các gói thầu, biến dùng chung
 
 var hrefSplit = window.location.href.split('/');
-var iIdKHLuaChonNhaThau = hrefSplit[hrefSplit.length - 1];
+var iIdKHLuaChonNhaThau = getUrlParameter('id') || hrefSplit[hrefSplit.length - 1];
 var arrGoiThau = [];
 var arrGoiThauNguonVon = [];
 var arrGoiThauChiPhi = [];
@@ -233,12 +233,14 @@ function GetAllGoiThauByKhlcntId() {
             if (result.data == null) return;
             var sItem = []
             result.data.forEach(function (item) {
+                var sDisable = '';
+                if (isExistGoiThau(item.iID_GoiThauID)) sDisable = 'disabled';
                 sItem.push("<tr data-id='" + item.iID_GoiThauID + "' data-parentid='" + item.iID_ParentID + "' ondblclick='ViewGoiThauDetail(\"" + item.iID_GoiThauID + "\")'>");
                 sItem.push("<td class='width-200'><input type='text'class='form-control sTenGoiThau' value='" + item.sTenGoiThau + "'></td>");
-                sItem.push("<td class='fGiaTri text-right'>" + FormatNumber(item.fTienTrungThau) + "</td>");
-                sItem.push("<td>" + sCbxHinhThuc + "</td>");
-                sItem.push("<td>" + sCbxPhuongThuc + "</td>");
-                sItem.push("<td '><input type='text' class='form-control sThoiGianTCLCNT' 'text-right' value='" + item.sThoiGianTCLCNT + "'></td>");
+                sItem.push(`<td class='text-right'> <input onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' type='text' class= 'form-control fGiaTri text-right' value ='${FormatNumber(item.fTienTrungThau)}' ${sDisable}></td>`);
+                //sItem.push("<td>" + sCbxHinhThuc + "</td>");
+                //sItem.push("<td>" + sCbxPhuongThuc + "</td>");
+                //sItem.push("<td '><input type='text' class='form-control sThoiGianTCLCNT' 'text-right' value='" + item.sThoiGianTCLCNT + "'></td>");
                 sItem.push("<td>" + sCbxLoaiHD + "</td>");
                 sItem.push("<td '><input type='text' class='form-control iThoiGianThucHien' 'text-right' value='" + item.iThoiGianThucHien + "'></td>");
                 //sItem.push("<td class='width-50 text-center'><button class='btn-detail'><i class='fa fa-eye fa-lg' aria-hidden='true' onclick=DetailGoiThau('" + item.iID_GoiThauID + "')></i></button><button class='btn-delete'><i class='fa fa-trash-o fa-lg' aria-hidden='true' onclick=DeleteGoiThau($(this))></i></button></td>");
@@ -251,8 +253,8 @@ function GetAllGoiThauByKhlcntId() {
                 var goithauId = $(item).data("id");
                 var itemGoiThau = $.map(result.data, function (n) { return n.iID_GoiThauID == goithauId ? n : null });
                 if (itemGoiThau == null || itemGoiThau.length == 0) return false;
-                $(item).find(".sHinhThucChonNhaThau").val(itemGoiThau[0].sHinhThucChonNhaThau);
-                $(item).find(".sPhuongThucDauThau").val(itemGoiThau[0].sPhuongThucDauThau);
+                //$(item).find(".sHinhThucChonNhaThau").val(itemGoiThau[0].sHinhThucChonNhaThau);
+                //$(item).find(".sPhuongThucDauThau").val(itemGoiThau[0].sPhuongThucDauThau);
                 $(item).find(".sHinhThucHopDong").val(itemGoiThau[0].sHinhThucHopDong);
             });
 
@@ -417,12 +419,12 @@ function InsertGoiThau() {
     sItem.push("<tr data-id='" + iIdGoiThau + "' ondblclick='ViewGoiThauDetail(\"" + iIdGoiThau + "\")'>");
     sItem.push("<td class='width-200'><input type='text' class='form-control sTenGoiThau' value=''></td>");
     //sItem.push("<td  width-200'><input type='text' class='form-control' id='sTenGoiThau' value='" + item.sTenGoiThau + "'></td>");
-    sItem.push("<td width=155.27px class='fGiaTri text-right'></td>");
-    sItem.push("<td width=155.27px >" + sCbxHinhThuc + "</td>");
-    sItem.push("<td width=155.27px >" + sCbxPhuongThuc + "</td>");
-    sItem.push("<td width=155.27px><input type='text' class='form-control sThoiGianTCLCNT' value=''></td>");
-    sItem.push("<td width=155.27px >" + sCbxLoaiHD + "</td>");
-    sItem.push("<td width=155.27px><input type='text' class='form-control iThoiGianThucHien' value=''></td>");
+    sItem.push("<td class='text-right'><input type='text' class='form-control fGiaTri text-right' value='' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' ></td>"); 
+    //sItem.push("<td width=155.27px >" + sCbxHinhThuc + "</td>");
+    //sItem.push("<td width=155.27px >" + sCbxPhuongThuc + "</td>");
+    //sItem.push("<td width=155.27px><input type='text' class='form-control sThoiGianTCLCNT' value=''></td>");
+    sItem.push("<td >" + sCbxLoaiHD + "</td>");
+    sItem.push("<td ><input type='text' class='form-control iThoiGianThucHien' value=''></td>");
     //sItem.push("<td ><input type='text' class='form-control' id ='iThoiGianThucHien' value='" + item.iThoiGianThucHien + "'></td>");
     sItem.push("<td class='width-50 text-center'><button class='btn-delete'><i class='fa fa-trash-o fa-lg' aria-hidden='true' onclick='DeleteGoiThau($(this))'></i></button></td>");
     sItem.push("</tr>");
@@ -549,7 +551,6 @@ function GetNguonVonGoiThauDetail(iIdGoiThau) {
             sItem.push("<td class='fGiaTriConLai text-right'>" + FormatNumber(getNguonVonForCurrentGoiThau(iIdGoiThau, item)) + "</td>");
             sItem.push("</tr>");
         }
-
     });
     // neu update thi tinh tong luon
     if (arrNguonVon.length > 0) {
@@ -1120,7 +1121,12 @@ function SaveDetailGoiThau() {
         return;
     }
     lstChungTuGoiThau[$("#iIdGoiThau").val()] = [...itemsChungTuGoiThau];
-    $("#tblGoiThau [data-id='" + $("#iIdGoiThau").val() + "'] .fGiaTri").text($(".rTongNguonVon").text());
+    $("#tblGoiThau [data-id='" + $("#iIdGoiThau").val() + "'] .fGiaTri").val($(".rTongNguonVon").text());
+    if ($('.ck_NguonVon:checked').length > 0) {
+        $("#tblGoiThau [data-id='" + $("#iIdGoiThau").val() + "'] .fGiaTri").prop('disabled', true);
+    } else {
+        $("#tblGoiThau [data-id='" + $("#iIdGoiThau").val() + "'] .fGiaTri").prop('disabled', false);
+    }
     alert("Cập nhật thành công !");
     $("#modalChiTietGoiThau").modal("hide");
 }
@@ -1215,13 +1221,13 @@ function ValidateKHLCNT() {
         sMessError.push("Chưa nhập gói thầu !");
     }
 
-    if (!$(".sHinhThucChonNhaThau").val()) {
-        sMessError.push("Hình thức chọn nhà thầu chưa được chọn !");
-    }
+    //if (!$(".sHinhThucChonNhaThau").val()) {
+    //    sMessError.push("Hình thức chọn nhà thầu chưa được chọn !");
+    //}
 
-    if (!$(".sPhuongThucDauThau").val()) {
-        sMessError.push("Phương thức lựa chọn chưa được chọn !");
-    }
+    //if (!$(".sPhuongThucDauThau").val()) {
+    //    sMessError.push("Phương thức lựa chọn chưa được chọn !");
+    //}
 
     if (!$(".sHinhThucHopDong").val()) {
         sMessError.push("Loại hợp đồng chưa được chọn !");
@@ -1268,13 +1274,13 @@ function SetGoiThau() {
         objGoiThau.iID_DuAnID = $("#iID_DuAnID").val();
         //objGoiThau.sTenGoiThau = $(item).find("#sTenGoiThauinput").val();
         objGoiThau.sTenGoiThau = $(item).find(".sTenGoiThau").val();
-        objGoiThau.sHinhThucChonNhaThau = $(item).find(".sHinhThucChonNhaThau").val();
-        objGoiThau.sPhuongThucDauThau = $(item).find(".sPhuongThucDauThau").val();
-        objGoiThau.sThoiGianTCLCNT = $(item).find(".sThoiGianTCLCNT").val();
+        //objGoiThau.sHinhThucChonNhaThau = $(item).find(".sHinhThucChonNhaThau").val();
+        //objGoiThau.sPhuongThucDauThau = $(item).find(".sPhuongThucDauThau").val();
+        //objGoiThau.sThoiGianTCLCNT = $(item).find(".sThoiGianTCLCNT").val();
         objGoiThau.sHinhThucHopDong = $(item).find(".sHinhThucHopDong").val();
         //objGoiThau.iThoiGianThucHien = $(item).find("#iThoiGianThucHien input").val();
         objGoiThau.iThoiGianThucHien = $(item).find(".iThoiGianThucHien").val();
-        var sGiaTri = $(item).find(".fGiaTri").text().replaceAll(".", "");
+        var sGiaTri = $(item).find(".fGiaTri").val().replaceAll(".", "");
         if (sGiaTri != "")
             objGoiThau.fTienTrungThau = parseFloat(sGiaTri);
         else
@@ -1354,4 +1360,41 @@ function ReloadPhuongThucLuaChon() {
             $(changeLine).find(".sPhuongThucDauThau").val("");
         }
     });
+}
+
+function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+    return false;
+};
+
+function isExistGoiThau(iIdGoiThau) {
+    var lstNguonVon = $.map(itemsChungTu[0], function (n) { return n.iID_NguonVonID != 0 ? n : null });
+    // chỉ dùng arrGoiThauNguonVon 1 lần
+    var arrNguonVon = [];
+    if (arrGoiThauNguonVon.length > 0) {
+        arrNguonVon = [...arrGoiThauNguonVon.filter(nv => nv.iID_GoiThauID === iIdGoiThau)];
+    }
+    else {
+        if (lstChungTuGoiThau[iIdGoiThau])
+            arrNguonVon = lstChungTuGoiThau[iIdGoiThau][0];
+    }
+
+    var countNguonVon = 0;
+    lstNguonVon.forEach(function (item) {
+        var indexInArrGoiThauNguonVon = arrNguonVon.map(ele => ele.iID_NguonVonID).indexOf(item.iID_NguonVonID);
+        if (indexInArrGoiThauNguonVon >= 0) countNguonVon++;
+    });
+
+    return countNguonVon > 0;
 }

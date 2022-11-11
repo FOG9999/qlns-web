@@ -1506,7 +1506,7 @@ namespace VIETTEL.Models
 
                 DK += String.Format(" AND ({0})", DKLNS);
 
-                var sql = FileHelpers.GetSqlQuery("get_dtquyettoanchitiet1.sql");
+                var sql = FileHelpers.GetSqlQuery("get_dtquyettoanchitiet.sql");
 
                 //SQL = String.Format("SELECT iID_MaMucLucNganSach,iID_MaMucLucNganSach_Cha,bLaHangCha,sXauNoiMa,{0},{1} FROM NS_MucLucNganSach WHERE iNamLamViec=@iNamLamViec AND {2}  ORDER BY {3}", MucLucNganSachModels.strDSTruong, MucLucNganSachModels.strDSDuocNhapTruongTien, DK, MucLucNganSachModels.strDSTruongSapXep);
                 int iNamLamViec = Convert.ToInt32(ReportModels.LayNamLamViec(MaND));

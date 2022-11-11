@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Viettel.Domain.DomainModel;
 using Viettel.Models.QLVonDauTu;
 using Viettel.Services;
 using VIETTEL.Controllers;
@@ -21,7 +22,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         // GET: QLVonDauTu/TongHopThongTinDuAn
         public ActionResult Index()
         {
-            ViewBag.ListDonViQuanLy = _iQLVonDauTuService.GetDanhSachDonVi(PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
+            ViewBag.ListDonViQuanLy = _iQLVonDauTuService.GetDanhSachDonVi(PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
             List<VDTTongHopThongTinDuAnViewModel> arrData = new List<VDTTongHopThongTinDuAnViewModel>();
             return View(arrData);
         }

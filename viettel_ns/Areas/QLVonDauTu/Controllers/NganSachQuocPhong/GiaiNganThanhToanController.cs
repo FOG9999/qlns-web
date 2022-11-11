@@ -12,6 +12,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Viettel.Domain.DomainModel;
+using Viettel.Models.BaoHiemXaHoi;
 using Viettel.Models.QLVonDauTu;
 using Viettel.Services;
 using VIETTEL.Application.Flexcel.Functions;
@@ -321,6 +322,117 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             return View(data);
         }
 
+        public ActionResult DetailChiTiet(Guid? id)
+        {
+            VDTThongTriModel vm = new VDTThongTriModel();
+
+            List<NS_DonVi> lstDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
+            lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = Constants.CHON });
+            ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_Ma", "sMoTa");
+
+            List<NS_NguonNganSach> lstNguonVon = _vdtService.LayNguonVon().ToList();
+            lstNguonVon.Insert(0, new NS_NguonNganSach { iID_MaNguonNganSach = 0, sTen = Constants.CHON });
+            ViewBag.ListNguonVon = lstNguonVon.ToSelectList("iID_MaNguonNganSach", "sTen");
+
+            List<SelectListItem> lstLoaiThongTri = new List<SelectListItem>()
+            {
+                new SelectListItem{Text=Constants.LoaiThongTriThanhToan.TypeName.CAP_THANH_TOAN,Value=((int)Constants.LoaiThongTriThanhToan.Type.CAP_THANH_TOAN).ToString()},
+                new SelectListItem{Text=Constants.LoaiThongTriThanhToan.TypeName.CAP_TAM_UNG,Value=((int)Constants.LoaiThongTriThanhToan.Type.CAP_TAM_UNG).ToString()},
+                new SelectListItem{Text=Constants.LoaiThongTriThanhToan.TypeName.CAP_KINH_PHI,Value=((int)Constants.LoaiThongTriThanhToan.Type.CAP_KINH_PHI).ToString()},
+                new SelectListItem{Text=Constants.LoaiThongTriThanhToan.TypeName.CAP_HOP_THUC,Value=((int)Constants.LoaiThongTriThanhToan.Type.CAP_HOP_THUC).ToString()}
+            };
+            lstLoaiThongTri.Insert(0, new SelectListItem { Text = Constants.CHON, Value = 0.ToString() });
+            ViewBag.ListLoaiThongTri = lstLoaiThongTri.ToSelectList();
+
+            if (id != null)
+            {
+                vm = _vdtService.LayChiTietThongTri(id.ToString());
+                return View(vm);
+            }
+          
+
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public JsonResult GetThongTriChiTiet(Guid id)
+        {
+            List<VdtThongTriChiTietQuery> lstThanhToan = new List<VdtThongTriChiTietQuery>();
+            List<VdtThongTriChiTietQuery> lstThuHoi = new List<VdtThongTriChiTietQuery>();
+            List<VdtThongTriChiTietQuery> lstTamUng = new List<VdtThongTriChiTietQuery>();
+            List<VdtThongTriChiTietQuery> lstKinhPhi = new List<VdtThongTriChiTietQuery>();
+            List<VdtThongTriChiTietQuery> lstHopThuc = new List<VdtThongTriChiTietQuery>();
+
+            List<VdtThongTriChiTietQuery> listData = new List<VdtThongTriChiTietQuery>();
+            ViewBag.listDataChiTiet = listData;
+            if (TempData["listIdThucHienTT"] != null)
+            {
+                var lstID = (List<Guid>)TempData["listIdThucHienTT"];
+                listData = _vdtService.GetVdtThongTriChiTietByListIdDeNghiThanhToan(lstID).ToList();
+                if (listData != null)
+                {
+                    listData = listData.Select(n => { n.id = Guid.NewGuid(); return n; }).ToList();
+                    foreach(var item in listData)
+                    {
+                        if(item.iLoaiThanhToan == 1)
+                        {
+                            if(item.SM == null) {
+                                item.SM = "";
+                            }
+
+                            if(item.STm == null) {
+                                item.STm = "";
+                            }
+
+                            if(item.STtm == null) {
+                                item.STtm = "";
+                            }
+
+                            if(item.SNg == null) {
+                                item.SNg = "";
+                            }
+
+                            lstThanhToan.Add(item);
+                        }
+                        else
+                        {
+                            if (item.SM == null)
+                            {
+                                item.SM = "";
+                            }
+
+                            if (item.STm == null)
+                            {
+                                item.STm = "";
+                            }
+
+                            if (item.STtm == null)
+                            {
+                                item.STtm = "";
+                            }
+
+                            if (item.SNg == null)
+                            {
+                                item.SNg = "";
+                            }
+
+                            lstTamUng.Add(item);
+                        }
+                    }
+                }
+
+            }
+            return Json(new
+            {
+                lstThanhToan = lstThanhToan,
+                lstThuHoi = lstThuHoi,
+                lstTamUng = lstTamUng,
+                lstKinhPhi = lstKinhPhi,
+                lstHopThuc = lstHopThuc
+            }, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public ActionResult GetModal(List<Guid> lstItem, int iIdNguonVon, int iNamKeHoach, int iLoaiThanhToan, Guid iID_DonViQuanLyID)
         {
@@ -374,7 +486,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
         [HttpPost]
         public JsonResult Luu(VDTThongTriModel model, bool? bReloadChiTiet, List<Guid> lstGuidChecked)
         {
-            bool status = false;
+            Dictionary<bool, Guid> status = new Dictionary<bool, Guid>();
             if (model != null && !string.IsNullOrEmpty(model.sMaNguonVon))
             {
                 var lstNguonVon = _vdtService.LayNguonVon();
@@ -383,8 +495,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                     model.sMaNguonVon = lstNguonVon.FirstOrDefault(n => n.iID_MaNguonNganSach == int.Parse(model.sMaNguonVon)).sMoTa;
                 }
             }
+            TempData["listIdThucHienTT"] = lstGuidChecked;
             status = _vdtService.InsertThongTriThanhToan(model, Username, lstGuidChecked);
-            return Json(status, JsonRequestBehavior.AllowGet);
+            return Json(new {status = status.Keys.FirstOrDefault(), iID = status.Values.FirstOrDefault()}, JsonRequestBehavior.AllowGet);
         }
 
         #region Event

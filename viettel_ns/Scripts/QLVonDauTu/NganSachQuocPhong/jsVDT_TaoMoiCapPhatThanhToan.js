@@ -240,7 +240,7 @@ function GetDataDropdownHopDong() {
             if (r.bIsComplete) {
                 $("#drpHopDong").empty()
                 $.each(r.data, function (index, value) {
-                    $("#drpHopDong").append("<option value='" + value.iID_HopDongID + "' data-fTienHopDong='" + (value.fTienHopDong == null ? 0 : value.fTienHopDong) + "'>" + value.sSoHopDong + "</option>");
+                    $("#drpHopDong").append("<option value='" + value.iID_HopDongID + "' data-fTienHopDong='" + (value.fTienHopDong == null ? 0 : value.fTienHopDong) + "'>" + value.sSoHopDong + ' - ' + value.sTenHopDong + "</option>");
                 });
                 $("#drpHopDong").prop("selectedIndex", -1);
             }

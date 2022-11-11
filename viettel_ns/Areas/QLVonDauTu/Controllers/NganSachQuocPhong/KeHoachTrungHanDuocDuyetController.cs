@@ -68,8 +68,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 vm.Items = _iQLVonDauTuService.GetAllKeHoach5NamDuocDuyet(ref vm._paging, PhienLamViec.NamLamViec, "", null, null, null, "", null, null, 0);
 
                 List<NS_DonVi> lstDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
-                lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = "--Tất cả--" });
-                ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_Ma", "sTen");
+                lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = "--Tất cả--" });
+                ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_Ma", "sMoTa");
                 List<KeHoach5NamDeXuatModel> lstVoucherTypes = new List<KeHoach5NamDeXuatModel>()
             {
                 new KeHoach5NamDeXuatModel(){SVoucherTypes = "Tất cả", iLoai = 0}
@@ -96,8 +96,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 vm.Items = _iQLVonDauTuService.GetAllKeHoach5NamDuocDuyet(ref vm._paging, PhienLamViec.NamLamViec, sSoQuyetDinh, dNgayQuyetDinhFrom, dNgayQuyetDinhTo, iID_DonViQuanLyID, sMoTaChiTiet, iGiaiDoanTu, iGiaiDoanDen, iLoai);
 
                 List<NS_DonVi> lstDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
-                lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = "--Tất cả--" });
-                ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_Ma", "sTen");
+                lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = "--Tất cả--" });
+                ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_Ma", "sMoTa");
                 List<KeHoach5NamDeXuatModel> lstVoucherTypes = new List<KeHoach5NamDeXuatModel>()
             {
                 new KeHoach5NamDeXuatModel(){SVoucherTypes = "Tất cả", iLoai = 0}
@@ -130,7 +130,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                     data.iGiaiDoanTu = _iQLVonDauTuService.FindCurrentPeriod(PhienLamViec.NamLamViec);
                     data.iGiaiDoanDen = data.iGiaiDoanTu + 4;
                 }
-                ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
+                ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
                 ViewBag.ListVoucherTypes = CreateVoucherTypes().ToSelectList("iLoai", "SVoucherTypes");
             }
             catch(Exception ex)
@@ -467,7 +467,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             vm.iGiaiDoanTu = _iQLVonDauTuService.FindCurrentPeriod(PhienLamViec.NamLamViec);
             vm.iGiaiDoanDen = vm.iGiaiDoanTu + 4;
 
-            ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
+            ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
             ViewBag.ListNguonNganSach = lstDMNguonNganSach.ToSelectList("iID_MaNguonNganSach", "sTen");
 
             List<VDT_DM_LoaiCongTrinh> lstLoaiCongTrinh = _iQLVonDauTuService.GetListParentDMLoaiCongTrinh();

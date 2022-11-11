@@ -49,8 +49,8 @@ namespace Viettel.Models.QLVonDauTu
         public string sNoiDung { get; set; }
         public int? iThuTu { get; set; }
         public string sMaOrder { get; set; }
-        public float? fGiaTriPheDuyet { get; set; }
-        public float? fGiaTriGoiThau { get; set; }
+        public double? fGiaTriPheDuyet { get; set; }
+        public double? fGiaTriGoiThau { get; set; }
         public int iProcessStatus { get; set; }
     }
 

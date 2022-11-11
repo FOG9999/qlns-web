@@ -353,7 +353,7 @@
                     </div>
 
                     <div class="form-group row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-12" style="overflow-x: auto">
                             <table class="table table-bordered" id="tblDanhSachThanhToanChiTiet">
                                 <thead>
                                     <tr>
@@ -375,10 +375,10 @@
                                         <th rowspan="2">Hành động</th>
                                     </tr>
                                     <tr>
-                                        <th>Giá trị đề nghị</th>
-                                        <th>Giá trị phê duyệt</th>
-                                        <th>Giá trị đề nghị</th>
-                                        <th>Giá trị phê duyệt</th>
+                                        <th width="10%">Giá trị đề nghị</th>
+                                        <th width="10%">Giá trị phê duyệt</th>
+                                        <th width="10%">Giá trị đề nghị</th>
+                                        <th width="10%">Giá trị phê duyệt</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -399,3 +399,8 @@
 
 <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsVDT_CapNhatCapPhatThanhToan.js"></script>
 <script src="~/Scripts/sheet/jsNumber.js"></script>
+<style>
+    .table td {
+        min-width: 80px;
+    }
+</style>

@@ -73,9 +73,9 @@ function TinhLaiDongTong() {
             fTong_VU += parseFloat(UnFormatNumber(r_fTong_VUNCT));
         }
 
-        var fTongCapTaiKhoBac_VU = $(row).find(".fTongCapTaiKhoBac_VU").html();
-        if (fTongCapTaiKhoBac_VU != undefined && $.isNumeric(UnFormatNumber(fTongCapTaiKhoBac_VU))) {
-            fTongCapTaiKhoBac_VU += parseFloat(UnFormatNumber(fTongCapTaiKhoBac_VU));
+        var r_fCapBacTaiKhoBac_VUNCT = $(row).find(".r_fCapBacTaiKhoBac_VUNCT").html();
+        if (r_fCapBacTaiKhoBac_VUNCT != undefined && $.isNumeric(UnFormatNumber(r_fCapBacTaiKhoBac_VUNCT))) {
+            fTongCapTaiKhoBac_VU += parseFloat(UnFormatNumber(r_fCapBacTaiKhoBac_VUNCT));
         }
 
         var r_fCapBangLenhChi_VUNCT = $(row).find(".r_fCapBangLenhChi_VUNCT").html();

@@ -297,7 +297,7 @@
                     <hr class='color-background-red' />
 
                     <div class="form-group row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-12" style="overflow-x: auto">
                             <table class="table table-bordered" id="tblDanhSachThanhToanChiTiet">
                                 <thead>
                                     <tr>
@@ -370,3 +370,9 @@
     <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsVDT_ChiTietCapPhatThanhToan.js"></script>
     <script src="~/Scripts/sheet/jsNumber.js"></script>
 }
+
+<style>
+    .table td {
+        min-width: 80px;
+    }
+</style>

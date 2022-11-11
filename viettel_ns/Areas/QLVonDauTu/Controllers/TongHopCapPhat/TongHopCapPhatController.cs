@@ -37,7 +37,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.TongHopCapPhat
             {
                 for (int i = 0; i < lstDonVi.Count; i++)
                 {
-                    htmlDuAn.AppendFormat("<option value='{0}'>{1}</option>", lstDonVi[i].iID_Ma, HttpUtility.HtmlEncode(lstDonVi[i].sTen));
+                    htmlDuAn.AppendFormat("<option value='{0}'>{1}</option>", lstDonVi[i].iID_Ma, HttpUtility.HtmlEncode(lstDonVi[i].iID_MaDonVi + " - " + lstDonVi[i].sTen));
                 }
             }
             return Json(new { htmlCT = htmlDuAn.ToString() }, JsonRequestBehavior.AllowGet);
@@ -81,7 +81,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.TongHopCapPhat
             double? fTongKhoBac_VU = lstData.Sum(x => x.fCapBacTaiKhoBac_VUNCT);
             double? fTongLenhChi_VU = lstData.Sum(x => x.fCapBangLenhChi_VUNCT);
             double? fTongKhac = 0 ;
-            double? fTong = (fTongKhoBac_VU.HasValue  ? 0 : fTongKhoBac_VU) + (fTongLenhChi_VU.HasValue  ? 0 : fTongLenhChi_VU) + fTongKhac;
+            double? fTong = (fTongKhoBac_VU.HasValue  ? fTongKhoBac_VU :0) + (fTongLenhChi_VU.HasValue  ? fTongLenhChi_VU :0) + fTongKhac;
             double? fTongKLHT = lstData.Sum(x => x.fThanhToanKLHT);
             double? fTongTamUng = lstData.Sum(x => x.fTamUng);
             double? fTongThuHoiTamUng = lstData.Sum(x=>x.fThuHoiTamUng);

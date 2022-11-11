@@ -709,7 +709,7 @@ function KH5NamDX_ChiTiet_BangDuLieu_Save() {
     if (!ValidateData()) {
         return false;
     }
-    alert("lưu dữ liệu thành công !");
+    alert("Lưu dữ liệu thành công !");
     ValidateBeforeSave();
 }
 

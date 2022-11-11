@@ -43,7 +43,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             try
             {
                 ViewBag.ListNguonVon = _qLVonDauTuService.LayNguonVon().ToSelectList("iID_MaNguonNganSach", "sTen");
-                ViewBag.ListDonViQuanLy = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
+                ViewBag.ListDonViQuanLy = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
 
                 vm._paging.CurrentPage = 1;
                 vm.Items = _qLVonDauTuService.GetAllKeHoachVonNamDuocDuyet(ref vm._paging);
@@ -64,7 +64,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             try
             {
                 ViewBag.ListNguonVon = _qLVonDauTuService.LayNguonVon().ToSelectList("iID_MaNguonNganSach", "sTen");
-                ViewBag.ListDonViQuanLy = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
+                ViewBag.ListDonViQuanLy = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
 
                 vm._paging.CurrentPage = 1;
                 vm._paging = _paging;
@@ -93,7 +93,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                     data.iNamKeHoach = DateTime.Now.Year;
                 }
 
-                var lstDonVi = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
+                var lstDonVi = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
                 ViewBag.ListDonViQuanLy = lstDonVi;
 
                 if (idDonViQuanLy.HasValue && idDonViQuanLy != Guid.Empty)

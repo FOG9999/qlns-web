@@ -87,7 +87,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         public JsonResult GetCbxDonViQuanLy()
         {
             List<NS_DonVi> lstDonViQL = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
-            string sCbxData = string.Join(",", lstDonViQL.Select(n => string.Format("<option value='{0}' data-iIdDonVi='{1}'>{2}</option>", n.iID_MaDonVi, n.iID_Ma.ToString(), n.sTen)));
+            string sCbxData = string.Join(",", lstDonViQL.Select(n => string.Format("<option value='{0}' data-iIdDonVi='{1}'>{2}</option>", n.iID_MaDonVi, n.iID_Ma.ToString(), n.sMoTa)));
             return Json(new { data = sCbxData }, JsonRequestBehavior.AllowGet);
         }
 

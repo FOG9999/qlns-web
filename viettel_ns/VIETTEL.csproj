@@ -727,6 +727,7 @@
     <Content Include="App_Data\sql\QLVonDauTu\TKTCVaTongDuToan\vdt_get_listnguonvon_dutoan_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\TKTCVaTongDuToan\vdt_tktctdt_get_chiphi_by_duan.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\TKTCVaTongDuToan\vdt_tktctdt_get_nguonvon_by_duan.sql" />
+    <Content Include="App_Data\sql\QuyetToan\get_dtquyettoanchitiet.sql" />
     <Content Include="App_Data\sql\QuyetToan\qt_sochuyennamsau_tonghop_donvi - Copy.sql" />
     <Content Include="App_Data\sql\TongHopNganSach\rptTongHop_CT_QT.sql" />
     <Content Include="Areas\Admin\Sql\dt_chitieu_thcuc_phuluc_ngang_tonghop.sql" />
@@ -1863,6 +1864,7 @@
     <Content Include="Areas\QLNH\Views\KeHoachChiTietBQP\_sheet.cshtml" />
     <Content Include="Areas\QLNH\Views\KeHoachTongTheTTCP\_sheetFrame.cshtml" />
     <Content Include="Areas\QLNH\Views\KeHoachChiTietBQP\_sheetFrame.cshtml" />
+    <Content Include="Areas\QLVonDauTu\Views\GiaiNganThanhToan\DetailChiTiet.cshtml" />
     <Content Include="Areas\QLVonDauTu\Views\VDT_QT_DeNghiQuyetToan\_sheetImport.cshtml" />
     <None Include="Areas\QuyetToan\Controllers\ReportController.cs1" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\Index.cshtml" />
@@ -4920,6 +4922,7 @@
     <Content Include="Scripts\QLVonDauTu\NganSachQuocPhong\jsVDT_TaoMoiCapPhatThanhToan.js" />
     <Content Include="Scripts\QLVonDauTu\NganSachQuocPhong\jsVDT_TaoMoiKeHoachChiQuy.js" />
     <Content Include="Scripts\QLVonDauTu\NganSachQuocPhong\KeHoachVonUngDeXuat\jsVdt_KeHoachVonUngDX_ChiTiet.js" />
+    <Content Include="Scripts\QLVonDauTu\NganSachQuocPhong\jsVDT_TaoMoiThongTriChiTiet.js" />
     <Content Include="Scripts\QLVonDauTu\QuyetToan\jsQuyetToanNienDoTroLy.js" />
     <Content Include="Scripts\QLVonDauTu\QuyetToan\jsVdtQtBcQuyetToanNienDo.js" />
     <Content Include="Scripts\QLVonDauTu\QuyetToan\jsVdtQtBcQuyetToanNienDo_v1.js" />

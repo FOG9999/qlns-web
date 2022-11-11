@@ -29,8 +29,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
 
             //Lay danh sach don vi quan ly theo user login
             List<NS_DonVi> lstDonViQL = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
-            lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = Constants.CHON });
-            ViewBag.ListDonVi = lstDonViQL.ToSelectList("iID_MaDonVi", "sTen");
+            lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = Constants.CHON });
+            ViewBag.ListDonVi = lstDonViQL.ToSelectList("iID_MaDonVi", "sMoTa");
             //Lay danh sach chu dau tu theo nam lam viec
             List<DM_ChuDauTu> lstChuDT = _qLVonDauTuService.GetChuDTListByNamLamViec(PhienLamViec.NamLamViec).ToList();
             lstChuDT.Insert(0, new DM_ChuDauTu { ID = Guid.Empty, sTenCDT = Constants.CHON });
@@ -47,8 +47,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             vm.Items = _qLVonDauTuService.GetAllVDTQuanLyTTHopDong(ref vm._paging, Username, PhienLamViec.NamLamViec, sSoHopDong, fTienHopDongTu, fTienHopDongDen, dHopDongTuNgay, dHopDongDenNgay, sTenDuAn, sTenDonVi, sChuDautu);
             //Lay danh sach don vi quan ly theo user login
             List<NS_DonVi> lstDonViQL = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
-            lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = Constants.CHON });
-            ViewBag.ListDonVi = lstDonViQL.ToSelectList("iID_MaDonVi", "sTen");
+            lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = Constants.CHON });
+            ViewBag.ListDonVi = lstDonViQL.ToSelectList("iID_MaDonVi", "sMoTa");
             //Lay danh sach chu dau tu theo nam lam viec
             List<DM_ChuDauTu> lstChuDT = _qLVonDauTuService.GetChuDTListByNamLamViec(PhienLamViec.NamLamViec).ToList();
             lstChuDT.Insert(0, new DM_ChuDauTu { ID = Guid.Empty, sTenCDT = Constants.CHON });
@@ -61,8 +61,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         {
             //Lay danh sach don vi quan ly theo user login
             List<NS_DonVi> lstDonViQL = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
-            lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = Constants.CHON });
-            ViewBag.ListDonViQL = lstDonViQL.ToSelectList("iID_Ma", "sTen");
+            lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = Constants.CHON });
+            ViewBag.ListDonViQL = lstDonViQL.ToSelectList("iID_Ma", "sMoTa");
 
             //Lay danh muc phan loai hop dong
             List<VDT_DM_LoaiHopDong> lstPhanLoaiHopDong = _qLVonDauTuService.GetDMPhanLoaiHopDong().ToList();

@@ -18,6 +18,7 @@ $(document).ready(function () {
         GetKinhPhiCucTaiChinhCap();
         $("#" + TBL_DANH_SACH + " tbody").html("");
     });
+    EventValidate();
 });
 
 function GetKinhPhiCucTaiChinhCap() {
@@ -62,6 +63,21 @@ function GetKinhPhiCucTaiChinhCap() {
 
 //===================== Event button ==========================//
 
+function OnKeyupValidateNumber(field) {
+    var value = $(field).html();
+    if (IsNumber(value)) {
+        $(field).html(FormatNumber($(field).html() == "" ? 0 : UnFormatNumber($(field).html())));
+    }
+
+}
+
+function KeyPressValidateNumber() {
+    $(".sotien").keypress(function (e) {
+        var x = event.charCode || event.keyCode;
+        if (isNaN(String.fromCharCode(e.which)) && x != 46 || x === 32 || x === 13 || (x === 46 && event.currentTarget.innerText.includes('.'))) e.preventDefault();
+    });
+}
+
 function CancelSaveData() {
     location.href = "/QLVonDauTu/QLKeHoachChiQuy";
 }
@@ -97,9 +113,13 @@ function Loc() {
 
 // event
 function EventValidate() {
-    $("td.sotien[contenteditable='true']").on("keypress", function (event) {
-        return ValidateNumberKeyPress(this, event);
-    })
+
+
+    //$("td.sotien[contenteditable='true']").on("keypress", function (event) {
+    //    $(this).html(FormatNumber($(this).html() == "" ? 0 : UnFormatNumber($(this).html())));
+    //})
+
+
     $("td.sotien[contenteditable='true']").on("focusout", function (event) {
         $(this).html(FormatNumber($(this).html() == "" ? 0 : UnFormatNumber($(this).html())));
     })
@@ -148,11 +168,11 @@ function GetListChiTiet() {
     $("#" + TBL_DANH_SACH + " tbody tr").each(function () {
         var iID_DuAnId = $(this).find(".r_iID_DuAnID").val();
         var iID_LoaiCongTrinhId = $(this).find(".r_iID_LoaiCongTrinhId").val();
-        var fGiaTriDeNghi = parseInt($(this).find(".r_sGiaTriDeNghi").text() == "" ? 0 : UnFormatNumber($(this).find(".r_sGiaTriDeNghi").text()));
+        var fGiaTriDeNghi = parseInt($(this).find(".r_sGiaTriDeNghi").val()??'' == "" ? 0 : UnFormatNumber($(this).find(".r_sGiaTriDeNghi").val()??''));
         var sGhiChu = $(this).find(".r_sGhiChu").text();
         var sLoaiThanhToan = $(this).find(".r_sLoaiThanhToan").text();
 
-        if ($(this).find(".r_sGiaTriDeNghi").text() != "" && fGiaTriDeNghi > 0) {
+        if ($(this).find(".r_sGiaTriDeNghi").val()??'' != "" && fGiaTriDeNghi > 0) {
             lstData.push({
                 iID_DuAnId: iID_DuAnId,
                 iID_LoaiCongTrinhId: iID_LoaiCongTrinhId,

@@ -208,9 +208,13 @@ $.ajax({
 
                     dongMoi += "<td class='r_NoiDung'>" + (item.sMoTa != null ? item.sMoTa : "") + "</td>";
                     dongMoi += "<td class='r_fGiaTriDeNghiTN sotien' align='right'>" + item.sDefaultValueTN + "</td>";
-                    dongMoi += "<td class='r_vontrongnuoc sotien' contenteditable='true' align='right'>" + item.sGiaTriTrongNuoc + "</td>";
+                    //dongMoi += "<td class='r_vontrongnuoc sotien' contenteditable='true' align='right'>" + item.sGiaTriTrongNuoc + "</td>";
+                    dongMoi += "<td> <input class='r_vontrongnuoc sotien' style='border: none; background: none; height: 30px; text-align: right' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' value=" + item.sGiaTriTrongNuoc + " > </td>"
+
+
                     dongMoi += "<td class='r_fGiaTriDeNghiNN sotien' align='right'>" + item.sDefaultValueNN + "</td>";
-                    dongMoi += "<td class='r_vonngoainuoc sotien' contenteditable='true' align='right'>" + item.sGiaTriNgoaiNuoc + "</td>";
+                    //dongMoi += "<td class='r_vonngoainuoc sotien' contenteditable='true' align='right'>" + item.sGiaTriNgoaiNuoc + "</td>";
+                    dongMoi += "<td> <input class='r_vonngoainuoc sotien' style='border: none; background: none; height: 30px; text-align: right' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' value=" + item.sGiaTriNgoaiNuoc + " > </td>"
 
                     dongMoi += "<td class='r_tongtien sotien' align='right'>" + item.sTongSo + "</td>";
                     dongMoi += "<td class='r_ghichu' contenteditable='true'>" + (item.sGhiChu != null ? item.sGhiChu : "") + "</td>";
@@ -302,10 +306,10 @@ function GetDataDropdownHopDong() {
                 $.each(r.data, function (index, value) {
                     if (value.iID_HopDongID == iID_HopDongIdOld)
                     {
-                        $("#drpHopDong").append("<option value='" + value.iID_HopDongID + "' selected>" + value.sSoHopDong + "</option>");
+                        $("#drpHopDong").append("<option value='" + value.iID_HopDongID + "' selected>" + value.sSoHopDong + ' - ' + value.sTenHopDong + "</option>");
                         $('#drpHopDong').trigger('change');
                     }
-                    else $("#drpHopDong").append("<option value='" + value.iID_HopDongID + "'>" + value.sSoHopDong + "</option>");
+                    else $("#drpHopDong").append("<option value='" + value.iID_HopDongID + "'>" + value.sSoHopDong + ' - ' + value.sTenHopDong + "</option>");
                 });
             }
             if ($("#bIsEdit").val() == "1") {
@@ -470,8 +474,8 @@ function GetListThanhToanChiTiet(iID_DeNghiThanhToanID) {
         var iLoaiNamKeHoach = $(this).attr("data-iloainamkehoach");
         var iLoaiDeNghi = $(this).attr("data-iloaidenghi");
 
-        var fGiaTriNgoaiNuoc = parseInt((UnFormatNumber($(this).find(".r_vonngoainuoc").text())) == "" ? 0 : UnFormatNumber($(this).find(".r_vonngoainuoc").text()));
-        var fGiaTriTrongNuoc = parseIntEmptyStr(UnFormatNumber($(this).find(".r_vontrongnuoc").text()));
+        var fGiaTriNgoaiNuoc = parseInt((UnFormatNumber($(this).find(".r_vonngoainuoc").val()??'')) == "" ? 0 : UnFormatNumber($(this).find(".r_vonngoainuoc").val()??''));
+        var fGiaTriTrongNuoc = parseIntEmptyStr(UnFormatNumber($(this).find(".r_vontrongnuoc").val()??''));
         var sGhiChu = $(this).find(".r_ghichu").text();
 
         var sLNS = $(this).find(".r_Lns option:selected").text();
@@ -580,10 +584,11 @@ function ThemMoiThanhToanChiTiet() {
     dongMoi += "<td class='r_Ng'><select class='form-control'></option></td>";
     dongMoi += "<td class='r_NoiDung'></td>";
     dongMoi += "<td class='r_fGiaTriDeNghiTN sotien' align='right'>" + FormatNumber(fDefaultValueTN) + "</td>";
-    dongMoi += "<td class='r_vontrongnuoc sotien' contenteditable='true' align='right'></td>";
+    //dongMoi += "<td class='r_vontrongnuoc sotien' contenteditable='true' align='right'></td>";
+    dongMoi += "<td > <input class='r_vontrongnuoc sotien' style='border: none; background: none; height: 30px; text-align: right' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' value='' /> </td>"
     dongMoi += "<td class='r_fGiaTriDeNghiNN sotien' align='right'>" + FormatNumber(fDefaultValueNN) + "</td>";
-    dongMoi += "<td class='r_vonngoainuoc sotien' contenteditable='true' align='right'></td>";
-
+    //dongMoi += "<td class='r_vonngoainuoc sotien' contenteditable='true' align='right'></td>";
+    dongMoi += "<td > <input class='r_vonngoainuoc sotien' style='border: none; background: none; height: 30px; text-align: right' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' value='' /> </td>"
     dongMoi += "<td class='r_tongtien sotien' align='right'></td>";
     dongMoi += "<td class='r_ghichu' contenteditable='true'>";
     dongMoi += "<td align='center'><button class='btn-delete btn-icon' type='button' onclick='XoaDong(this)'><span class='fa fa-trash-o fa-lg' aria-hidden='true'></span></button></td>";
@@ -668,17 +673,16 @@ function XoaDong(nutXoa) {
 
 // event
 function EventValidate() {
-    $("td.sotien[contenteditable='true']").on("keypress", function (event) {
-        return ValidateNumberKeyPress(this, event);
-    })
-    $("td.sotien[contenteditable='true']").on("focusout", function (event) {
-        $(this).html(FormatNumber($(this).html() == "" ? 0 : UnFormatNumber($(this).html())));
+    //$("td.sotien[contenteditable='true']").on("keypress", function (event) {
+    //    return ValidateNumberKeyPress(this, event);
+    //})
+    $("td .sotien").on("focusout", function (event) {
 
         // tinh tong so tien
-        var thisDong = this.parentElement;
+        var thisDong = this.parentElement.parentElement;
 
-        var fTrongNuoc = $(thisDong).find(".r_vontrongnuoc").html().trim();
-        var fNuocNgoai = $(thisDong).find(".r_vonngoainuoc").html().trim();
+        var fTrongNuoc = $(thisDong).find(".r_vontrongnuoc").val()??'';
+        var fNuocNgoai = $(thisDong).find(".r_vonngoainuoc").val()??'';
 
         var fTong = parseInt(fTrongNuoc == "" ? 0 : UnFormatNumber(fTrongNuoc))
             + parseInt(fNuocNgoai == "" ? 0 : UnFormatNumber(fNuocNgoai));

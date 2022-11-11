@@ -113,7 +113,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 
             try
             {
-                ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
+                ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
                 ViewBag.ListNguonVon = _qLVonDauTuService.LayNguonVon().ToSelectList("iID_MaNguonNganSach", "sTen");
 
                 vm._paging.CurrentPage = 1;
@@ -200,7 +200,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 
             try
             {
-                ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
+                ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
                 ViewBag.ListNguonVon = _qLVonDauTuService.LayNguonVon().ToSelectList("iID_MaNguonNganSach", "sTen");
 
                 vm._paging = _paging;
@@ -312,7 +312,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                         }
                     }
 
-                    ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
+                    ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
                 }
                 else
                 {
@@ -321,13 +321,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                     if (lstvalue.Count > 0)
                     {
                         ViewBag.IsTongHop = true;
-                        ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
+                        ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
                         //data.dNgayQuyetDinh = DateTime.Now;
                     }
                     else
                     {
                         ViewBag.IsTongHop = false;
-                        ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
+                        ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
                         //data.dNgayQuyetDinh = DateTime.Now;
                     }
                 }
@@ -567,7 +567,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             KHVonNamDeXuat.iNamKeHoach = DateTime.Now.Year;
             vm.KHVonNamDeXuat = KHVonNamDeXuat;
 
-            ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
+            ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
             ViewBag.ListNguonVon = _qLVonDauTuService.LayNguonVon().ToSelectList("iID_MaNguonNganSach", "sTen");
             return View(vm);
         }
@@ -1155,8 +1155,11 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 
             //lstParent.Select(x => { x.STT = (lstParent.IndexOf(x) + 1).ToString(); return x; }).ToList();
 
-            fr.AddTable<KHVNDXExportModel>("Items", dataReport.Where(x => x.TongMucDauTuDuocDuyet > 0 && x.VonKeoDaiCacNamTruoc > 0 && x.TongSoKeHoachVon > 0 &&
-                                                    x.LuyKeVonDaBoTriHetNam > 0 && x.TongNhuCauVonNamSau > 0 && x.ThuHoiVonUngTruoc > 0 && x.ThanhToan > 0
+            //fr.AddTable<KHVNDXExportModel>("Items", dataReport.Where(x => x.TongMucDauTuDuocDuyet > 0 && x.VonKeoDaiCacNamTruoc > 0 && x.TongSoKeHoachVon > 0 &&
+            //                                        x.LuyKeVonDaBoTriHetNam > 0 && x.TongNhuCauVonNamSau > 0 && x.ThuHoiVonUngTruoc > 0 && x.ThanhToan > 0
+            //                                            ));
+
+            fr.AddTable<KHVNDXExportModel>("Items", dataReport.Where(x => x.ThanhToan > 0
                                                         ));
             FormatNumber formatNumber = new FormatNumber(1, ExportType.EXCEL);
             fr.SetUserFunction("FormatNumber", formatNumber);

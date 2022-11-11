@@ -166,7 +166,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 new SheetColumn(columnName: "iID_PhanBoVon_DonVi_PheDuyet_ID", header: "Phân bổ vốn đơn vị phê duyệt ID", isHidden: true, isReadonly: true),
                 new SheetColumn(columnName: "iID_LoaiCongTrinhID", header:"Id Loại công trình", isHidden: true, isReadonly: true),
                 new SheetColumn(columnName: "iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID", header: "Phân bổ vốn đơn vị phê duyệt chi tiết ID", isHidden: true, isReadonly: true),
-                new SheetColumn(columnName: "modelActive", header: "Model active", isHidden: true, isReadonly: true)
+                new SheetColumn(columnName: "modelActive", header: "Model active", isHidden: true, isReadonly: true),
+                new SheetColumn(columnName: "iID_DonViQuanLyID", header: "ID đơn vị quản lý", isHidden: true, isReadonly: true)
             };
 
             return listColumn;

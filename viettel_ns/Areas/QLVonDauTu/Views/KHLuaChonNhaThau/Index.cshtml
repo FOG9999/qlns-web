@@ -38,6 +38,17 @@
             _paging.ItemsPerPage = @Model._paging.ItemsPerPage ;
         });
     </script>
+
+    <script>
+        $(document).ready(() => {
+            document.addEventListener('keydown', event);
+        });
+        function event(e) {
+            if (e.key == "Enter") {
+                $("#btn_timKiem").click()
+            }
+        }
+    </script>
 }
 
 

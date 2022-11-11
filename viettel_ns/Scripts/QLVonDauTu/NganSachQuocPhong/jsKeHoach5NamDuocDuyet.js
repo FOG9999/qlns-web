@@ -224,7 +224,7 @@ function getAllTotalMoney() {
 }
 
 function ChiTietKeHoach5NamDuocDuyet(id) {
-    window.location.href = "/QLVonDauTu/KeHoachTrungHanDuocDuyet/Detail/" + id;
+    window.location.href = "/QLVonDauTu/KeHoachTrungHanDuocDuyet/Detail/" + id + "?isViewDetail=1";
 }
 
 

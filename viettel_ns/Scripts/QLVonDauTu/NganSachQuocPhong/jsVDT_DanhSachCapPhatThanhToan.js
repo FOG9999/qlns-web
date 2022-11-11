@@ -228,13 +228,15 @@ function Luu() {
             dataType: "json",
             cache: false,
             success: function (data) {
-                if (data != null && data == true) {
-                    tabThongTri();
-                    $("ul.nav li:first-child").removeClass("active");
-                    $("#thanhtoan").removeClass("active");
-                    $("ul.nav li:nth-child(2)").addClass("active");
-                    $("#thongtri").addClass("active");
-                    $("#btnShowConfirmDelete").click();
+                if (data != null && data.status == true) {
+                   // tabThongTri();
+                    //$("ul.nav li:first-child").removeClass("active");
+                    //$("#thanhtoan").removeClass("active");
+                    //$("ul.nav li:nth-child(2)").addClass("active");
+                    //$("#thongtri").addClass("active");
+                    //$("#btnShowConfirmDelete").click();
+                    window.location.href = "/QLVonDauTu/GiaiNganThanhToan/DetailChiTiet?id=" + data.iID ;
+
                 }
             },
             error: function (data) {

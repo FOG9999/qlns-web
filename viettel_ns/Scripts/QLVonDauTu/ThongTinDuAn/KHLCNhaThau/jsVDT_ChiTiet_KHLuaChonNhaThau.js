@@ -457,9 +457,9 @@ function VeDanhSachGoiThau() {
         dongMoi += "<input type='hidden' class='r_iID_DuToanID' value='" + x.iID_DuToanID + "'/><input type='hidden' class='r_iID_GoiThauID' value='" + x.iID_GoiThauID + "'/>";
         dongMoi += "<td class='r_sTenGoiThau width-200'>" + x.sTenGoiThau + "</td>";
         dongMoi += "<td class='r_fGiaGoiThau sotien' align='right'>" + x.fTienTrungThau + "</td>";
-        dongMoi += "<td class='r_HinhThucLuaChonNhaThau'>" + x.sHinhThucChonNhaThau + "</td>";
-        dongMoi += "<td class='r_PhuongThucChonNhaThau'>" + x.sPhuongThucDauThau + "</td>";
-        dongMoi += "<td class='r_ThoiGianBatDau'>" + x.sThoiGianTCLCNT + "</td>";
+        //dongMoi += "<td class='r_HinhThucLuaChonNhaThau'>" + x.sHinhThucChonNhaThau + "</td>";
+        //dongMoi += "<td class='r_PhuongThucChonNhaThau'>" + x.sPhuongThucDauThau + "</td>";
+        //dongMoi += "<td class='r_ThoiGianBatDau'>" + x.sThoiGianTCLCNT + "</td>";
         dongMoi += "<td class='r_LoaiHopDong'>" + x.sHinhThucHopDong + "</td>";
         dongMoi += "<td class='r_iThoiGianThucHien sotien' align='right'>" + (x.iThoiGianThucHien ? x.iThoiGianThucHien : ' ') + "</td>";
 

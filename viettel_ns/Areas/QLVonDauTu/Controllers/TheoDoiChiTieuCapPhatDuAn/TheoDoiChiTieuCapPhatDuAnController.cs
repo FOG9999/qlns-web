@@ -23,7 +23,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.TheoDoiChiTieuCapPhatDuAn
         public ActionResult Index()
         {
             List<VdtBcTheoDoiChiTieuCapPhatModel> lstData = new List<VdtBcTheoDoiChiTieuCapPhatModel>();
-            ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_MaDonVi", "sTen");
+            ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_MaDonVi", "sMoTa");
             return View(lstData);
         }
 

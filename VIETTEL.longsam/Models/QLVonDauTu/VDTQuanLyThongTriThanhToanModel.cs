@@ -90,5 +90,6 @@ namespace Viettel.Models.QLVonDauTu
             public string sNG { get; set; }
             public string sNoiDung { get; set; }
             public string sTenLoaiCongTrinh { get; set; }
+            public string sTenDuAn { get; set; }
         }
     }

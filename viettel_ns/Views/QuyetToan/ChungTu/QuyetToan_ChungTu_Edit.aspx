@@ -216,7 +216,7 @@
                                                         if (i + c < dtLNS.Rows.Count)
                                                         {
                                                             strChecked = "";
-                                                            strTen = Convert.ToString(dtLNS.Rows[i + c]["TenHT"]);
+                                                            strTen = Convert.ToString(dtLNS.Rows[i + c]["sTen"]);
                                                             strMa = Convert.ToString(dtLNS.Rows[i + c]["sLNS"]);
                                                             if (sLNS.Contains(strMa))
                                                             {
