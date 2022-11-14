@@ -17,6 +17,7 @@ $(document).ready(function ($) {
     LoadDataThanhToan();
     LoadDataDonvi();
     LoadDataNguonVon();
+    RenderGridView();
 });
 
 function ChangePage(iCurrentPage = 1) {

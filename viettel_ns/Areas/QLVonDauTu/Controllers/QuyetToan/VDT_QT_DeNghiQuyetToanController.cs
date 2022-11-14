@@ -671,8 +671,22 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             {
                 ChiPhiId = x.iID_DuAn_ChiPhi.HasValue ? x.iID_DuAn_ChiPhi.Value : Guid.Empty,
                 GiaTriPheDuyet = x.fTienPheDuyet,
-                TenChiPhi = x.sTenChiPhi
+                TenChiPhi = x.sTenChiPhi,
+                iID_ChiPhi = x.iID_ChiPhiID
             }).ToList();
+
+            List<VDTQuyetDinhDauTuChiPhiModel> listChiPhiQDDT = _vdtService.GetListChiPhiQDDTByIdDuToan(Guid.Parse(duToanId)).ToList();
+            if (listChiPhiQDDT != null && listChiPhiQDDT.Count > 0)
+            {
+                foreach (DeNghiQuyetToanChiTietModel dataQt in listDeNghiQuyetToan)
+                {
+                    VDTQuyetDinhDauTuChiPhiModel entity = listChiPhiQDDT.Where(n => n.iID_ChiPhi == dataQt.iID_ChiPhi).FirstOrDefault();
+                    if (entity != null)
+                    {
+                        dataQt.GiaTriPheDuyetQDDT = entity.fTienPheDuyet ?? 0;
+                    }
+                }
+            }
 
             listDeNghiQuyetToan.Where(n => n.PhanCap == 1).Select(n => { n.IsShow = true; return n; }).ToList();
             listDeNghiQuyetToan.Select(n => { n.IsChiPhi = true; return n; }).ToList();
@@ -699,6 +713,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             {
                 n.Stt = (listDeNghiQuyetToan.IndexOf(n) + 1);
                 n.GiaTriPheDuyet = n.GiaTriPheDuyet.HasValue ? n.GiaTriPheDuyet.Value / (Double)(dataNhap.fDonViTinh) : 0;
+                n.GiaTriPheDuyetQDDT = n.GiaTriPheDuyetQDDT.HasValue ? n.GiaTriPheDuyetQDDT.Value / (Double)(dataNhap.fDonViTinh) : 0;
                 n.FGiaTriKiemToan = n.FGiaTriKiemToan.HasValue ? n.FGiaTriKiemToan.Value / (Double)(dataNhap.fDonViTinh) : 0;
                 n.FGiaTriDeNghiQuyetToan /= (Double)(dataNhap.fDonViTinh);
                 n.FGiaTriAB /= (Double)(dataNhap.fDonViTinh);

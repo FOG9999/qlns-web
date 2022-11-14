@@ -154,7 +154,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     //new SheetColumn(columnName: "STT", header: "STT", columnWidth:50, align: "left", hasSearch: false, isReadonly: true),
                     new SheetColumn(columnName: "sMaDuAn", header: "Mã dự án", columnWidth:200, align: "left", isFixed: true, hasSearch: true, isReadonly: true),
                     new SheetColumn(columnName: "sTenDuAn", header: "Tên dự án", columnWidth:200, align: "left", isFixed: true, hasSearch: true, isReadonly: true),
+                    //Hidden Don vi thuc hien du An add DonViQuanLY
                     new SheetColumn(columnName: "sTen", header: "Đơn vị thực hiện dự án", columnWidth:200, align: "left", isFixed: true, hasSearch: true, isReadonly: true),
+                    new SheetColumn(columnName: "sTenDonViQuanLy", header: "Đơn vị", columnWidth:200, align: "left", isFixed: true, hasSearch: true, isReadonly: true,isHidden: true),
                     new SheetColumn(columnName: "sLoaiDuAn", header: "Loại dự án", columnWidth:80, align: "left", isFixed: true, hasSearch: true, isReadonly: true),
                     new SheetColumn(columnName: "sThoiGianThucHien", header: "Thời gian thực hiện", columnWidth:80, align: "center", isFixed: true, hasSearch: true, isReadonly: true),
                     new SheetColumn(columnName: "sTenLoaiCongTrinh", header: "Loại công trình", columnWidth:80, align: "left", isFixed: true, hasSearch: true, isReadonly: true),
@@ -185,6 +187,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     new SheetColumn(columnName: "iID_DuAnID", isHidden: true),
                     new SheetColumn(columnName: "iID_KeHoachVonNamDeXuatID", isHidden: true),
                     new SheetColumn(columnName: "iID_DonViQuanLyID", isHidden: true),
+                    new SheetColumn(columnName: "iID_DonViThucHienDuAn", isHidden: true),
                     new SheetColumn(columnName: "iID_NguonVonID", isHidden: true),
                     new SheetColumn(columnName: "iID_LoaiCongTrinh", isHidden: true),
                     //new SheetColumn(columnName: "Level", isHidden: true),

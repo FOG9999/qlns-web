@@ -2144,6 +2144,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 }
 
                 TempData["paramReport"] = data;
+                List<int> arrYearStartAndYearEnd = new List<int>();
+                arrYearStartAndYearEnd.Add(data.iGiaiDoanTu);
+                arrYearStartAndYearEnd.Add(data.iGiaiDoanDen);
+                TempData["arrYearStartAndYearEnd"] = arrYearStartAndYearEnd;
 
                 return true;
             }
@@ -2396,7 +2400,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             fr.SetValue("DonViTinh", paramReport.sDonViTinh);
             fr.SetValue("FHanMucDauTuDuocDuyetSum", dataSummary.FHanMucDauTuDuocDuyet);
             fr.SetValue("FTongSoDuocDuyetSum", dataSummary.FTongSoDuocDuyet);
-            fr.SetValue("FVonBoTriTuNamDenNamDuocDuyetSum", dataSummary.FVonBoTriSauNamDuocDuyet);
+            fr.SetValue("FVonBoTriTuNamDenNamDuocDuyetSum", dataSummary.FVonBoTriTuNamDenNamDuocDuyet);
             fr.SetValue("FVonBoTriSauNamDuocDuyetSum", dataSummary.FVonBoTriSauNamDuocDuyet);
             fr.SetValue("FHanMucDauTuDeXuatSum", dataSummary.FHanMucDauTuDeXuat);
             fr.SetValue("FTongSoDeXuatSum", dataSummary.FTongSoDeXuat);

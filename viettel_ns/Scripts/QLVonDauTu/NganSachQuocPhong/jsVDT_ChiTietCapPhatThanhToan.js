@@ -32,7 +32,7 @@ function recalculateTyLeThanhToan() {
                 FGiaTriThuHoiUngTruocTn +
                 FGiaTriThuHoiUngTruocNn)) / GiaTriHopDong;
 
-        $('#fTyLeThanhToan').html(tyLeThanhToan);
+        $('#fTyLeThanhToan').html(tyLeThanhToan.toFixed(2));
     }
     catch (e) {
         console.error(e)

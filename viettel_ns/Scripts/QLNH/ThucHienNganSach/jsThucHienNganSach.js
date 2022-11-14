@@ -126,54 +126,30 @@ function printBaoCao(ext) {
     if (!ValidateDataPrint(data)) {
         return false;
     }
+    $("input:checkbox[check-group='To']").each(function () {
+        if (this.checked) {
+            var item = this.value;
+            var url = $("#urlExport").val() +
+                "?ext=" + ext + "&dvt = 1"
+                + "&txtTieuDe1=" + encodeURIComponent($("<div/>").text(txtTieuDe1).html())
+                + "&txtTieuDe2=" + encodeURIComponent($("<div/>").text(txtTieuDe2).html())
+                + "&slbDonViVND=" + slbDonViVND
+                + "&slbDonViUSD=" + slbDonViUSD
+                + "&sTenDonViCapTren=" + encodeURIComponent($("<div/>").text(sTenDonViCapTren).html())
+                + "&sTenDonViCapDuoi=" + encodeURIComponent($("<div/>").text(sTenDonViCapDuoi).html())
+                + "&iInMotTo=" + item
+                + "&sTenDonVi=" + sTenDonVi
+                + "&tabTable=" + tabTable
+                + "&iTuNam=" + iTuNam
+                + "&iDenNam=" + iDenNam
+                + "&iDonvi=" + iDonvi
+                + "&iQuyList=" + iQuyList
+                + "&iNam=" + iNam
 
-    url = $("#urlExport").val() +
-        "?ext=" + ext + "&dvt = 1"
-        + "&txtTieuDe1=" + encodeURIComponent(txtTieuDe1)
-        + "&txtTieuDe2=" + encodeURIComponent(txtTieuDe2)
-        + "&slbDonViVND=" + slbDonViVND
-        + "&slbDonViUSD=" + slbDonViUSD
-        + "&sTenDonViCapTren=" + encodeURIComponent(sTenDonViCapTren)
-        + "&sTenDonViCapDuoi=" + encodeURIComponent(sTenDonViCapDuoi)
-        + "&iInMotTo=" + iInMotTo
-        + "&sTenDonVi=" + sTenDonVi
-        + "&tabTable=" + tabTable
-        + "&iTuNam=" + iTuNam
-        + "&iDenNam=" + iDenNam
-        + "&iDonvi=" + iDonvi
-        + "&iQuyList=" + iQuyList
-        + "&iNam=" + iNam
-        + "&InToHai=1"
-
-
-    //url = unescape(url);
-    links.push(url);
-
+            links.push(url);
+        }
+    })
     openLinks(links);
-
-    if (iInMotTo == 3) {
-        urlToHai = $("#urlExport").val() +
-            "?ext=" + ext + "&dvt = 1"
-            + "&txtTieuDe1=" + encodeURIComponent(txtTieuDe1)
-            + "&txtTieuDe2=" + encodeURIComponent(txtTieuDe2)
-            + "&slbDonViVND=" + slbDonViVND
-            + "&slbDonViUSD=" + slbDonViUSD
-            + "&sTenDonViCapTren=" + encodeURIComponent(sTenDonViCapTren)
-            + "&sTenDonViCapDuoi=" + encodeURIComponent(sTenDonViCapDuoi)
-            + "&iInMotTo=" + iInMotTo
-            + "&sTenDonVi=" + sTenDonVi
-            + "&tabTable=" + tabTable
-            + "&iTuNam=" + iTuNam
-            + "&iDenNam=" + iDenNam
-            + "&iDonvi=" + iDonvi
-            + "&iQuyList=" + iQuyList
-            + "&iNam=" + iNam
-            + "&InToHai=2"
-
-        linksToHai.push(urlToHai);
-
-        openLinks(linksToHai);
-    }
 }
 function ValidateDataPrint(data) {
     var Title = 'Lỗi in báo cáo tình hình thực hiện ngân sách';
@@ -197,7 +173,13 @@ function ValidateDataPrint(data) {
     if ($.trim(data.sTenDonViCapDuoi) == "") {
         Messages.push("Chưa nhập đơn vị!");
     }
-    if (data.iInMotTo == 0 && data.tabTable == 2) {
+    var iCheck = 0;
+    $("input:checkbox[check-group='To']").each(function () {
+        if (!this.checked) {
+            iCheck++;
+        }
+    })
+    if (iCheck > 0 && data.tabTable == 2) {
         Messages.push("Chưa chọn số tờ!");
     }
 

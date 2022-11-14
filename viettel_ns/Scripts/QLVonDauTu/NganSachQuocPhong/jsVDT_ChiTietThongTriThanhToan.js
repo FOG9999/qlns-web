@@ -109,7 +109,7 @@ function layChiTiet() {
                         htmlThanhToan += " <td align=\"center\">" + x.SNg + "</td>";
                         htmlThanhToan += " <td align=\"center\">" + x.STenLoaiCongTrinh + "</td>";
                         htmlThanhToan += " <td align=\"center\">" + x.STenDuAn + "</td>";
-                        htmlThanhToan += " <td align=\"center\">" + x.FSoTien + "</td>";
+                        htmlThanhToan += " <td align=\"center\">" + FormatNumber(x.FSoTien) + "</td>";
                         htmlThanhToan += "</tr>";
                     });
                     $("#tblThanhToan tbody").html(htmlThanhToan);
@@ -132,7 +132,7 @@ function layChiTiet() {
                         htmlThuHoi += " <td align=\"center\">" + x.SNg + "</td>";
                         htmlThuHoi += " <td align=\"center\">" + x.STenLoaiCongTrinh + "</td>";
                         htmlThuHoi += " <td align=\"center\">" + x.STenDuAn + "</td>";
-                        htmlThuHoi += " <td align=\"center\">" + x.FSoTien + "</td>";
+                        htmlThuHoi += " <td align=\"center\">" + FormatNumber(x.FSoTien) + "</td>";
                         htmlThuHoi += "</tr>";
                     });
                     $("#tblThuHoi tbody").html(htmlThuHoi);
@@ -156,7 +156,7 @@ function layChiTiet() {
                         htmlTamUng += " <td align=\"center\">" + x.SNg + "</td>";
                         htmlTamUng += " <td align=\"center\">" + x.STenLoaiCongTrinh + "</td>";
                         htmlTamUng += " <td align=\"center\">" + x.STenDuAn + "</td>";
-                        htmlTamUng += " <td align=\"center\">" + x.FSoTien + "</td>";
+                        htmlTamUng += " <td align=\"center\">" + FormatNumber(x.FSoTien) + "</td>";
                         htmlTamUng += "</tr>";
 
                     });
@@ -182,7 +182,7 @@ function layChiTiet() {
                         htmlKinhPhi += " <td align=\"center\">" + x.SNg + "</td>";
                         htmlKinhPhi += " <td align=\"center\">" + x.STenLoaiCongTrinh + "</td>";
                         htmlKinhPhi += " <td align=\"center\">" + x.STenDuAn + "</td>";
-                        htmlKinhPhi += " <td align=\"center\">" + x.FSoTien + "</td>";
+                        htmlKinhPhi += " <td align=\"center\">" + FormatNumber(x.FSoTien) + "</td>";
                         htmlKinhPhi += "</tr>";
 
                     });
@@ -208,7 +208,7 @@ function layChiTiet() {
                         htmlHopThuc += " <td align=\"center\">" + x.SNg + "</td>";
                         htmlHopThuc += " <td align=\"center\">" + x.STenLoaiCongTrinh + "</td>";
                         htmlHopThuc += " <td align=\"center\">" + x.STenDuAn + "</td>";
-                        htmlHopThuc += " <td align=\"center\">" + x.FSoTien + "</td>";
+                        htmlHopThuc += " <td align=\"center\">" + FormatNumber(x.FSoTien) + "</td>";
                         htmlHopThuc += "</tr>";
                     });
                     $("#tblHopThuc tbody").html(htmlHopThuc);

@@ -423,7 +423,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 
         #region kế hoạch vốn ứng chi tiết
 
-        public ActionResult DetailChiTiet(Guid? idKHVU, bool isUpdate, bool isTongHop, bool isDieuChinh)
+        public ActionResult DetailChiTiet(Guid? idKHVU, bool isUpdate, bool isTongHop, bool isDieuChinh = false)
         {
 
             var data = TempData["ListIdDuAn"];

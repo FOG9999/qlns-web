@@ -37,6 +37,7 @@
     Boolean LayTheoMaNDTao = false;
     if (LuongCongViecModel.KiemTra_TroLyPhongBan(MaND)) LayTheoMaNDTao = true;
     String MaPhongBan = NganSach_HamChungModels.MaPhongBanCuaMaND(MaND);
+    DataTable listLNSAll = DanhMucModels.NS_LoaiNganSach(false);
     
     DataTable dtTrangThai_All = LuongCongViecModel.Get_dtDSTrangThaiDuyet(QuyetToanModels.iID_MaPhanHeQuyetToan);
     DataTable dt = QuyetToan_QuanSo_ChungTuModels.Get_DanhSachChungTu(iLoai, MaND, iSoChungTu, dTuNgay, dDenNgay, iID_MaTrangThaiDuyet, LayTheoMaNDTao, iThang_Quy, iID_MaDonVi, CurrentPage, Globals.PageSize);
@@ -225,7 +226,7 @@
             String strTenDonVi = DonViModels.Get_TenDonVi(Convert.ToString(R["iID_MaDonVi"]));            
             
             //Lấy thông tin loại ngân sách
-            String strLNS = DanhMucModels.NS_TenLoaiNganSach(Convert.ToString(R["sDSLNS"]));
+            String strLNS = DanhMucModels.NS_TenLoaiNganSachUpgrade(Convert.ToString(R["sDSLNS"]), listLNSAll);
             
             //Lây thời gian quyết toán
             String strThoiGianQuyetToan = "";

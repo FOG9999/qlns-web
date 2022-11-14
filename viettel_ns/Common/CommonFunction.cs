@@ -122,7 +122,7 @@ namespace VIETTEL.Common
         {
             string result = "";
             bool flagSign = false;
-            string text = Convert.ToString(So);
+            string text = Convert.ToString(So, new CultureInfo("en-US"));
             if (double.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out _))
             {
                 double num = Convert.ToDouble(text);
