@@ -207,7 +207,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             VDTQtBcquyetToanNienDoExportModel vm = new VDTQtBcquyetToanNienDoExportModel();
             try
             {
-                ViewBag.ListDonViQuanLy = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
+                ViewBag.ListDonViQuanLy = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
 
                 List<ComBoBoxItem> lstLoaiChungTu = new List<ComBoBoxItem>()
                 {

@@ -5,6 +5,7 @@ DECLARE @iIDNguonVonID int
 DECLARE @dNgayLap date
 DECLARE @checkQDDT int
 
+
 --DECLARE @sMaDuAn nvarchar(100)
 --DECLARE @sTenDuAn nvarchar(100)
 --DECLARE @sTen nvarchar(100)
@@ -17,7 +18,13 @@ DECLARE @checkQDDT int
 
 DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 	SELECT @iIdMaDonViQuanLy = iID_MaDonViQuanLy, @iNamLamViec = iNamKeHoach, @iIDNguonVonID = iID_NguonVonID, @dNgayLap = dNgayQuyetDinh
-	FROM VDT_KHV_KeHoachVonNam_DeXuat 
+	FROM VDT_KHV_KeHoachVonNam_DeXuat khv
+	LEFT JOIN NS_DonVi dv on dv.iID_Ma = khv.iID_DonViQuanLyID
+	WHERE iID_KeHoachVonNamDeXuatID = @iIDKHVNDeXuatId;
+	--Bang tmp lay don vi quan ly--
+	SELECT iID_MaDonViQuanLy,  iNamKeHoach,  iID_NguonVonID,  dNgayQuyetDinh,  iID_DonViQuanLyID, dv.sTen as sTenDonViQuanLy INTO #tmpDonViQL
+	FROM VDT_KHV_KeHoachVonNam_DeXuat khv
+	LEFT JOIN NS_DonVi dv on dv.iID_Ma = khv.iID_DonViQuanLyID
 	WHERE iID_KeHoachVonNamDeXuatID = @iIDKHVNDeXuatId
 	-- col 1 : Tong muc dau tu duoc duyet
 	BEGIN
@@ -197,7 +204,7 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 	WHERE tmdt.iID_DuAnID IN (SELECT * FROM f_split(@lstDuAnID))
 
 	-- SELECT OUT -->
-	SELECT Distinct @iIDKHVNDeXuatId as iID_KeHoachVonNamDeXuatID,dv.sTenDonVi as sTen,ISNULL(dt.iID_KeHoachVonNamDeXuatChiTietID, @guidEmpty) as iID_KeHoachVonNamDeXuatChiTietID, tmp.iID_DuAnID, tmp.sMaDuAn, tmp.sTenDuAn, tmp.sTenLoaiDuAn, tmp.sThoiGianThucHien, tmp.sTenLoaiCongTrinh, tmp.sCapPheDuyet, tmp.sChuDauTu, dt.fThuHoiVonUngTruoc,
+	SELECT Distinct @iIDKHVNDeXuatId as iID_KeHoachVonNamDeXuatID,ISNULL(dt.iID_KeHoachVonNamDeXuatChiTietID, @guidEmpty) as iID_KeHoachVonNamDeXuatChiTietID, tmp.iID_DuAnID, tmp.sMaDuAn, tmp.sTenDuAn, tmp.sTenLoaiDuAn, tmp.sThoiGianThucHien, tmp.sTenLoaiCongTrinh, tmp.sCapPheDuyet, tmp.sChuDauTu, dt.fThuHoiVonUngTruoc,
 		(CASE WHEN dt.iID_DuAnID IS NULL THEN tmp.fTongMucDauTuDuocDuyet ELSE dt.fTongMucDauTuDuocDuyet END) as fTongMucDauTuDuocDuyet,
 		tmp.fLuyKeVonNamTruoc as fLuyKeVonNamTruoc,
 		tmp.fKeHoachVonDuocDuyetNamNay as fKeHoachVonDuocDuyetNamNay,
@@ -211,7 +218,12 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 		tmp.iThoiGianThucHien AS iThoiGianThucHien,
 		ISNULL((SELECT TOP(1) fVonBoTriTuNamDenNam  FROM VDT_KHV_KeHoach5Nam_ChiTiet WHERE iID_DuAnID = tmp.iID_DuAnID AND iID_NguonVonID = @iIDNguonVonID), 0) as fKeHoachTrungHanDuocDuyet,
 		(CASE WHEN dact.iID_DuAnID IS NULL THEN N'Mở mới' ELSE N'Chuyển tiếp' END) as sLoaiDuAn,
-		tmp.iID_LoaiCongTrinh,tmp.iID_ChuDauTuID
+		tmp.iID_LoaiCongTrinh,tmp.iID_ChuDauTuID,
+		tmpDonViQL.iID_DonViQuanLyID as iID_DonViQuanLyID,
+		tmpDonViQL.sTenDonViQuanLy as sTenDonViQuanLy,
+		da.iID_DonViThucHienDuAnID as iID_DonViThucHienDuAn,
+		dv.sTenDonVi as sTen
+
 	FROM #tmp as tmp
 	LEFT JOIN VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet as dt on tmp.iID_DuAnID = dt.iID_DuAnID AND dt.iID_KeHoachVonNamDeXuatID = @iIDKHVNDeXuatId
 	LEFT JOIN VDT_DA_DuAn  da on  tmp.iID_DuAnID = da.iID_DuAnID
@@ -220,9 +232,10 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 	LEFT JOIN #tmpThDd khvnct on dt.iID_DuAnID = khvnct.iID_DuAnID and dt.iID_LoaiCongTrinh = khvnct.iID_LoaiCongTrinhID and khvnct.iID_NguonVonID = @iIDNguonVonID
 	LEFT JOIN #tmpVonBoTriNam as vbthn on tmp.iID_DuAnID = vbthn.iID_DuAnID 
 	LEFT JOIN #tmpKhTh as khth on tmp.iID_DuAnID = khth.iID_DuAnID
+	CROSS JOIN #tmpDonViQL as tmpDonViQL
 	WHERE (ISNULL(@sMaDuAn,'') = '' OR tmp.sMaDuAn LIKE N'%'+@sMaDuAn+'%')
 	AND (ISNULL(@sTenDuAn,'') = '' OR tmp.sTenDuAn LIKE N'%'+@sTenDuAn+'%')
-	AND (ISNULL(@sTen,'') = '' OR dv.sTenDonVi LIKE N'%'+@sTen+'%')
+	AND (ISNULL(@sTenDonViQuanLy,'') = '' OR tmpDonViQL.sTenDonViQuanLy LIKE N'%'+@sTenDonViQuanLy+'%')
 	AND (ISNULL(@sLoaiDuAn,'') = '' OR (CASE WHEN dact.iID_DuAnID IS NULL THEN N'Mở mới' ELSE N'Chuyển tiếp' END) LIKE N'%'+@sLoaiDuAn+'%')
 	AND (ISNULL(@sThoiGianThucHien,'') = '' OR tmp.sThoiGianThucHien LIKE N'%'+@sThoiGianThucHien+'%')
 	AND (ISNULL(@sChuDauTu,'') = '' OR tmp.sChuDauTu LIKE N'%'+@sChuDauTu+'%')
@@ -239,6 +252,7 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 	DROP TABLE #tmpKhTh
 	DROP TABLE #tmpLCTCDT
 	DROP TABLE #tmpCDT
+	DROP TABLE #tmpDonViQL
 
 
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -49,9 +50,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.KhoiTao
                 data.dNgayKhoiTao = DateTime.Now;
             }
 
-            List<NS_DonVi> lstDonViQL = _qLVonDauTuService.GetListDonViByNamLamViec(PhienLamViec.NamLamViec).ToList();
-            lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = "--Chọn--" });
-            ViewBag.ListDonViQL = lstDonViQL.ToSelectList("iID_Ma", "sTen");
+            List<NS_DonVi> lstDonViQL = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec, false, false).ToList();
+            lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = "--Chọn--" });
+            ViewBag.ListDonViQL = lstDonViQL.ToSelectList("iID_Ma", "sMoTa");
             return PartialView("_modalUpdate", data);
         }
 

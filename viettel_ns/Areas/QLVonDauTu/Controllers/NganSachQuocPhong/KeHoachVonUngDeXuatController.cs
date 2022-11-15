@@ -413,7 +413,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             {
                 lstCbx.Add(new SelectListItem()
                 {
-                    Text = string.Format("{0} - {1}", item.iID_MaDonVi, item.sTen),
+                    Text = string.Format("{0} - {1}", item.iID_MaDonVi, item.sMoTa),
                     Value = string.Format("{0}", item.iID_MaDonVi),
                 });
             }
@@ -423,7 +423,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 
         #region kế hoạch vốn ứng chi tiết
 
-        public ActionResult DetailChiTiet(Guid? idKHVU, bool isUpdate, bool isTongHop, bool isDieuChinh)
+        public ActionResult DetailChiTiet(Guid? idKHVU, bool isUpdate, bool isTongHop, bool isDieuChinh = false)
         {
 
             var data = TempData["ListIdDuAn"];

@@ -29,8 +29,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             vm._paging.CurrentPage = 1;
             vm.Items = _iQLVonDauTuService.GetThongTriQuyetToanPaging(ref vm._paging);
             List<NS_DonVi> lstDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
-            lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = Constants.TAT_CA });
-            ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_MaDonVi", "sTen");
+            lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = Constants.TAT_CA });
+            ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_MaDonVi", "sMoTa");
             return View(vm);
         }
 
@@ -41,8 +41,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             vm._paging = _paging;
             vm.Items = _iQLVonDauTuService.GetThongTriQuyetToanPaging(ref vm._paging, sMaDonVi, sMaThongTri, iNamThongTri, dNgayThongTri);
             List<NS_DonVi> lstDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
-            lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = Constants.TAT_CA });
-            ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_MaDonVi", "sTen");
+            lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = Constants.TAT_CA });
+            ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_MaDonVi", "sMoTa");
 
             // luu dieu kien tim kiem
             TempData["sMaDonvi"] = sMaDonVi;
@@ -56,8 +56,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
         public ActionResult TaoMoi()
         {
             List<NS_DonVi> lstDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
-            lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = Constants.CHON });
-            ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_Ma", "sTen");
+            lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = Constants.CHON });
+            ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_Ma", "sMoTa");
             List<NS_NguonNganSach> lstNguonVon = _iQLVonDauTuService.LayNguonVon().ToList();
             lstNguonVon.Insert(0, new NS_NguonNganSach { iID_MaNguonNganSach = 0, sTen = Constants.CHON });
             ViewBag.ListNguonVon = lstNguonVon.ToSelectList("iID_MaNguonNganSach", "sTen");
@@ -78,7 +78,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             VDTThongTriModel model = _iQLVonDauTuService.LayChiTietThongTri(id);
 
             List<NS_DonVi> lstDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
-            ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_MaDonVi", "sTen");
+            ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_MaDonVi", "sMoTa");
             List<NS_NguonNganSach> lstNguonVon = _iQLVonDauTuService.LayNguonVon().ToList();
             ViewBag.ListNguonVon = lstNguonVon.ToSelectList("sMoTa", "sTen");
             ViewBag.dNgayThongTri = (model != null && model.dNgayThongTri.HasValue) ? model.dNgayThongTri.Value.ToString("dd/MM/yyyy") : string.Empty;

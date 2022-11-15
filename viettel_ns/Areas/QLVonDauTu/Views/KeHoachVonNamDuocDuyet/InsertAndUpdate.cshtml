@@ -54,14 +54,46 @@
     <div class="text-center">
         <button class="btn btn-default" id="btnVoucherCancel" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
         <button class="btn btn-primary" id="btnVoucherSave" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
-        @if (ViewBag.IsView == "true") {
-        <button class="btn btn-info" id="btnVoucherDetail" onclick="ChiTietKeHoachVonNamDuocDuyet('@Model.iID_KeHoachVonNam_DuocDuyetID',true)"><i class="fa fa-eye fa-lg" aria-hidden="true"></i><span>Xem chi tiết</span></button>
+        @if (ViewBag.IsView == "true")
+        {
+            <button class="btn btn-info" id="btnVoucherDetail" onclick="ChiTietKeHoachVonNamDuocDuyet('@Model.iID_KeHoachVonNam_DuocDuyetID',true)"><i class="fa fa-eye fa-lg" aria-hidden="true"></i><span>Xem chi tiết</span></button>
         }
     </div>
 </div>
 
+<script src="/Scripts/js/js_vdtWeb.js"></script>
+
 <script type="text/javascript">
     $(document).ready(function () {
+        var isShowing = false;
+        $('.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: 'vi',
+            todayHighlight: true,
+            format: "dd/mm/yyyy"
+        }).on('hide', () => {
+            isShowing = false;
+        }).on('show', () => {
+            isShowing = true;
+        });
+
+        $("#dNgayQuyetDinhModal").keydown(function (event) {
+            ValidateInputKeydown(event, this, 3);
+        }).blur(function (event) {
+            setTimeout(() => {
+                if (!isShowing) ValidateInputFocusOut(event, this, 3);
+            }, 0);
+        });
+
+        $("#txtNamKeHoachModal").keydown(function (event) {
+            ValidateInputKeydown(event, this, 1);
+        }).blur(function (event) {
+            ValidateInputFocusOut(event, this, 6);
+        });
+
         if ($("#iID_KHVonNamDuocDuyetIDModal").val() == GUID_EMPTY) {
             document.getElementById('txtNamKeHoachModal').removeAttribute("disabled");
             document.getElementById('iID_DonViQuanLyIDModal').removeAttribute("disabled");
@@ -81,15 +113,15 @@
                 document.getElementById('txtSoKeHoachModal').setAttribute("disabled", "disabled");
                 document.getElementById('dNgayQuyetDinhModal').setAttribute("disabled", "disabled");
                 document.getElementById('btnVoucherSave').setAttribute("disabled", "disabled");
-            //} else {
-            //    document.getElementById('txtSoKeHoachModal').removeAttribute("disabled");
-            //    document.getElementById('dNgayQuyetDinhModal').removeAttribute("disabled");
-            //    document.getElementById('btnVoucherSave').removeAttribute("disabled");
+                //} else {
+                //    document.getElementById('txtSoKeHoachModal').removeAttribute("disabled");
+                //    document.getElementById('dNgayQuyetDinhModal').removeAttribute("disabled");
+                //    document.getElementById('btnVoucherSave').removeAttribute("disabled");
             }
         }
 
         $("#iID_DonViQuanLyIDModal").on("change", function () {
             OpenModal($("#iID_KHVonNamDuocDuyetIDModal").val(), $("#iID_DonViQuanLyIDModal").val());
-        });
+        });     
     });
 </script>

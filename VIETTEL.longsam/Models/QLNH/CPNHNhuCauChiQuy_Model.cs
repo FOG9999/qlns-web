@@ -143,10 +143,31 @@ namespace Viettel.Models.CPNH
         public string sTenCDT { get; set; }
         public string sTenDonVi { get; set; }
         public string depth { get; set; }
+        public List<ThucHienNganSach_GiaiDoan_Model> lstData { get; set; }
+
         public List<ThucHienNganSach_GiaiDoan_Model> lstGiaiDoanTTCP { get; set; }
         public List<ThucHienNganSach_GiaiDoan_Model> lstGiaiDoanKinhPhiDaGiaiNgan { get; set; }
         public List<ThucHienNganSach_GiaiDoan_Model> lstGiaiDoanKinhPhiDuocCap { get; set; }
 
+    }
+
+    public class HeaderInfo
+    {
+        public string sTen { get; set; }
+        public int iSoCon { get; set; }
+        public int iCha { get; set; }
+        public string sMergeRange { get; set; }
+        public Guid? iID_Header { get; set; }
+    }
+
+    public class Header
+    {
+        public List<HeaderInfo> lstHeaderLv1 { get; set; }
+        public List<HeaderInfo> lstHeaderLv2 { get; set; }
+        public List<HeaderInfo> lstHeaderLv3 { get; set; }
+        //public string MergeRangeLv1 { get; set; }
+        //public string MergeRangeLv2 { get; set; }
+        //public string MergeRangeLv3 { get; set; }
     }
 
 }

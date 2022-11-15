@@ -16,7 +16,7 @@ using VIETTEL.Flexcel;
 using FlexCel.XlsAdapter;
 using System.Text;
 using System.Globalization;
-using DomainModel;
+using VIETTEL.Common;
 
 namespace VIETTEL.Areas.QLNH.Controllers.CPNH
 {
@@ -26,9 +26,9 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
         private readonly INganSachService _nganSachService = NganSachService.Default;
         private readonly IQLNguonNganSachService _nnsService = QLNguonNganSachService.Default;
         private const string sFilePathBaoCao1 = "/Report_ExcelFrom/QLNH/rpt_ThucHienNganSach.xlsx";
-        private const string sFilePathBaoCaoTo1 = "/Report_ExcelFrom/QLNH/rpt_ThucHienNganSach_GiaiDoanTo1.xlsx";
-        private const string sFilePathBaoCaoTo2 = "/Report_ExcelFrom/QLNH/rpt_ThucHienNganSach_GiaiDoanTo2.xlsx";
-        private int _columnCountBC1 = 7;
+        private const string sFilePathBaoCaoTo1 = "/Report_ExcelFrom/QLNH/rpt_ThucHienNganSach_GiaiDoanTo.xlsx";
+        private const string sFilePathBaoCaoTo2 = "/Report_ExcelFrom/QLNH/rpt_ThucHienNganSach_GiaiDoanTo.xlsx";
+        private int _columnCountBC1 = 15;
         private const string sControlName = "ThucHienNganSach";
 
         public List<Dropdown_SelectValue> lstDonViVND = new List<Dropdown_SelectValue>()
@@ -159,7 +159,17 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             ViewBag.iDonvi = iDonvi;
             ViewBag.iQuyList = iQuyList;
             ViewBag.iNam = iNam;
-
+            List<CPNHThucHienNganSach_Model> list = _cpnhService.getListThucHienNganSachModels(tabTable, iTuNam, iDenNam, iDonvi, iQuyList, iNam, 1, 1).ToList();
+            List<CPNHThucHienNganSach_Model> getlistGiaiDoan = list.Where(x => x.iGiaiDoanTu != 0 && x.iGiaiDoanDen != 0).OrderBy(x => x.iGiaiDoanDen).OrderBy(x => x.iGiaiDoanTu).ToList();
+            List<ThucHienNganSach_GiaiDoan_Model> lstGiaiDoan = getlistGiaiDoan
+                    .GroupBy(x => new { x.iGiaiDoanTu, x.iGiaiDoanDen }).Select(x => x.First())
+                    .Select(x => new ThucHienNganSach_GiaiDoan_Model
+                    {
+                        sGiaiDoan = "Giai đoạn " + x.iGiaiDoanTu + " - " + x.iGiaiDoanDen,
+                        iGiaiDoanTu = x.iGiaiDoanTu,
+                        iGiaiDoanDen = x.iGiaiDoanDen
+                    }).ToList();
+            ViewBag.iTo = lstGiaiDoan != null ? ((lstGiaiDoan.Count*5 + 10) / _columnCountBC1) + 1 : 1;
             return PartialView("_modalInBaoCao");
         }
         public ActionResult ExportExcelBaoCao(
@@ -178,10 +188,10 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             int iNam = 2022,
             int InToHai = 1)
         {
-            txtTieuDe1 = HttpUtility.UrlDecode(txtTieuDe1).ToUpper();
-            txtTieuDe2 = HttpUtility.UrlDecode(txtTieuDe2).ToUpper();
-            sTenDonViCapTren = HttpUtility.UrlDecode(sTenDonViCapTren);
-            sTenDonViCapDuoi = HttpUtility.UrlDecode(sTenDonViCapDuoi);
+            txtTieuDe1 = HttpUtility.UrlDecode(HttpUtility.HtmlDecode(txtTieuDe1)).ToUpper();
+            txtTieuDe2 = HttpUtility.UrlDecode(HttpUtility.HtmlDecode(txtTieuDe2)).ToUpper();
+            sTenDonViCapTren = HttpUtility.UrlDecode(HttpUtility.HtmlDecode(sTenDonViCapTren));
+            sTenDonViCapDuoi = HttpUtility.UrlDecode(HttpUtility.HtmlDecode(sTenDonViCapDuoi));
 
             string fileName = string.Format("{0}.{1}", "BaoCaoTinhHinhThucHienNganSach", ext);
             List<CPNHThucHienNganSach_Model> list = _cpnhService.getListThucHienNganSachModels(tabTable, iTuNam, iDenNam, iDonvi, iQuyList, iNam, slbDonViUSD != null ? slbDonViUSD.Value : 1, slbDonViVND != null ? slbDonViVND.Value : 1).ToList();
@@ -192,16 +202,9 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             }
             else
             {
-                if (iInMotTo == 1 || (iInMotTo == 3 && InToHai == 1))
-                {
-                    to = 1;
-                }
-                else if (iInMotTo == 2 || (iInMotTo == 3 && InToHai == 2))
-                {
-                    to = 2;
-                }
+                to = iInMotTo != null ? iInMotTo.Value : 0 ;
                 xls = TaoFileBaoCao2(dvt, to , list, tabTable, iTuNam, iDenNam, txtTieuDe1, txtTieuDe2,
-                    sTenDonViCapTren, sTenDonViCapDuoi, slbDonViUSD, slbDonViVND, iInMotTo, InToHai);
+                    sTenDonViCapTren, sTenDonViCapDuoi, slbDonViUSD, slbDonViVND, InToHai);
             }
             return Print(xls, ext, fileName);
         }
@@ -240,19 +243,14 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
         }
         public ExcelFile TaoFileBaoCao2(int dvt = 1, int to = 1, List<CPNHThucHienNganSach_Model> list = null, int tabTable = 1,
             int iTuNam = 1, int? iDenNam = 1, string txtTieuDe1 = "", string txtTieuDe2 = "",
-            string sTenDonViCapTren = "", string sTenDonViCapDuoi = "", int? slbDonViUSD = 1, int? slbDonViVND = 1, int? iInMotTo = 1 , int InToHai = 1)
+            string sTenDonViCapTren = "", string sTenDonViCapDuoi = "", int? slbDonViUSD = 1, int? slbDonViVND = 1, int InToHai = 1)
         {
+
             string sDonViTinh = (slbDonViUSD == 1 ? "USD" : slbDonViUSD == 1000 ? "Nghìn USD" : "Triệu USD") +
                             " / " + (slbDonViVND == 1 ? "VND" : slbDonViVND == 1000 ? "Nghìn VND" : "Triệu VND");
             XlsFile Result = new XlsFile(true);
-            if (iInMotTo == 1 || (iInMotTo == 3 && InToHai == 1))
-            {
-                Result.Open(Server.MapPath(sFilePathBaoCaoTo1));
-            }else if (iInMotTo == 2 || (iInMotTo == 3 && InToHai == 2))
-            {
-                Result.Open(Server.MapPath(sFilePathBaoCaoTo2));
-            }
-                
+            Result.Open(Server.MapPath(sFilePathBaoCaoTo1));
+
             FlexCelReport fr = new FlexCelReport();
             List<CPNHThucHienNganSach_Model> getlistGiaiDoan = list.Where(x => x.iGiaiDoanTu != 0 && x.iGiaiDoanDen != 0).OrderBy(x => x.iGiaiDoanTu).OrderBy(x => x.iGiaiDoanDen).ToList();
             List<ThucHienNganSach_GiaiDoan_Model> lstGiaiDoan = getlistGiaiDoan
@@ -263,168 +261,331 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                         iGiaiDoanTu = x.iGiaiDoanTu,
                         iGiaiDoanDen = x.iGiaiDoanDen
                     }).ToList();
-            int columnStart = _columnCountBC1 * (to - 1);
+
+
+            Header objHeader = new Header();
+            objHeader.lstHeaderLv1 = new List<HeaderInfo>();
+            objHeader.lstHeaderLv2 = new List<HeaderInfo>();
+            objHeader.lstHeaderLv3 = new List<HeaderInfo>();
+            var countColumn = 10 + lstGiaiDoan.Count() + (lstGiaiDoan.Count() * 2) + (lstGiaiDoan.Count() * 2);
+            int ResultTo = countColumn / _columnCountBC1 + 1;
+
+            //Header lever 1 ;
+            #region Header
             List<CPNHThucHienNganSach_Model> listData = getList(list , lstGiaiDoan, tabTable);
             var listColumn = new List<ThucHienNganSach_GiaiDoan_Model>();
             if (lstGiaiDoan != null)
             {
-                if (to == 1)
+                for (var i = 1; i <= countColumn; i++)
                 {
-                    var countColumn = 5 + lstGiaiDoan.Count() + (lstGiaiDoan.Count() * 2);
-                    for (var i = 1; i <= countColumn; i++)
-                    {
-                        var startColumn1 = 3 + lstGiaiDoan.Count() + 1;
-                        var startColumn2 = startColumn1 + (lstGiaiDoan.Count() * 2) + 2;
+                    var startColumn1 = 3 + lstGiaiDoan.Count() + 1;
+                    var startColumn2 = startColumn1 + (lstGiaiDoan.Count() * 2) + 2;
+                    var startColumn3 = startColumn2 + (lstGiaiDoan.Count() * 2) + 2;
 
-                        if (i == 3)
+                    // header vl1 ;
+
+                    if (i < 3)
+                    {
+                        objHeader.lstHeaderLv1.Add(new HeaderInfo
                         {
-                            ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
-                            var nowColumn = i.ToString() + " =";
-                            for (var j = 1; j <= lstGiaiDoan.Count(); j++)
-                            {
-                                nowColumn += (i + j).ToString() + " +";
-                            }
-                            SoBC.sGiaiDoan = nowColumn.Remove(nowColumn.Length - 1);
-                            listColumn.Add(SoBC);
-                        }
-                        else if (i == startColumn1 || i == startColumn1 + 1 || i == startColumn2 || i == startColumn2 + 1)
+                            sTen = "Giá trị hợp đồng mua sắm hoặc dự toán được duyệt",
+                        });
+                        objHeader.lstHeaderLv3.Add(new HeaderInfo
                         {
-                            ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
-                            var nowColumn = i.ToString() + " =";
-                            for (var j = 1; j <= lstGiaiDoan.Count(); j++)
-                            {
-                                nowColumn += (i + (j * 2)).ToString() + " +";
-                            }
-                            SoBC.sGiaiDoan = nowColumn.Remove(nowColumn.Length - 1);
-                            listColumn.Add(SoBC);
-                        }
-                        else
-                        {
-                            ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
-                            SoBC.sGiaiDoan = i.ToString();
-                            listColumn.Add(SoBC);
-                        }
+                            sTen = i == 1 ? "USD" : "VND",
+                        });
                     }
-                }
-                else if (to == 2)
-                {
-                    var countColumnTo1 = 5 + lstGiaiDoan.Count() + (lstGiaiDoan.Count() * 2);
-                    var countColumn = 5 + (lstGiaiDoan.Count() * 2);
-
-                    for (var i = 1; i <= countColumn; i++)
+                    else if (i < startColumn1) {
+                        objHeader.lstHeaderLv1.Add(new HeaderInfo
+                        {
+                            sTen = "Kế hoạch sử dụng Quỹ dự trữ ngoại hối (NSĐB) được Thủ tướng Chính phủ phê duyệt (QĐ số.....) (*)",
+                        });
+                        objHeader.lstHeaderLv3.Add(new HeaderInfo
+                        {
+                            sTen = "USD",
+                        });
+                    }
+                    else if (i < startColumn2)
                     {
-                        var startColumn1 = 3 + lstGiaiDoan.Count() + 1;
-                        var startColumn2 = startColumn1 + (lstGiaiDoan.Count() * 2) + 2;
-                        var startColumn3 = startColumn2 + (lstGiaiDoan.Count() * 2) + 2;
-
-                        if (i == 1 || i == 2)
+                        objHeader.lstHeaderLv1.Add(new HeaderInfo
                         {
-                            ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
-                            var nowColumn = (countColumnTo1 + i).ToString() + " =";
-                            for (var j = 1; j <= lstGiaiDoan.Count(); j++)
-                            {
-                                nowColumn += (countColumnTo1 + i + (j * 2)).ToString() + " +";
-                            }
-                            SoBC.sGiaiDoan = nowColumn.Remove(nowColumn.Length - 1);
-                            listColumn.Add(SoBC);
-                        }
-                        else if (i + countColumnTo1 == startColumn3 + 1)
+                            sTen = "Kinh phí được cấp",
+                        });
+                        objHeader.lstHeaderLv3.Add(new HeaderInfo
                         {
-                            ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
-                            var nowColumn = (countColumnTo1 + i).ToString() + " =" + (startColumn1 + 1).ToString() + " -" + (startColumn2 + 1).ToString();
-                            SoBC.sGiaiDoan = nowColumn;
-                            listColumn.Add(SoBC);
-                        }
-                        else if (i == countColumn)
+                            sTen = (startColumn2 - i) % 2 == 1 ? "VND" : "USD",
+                        });
+                    }
+                    else if (i < startColumn3)
+                    {
+                        objHeader.lstHeaderLv1.Add(new HeaderInfo
                         {
-                            ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
-                            var nowColumn = (countColumnTo1 + i).ToString() + " =" + 3 + " -" + (startColumn1).ToString();
-                            SoBC.sGiaiDoan = nowColumn;
-                            listColumn.Add(SoBC);
-                        }
-                        else
+                            sTen = "Kinh phí đã giải ngân (thanh toán, tạm ứng)",
+                        });
+                        objHeader.lstHeaderLv3.Add(new HeaderInfo
                         {
-                            ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
-                            SoBC.sGiaiDoan = (i + countColumnTo1).ToString();
-                            listColumn.Add(SoBC);
+                            sTen = (startColumn3 - i) % 2 == 1 ? "VND" : "USD",
+                        });
+                    }
+                    else if (i < countColumn)
+                    {
+                        objHeader.lstHeaderLv1.Add(new HeaderInfo
+                        {
+                            sTen = "Kinh phí chưa quyết toán",
+                        });
+                        objHeader.lstHeaderLv3.Add(new HeaderInfo
+                        {
+                            sTen = (countColumn - i) % 2 == 1 ? "VND" : "USD",
+                        });
+                    }
+                    else if (i == countColumn)
+                    {
+                        objHeader.lstHeaderLv1.Add(new HeaderInfo
+                        {
+                            sTen = "Kế hoạch chưa giải ngân",
+                        });
+                        objHeader.lstHeaderLv3.Add(new HeaderInfo
+                        {
+                            sTen = "USD",
+                        });
+                    }
+                    // listColumn 1 2 3 .......
+                    if (i == 3)
+                    {
+                        ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
+                        var nowColumn = i.ToString() + " =";
+                        for (var j = 1; j <= lstGiaiDoan.Count(); j++)
+                        {
+                            nowColumn += (i + j).ToString() + " +";
                         }
+                        SoBC.sGiaiDoan = nowColumn.Remove(nowColumn.Length - 1);
+                        listColumn.Add(SoBC);
+                    }
+                    else if (i == startColumn1 || i == startColumn1 + 1 || i == startColumn2 || i == startColumn2 + 1)
+                    {
+                        ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
+                        var nowColumn = i.ToString() + " =";
+                        for (var j = 1; j <= lstGiaiDoan.Count(); j++)
+                        {
+                            nowColumn += (i + (j * 2)).ToString() + " +";
+                        }
+                        SoBC.sGiaiDoan = nowColumn.Remove(nowColumn.Length - 1);
+                        listColumn.Add(SoBC);
+                    }
+                    else if (i == startColumn3)
+                    {
+                        ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
+                        var nowColumn = i.ToString() + " =" + (startColumn1).ToString() + " -" + (startColumn2).ToString();
+                        SoBC.sGiaiDoan = nowColumn;
+                        listColumn.Add(SoBC);
+                    }
+                    else if (i == startColumn3 + 1)
+                    {
+                        ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
+                        var nowColumn = i.ToString() + " =" + (startColumn1 + 1).ToString() + " -" + (startColumn2 + 1).ToString();
+                        SoBC.sGiaiDoan = nowColumn;
+                        listColumn.Add(SoBC);
+                    }
+                    else if (i == countColumn)
+                    {
+                        ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
+                        var nowColumn = i.ToString() + " =" + 3 + " -" + (startColumn1).ToString();
+                        SoBC.sGiaiDoan = nowColumn;
+                        listColumn.Add(SoBC);
+                    }
+                    else
+                    {
+                        ThucHienNganSach_GiaiDoan_Model SoBC = new ThucHienNganSach_GiaiDoan_Model();
+                        SoBC.sGiaiDoan = i.ToString();
+                        listColumn.Add(SoBC);
                     }
                 }
             }
-
-            fr.SetValue(new
+            
+            objHeader.lstHeaderLv2.Add(new HeaderInfo
             {
-                dvt = dvt.ToStringDvt(),
-                To = to,
-                iTuNam = iTuNam,
-                iDenNam = iDenNam,
-                txtTieuDe1 = txtTieuDe1,
-                txtTieuDe2 = txtTieuDe2,
-                sTenDonViCapTren = sTenDonViCapTren,
-                sTenDonViCapDuoi = sTenDonViCapDuoi,
-                sDonViTinh = sDonViTinh
+                sTen = "Giá trị hợp đồng mua sắm hoặc dự toán được duyệt",
             });
+            objHeader.lstHeaderLv2.Add(new HeaderInfo
+            {
+                sTen = "Giá trị hợp đồng mua sắm hoặc dự toán được duyệt",
+            });
+
+            objHeader.lstHeaderLv2.Add(new HeaderInfo
+            {
+                sTen = "Tổng số",
+            });
+
+            for (var i = 0; i < lstGiaiDoan.Count; i++)
+            {
+                objHeader.lstHeaderLv2.Add(new HeaderInfo
+                {
+                    sTen = lstGiaiDoan[i].sGiaiDoan,
+                });
+            }
+
+            objHeader.lstHeaderLv2.Add(new HeaderInfo
+            {
+                sTen = "Tổng số",
+            });
+            objHeader.lstHeaderLv2.Add(new HeaderInfo
+            {
+                sTen = "Tổng số",
+            });
+
+            for (var i = 0; i < lstGiaiDoan.Count; i++)
+            {
+                objHeader.lstHeaderLv2.Add(new HeaderInfo
+                {
+                    sTen = lstGiaiDoan[i].sGiaiDoan,
+                });
+                objHeader.lstHeaderLv2.Add(new HeaderInfo
+                {
+                    sTen = lstGiaiDoan[i].sGiaiDoan,
+                });
+            }
+
+            objHeader.lstHeaderLv2.Add(new HeaderInfo
+            {
+                sTen = "Tổng số",
+            });
+            objHeader.lstHeaderLv2.Add(new HeaderInfo
+            {
+                sTen = "Tổng số",
+            });
+
+            for (var i = 0; i < lstGiaiDoan.Count; i++)
+            {
+                objHeader.lstHeaderLv2.Add(new HeaderInfo
+                {
+                    sTen = lstGiaiDoan[i].sGiaiDoan,
+                });
+                objHeader.lstHeaderLv2.Add(new HeaderInfo
+                {
+                    sTen = lstGiaiDoan[i].sGiaiDoan,
+                });
+            }
+
+
+            objHeader.lstHeaderLv2.Add(new HeaderInfo
+            {
+                sTen = "Kinh phí chưa quyết toán",
+            });
+            objHeader.lstHeaderLv2.Add(new HeaderInfo
+            {
+                sTen = "Kinh phí chưa quyết toán",
+            });
+            objHeader.lstHeaderLv2.Add(new HeaderInfo
+            {
+                sTen = "Kế hoạch chưa giải ngân",
+            });
+            #endregion
+            fr.SetValue("dvt", dvt.ToStringDvt());
+            fr.SetValue("To", to);
+            fr.SetValue("iTuNam", iTuNam);
+            fr.SetValue("iDenNam", iDenNam);
+            fr.SetValue("txtTieuDe1", (txtTieuDe1.ToUpper()));
+            fr.SetValue("txtTieuDe2", txtTieuDe2.ToUpper());
+            fr.SetValue("sTenDonViCapTren", sTenDonViCapTren);
+            fr.SetValue("sTenDonViCapDuoi", sTenDonViCapDuoi);
+            fr.SetValue("sDonViTinh", sDonViTinh);
+
+            int columnStart = _columnCountBC1 * (to - 1);
+
+            for (int i = 1; i <= _columnCountBC1; i++)
+            {
+                if (columnStart + i <= objHeader.lstHeaderLv1.Count)
+                {
+                    fr.SetValue(string.Format("HeaderA{0}", i), objHeader.lstHeaderLv1[columnStart + i - 1].sTen);
+                    fr.SetValue(string.Format("HeaderB{0}", i), objHeader.lstHeaderLv2[columnStart + i - 1].sTen);
+                    fr.SetValue(string.Format("HeaderC{0}", i), objHeader.lstHeaderLv3[columnStart + i - 1].sTen);
+                }
+                else
+                {
+                    fr.SetValue(string.Format("HeaderA{0}", i), "");
+                    fr.SetValue(string.Format("HeaderB{0}", i), "");
+                    fr.SetValue(string.Format("HeaderC{0}", i), "");
+                }
+            }
+            foreach (var item in listData)
+            {
+                item.lstData = new List<ThucHienNganSach_GiaiDoan_Model>();
+                item.lstData.Add(new ThucHienNganSach_GiaiDoan_Model() { sGiaiDoan = CommonFunction.DinhDangSo(item.HopDongUSD , 2, false) });
+                item.lstData.Add(new ThucHienNganSach_GiaiDoan_Model() { sGiaiDoan = CommonFunction.DinhDangSo(item.HopDongVND, 0, false) });
+                item.lstData.Add(new ThucHienNganSach_GiaiDoan_Model() { sGiaiDoan = CommonFunction.DinhDangSo(item.NCVTTCP, 2, false) });
+
+                foreach (var giaidoan in item.lstGiaiDoanTTCP)
+                {
+                    item.lstData.Add(new ThucHienNganSach_GiaiDoan_Model() { sGiaiDoan = CommonFunction.DinhDangSo(giaidoan.valueUSD, 2, false) });
+                }
+                item.lstData.Add(new ThucHienNganSach_GiaiDoan_Model() { sGiaiDoan = CommonFunction.DinhDangSo(item.fLuyKeKinhPhiDuocCap_USD, 2, false) });
+                item.lstData.Add(new ThucHienNganSach_GiaiDoan_Model() { sGiaiDoan = CommonFunction.DinhDangSo(item.fLuyKeKinhPhiDuocCap_VND, 0, false) });
+
+                foreach (var giaidoan in item.lstGiaiDoanKinhPhiDuocCap)
+                {
+                    item.lstData.Add(new ThucHienNganSach_GiaiDoan_Model() { sGiaiDoan = CommonFunction.DinhDangSo(giaidoan.valueUSD, 2, false) });
+                    item.lstData.Add(new ThucHienNganSach_GiaiDoan_Model() { sGiaiDoan = CommonFunction.DinhDangSo(giaidoan.valueVND, 0, false) });
+                }
+
+                item.lstData.Add(new ThucHienNganSach_GiaiDoan_Model() { sGiaiDoan = CommonFunction.DinhDangSo(item.fDeNghiQTNamNay_USD, 2, false) });
+                item.lstData.Add(new ThucHienNganSach_GiaiDoan_Model() { sGiaiDoan = CommonFunction.DinhDangSo(item.fDeNghiQTNamNay_VND, 0, false) });
+
+                foreach (var giaidoan in item.lstGiaiDoanKinhPhiDaGiaiNgan)
+                {
+                    item.lstData.Add(new ThucHienNganSach_GiaiDoan_Model() { sGiaiDoan = CommonFunction.DinhDangSo(giaidoan.valueUSD, 2, false) });
+                    item.lstData.Add(new ThucHienNganSach_GiaiDoan_Model() { sGiaiDoan = CommonFunction.DinhDangSo(giaidoan.valueVND, 0, false) });
+                }
+
+                item.lstData.Add(new ThucHienNganSach_GiaiDoan_Model() { sGiaiDoan = CommonFunction.DinhDangSo(item.KinhPhiChuaQuyetToanUSD, 2, false) });
+                item.lstData.Add(new ThucHienNganSach_GiaiDoan_Model() { sGiaiDoan = CommonFunction.DinhDangSo(item.KinhPhiChuaQuyetToanVND, 0, false) });
+                item.lstData.Add(new ThucHienNganSach_GiaiDoan_Model() { sGiaiDoan = CommonFunction.DinhDangSo(item.KeHoachGiaiNgan, 2, false) });
+
+                item.lstData = item.lstData.Skip(columnStart).Take(_columnCountBC1).ToList();
+
+            }
+
+            listColumn = listColumn.Skip(columnStart).Take(_columnCountBC1).ToList();
             fr.AddTable<CPNHThucHienNganSach_Model>("dt", listData);
             fr.AddTable<ThucHienNganSach_GiaiDoan_Model>("listColumn", listColumn);
-            fr.AddTable<ThucHienNganSach_GiaiDoan_Model>("lstGiaiDoan", lstGiaiDoan);
-            fr.AddTable<ThucHienNganSach_GiaiDoan_Model>("lstGiaiDoan2", lstGiaiDoan);
-            fr.AddTable<ThucHienNganSach_GiaiDoan_Model>("lstGiaiDoan3", lstGiaiDoan);
             fr.UseChuKy(Username)
             .UseChuKyForController(sControlName)
             .UseForm(this).Run(Result);
 
             if (to == 1)
             {
-                var countColumn = 5 + lstGiaiDoan.Count() + (lstGiaiDoan.Count() * 2);
-                Result.MergeCells(1, 3, 1, 2 + countColumn);
-                Result.MergeCells(2, 3, 2, 2 + countColumn);
-                Result.MergeCells(3, 3, 3, 2 + countColumn);
-                Result.MergeCells(3, 3, 3, 2 + countColumn);
-                Result.MergeCells(5, 3, 5, 2 + countColumn);
-                var col1 = 5 + lstGiaiDoan.Count();
-                var col2 = col1 + ((lstGiaiDoan.Count() + 1) * 2);
-                Result.MergeCells(6, 5, 6, col1);
-                Result.MergeCells(6, col1 + 1, 6, col1 + ((lstGiaiDoan.Count() + 1) * 2));
-                //tạo border format
-                var b = Result.GetDefaultFormat;
-                //b.Borders.Left.Style = TFlxBorderStyle.Thin;
-                //b.Borders.Right.Style = TFlxBorderStyle.Thin;
-                //b.Borders.Top.Style = TFlxBorderStyle.Thin;
-                //b.Borders.Bottom.Style = TFlxBorderStyle.Thin;
-                var ApplyFormat = new TFlxApplyFormat();
-                ApplyFormat.SetAllMembers(false);
-                //ApplyFormat.Borders.SetAllMembers(true);
-                TCellAddress Cell = null;
-                //tìm dòng cuối cùng của bảng
-                Cell = Result.Find("Cộng", null, Cell, false, true, true, false);
-                //set border cho bảng
-                Result.SetCellFormat(6, 1, 9 + listData.Count(), 7 + lstGiaiDoan.Count() * 3, b, ApplyFormat, false);
+                Result.MergeCells(6, 4, 7, 5);
+
             }
-            else if (to == 2)
+            if (to == ResultTo)
             {
-                var countColumn = 5 + (lstGiaiDoan.Count() * 2);
-                Result.MergeCells(1, 3, 1, 2 + countColumn);
-                Result.MergeCells(2, 3, 2, 2 + countColumn);
-                Result.MergeCells(3, 3, 3, 2 + countColumn);
-                Result.MergeCells(3, 3, 3, 2 + countColumn);
-                Result.MergeCells(5, 3, 5, 2 + countColumn);
-                var col1 = 2 + ((lstGiaiDoan.Count() + 1) * 2);
-                Result.MergeCells(6, 3, 6, col1);
-                //tạo border format
-                var b = Result.GetDefaultFormat;
-                b.Borders.Left.Style = TFlxBorderStyle.Thin;
-                b.Borders.Right.Style = TFlxBorderStyle.Thin;
-                b.Borders.Top.Style = TFlxBorderStyle.Thin;
-                b.Borders.Bottom.Style = TFlxBorderStyle.Thin;
-                var ApplyFormat = new TFlxApplyFormat();
-                ApplyFormat.SetAllMembers(false);
-                //ApplyFormat.Borders.SetAllMembers(true);
-                TCellAddress Cell = null;
-                //tìm dòng cuối cùng của bảng
-                Cell = Result.Find("Cộng", null, Cell, false, true, true, false);
-                //set border cho bảng
-                Result.SetCellFormat(6, 1, 9 + listData.Count(), 7 + lstGiaiDoan.Count() * 3, b, ApplyFormat, false);
+                Result.MergeCells(6, countColumn - _columnCountBC1 * (to - 1) + 3, 7, countColumn - _columnCountBC1 * (to - 1) + 3);
+                if (((countColumn - 4) / _columnCountBC1) + 1 == to)
+                {
+                    Result.MergeCells(6, countColumn - _columnCountBC1 * (to - 1) + 1, 7, countColumn - _columnCountBC1 * (to - 1) + 2);
+                }
+                else if (((countColumn - 3) / _columnCountBC1) + 1 == to)
+                {
+                    Result.MergeCells(6, countColumn - _columnCountBC1 * (to - 1) + 1, 7, countColumn - _columnCountBC1 * (to - 1) + 1);
+                    Result.MergeCells(6, countColumn - _columnCountBC1 * (to - 1) + 2, 7, countColumn - _columnCountBC1 * (to - 1) + 2);
+                }
             }
+
+            Result.MergeH(6, 4, 18);
+            Result.MergeH(7, 4, 18);
+
+            Result.MergeC(6, 5, 6, 18);
+
+            //tạo border format
+            var b = Result.GetDefaultFormat;
+
+            var ApplyFormat = new TFlxApplyFormat();
+            ApplyFormat.SetAllMembers(false);
+            //ApplyFormat.Borders.SetAllMembers(true);
+            TCellAddress Cell = null;
+            //tìm dòng cuối cùng của bảng
+            Cell = Result.Find("Cộng", null, Cell, false, true, true, false);
+            //set border cho bảng
+            Result.SetCellFormat(6, 1, 9 + listData.Count(), 7 + lstGiaiDoan.Count() * 3, b, ApplyFormat, false);
 
             return Result;
         }

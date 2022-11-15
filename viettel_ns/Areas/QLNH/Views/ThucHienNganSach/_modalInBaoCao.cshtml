@@ -87,18 +87,88 @@
     </div>
     @if (ViewBag.tabTable == 2)
     {
-        <div class="form-group row">
-            <div class="col-sm-6">
-                <div>
-                    <input type="checkbox" id="chkInToMot" autocomplete="off" /> <label for="chkInMotTo">  In tờ một</label>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div>
-                    <input type="checkbox" id="chkInToHai" autocomplete="off" /> <label for="chkInMotTo">  In tờ hai</label>
-                </div>
+<div class="form-group row">
+    @if (ViewBag.iTo >= 1)
+    {
+        <div class="col-sm-6">
+            <div>
+                <input type="checkbox" value="1" data-value="1" data-group="To" data-text="Tờ 1" check-group="To" id="To-1" autocomplete="off" onchange="checkItem('To','1', this)"><label for="chkInMotTo">  In tờ một</label>
             </div>
         </div>
+    }
+    @if (ViewBag.iTo >= 2)
+    {
+        <div class="col-sm-6">
+            <div>
+                <input type="checkbox" value="2" data-value="2" data-group="To" data-text="Tờ 2" check-group="To" id="To-2" autocomplete="off" onchange="checkItem('To','2', this)"><label for="chkInMotTo">  In tờ hai</label>
+            </div>
+        </div>
+    }
+    @if (ViewBag.iTo >= 3)
+    {
+        <div class="col-sm-6">
+            <div>
+                <input type="checkbox" value="3" data-value="3" data-group="To" data-text="Tờ 3" check-group="To" id="To-3" autocomplete="off" onchange="checkItem('To','3', this)"><label for="chkInMotTo">  In tờ ba</label>
+            </div>
+        </div>
+    }
+    @if (ViewBag.iTo >= 4)
+    {
+        <div class="col-sm-6">
+            <div>
+                <input type="checkbox" value="4" data-value="4" data-group="To" data-text="Tờ 4" check-group="To" id="To-4" autocomplete="off" onchange="checkItem('To','4', this)"><label for="chkInMotTo">  In tờ bốn</label>
+            </div>
+        </div>
+    }
+    @if (ViewBag.iTo >= 5)
+    {
+        <div class="col-sm-6">
+            <div>
+                <input type="checkbox" value="5" data-value="5" data-group="To" data-text="Tờ 5" check-group="To" id="To-5" autocomplete="off" onchange="checkItem('To','5', this)"><label for="chkInMotTo">  In tờ năm</label>
+            </div>
+        </div>
+    }
+    @if (ViewBag.iTo >= 6)
+    {
+        <div class="col-sm-6">
+            <div>
+                <input type="checkbox" value="6" data-value="6" data-group="To" data-text="Tờ 6" check-group="To" id="To-6" autocomplete="off" onchange="checkItem('To','6', this)"><label for="chkInMotTo">  In tờ sáu</label>
+            </div>
+        </div>
+    }
+    @if (ViewBag.iTo >= 7)
+    {
+        <div class="col-sm-6">
+            <div>
+                <input type="checkbox" value="7" data-value="7" data-group="To" data-text="Tờ 7" check-group="To" id="To-7" autocomplete="off" onchange="checkItem('To','7', this)"><label for="chkInMotTo">  In tờ bảy</label>
+            </div>
+        </div>
+    }
+    @if (ViewBag.iTo >= 8)
+    {
+        <div class="col-sm-6">
+            <div>
+                <input type="checkbox" value="8" data-value="8" data-group="To" data-text="Tờ 8" check-group="To" id="To-8" autocomplete="off" onchange="checkItem('To','8', this)"><label for="chkInMotTo">  In tờ tám</label>
+            </div>
+        </div>
+    }
+    @if (ViewBag.iTo >= 9)
+    {
+        <div class="col-sm-6">
+            <div>
+                <input type="checkbox" value="9" data-value="9" data-group="To" data-text="Tờ 9" check-group="To" id="To-9" autocomplete="off" onchange="checkItem('To','9', this)"><label for="chkInMotTo">  In tờ chín</label>
+            </div>
+        </div>
+    }
+    @if (ViewBag.iTo >= 10)
+    {
+        <div class="col-sm-6">
+            <div>
+                <input type="checkbox" value="10" data-value="10" data-group="To" data-text="Tờ 10" check-group="To" id="To-10" autocomplete="off" onchange="checkItem('To','10', this)"><label for="chkInMotTo">  In tờ mười</label>
+            </div>
+        </div>
+    }
+</div>
     }
 
             @Html.Partial("_ui_chuky")

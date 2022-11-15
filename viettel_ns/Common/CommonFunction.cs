@@ -28,7 +28,7 @@ namespace VIETTEL.Common
                 if (lstDonViExclude != null && !lstDonViExclude.Contains(Convert.ToString(dr["iCapNS"]))) continue;
                 lstCbx.Add(new SelectListItem()
                 {
-                    Text = Convert.ToString(dr["sTen"]),
+                    Text = Convert.ToString(dr["iID_MaDonVi"]) + " - " + Convert.ToString(dr["sTen"]),
                     Value = Convert.ToString(dr["iID_Ma"]) + "|" + Convert.ToString(dr["iID_MaDonVi"])
                 });
             }   
@@ -68,7 +68,8 @@ namespace VIETTEL.Common
                 {
                     sTenLoaiDonVi = Convert.ToString(dr["sTen"]),
                     iID_MaDonVi = Convert.ToString(dr["iID_MaDonVi"]),
-                    iID_Ma = Guid.Parse(Convert.ToString(dr["iID_Ma"]))
+                    iID_Ma = Guid.Parse(Convert.ToString(dr["iID_Ma"])),
+                    sMoTa = Convert.ToString(dr["iID_MaDonVi"]) + " - " + Convert.ToString(dr["sTen"]),
                 });
             }
             return results;
@@ -122,7 +123,7 @@ namespace VIETTEL.Common
         {
             string result = "";
             bool flagSign = false;
-            string text = Convert.ToString(So);
+            string text = Convert.ToString(So, new CultureInfo("en-US"));
             if (double.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out _))
             {
                 double num = Convert.ToDouble(text);

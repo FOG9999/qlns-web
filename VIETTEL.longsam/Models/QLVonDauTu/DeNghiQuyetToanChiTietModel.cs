@@ -50,5 +50,35 @@ namespace Viettel.Models.QLVonDauTu
 
         public string MaHangMuc { get; set; }
         public bool IsHangCha { get; set; }
+        public Guid? iID_ChiPhi { get; set; }
+        public double? GiaTriPheDuyetQDDT { get; set; }
+        public string sGiaTriKiemToan
+        {
+            get 
+            {
+                return this.FGiaTriKiemToan.HasValue ? this.FGiaTriKiemToan.Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "0"; 
+            }
+        }
+        public string sGiaTriDeNghiQuyetToan
+        {
+            get 
+            {
+                return this.fGiaTriDeNghiQuyetToan != 0 ? this.FGiaTriDeNghiQuyetToan.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "0"; 
+            }
+        }
+        public string sGiaTriPheDuyet
+        {
+            get 
+            {
+                return this.GiaTriPheDuyet.HasValue ? this.GiaTriPheDuyet.Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "0";
+            }
+        }
+        public string sGiaTriPheDuyetQDDT
+        {
+            get 
+            {
+                return this.GiaTriPheDuyetQDDT.HasValue ? this.GiaTriPheDuyetQDDT.Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "0";
+            }
+        }
     }
 }

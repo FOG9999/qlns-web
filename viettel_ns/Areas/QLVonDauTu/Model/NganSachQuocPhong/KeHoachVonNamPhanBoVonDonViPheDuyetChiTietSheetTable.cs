@@ -159,7 +159,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 new SheetColumn(columnName: "fTiGiaDonVi", header: "ID tiền tệ", isHidden: true, isReadonly: true ),
                 new SheetColumn(columnName: "fTiGia", header: "Tỷ giá", isHidden: true, isReadonly: true ),
                 new SheetColumn(columnName: "iID_LoaiCongTrinh", header: "ID loại công trình", isHidden: true, isReadonly: true ),
-                new SheetColumn(columnName: "iId_Parent", header: "ID parent", isHidden: true, isReadonly: true ),
+                new SheetColumn(columnName: "iID_Parent", header: "ID parent", isHidden: true, isReadonly: true ),
                 new SheetColumn(columnName: "bActive", header: "Active", isHidden: true, isReadonly: true ),
                 new SheetColumn(columnName: "ILoaiDuAn", header: "ID loại dự án", isHidden: true, isReadonly: true ),
                 new SheetColumn(columnName: "iID_DuAnID", header: "Id dự án", isHidden: true, isReadonly: true),

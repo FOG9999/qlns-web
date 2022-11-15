@@ -670,7 +670,7 @@ function saveHangMuc() {
     var objChiPhi = arrChiPhiSave.filter(x => x.iID_DuAn_ChiPhi == chiPhiDuAnId)[0];
     var result = 0;
 
-    var arrHMParent = arrHangMucSave.filter(function (x) { return (x.iID_ParentID == "" || x.iID_ParentID == null) && x.iID_DuAn_ChiPhi == chiPhiDuAnId });
+    var arrHMParent = arrHangMucSave.filter(function (x) { return (x.iID_ParentID == "" || x.iID_ParentID == null) && x.iID_DuAn_ChiPhi == chiPhiDuAnId && !x.isDelete });
     if (arrHasValue(arrHMParent)) {
         arrHMParent.forEach(x => {
             if (x.fTienPheDuyet != null || x.fTienPheDuyet != "") {
@@ -693,7 +693,7 @@ function CalculateTienConLaiHangMuc() {
     //var result = giaTriChiPhi;
     var result = 0;
 
-    var arrHMParent = arrHangMucTemp.filter(function (x) { return (x.iID_ParentID == "" || x.iID_ParentID == null) && x.iID_DuAn_ChiPhi == chiPhiDuAnId });
+    var arrHMParent = arrHangMucTemp.filter(function (x) { return (x.iID_ParentID == "" || x.iID_ParentID == null) && x.iID_DuAn_ChiPhi == chiPhiDuAnId && !x.isDelete });
     if (arrHasValue(arrHMParent)) {
         arrHMParent.forEach(x => {
             if (x.fTienPheDuyet != null || x.fTienPheDuyet != "") {
@@ -729,7 +729,7 @@ function UpdateHangMuc(nutCreateHangMuc) {
 
     arrHangMucTemp.push(objHangMuc);    
 
-    CalculateDataHangMucByChiPhi(objHangMuc.iID_QDDauTu_DM_HangMucID);
+    CalculateDataHangMucByChiPhi(objHangMuc.id);
     CalculateTienConLaiHangMuc();
 
 }
@@ -834,11 +834,9 @@ function ThemMoiHangMuc() {
     dongMoi += "<td><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh() + "</div></td>";
     dongMoi += "<td class='r_HanMucDauTu' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control txtHanMucDauTu' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' /></td>";
     dongMoi += "<td align='center' class='width-200'>";
-    if (arrHangMucSave.filter(x => x.iID_DuAn_ChiPhi == iIdDuAnChiPhi).length == 0) {
-        dongMoi += "<button class='btn-add-child btn-icon' type = 'button' onclick = 'ThemMoiHangMucCon(this)' > " +
+    dongMoi += "<button class='btn-add-child btn-icon' type = 'button' onclick = 'ThemMoiHangMucCon(this)' > " +
             "<i class='fa fa-plus fa-lg' aria-hidden='true'></i>" +
             "</button> ";
-    }
     dongMoi += "<button class='btn-delete btn-icon' type='button' onclick='XoaDong(this, \"" + TBL_HANG_MUC_CHINH + "\")'>" +
         "<i class='fa fa-trash-o fa-lg' aria-hidden='true'></i>" +
         "</button></td>";
@@ -925,7 +923,7 @@ function TaoMaOrderHangMucMoi(parentId) {
     var iIdDuAnChiPhi = $("#txtIIdDuAnChiPhi").val();
     var sMaOrder = "";
     var indexRow = -1;
-    var arrHangMucOrder = arrHangMucTemp.filter(x => x.iID_DuAn_ChiPhi == "" || x.iID_DuAn_ChiPhi == null || x.iID_DuAn_ChiPhi == iIdDuAnChiPhi).sort(compareSMaOrder);
+    var arrHangMucOrder = arrHangMucTemp.filter(x => (x.iID_DuAn_ChiPhi == "" || x.iID_DuAn_ChiPhi == null || x.iID_DuAn_ChiPhi == iIdDuAnChiPhi) && !x.isDelete).sort(compareSMaOrder);
     if (parentId == "" || parentId == null) {
         var arrHangMucParent = arrHangMucOrder.filter(x => x.iID_ParentID == null || x.iID_ParentID == "");
         var sMaOrderLast = "0";
@@ -971,7 +969,7 @@ function CalculateDataHangMucByChiPhi(itemId) {
 
     // update đệ quy lên hạng mục bậc cao nhất
     if (objParentItem.iID_ParentID != "" && objParentItem.iID_ParentID != null) {
-        var sameParentObjParentItems = arrHangMucTemp.filter(function (x) { return x.iID_ParentID == objParentItem.iID_ParentID && x.iID_ParentID != "" });
+        var sameParentObjParentItems = arrHangMucTemp.filter(function (x) { return x.iID_ParentID == objParentItem.iID_ParentID && x.iID_ParentID != "" && !x.isDelete });
         var grandpa = arrHangMucTemp.find(x => x.iID_QDDauTu_DM_HangMucID == objParentItem.iID_ParentID);
         CalculateTotalParentHangMuc(grandpa, sameParentObjParentItems);
     }

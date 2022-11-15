@@ -92,5 +92,47 @@
         $("#iID_DonViQuanLyIDModal").on("change", function () {
             OpenModal($("#iID_KHVPBVDonViPheDuyetIDModal").val(), $("#iID_DonViQuanLyIDModal").val());
         });
+
+        $("#iID_DonViQuanLyID").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#iLoai").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+
+        var isShowing = false;
+        $('.dateFormat').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: 'vi',
+            todayHighlight: true,
+            format: "dd/mm/yyyy"
+        }).on('hide', () => {
+            isShowing = false;
+        }).on('show', () => {
+            isShowing = true;
+        });
+
+        $("#dNgayQuyetDinh").keydown(function (event) {
+            ValidateInputKeydown(event, this, 3);
+        }).blur(function (event) {
+            setTimeout(() => {
+                if (!isShowing) ValidateInputFocusOut(event, this, 3);
+            }, 0);
+        });
+
+        $("#iGiaiDoanTu").keydown(function (event) {
+            ValidateInputKeydown(event, this, 1);
+        }).blur(function (event) {
+            ValidateInputFocusOut(event, this, 6);
+        });
+
+        $("#iGiaiDoanDen").keydown(function (event) {
+            ValidateInputKeydown(event, this, 1);
+        }).blur(function (event) {
+            ValidateInputFocusOut(event, this, 6);
+        });
+
+        $("#txtsSoQuyetDinh").keyup(function (event) {
+            ValidateMaxLength(this, 100);
+        });
     });
 </script>

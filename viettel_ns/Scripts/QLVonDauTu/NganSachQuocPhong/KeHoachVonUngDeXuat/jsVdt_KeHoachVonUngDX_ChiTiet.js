@@ -21,6 +21,29 @@ $(document).ready(function () {
             document.getElementById("FileUpload").value = "";
         };
     });
+
+    var isShowing = false;
+    $('.date').datepicker({
+        todayBtn: "linked",
+        keyboardNavigation: false,
+        forceParse: false,
+        autoclose: true,
+        language: 'vi',
+        todayHighlight: true,
+        format: "dd/mm/yyyy"
+    }).on('hide', () => {
+        isShowing = false;
+    }).on('show', () => {
+        isShowing = true;
+    });
+
+    $("#dNgayDeNghi").keydown(function (event) {
+        ValidateInputKeydown(event, this, 3);
+    }).blur(function (event) {
+        setTimeout(() => {
+            if (!isShowing) ValidateInputFocusOut(event, this, 3);
+        }, 0);
+    });
 });
 
 function HiddenLabelTongHop() {

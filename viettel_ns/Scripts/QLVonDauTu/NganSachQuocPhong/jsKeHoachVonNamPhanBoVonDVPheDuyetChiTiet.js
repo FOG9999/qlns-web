@@ -59,6 +59,7 @@ function ValidateBeforeSave() {
         object.iLoaiDuAn = Bang_arrGiaTri[i][Bang_arrCSMaCot["iLoaiDuAn"]];
         object.sGhiChu = Bang_arrGiaTri[i][Bang_arrCSMaCot["sGhiChu"]];
         object.iID_DonViQuanLyID = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_DonViQuanLyID"]];
+        object.fGiaTriDeNghi = Bang_arrGiaTri[i][Bang_arrCSMaCot["fGiaTriDeNghi"]];
 
         listItem.push(object);
     }

@@ -613,7 +613,8 @@ function GetChiPhiGoiThauDetail(iIdGoiThau) {
     }
 
     lstNguonVon.forEach(function (item) {
-        // nếu chi phí này k được check cho gói thầu hiện tại và có giá trị còn lại <= 0 => ẩn đi
+        // nếu chi phí này đã được check cho gói thầu khác và có giá trị còn lại <= 0 => ẩn đi
+        // nếu chưa được check cho gói thâu nào thì cứ hiện
         let currGiaTriConLai = getChiPhiForCurrentGoiThau(iIdGoiThau, item);        
         var parentIndex = arrChiPhi.map(ele => {
             if (ele.iID_ChiPhi) return ele.iID_ChiPhi;
@@ -626,14 +627,24 @@ function GetChiPhiGoiThauDetail(iIdGoiThau) {
             else return ele.iID_ChiPhiID;
         }).indexOf(item.iID_ChiPhiID);
 
-        if ((childIndex >= 0 || parentIndex >= 0) || currGiaTriConLai >= 0) {
+        // danh sách các chi phí đã được check
+        var lstAllGoiThauChiPhiChecked = [];
+        for (var gtID in lstChungTuGoiThau) {
+            var lstChiPhiIDs = lstChungTuGoiThau[gtID][1].map(x => x.iID_ChiPhiID);
+            lstAllGoiThauChiPhiChecked.push(...lstChiPhiIDs);
+        }
+
+        // 3 điều kiện hiển thị:
+        // nếu chi phí này được check cho gói thầu hiện tại, hoặc chi phí cha được check cho gói thầu hiện tại
+        // nếu chi phí này có giá trị phê duyệt và chưa được assign hết tiền
+        // nếu chi phí này chưa được assign cho gói thầu nào
+        if ((childIndex >= 0 || parentIndex >= 0) || (currGiaTriConLai > 0 && item.fGiaTriPheDuyet > 0) || lstAllGoiThauChiPhiChecked.indexOf(item.iID_ChiPhiID) < 0) {
             sItem.push("<tr data-id='" + item.iID_ChiPhiID + "' data-parent='" + item.iID_ParentId + "'>");
             sItem.push("<td class='width-50 text-center'><input type='checkbox' class='ck_ChiPhi' value='" + item.iID_ChiPhiID +
                 (childIndex >= 0 || parentIndex >= 0 ? "\' checked " : "\'") + " onClick='CheckChiPhi(this)'></td>");
             sItem.push("<td class='sNoiDung'>" + item.sNoiDung + "</td>");
             sItem.push("<td class='fGiaTriPheDuyet text-right'>" + FormatNumber(item.fGiaTriPheDuyet) + "</td>");
             // update ke hoach lua chon nha thau
-            // if (iIdKHLuaChonNhaThau) {
             if (childIndex < 0 && parentIndex < 0)
                 sItem.push(
                     "<td><input type='text' disabled='disabled' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' class='fGiaTriGoiThau form-control' style='text-align:right' value='0'/></td>");
@@ -645,16 +656,6 @@ function GetChiPhiGoiThauDetail(iIdGoiThau) {
                         : (arrChiPhi[parentIndex].fGiaTriGoiThau ? arrChiPhi[parentIndex].fGiaTriGoiThau : arrChiPhi[parentIndex].fTienGoiThau)) +
                     "'/></td>");
             }
-            //}
-            // add new ke hoach lua chon nha thau, không thể sửa ô input giá trị chi phí, ô này sẽ có giá trị bằng tổng các hạng mục con được chọn khi mở chi tiết hạng mục chi phí hiện tại, ở button cuối hàng
-            /*
-            else {
-                sItem.push(
-                    "<td><input type='text' disabled onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' class='fGiaTriGoiThau form-control' style='text-align:right' value='" +
-                    (0) +
-                    "'/></td>");
-            }
-            */
             sItem.push("<td class='fGiaTriConLai text-right'>" + FormatNumber(currGiaTriConLai) + "</td>");
             sItem.push("<td class='width-50'><button class='btn-primary' onclick='GetHangMucGoiThauDetail(\"" + iIdGoiThau + "\", \"" + item.iID_ChiPhiID + "\")' " + (childIndex >= 0 || parentIndex >= 0 ? " " : " disabled") + "><i class='fa fa-pencil-square-o fa-lg' aria-hidden='true')'></i></button></td>");
             sItem.push("</tr>");
@@ -662,7 +663,7 @@ function GetChiPhiGoiThauDetail(iIdGoiThau) {
     });
     $("#tblDanhSachChiPhiModal tbody").html(sItem.join(""));
 
-    // update itemsChungTuGoiThau trong trường hợp update
+    // update itemsChungTuGoiThau trong trường hợp sửa
     if (iIdKHLuaChonNhaThau) {
         // update chi phí
         $("#tblDanhSachChiPhiModal .fGiaTriGoiThau").each(function (index, item) {
@@ -1022,7 +1023,9 @@ function CheckHangMuc(item) {
     } else {
         $(rowChiPhi).find(".fGiaTriGoiThau").prop("disabled", true);
     }
-    $(rowChiPhi).find(".fGiaTriConLai").text(FormatNumber(fGiaTriPheDuyet - fTong));
+    var lstChiPhi = $.map(itemsChungTu[1], function (n) { return n.iID_NguonVonID == 0 && n.iID_HangMucID == null ? n : null });
+    var currChiPhi = lstChiPhi.filter(cp => cp.iID_ChiPhiID === $($(rowChiPhi)[0]).data('id'))[0];
+    $(rowChiPhi).find(".fGiaTriConLai").text(FormatNumber(getChiPhiForCurrentGoiThau($("#iIdGoiThau").val(), currChiPhi) - fTong));
     //CheckChiPhi(rowChiPhi.find(".ck_ChiPhi")[0]);
 
     itemsChungTuGoiThau[2] = $.map(itemsChungTuGoiThau[2], function (n) { return n.iID_ChiPhiID == $("#iIdChiPhiChoose").val() ? null : n });
@@ -1095,6 +1098,18 @@ function RecursiveCheckChildHangMuc(item, bIsCheck) {
     return fSumTong;
 }
 
+// lưu lại giá trị các chi phí đã chọn
+function saveFGiaTriGoiThau_AllCheckedChiPhi(goithauID) {
+    $('#tblDanhSachChiPhiModal tbody ').find(".ck_ChiPhi:checkbox:checked").each((index, cp) => {
+        let lstCP = itemsChungTuGoiThau[1];
+        for (let i = 0; i < lstCP.length; i++) {
+            if (lstCP[i].iID_ChiPhiID == $(cp).val()) {
+                lstCP[i].fGiaTriGoiThau = parseInt(UnFormatNumber($(cp).closest('tr').find('input.fGiaTriGoiThau').val()));
+            }
+        }
+    });
+}
+
 //------ Event Window
 function SaveDetailGoiThau() {
     var sConLai = $(".rConLai").text().replaceAll(".", "");
@@ -1120,6 +1135,7 @@ function SaveDetailGoiThau() {
         alert("Chưa chọn thông tin chi tiết gói thầu !");
         return;
     }
+    saveFGiaTriGoiThau_AllCheckedChiPhi($("#iIdGoiThau").val());
     lstChungTuGoiThau[$("#iIdGoiThau").val()] = [...itemsChungTuGoiThau];
     $("#tblGoiThau [data-id='" + $("#iIdGoiThau").val() + "'] .fGiaTri").val($(".rTongNguonVon").text());
     if ($('.ck_NguonVon:checked').length > 0) {

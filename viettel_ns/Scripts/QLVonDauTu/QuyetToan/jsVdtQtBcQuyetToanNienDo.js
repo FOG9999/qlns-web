@@ -17,6 +17,7 @@ $(document).ready(function ($) {
     LoadDataThanhToan();
     LoadDataDonvi();
     LoadDataNguonVon();
+    RenderGridView();
 });
 
 function ChangePage(iCurrentPage = 1) {
@@ -738,7 +739,7 @@ function GetDonViQuanLy() {
         success: function (data) {
             if (data.results != null) {
                 data.results.forEach(function (item) {
-                    $("#drpDonViQuanLy").append("<option data-id='" + item.iID_Ma + "' value='" + item.iID_MaDonVi + "' >" + item.sTenLoaiDonVi + "</option>")
+                    $("#drpDonViQuanLy").append("<option data-id='" + item.iID_Ma + "' value='" + item.iID_MaDonVi + "' >" + item.sMoTa + "</option>")
                 });
                 var iIdMaDonVi = $("#iIdMaDonVi").val();
                 if (iIdMaDonVi != null && iIdMaDonVi != "") {

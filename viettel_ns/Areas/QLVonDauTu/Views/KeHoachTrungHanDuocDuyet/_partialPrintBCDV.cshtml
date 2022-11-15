@@ -11,6 +11,17 @@
             top: 0;
             z-index: 1;
         }
+
+    #search {
+        width: 100%; /* Full-width */
+        font-size: 14px; /* Increase font-size */
+        padding: 6px 15px 6px 20px; /* Add some padding */
+        border: 1px solid #ddd; /* Add a grey border */
+        margin-bottom: 12px; /* Add some space below the input */
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
 </style>
 
 @*Thông tin nội dung*@
@@ -47,11 +58,12 @@
             <input type="number" id="iGiaiDoanDen" name="iGiaiDoanDen" class="form-control" value="@Model.iGiaiDoanDen" maxlength="50" disabled/>
         </div>
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-4 tableFixHead" style="height: 430px;">
+        <input type="text" id="search" onkeyup="handleSearch()" placeholder="Tìm kiếm đơn vị thực hiện dự án">
         <table class="table table-bordered" id="tblListDonViThucHienDuAnDd">
             <thead>
-            <th><input type="checkbox" name="cbAll_DVTHDA" class="cbAll_DVTHDA" /></th>
-            <th width="90%">Đơn vị thực hiện dự án</th>
+            <th style="position: sticky; top: 40px; z-index: 1;"><input type="checkbox" name="cbAll_DVTHDA" class="cbAll_DVTHDA" /></th>
+            <th width="90%" style="position: sticky; top: 40px; z-index: 1;">Đơn vị thực hiện dự án</th>
             </thead>
             <tbody>
                 @{

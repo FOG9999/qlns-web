@@ -112,6 +112,7 @@ namespace Viettel.Models.QLVonDauTu
         public string sTenChiPhi { get; set; }
         public double? fTruocDieuChinh { get; set; }
         public int? iLoaiDieuChinh { get; set; }
+        public Guid? iID_ChiPhi { get; set; }
     }
 
     public class VDTQuyetDinhDauTuNguonVonModel : VDT_DA_QDDauTu_NguonVon

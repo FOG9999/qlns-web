@@ -417,6 +417,26 @@ namespace VIETTEL.Models
             dt.Dispose();
             return vR;
         }
+
+        /// <summary>
+        /// Lấy tên loại ngân sách
+        /// </summary>
+        /// <param name="sLNS"></param>
+        /// <returns></returns>
+        public static String NS_TenLoaiNganSachUpgrade(String sLNS, DataTable listLnsAll)
+        {
+            String vR = "";
+            for (int i = 0; i < listLnsAll.Rows.Count; i++)
+            {
+                if (Convert.ToString(listLnsAll.Rows[i]["sLNS"]) == sLNS)
+                {
+                    vR = Convert.ToString(listLnsAll.Rows[i]["TenHT"]);
+                    break;
+                }
+            }
+            listLnsAll.Dispose();
+            return vR;
+        }
         /// <summary>
         /// Danh sách nguồn ngân sách
         /// </summary>

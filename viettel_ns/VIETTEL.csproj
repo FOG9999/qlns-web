@@ -650,6 +650,7 @@
     <Content Include="App_Data\sql\QLVonDauTu\PheDuyetDuAn\vdt_get_qddautu_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\PheDuyetDuAn\vdt_pheduyet_get_thongtinduan_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\PheDuyetDuAn\dm_get_all_duan_by_donvi_pheduyetduan.sql" />
+    <Content Include="App_Data\sql\QLVonDauTu\QuyetToan\vdt_get_listchiphi_qddt_by_iddutoan.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\QuyetToan\vdt_check_exist_sochungtu_tddl.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\QuyetToan\vdt_get_dutoan_nguonvon_by_dutoanid.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -4760,6 +4761,7 @@
     <Content Include="ScriptDatabase\StoreChange\proc_vdt_khv_getdatakhvuduocduyet_chitiet.sql" />
     <Content Include="ScriptDatabase\StoreChange\sp_vdt_rpt_tinh_hinh_thuc_hien_du_an.sql" />
     <Content Include="ScriptDatabase\StoreChange\them_sua_cot_trong_bang_KeHoachVonUng_DeXuat_DuocDuyet.sql" />
+    <Content Include="ScriptDatabase\StoreChange\VDT_KHV_PhanBoVon_DonVi_ChiTiet_PheDuyet.sql" />
     <Content Include="Scripts\DanhMuc\jsImPortDMDonViBHXH.js" />
     <Content Include="Scripts\DanhMuc\jsDMLoaiCongTrinh.js" />
     <Content Include="Scripts\DanhMuc\jsDMNguon.js" />
@@ -6904,6 +6906,11 @@
     <Content Include="Report_ExcelFrom\QLNH\rpt_BaoCaoKetLuanQuyetToan.xlsx" />
     <Content Include="Report_ExcelFrom\QLNH\rpt_ThucHienNganSach_GiaiDoanTo2.xlsx" />
     <Content Include="Report_ExcelFrom\QLNH\rpt_ThucHienNganSach_GiaiDoanTo1.xlsx" />
+    <Content Include="Report_ExcelFrom\NguonNS\rpt_NguonNS_BaoCao1.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report_ExcelFrom\QLNH\rpt_ThucHienNganSach_GiaiDoanTo.xlsx" />
+    <Content Include="Report_ExcelFrom\QLNH\rpt_BaoCaoThucHienNganSach.xlsx" />
     <None Include="Report_ExcelFrom\VonDauTu\rpt_ThongTriQuyetToan.xls" />
     <None Include="Webh.Debug.config">
       <DependentUpon>Webh.config</DependentUpon>

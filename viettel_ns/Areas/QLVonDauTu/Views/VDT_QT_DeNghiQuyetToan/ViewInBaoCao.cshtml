@@ -91,6 +91,7 @@
     @Html.Partial("_SheetScript")
     <script src="~/Scripts/QLVonDauTu/QuyetToan/js_VDT_QT_DeNghiQuyetToan.js"></script>
     <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+    <script src="/Scripts/js/js_vdtWeb.js"></script>
     <script>
         var _paging = {};
 
@@ -99,6 +100,29 @@
             sUrlListView = '@Url.Action("GetListView", "VDT_QT_DeNghiQuyetToan")';
             _paging.CurrentPage = @Model._paging.CurrentPage ;
             _paging.ItemsPerPage = @Model._paging.ItemsPerPage ;
+
+            var isShowing = false;
+            $('.date').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+                format: "dd/mm/yyyy"
+            }).on('hide', () => {
+                isShowing = false;
+            }).on('show', () => {
+                isShowing = true;
+            });
+
+            $("#dNgayChungTu").keydown(function (event) {
+                ValidateInputKeydown(event, this, 3);
+            }).blur(function (event) {
+                setTimeout(() => {
+                    if (!isShowing) ValidateInputFocusOut(event, this, 3);
+                }, 0);
+            });
         });
     </script>
 }

@@ -9646,13 +9646,15 @@ namespace Viettel.Domain.DomainModel
 		public virtual Guid? iId_Parent { get; set; }
 		public virtual bool? bActive { get; set; }
 		public virtual int? ILoaiDuAn { get; set; }
-	}
+        public virtual double? fGiaTriDeNghi { get; set; }
+
+    }
 
     /// <summary>
     /// A class which represents the vw_aspnet_WebPartState_Paths view.
     /// </summary>
-	/*[Table("vw_aspnet_WebPartState_Paths")]*/
-	public partial class vw_aspnet_WebPartState_Paths
+    /*[Table("vw_aspnet_WebPartState_Paths")]*/
+    public partial class vw_aspnet_WebPartState_Paths
 	{
 		public virtual Guid ApplicationId { get; set; }
 		public virtual Guid PathId { get; set; }
@@ -9870,13 +9872,13 @@ namespace Viettel.Domain.DomainModel
 		public virtual Guid? iID_PhanBoGocID { get; set; }
 		public virtual Guid? iID_VonNamDeXuatID { get; set; }
 		public virtual bool? bKhoa { get; set; }
-	}
+    }
 
     /// <summary>
     /// A class which represents the vw_aspnet_WebPartState_User view.
     /// </summary>
-	/*[Table("vw_aspnet_WebPartState_User")]*/
-	public partial class vw_aspnet_WebPartState_User
+    /*[Table("vw_aspnet_WebPartState_User")]*/
+    public partial class vw_aspnet_WebPartState_User
 	{
 		public virtual Guid? PathId { get; set; }
 		public virtual Guid? UserId { get; set; }

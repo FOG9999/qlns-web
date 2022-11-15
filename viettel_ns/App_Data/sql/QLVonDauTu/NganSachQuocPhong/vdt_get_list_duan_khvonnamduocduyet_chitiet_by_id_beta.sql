@@ -1,11 +1,22 @@
 DECLARE @phanBoVonId uniqueidentifier set @phanBoVonId = null
 DECLARE @iIdPhanBoVonDeXuat uniqueidentifier set @iIdPhanBoVonDeXuat = null
 DECLARE @iNamLamViec int
+Declare @EmptyGuid uniqueidentifier
+Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
+
+
 
 --#DECLARE#--
 --#DECLARE#--
+SELECT dx.iID_KeHoachVonNamDeXuatID,dx.fThanhToan, ct.iID_DuAnID  INTO #tmpfThanhToan 
+FROM VDT_KHV_KeHoachVonNam_DeXuat dx
+INNER JOIN VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet ct on ct.iID_KeHoachVonNamDeXuatID = dx.iID_KeHoachVonNamDeXuatID
+WHERE dx.iID_KeHoachVonNamDeXuatID = @iIdPhanBoVonDeXuat 
+
+
+
 select iID_DuAnID, MAX(iID_PhanBoVon_DonVi_PheDuyet_ID) as iID_PhanBoVon_DonVi_PheDuyet_ID, MAX(sTenDuAn) as sTenDuAn, MAX(sLoaiDuAn) as sLoaiDuAn, MAX(sTenLoaiCongTrinh) as sTenLoaiCongTrinh, MAX(iID_LoaiCongTrinh) as iID_LoaiCongTrinh,MIN(iID_DonViQuanLyID) as iID_DonViQuanLyID, MIN(sTenDonViThucHienDuAn) as sTenDonViThucHienDuAn, 
-MAX(fGiaTriPhanBo) as fGiaTriDeNghi,MAX(fGiaTriPhanBo) as fGiaTriPhanBo, MAX(iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID) as iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID, MAX(iID_Parent) as iID_Parent, MAX(sGhiChu) as sGhiChu from
+MAX(fGiaTriDeNghi) as fGiaTriDeNghi,MAX(fGiaTriPhanBo) as fGiaTriPhanBo, MAX(iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID) as iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID, MAX(iID_Parent) as iID_Parent, MAX(sGhiChu) as sGhiChu from
 (
 	select ct.iID_DuAnID, ct.iID_PhanBoVon_DonVi_PheDuyet_ID, da.sTenDuAn, 
 		case 
@@ -17,15 +28,24 @@ MAX(fGiaTriPhanBo) as fGiaTriDeNghi,MAX(fGiaTriPhanBo) as fGiaTriPhanBo, MAX(iID
 	ct.iID_LoaiCongTrinh,
 	dv.iID_Ma as iID_DonViQuanLyID,
 	dv.sTen as sTenDonViThucHienDuAn,
-	ct.fGiaTriPhanBo as fGiaTriDeNghi,
+	ct.fGiaTriDeNghi as fGiaTriDeNghi,
 	ct.fGiaTriPhanBo as fGiaTriPhanBo,
 	ct.Id as iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID,
 	ct.iId_Parent,
 	ct.bActive,
 	ct.sGhiChu 
-	from VDT_KHV_PhanBoVon_DonVi_ChiTiet_PheDuyet as ct left join VDT_DA_DuAn as da on ct.iID_DuAnID = da.iID_DuAnID
-	LEFT JOIN NS_DonVi dv ON dv.iID_MaDonVi = da.iID_MaDonViThucHienDuAnID
-	Where ct.iID_PhanBoVon_DonVi_PheDuyet_ID = @phanBoVonId and ct.iID_LoaiCongTrinh is not null
+	from VDT_KHV_PhanBoVon_DonVi_ChiTiet_PheDuyet as ct 
+	INNER JOIN VDT_KHV_PhanBoVon_DonVi_PheDuyet pd on pd.Id = ct.iID_PhanBoVon_DonVi_PheDuyet_ID
+	INNER JOin VDT_KHV_KeHoachVonNam_DeXuat dx on dx.iID_KeHoachVonNamDeXuatID = pd.iID_VonNamDeXuatID
+	INNER join VDT_DA_DuAn as da on ct.iID_DuAnID = da.iID_DuAnID
+	INNER JOIN NS_DonVi dv ON dv.iID_MaDonVi = da.iID_MaDonViThucHienDuAnID
+	--LEFT JOIN #tmpfThanhToan as tmp on tmp.iID_DuAnID = da.iID_DuAnID
+	
+	Where ct.iID_PhanBoVon_DonVi_PheDuyet_ID = @phanBoVonId 
+	AND ct.iID_LoaiCongTrinh is not null 
+	--AND dx.iID_KeHoachVonNamDeXuatID = @iIdPhanBoVonDeXuat
+
+	--and dv.iNamLamViec_DonVi = 2022
 
     union all
 
@@ -42,7 +62,7 @@ MAX(fGiaTriPhanBo) as fGiaTriDeNghi,MAX(fGiaTriPhanBo) as fGiaTriPhanBo, MAX(iID
 	lct.iID_LoaiCongTrinh,
 	dv.iID_Ma as iID_DonViQuanLyID,
 	dv.sTen as sTenDonViThucHienDuAn,
-	null as fGiaTriDeNghi,
+	tmp.fThanhToan as fGiaTriDeNghi,
 	null as fGiaTriPhanBo,
 	null as iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID,
 	null as iID_Parent,
@@ -52,12 +72,9 @@ from
 	VDT_DA_DuAn da
 	LEFT JOIN NS_DonVi dv ON dv.iID_MaDonVi = da.iID_MaDonViThucHienDuAnID AND dv.iNamLamViec_DonVi = @iNamLamViec
 	LEFT JOIN VDT_DA_DuAn_HangMuc dahm ON da.iID_DuAnID = dahm.iID_DuAnID
-left join
-	VDT_KHV_KeHoach5Nam_ChiTiet kh5nct
-on da.iID_DuAnID = kh5nct.iID_DuAnID
-left join
-	VDT_DM_LoaiCongTrinh lct
-on da.iID_LoaiCongTrinhID = lct.iID_LoaiCongTrinh or dahm.iID_LoaiCongTrinhID = lct.iID_LoaiCongTrinh
+	left join VDT_KHV_KeHoach5Nam_ChiTiet kh5nct on da.iID_DuAnID = kh5nct.iID_DuAnID
+	left join VDT_DM_LoaiCongTrinh lct on da.iID_LoaiCongTrinhID = lct.iID_LoaiCongTrinh or dahm.iID_LoaiCongTrinhID = lct.iID_LoaiCongTrinh
+	CROSS JOIN #tmpfThanhToan as tmp
 where
 	da.iID_DuAnID in (
 		select 
@@ -83,19 +100,22 @@ where
 	ct.iID_LoaiCongTrinh,
 	dv.iID_Ma as iID_DonViQuanLyID,
 	dv.sTen as sTenDonViThucHienDuAn,
-	ct.fGiaTriPhanBo as fGiaTriDeNghi, 
+	ct.fGiaTriDeNghi as fGiaTriDeNghi, 
 	ct.fGiaTriPhanBo, 
 	ct.Id as iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID,
 	ct.iId_Parent,
 	ct.bActive,
 	ct.sGhiChu 
-	from VDT_KHV_PhanBoVon_DonVi_ChiTiet_PheDuyet as ct left join VDT_DA_DuAn as da on ct.iID_DuAnID = da.iID_DuAnID
+	from VDT_KHV_PhanBoVon_DonVi_ChiTiet_PheDuyet as ct 
+	INNER JOIN VDT_KHV_PhanBoVon_DonVi_PheDuyet pd on pd.Id = ct.iID_PhanBoVon_DonVi_PheDuyet_ID
+	INNER JOin VDT_KHV_KeHoachVonNam_DeXuat dx on dx.iID_KeHoachVonNamDeXuatID = pd.iID_VonNamDeXuatID
+	left join VDT_DA_DuAn as da on ct.iID_DuAnID = da.iID_DuAnID
 	LEFT JOIN NS_DonVi dv ON dv.iID_MaDonVi = da.iID_MaDonViThucHienDuAnID
 	left join VDT_DM_LoaiCongTrinh lct on ct.iID_LoaiCongTrinh = lct.iID_LoaiCongTrinh
-	Where ct.iID_PhanBoVon_DonVi_PheDuyet_ID = @phanBoVonId
+	Where ct.iID_PhanBoVon_DonVi_PheDuyet_ID = @phanBoVonId 
+	--AND dx.iID_KeHoachVonNamDeXuatID = @iIdPhanBoVonDeXuat
 
 ) as data
 Group by iID_DuAnID
 
-
-
+drop table #tmpfThanhToan

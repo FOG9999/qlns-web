@@ -31,7 +31,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
         public ActionResult Index()
         {
             ViewBag.ListChuDauTu = _iQLVonDauTuService.LayChuDauTu(PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
-            ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sTen");
+            ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
 
             VDTPheDuyetQuyetToanPagingModel dataQuyetToan = new VDTPheDuyetQuyetToanPagingModel();
             dataQuyetToan._paging.CurrentPage = 1;
@@ -52,8 +52,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
         public ActionResult CreateNew(Guid? id)
         {
             List<NS_DonVi> lstDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
-            lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = Constants.CHON });
-            ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_Ma", "sTen");
+            lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = Constants.CHON });
+            ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_Ma", "sMoTa");
 
             List<VDT_DM_ChiPhi> lstChiPhi = _iQLVonDauTuService.LayChiPhi().ToList();
             lstChiPhi.Insert(0, new VDT_DM_ChiPhi { iID_ChiPhi = Guid.Empty, sTenChiPhi = Constants.CHON });

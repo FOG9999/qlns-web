@@ -148,7 +148,7 @@ function GetDonViQuanLy() {
         success: function (data) {
             if (data.results != null) {
                 data.results.forEach(function (item) {
-                    $("#iID_DonViQuanLyID").append("<option data-id='" + item.iID_Ma + "' value='" + item.iID_MaDonVi + "' >" + item.sTenLoaiDonVi + "</option>")
+                    $("#iID_DonViQuanLyID").append("<option data-id='" + item.iID_Ma + "' value='" + item.iID_MaDonVi + "' >" + item.sMoTa + "</option>")
                 });
             }
         }

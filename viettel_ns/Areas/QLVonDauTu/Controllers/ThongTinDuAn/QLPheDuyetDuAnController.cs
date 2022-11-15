@@ -810,6 +810,12 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                         item.iID_ChiPhi_Parent = listNewIDDuAnChiPhi[item.iID_ChiPhi_Parent.Value];
                     }
 
+                    // update giá trị trước điều chỉnh = giá trị phê duyệt của bản ghi hiện tại
+                    foreach (VDTQuyetDinhDauTuChiPhiCreateModel item in listChiPhi)
+                    {
+                        item.fGiaTriTruocDieuChinh = item.fTienPheDuyet;
+                    }
+
                     // reset iID_QDDauTu_DM_HangMuc
                     Dictionary<Guid, Guid> listNewIDQDDauTuDMHangMuc = new Dictionary<Guid, Guid>();
                     foreach (VDTQuyetDinhDauTuDMHangMucModel item in listHangMuc)

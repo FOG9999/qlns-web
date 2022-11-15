@@ -892,7 +892,7 @@ function Save() {
                     messAlert = "Tạo mới dữ liệu thành công.";
                 alert(messAlert);
                 if ($("#txtIstongHop").val() == 1) isTongHop = true;
-                window.location.href = "/QLVonDauTu/KeHoachVonUngDeXuat/DetailChiTiet?idKHVU=" + result.ID + "&isUpdate=" + !result.isinsert + "&isTongHop=" + isTongHop;
+                window.location.href = "/QLVonDauTu/KeHoachVonUngDeXuat/DetailChiTiet?idKHVU=" + result.ID + "&isUpdate=" + !result.isinsert + "&isTongHop=" + isTongHop ;
                 //if (result.isinsert) {
                 //    window.location.href = "/QLVonDauTu/KeHoachVonUngDeXuat/Update/" + result.ID;
                 //}
