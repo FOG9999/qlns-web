@@ -867,9 +867,10 @@ namespace Viettel.Services
         /// <param name="dHopDongTuNgay">Hợp đồng từ ngày</param>
         /// <param name="dHopDongDenNgay">Hợp đồng đến ngày</param>
         /// <param name="sTenDuAn">Tên dự án</param>
+        /// <param name="sTenHopDong">Tên hợp đồng</param>
         /// <returns></returns>
         IEnumerable<VDT_DA_TT_HopDong_ViewModel> GetAllVDTQuanLyTTHopDong(ref PagingInfo _paging, string sUserLogin, int iNamLamViec, string sSoHopDong = "", double? fTienHopDongTu = null,
-            double? fTienHopDongDen = null, DateTime? dHopDongTuNgay = null, DateTime? dHopDongDenNgay = null, string sTenDuAn = null, string sTenDonVi = null, string sChuDauTu = null);
+            double? fTienHopDongDen = null, DateTime? dHopDongTuNgay = null, DateTime? dHopDongDenNgay = null, string sTenDuAn = null, string sTenDonVi = null, string sChuDauTu = null, string sTenHopDong = "");
 
         /// <summary>
         /// Lấy danh mục loại hợp đồng
@@ -6825,7 +6826,7 @@ namespace Viettel.Services
 
         #region Thông tin dự án - QL thông tin hợp đồng
         public IEnumerable<VDT_DA_TT_HopDong_ViewModel> GetAllVDTQuanLyTTHopDong(ref PagingInfo _paging, string sUserLogin, int iNamLamViec, string sSoHopDong = "", double? fTienHopDongTu = null,
-            double? fTienHopDongDen = null, DateTime? dHopDongTuNgay = null, DateTime? dHopDongDenNgay = null, string sTenDuAn = null, string iID_MaDonVi = null, string sId_CDT = null)
+            double? fTienHopDongDen = null, DateTime? dHopDongTuNgay = null, DateTime? dHopDongDenNgay = null, string sTenDuAn = null, string iID_MaDonVi = null, string sId_CDT = null, string sTenHopDong = "")
         {
             try
             {
@@ -6845,6 +6846,7 @@ namespace Viettel.Services
                     lstParam.Add("CurrentPage", _paging.CurrentPage);
                     lstParam.Add("ItemsPerPage", _paging.ItemsPerPage);
                     lstParam.Add("iToTalItem", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                    lstParam.Add("sTenHopDong", sTenHopDong);
                     var items = conn.Query<VDT_DA_TT_HopDong_ViewModel>("proc_get_all_qltthopdong_paging", lstParam, commandType: CommandType.StoredProcedure);
                     _paging.TotalItems = lstParam.Get<int>("iToTalItem");
                     return items;
@@ -13160,6 +13162,7 @@ namespace Viettel.Services
                         entity.fThuHoiVonUngTruoc = item.fThuHoiVonUngTruoc;
                         entity.fThanhToan = item.fThanhToan;
                         entity.iLoaiDuAn = item.iLoaiDuAn;
+                        entity.iID_DonViID = item.iID_DonViID;
                         conn.Update(entity);
                     }
                     if (listDeleted != null)
@@ -13762,10 +13765,10 @@ namespace Viettel.Services
                 {
                     using (var cmd = new SqlCommand(sql, conn))
                     {
-                        //_filters.ToList().ForEach(x =>
-                        //{
-                        //    cmd.Parameters.AddWithValue($"@{x.Key}", string.IsNullOrWhiteSpace(x.Value) ? x.Value.ToParamString() : $"%{x.Value}%");
-                        //});
+                        _filters.ToList().ForEach(x =>
+                        {
+                            cmd.Parameters.AddWithValue($"@{x.Key}", string.IsNullOrWhiteSpace(x.Value) ? x.Value.ToParamString() : $"%{x.Value}%");
+                        });
                         cmd.Parameters.AddWithValue("@phanBoVonId", Guid.Parse(iIDPhanBoVonID));
                         cmd.Parameters.AddWithValue("@iIdPhanBoVonDeXuat", Guid.Parse(iIdPhanBoVonDeXuat));
                         cmd.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);

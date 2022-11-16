@@ -3890,6 +3890,7 @@ namespace Viettel.Domain.DomainModel
 		public virtual double? fThanhToanDC { get; set; }
 		public virtual int? iLoaiDuAn { get; set; }
 		public virtual Guid? iID_LoaiCongTrinh { get; set; }
+		public virtual Guid? iID_DonViID { get; set; }
 	}
 
     /// <summary>

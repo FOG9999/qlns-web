@@ -40,11 +40,11 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         }
 
         [HttpPost]
-        public ActionResult TimKiem(PagingInfo _paging, string sSoHopDong, double? fTienHopDongTu, double? fTienHopDongDen, DateTime? dHopDongTuNgay, DateTime? dHopDongDenNgay, string sTenDuAn, string sTenDonVi, string sChuDautu)
+        public ActionResult TimKiem(PagingInfo _paging, string sSoHopDong, double? fTienHopDongTu, double? fTienHopDongDen, DateTime? dHopDongTuNgay, DateTime? dHopDongDenNgay, string sTenDuAn, string sTenDonVi, string sChuDautu, string sTenHopDong)
         {
             VDTQuanLyTTHopDongViewModel vm = new VDTQuanLyTTHopDongViewModel();
             vm._paging = _paging;
-            vm.Items = _qLVonDauTuService.GetAllVDTQuanLyTTHopDong(ref vm._paging, Username, PhienLamViec.NamLamViec, sSoHopDong, fTienHopDongTu, fTienHopDongDen, dHopDongTuNgay, dHopDongDenNgay, sTenDuAn, sTenDonVi, sChuDautu);
+            vm.Items = _qLVonDauTuService.GetAllVDTQuanLyTTHopDong(ref vm._paging, Username, PhienLamViec.NamLamViec, sSoHopDong, fTienHopDongTu, fTienHopDongDen, dHopDongTuNgay, dHopDongDenNgay, sTenDuAn, sTenDonVi, sChuDautu, sTenHopDong);
             //Lay danh sach don vi quan ly theo user login
             List<NS_DonVi> lstDonViQL = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
             lstDonViQL.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = Constants.CHON });

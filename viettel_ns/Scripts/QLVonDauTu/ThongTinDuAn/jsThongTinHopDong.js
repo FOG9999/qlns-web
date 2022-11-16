@@ -21,16 +21,17 @@ function ChangePage(iCurrentPage = 1) {
     var sTenDuAn = $("#txtTenDuAn").val();
     var sTenDonVi = $("#sTenDV").val();
     var sChuDauTu = $("#sTenCDT").val();
-    GetListData(sSoHopDong, fTienHopDongTu, fTienHopDongDen, dHopDongTuNgay, dHopDongDenNgay, sTenDuAn, sTenDonVi, sChuDauTu, iCurrentPage);
+    var sTenHopDong = $("#txtTenHopDong").val()??'';
+    GetListData(sSoHopDong, fTienHopDongTu, fTienHopDongDen, dHopDongTuNgay, dHopDongDenNgay, sTenDuAn, sTenDonVi, sChuDauTu, sTenHopDong, iCurrentPage);
 }
 
-function GetListData(sSoHopDong, fTienHopDongTu, fTienHopDongDen, dHopDongTuNgay, dHopDongDenNgay, sTenDuAn, sTenDonVi, sChuDauTu, iCurrentPage) {
+function GetListData(sSoHopDong, fTienHopDongTu, fTienHopDongDen, dHopDongTuNgay, dHopDongDenNgay, sTenDuAn, sTenDonVi, sChuDauTu, sTenHopDong, iCurrentPage) {
     _paging.CurrentPage = iCurrentPage;
     $.ajax({
         type: "POST",
         dataType: "html",
         url: sUrlListView,
-        data: { sSoHopDong: sSoHopDong, fTienHopDongTu: fTienHopDongTu, fTienHopDongDen: fTienHopDongDen, dHopDongTuNgay: dHopDongTuNgay, dHopDongDenNgay: dHopDongDenNgay, sTenDuAn: sTenDuAn, sTenDonVi: sTenDonVi, sChuDauTu: sChuDauTu, _paging: _paging },
+        data: { sSoHopDong: sSoHopDong, fTienHopDongTu: fTienHopDongTu, fTienHopDongDen: fTienHopDongDen, dHopDongTuNgay: dHopDongTuNgay, dHopDongDenNgay: dHopDongDenNgay, sTenDuAn: sTenDuAn, sTenDonVi: sTenDonVi, sChuDauTu: sChuDauTu, sTenHopDong: sTenHopDong, _paging: _paging },
         success: function (data) {
             $("#lstDataView").html(data);
             $("#txtSoHopDong").val(sSoHopDong);
@@ -41,6 +42,7 @@ function GetListData(sSoHopDong, fTienHopDongTu, fTienHopDongDen, dHopDongTuNgay
             $("#txtTenDuAn").val(sTenDuAn);
             $("#sTenDV").val(sTenDonVi);
             $("#sTenCDT").val(sChuDauTu);
+            $("#txtTenHopDong").val(sTenHopDong);
         }
     });
 }

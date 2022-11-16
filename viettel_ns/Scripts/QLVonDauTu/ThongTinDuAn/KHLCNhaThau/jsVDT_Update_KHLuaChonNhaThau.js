@@ -32,9 +32,23 @@ $(document).ready(function () {
 });
 
 $("#cbxLoaiChungTu").change(() => {
-    GetListChungTu();
+    lstChungTuAll = [];
+    itemsChungTu = [];
+    itemsChungTuGoiThau = [[], [], []];
+    lstChungTuGoiThau = []; // sử dụng để update cho tất cả các gói thầu, biến dùng chung
+
+    arrGoiThau = [];
+    arrGoiThauNguonVon = [];
+    arrGoiThauChiPhi = [];
+    arrGoiThauHangMuc = [];
+    arrDuAnChiPhiGoiThau = [];
+
     $('#iID_DonViQuanLyID').val('').trigger('change');
     $("#cbxChuDauTu").val('').trigger('change');
+
+    
+
+    GetListChungTu();
 })
 
 
@@ -695,6 +709,12 @@ function checkIfHangMucIsCheckedForOtherGoiThau(hangmucId, idGoiThau) {
     return returnVal;
 }
 
+function getGiaTriGoiThauHangMuc(hm) {
+    let listHM = lstChungTuGoiThau[$('#iIdGoiThau').val()][2];
+    let hmSelected = listHM.filter(h => h.iID_HangMucID == hm.iID_HangMucID)[0];
+    return hmSelected ? hmSelected.fGiaTriGoiThau : 0;
+}
+
 // isAddingToItemsChungTuGoiThau: nếu đang cập nhật itemschungtuGoithau -> true
 function GetHangMucGoiThauDetail(iIdGoiThau, iIdChiPhi, isAddingToItemsChungTuGoiThau) {
     $("#iIdChiPhiChoose").val(iIdChiPhi);
@@ -732,7 +752,7 @@ function GetHangMucGoiThauDetail(iIdGoiThau, iIdChiPhi, isAddingToItemsChungTuGo
             sItem.push("<td class='sMaOrder width-50'>" + item.sMaOrder + "</td>");
             sItem.push("<td class='sNoiDung'>" + item.sNoiDung + "</td>");
             sItem.push("<td class='fGiaTriPheDuyet text-right'>" + FormatNumber(item.fGiaTriPheDuyet) + "</td>");
-            sItem.push("<td class='fGiaTriGoiThau text-right'>0</td>");
+            sItem.push("<td class='fGiaTriGoiThau text-right'>" + getGiaTriGoiThauHangMuc(item) +"</td>");
             sItem.push("<td class='fGiaTriConLai text-right'>" +
                 FormatNumber(item.fGiaTriPheDuyet - item.fGiaTriGoiThau) +
                 "</td>");
@@ -839,6 +859,44 @@ function CheckAllChiPhi(item) {
     });
 }
 
+function recursiveUpdateGiaTriChiPhi_ToggleCheck(item) {
+    // 1. nếu chi phí hiện tại k có con thì giá trị gói thầu cho chi phí hiện tại = giá trị còn lại của chi phí đó
+    // 2. nếu chi phí hiện tại có con
+    // 2.1. recursiveUpdateGiaTriChiPhi_ToggleCheck qua các con để update giá trị gói thầu cho các con
+    // 2.2. update giá trị của chi phí hiện tại khi đã update xong các con
+    // 3. nếu chi phí hiện tại có bố
+    // 3.1. recursiveUpdateGiaTriChiPhi_ToggleCheck bố cho đến khi bố = null
+    if (item.checked) {
+        let fGiaTriConLai = parseFloat($(item).closest("tr").find(".fGiaTriConLai").text().replaceAll(".", ""));
+        let giaTriGoiThau = 0;
+
+        let childCounter = 0;
+        $.each($("#tblDanhSachChiPhiModal tbody [data-parent='" + $(item).val() + "'] .ck_ChiPhi:checkbox:checked"), function (index, child) {
+            childCounter++;
+        });
+
+        if (childCounter > 0) {
+            $.each($("#tblDanhSachChiPhiModal tbody [data-parent='" + $(item).val() + "'] .ck_ChiPhi:checkbox:checked"), function (index, child) {
+                recursiveUpdateGiaTriChiPhi_ToggleCheck(child);
+                let gtrGoiThauChildAfter = $(child).closest("tr").find(".fGiaTriGoiThau").val().replaceAll(".", "");
+                giaTriGoiThau += parseFloat(gtrGoiThauChildAfter);
+            });
+            let giaTriConLai = fGiaTriConLai - giaTriGoiThau;
+            $($(item).closest("tr").find(".fGiaTriConLai")[0]).text(FormatNumber(giaTriConLai));
+            $(item).closest("tr").find(".fGiaTriGoiThau").val(FormatNumber(giaTriGoiThau));
+            
+        }
+        else {
+            giaTriGoiThau = fGiaTriConLai;
+            $($(item).closest("tr").find(".fGiaTriConLai")[0]).text(FormatNumber(0));
+            $(item).closest("tr").find(".fGiaTriGoiThau").val(FormatNumber(giaTriGoiThau));
+        }
+    }
+    else {
+
+    }
+}
+
 function updateGiaTriChiPhiWhenChecked(item) {
     if (item) {
         if (item.checked) {
@@ -871,6 +929,8 @@ function CheckChiPhi(item) {
     
     RecursiveCheckChildChiPhi(item, item.checked);
     RecursiveCheckParentChiPhi(item, item.checked);
+
+    //recursiveUpdateGiaTriChiPhi_ToggleCheck(item);
     
     var fTong = 0
     $.each($("#tblDanhSachChiPhiModal tbody").find("[data-parent='null'] .ck_ChiPhi:checkbox:checked"), function (index, parent) {
@@ -1056,9 +1116,12 @@ function RecursiveCheckParentHangMuc(item, bIsCheck) {
         if (sGiaTri != "")
             fGiaTriGoiThau += parseFloat(sGiaTri);
     });
-    parentItem[0].checked = bIsCheck;
+    if (fGiaTriGoiThau == fGiaTriPheDuyet) { parentItem[0].checked = bIsCheck; }
+    else if (!bIsCheck) {
+        parentItem[0].checked = false;
+    }
     if (!bIsCheck && $("#tblHangMucChinh tbody").find("[data-parent='" + parentId + "'] .ck_HangMuc:checkbox:checked").length != 0) {
-        parentItem[0].checked = !bIsCheck;
+        parentItem[0].checked = bIsCheck;
     }
     if (fGiaTriGoiThau == 0) {
         $(parentItem).closest("tr").find(".fGiaTriGoiThau").text("0");
@@ -1110,6 +1173,18 @@ function saveFGiaTriGoiThau_AllCheckedChiPhi(goithauID) {
     });
 }
 
+// lưu lại giá trị các hạng mục đã chọn
+function saveFGiaTriGoiThau_AllCheckedHangMuc(goithauID) {
+    $('#tblDanhSachHangMuc tbody ').find(".ck_HangMuc:checkbox:checked").each((index, cp) => {
+        let lstCP = itemsChungTuGoiThau[2];
+        for (let i = 0; i < lstCP.length; i++) {
+            if (lstCP[i].iID_ChiPhiID == $(cp).val()) {
+                lstCP[i].fGiaTriGoiThau = parseInt(UnFormatNumber($(cp).closest('tr').find('input.fGiaTriGoiThau').val()));
+            }
+        }
+    });
+}
+
 //------ Event Window
 function SaveDetailGoiThau() {
     var sConLai = $(".rConLai").text().replaceAll(".", "");
@@ -1136,6 +1211,7 @@ function SaveDetailGoiThau() {
         return;
     }
     saveFGiaTriGoiThau_AllCheckedChiPhi($("#iIdGoiThau").val());
+    saveFGiaTriGoiThau_AllCheckedHangMuc($("#iIdGoiThau").val());
     lstChungTuGoiThau[$("#iIdGoiThau").val()] = [...itemsChungTuGoiThau];
     $("#tblGoiThau [data-id='" + $("#iIdGoiThau").val() + "'] .fGiaTri").val($(".rTongNguonVon").text());
     if ($('.ck_NguonVon:checked').length > 0) {

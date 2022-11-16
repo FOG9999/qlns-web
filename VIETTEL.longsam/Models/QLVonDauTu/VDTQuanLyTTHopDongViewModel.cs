@@ -39,5 +39,6 @@ namespace Viettel.Models.QLVonDauTu
         public string sTenHinhThucQuanLy { get; set; }
         public string TenDonVi { get; set; }
         public string ChuDauTu { get; set; }
+        public string sTenHopDong { get; set; }
     }
 }

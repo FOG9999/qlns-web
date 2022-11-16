@@ -176,7 +176,8 @@ function ValidateBeforeSave() {
             fTiGia: 0,
             sTrangThaiDuAnDangKy: "",
             iLoaiDuAn: 0,
-            iID_LoaiCongTrinh: ""
+            iID_LoaiCongTrinh: "",
+            iID_DonViID:""
 
         };
 
@@ -192,6 +193,7 @@ function ValidateBeforeSave() {
         object.fThuHoiVonUngTruoc = Bang_arrGiaTri[i][Bang_arrCSMaCot["fThuHoiVonUngTruoc"]];
         object.fThanhToan = Bang_arrGiaTri[i][Bang_arrCSMaCot["fThanhToan"]];
         object.iID_LoaiCongTrinh = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_LoaiCongTrinh"]];
+        object.iID_DonViID = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_DonViQuanLyID"]];
         if (!Bang_arrHangDaXoa[i]) {
             listItemAfter.push(object);
         }

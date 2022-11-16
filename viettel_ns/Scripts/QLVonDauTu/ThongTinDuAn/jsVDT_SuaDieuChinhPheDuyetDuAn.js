@@ -430,9 +430,9 @@ function LoadDataViewChiPhi() {
         html += "<button class='btn-detail' type = 'button' onclick = 'DetailChiPhi(this)' > " +
             "<i class='fa fa-eye fa-lg' aria-hidden='true'></i>" +
             "</button> ";
-        html += "<button class='btn-add-child btn-icon' type = 'button' onclick = 'ThemMoiChiPhiCon(this)' > " +
-            "<i class='fa fa-plus fa-lg' aria-hidden='true'></i>" +
-            "</button> ";
+        //html += "<button class='btn-add-child btn-icon' type = 'button' onclick = 'ThemMoiChiPhiCon(this)' > " +
+        //    "<i class='fa fa-plus fa-lg' aria-hidden='true'></i>" +
+        //    "</button> ";
         html += "<button class='btn-delete btn-icon' type='button' onclick='XoaDong(this, \"" + TBL_CHI_PHI_DAU_TU + "\")'>" +
             "<span class='fa fa-trash-o fa-lg' aria-hidden='true'></span>" +
             "</button></td>";
@@ -641,7 +641,7 @@ function LoadViewHangMuc(data) {
             dongMoi += `<tr style='cursor: pointer;' class='${parent} error-row' data-xoa='1' data-id='` + data[i].id + "' data-iidduanchiphi='" + data[i].iID_DuAn_ChiPhi + "'>";
             dongMoi += "<td class='r_STT width-100'>" + data[i].sMaOrder + "</td><input type='hidden' class='r_HangMucID' value='" + data[i].iID_HangMucID + "'/>";
             dongMoi += "<td class='r_sTenHangMuc'><input type='text' disabled onblur='UpdateHangMuc(this)' class='form-control txtTenHangMuc' value='" + data[i].sTenHangMuc + "'/></td>"
-            dongMoi += "<td><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh(data[i].iID_LoaiCongTrinhID, true) + "</div></td>";
+            //dongMoi += "<td><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh(data[i].iID_LoaiCongTrinhID, true) + "</div></td>";
             dongMoi += "<td class='r_HanMucDauTu' align='right'><input type='text' style='text-align: right' disabled class='form-control txtGiaTriTruocDieuChinh' value='" + FormatNumber(data[i].fGiaTriTruocDieuChinh) + "'/></td>";
             dongMoi += "<td class='r_HanMucDauTu' align='right'><input type='text' disabled onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control txtHanMucDauTu' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' value='" + FormatNumber(data[i].fTienPheDuyet) + "'/></td>";
             dongMoi += "<td align='center' class='width-200'>";
@@ -661,7 +661,7 @@ function LoadViewHangMuc(data) {
             dongMoi += `<tr style='cursor: pointer;' class='${parent}' data-id='` + data[i].id + "' data-iidduanchiphi='" + data[i].iID_DuAn_ChiPhi + "'>";
             dongMoi += "<td class='r_STT width-100'>" + data[i].sMaOrder + "</td><input type='hidden' class='r_HangMucID' value='" + data[i].iID_HangMucID + "'/>";
             dongMoi += "<td class='r_sTenHangMuc'><input type='text' onblur='UpdateHangMuc(this)' class='form-control txtTenHangMuc' value='" + data[i].sTenHangMuc + "'/></td>"
-            dongMoi += "<td><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh(data[i].iID_LoaiCongTrinhID) + "</div></td>";
+            //dongMoi += "<td><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh(data[i].iID_LoaiCongTrinhID) + "</div></td>";
             dongMoi += "<td class='r_HanMucDauTu' align='right'></div><input type='text' style='text-align: right' disabled class='form-control txtGiaTriTruocDieuChinh' value='" + FormatNumber(data[i].fGiaTriTruocDieuChinh) + "'/></td>";
             dongMoi += "<td class='r_HanMucDauTu' align='right'></div><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control txtHanMucDauTu' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' value='" + FormatNumber(data[i].fTienPheDuyet) + "'/></td>";
             dongMoi += "<td align='center' class='width-200'>";
@@ -814,7 +814,7 @@ function ThemMoiHangMuc() {
     dongMoi += "<tr style='cursor: pointer;' class='parent' data-id='" + hangMucId + "' data-iidduanchiphi='" + iIdDuAnChiPhi + "'>";
     dongMoi += "<td class='r_STT width-100'>" + objInfoDongMoi.sMaOrder + "</td>";
     dongMoi += "<td class='r_sTenHangMuc'><input type='text' onblur='UpdateHangMuc(this)' class='form-control txtTenHangMuc'/></td>"
-    dongMoi += "<td><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh() + "</div></td>";
+    //dongMoi += "<td><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh() + "</div></td>";
     dongMoi += "<td class='r_HanMucDauTu' align='right'><input type='text' disabled style='text-align: right' class='form-control txtGiaTriTruocDieuChinh' /></td>";
     dongMoi += "<td class='r_HanMucDauTu' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control txtHanMucDauTu' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' /></td>";
     dongMoi += "<td align='center' class='width-200'>";
@@ -860,7 +860,7 @@ function ThemMoiHangMucCon(nutThem) {
     dongMoi += "<tr style='cursor: pointer;' data-id='" + hangMucId + "' data-iidduanchiphi='" + iIdDuAnChiPhi + "'>";
     dongMoi += "<td class='r_STT width-100'>" + objInfoDongMoi.sMaOrder + "</td>";
     dongMoi += "<td class='r_sTenHangMuc'><input type='text' onblur='UpdateHangMuc(this)' class='form-control txtTenHangMuc'/></td>"
-    dongMoi += "<td><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh() + "</div></td>";
+    //dongMoi += "<td><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh() + "</div></td>";
     dongMoi += "<td class='r_GiaTriTruocDieuChinh' align='right'><input type='text' disabled style='text-align: right' class='form-control txtGiaTriTruocDieuChinh'/></td>";
     dongMoi += "<td class='r_HanMucDauTu' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control txtHanMucDauTu' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);'/></td>";
     dongMoi += "<td align='center' class='width-200'>";

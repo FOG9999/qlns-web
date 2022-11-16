@@ -8,6 +8,7 @@
     <thead class="header-search">
     <th width="45px"></th>
     <th width="150px"><input type="text" class="form-control" id="txtSoHopDong" autocomplete="off" /></th>
+    <th width="150px"><input type="text" class="form-control" id="txtTenHopDong" autocomplete="off" /></th>
     <th width="250px">
         <div style="display:flex">
             <div class='input-group date'>
@@ -25,12 +26,12 @@
             </div>
         </div>
     </th>
-    <th width="150px">@Html.DropDownList("sTenDV", (IEnumerable<SelectListItem>) ViewBag.listDonVi, new { @class = "form-control requireInput", @id = "sTenDV" }) </th>
+    <th width="150px">@Html.DropDownList("sTenDV", (IEnumerable<SelectListItem>)ViewBag.listDonVi, new { @class = "form-control requireInput", @id = "sTenDV" }) </th>
     <th width="150px"><input type="text" class="form-control" id="txtTenDuAn" autocomplete="off" /></th>
     @*<th width="150px">@Html.DropDownList("cboDonViQL",new SelectList(ViewBag.ListDonViQL) , new { @class = "form-control", @id = "txtDonViQL" })</th>
-    <th width="150px">@Html.DropDownList("cboDuAnQL", new  SelectList(ViewBag.listDuAn), new { @class = "form-control", @id = "txtDuAnQL" })</th>*@
-   @* @Html.DropDownList("iID_HopDong_" + i, new SelectList(ViewBag.ListHopDong, "Value", "Text", item.iID_HopDongId), new { @class = "form-control hopdong", @id = "iID_HopDong_" + i })*@
-<th width="100px">@Html.DropDownList("sTenCDT", (SelectList)(ViewBag.ListChuDT), new { @class = "form-control requireInput", @id = "sTenCDT" })</th>
+        <th width="150px">@Html.DropDownList("cboDuAnQL", new  SelectList(ViewBag.listDuAn), new { @class = "form-control", @id = "txtDuAnQL" })</th>*@
+    @* @Html.DropDownList("iID_HopDong_" + i, new SelectList(ViewBag.ListHopDong, "Value", "Text", item.iID_HopDongId), new { @class = "form-control hopdong", @id = "iID_HopDong_" + i })*@
+    <th width="100px">@Html.DropDownList("sTenCDT", (SelectList)(ViewBag.ListChuDT), new { @class = "form-control requireInput", @id = "sTenCDT" })</th>
     <th width="100px"></th>
     <th width="150px">
         <div style="display: flex">
@@ -39,25 +40,24 @@
             <input type='text' style="width: 50%" class="form-control col-sm-2" value="" id="txtGiaHopDongDen" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
         </div>
     </th>
-    <th width="150px"></th>
-    <th width="150px"></th>
+    <th width="30px"></th>
     <th width="100px"></th>
     <th width="100px"></th>
     @*<th width="100px"></th>
-    <th width="100px"></th>*@
-    <th width="100px"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+        <th width="100px"></th>*@
+    <th width="100px"><button class="btn btn-info" id="btn_timKiem" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
     </thead>
     <thead>
     <th style="min-width: 45px;">STT</th>
     <th style="min-width: 150px">Số hợp đồng</th>
+    <th style="min-width: 150px">Tên hợp đồng</th>
     <th style="min-width: 250px">Ngày hợp đồng</th>
     <th style="min-width: 150px">Đơn vị</th>
     <th style="min-width: 150px">Dự án</th>
     <th style="min-width: 100px">Chủ đầu tư</th>
     <th style="min-width: 100px">Nhà thầu đại diện</th>
     <th style="min-width: 150px">Giá trị hợp đồng</th>
-    <th style="min-width: 150px">Nội dung hợp đồng</th>
-    <th style="min-width: 150px">Thời gian thực hiện(ngày)</th>
+    <th style="min-width: 30px">Thời gian thực hiện(ngày)</th>
     <th style="min-width: 100px">Loại hợp đồng</th>
     <th style="min-width: 100px">Lần điều chỉnh</th>
     <th style="min-width: 100px">Thao tác</th>
@@ -71,13 +71,13 @@
                 <tr style="cursor: pointer">
                     <td align="center">@index</td>
                     <td align="left">@item.sSoHopDong</td>
+                    <td align="left">@item.sTenHopDong</td>
                     <td align="center">@item.dNgayHopDong.ToString("dd/MM/yyyy")</td>
                     <td align="left">@item.TenDonVi</td>
                     <td align="left">@item.sTenDuAn</td>
                     <td align="left">@item.ChuDauTu</td>
                     <td align="left">@item.sTenNhaThau</td>
                     <td align="right" class="sotien">@item.fTienHopDong</td>
-                    <td align="left">@item.NoiDungHopDong</td>
                     <td align="right">@item.iThoiGianThucHien</td>
                     <td align="left">@item.sTenLoaiHopDong</td>
                     <td align="center">@string.Format("({0})", item.iTongSoDieuChinh)</td>

@@ -86,7 +86,14 @@
             sUrlListView = '@Url.Action("TimKiem", "QLThongTinHopDong")';
             _paging.CurrentPage = @Model._paging.CurrentPage ;
             _paging.ItemsPerPage = @Model._paging.ItemsPerPage ;
+
+            document.addEventListener('keydown', event);
         });
 
+        function event(e) {
+            if (e.key == "Enter") {
+                $("#btn_timKiem").click()
+            }
+        }
     </script>
 }

@@ -823,7 +823,8 @@ namespace VIETTEL.Controllers
             List<Object> list = new List<Object>();
 
             //String DK = String.Format("iTrangThai=1 ");
-            String SQL = String.Format("SELECT iID_MaDonVi, sTenDonVi FROM VDT_DM_DonViThucHienDuAn");
+            //String SQL = String.Format("SELECT iID_MaDonVi, sTenDonVi FROM VDT_DM_DonViThucHienDuAn where iiID_MaDonVi Like '%{0}%'");
+            String SQL = String.Format("SELECT iID_MaDonVi, sTenDonVi FROM VDT_DM_DonViThucHienDuAn where (iID_MaDonVi LIKE @iID_MaDonVi OR sTenDonVi LIKE @sTenDonVi)");
             SqlCommand cmd = new SqlCommand(SQL);
             cmd.Parameters.AddWithValue("@iID_MaDonVi", GiaTri + "%");
             cmd.Parameters.AddWithValue("@sTenDonVi", "%" + GiaTri + "%");
@@ -4687,7 +4688,7 @@ AND tk.iID_MaTaiKhoanDanhMucChiTiet=ct.iID_MaTaiKhoanDanhMucChiTiet AND (ct.sTen
             String DK = String.Format("bActive=1 ");
             String SQL = String.Format("SELECT sMaLoaiCongTrinh, sTenLoaiCongTrinh FROM VDT_DM_LoaiCongTrinh WHERE {0} AND (sMaLoaiCongTrinh LIKE @sMaLoaiCongTrinh OR sTenLoaiCongTrinh like @sTenLoaiCongTrinh) ORDER BY sTenLoaiCongTrinh", DK);
             SqlCommand cmd = new SqlCommand(SQL);
-            cmd.Parameters.AddWithValue("@sMaLoaiCongTrinh", GiaTri + "%");
+            cmd.Parameters.AddWithValue("@sMaLoaiCongTrinh", "%" + GiaTri + "%");
             cmd.Parameters.AddWithValue("@sTenLoaiCongTrinh", "%" + GiaTri + "%");
             DataTable dt = Connection.GetDataTable(cmd);
             cmd.Dispose();
