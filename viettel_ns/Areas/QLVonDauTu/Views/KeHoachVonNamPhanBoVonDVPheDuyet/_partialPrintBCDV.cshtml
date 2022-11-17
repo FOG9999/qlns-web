@@ -12,7 +12,7 @@
             z-index: 1;
         }
 </style>
-<div class="form-group">
+<div class="form-group col-sm-12">
     <h4 class="color-text-red">Thông tin báo cáo:</h4>
     <hr class='color-background-red' />
 </div>
@@ -32,10 +32,19 @@
             <div class="card-body tab-content" style="padding-top: 0px !important;">
                 <div class="row">
                     <div class="col-sm-4 col-md-4 col-lg-4">
+                        <div class="col-sm-12 form-group" id="divLoaiCongTrinh">
+                            <label>Loại công trình</label>
+                            <select id="iIdLoaiCongTrinh" name="iIdLoaiCongTrinh">
+                                <option value="1" selected>Công trình mở mới</option>
+                                <option value="3">Công trình chuyển tiếp</option>
+                            </select>
+                        </div>
                         <div class="col-sm-12 form-group">
                             <label>Loại chứng từ</label>
-                            @Helpers.Required()
-                            @Html.DropDownList("ValueItem", (SelectList)(ViewBag.lstLoaiChungTu), new { @class = "form-control", @id = "ValueItemLoaiChungTuDv" })
+                            <select id="iIdLoaiChungTu" name="iIdLoaiChungTu">
+                                <option value="1" selected>Gốc</option>
+                                <option value="2">Điều chỉnh</option>
+                            </select>
                         </div>
                         <div class="col-sm-12 form-group">
                             <label for="txtNamKeHoach">Năm kế hoạch</label>@Helpers.Required()<br />
@@ -45,11 +54,6 @@
                             <label>Loại nguồn vốn</label>
                             @Helpers.Required()
                             @Html.DropDownList("iID_MaNguonNganSachdv", (SelectList)(ViewBag.lstNguonVon), new { @class = "form-control iID_MaNguonNganSachDv", @id = "iID_MaNguonNganSachDv" })
-                        </div>
-                        <div class="col-sm-12 form-group" id="divLoaiCongTrinh">
-                            <label>Loại công trình</label>
-                            @Helpers.Required()
-                            @Html.DropDownList("iID_LoaiCongTrinhdv", (SelectList)(ViewBag.lstLoaiCongTrinh), new { @class = "form-control iID_LoaiCongTrinhDv", @id = "iID_LoaiCongTrinhDv" })
                         </div>
                         <div class="col-sm-12 form-group">
                             <label>Đơn vị tính</label>
@@ -69,7 +73,7 @@
                                         foreach (var item in Model.lstDonViQuanLy)
                                         {
                                             <tr style="cursor: pointer">
-                                                <td align="center"><input type="checkbox" name="cb_DVQL" class="cb_DVQL" value="@item.iID_Ma" /></td>
+                                                <td align="center"><input type="checkbox" name="cb_DVQL" class="cb_DVQL" value="@item.iID_MaDonVi" /></td>
                                                 <td align="left">@item.sTen</td>
                                             </tr>
                                         }
@@ -81,11 +85,11 @@
                     <div class="col-sm-4 col-md-4 col-lg-4">
                         <div class="col-sm-12 form-group">
                             <label for="txtHeader1">Tiêu đề 1</label>@Helpers.Required()<br />
-                            <input type="text" class="form-control" id="txtHeader1" value="DỰ TOÁN CHI XDCB NGUỒN NGÂN SÁCH QUỐC PHÒNG NĂM ....." />
+                            <input type="text" class="form-control" id="txtHeader1" value="DỰ TOÁN CHI XDCB NGUỒN NSQP NĂM ..." />
                         </div>
                         <div class="col-sm-12 form-group">
                             <label for="txtHeader2">Tiêu đề 2</label>@Helpers.Required()<br />
-                            <input type="text" class="form-control" id="txtHeader2" value="(Kèm theo Quyết định số ....... ngày ........ tháng ..... năm ..... của ......)" />
+                            <input type="text" class="form-control" id="txtHeader2" value="(Kèm theo công văn số…../.... ngày…../…./20... của ..........)" />
                         </div>
                     </div>
                 </div>

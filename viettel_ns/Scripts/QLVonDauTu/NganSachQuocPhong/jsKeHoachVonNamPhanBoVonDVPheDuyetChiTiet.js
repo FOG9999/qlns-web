@@ -102,7 +102,10 @@ function BangDuLieu_onKeypress_F9(h, c) {
 }
 
 function BangDuLieu_onKeypress_F10() {
+    KHVonNamDD_ChiTiet_BangDuLieu_Save();
 }
+
+function BangDuLieu_onKeyPress_Enter() { }
 
 function BangDuLieu_onKeypress_F2(h, c) {
     if (BangDuLieu_DuocSuaChiTiet && h < Bang_nH - 1) {

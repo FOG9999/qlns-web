@@ -56,7 +56,7 @@
                             <p>@Html.Raw(Model.dNgayQuyetDinh.HasValue ? Model.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy") : string.Empty)</p>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row" style="display: none;">
                         <div class="col-md-12">
                             <label for="sMoTa">Mô tả</label>
                             <p class="sMoTa">@Html.Raw(Model.sMoTa)</p>
@@ -136,14 +136,14 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row" style="display: none;">
                         <div class="col-md-12">
                             <label for="sMucTieu">Mục tiêu đầu tư</label>
                             <p class="sMucTieu">@Html.Raw(Model.sMucTieu)</p>
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row" style="display: none;">
                         <div class="col-md-12">
                             <label for="sQuyMo">Nội dung quy mô đầu tư</label>
                             <p class="sQuyMo">@Html.Raw(Model.sQuyMo)</p>

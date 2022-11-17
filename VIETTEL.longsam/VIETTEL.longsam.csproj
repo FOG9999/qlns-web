@@ -246,6 +246,8 @@
     <Compile Include="Models\QLVonDauTu\KhoiTaoThongTinDuAnChiTietViewModel.cs" />
     <Compile Include="Models\QLVonDauTu\KhoiTaoThongTinDuAnViewModel.cs" />
     <Compile Include="Models\QLVonDauTu\KHVNDXExportExcelModel.cs" />
+    <Compile Include="Models\QLVonDauTu\PhanBoVonDonViPheDuyetDieuChinhReportQuery.cs" />
+    <Compile Include="Models\QLVonDauTu\PhanBoVonDonViPheDuyetReportQuery.cs" />
     <Compile Include="Models\QLVonDauTu\RptDuToanNSQPNamModel.cs" />
     <Compile Include="Models\QLVonDauTu\ThongTinGoiThauViewModel.cs" />
     <Compile Include="Models\QLVonDauTu\VDTBaoCaoDieuChinhKeHoachViewModel.cs" />
@@ -277,6 +279,8 @@
     <Compile Include="Models\QLVonDauTu\VDTKHVPhanBoVonChiTietViewModel.cs" />
     <Compile Include="Models\QLVonDauTu\VDTKHVPhanBoVonViewModel.cs" />
     <Compile Include="Models\QLVonDauTu\VdtKhvuDXChiTietModel.cs" />
+    <Compile Include="Models\QLVonDauTu\VdtKhvVonNamDonViPheDuyetNguonVonDieuChinhQuery.cs" />
+    <Compile Include="Models\QLVonDauTu\VdtKhvVonNamDonViPheDuyetNguonVonQuery.cs" />
     <Compile Include="Models\QLVonDauTu\VDTPheDuyetChuTruongDauTuModel.cs" />
     <Compile Include="Models\QLVonDauTu\VDTPheDuyetDuAnModel.cs" />
     <Compile Include="Models\QLVonDauTu\VDTPheDuyetQuyetToanPagingModel.cs" />

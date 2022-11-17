@@ -121,7 +121,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             //Lay danh sach don vi quan ly theo user login
             List<VDT_DM_NhomDuAn> lstNhomDuAn = _iQLVonDauTuService.LayNhomDuAn().ToList();
             lstNhomDuAn.Insert(0, new VDT_DM_NhomDuAn { iID_NhomDuAnID = Guid.Empty, sTenNhomDuAn = Constants.CHON });
-            ViewBag.ListNhomDuAn = lstNhomDuAn.ToSelectList("iID_NhomDuAnID", "sTenNhomDuAn");
+            ViewBag.ListNhomDuAn = lstNhomDuAn.ToSelectList("iID_NhomDuAnID", "sTenNhomDuAn", lstNhomDuAn[2].iID_NhomDuAnID.ToString());
 
             List<VDT_DM_HinhThucQuanLy> lstHinhThucQuanLy = _iQLVonDauTuService.LayHinhThucQuanLy().ToList();
             lstHinhThucQuanLy.Insert(0, new VDT_DM_HinhThucQuanLy { iID_HinhThucQuanLyID = Guid.Empty, sTenHinhThucQuanLy = Constants.CHON });

@@ -48,6 +48,8 @@ namespace Viettel.Models.QLVonDauTu
         public int? Loai { get; set; }
         public string STT { get; set; }
         public double? fGiaTriDeNghi { get;set; }
+        public Guid? iID_DonViID { get;set; }
+        public string sTenDonVi { get;set; }
     }
 
     public class VDTKHVPhanBoVonDonViPheDuyetExport

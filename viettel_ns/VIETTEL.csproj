@@ -1867,6 +1867,21 @@
     <Content Include="Areas\QLNH\Views\KeHoachChiTietBQP\_sheetFrame.cshtml" />
     <Content Include="Areas\QLVonDauTu\Views\GiaiNganThanhToan\DetailChiTiet.cshtml" />
     <Content Include="Areas\QLVonDauTu\Views\VDT_QT_DeNghiQuyetToan\_sheetImport.cshtml" />
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\rpt_BaoCao_KHNam_DeXuat_DieuChinh_NguonVonKhac.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\rpt_BaoCao_KHNam_DonVi_PheDuyet_CTCT.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\rpt_BaoCao_KHNam_DonVi_PheDuyet_CTMM.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\rpt_BaoCao_KHNam_DonVi_PheDuyet_DieuChinh.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\rpt_BaoCao_KHNam_DonVi_PheDuyet_NguonVonKhac.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Areas\QuyetToan\Controllers\ReportController.cs1" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\Index.cshtml" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\_list.cshtml" />

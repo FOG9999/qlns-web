@@ -134,7 +134,7 @@ function ThemMoiHangMuc() {
     dongMoi += "<tr style='cursor: pointer;' class='parent' data-id='" + hangMucId + "' data-iidduanchiphi='" + iIdDuAnChiPhi + "'>";
     dongMoi += "<td class='r_STT width-50'>" + objInfoDongMoi.sMaOrder + "</td>";
     dongMoi += "<td class='r_sTenHangMuc'><input type='text' id='sTenHangMuc' onblur='UpdateHangMuc(this)' class='form-control sTenHangMuc'/></td>"
-    dongMoi += "<td><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh(objInfoDongMoi.iID_LoaiCongTrinhID) + "</div></td>";
+    //dongMoi += "<td><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh(objInfoDongMoi.iID_LoaiCongTrinhID) + "</div></td>";
     dongMoi += "<td class='fGiaTriPDDA' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control txtGiaTriPDDA' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' disabled /></td>";
     dongMoi += "<td class='fGiaTriPDTKTC' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control fTienPheDuyet' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' /></td>";
     if ($("#bIsDieuChinh").val() == "True") {
@@ -434,7 +434,7 @@ function RenderHangMuc(lstHangMucByChiPhi) {
         lstStrHangMuc.push("<td class='hidden iID_ParentID' id='iID_ParentID' value='" + item.iID_ParentID + "' ></td>")
         lstStrHangMuc.push("<td class='hidden iID_LoaiCongTrinhID' id='iID_LoaiCongTrinhID' value='" + item.iID_LoaiCongTrinhID + "' ></td>")
         lstStrHangMuc.push("<td><input type='text' id='sTenHangMuc' class='sTenHangMuc form-control' value='" + item.sTenHangMuc + "'></td>");
-        lstStrHangMuc.push("<td class='sLoaiCongTrinh' id='iID_LoaiCongTrinhID'>" + CreateHtmlSelectLoaiCongTrinh(item.iID_LoaiCongTrinhID) + "</td>");
+        //lstStrHangMuc.push("<td class='sLoaiCongTrinh' id='iID_LoaiCongTrinhID'>" + CreateHtmlSelectLoaiCongTrinh(item.iID_LoaiCongTrinhID) + "</td>");
         lstStrHangMuc.push("<td class='fGiaTriPDDA' style='text-align:right' id='fTienPheDuyet' value='" + FormatNumber(item.fTienPheDuyetQDDT) + "' >" + FormatNumber(item.fTienPheDuyetQDDT) + "</td>");
         if (bIsDieuChinh == "True") {
             lstStrHangMuc.push("<td class='fGiaTriDieuChinh' style='text-align:right'  id='fGiaTriDieuChinh' value='" + FormatNumber(item.fGiaTriDieuChinh ? item.fGiaTriDieuChinh : 0) + "'>" + FormatNumber(item.fGiaTriDieuChinh ? item.fGiaTriDieuChinh : 0) + "</td>");

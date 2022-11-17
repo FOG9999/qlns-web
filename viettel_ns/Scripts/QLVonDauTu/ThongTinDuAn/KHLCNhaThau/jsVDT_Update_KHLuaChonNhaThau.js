@@ -17,6 +17,8 @@ var arrGoiThauChiPhi = [];
 var arrGoiThauHangMuc = [];
 var arrDuAnChiPhiGoiThau = [];
 
+var isSettingUpData = true;
+
 
 $(document).ready(function () {
     if ($("#bIsDieuChinh").val() == 1)
@@ -96,6 +98,8 @@ function GetDanhSachGoiThau() {
             arrGoiThauNguonVon = [];
             arrGoiThauChiPhi = [];
             arrGoiThauHangMuc = [];
+
+            isSettingUpData = false;
 
             // call function to apply common validators
             CallFunctionCommon();
@@ -709,10 +713,44 @@ function checkIfHangMucIsCheckedForOtherGoiThau(hangmucId, idGoiThau) {
     return returnVal;
 }
 
+// hàm kiểm tra xem có phải con, cháu j k, return true nếu elder is parent or grandpa,... else otherwise
+function checkRelative(elder, child, arraySource) {
+
+}
+
 function getGiaTriGoiThauHangMuc(hm) {
-    let listHM = lstChungTuGoiThau[$('#iIdGoiThau').val()][2];
-    let hmSelected = listHM.filter(h => h.iID_HangMucID == hm.iID_HangMucID)[0];
-    return hmSelected ? hmSelected.fGiaTriGoiThau : 0;
+    // hàm này được gọi kể cả khi chưa setup được lstChungTuGoiThau, khi đó cần phải lấy data từ API, flow tương tự trường hợp lấy từ lstChungTuGoiThau
+    if (isSettingUpData) {
+        let hmSelected = arrGoiThauHangMuc.find(x => x.iID_HangMucID == hm.iID_HangMucID);
+        if (hmSelected) {
+            return hmSelected.fTienGoiThau
+        }
+        else {
+            // merge itemsChungTu and arrGoiThauHangMuc
+            arrGoiThauHangMuc.map(h => {
+                let h1 = itemsChungTu[2].find(x => x.iID_HangMucID == h.iID_HangMucID);
+                return {
+                    ...h,
+                    iID_ParentId: h1.iID_ParentId
+                }
+            })
+            let children = arrGoiThauHangMuc.filter(h => h.iID_ParentId == hm.iID_HangMucID);
+            return children.map(x => x.fGiaTriGoiThau).reduce((a, b) => a += b, 0);
+        }
+    }
+    else {
+        let listHM = lstChungTuGoiThau[$('#iIdGoiThau').val()][2];
+        let hmSelected = listHM.filter(h => h.iID_HangMucID == hm.iID_HangMucID)[0];
+        // nếu hạng mục này được check -> lấy giá trị trong mảng lstChungTuGoiThau
+        if (hmSelected) {
+            return hmSelected.fGiaTriGoiThau;
+        }
+        // nếu hạng mục này k có trong lstChungTuGoiThau, tính tổng các con của nó 
+        else {
+            let children = listHM.filter(h => h.iID_ParentId == hm.iID_HangMucID);
+            return children.map(x => x.fGiaTriGoiThau).reduce((a, b) => a += b, 0);
+        }
+    }    
 }
 
 // isAddingToItemsChungTuGoiThau: nếu đang cập nhật itemschungtuGoithau -> true
@@ -752,9 +790,9 @@ function GetHangMucGoiThauDetail(iIdGoiThau, iIdChiPhi, isAddingToItemsChungTuGo
             sItem.push("<td class='sMaOrder width-50'>" + item.sMaOrder + "</td>");
             sItem.push("<td class='sNoiDung'>" + item.sNoiDung + "</td>");
             sItem.push("<td class='fGiaTriPheDuyet text-right'>" + FormatNumber(item.fGiaTriPheDuyet) + "</td>");
-            sItem.push("<td class='fGiaTriGoiThau text-right'>" + getGiaTriGoiThauHangMuc(item) +"</td>");
+            sItem.push("<td class='fGiaTriGoiThau text-right'>" + FormatNumber(getGiaTriGoiThauHangMuc(item)) +"</td>");
             sItem.push("<td class='fGiaTriConLai text-right'>" +
-                FormatNumber(item.fGiaTriPheDuyet - item.fGiaTriGoiThau) +
+                (FormatNumber(item.fGiaTriPheDuyet - getGiaTriGoiThauHangMuc(item)) ? FormatNumber(item.fGiaTriPheDuyet - getGiaTriGoiThauHangMuc(item)) : 0) +
                 "</td>");
             sItem.push("</tr>");
         }
@@ -1071,8 +1109,9 @@ function CheckHangMuc(item) {
     RecursiveCheckChildHangMuc(item, item.checked);
     RecursiveCheckParentHangMuc(item, item.checked);
     var fTong = 0
-    $.each($("#tblHangMucChinh tbody").find("[data-parent='null'] .ck_HangMuc:checkbox:checked"), function (index, parent) {
-        fTong += parseFloat($(parent).closest("tr").find(".fGiaTriGoiThau").text().replaceAll(".", ""));
+    $.each($("#tblHangMucChinh tbody").find("[data-parent='null'] .ck_HangMuc"), function (index, parent) {
+        let fGiaTriParentTxt = $(parent).closest("tr").find(".fGiaTriGoiThau").text().replaceAll(".", "");
+        fTong += parseFloat(fGiaTriParentTxt ? fGiaTriParentTxt : 0);
     });
 
     var rowChiPhi = $("#tblDanhSachChiPhiModal [data-id='" + $("#iIdChiPhiChoose").val() + "']");
@@ -1111,7 +1150,7 @@ function RecursiveCheckParentHangMuc(item, bIsCheck) {
     var parentItem = $("#tblHangMucChinh tbody [data-id='" + parentId + "'] .ck_HangMuc");
     var fGiaTriPheDuyet = parseFloat($("#tblHangMucChinh tbody [data-id='" + parentId + "'] .fGiaTriPheDuyet").text().replaceAll(".", ""));
     var fGiaTriGoiThau = 0;
-    $.each($("#tblHangMucChinh tbody [data-parent='" + parentId + "'] .ck_HangMuc:checkbox:checked"), function (index, child) {
+    $.each($("#tblHangMucChinh tbody [data-parent='" + parentId + "'] .ck_HangMuc"), function (index, child) {
         var sGiaTri = $(child).closest("tr").find(".fGiaTriGoiThau").text().replaceAll(".", "");
         if (sGiaTri != "")
             fGiaTriGoiThau += parseFloat(sGiaTri);
@@ -1199,10 +1238,8 @@ function SaveDetailGoiThau() {
     }
     */
 
-    for (let goiThau in lstChungTuGoiThau) {
-        if (!validateGiaTriConLaiBeforeSave(goiThau)) {
-            return;
-        }
+    if (!validateGiaTriConLaiBeforeSave($("#iIdGoiThau").val())) {
+        return;
     }
 
     lstChungTuGoiThau[$("#iIdGoiThau").val()] = [];

@@ -145,7 +145,11 @@ namespace Viettel.Models.QLVonDauTu
         public int? IIdNguonVon { get; set; }
         public double? LuyKeVonNSQPDaBoTri { get; set; }
         public double? LuyKeVonNSQPDeNghiBoTri { get; set; }
-        public double? TongLuyKe { get; set; }
+        public double? TongLuyKe {
+            get {
+                return LuyKeVonNSQPDaBoTri + LuyKeVonNSQPDeNghiBoTri;
+            } 
+        }
         public string SSoQuyetDinhNgayQuyetDinh { get; set; }
         public double? FHanMucDauTuQP { get; set; }
         public double? FHanMucDauTuNN { get; set; }

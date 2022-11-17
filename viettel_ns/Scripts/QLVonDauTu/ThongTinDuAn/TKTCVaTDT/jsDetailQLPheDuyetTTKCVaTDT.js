@@ -152,7 +152,7 @@ function RenderHangMuc(lstHangMucByChiPhi) {
         lstStrHangMuc.push("<tr data-id='" + item.iID_HangMucID + "' data-parent='" + item.iID_ParentID + "' data-fTienPheDuyetQDDT='" + item.fTienPheDuyetQDDT + "' data-iIDLoaiCongTrinhID='" + item.iID_LoaiCongTrinhID + "' data-iIdHangMucPhanChia='" + item.iID_HangMucPhanChia + "' data-bIsParent='" + item.isParent + "'>");
         lstStrHangMuc.push("<td class='width-50 smaOrder'>" + item.smaOrder + "</td>")
         lstStrHangMuc.push("<td>" + item.sTenHangMuc + "</td>");
-        lstStrHangMuc.push("<td class='sLoaiCongTrinh'>" + (item.sTenLoaiCongTrinh == null ? "" : item.sTenLoaiCongTrinh) + "</td>")
+        //lstStrHangMuc.push("<td class='sLoaiCongTrinh'>" + (item.sTenLoaiCongTrinh == null ? "" : item.sTenLoaiCongTrinh) + "</td>")
         lstStrHangMuc.push("<td style='text-align:right'>" + FormatNumber(item.fTienPheDuyetQDDT) + "</td>");
         if (bIsDieuChinh == "True") {
             lstStrHangMuc.push("<td class='fGiaTriDieuChinh' style='text-align:right'>" + FormatNumber(item.fGiaTriDieuChinh) + "</td>");

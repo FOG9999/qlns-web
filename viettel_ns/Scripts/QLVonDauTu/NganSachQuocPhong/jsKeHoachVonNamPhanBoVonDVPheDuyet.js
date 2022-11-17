@@ -352,29 +352,45 @@ ValidateDataBaoCao = (data, arrIdDVQL) => {
     var Title = 'Lỗi in báo cáo';
     var Messages = [];
 
+    data.sLoaiCongTrinh = $("#iIdLoaiCongTrinh").val();
+    if (data.sLoaiCongTrinh == null || data.sLoaiCongTrinh == "") {
+        Messages.push("Loại công trình chưa chọn !");
+    }
+
+    data.sLoaiChungTu = $("#iIdLoaiChungTu").val();
     if (data.sLoaiChungTu == null || data.sLoaiChungTu == "") {
         Messages.push("Loại chứng từ chưa chọn !");
     }
 
-    if (data.sLoaiChungTu == "1") {
-        if (data.sLoaiCongTrinh == null || data.sLoaiCongTrinh == "") {
-            Messages.push("Loại công trình chưa chọn !");
-        }
-        if (data.sNguonVon == null || data.sNguonVon == "") {
-            Messages.push("Nguồn vốn chưa chọn !");
-        }
+    data.iNamLamViec = $("#txtNamKeHoach").val();
+    if (data.iNamLamViec == null || data.iNamLamViec == "") {
+        Messages.push("Năm kế hoạch chưa chọn !");
     }
 
-    if (data.iNamLamViec == null || data.iNamLamViec == "") {
-        Messages.push("Năm kế hoạch chưa nhập !");
+    data.sNguonVon = $("#iID_MaNguonNganSachDv").val();
+    if (data.sNguonVon == null || data.sNguonVon == "") {
+        Messages.push("Loại nguồn vốn chưa chọn !");
+    }
+
+    data.sValueDonViTinh = $("#ValueItemDonViTinhDv").val();
+    if (data.sValueDonViTinh == null || data.sValueDonViTinh == "") {
+        Messages.push("Đơn vị tính chưa chọn !");
+    } else {
+        data.sDonViTinh = $("#ValueItemDonViTinhDv :selected").text();
     }
 
     if (arrIdDVQL.length == 0) {
         Messages.push("Đơn vị quản lý chưa chọn !");
     }
 
-    if (data.sValueDonViTinh == null || data.sValueDonViTinh == "") {
-        Messages.push("Đơn vị tính chưa chọn !");
+    data.txtHeader1 = $("#txtHeader1").val();
+    if (data.txtHeader1 == null || data.txtHeader1 == "") {
+        Messages.push("Tiêu đề 1 không được để trống !");
+    }
+
+    data.txtHeader2 = $("#txtHeader2").val();
+    if (data.txtHeader2 == null || data.txtHeader2 == "") {
+        Messages.push("Tiêu đề 2 không được để trống !");
     }
 
     if (Messages != null && Messages != undefined && Messages.length > 0) {
@@ -388,61 +404,15 @@ ValidateDataBaoCao = (data, arrIdDVQL) => {
         });
         return false;
     }
-
     return true;
 }
 
 PrintBaoCao = (isPdf = true) => {
     debugger;
-    var checkDataVakidate = $('.card-body .nav-tabs li.active a').attr("data-value");
     var data = {};
-    var strIdLoaiCongTrinhTH = "";
-    if (checkDataVakidate === '1') {
-        if ($("#iID_LoaiCongTrinhDv :selected").val() == GUID_EMPTY) {
-            $("#iID_LoaiCongTrinhDv option").each(function () {
-                if (this.value != GUID_EMPTY) {
-                    if (strIdLoaiCongTrinhTH == "") {
-                        strIdLoaiCongTrinhTH += this.value;
-                    } else {
-                        strIdLoaiCongTrinhTH += "," + this.value;
-                    }
-                }
-            });
-            data.sLoaiCongTrinh = strIdLoaiCongTrinhTH;
-        } else {
-            data.sLoaiCongTrinh = $("#iID_LoaiCongTrinhDv :selected").val();
-        }
-    }
-    if ($("#iID_LoaiCongTrinh :selected").val() == GUID_EMPTY) {
-        $("#iID_LoaiCongTrinh option").each(function () {
-            if (this.value != GUID_EMPTY) {
-                if (strIdLoaiCongTrinhTH == "") {
-                    strIdLoaiCongTrinhTH += this.value;
-                } else {
-                    strIdLoaiCongTrinhTH += "," + this.value;
-                }
-            }
-        });
-        data.sLoaiCongTrinh = strIdLoaiCongTrinhTH;
-    } else {
-        data.sLoaiCongTrinh = $("#iID_LoaiCongTrinh :selected").val();
-    }
-    data.txtHeader1 = $("#txtHeader1").val();
-    data.txtHeader2 = $("#txtHeader2").val();
-    data.iNamLamViec = $("#txtNamKeHoach").val();
-    if (checkDataVakidate === '1') {
-        data.sDonViTinh = $("#ValueItemDonViTinhDv :selected").html();
-        data.sValueDonViTinh = $("#ValueItemDonViTinhDv :selected").val();
-        data.sLoaiChungTu = $("#ValueItemLoaiChungTuDv :selected").val();
-        data.sNguonVon = $("#iID_MaNguonNganSachDv :selected").val();
-    }
-    data.sValueDonViTinh = $("#ValueItemDonViTinh :selected").val();
-    data.sDonViTinh = $("#ValueItemDonViTinh :selected").html(); 
-    data.sLoaiChungTu = $("#ValueItemLoaiChungTu :selected").val();
-    data.sNguonVon = $("#iID_MaNguonNganSach :selected").val();
- 
-
     var arrIdDVQL = [];
+
+
     $("#tblListDonViQuanLy input[type=checkbox]:checked").each(function () {
         var rowValue = $(this).val();
         if (rowValue != 'on') {

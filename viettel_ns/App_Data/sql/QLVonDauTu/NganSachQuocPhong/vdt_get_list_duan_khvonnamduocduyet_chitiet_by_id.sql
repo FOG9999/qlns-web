@@ -73,8 +73,8 @@ where
 		on khvndxct.iID_KeHoachVonNamDeXuatID = khvndx.iID_KeHoachVonNamDeXuatID
 		where 
 			khvndx.iID_KeHoachVonNamDeXuatID = @iIdPhanBoVonDeXuat
+			and khvndxct.iID_DonViID = (SELECT iID_DonViQuanLyID FROM VDT_KHV_KeHoachVonNam_DuocDuyet where iID_KeHoachVonNam_DuocDuyetID = @phanBoVonId)
 	)
-
 union all
 
 select
@@ -142,6 +142,7 @@ left join
 on khvnddct.iID_LoaiCongTrinh = lct.iID_LoaiCongTrinh
 where
 	khvnddct.iID_KeHoachVonNam_DuocDuyetID = @phanBoVonId
+	and dv.iID_Ma = (SELECT iID_DonViQuanLyID FROM VDT_KHV_KeHoachVonNam_DuocDuyet where iID_KeHoachVonNam_DuocDuyetID = @phanBoVonId)
 	
 	) as data
 where (@sTenDuAn = '' or @sTenDuAn is null or sTenDuAn is null or sTenDuAn like @sTenDuAn)

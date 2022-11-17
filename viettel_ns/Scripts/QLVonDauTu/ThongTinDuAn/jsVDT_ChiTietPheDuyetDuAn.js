@@ -380,7 +380,7 @@ function LoadViewHangMuc(data) {
         dongMoi += `<tr style='cursor: pointer;' class='${parent}'>`;
         dongMoi += "<td class='r_STT width-50' style='text-align: center'>" + data[i].smaOrder + "</td><input type='hidden' id='" + data[i].iID_QDDauTu_DM_HangMucID + "' class='r_iID_DuAn_HangMucID' value='" + data[i].iID_QDDauTu_DM_HangMucID + "'/> <input type='hidden' class='r_HangMucID' value='" + data[i].iID_HangMucID + "'/> <input type='hidden' class='r_HangMucParentID' value='" + data[i].iID_ParentID + "'/> <input type='hidden' class='r_IsEdit' value='" + data[i].isEdit + "'/>";
         dongMoi += "<td class='r_sTenHangMuc'><div class='sTenHangMuc' hidden></div><input type='text' class='form-control txtTenHangMuc' disabled value='" + data[i].sTenHangMuc + "'/></td>"
-        dongMoi += "<td><input type='hidden' class='r_iID_LoaiCongTrinhID' value=''/><div class='sTenLoaiCongTrinh' hidden></div><div disabled class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh(data[i].iID_LoaiCongTrinhID) + "</div></td>";
+        //dongMoi += "<td><input type='hidden' class='r_iID_LoaiCongTrinhID' value=''/><div class='sTenLoaiCongTrinh' hidden></div><div disabled class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh(data[i].iID_LoaiCongTrinhID) + "</div></td>";
         if (data[i].isEdit) {
             dongMoi += "<td class='r_HanMucDauTu' align='right'><div class='fHanMucDauTu' hidden></div><input type='text' disabled style='text-align: right'  class='form-control txtHanMucDauTu' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' value='" + FormatNumber(data[i].fTienPheDuyet) + "'/></td>";
 

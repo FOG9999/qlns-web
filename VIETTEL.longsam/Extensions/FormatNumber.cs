@@ -70,13 +70,13 @@ namespace VTS.QLNS.CTC.App.Service.UserFunction
                 }
                 else
                 {
-                    parameters[0] = parameters[0].ToString().Replace(",",".");
+                    //parameters[0] = parameters[0].ToString().Replace(",",".");
                     val = double.Parse(parameters[0].ToString())/ donVi;
                 }
             }
 
             if (val == 0) return _defaultIfZero;
-            return formatNumber(val);
+            return formatNumber(Math.Round(val));
         }
 
         private object formatNumber(double number)
@@ -84,7 +84,7 @@ namespace VTS.QLNS.CTC.App.Service.UserFunction
             if (_exportType == ExportType.PDF)
             {
                 CultureInfo vi = new CultureInfo("vi-VN", true);
-                vi.NumberFormat.NumberDecimalSeparator = ",";
+                //vi.NumberFormat.NumberDecimalSeparator = ",";
                 vi.NumberFormat.NumberGroupSeparator = ".";
                 return Regex.Replace(String.Format(vi, "{0:n" + _maxDecimalPlace + "}", number),
                                      @"[" + vi.NumberFormat.NumberDecimalSeparator + "]?0+$", "");

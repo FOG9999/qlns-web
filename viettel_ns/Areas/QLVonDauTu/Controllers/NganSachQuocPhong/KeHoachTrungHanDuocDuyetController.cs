@@ -22,6 +22,8 @@ using VIETTEL.Controllers;
 using VIETTEL.Flexcel;
 using VIETTEL.Helpers;
 using VIETTEL.Models;
+using static VTS.QLNS.CTC.App.Service.UserFunction.FormatNumber;
+using VTS.QLNS.CTC.App.Service.UserFunction;
 
 namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 {
@@ -811,6 +813,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             iNamBatDau = paramReport.iGiaiDoanTu;
             iNamKetThuc = paramReport.iGiaiDoanDen;
 
+            KH5NDDPrintDataExportModel dataSummary = new KH5NDDPrintDataExportModel();
+            dataSummary.FHanMucDauTu = dataReport.Where(x => x.LoaiParent == 0).Sum(x => x.FHanMucDauTu);
+            dataSummary.FVonDaGiao = dataReport.Where(x => x.LoaiParent == 0).Sum(x => x.FVonDaGiao);
+            dataSummary.FTongVonBoTri = dataReport.Where(x => x.LoaiParent == 0).Sum(x => x.FTongVonBoTri);
+            dataSummary.FGiaTriKeHoach = dataReport.Where(x => x.LoaiParent == 0).Sum(x => x.FGiaTriKeHoach);
+            dataSummary.FVonBoTri = dataReport.Where(x => x.LoaiParent == 0).Sum(x => x.FVonBoTri);
+
             if (itemQuery != null)
             {
                 iNamBatDau = itemQuery.iGiaiDoanTu;
@@ -825,8 +834,15 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 }
             }
 
+            FormatNumber formatNumber = new FormatNumber(1, ExportType.PDF);
+            fr.SetUserFunction("FormatNumber", formatNumber);
             fr.AddTable<KH5NDDPrintDataExportModel>("Items", dataReport);
 
+            fr.SetValue("FHanMucDauTuSum", dataSummary.FHanMucDauTu);
+            fr.SetValue("FVonDaGiaoSum", dataSummary.FVonDaGiao);
+            fr.SetValue("FTongVonBoTriSum", dataSummary.FTongVonBoTri);
+            fr.SetValue("FGiaTriKeHoachSum", dataSummary.FGiaTriKeHoach);
+            fr.SetValue("FVonBoTriSum", dataSummary.FVonBoTri);
             fr.SetValue("YearBefore", iNamBatDau - 1);
             fr.SetValue("YearAfter", iNamKetThuc);
             fr.SetValue("Period", string.Format("{0} - {1}", iNamBatDau, iNamKetThuc));
@@ -840,6 +856,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                   .UseForm(this);
 
             fr.Run(Result);
+
+            _iQLVonDauTuService.FormatAllRowHeight(dataReport, "STenDuAn", 12, 48, Result, 500);         //set height neu dong qua nho
+            Result.SetRowHeight(11, 600);            
+
             return Result;
         }
 
@@ -881,6 +901,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 }
             }
 
+            FormatNumber formatNumber = new FormatNumber(1, ExportType.PDF);
+            fr.SetUserFunction("FormatNumber", formatNumber);
             fr.AddTable<KH5NDDPrintDataChuyenTiepExportModel>("Items", dataReport);
 
             fr.SetValue("BeforeYear", iNamBatDau - 1);
@@ -905,6 +927,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                   .UseChuKyForController(sControlName)
                   .UseForm(this);
             fr.Run(Result);
+
+            _iQLVonDauTuService.FormatAllRowHeight(dataReport, "STenDuAn", 14, 35, Result, 600);         //set height neu dong qua nho
+            Result.SetRowHeight(13, 700);
+
             return Result;
         }
 

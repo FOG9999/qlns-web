@@ -220,9 +220,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 //Sau khi tinh tong cha thi luu lai vao DB
                 IEnumerable<VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet> newData = ConvertToModels(dtChiTiet);
                 _iQLVonDauTuService.SaveKeHoach5NamDeXuatChiTiet(newData);
-                //update fGiaTriKeHoach
-                _iQLVonDauTuService.UpdateGiaTriKeHoach(iID_KeHoach5NamID);
             }
+            //update fGiaTriKeHoach
+            _iQLVonDauTuService.UpdateGiaTriKeHoach(iID_KeHoach5NamID);
         }
 
         //duonglt test

@@ -45,7 +45,7 @@
                     <input type="number" id="iGiaiDoanDen" name="iGiaiDoanDen" class="form-control" value="@Model.KH5NamDeXuat.iGiaiDoanDen" maxlength="50" disabled/>
                 </div>
                 <div class="col-sm-3" id="dvLct">
-                    <label for="txt_ChungTu">Loại công trình</label>
+                    <label for="txt_ChungTu">Loại dự án</label>
                     @Helpers.Required()
                     @Html.DropDownList("ValueItem", (SelectList)(ViewBag.LoaiCongTrinh), new { @class = "form-control", @id = "ValueItemCt" })
                 </div>

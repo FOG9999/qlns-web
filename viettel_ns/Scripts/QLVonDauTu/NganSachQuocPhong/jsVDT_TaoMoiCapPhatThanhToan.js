@@ -1147,7 +1147,7 @@ function recalculateTyLeThanhToan() {
                 FGiaTriThuHoiUngTruocTn +
                 FGiaTriThuHoiUngTruocNn)) / GiaTriHopDong;
 
-        $('#fTyLeThanhToan').val(tyLeThanhToan);
+        $('#fTyLeThanhToan').val(tyLeThanhToan.toFixed(2));
     }
     catch (e) {
         console.error(e)

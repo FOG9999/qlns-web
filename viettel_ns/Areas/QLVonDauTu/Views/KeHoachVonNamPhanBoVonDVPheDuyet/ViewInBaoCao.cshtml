@@ -21,19 +21,8 @@
                     </span>
                     <input type="hidden" value="@ViewBag.isStatus" id="txtStatusReport" />
                 </div>
-                <ul class="nav nav-tabs" style="margin-top: 10px;">
-                    <li class="active"><a data-toggle="tab" href="#bcTheoDonVi" data-value="1">Báo cáo theo đơn vị</a></li>
-                    <li><a data-toggle="tab" href="#bcTongHop" data-value="2">Báo cáo tổng hợp</a></li>
-                </ul>
             </div>
-
-            <div class="card-body tab-content" style="padding-top: 0px !important;">
-                <div id="bcTheoDonVi" class="tab-pane fade in active">
-                    @Html.Partial("_partialPrintBCDV", Model)
-                </div>
-                <div id="bcTongHop" class="tab-pane fade in ">
-                    @Html.Partial("_partialPrintBCTH", Model)
-                </div>
+                @Html.Partial("_partialPrintBCDV", Model)
             </div>
         </div>
     </div>

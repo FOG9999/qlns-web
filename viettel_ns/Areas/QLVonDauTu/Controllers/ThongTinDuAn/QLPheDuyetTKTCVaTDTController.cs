@@ -122,7 +122,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         public JsonResult GetNguonVonByDuToan(Guid iIdDuAnId, Guid? iIdDuToan = null, bool bIsDieuChinh = false)
         {
             List<VDT_DA_DuToan_Nguonvon_ViewModel> lstData = new List<VDT_DA_DuToan_Nguonvon_ViewModel>();
-            if (iIdDuToan == null || iIdDuToan == Guid.Empty || bIsDieuChinh == false)
+            if ((iIdDuToan == null || iIdDuToan == Guid.Empty) && bIsDieuChinh == false)
             {
                 lstData = _qLVonDauTuService.GetNguonVonTKTCTDTByDuAnId(iIdDuAnId);
             }
@@ -154,7 +154,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         public JsonResult GetHangMucByDuToan(Guid iIdDuAnId, Guid? iIdDuToan = null, bool bIsDieuChinh = false)
         {
             List<VDT_DA_DuToan_HangMuc_ViewModel> lstData = new List<VDT_DA_DuToan_HangMuc_ViewModel>();
-            if (iIdDuToan == null || iIdDuToan == Guid.Empty || bIsDieuChinh)
+            if ((iIdDuToan == null || iIdDuToan == Guid.Empty) && bIsDieuChinh)
             {
                 lstData = _qLVonDauTuService.GetListHangMucTheoPheDuyetDuAn(iIdDuAnId);
             }

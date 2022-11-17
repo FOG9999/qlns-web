@@ -19,6 +19,10 @@ using VIETTEL.Helpers;
 using System.Net;
 using VIETTEL.Common;
 using VIETTEL.Flexcel;
+using static VTS.QLNS.CTC.App.Service.UserFunction.FormatNumber;
+using VTS.QLNS.CTC.App.Service.UserFunction;
+using System.Linq.Expressions;
+using Viettel;
 
 namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 {
@@ -34,6 +38,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
         private string ftpUsername = System.Configuration.ConfigurationManager.AppSettings["FtpUsername"];
         private string ftpPassword = System.Configuration.ConfigurationManager.AppSettings["FtpPassword"];
         private const string sControlName = "KeHoachVonNamPhanBoVonDVPheDuyet";
+        private const string RPT_DONVI = "2";
+        private const string RPT_GOC = "1";
+        private const string RPT_CONGTRINH_MOMOI = "1";
+        private const string RPT_CONGTRINH_CHUYENTIEP = "3";
 
         // GET: QLVonDauTu/KeHoachVonNamPhanBoVonDVPheDuyet
         public ActionResult Index()
@@ -407,30 +415,23 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             }
             return Json("");
         }
+
         [HttpGet]
         public ActionResult ViewInBaoCao()
         {
             VDTKeHoachVonNamDuocDuyetExport vm = new VDTKeHoachVonNamDuocDuyetExport();
             try
             {
-                IEnumerable<NS_DonVi> lstDonViQuanLy = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec);
-                vm.lstDonViQuanLy = lstDonViQuanLy;
-
-                List<ComBoBoxItem> lstLoaiChungTu = new List<ComBoBoxItem>()
+                vm.lstDonViQuanLy = new List<NS_DonVi>();
+                string[] lstDonViInclude = new string[] { "0", "1" };
+                IEnumerable<NS_DonVi> lstDonViQuanLy = _qLVonDauTuService.GetDonviList(PhienLamViec.NamLamViec);
+                if(lstDonViQuanLy != null)
                 {
-                    new ComBoBoxItem(){DisplayItem = "Gốc", ValueItem = "1"}
-                };
-
-                ViewBag.lstLoaiChungTu = lstLoaiChungTu.ToSelectList("ValueItem", "DisplayItem");
+                    vm.lstDonViQuanLy = lstDonViQuanLy.Where(n => (n.iTrangThai ?? 1) == 1);
+                }
 
                 IEnumerable<NS_NguonNganSach> lstDMNguonNganSach = _qLVonDauTuService.GetListDMNguonNganSach();
                 ViewBag.lstNguonVon = lstDMNguonNganSach.ToSelectList("iID_MaNguonNganSach", "sTen");
-
-                ViewBag.ListDonViQuanLy = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
-
-                List<VDT_DM_LoaiCongTrinh> lstLoaiCongTrinh = _qLVonDauTuService.GetListParentDMLoaiCongTrinh();
-                lstLoaiCongTrinh.Insert(0, new VDT_DM_LoaiCongTrinh { iID_LoaiCongTrinh = Guid.Empty, sTenLoaiCongTrinh = "--Tất cả--" });
-                ViewBag.lstLoaiCongTrinh = lstLoaiCongTrinh.ToSelectList("iID_LoaiCongTrinh", "sTenLoaiCongTrinh");
 
                 List<ComBoBoxItem> lstDonViTinh = new List<ComBoBoxItem>()
                 {
@@ -455,60 +456,75 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
         {
             try
             {
-                var listErrMess = new List<string>();
-                if (dataReport == null || arrIdDVQL.Count() == 0)
+                XlsFile Result = new XlsFile(true);
+                FlexCelReport fr = new FlexCelReport();
+                string templateFileName = string.Empty;
+
+                if (dataReport.sLoaiChungTu == RPT_GOC)
                 {
-                    listErrMess.Add("Lỗi in báo cáo");
+                    if(dataReport.sNguonVon == "1")
+                    {
+                        fr = HandleDataExportChungTuGocNSQP(dataReport, arrIdDVQL);
+                        if (dataReport.sLoaiCongTrinh == RPT_CONGTRINH_MOMOI)
+                        {
+                            templateFileName = "rpt_BaoCao_KHNam_DonVi_PheDuyet_CTMM.xlsx";
+                        }
+                        else
+                        {
+                            templateFileName = "rpt_BaoCao_KHNam_DonVi_PheDuyet_CTCT.xlsx";
+                        }
+                    }
+                    else
+                    {
+                        fr = HandleDataExportBudgetOther(dataReport, arrIdDVQL);
+                        templateFileName = "rpt_BaoCao_KHNam_DonVi_PheDuyet_NguonVonKhac.xlsx";
+                    }
+                }
+                else
+                {
+                    if (dataReport.sNguonVon == "1")
+                    {
+                        fr = HandleDataExportDieuChinh(dataReport, arrIdDVQL);
+                        templateFileName = "rpt_BaoCao_KHNam_DonVi_PheDuyet_DieuChinh.xlsx";
+                    }
+                    else
+                    {
+                        fr = HandleDataExportBudgetOtherDieuChinh(dataReport, arrIdDVQL);
+                        templateFileName = "rpt_BaoCao_KHNam_DeXuat_DieuChinh_NguonVonKhac.xlsx";
+                    }
                 }
 
-                if (listErrMess.Count() > 0)
+                Result.Open(Server.MapPath(Path.Combine("~/Areas/QLVonDauTu/ReportExcelForm", templateFileName)));
+                FormatNumber formatNumber = new FormatNumber(int.Parse(dataReport.sValueDonViTinh), (isPdf ? ExportType.PDF : ExportType.EXCEL));
+                string sTenDonVi = GetNameUnit(dataReport);
+                if (!string.IsNullOrEmpty(sTenDonVi))
                 {
-                    return Json(new { status = false, listErrMess = listErrMess }, JsonRequestBehavior.AllowGet);
+                    sTenDonVi = sTenDonVi.ToUpper();
                 }
-
-                string lstDonViQuanLy = string.Join(",", arrIdDVQL.ToList());
-                List<VDT_KHV_KeHoachVonNam_DuocDuyet> itemQuery = _qLVonDauTuService.GetKeHoachVonNamDuocDuyetByCondition(dataReport.iNamLamViec, lstDonViQuanLy, dataReport.sNguonVon).ToList();
-                if (itemQuery == null || itemQuery.Count() == 0)
+                if(fr == null)
                 {
-                    listErrMess.Add("Không tìm thấy dữ liệu");
-                    return Json(new { status = false, listErrMess = listErrMess }, JsonRequestBehavior.AllowGet);
+                    return Json(new { status = false }, JsonRequestBehavior.AllowGet);
                 }
-                string lstLct = dataReport.sLoaiCongTrinh;
-
-                Dictionary<string, string> lstGroupUnit = itemQuery.GroupBy(x => x.iID_DonViQuanLyID)
-                       .ToDictionary(x => x.Key.ToString(), x => string.Join(",", itemQuery.Where(y => y.iID_DonViQuanLyID == x.Key).Select(z => z.iID_KeHoachVonNam_DuocDuyetID.ToString()).ToList()));
-
-                List<VDTKeHoachVonNamDuocDuyetExport> lstGroup = new List<VDTKeHoachVonNamDuocDuyetExport>();
-
-                foreach (var itemUnit in lstGroupUnit.Keys)
-                {
-                    string lstId = lstGroupUnit[itemUnit];
-                    List<VDTKeHoachVonNamDuocDuyetExport> lstCongTrinhMoMoi = _qLVonDauTuService.GetKeHoachVonNamDuocDuyetReport(lstId, lstLct, KHOI_CONG_MOI, double.Parse(dataReport.sValueDonViTinh)).ToList();
-                    string sNameUnit = _qLVonDauTuService.GetDonViQuanLyById(Guid.Parse(itemUnit)).sTen;
-                    lstGroup.Add(new VDTKeHoachVonNamDuocDuyetExport() { sTenDuAn = sNameUnit.ToUpper(), IsHangCha = true });
-                    List<VDTKeHoachVonNamDuocDuyetExport> lstDataExportCongTrinhMoMoi = CalculateDataReport(lstCongTrinhMoMoi);
-                    lstGroup.AddRange(lstDataExportCongTrinhMoMoi);
-                    List<VDTKeHoachVonNamDuocDuyetExport> lstCongTrinhChuyenTiep = _qLVonDauTuService.GetKeHoachVonNamDuocDuyetReport(lstId, lstLct, CHUYEN_TIEP, double.Parse(dataReport.sValueDonViTinh)).ToList();
-                    List<VDTKeHoachVonNamDuocDuyetExport> lstDataExportCongTrinhChuyenTiep = CalculateDataReport(lstCongTrinhChuyenTiep);
-                    lstGroup.AddRange(lstDataExportCongTrinhChuyenTiep);
-                }
-
-                ExcelFile xls = CreateReportGoc(lstGroup, dataReport);
-                xls.PrintLandscape = false;
-
-                TempData["DataReportGocXls"] = xls;
-
-                FlexCelPdfExport pdf = new FlexCelPdfExport(xls, true);
+                fr.SetUserFunction("FormatNumber", formatNumber);
+                fr.SetValue("Year", dataReport.iNamLamViec);
+                fr.SetValue("TitleFirst", dataReport.txtHeader1);
+                fr.SetValue("TitleSecond", dataReport.txtHeader2);
+                fr.SetValue("DonViTinh", dataReport.sDonViTinh);
+                fr.SetValue("DonVi", sTenDonVi);
+                fr.SetValue("DonViCapTren", "BỘ QUỐC PHÒNG");
+                fr.UseChuKy(Username).UseChuKyForController(sControlName).UseForm(this);
+                fr.Run(Result);
+                Result.PrintLandscape = false;
+                TempData["DataReportGocXls"] = Result;
+                FlexCelPdfExport pdf = new FlexCelPdfExport(Result, true);
                 var bufferPdf = new MemoryStream();
-
                 pdf.Export(bufferPdf);
-
                 TempData["DataReportGoc"] = bufferPdf;
-
             }
             catch (Exception ex)
             {
                 AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+                return Json(new { status = false }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new { status = true, isPdf = isPdf, isGoc = dataReport.sLoaiChungTu.Equals("1") ? true : false }, JsonRequestBehavior.AllowGet);
@@ -520,23 +536,6 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             ExcelFile xls = (ExcelFile)TempData["DataReportGocXls"];
 
             return Print(xls, pdf ? "pdf" : "xls", pdf ? "BaoCaoKeHoachVonNamDuocDuyet.pdf" : "BaoCaoKeHoachVonNamDuocDuyet.xls");
-
-            //if (pdf)
-            //{
-            //    MemoryStream stream = (MemoryStream)TempData["DataReportGoc"];
-            //    return File(stream.ToArray(), "application/pdf", $"BaoCaoKeHoachVonNamDuocDuyet.pdf");
-            //}
-            //else
-            //{
-            //    ExcelFile xls = (ExcelFile)TempData["DataReportGocXls"];
-
-            //    using (MemoryStream stream = new MemoryStream())
-            //    {
-            //        xls.Save(stream);
-
-            //        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"BaoCaoKeHoachVonNamDuocDuyet.xlsx");
-            //    }
-            //}
         }
 
         #region Helper
@@ -718,6 +717,394 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             parrentItem.TongSo += seftItem.TongSo;
             CalculateParent(parrentItem, seftItem, data);
         }
+
+        #region Print
+        public FlexCelReport HandleDataExportChungTuGocNSQP(VDTKeHoachVonNamDuocDuyetExport dataReport, List<string> arrIdDVQL)
+        {
+            List<PhanBoVonDonViPheDuyetReportQuery> results = new List<PhanBoVonDonViPheDuyetReportQuery>();
+            List<VDT_DA_QDDauTu> ListAllDaQddauTu = _qLVonDauTuService.GetAllVdtDaQdDauTu();
+            List<VDT_KHV_PhanBoVon_DonVi_PheDuyet> lstQuery = _qLVonDauTuService.GetVDTKhvPhanBoVonDonViPheDuyetByCondition(dataReport);
+            if (lstQuery == null || lstQuery.Count == 0) return null;
+
+            results = _qLVonDauTuService.GetPhanBoVonDonViPheDuyetReport(string.Join(",", lstQuery.Select(n => n.Id)), Int32.Parse(dataReport.iNamLamViec), int.Parse(dataReport.sLoaiCongTrinh), 
+                string.Join(",", arrIdDVQL), Double.Parse(dataReport.sValueDonViTinh)).ToList();
+            BoSungDuLieuNSQP(results, ListAllDaQddauTu, dataReport.sValueDonViTinh);
+            results = CalculateDataReport(results, dataReport);
+            foreach (var item in results)
+            {
+                if (item.NgayPheDuyet != null)
+                    item.dNgayPheDuyet = item.NgayPheDuyet.Value.ToString("dd/MM/yyyy");
+            }
+            double TongMucDauTu = results.Where(x => !x.IsHangCha).Sum(x => x.TongMucDauTu);
+            double TongMucDauTuNSQP = results.Where(x => !x.IsHangCha).Sum(x => x.TongMucDauTuNSQP);
+            double VonBoTriDenHetNamTruoc = results.Where(x => !x.IsHangCha).Sum(x => x.VonBoTriDenHetNamTruoc);
+            double KeHoachVonDauTuNam = results.Where(x => !x.IsHangCha).Sum(x => x.KeHoachVonDauTuNam);
+            double VonGiaiNganNam = results.Where(x => !x.IsHangCha).Sum(x => x.VonGiaiNganNam);
+            double DieuChinhVonNam = results.Where(x => !x.IsHangCha).Sum(x => x.DieuChinhVonNam);
+            FlexCelReport fr = new FlexCelReport();
+            fr.AddTable<PhanBoVonDonViPheDuyetReportQuery>("Items", results);
+            fr.SetValue("TongMucDauTuSum", TongMucDauTu);
+            fr.SetValue("TongMucDauTuNSQPSum", TongMucDauTuNSQP);
+            fr.SetValue("VonBoTriDenHetNamTruocSum", VonBoTriDenHetNamTruoc);
+            fr.SetValue("KeHoachVonDauTuNamSum", KeHoachVonDauTuNam);
+            fr.SetValue("VonGiaiNganNamSum", VonGiaiNganNam);
+            fr.SetValue("DieuChinhVonNamSum", DieuChinhVonNam);
+            return fr;
+        }
+
+        public FlexCelReport HandleDataExportBudgetOther(VDTKeHoachVonNamDuocDuyetExport dataReport, List<string> arrIdDVQL)
+        {
+            List<VdtKhvVonNamDonViPheDuyetNguonVonQuery> results = new List<VdtKhvVonNamDonViPheDuyetNguonVonQuery>();
+            List<VDT_DA_QDDauTu> ListAllDaQddauTu = _qLVonDauTuService.GetAllVdtDaQdDauTu();
+            List<VDT_KHV_PhanBoVon_DonVi_PheDuyet> lstQuery = _qLVonDauTuService.GetVDTKhvPhanBoVonDonViPheDuyetByCondition(dataReport);
+            if (lstQuery == null || lstQuery.Count == 0) return null;
+
+            results = _qLVonDauTuService.GetPhanBoVonDonViPheDuyetNguonVonReport(string.Join(",", lstQuery.Select(n => n.Id)),
+                string.Join(",", arrIdDVQL), Double.Parse(dataReport.sValueDonViTinh));
+            BoSungDuLieuNSKhac(results, ListAllDaQddauTu, dataReport.sValueDonViTinh);
+
+            results.Select(item => { item.TongSoVonNamDieuChinh = item.ThuHoiVonDaUngTruocDieuChinh + item.TraNoXDCB; return item; }).ToList();
+
+            List<VdtKhvVonNamDonViPheDuyetNguonVonQuery> lstParent = results.Where(x => x.IsHangCha).ToList();
+            lstParent.Select(x => { x.STT = (lstParent.IndexOf(x) + 1).ToString(); return x; }).ToList();
+            List<VdtKhvVonNamDonViPheDuyetNguonVonQuery> lstChildrent = results.Where(x => !x.IsHangCha).ToList();
+            lstParent.Select(x =>
+            {
+                List<VdtKhvVonNamDonViPheDuyetNguonVonQuery> item = lstChildrent.Where(y => y.IdNhomDuAn == x.IdNhomDuAn).ToList();
+                item.Select(y => { y.STT = string.Format("{0}.{1}", x.STT, item.IndexOf(y) + 1); return y; }).ToList();
+                return x;
+            }).ToList();
+
+            FlexCelReport fr = new FlexCelReport();
+            fr.AddTable<VdtKhvVonNamDonViPheDuyetNguonVonQuery>("Items", results);
+
+            fr.SetValue("TongSoVonDauTuSum", results.Where(x => !x.IsHangCha).Sum(x => x.TongSoVonDauTu));
+            fr.SetValue("TongSoVonDauTuTrongNuocSum", results.Where(x => !x.IsHangCha).Sum(x => x.TongSoVonDauTuTrongNuoc));
+            fr.SetValue("KeHoachVonDauTuGiaiDoanSum", results.Where(x => !x.IsHangCha).Sum(x => x.KeHoachVonDauTuGiaiDoan));
+            fr.SetValue("VonThanhToanLuyKeSum", results.Where(x => !x.IsHangCha).Sum(x => x.VonThanhToanLuyKe));
+            fr.SetValue("TongSoKeHoachVonNamSum", results.Where(x => !x.IsHangCha).Sum(x => x.TongSoKeHoachVonNam));
+            fr.SetValue("ThuHoiVonDaUngTruocSum", results.Where(x => !x.IsHangCha).Sum(x => x.ThuHoiVonDaUngTruoc));
+            fr.SetValue("VonThucHienTuDauNamDenNaySum", results.Where(x => !x.IsHangCha).Sum(x => x.VonThucHienTuDauNamDenNay));
+            fr.SetValue("TongSoVonNamDieuChinhSum", results.Where(x => !x.IsHangCha).Sum(x => x.TongSoVonNamDieuChinh));
+            fr.SetValue("ThuHoiVonDaUngTruocDieuChinhSum", results.Where(x => !x.IsHangCha).Sum(x => x.ThuHoiVonDaUngTruocDieuChinh));
+            fr.SetValue("TraNoXDCBSum", results.Where(x => !x.IsHangCha).Sum(x => x.TraNoXDCB));
+            return fr;
+        }
+
+        public FlexCelReport HandleDataExportDieuChinh(VDTKeHoachVonNamDuocDuyetExport dataReport, List<string> arrIdDVQL)
+        {
+            List<PhanBoVonDonViPheDuyetDieuChinhReportQuery> results = new List<PhanBoVonDonViPheDuyetDieuChinhReportQuery>();
+            List<VDT_DA_QDDauTu> ListAllDaQddauTu = _qLVonDauTuService.GetAllVdtDaQdDauTu();
+            List<VDT_KHV_PhanBoVon_DonVi_PheDuyet> lstQuery = _qLVonDauTuService.GetVDTKhvPhanBoVonDonViPheDuyetByCondition(dataReport);
+            if (lstQuery == null || lstQuery.Count == 0) return null;
+
+            results = _qLVonDauTuService.GetPhanBoVonDonViPheDuyetDieuChinhReport(string.Join(",", lstQuery.Select(n => n.Id)), Int32.Parse(dataReport.iNamLamViec), int.Parse(dataReport.sLoaiCongTrinh),
+                string.Join(",", arrIdDVQL), Double.Parse(dataReport.sValueDonViTinh)).ToList();
+
+            results = CalculateDataReportDieuChinh(results);
+            FlexCelReport fr = new FlexCelReport();
+            fr.AddTable<PhanBoVonDonViPheDuyetDieuChinhReportQuery>("Items", results);
+            fr.SetValue("TongMucDauTuSum", results.Where(x => !x.IsHangCha).Sum(x => x.TongMucDauTu));
+            fr.SetValue("TongMucDauTuNSQPSum", results.Where(x => !x.IsHangCha).Sum(x => x.TongMucDauTuNSQP));
+            fr.SetValue("VonBoTriDenHetNamTruocSum", results.Where(x => !x.IsHangCha).Sum(x => x.VonBoTriDenHetNamTruoc));
+            fr.SetValue("KeHoachVonDauTuNamSum", results.Where(x => !x.IsHangCha).Sum(x => x.KeHoachVonDauTuNam));
+            fr.SetValue("VonGiaiNganNamSum", results.Where(x => !x.IsHangCha).Sum(x => x.VonGiaiNganNam));
+            fr.SetValue("DieuChinhVonNamSum", results.Where(x => !x.IsHangCha).Sum(x => x.DieuChinhVonNam));
+            return fr;
+        }
+
+        public FlexCelReport HandleDataExportBudgetOtherDieuChinh(VDTKeHoachVonNamDuocDuyetExport dataReport, List<string> arrIdDVQL)
+        {
+            List<VdtKhvVonNamDonViPheDuyetNguonVonDieuChinhQuery> results = new List<VdtKhvVonNamDonViPheDuyetNguonVonDieuChinhQuery>();
+            List<VDT_DA_QDDauTu> ListAllDaQddauTu = _qLVonDauTuService.GetAllVdtDaQdDauTu();
+            List<VDT_KHV_PhanBoVon_DonVi_PheDuyet> lstQuery = _qLVonDauTuService.GetVDTKhvPhanBoVonDonViPheDuyetByCondition(dataReport);
+            if (lstQuery == null || lstQuery.Count == 0) return null;
+
+            results = _qLVonDauTuService.GetPhanBoVonDonViPheDuyetNguonVonDieuChinhReport(string.Join(",", lstQuery.Select(n => n.Id)),
+                string.Join(",", arrIdDVQL), Double.Parse(dataReport.sValueDonViTinh));
+
+            List<VdtKhvVonNamDonViPheDuyetNguonVonDieuChinhQuery> lstParent = results.Where(x => x.IsHangCha).ToList();
+            lstParent.Select(x => { x.STT = (lstParent.IndexOf(x) + 1).ToString(); return x; }).ToList();
+            List<VdtKhvVonNamDonViPheDuyetNguonVonDieuChinhQuery> lstChildrent = results.Where(x => !x.IsHangCha).ToList();
+            lstParent.Select(x =>
+            {
+                List<VdtKhvVonNamDonViPheDuyetNguonVonDieuChinhQuery> item = lstChildrent.Where(y => y.IdNhomDuAn == x.IdNhomDuAn).ToList();
+                item.Select(y => { y.STT = string.Format("{0}.{1}", x.STT, item.IndexOf(y) + 1); return y; }).ToList();
+                return x;
+            }).ToList();
+            FlexCelReport fr = new FlexCelReport();
+            fr.AddTable<VdtKhvVonNamDonViPheDuyetNguonVonDieuChinhQuery>("Items", results);
+            fr.SetValue("TongSoVonDauTuSum", results.Where(x => !x.IsHangCha).Sum(x => x.TongSoVonDauTu));
+            fr.SetValue("TongSoVonDauTuTrongNuocSum", results.Where(x => !x.IsHangCha).Sum(x => x.TongSoVonDauTuTrongNuoc));
+            fr.SetValue("KeHoachVonDauTuGiaiDoanSum", results.Where(x => !x.IsHangCha).Sum(x => x.KeHoachVonDauTuGiaiDoan));
+            fr.SetValue("VonThanhToanLuyKeSum", results.Where(x => !x.IsHangCha).Sum(x => x.VonThanhToanLuyKe));
+            fr.SetValue("TongSoKeHoachVonNamSum", results.Where(x => !x.IsHangCha).Sum(x => x.TongSoKeHoachVonNam));
+            fr.SetValue("ThuHoiVonDaUngTruocSum", results.Where(x => !x.IsHangCha).Sum(x => x.ThuHoiVonDaUngTruoc));
+            fr.SetValue("VonThucHienTuDauNamDenNaySum", results.Where(x => !x.IsHangCha).Sum(x => x.VonThucHienTuDauNamDenNay));
+            fr.SetValue("TongSoVonNamDieuChinhSum", results.Where(x => !x.IsHangCha).Sum(x => x.TongSoVonNamDieuChinh));
+            fr.SetValue("ThuHoiVonDaUngTruocDieuChinhSum", results.Where(x => !x.IsHangCha).Sum(x => x.ThuHoiVonDaUngTruocDieuChinh));
+            fr.SetValue("TraNoXDCBSum", results.Where(x => !x.IsHangCha).Sum(x => x.TraNoXDCB));
+            return fr;
+        }
+
+        private List<PhanBoVonDonViPheDuyetReportQuery> CalculateDataReport(List<PhanBoVonDonViPheDuyetReportQuery> data, VDTKeHoachVonNamDuocDuyetExport dataReport)
+        {
+            try
+            {
+                List<PhanBoVonDonViPheDuyetReportQuery> result = new List<PhanBoVonDonViPheDuyetReportQuery>();
+                List<PhanBoVonDonViPheDuyetReportQuery> childrent = data.Where(x => !x.IsHangCha).ToList();
+                List<PhanBoVonDonViPheDuyetReportQuery> parent = data.Where(x => x.IsHangCha && (x.LoaiParent.Equals(0) || x.LoaiParent.Equals(1))).ToList();
+
+                data.Where(x => x.IsHangCha && x.LoaiParent.Equals(1)).Select(x =>
+                {
+                    x.TongMucDauTu = 0;
+                    x.TongMucDauTuNSQP = 0;
+                    x.VonBoTriDenHetNamTruoc = 0;
+                    x.KeHoachVonDauTuNam = 0;
+                    x.VonGiaiNganNam = 0;
+                    x.DieuChinhVonNam = 0;
+                    return x;
+                }).ToList();
+
+                foreach (var pr in parent.Where(x => x.IIdLoaiCongTrinh != null))
+                {
+                    List<PhanBoVonDonViPheDuyetReportQuery> lstChilrent = childrent.Where(x => x.IIdLoaiCongTrinh.Equals(pr.IIdLoaiCongTrinh)).ToList();
+                    foreach (var item in lstChilrent.Where(x => ((x.TongMucDauTu != 0)
+                        || (x.TongMucDauTuNSQP != 0)
+                        || (x.VonBoTriDenHetNamTruoc != 0)
+                        || (x.KeHoachVonDauTuNam != 0)
+                        || (x.VonGiaiNganNam != 0)
+                        || (x.DieuChinhVonNam != 0))))
+                    {
+                        pr.TongMucDauTu += item.TongMucDauTu;
+                        pr.TongMucDauTuNSQP += item.TongMucDauTuNSQP;
+                        pr.VonBoTriDenHetNamTruoc += item.VonBoTriDenHetNamTruoc;
+                        pr.KeHoachVonDauTuNam += item.KeHoachVonDauTuNam;
+                        pr.VonGiaiNganNam += item.VonGiaiNganNam;
+                        pr.DieuChinhVonNam += item.DieuChinhVonNam;
+                    }
+                }
+
+                foreach (var item in parent.Where(x => ((x.TongMucDauTu != 0)
+                    || (x.TongMucDauTuNSQP != 0)
+                    || (x.VonBoTriDenHetNamTruoc != 0)
+                    || (x.KeHoachVonDauTuNam != 0)
+                    || (x.VonGiaiNganNam != 0)
+                    || (x.DieuChinhVonNam != 0)) && x.IIdLoaiCongTrinh != null))
+                {
+                    CalculateParent(item, item, data);
+                }
+
+                result = data.Where(x => ((x.TongMucDauTu != 0)
+                    || (x.TongMucDauTuNSQP != 0)
+                    || (x.VonBoTriDenHetNamTruoc != 0)
+                    || (x.KeHoachVonDauTuNam != 0)
+                    || (x.VonGiaiNganNam != 0)
+                    || (x.DieuChinhVonNam != 0)) || (x.IIdLoaiCongTrinh == null && x.IIdLoaiCongTrinhParent == null)).ToList();
+
+                foreach (var child in result)
+                {
+                    if (child.IdDuAn != null && child.IdDuAn != Guid.Empty)
+                    {
+                        var vonBoTri5Nam = _qLVonDauTuService.GetVonBoTri5Nam(child.IdDuAn.ToString(), Int32.Parse(dataReport.iNamLamViec));
+                        child.VonBoTri5Nam = (Double)vonBoTri5Nam / Int32.Parse(dataReport.sValueDonViTinh);
+                    }
+                }
+
+                List<PhanBoVonDonViPheDuyetReportQuery> lstItem = data.Where(n => n.LoaiParent.Equals(0) && !n.Loai.Equals(1)).ToList();
+                lstItem.Select(n => { n.STT = CommonFunction.ConvertLaMa((lstItem.IndexOf(n) + 1)).ToString(); return n; }).ToList();
+                List<PhanBoVonDonViPheDuyetReportQuery> lstItemLevel = data.Where(x => !x.Loai.Equals(1) && x.LoaiParent.Equals(2)).ToList();
+                lstItemLevel.Select(x => { x.STT = (lstItemLevel.IndexOf(x) + 1).ToString(); return x; }).ToList();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new List<PhanBoVonDonViPheDuyetReportQuery>();
+            }
+        }
+
+        private void CalculateParent(PhanBoVonDonViPheDuyetReportQuery currentItem, PhanBoVonDonViPheDuyetReportQuery seftItem, List<PhanBoVonDonViPheDuyetReportQuery> data)
+        {
+            try
+            {
+                var parrentItem = data.Where(x => x.IIdLoaiCongTrinh != null && x.IIdLoaiCongTrinh == currentItem.IIdLoaiCongTrinhParent).FirstOrDefault();
+                if (parrentItem == null) return;
+                parrentItem.TongMucDauTu += seftItem.TongMucDauTu;
+                parrentItem.TongMucDauTuNSQP += seftItem.TongMucDauTuNSQP;
+                parrentItem.VonBoTriDenHetNamTruoc += seftItem.VonBoTriDenHetNamTruoc;
+                parrentItem.KeHoachVonDauTuNam += seftItem.KeHoachVonDauTuNam;
+                parrentItem.VonGiaiNganNam += seftItem.VonGiaiNganNam;
+                parrentItem.DieuChinhVonNam += seftItem.DieuChinhVonNam;
+                CalculateParent(parrentItem, seftItem, data);
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private List<PhanBoVonDonViPheDuyetDieuChinhReportQuery> CalculateDataReportDieuChinh(List<PhanBoVonDonViPheDuyetDieuChinhReportQuery> data)
+        {
+            try
+            {
+                List<PhanBoVonDonViPheDuyetDieuChinhReportQuery> result = new List<PhanBoVonDonViPheDuyetDieuChinhReportQuery>();
+                List<PhanBoVonDonViPheDuyetDieuChinhReportQuery> childrent = data.Where(x => !x.IsHangCha).ToList();
+                List<PhanBoVonDonViPheDuyetDieuChinhReportQuery> parent = data.Where(x => x.IsHangCha && (x.LoaiParent.Equals(0) || x.LoaiParent.Equals(1))).ToList();
+
+                data.Where(x => x.IsHangCha && x.LoaiParent.Equals(1)).Select(x =>
+                {
+                    x.TongMucDauTu = 0;
+                    x.TongMucDauTuNSQP = 0;
+                    x.VonBoTriDenHetNamTruoc = 0;
+                    x.KeHoachVonDauTuNam = 0;
+                    x.VonGiaiNganNam = 0;
+                    x.DieuChinhVonNam = 0;
+                    return x;
+                }).ToList();
+
+                foreach (var pr in parent.Where(x => x.IIdLoaiCongTrinh != null))
+                {
+                    List<PhanBoVonDonViPheDuyetDieuChinhReportQuery> lstChilrent = childrent.Where(x => x.IIdLoaiCongTrinh.Equals(pr.IIdLoaiCongTrinh)).ToList();
+                    foreach (var item in lstChilrent.Where(x => ((x.TongMucDauTu != 0)
+                        || (x.TongMucDauTuNSQP != 0)
+                        || (x.VonBoTriDenHetNamTruoc != 0)
+                        || (x.KeHoachVonDauTuNam != 0)
+                        || (x.VonGiaiNganNam != 0)
+                        || (x.DieuChinhVonNam != 0))))
+                    {
+                        pr.TongMucDauTu += item.TongMucDauTu;
+                        pr.TongMucDauTuNSQP += item.TongMucDauTuNSQP;
+                        pr.VonBoTriDenHetNamTruoc += item.VonBoTriDenHetNamTruoc;
+                        pr.KeHoachVonDauTuNam += item.KeHoachVonDauTuNam;
+                        pr.VonGiaiNganNam += item.VonGiaiNganNam;
+                        pr.DieuChinhVonNam += item.DieuChinhVonNam;
+                    }
+                }
+
+                foreach (var item in parent.Where(x => ((x.TongMucDauTu != 0)
+                    || (x.TongMucDauTuNSQP != 0)
+                    || (x.VonBoTriDenHetNamTruoc != 0)
+                    || (x.KeHoachVonDauTuNam != 0)
+                    || (x.VonGiaiNganNam != 0)
+                    || (x.DieuChinhVonNam != 0) && x.IIdLoaiCongTrinh != null)))
+                {
+                    CalculateParentDieuChinh(item, item, data);
+                }
+
+                result = data.Where(x => ((x.TongMucDauTu != 0)
+                    || (x.TongMucDauTuNSQP != 0)
+                    || (x.VonBoTriDenHetNamTruoc != 0)
+                    || (x.KeHoachVonDauTuNam != 0)
+                    || (x.VonGiaiNganNam != 0)
+                    || (x.DieuChinhVonNam != 0 )) || (x.IIdLoaiCongTrinh == null && x.IIdLoaiCongTrinhParent == null)).ToList();
+
+                List<PhanBoVonDonViPheDuyetDieuChinhReportQuery> lstItem = data.Where(n => n.LoaiParent.Equals(0) && !n.Loai.Equals(1)).ToList();
+                lstItem.Select(n => { n.STT = CommonFunction.ConvertLaMa((lstItem.IndexOf(n) + 1)).ToString(); return n; }).ToList();
+                List<PhanBoVonDonViPheDuyetDieuChinhReportQuery> lstItemLevel = data.Where(x => !x.Loai.Equals(1) && x.LoaiParent.Equals(2)).ToList();
+                lstItemLevel.Select(x => { x.STT = (lstItemLevel.IndexOf(x) + 1).ToString(); return x; }).ToList();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new List<PhanBoVonDonViPheDuyetDieuChinhReportQuery>();
+            }
+        }
+
+        private void CalculateParentDieuChinh(PhanBoVonDonViPheDuyetDieuChinhReportQuery currentItem, PhanBoVonDonViPheDuyetDieuChinhReportQuery seftItem, List<PhanBoVonDonViPheDuyetDieuChinhReportQuery> data)
+        {
+            try
+            {
+                var parrentItem = data.Where(x => x.IIdLoaiCongTrinh != null && x.IIdLoaiCongTrinh == currentItem.IIdLoaiCongTrinhParent).FirstOrDefault();
+                if (parrentItem == null) return;
+                parrentItem.TongMucDauTu += seftItem.TongMucDauTu;
+                parrentItem.TongMucDauTuNSQP += seftItem.TongMucDauTuNSQP;
+                parrentItem.VonBoTriDenHetNamTruoc += seftItem.VonBoTriDenHetNamTruoc;
+                parrentItem.KeHoachVonDauTuNam += seftItem.KeHoachVonDauTuNam;
+                parrentItem.VonGiaiNganNam += seftItem.VonGiaiNganNam;
+                parrentItem.DieuChinhVonNam += seftItem.DieuChinhVonNam;
+                CalculateParentDieuChinh(parrentItem, seftItem, data);
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        public void BoSungDuLieuNSQP(List<PhanBoVonDonViPheDuyetReportQuery> data, List<VDT_DA_QDDauTu> ListAllDaQddauTu, string donViTinh)
+        {
+            foreach (var it in data)
+            {
+                if (it.IdDuAn.HasValue)
+                {
+                    var lstQddauTu = ListAllDaQddauTu.Where(x => x.iID_DuAnID.Equals(it.IdDuAn.Value)).FirstOrDefault();
+                    if (lstQddauTu != null)
+                    {
+                        var lstNguonVon = _qLVonDauTuService.FindNguonVonByParentId(lstQddauTu.iID_QDDauTuID);
+                        it.SoPheDuyet = lstQddauTu.sSoQuyetDinh;
+                        it.NgayPheDuyet = lstQddauTu.dNgayQuyetDinh;
+                        it.TongMucDauTu = lstQddauTu.fTongMucDauTuPheDuyet.GetValueOrDefault() / double.Parse(donViTinh);
+                        it.TongMucDauTuNSQP = 0;
+                        if(lstNguonVon != null)
+                            it.TongMucDauTuNSQP = lstNguonVon.Sum(x => x.fTienPheDuyet.GetValueOrDefault()) / double.Parse(donViTinh);
+                    }
+                }
+            }
+        }
+
+        public void BoSungDuLieuNSKhac(List<VdtKhvVonNamDonViPheDuyetNguonVonQuery> data, List<VDT_DA_QDDauTu> ListAllDaQddauTu, string donViTinh)
+        {
+            foreach (var it in data)
+            {
+                if (it.IdDuAn.HasValue)
+                {
+                    var lstQddauTu = ListAllDaQddauTu.Where(x => x.iID_DuAnID.Equals(it.IdDuAn.Value)).FirstOrDefault();
+                    if (lstQddauTu != null)
+                    {
+                        var lstNguonVon = _qLVonDauTuService.FindNguonVonByParentId(lstQddauTu.iID_QDDauTuID);
+                        it.SSoQuyetDinh = lstQddauTu.sSoQuyetDinh;
+                        it.DNgayQuyetDinh = lstQddauTu.dNgayQuyetDinh;
+                        it.TongSoVonDauTu = lstQddauTu.fTongMucDauTuPheDuyet.GetValueOrDefault() / double.Parse(donViTinh);
+                        it.TongSoVonDauTuTrongNuoc = 0;
+                        if(lstNguonVon != null)
+                            it.TongSoVonDauTuTrongNuoc = lstNguonVon.Sum(x => x.fTienPheDuyet.GetValueOrDefault()) / double.Parse(donViTinh);
+                    }
+                }
+            }
+        }
+
+        private string GetNameUnit(VDTKeHoachVonNamDuocDuyetExport dataReport)
+        {
+            string sTenDonVi = string.Empty;
+            try
+            {
+                Dictionary<string, NS_DonVi> dicDonVi = new Dictionary<string, NS_DonVi>();
+                var lstDonVi = _qLVonDauTuService.GetDanhSachDonVi(PhienLamViec.NamLamViec);
+                if(lstDonVi != null)
+                {
+                    foreach(var item in lstDonVi)
+                    {
+                        if (!dicDonVi.ContainsKey(item.iID_MaDonVi))
+                            dicDonVi.Add(item.iID_MaDonVi, item);
+                    }
+                }
+                if (!string.IsNullOrEmpty(PhienLamViec.iID_MaDonVi) && dicDonVi.ContainsKey(PhienLamViec.iID_MaDonVi))
+                    sTenDonVi = dicDonVi[PhienLamViec.iID_MaDonVi].sTen;
+                
+                //if (ListDonVi.Where(x => x.IsChecked).Count() == 1)
+                //{
+                //    string sTen = ListDonVi.Where(x => x.IsChecked).FirstOrDefault().DisplayItem;
+                //    if (!string.IsNullOrEmpty(sTen) && sTen.Contains("-"))
+                //    {
+                //        sTen = sTen.Split("-")[1];
+                //    }
+                //    sTenDonVi = sTen;
+                //}
+            }
+            catch (Exception ex)
+            {
+                
+            }
+            return sTenDonVi;
+        }
+        #endregion
         #endregion Helper
     }
 }

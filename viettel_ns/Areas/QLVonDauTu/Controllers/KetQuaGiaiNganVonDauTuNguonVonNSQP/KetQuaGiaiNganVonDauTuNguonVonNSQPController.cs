@@ -25,7 +25,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.KetQuaGiaiNganVonDauTuNguonVonNSQ
         // GET: QLVonDauTu/KetQuaGiaiNganVonDauTuNguonVonNSQP
         public ActionResult Index()
         {
-            ViewBag.ListDonViQuanLy = _iQLVonDauTuService.GetDanhSachDonVi(PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
+            List<NS_DonVi> listDV = _iQLVonDauTuService.GetDanhSachDonVi(PhienLamViec.NamLamViec).ToList();
+            listDV.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = Constants.TAT_CA });
+            ViewBag.ListDonViQuanLy = listDV.ToSelectList("iID_Ma", "sMoTa");
             ViewBag.ListNguonVonDauTu = CommonFunction.GetDataDropDownNguonNganSach();
             List<VDTKetQuaGiaiNganChiKinhPhiDauTuViewModel_v2> arrData = new List<VDTKetQuaGiaiNganChiKinhPhiDauTuViewModel_v2>();
             IEnumerable<VDTKetQuaGiaiNganChiKinhPhiDauTuViewModel_v2> lstData = arrData.AsEnumerable();
