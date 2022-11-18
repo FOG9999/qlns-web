@@ -17,10 +17,6 @@
         font-size: 14px; /* Increase font-size */
         padding: 6px 15px 6px 20px; /* Add some padding */
         border: 1px solid #ddd; /* Add a grey border */
-        margin-bottom: 12px; /* Add some space below the input */
-        position: sticky;
-        top: 0;
-        z-index: 1;
     }
 </style>
 
@@ -59,7 +55,15 @@
         </div>
     </div>
     <div class="col-sm-4 tableFixHead" style="height: 430px;">
-        <input type="text" id="search" onkeyup="handleSearch()" placeholder="Tìm kiếm đơn vị thực hiện dự án">
+        <div style="
+            position: sticky;
+            z-index: 1;
+            top: 0;
+            padding-bottom: 10px;
+            background: white;
+        ">
+            <input type="text" id="search" onkeyup="handleSearch()" placeholder="Tìm kiếm đơn vị thực hiện dự án">
+        </div>
         <table class="table table-bordered" id="tblListDonViThucHienDuAnDd">
             <thead>
             <th style="position: sticky; top: 40px; z-index: 1;"><input type="checkbox" name="cbAll_DVTHDA" class="cbAll_DVTHDA" /></th>
@@ -128,7 +132,7 @@
         });
     });
 
-    function printBCDV() {
+    function printBCDV(isExcel) {
         var data = {};
         var strIdLoaiCongTrinhTH = "";
         if ($("#iID_LoaiCongTrinh_DV :selected").val() == GUID_EMPTY) {
@@ -168,7 +172,7 @@
             return false;
         }
 
-        exportBCTheoDonVi(data, arrIdDVQL);
+        exportBCTheoDonVi(data, arrIdDVQL, isExcel);
     }
 
     function ValidateDataBCDV(data, arrIdNguonVon, arrIdDVQL) {

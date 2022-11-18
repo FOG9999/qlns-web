@@ -25,6 +25,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.TongHopCapPhat
         public ActionResult Index()
         {
             ViewBag.ListNguonVonDauTu = CommonFunction.GetDataDropDownNguonNganSach();
+            ViewBag.iNamLamViec = PhienLamViec.iNamLamViec;
             List<VDTBaoCaoCapPhatViewModel> arrData = new List<VDTBaoCaoCapPhatViewModel>();
             return View(arrData);
         }

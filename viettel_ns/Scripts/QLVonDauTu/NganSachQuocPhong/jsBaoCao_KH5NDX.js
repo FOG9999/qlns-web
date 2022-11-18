@@ -50,7 +50,7 @@ function backViewKH5NDX() {
     window.location.href = "/QLVonDauTu/KeHoachTrungHanDeXuat/Index/";
 }
 
-function exportBCTongHop(data, arrIdNguonVon, arrIdDVQL) {
+function exportBCTongHop(data, arrIdNguonVon, arrIdDVQL, isExcel) {
     console.log(data);
     console.log(arrIdNguonVon);
     var isModified = $("#txtRptModified").val();
@@ -63,8 +63,10 @@ function exportBCTongHop(data, arrIdNguonVon, arrIdDVQL) {
         data: { data: data, arrIdNguonVon: arrIdNguonVon, arrIdDVQL: arrIdDVQL, isModified: isModified, isCt: isCt},
         success: function (r) {
             if (r == "True") {
-                console.log(1);
-                window.open("/QLVonDauTu/KeHoachTrungHanDeXuat/ExportExcel/?isModified=" + isModified + '&isCt=' + isCt, "_blank");
+                if (isExcel) {
+                    window.open("/QLVonDauTu/KeHoachTrungHanDeXuat/ExportExcelFile/?isModified=" + isModified + '&isCt=' + isCt + "&isBaoCaoTheoDV=False", "_blank");
+                }
+                else window.open("/QLVonDauTu/KeHoachTrungHanDeXuat/ExportExcel/?isModified=" + isModified + '&isCt=' + isCt, "_blank");
             }
             else {
                 window.location.href = "/QLVonDauTu/KeHoachTrungHanDeXuat/ViewInBaoCao/?isModified=" + isModified + '&isCt=' + isCt;
@@ -73,7 +75,7 @@ function exportBCTongHop(data, arrIdNguonVon, arrIdDVQL) {
     });
 }
 
-function exportBCTheoDonVi(data, arrIdNguonVon, arrIdDVQL) {
+function exportBCTheoDonVi(data, arrIdNguonVon, arrIdDVQL, isExcel) {
     console.log(data);
     console.log(arrIdNguonVon);
     console.log(arrIdDVQL);
@@ -87,8 +89,10 @@ function exportBCTheoDonVi(data, arrIdNguonVon, arrIdDVQL) {
         data: { data: data, arrIdNguonVon: arrIdNguonVon, arrIdDVQL: arrIdDVQL, isModified: isModified, isCt: isCt},
         success: function (r) {
             if (r == "True") {
-                console.log(2);
-                window.open("/QLVonDauTu/KeHoachTrungHanDeXuat/ExportExcel/?isModified=" + isModified + '&isCt=' + isCt, '_blank');
+                if (isExcel) {
+                    window.open("/QLVonDauTu/KeHoachTrungHanDeXuat/ExportExcelFile/?isModified=" + isModified + '&isCt=' + isCt + "&isBaoCaoTheoDV=True", '_blank');
+                }
+                else window.open("/QLVonDauTu/KeHoachTrungHanDeXuat/ExportExcel/?isModified=" + isModified + '&isCt=' + isCt, '_blank');
             }
             else {
                 var Title = 'Lỗi in báo cáo tổng hợp';

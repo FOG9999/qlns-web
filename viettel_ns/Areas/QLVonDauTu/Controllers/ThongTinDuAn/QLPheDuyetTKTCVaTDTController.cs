@@ -611,5 +611,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             return Json(new { status = true, data = listModel });
         }
 
+        public JsonResult CheckExistSoQuyetDinh(string checkVal)
+        {
+            bool isExisted = _qLVonDauTuService.CheckExistSoQuyetDinhShare("sSoQuyetDinh", "VDT_DA_DuToan", checkVal);
+            return Json(new { isExisted }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -63,6 +63,12 @@ function GetListData(sSoDeNghi, iNamKeHoach, iLoaiThanhToan, sDonViQuanLy, iid_D
             $("#drpDonViQuanLy").val(sDonViQuanLy);
             $('#drpDuAn').val(iid_DuAnID);
             $('#drpLoaiThanhToan').val(iLoaiThanhToan);
+
+            $("#sSoDeNghiXuatDanhSach").val(sSoDeNghi);
+            $("#dFromNgayDeNghiXuatDanhSach").val(dNgayDeNghiFrom);
+            $("#dToNgayDeNghiXuatDanhSach").val(dNgayDeNghiTo);
+            $("#iNamKeHoachXuatDanhSach").val(iNamKeHoach);
+            $("#sMaDonViXuatDanhSach").val(sDonViQuanLy);
         }
     });
 }
@@ -317,4 +323,14 @@ function OpenDetail(id) {
     //    },
     //    error: function (data) {}
     //});
+}
+
+function XuatDanhSach() {
+    var sSoDeNghiXuatDanhSach = $("#sSoDeNghiXuatDanhSach").val();
+    var dFromNgayDeNghiXuatDanhSach = $("#dFromNgayDeNghiXuatDanhSach").val().split("/").reverse().join("/");;
+    var dToNgayDeNghiXuatDanhSach = $("#dToNgayDeNghiXuatDanhSach").val().split("/").reverse().join("/");;;
+    var iNamKeHoachXuatDanhSach = $("#iNamKeHoachXuatDanhSach").val();
+    var sMaDonViXuatDanhSach = $("#sMaDonViXuatDanhSach").val();
+
+    window.location.href = `/QLVonDauTu/GiaiNganThanhToan/XuatDanhSach?sSoDeNghi=${sSoDeNghiXuatDanhSach}&iNamKeHoach=${iNamKeHoachXuatDanhSach}&iLoaiThanhToan=${null}&sDonViQuanLy=${sMaDonViXuatDanhSach}&dNgayDeNghiFrom=${dFromNgayDeNghiXuatDanhSach}&iid_DuAnID=${null}&dNgayDeNghiTo=${dToNgayDeNghiXuatDanhSach}`;
 }

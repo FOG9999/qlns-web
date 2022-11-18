@@ -746,6 +746,47 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             return true;
         }
 
+        public ActionResult ExportExcelFile(bool isCt, bool isBaoCaoTheoDV)
+        {
+            string sFileName = isBaoCaoTheoDV ? "BaoCao_KeHoachTrungHan_DuocDuyet_TheoDonVi.xlsx" : "BaoCao_KeHoachTrungHan_DuocDuyet_TongHop.xlsx";
+            List<KH5NDDPrintDataExportModel> dataReport = null;
+            List<KH5NDDPrintDataChuyenTiepExportModel> dataReportCt = null;
+
+            KH5NDDPrintDataExportModel paramReport = null;
+
+            paramReport = (KH5NDDPrintDataExportModel)TempData["paramReport"];
+
+            if (isCt)
+            {
+                if (TempData["dataReportDc"] != null)
+                {
+                    dataReportCt = (List<KH5NDDPrintDataChuyenTiepExportModel>)TempData["dataReportDc"];
+                }
+            }
+            else
+            {
+                if (TempData["dataReport"] != null)
+                {
+                    dataReport = (List<KH5NDDPrintDataExportModel>)TempData["dataReport"];
+                }
+                else
+                    return RedirectToAction("ViewInBaoCao");
+            }
+
+            ExcelFile xls = null;
+            if (isCt)
+            {
+                xls = (XlsFile)CreateReportCt(dataReportCt, paramReport);
+            }
+            else
+            {
+                xls = (XlsFile)CreateReport(dataReport, paramReport);
+            }
+
+            return xls.ToFileResult(sFileName);
+            
+        }
+
         public ActionResult ExportExcel(bool isCt)
         {
             string sContentType = "application/pdf";

@@ -40,7 +40,7 @@ LayDanhSachChungTuDuocDuyetTheoDonViQuanLy = (iID_DonViQuanLyID, isCt = 'false')
     })
 }
 
-exportBCTongHop = (data) => {
+exportBCTongHop = (data, isExcel) => {
     console.log(data);
     var isCt = $("#txtRptCt").val();
     if (isCt == "" || isCt == undefined) isCt = false;
@@ -50,8 +50,10 @@ exportBCTongHop = (data) => {
         data: { data: data, isCt: isCt },
         success: function (r) {
             if (r == "True") {
-                console.log(1);
-                window.open("/QLVonDauTu/KeHoachTrungHanDuocDuyet/ExportExcel/?isCt=" + isCt);
+                if (isExcel) {
+                    window.open("/QLVonDauTu/KeHoachTrungHanDuocDuyet/ExportExcelFile/?isCt=" + isCt + "&isBaoCaoTheoDV=False");
+                }
+                else window.open("/QLVonDauTu/KeHoachTrungHanDuocDuyet/ExportExcel/?isCt=" + isCt);
             }
             else {
                 window.open("/QLVonDauTu/KeHoachTrungHanDuocDuyet/ViewInBaoCao/?isCt=" + isCt);
@@ -60,7 +62,7 @@ exportBCTongHop = (data) => {
     });
 }
 
-exportBCTheoDonVi = (data, arrDVTHDA) => {
+exportBCTheoDonVi = (data, arrDVTHDA, isExcel) => {
     console.log(data);
     console.log(arrDVTHDA);
     var isCt = $("#txtRptCt").val();
@@ -71,7 +73,10 @@ exportBCTheoDonVi = (data, arrDVTHDA) => {
         data: { data: data, arrDVTHDA: arrDVTHDA, isCt: isCt},
         success: function (r) {
             if (r == "True") {
-                window.open("/QLVonDauTu/KeHoachTrungHanDuocDuyet/ExportExcel/?isCt=" + isCt);
+                if (isExcel) {
+                    window.open("/QLVonDauTu/KeHoachTrungHanDuocDuyet/ExportExcelFile/?isCt=" + isCt + "&isBaoCaoTheoDV=True");
+                }
+                else window.open("/QLVonDauTu/KeHoachTrungHanDuocDuyet/ExportExcel/?isCt=" + isCt);
             }
             else {
                 window.open("/QLVonDauTu/KeHoachTrungHanDuocDuyet/ViewInBaoCao/?isCt=" + isCt);

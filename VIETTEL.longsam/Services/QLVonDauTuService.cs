@@ -806,7 +806,7 @@ namespace Viettel.Services
         VDT_TT_DeNghiThanhToan GetDeNghiThanhToanByID(Guid iId);
         IEnumerable<GiaiNganThanhToanChiTietViewModel> GetDeNghiThanhToanChiTietByDeNghiThanhToanID(Guid iId);
         IEnumerable<GiaiNganThanhToanViewModel> GetAllGiaiNganThanhToanPaging(ref PagingInfo _paging, string sSoDeNghi = "", int? iNamKeHoach = null, DateTime? dNgayLapFrom = null, DateTime? dNgayLapTo = null, Guid? sDonViQuanLy = null);
-        IEnumerable<GiaiNganThanhToanViewModel> LoadVDTTTDeNghiThanhToanIndex(ref PagingInfo _paging, int workYear, string maNguoiDung, int? iNamKeHoach = null, DateTime? dNgayDeNghiFrom = null, DateTime? dNgayDeNghiTo = null, string iidDuAn = "", string iLoaiThanhToan = "", string sMaDonVi = "", string sSoDeNghi = "");
+        IEnumerable<GiaiNganThanhToanViewModel> LoadVDTTTDeNghiThanhToanIndex(ref PagingInfo _paging, int workYear, string maNguoiDung, int? iNamKeHoach = null, DateTime? dNgayDeNghiFrom = null, DateTime? dNgayDeNghiTo = null, string iidDuAn = "", string iLoaiThanhToan = "", string sMaDonVi = "", string sSoDeNghi = "", bool isXuatDanhSach = false);
 
         /// <summary>
         /// get list mlns by du an
@@ -6226,7 +6226,7 @@ namespace Viettel.Services
             return null;
         }
 
-        public IEnumerable<GiaiNganThanhToanViewModel> LoadVDTTTDeNghiThanhToanIndex(ref PagingInfo _paging, int workYear, string maNguoiDung, int? iNamKeHoach, DateTime? dNgayDeNghiFrom, DateTime? dNgayDeNghiTo, string iidDuAn = "", string iLoaiThanhToan = "", string sMaDonVi = "", string sSoDeNghi = "")
+        public IEnumerable<GiaiNganThanhToanViewModel> LoadVDTTTDeNghiThanhToanIndex(ref PagingInfo _paging, int workYear, string maNguoiDung, int? iNamKeHoach, DateTime? dNgayDeNghiFrom, DateTime? dNgayDeNghiTo, string iidDuAn = "", string iLoaiThanhToan = "", string sMaDonVi = "", string sSoDeNghi = "", bool isXuatDanhSach = false)
         {
             try
             {
@@ -6242,6 +6242,7 @@ namespace Viettel.Services
                     lstParam.Add("iidDuAn", iidDuAn == "" ? null : iidDuAn);
                     lstParam.Add("iLoaiThanhToan", iLoaiThanhToan == "" ? null : iLoaiThanhToan);
                     lstParam.Add("sMaDonVi", sMaDonVi == "" ? null : sMaDonVi);
+                    lstParam.Add("isXuatDanhSach", isXuatDanhSach);
                     lstParam.Add("CurrentPage", _paging.CurrentPage);
                     lstParam.Add("ItemsPerPage", _paging.ItemsPerPage);
                     lstParam.Add("iToTalItem", dbType: DbType.Int32, direction: ParameterDirection.Output);

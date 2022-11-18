@@ -208,6 +208,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             try
             {
                 ViewBag.ListDonViQuanLy = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
+                ViewBag.iNamLamViec = PhienLamViec.iNamLamViec;
 
                 List<ComBoBoxItem> lstLoaiChungTu = new List<ComBoBoxItem>()
                 {

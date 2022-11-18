@@ -197,7 +197,7 @@ function OpenModalDetail(id) {
         data: { id: id },
         success: function (data) {
             $("#contentModalKHVonNamDuocDuyetPoupup").html(data);
-            $("#modalKHVonNamDuocDuyetLabel").html('Chi tiết kế hoạch vốn năm phân bổ vốn đơn vị phê duyệt');
+            $("#modalKHVonNamDuocDuyetLabel").html('Chi tiết kế hoạch vốn năm được duyệt');
             $(".date").datepicker({
                 todayBtn: "linked",
                 language: "vi",

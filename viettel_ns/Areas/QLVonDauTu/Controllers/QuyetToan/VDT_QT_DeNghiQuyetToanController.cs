@@ -167,15 +167,17 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
         {
             var result = new List<dynamic>();
             var data = _vdtService.GetAllDuToanIdByDuAnId(iIdDuAnId);
+            string sKhoiCong = "";
+            string sKetThuc = "";
             if (data != null && data.Any())
             {                               
                 foreach (var item in data)
                 {
                     result.Add(new { id = item.iID_DuToanID, text = item.sSoQuyetDinh });
                 }
-            }
-            string sKhoiCong = _vdtService.GetPheDuyetTKTCvaTDTByID(data.FirstOrDefault().iID_DuToanID).sKhoiCong;
-            string sKetThuc = _vdtService.GetPheDuyetTKTCvaTDTByID(data.FirstOrDefault().iID_DuToanID).sKetThuc;
+                sKhoiCong = _vdtService.GetPheDuyetTKTCvaTDTByID(data.FirstOrDefault().iID_DuToanID).sKhoiCong;
+                sKetThuc = _vdtService.GetPheDuyetTKTCvaTDTByID(data.FirstOrDefault().iID_DuToanID).sKetThuc;
+            }            
             return Json(new { datas = result, sKhoiCong = sKhoiCong, sKetThuc = sKetThuc }, JsonRequestBehavior.AllowGet);
         }
 
@@ -488,6 +490,35 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                 return false;
             }
             return true;
+        }
+
+        public ActionResult ExportExcelFile()
+        {
+            string sFileName = "DeNghiQuyetToanHoanThanh_ReportToTrinh.xlsx";
+            DeNghiQuyetToanPrintDataExportModel dataNhap = new DeNghiQuyetToanPrintDataExportModel();
+            VDT_QT_DeNghiQuyetToanViewModel denghiItem = new VDT_QT_DeNghiQuyetToanViewModel();
+
+            if (TempData["dataNhap"] != null && TempData["denghiItem"] != null)
+            {
+                dataNhap = (DeNghiQuyetToanPrintDataExportModel)TempData["dataNhap"];
+                denghiItem = (VDT_QT_DeNghiQuyetToanViewModel)TempData["denghiItem"];
+            }
+            else
+                return RedirectToAction("ViewInBaoCao");
+
+            ExcelFile xls = null;
+            if (dataNhap.iItemLoaiBC == 0)
+            {
+                xls = (XlsFile) CreateReportToTrinh(dataNhap, denghiItem);
+            }
+            else if (dataNhap.iItemLoaiBC == 1)
+            {
+                sFileName = "DeNghiQuyetToanHoanThanh_ReportPhuLuc.xlsx";
+                xls = (XlsFile) CreateReportPhuLuc(dataNhap, denghiItem);
+            }
+            xls.PrintLandscape = true;
+
+            return xls.ToFileResult(sFileName);
         }
 
         public ActionResult ExportExcel()

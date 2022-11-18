@@ -165,7 +165,7 @@
 
     });
 
-    function printBCDV() {
+    function printBCDV(isExcel) {
         console.log("txt_TieuDe1_DV", $("#txt_TieuDe123").val());
         var data = {};
         var strIdLoaiCongTrinhTH = "";
@@ -214,7 +214,7 @@
             return false;
         }
 
-        exportBCTheoDonVi(data, arrIdNguonVon, arrIdDVQL);
+        exportBCTheoDonVi(data, arrIdNguonVon, arrIdDVQL, isExcel);
     }
 
     function ValidateDataBCDV(data, arrIdNguonVon, arrIdDVQL) {

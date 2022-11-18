@@ -29,6 +29,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.KetQuaGiaiNganVonDauTuNguonVonNSQ
             listDV.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = Constants.TAT_CA });
             ViewBag.ListDonViQuanLy = listDV.ToSelectList("iID_Ma", "sMoTa");
             ViewBag.ListNguonVonDauTu = CommonFunction.GetDataDropDownNguonNganSach();
+            ViewBag.iNamLamViec = PhienLamViec.iNamLamViec;
             List<VDTKetQuaGiaiNganChiKinhPhiDauTuViewModel_v2> arrData = new List<VDTKetQuaGiaiNganChiKinhPhiDauTuViewModel_v2>();
             IEnumerable<VDTKetQuaGiaiNganChiKinhPhiDauTuViewModel_v2> lstData = arrData.AsEnumerable();
             return View(lstData);

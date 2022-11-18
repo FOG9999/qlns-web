@@ -23,6 +23,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         public ActionResult Index()
         {
             ViewBag.ListDonViQuanLy = _iQLVonDauTuService.GetDanhSachDonVi(PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
+            ViewBag.iNamLamViec = PhienLamViec.iNamLamViec;
             List<VDTTongHopThongTinDuAnViewModel> arrData = new List<VDTTongHopThongTinDuAnViewModel>();
             return View(arrData);
         }

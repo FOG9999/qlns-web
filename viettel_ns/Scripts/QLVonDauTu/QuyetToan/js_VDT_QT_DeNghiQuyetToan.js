@@ -201,7 +201,7 @@ function ViewInBaoCao() {
     window.location.href = "/QLVonDauTu/VDT_QT_DeNghiQuyetToan/ViewInBaoCao";
 }
 
-function printBC() {
+function printBC(isExcel) {
     var data = {};
     data.iID_DeNghiQuyetToanID = $("#iID_DeNghiQuyetToanID").val();
     data.iItemLoaiBC = $("#Value").val();
@@ -220,11 +220,13 @@ function printBC() {
         data: { data: data },
         success: function (r) {
             if (r == "True") {
-                console.log(1);
-                window.location.href = "/QLVonDauTu/VDT_QT_DeNghiQuyetToan/ExportExcel";
+                if (isExcel) {
+                    window.open("/QLVonDauTu/VDT_QT_DeNghiQuyetToan/ExportExcelFile");
+                }
+                else window.open("/QLVonDauTu/VDT_QT_DeNghiQuyetToan/ExportExcel");
             }
             else {
-                window.location.href = "/QLVonDauTu/KeHoachTrungHanDeXuat/ViewInBaoCao";
+                window.open("/QLVonDauTu/KeHoachTrungHanDeXuat/ViewInBaoCao");
             }
         }
     });

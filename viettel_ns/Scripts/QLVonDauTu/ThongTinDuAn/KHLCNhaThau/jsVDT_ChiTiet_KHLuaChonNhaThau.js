@@ -463,6 +463,8 @@ function VeDanhSachGoiThau() {
         dongMoi += "<td class='r_LoaiHopDong'>" + x.sHinhThucHopDong + "</td>";
         dongMoi += "<td class='r_iThoiGianThucHien sotien' align='right'>" + (x.iThoiGianThucHien ? x.iThoiGianThucHien : ' ') + "</td>";
 
+        dongMoi += "<td style='width: 50px' align='right'><button type='button' onclick='ViewItemDetail(this)' class='btn-detail'> <i class='fa fa-eye fa-lg'></i> </button></td>";
+
         html += dongMoi;
         index++;
     })
@@ -472,11 +474,10 @@ function VeDanhSachGoiThau() {
     SuKienDbClickDongTable();
 }
 
-function SuKienDbClickDongTable() {
-    $("#" + TBL_DANH_SACH_GOI_THAU + " td").dblclick(function () {
+function ViewItemDetail(currentElement) {
         arrNguonVonModal = [];
         arrChiPhiModal = [];
-        var $this = $(this);
+        var $this = $(currentElement);
         var row = $this.closest("tr");
         var rGoiThauID = row.find('.r_iID_GoiThauID').val();
         var rDuToanID = selectedDuToan;
@@ -494,6 +495,11 @@ function SuKienDbClickDongTable() {
         $(".modal-content").scrollTop(0);
         $('#modalChiTietGoiThau input[type=checkbox]').attr('disabled', 'true');
         DinhDangSo("modalChiTietGoiThau");
+}
+
+function SuKienDbClickDongTable() {
+    $("#" + TBL_DANH_SACH_GOI_THAU + " td").dblclick(function () {
+        ViewItemDetail(this);
     });
 }
 

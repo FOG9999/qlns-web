@@ -500,6 +500,47 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             return Json(new {status = status.Keys.FirstOrDefault(), iID = status.Values.FirstOrDefault()}, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult XuatDanhSach( int? iNamKeHoach, DateTime? dNgayDeNghiFrom, DateTime? dNgayDeNghiTo, Guid? sDonViQuanLy, string sSoDeNghi = "")
+        {
+            PagingInfo temp = new PagingInfo();
+            // tìm kiếm mã đơn vị dựa trên id đơn vị truyền về
+            NS_DonVi dv = null;
+            if (sDonViQuanLy != null)
+            {
+                dv = _vdtService.GetDonViQuanLyById(sDonViQuanLy.Value);
+            }
+
+            var lstData = _vdtService.LoadVDTTTDeNghiThanhToanIndex(ref temp, PhienLamViec.NamLamViec, Username, iNamKeHoach == null ? null : iNamKeHoach, dNgayDeNghiFrom, dNgayDeNghiTo, null, null, dv == null ? "" : dv.iID_MaDonVi, sSoDeNghi == null ? "" : sSoDeNghi, true);
+
+            foreach (var item in lstData)
+            {
+                if (item.iCoQuanThanhToan == (int)Constants.CoQuanThanhToan.Type.KHO_BAC)
+                    item.sCoQuanThanhToan = Constants.CoQuanThanhToan.TypeName.KHO_BAC;
+                else if (item.iCoQuanThanhToan == (int)Constants.CoQuanThanhToan.Type.CQTC)
+                {
+                    if (item.loaiCoQuanTaiChinh == 0)
+                        item.sCoQuanThanhToan = Constants.CoQuanThanhToan.TypeName.CQTC;
+                    else
+                    {
+                        item.sCoQuanThanhToan = Constants.CoQuanThanhToan.TypeName.CTC;
+                    }
+                }
+
+                if (item.iLoaiThanhToan == (int)Constants.LoaiThanhToan.Type.THANH_TOAN)
+                    item.sLoaiThanhToan = Constants.LoaiThanhToan.TypeName.THANH_TOAN;
+                else if (item.iLoaiThanhToan == (int)Constants.LoaiThanhToan.Type.TAM_UNG)
+                    item.sLoaiThanhToan = Constants.LoaiThanhToan.TypeName.TAM_UNG;
+            }
+
+            XlsFile Result = new XlsFile(true);
+            FlexCelReport fr = new FlexCelReport();
+
+            fr.AddTable("Items", lstData);
+            Result.Open(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/ThucHienThanhToan/rpt_vdt_thuchienthanhtoan_danhsach.xlsx"));
+            fr.Run(Result);
+            return Print(Result, "xlsx", "rpt_vdt_thuchienthanhtoan_danhsach.xlsx");
+        }
+
         #region Event
         public JsonResult GetPheDuyetThanhToanChiTiet(Guid iID_DeNghiThanhToanID)
         {

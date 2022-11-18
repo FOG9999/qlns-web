@@ -30,6 +30,10 @@ namespace VIETTEL.Models
         {
             String SQL = "SELECT * FROM NS_DonVi WHERE iTrangThai=1 AND iNamLamViec_DonVi=@iNamLamViec_DonVi ORDER BY iID_MaDonVi";
             SqlCommand cmd = new SqlCommand(SQL);
+            if(NguoiDungCauHinhModels.iNamLamViec == null)
+            {
+                NguoiDungCauHinhModels.iNamLamViec = DateTime.Now.Year;
+            }
             cmd.Parameters.AddWithValue("@iNamLamViec_DonVi", NguoiDungCauHinhModels.iNamLamViec);
             DataTable dt = Connection.GetDataTable(cmd);
             cmd.Dispose();

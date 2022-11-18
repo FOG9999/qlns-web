@@ -769,7 +769,8 @@ function addlist(iIdChiPhi) {
 function HideModalChiTietChiPhi() {
     $("#modal-listdetailchiphi").modal("hide");
 }
-function SaveThietKeThiCong() {
+
+async function SaveThietKeThiCong() {
     var lstNguonVon = GetNguonVonByTable();
     arrHangMucSave = lstHangMuc.filter(y => y.fTienPheDuyet != 0);
     for (var i = 0; i < arrHangMucSave.length; i++) {
@@ -782,6 +783,16 @@ function SaveThietKeThiCong() {
     }
 
     if (!ValidateDuToan(lstNguonVon)) return;
+
+    let res = await checkExistSoQuyetDinh();
+    if (res.isExisted) {
+        let errMsg = "Số quyết định đã tồn tại";
+        let element = $("#sSoQuyetDinh").get(0);
+        element.classList.add("input-error");
+        element.setCustomValidity(errMsg);
+        element.reportValidity();
+        return;
+    }
 
     var dataHM = [];
     $("#tblChiPhiDauTu").find("tr").each(function (index) {
@@ -1197,4 +1208,15 @@ function UnFormatNumber(value) {
 
     console.log("kiemtraso: " + value);
     return value;
+}
+
+// check trùng số quyết định
+function checkExistSoQuyetDinh() {
+    let checkVal = $("#sSoQuyetDinh").val();
+    return $.ajax({
+        url: "/QLVonDauTu/QLPheDuyetTKTCVaTDT/CheckExistSoQuyetDinh",
+        type: "GET",
+        data: { checkVal: checkVal },
+        dataType: "json"
+    })
 }

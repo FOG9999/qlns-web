@@ -10,6 +10,19 @@
     <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
 }
 
+<style>
+    #search {
+        width: 100%; /* Full-width */
+        font-size: 14px; /* Increase font-size */
+        padding: 6px 15px 6px 20px; /* Add some padding */
+        border: 1px solid #ddd; /* Add a grey border */
+        margin-bottom: 12px; /* Add some space below the input */
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+</style>
+
 <div class="main">
     <div class="panel-list-item col-sm-12">
         <div class="card">
@@ -49,8 +62,9 @@
                             @Html.DropDownList("ValueItem", (SelectList)(ViewBag.lstDonViTinh), new { @class = "form-control", @id = "ValueItemDonViTinh" })
                         </div>
                     </div>
-                    <div class="col-sm-4 col-md-4 col-lg-4">
-                        <div class="col-sm-12 form-group">
+                    <div class="col-sm-4 col-md-4 col-lg-4 ">
+                        <div class="col-sm-12 form-group tableFixHead" style="height: 450px";>
+                            <input type="text" id="search" onkeyup="handleSearch()" placeholder="Tìm kiếm đơn vị ">
                             <table class="table table-bordered" id="tblListDonViQuanLy">
                                 <thead>
                                     <tr>
@@ -64,7 +78,7 @@
                                         {
                                             <tr style="cursor: pointer">
                                                 <td align="center"><input type="checkbox" name="cb_DVQL" class="cb_DVQL" value="@item.iID_Ma" /></td>
-                                                <td align="left">@item.sTen</td>
+                                                <td align="left">@(item.iID_MaDonVi +" - "+ item.sTen)</td>
                                             </tr>
                                         }
                                     }
@@ -105,17 +119,17 @@
     <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsKeHoachVonNamDuocDuyet.js"></script>
     <script src="/Scripts/js/js_vdtWeb.js"></script>
     <script type="text/javascript">
-        $('#select-all-donviquanly').click(function (event) {
-            if (this.checked) {
-                $(':checkbox').each(function () {
-                    this.checked = true;
-                });
-            } else {
-                $(':checkbox').each(function () {
-                    this.checked = false;
-                });
-            }
-        });
+        //$('#select-all-donviquanly').click(function (event) {
+        //    if (this.checked) {
+        //        $(':checkbox').each(function () {
+        //            this.checked = true;
+        //        });
+        //    } else {
+        //        $(':checkbox').each(function () {
+        //            this.checked = false;
+        //        });
+        //    }
+        //});
 
         $("#ValueItemLoaiChungTu").on("change", function () {
             if ($("#ValueItemLoaiChungTu").val() == "2") {

@@ -23,6 +23,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.TinhHinhThucHienDuAn
         public ActionResult Index()
         {
             List<VDTTinhHinhDuAnViewModel> arrData = new List<VDTTinhHinhDuAnViewModel>();
+            ViewBag.iNamLamViec = PhienLamViec.iNamLamViec;
             return View(arrData);
         }
         [HttpPost]

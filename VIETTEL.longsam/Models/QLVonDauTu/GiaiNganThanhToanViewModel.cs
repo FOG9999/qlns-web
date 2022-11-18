@@ -171,6 +171,7 @@ namespace Viettel.Models.QLVonDauTu
         public string CoQuanThanhToan { get; set; }
         public string sTenHopDong { get; set; }
         public int iLoaiThanhToan { get; set; }
+        public int iSTT { get; set; }
     }
 
     public class DeNghiThanhToanValueQuery

@@ -85,7 +85,7 @@
         LayDanhSachChungTuDuocDuyetTheoDonViQuanLy(iID_DonViQuanLyID, isCt);
     }
 
-    function printBCTH() {
+    function printBCTH(isExcel) {
         var data = {};
         data.iID_DonViQuanLyID = $("#iID_DonViQuanLyID").val();
         data.iID_KeHoach5NamID = $("#iID_KeHoach5NamID").val();
@@ -120,7 +120,7 @@
         if (!ValidateDataBCTH(data)) {
             return false;
         }
-        exportBCTongHop(data);
+        exportBCTongHop(data, isExcel);
     }
 
     function ValidateDataBCTH(data) {

@@ -2159,6 +2159,61 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             }
         }
 
+        public ActionResult ExportExcelFile(bool isModified, bool isCt, bool isBaoCaoTheoDV)
+        {
+            string sFileName = isBaoCaoTheoDV ? "BaoCao_KeHoachTrungHan_DeXuat_TheoDonVi.xlsx" : "BaoCao_KeHoachTrungHan_DeXuat_TongHop.xlsx";
+            List<KH5NDXPrintDataExportModel> dataReport = null;
+            List<KH5NDXPrintDataDieuChinhExportModel> dataReportDc = null;
+            List<VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel> dataReportCt = null;
+            KH5NDXPrintDataExportModel paramReport = null;
+
+            paramReport = (KH5NDXPrintDataExportModel)TempData["paramReport"];
+
+            if (isModified && !isCt)
+            {
+                if (TempData["dataReportDc"] != null)
+                {
+                    dataReportDc = (List<KH5NDXPrintDataDieuChinhExportModel>)TempData["dataReportDc"];
+                }
+                else
+                    return RedirectToAction("ViewInBaoCao");
+            }
+            else if (!isModified && isCt)
+            {
+                if (TempData["dataReportCt"] != null)
+                {
+                    dataReportCt = (List<VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel>)TempData["dataReportCt"];
+                }
+                else
+                    return RedirectToAction("ViewInBaoCao");
+            }
+            else
+            {
+                if (TempData["dataReport"] != null)
+                {
+                    dataReport = (List<KH5NDXPrintDataExportModel>)TempData["dataReport"];
+                }
+                else
+                    return RedirectToAction("ViewInBaoCao");
+            }
+
+            ExcelFile xls = null;
+            if (isModified && !isCt)
+            {
+                xls = (XlsFile) CreateReportDc(dataReportDc, paramReport);
+            }
+            else if (!isModified && isCt)
+            {
+                xls = (XlsFile)CreateReportCt(dataReportCt, paramReport);
+            }
+            else
+            {
+                xls = (XlsFile)CreateReport(dataReport, paramReport);
+            }
+
+            return xls.ToFileResult(sFileName);
+        }
+
         public ActionResult ExportExcel(bool isModified, bool isCt)
         {
             string sContentType = "application/pdf";
