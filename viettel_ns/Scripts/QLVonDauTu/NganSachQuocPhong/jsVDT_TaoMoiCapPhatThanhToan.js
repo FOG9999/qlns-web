@@ -863,6 +863,13 @@ function EventValidate() {
             $(this).blur();
         }
     });
+    $("td.sotien[contenteditable='true']").on('keyup', function(event) {
+        $(this).html(FormatNumber($(this).html() == "" ? 0 : UnFormatNumber($(this).html())));
+        // select all the content in the element
+        document.execCommand('selectAll', false, null);
+        // collapse selection to the end
+        document.getSelection().collapseToEnd();
+    })
 }
 
 function GetKeHoachVonTT() {
