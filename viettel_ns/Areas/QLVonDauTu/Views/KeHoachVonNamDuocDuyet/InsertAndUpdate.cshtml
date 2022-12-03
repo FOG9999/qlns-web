@@ -46,6 +46,12 @@
                 <input type="text" maxlength="4" name="txtNamKeHoachModal" class="form-control" id="txtNamKeHoachModal" value="@Html.Raw(Html.Encode(@Model.iNamKeHoach))" autocomplete="off" />
             </div>
         </div>
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <label for="drpQuy" class="">Loại dự toán <span class="require">*</span></label>
+                @Html.DropDownList("iLoaiDuToan", (SelectList)(ViewBag.drLoaiDuToan), new { @class = "form-control", @id = "iLoaiDuToan" })
+            </div>
+        </div>
 
     </div>
 </div>

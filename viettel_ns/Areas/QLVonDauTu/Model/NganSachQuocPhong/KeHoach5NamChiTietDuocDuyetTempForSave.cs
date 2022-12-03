@@ -33,6 +33,11 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
             get => getTenNganSach(iID_NguonVonID);
         }
 
+        public string sDonVi
+        {
+            get => getTenNSDonVi(iID_DonViID);
+        }
+
         private string getTenDonVi(Guid? iID_DonViQuanLyID)
         {
             try
@@ -53,6 +58,24 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 return "";
             }            
             
+        }
+
+        private string getTenNSDonVi(Guid? iID_DonViID)
+        {
+            try
+            {
+                if (iID_DonViID.HasValue)
+                {
+                    NS_DonVi donVi = _danhMucService.GetNSDonViById(iID_DonViID ?? Guid.Empty);
+                    return donVi.iID_MaDonVi + " - " + donVi.sTen;
+                }
+                else return "";
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
         }
 
         private string getTenLoaiCongTrinh(Guid? iID_LoaiCongTrinhID)

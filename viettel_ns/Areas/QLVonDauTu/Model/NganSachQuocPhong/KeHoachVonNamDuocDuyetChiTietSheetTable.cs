@@ -183,7 +183,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 new SheetColumn(columnName: "modelActive", header: "Model active", isHidden: true, isReadonly: true)
             };
 
-            return listColumn;
+            listColumn = listColumn.OrderByDescending(item => !item.IsHidden).ToList();
+
+            return listColumn;  
         }
     }
 }

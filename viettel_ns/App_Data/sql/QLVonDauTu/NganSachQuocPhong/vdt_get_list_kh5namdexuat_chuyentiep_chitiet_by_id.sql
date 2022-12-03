@@ -158,7 +158,18 @@ DECLARE @iGiaiDoanDen nvarchar(500)	set @iGiaiDoanDen = ''
 		duan.sTenLoaiCongTrinh,
 		duan.sTenNguonVon as sTenNganSach,
 		null as numChild,
-		duan.iIDDuAnID as iID_DuAnID
+		duan.iIDDuAnID as iID_DuAnID,
+		(ISNULL(khthChiTiet.fVon5namNganhDX,0) + ISNULL(khthChiTiet.fVonsaunamNganhDX,0)) as fTongVonBoTriNganh,
+		(ISNULL(khthChiTiet.fVon5namCTCDX,0) + ISNULL(khthChiTiet.fVonsaunamCTCDexuat,0)) as fTongVonBoTriCuc,
+		khthChiTiet.fHanmucNganhDX,
+		khthChiTiet.fVon5namNganhDX,
+		khthChiTiet.fVonsaunamNganhDX,
+		khthChiTiet.fVon5namCTCDX,
+		khthChiTiet.fHanmucCucTCDX,
+		khthChiTiet.fVonnamthunhatCTC,
+		khthChiTiet.fVonsaunamCTCDexuat,
+		khthChiTiet.fCucTCDeXuat,
+		khthChiTiet.fDuKienBoTriNamThu2
 	FROM ThongTinDuAn duan
 	left JOIN ThongTinChiTiet khthChiTiet
 		ON duan.iIDDuAnID = khthChiTiet.iID_DuAnID

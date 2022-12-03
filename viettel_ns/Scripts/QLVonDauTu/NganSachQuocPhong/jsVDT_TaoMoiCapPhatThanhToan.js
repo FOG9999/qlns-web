@@ -147,10 +147,18 @@ $(document).ready(function () {
             // display cot Loai
             $("#" + TBL_DANH_SACH_THANH_TOAN_CHITIET + " tr th:eq(1)").show();
             $("#" + TBL_DANH_SACH_THANH_TOAN_CHITIET + " tr td:eq(1)").show();
+            // display các số đề nghị tạm ứng
+            $(".only-thanhtoan").each((index, ele) => {
+                $(ele).show();
+            })
         } else {
             // hidden cot Loai
             $("#" + TBL_DANH_SACH_THANH_TOAN_CHITIET + " tr th:eq(1)").hide();
             $("#" + TBL_DANH_SACH_THANH_TOAN_CHITIET + " tr td:eq(1)").hide();
+            // hide các số đề nghị tạm ứng
+            $(".only-thanhtoan").each((index, ele) => {
+                $(ele).hide();
+            })
         }
     })
 

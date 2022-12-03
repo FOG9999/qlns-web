@@ -29,6 +29,7 @@ namespace Viettel.Models.QLVonDauTu
         public List<VDTDuToanNguonVonModel> listNguonVon { get; set; }
         public List<VDT_DA_DuToan_ChiPhi_ViewModel> listChiPhi { get; set; }
         public List<VDT_DA_DuToan_HangMuc_ViewModel> listHangMuc { get; set; }
+        public List<VDT_DA_NhaThau_GoiThau_ViewModel> listGoiThau { get; set; }
         public string sGiaTriDeNghiQuyetToan
         {
             get

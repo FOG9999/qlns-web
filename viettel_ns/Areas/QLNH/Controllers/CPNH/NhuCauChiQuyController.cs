@@ -770,7 +770,16 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                     ListData.Add(DataCha);
                 }
                 Stt++;
-                item.depth = SttCha + "." + Stt;
+                if (SttCha == 0)
+                {
+                    int Sttdv = 0;
+                    Sttdv++;
+                    item.depth = 1 + "." + Sttdv;
+                }
+                else
+                {
+                    item.depth = SttCha + "." + Stt;
+                }
 
                 if (item.iID_HopDongID == null || item.iID_HopDongID == Guid.Empty)
                 {
@@ -893,7 +902,16 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                     ListData.Add(DataCha);
                 }
                 Stt++;
-                item.depth = SttCha + "." + Stt;
+                if (SttCha==0)
+                {
+                   int Sttdv = 0;
+                    Sttdv++;
+                    item.depth = 1 + "." + Sttdv;
+                }
+                else
+                {
+                    item.depth = SttCha + "." + Stt;
+                }
 
                 if (item.iID_HopDongID == null /*|| item.iID_HopDongID == Guid.Empty*/)
                 {
@@ -913,8 +931,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                     DataCha.Noidungchi = "Tổng cộng: ";
                     DataCha.GiaTriHopDongUSD = listChitiet.Sum(x => x.GiaTriHopDongUSD); 
                     DataCha.GiaTriHopDongVND = listChitiet.Sum(x => x.GiaTriHopDongVND);
-                    DataCha.GiaTriGaiDoanUSD = listChitiet.Sum(x => x.GiaTriGaiDoanUSD);
-                    DataCha.GiaTriBQPUSD = listChitiet.Sum(x => x.GiaTriBQPUSD);
+                    DataCha.GiaTriGaiDoanUSD = ListData.Sum(x => x.GiaTriGaiDoanUSD);
+                    DataCha.GiaTriBQPUSD = ListData.Sum(x => x.GiaTriBQPUSD);
                     DataCha.KinhPhiUSD = listChitiet.Sum(x => x.KinhPhiUSD);
                     DataCha.KinhPhiVND = listChitiet.Sum(x => x.KinhPhiVND);
                     DataCha.KinhPhiDaChiUSD = listChitiet.Sum(x => x.KinhPhiDaChiUSD);

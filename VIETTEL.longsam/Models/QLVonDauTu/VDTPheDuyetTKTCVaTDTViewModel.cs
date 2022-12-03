@@ -71,6 +71,145 @@ namespace Viettel.Models.QLVonDauTu
         public string sMaDuAn { get; set; }
         public string sTenDuAn { get; set; }
         public string iSTT { get; set; }
+        public string ordpc { get; set; }
+        public string sGiaTriThamTra
+        {
+            get
+            {
+                return fGiaTriThamTra.HasValue ? fGiaTriThamTra.Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            }
+        }
+        public string sGiaTriQuyetToan
+        {
+            get
+            {
+                return fGiaTriQuyetToan.HasValue ? fGiaTriQuyetToan.Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            }
+        }
+        public double? fChenhLechSoVoiDeNghi
+        {
+            get
+            {
+                return (fGiaTriQuyetToan ?? 0) - fGiaTriDeNghiQuyetToan;
+            }
+        }
+
+        public double? fChenhLechSoVoiDuToanNhap
+        {
+            get
+            {
+                return (fGiaTriQuyetToan ?? 0) - fTienPheDuyet;
+            }
+        }
+
+        public string sChenhLenhSoVoiDuToanNhap
+        {
+            get
+            {
+                return fChenhLechSoVoiDuToanNhap.HasValue ? fChenhLechSoVoiDuToanNhap.Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            }
+        }
+        public string sChenhLechSoVoiDeNghi
+        {
+            get
+            {
+                return fChenhLechSoVoiDeNghi.HasValue ? fChenhLechSoVoiDeNghi.Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            }
+        }
+
+        public double? fChenhLenhSoVoiDuToan
+        {
+            get
+            {
+                return fGiaTriDeNghiQuyetToan ?? 0 - fTienPheDuyet;
+            }
+        }
+        public double? fChenhLenhSoVoiQuyetToanAB
+        {
+            get
+            {
+                return fGiaTriDeNghiQuyetToan ?? 0 - fGiaTriQuyetToanAB ?? 0;
+            }
+        }
+        public double? fChenhLechSoVoiKetQuaKiemToan
+        {
+            get
+            {
+                return fGiaTriDeNghiQuyetToan ?? 0 - fGiaTriKiemToan ?? 0;
+            }
+        }
+        public string sTienPheDuyet
+        {
+            get
+            {
+                return fTienPheDuyet.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN"));
+            }
+        }
+        public string sGiaTriKiemToan
+        {
+            get
+            {
+                return fGiaTriKiemToan.HasValue ? fGiaTriKiemToan.Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            }
+        }
+        public string sGiaTriDeNghiQuyetToan
+        {
+            get
+            {
+                return fGiaTriDeNghiQuyetToan.HasValue ? fGiaTriDeNghiQuyetToan.Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            }
+        }
+        public string sGiaTriQuyetToanAB
+        {
+            get
+            {
+                return fGiaTriQuyetToanAB.HasValue ? fGiaTriQuyetToanAB.Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            }
+        }
+        public string sChenhLenhSoVoiDuToan
+        {
+            get
+            {
+                return fChenhLenhSoVoiDuToan.HasValue ? fChenhLenhSoVoiDuToan.Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            }
+        }
+        public string sChenhLenhSoVoiQuyetToanAB
+        {
+            get
+            {
+                return fChenhLenhSoVoiQuyetToanAB.HasValue ? fChenhLenhSoVoiQuyetToanAB.Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            }
+        }
+        public string sChenhLechSoVoiKetQuaKiemToan
+        {
+            get
+            {
+                return fChenhLechSoVoiKetQuaKiemToan.HasValue ? fChenhLechSoVoiKetQuaKiemToan.Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            }
+        }
+
+    }
+
+    public class VDT_DA_NhaThau_GoiThau_ViewModel
+    {
+        public Guid? iID_DuAn_GoiThau { get; set; }
+        public string sTenGoiThau { get; set; }
+        public Guid iID_GoiThauID { get; set; }
+        public double fTienPheDuyet { get; set; }
+        public double fGiaTriDieuChinh { get; set; }
+        public double fTienPheDuyetQDDT { get; set; }
+        public int? iThuTu { get; set; }
+        public bool isDelete { get; set; }
+        public bool isParent { get; set; }
+
+        public double? fGiaTriKiemToan { get; set; }
+        public double? fGiaTriDeNghiQuyetToan { get; set; }
+        public double? fGiaTriQuyetToanAB { get; set; }
+        public double? fGiaTriThamTra { get; set; }
+        public double? fGiaTriQuyetToan { get; set; }
+        public string sMaDuAn { get; set; }
+        public string sTenDuAn { get; set; }
+        public string iSTT { get; set; }
         public string sGiaTriThamTra
         {
             get

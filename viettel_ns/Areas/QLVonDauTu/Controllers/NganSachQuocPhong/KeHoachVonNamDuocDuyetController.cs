@@ -109,6 +109,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 ViewBag.IsView = isView ? "true" : "false";
                 ViewBag.ListVoucherSuggestion = _qLVonDauTuService.GetAllKeHoachVonNamDeXuatByIdDonVi(data.iID_DonViQuanLyID).ToSelectList("iID_KeHoachVonNamDeXuatID", "sSoQuyetDinh");
                 ViewBag.ListNguonVon = _qLVonDauTuService.LayNguonVon().ToSelectList("iID_MaNguonNganSach", "sTen");
+                List<SelectListItem> lstLoaiDuToan = new List<SelectListItem> {
+                new SelectListItem{Text = Constants.LoaiDuToan.TypeName.DAU_NAM, Value=((int)Constants.LoaiDuToan.Type.DAU_NAM).ToString()},
+                new SelectListItem{Text = Constants.LoaiDuToan.TypeName.BO_SUNG, Value=((int)Constants.LoaiDuToan.Type.BO_SUNG).ToString()},
+                new SelectListItem{Text = Constants.LoaiDuToan.TypeName.NAM_TRUOC_CHUYEN_SANG, Value=((int)Constants.LoaiDuToan.Type.NAM_TRUOC_CHUYEN_SANG).ToString()},
+            };
+                ViewBag.drLoaiDuToan = lstLoaiDuToan.ToSelectList("Value", "Text");
+
             }
             catch (Exception ex)
             {
@@ -156,19 +163,19 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                     }
                 }
 
-                if (_qLVonDauTuService.CheckExistKeHoachVonNamDuocDuyet(data.iID_DonViQuanLyID.ToString(), data.iID_NguonVonID ?? 0, data.iNamKeHoach ?? 0, data.iID_KeHoachVonNam_DuocDuyetID))
-                {
-                    //var objDonVi = _nganSachService.GetDonViById(PhienLamViec.iNamLamViec, data.iID_MaDonViQuanLy);
-                    var objDonVi = _nganSachService.GetDonViById(PhienLamViec.iNamLamViec, data.iID_DonViQuanLyID.ToString());
-                    var objNguonVon = _qLVonDauTuService.GetListAllNguonNganSach().FirstOrDefault(n => n.iID_MaNguonNganSach == data.iID_NguonVonID);
-                    var strDonVi = string.Format("{0} - {1}", objDonVi.iID_MaDonVi, objDonVi.sTen);
-                    return Json(new
-                    {
-                        bIsComplete = false,
-                        sMessError = string.Format("Đơn vị {0} và nguồn vốn {1} trong năm kế hoạch {2} đã tồn tại.", strDonVi, objNguonVon.sTen, data.iNamKeHoach)
-                    },
-                        JsonRequestBehavior.AllowGet);
-                }
+                //if (_qLVonDauTuService.CheckExistKeHoachVonNamDuocDuyet(data.iID_DonViQuanLyID.ToString(), data.iID_NguonVonID ?? 0, data.iNamKeHoach ?? 0, data.iID_KeHoachVonNam_DuocDuyetID))
+                //{
+                //    //var objDonVi = _nganSachService.GetDonViById(PhienLamViec.iNamLamViec, data.iID_MaDonViQuanLy);
+                //    var objDonVi = _nganSachService.GetDonViById(PhienLamViec.iNamLamViec, data.iID_DonViQuanLyID.ToString());
+                //    var objNguonVon = _qLVonDauTuService.GetListAllNguonNganSach().FirstOrDefault(n => n.iID_MaNguonNganSach == data.iID_NguonVonID);
+                //    var strDonVi = string.Format("{0} - {1}", objDonVi.iID_MaDonVi, objDonVi.sTen);
+                //    return Json(new
+                //    {
+                //        bIsComplete = false,
+                //        sMessError = string.Format("Đơn vị {0} và nguồn vốn {1} trong năm kế hoạch {2} đã tồn tại.", strDonVi, objNguonVon.sTen, data.iNamKeHoach)
+                //    },
+                //        JsonRequestBehavior.AllowGet);
+                //}
 
                 if (!_qLVonDauTuService.SaveKeHoachVonNamDuocDuyet(ref iID, data, Username, isModified))
                 {
@@ -524,12 +531,15 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                     string lstId = lstGroupUnit[itemUnit];
                     List<VDTKeHoachVonNamDuocDuyetExport> lstCongTrinhMoMoi = _qLVonDauTuService.GetKeHoachVonNamDuocDuyetReport(lstId, lstLct, KHOI_CONG_MOI, double.Parse(dataReport.sValueDonViTinh)).ToList();
                     string sNameUnit = _qLVonDauTuService.GetDonViQuanLyById(Guid.Parse(itemUnit)).sTen;
-                    lstGroup.Add(new VDTKeHoachVonNamDuocDuyetExport() { sTenDuAn = sNameUnit.ToUpper(), IsHangCha = true });
                     List<VDTKeHoachVonNamDuocDuyetExport> lstDataExportCongTrinhMoMoi = CalculateDataReport(lstCongTrinhMoMoi);
-                    lstGroup.AddRange(lstDataExportCongTrinhMoMoi);
                     List<VDTKeHoachVonNamDuocDuyetExport> lstCongTrinhChuyenTiep = _qLVonDauTuService.GetKeHoachVonNamDuocDuyetReport(lstId, lstLct, CHUYEN_TIEP, double.Parse(dataReport.sValueDonViTinh)).ToList();
                     List<VDTKeHoachVonNamDuocDuyetExport> lstDataExportCongTrinhChuyenTiep = CalculateDataReport(lstCongTrinhChuyenTiep);
-                    lstGroup.AddRange(lstDataExportCongTrinhChuyenTiep);
+                    if(!(lstDataExportCongTrinhMoMoi.Count == 1 && lstDataExportCongTrinhChuyenTiep.Count == 1))
+                    {
+                        lstGroup.Add(new VDTKeHoachVonNamDuocDuyetExport() { sTenDuAn = sNameUnit.ToUpper(), IsHangCha = true });
+                        lstGroup.AddRange(lstDataExportCongTrinhMoMoi);
+                        lstGroup.AddRange(lstDataExportCongTrinhChuyenTiep);
+                    }
                 }
 
                 ExcelFile xls = CreateReportGoc(lstGroup, dataReport);
@@ -558,8 +568,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
         {
             ExcelFile xls = (ExcelFile)TempData["DataReportGocXls"];
 
-            return Print(xls, pdf ? "pdf" : "xls", pdf ? "BaoCaoKeHoachVonNamDuocDuyet.pdf" : "BaoCaoKeHoachVonNamDuocDuyet.xls");
-
+            return Print(xls, pdf ? "pdf" : "xls", pdf ? "BaoCaoKeHoachVonNamDuocDuyet.pdf" : "BaoCaoKeHoachVonNamDuocDuyet.xlsx");
+ 
             //if (pdf)
             //{
             //    MemoryStream stream = (MemoryStream)TempData["DataReportGoc"];

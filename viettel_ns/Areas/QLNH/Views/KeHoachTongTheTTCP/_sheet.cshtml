@@ -4,7 +4,7 @@
     <div class="col-sm-5" style="padding-left:0px;">
         <div>
             <span>
-                Kế hoạch giai đoạn:
+                Quyết định giai đoạn:
                 @if (Model.NH_KHTongTheTTCP_NVCViewModel.iLoai.HasValue)
                 {
                     if (Model.NH_KHTongTheTTCP_NVCViewModel.iLoai.Value == 1)
@@ -17,7 +17,7 @@
                     }
                 }
             </span><br>
-            <span>Kế hoạch tổng thể Thủ tướng Chính phủ phê duyệt: <span style="color: red">@Html.Raw(Html.Encode(Model.NH_KHTongTheTTCP_NVCViewModel.sSoKeHoach)) @(Model.NH_KHTongTheTTCP_NVCViewModel.dNgayKeHoach.HasValue ? ("- " + Model.NH_KHTongTheTTCP_NVCViewModel.dNgayKeHoach.Value.ToString("dd/MM/yyyy")) : "")</span></span>
+            <span>Quyết định tổng thể Thủ tướng Chính phủ phê duyệt: <span style="color: red">@Html.Raw(Html.Encode(Model.NH_KHTongTheTTCP_NVCViewModel.sSoKeHoach)) @(Model.NH_KHTongTheTTCP_NVCViewModel.dNgayKeHoach.HasValue ? ("- " + Model.NH_KHTongTheTTCP_NVCViewModel.dNgayKeHoach.Value.ToString("dd/MM/yyyy")) : "")</span></span>
         </div>
     </div>
     <div class="col-sm-7">

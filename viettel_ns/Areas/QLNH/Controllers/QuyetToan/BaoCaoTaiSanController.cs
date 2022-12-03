@@ -29,6 +29,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.QuyetToan
             if (vm.Items2 == null)
                 vm.Items2 = new List<BaoCaoTaiSanModel2>();
             ViewBag.ChangeTable =  true;
+
             List<NS_DonVi> lstDonViQL = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec, false, false).ToList();
             lstDonViQL.Insert(0, new NS_DonViModel { iID_Ma = Guid.Empty, sMoTa = "--Chọn đơn vị--" });
             vm.ListDonVi = lstDonViQL.ToSelectList("iID_Ma", "sMoTa");

@@ -3,19 +3,24 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
+using Viettel.Domain.DomainModel;
+using Viettel.Services;
 using VIETTEL.Models;
 
 namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
 {
     public class KeHoachVonNamDeXuat_Import_SheetTable : SheetTable
     {
+        private readonly IQLVonDauTuService _qLVonDauTuService = QLVonDauTuService.Default;
         public int iNamKeHoach { get; set; }
+        public string lstDuAnID { get; set; }
+
         public KeHoachVonNamDeXuat_Import_SheetTable()
         {
 
         }
 
-        public KeHoachVonNamDeXuat_Import_SheetTable(DataTable datatableData,int iNamLamViec, int iNamKeHoach, Dictionary<string, string> query)
+        public KeHoachVonNamDeXuat_Import_SheetTable(DataTable datatableData,int iNamLamViec, int iNamKeHoach,bool bIsImport, Guid iID_KeHoachVonNamDeXuatID, string listIdDuAns , Dictionary<string, string> query)
         {
             this.iNamKeHoach = iNamKeHoach;
             var filters = new Dictionary<string, string>();
@@ -24,9 +29,19 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 {
                     filters.Add(c.ColumnName, query.ContainsKey(c.ColumnName) ? query[c.ColumnName] : "");
                 });
+            if (bIsImport)
+            {
+                DataTable dataImport = _qLVonDauTuService.GetListKHVonNamDeXuatChiTietById(iID_KeHoachVonNamDeXuatID.ToString(), listIdDuAns, filters);
 
-            fillSheet(datatableData, iNamLamViec, filters);
+                fillSheet(dataImport, iNamLamViec, filters);
+            }
+            else
+            {
+                fillSheet(datatableData, iNamLamViec, filters);
+            }
+
         }
+     
 
         private void fillSheet(DataTable datatableData, int iNamLamViec, Dictionary<string, string> filters)
         {
@@ -34,6 +49,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
             _filters = filters ?? new Dictionary<string, string>();
 
             dtChiTiet = datatableData;
+            if(dtChiTiet == null)
+            {
+                dtChiTiet = new DataTable();
+            }
             dtChiTiet_Cu = dtChiTiet.Copy();
 
             System.Data.DataColumn dc = new DataColumn("bLaHangCha", typeof(bool));
@@ -111,6 +130,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     new SheetColumn(columnName: "sMauSac", isHidden: true),
                     new SheetColumn(columnName: "sFontColor", isHidden: true),
                     new SheetColumn(columnName: "sFontBold",isHidden: true),
+                    new SheetColumn(columnName: "sTenDonViQuanLy", align: "left", isFixed: true, hasSearch: true,isHidden: true),
+                    new SheetColumn(columnName: "sThoiGianThucHien", align: "center", isFixed: true, hasSearch: true, isReadonly: true,isHidden:true),
 
                 };
 

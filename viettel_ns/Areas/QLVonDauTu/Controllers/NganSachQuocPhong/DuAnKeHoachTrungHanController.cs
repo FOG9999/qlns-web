@@ -143,10 +143,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                                     entityDuAn.iMaDuAnIndex = iMaDuAnIndex;
                                     entityDuAn.iID_DonViThucHienDuAnID = entityKH5NDXCT.iID_DonViQuanLyID;
                                     entityDuAn.iID_MaDonViThucHienDuAnID = entityKH5NDXCT.iID_MaDonVi;
-                                    entityDuAn.iID_MaDonVi = itemDdQuery != null ? itemDdQuery.iID_MaDonViQuanLy : string.Empty;
+                                    //entityDuAn.iID_MaDonVi = itemDdQuery != null ? itemDdQuery.iID_MaDonViQuanLy : string.Empty;
                                     entityDuAn.iID_LoaiCongTrinhID = entityKH5NDXCT.iID_LoaiCongTrinhID;
+                                    entityDuAn.iID_DonViQuanLyID = entityKH5NDXCT.iID_DonViID;
+                                    entityDuAn.iID_MaDonVi = entityKH5NDXCT.iID_MaDonVi;
 
-                                    VDT_DM_DonViThucHienDuAn donVi = _danhMucService.GetDonViThucHienDuAn(entityDuAn.iID_MaDonViThucHienDuAnID);
+                                    //VDT_DM_DonViThucHienDuAn donVi = _danhMucService.GetDonViThucHienDuAn(entityDuAn.iID_MaDonViThucHienDuAnID);
+                                    NS_DonVi donVi = _danhMucService.GetNSDonViById(entityDuAn.iID_DonViQuanLyID.Value);
 
                                     string strMaDuAnIndex = getStrMaDuAnIndex(iMaDuAnIndex);
                                     string sMaDuAn = donVi.iID_MaDonVi + "-xxx-" + strMaDuAnIndex;
@@ -183,10 +186,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                                     entityDuAn.sDiaDiem = entityKH5NDXCT.sDiaDiem;
                                     entityDuAn.iID_DonViThucHienDuAnID = entityKH5NDXCT.iID_DonViQuanLyID;
                                     entityDuAn.iID_MaDonViThucHienDuAnID = entityKH5NDXCT.iID_MaDonVi;
-                                    entityDuAn.iID_MaDonVi = itemDdQuery != null ? itemDdQuery.iID_MaDonViQuanLy : string.Empty;
+                                    //entityDuAn.iID_MaDonVi = itemDdQuery != null ? itemDdQuery.iID_MaDonViQuanLy : string.Empty;
                                     entityDuAn.iID_LoaiCongTrinhID = entityKH5NDXCT.iID_LoaiCongTrinhID;
+                                    entityDuAn.iID_DonViQuanLyID = entityKH5NDXCT.iID_DonViID;
+                                    entityDuAn.iID_MaDonVi = entityKH5NDXCT.iID_MaDonVi;
 
-                                    VDT_DM_DonViThucHienDuAn donVi = _danhMucService.GetDonViThucHienDuAn(entityDuAn.iID_MaDonViThucHienDuAnID);
+                                    //VDT_DM_DonViThucHienDuAn donVi = _danhMucService.GetDonViThucHienDuAn(entityDuAn.iID_MaDonViThucHienDuAnID);
+                                    NS_DonVi donVi = _danhMucService.GetNSDonViById(entityDuAn.iID_DonViQuanLyID.Value);
 
                                     string sMaDuAn = entityDuAn.sMaDuAn;
                                     var arrMaDuAn = sMaDuAn.Split(new string[] { "-" }, StringSplitOptions.None);
@@ -358,6 +364,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             entityKH5NChiTiet.iID_KeHoach5Nam_ChiTietID = Guid.NewGuid();
             entityKH5NChiTiet.sDiaDiem = item.sDiaDiem;
             entityKH5NChiTiet.sThoiGianThucHien = item.iGiaiDoanTu.ToString() + " - " + item.iGiaiDoanDen.ToString();
+            entityKH5NChiTiet.iID_DonViID = item.iID_DonViID;
             return entityKH5NChiTiet;
         }
 
@@ -549,6 +556,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                                     entityDuAn.iID_MaDonViThucHienDuAnID = sMaDonVi;
                                     entityDuAn.iID_DonViThucHienDuAnID = donvi?.iID_Ma;
                                 }
+                                if (r.Columns.ContainsKey("sDonVi"))
+                                {
+                                    entityDuAn.iID_DonViQuanLyID = donvi?.iID_Ma;
+                                    entityDuAn.iID_MaDonViThucHienDuAnID = sMaDonVi;
+                                    entityDuAn.iID_MaDonVi = sMaDonVi;
+                                    entityDuAn.iID_DonViThucHienDuAnID = donvi?.iID_Ma;
+                                }
                                 if (r.Columns.ContainsKey("sTenCDT"))
                                 {
                                     entityDuAn.iID_ChuDauTuID = chudautu?.ID;
@@ -642,6 +656,15 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                                 sMaDonVi = rCT.Columns["sTenDonViQL"].Split(new string[] { "-" }, StringSplitOptions.None)[0];
                                 donvi = _iNganSachService.GetDonViByMaDonVi(PhienLamViec.iNamLamViec, sMaDonVi);
                             }
+                            if (rCT.Columns.ContainsKey("sDonVi"))
+                            {
+                                entityDuAn.iID_DonViQuanLyID = donvi?.iID_Ma;
+                                entityDuAn.iID_MaDonViThucHienDuAnID = sMaDonVi;
+                                entityDuAn.iID_MaDonVi = sMaDonVi;
+                                entityDuAn.iID_DonViThucHienDuAnID = donvi?.iID_Ma;
+                                sMaDonVi = rCT.Columns["sDonVi"].Split(new string[] { "-" }, StringSplitOptions.None)[0];
+                                donvi = _iNganSachService.GetDonViByMaDonVi(PhienLamViec.iNamLamViec, sMaDonVi);
+                            }
                             if (rCT.Columns.ContainsKey("sTenCDT"))
                             {
                                 entityDuAn.iID_ChuDauTuID = chudautu?.ID;
@@ -732,7 +755,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             var entityKH5NChiTiet = new KeHoach5NamChiTietDuocDuyetTempForSave();
             entityKH5NChiTiet.iID_KeHoach5NamID = idKhddParent;
             entityKH5NChiTiet.iID_DuAnID = item.iID_DuAnID;
-            entityKH5NChiTiet.iID_DonViQuanLyID = item.iID_DonViThucHienDuAnID;
+            entityKH5NChiTiet.iID_DonViQuanLyID = item.iID_DonViQuanLyID;
             entityKH5NChiTiet.sTen = item.sTenDuAn;
             entityKH5NChiTiet.iID_NguonVonID = iID_NguonVonID;
             entityKH5NChiTiet.iID_LoaiCongTrinhID = item.iID_LoaiCongTrinhID;

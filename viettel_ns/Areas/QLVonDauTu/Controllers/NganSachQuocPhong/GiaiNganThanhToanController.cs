@@ -163,8 +163,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             data.fLuyKeTTTN = data.fLuyKeThanhToanTN;
             data.fLuyKeTUNN = data.fLuyKeTUChuaThuHoiKhacNN; // thoe chế độ
             data.fLuyKeTUTN = data.fLuyKeTUChuaThuHoiKhacTN;
-            data.fLuyKeTUUngTruocNN = data.fLuyKeTUChuaThuHoiKhacNN; // ứng trước
-            data.fLuyKeTUUngTruocTN = data.fLuyKeTUChuaThuHoiKhacTN;
+            data.fLuyKeTUUngTruocNN = 0; // ứng trước -> chưa rõ nghiệp vụ!!!
+            data.fLuyKeTUUngTruocTN = 0;
             data.iCoQuanThanhToan = data.iCoQuanThanhToan.HasValue ? data.iCoQuanThanhToan : (int)Constants.CoQuanThanhToan.Type.KHO_BAC;
 
             // get list KHV
@@ -262,8 +262,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             data.fLuyKeTTTN = data.fLuyKeThanhToanTN;
             data.fLuyKeTUNN = data.fLuyKeTUChuaThuHoiKhacNN; // thoe chế độ
             data.fLuyKeTUTN = data.fLuyKeTUChuaThuHoiKhacTN;
-            data.fLuyKeTUUngTruocNN = data.fLuyKeTUChuaThuHoiKhacNN; // ứng trước
-            data.fLuyKeTUUngTruocTN = data.fLuyKeTUChuaThuHoiKhacTN;
+            data.fLuyKeTUUngTruocNN = 0; // ứng trước -> chưa rõ nghiệp vụ!!!
+            data.fLuyKeTUUngTruocTN = 0;
 
             // get list KHV
             List<KeHoachVonModel> listKHV = _vdtService.GetKeHoachVonCapPhatThanhToan(data.iID_DuAnId.ToString(), data.iID_NguonVonID.Value, data.dNgayDeNghi.Value, data.iNamKeHoach.Value, data.iCoQuanThanhToan.Value, data.iID_DeNghiThanhToanID);
@@ -559,13 +559,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 if (item.iLoaiDeNghi == (int)Constants.LoaiThanhToan.Type.THANH_TOAN || item.iLoaiDeNghi == (int)Constants.LoaiThanhToan.Type.TAM_UNG)
                 {
                     item.fDefaultValueTN = data.fGiaTriThanhToanTN;
-                    item.fDefaultValueNN = data.fGiaTriThanhToanNN;
+                    item.fDefaultValueNN = data.fGiaTriThanhToanNN;                    
                 }
                 else
                 {
                     item.fDefaultValueTN = data.fGiaTriThuHoiTN;
                     item.fDefaultValueNN = data.fGiaTriThuHoiNN;
                 }
+                item.iLoai = data.iLoaiThanhToan == (int)Constants.LoaiThanhToan.Type.THANH_TOAN ? item.iLoaiDeNghi : (int)Constants.LoaiThanhToan.Type.TAM_UNG; // trường này để lựa chọn giá trị cho dropdown loại thanh toán của phê duyệt chi tiết
                 item.fTongSo = item.fGiaTriNgoaiNuoc.Value + item.fGiaTriTrongNuoc.Value;
                 item.iLoaiNamKH = objKHVTT.ILoaiNamKhv;
 
@@ -1210,6 +1211,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
         {
             FlexCelReport fr = new FlexCelReport();
             CapPhatThanhToanReportQuery dataReport = _vdtService.GetThongTinPhanGhiCoQuanTaiChinh(id, PhienLamViec.NamLamViec);
+            List<PheDuyetThanhToanChiTiet> listData = _vdtService.GetListPheDuyetChiTietByDeNghiId(id);
+            int? loaiKeHoachVon = listData.FirstOrDefault().iLoaiKeHoachVon;
 
             XlsFile Result = new XlsFile(true);
             Result.Open(Server.MapPath(dataReport.iLoaiThanhToan == (int)PaymentTypeEnum.Type.THANH_TOAN ? sFilePath_GiayDeNghiCoQuanThanhToan_ThanhToan : sFilePath_GiayDeNghiCoQuanThanhToan_TamUng));
@@ -1227,9 +1230,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             fr.SetValue("NguonVon", dataReport.TenNguonVon);
             fr.SetValue("NamKeHoach", dataReport.NamKeHoach);
             fr.SetValue("GiaTriHopDong", dataReport.GiaTriHopDong);
-            fr.SetValue("NoiDung", dataReport.NoiDung);
-            fr.SetValue("ThanhToanTN", dataReport.ThanhToanTN);
-            fr.SetValue("ThanhToanNN", dataReport.ThanhToanNN);
+            fr.SetValue("NoiDung", dataReport.NoiDung);            
             fr.SetValue("ThueGiaTriGiaTang", dataReport.ThueGiaTriGiaTang);
             fr.SetValue("ChuyenTienBaoHanh", dataReport.ChuyenTienBaoHanh);
             fr.SetValue("ThuHuongTN", (dataReport.ThanhToanTN - dataReport.ThuHoiTN));
@@ -1280,7 +1281,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             double luyKeTUTN = 0;
             double luyKeTUNN = 0;
             double luyKeTUUngTruocTN = 0;
-            double luyKeTUUngTruocNN = 0;
+            double luyKeTUUngTruocNN = 0; 
+            double sumTN = 0;
+            double sumNN = 0;
 
             Guid iIdChungTu = new Guid();
             if (dataReport.bThanhToanTheoHopDong.HasValue && dataReport.bThanhToanTheoHopDong.Value)
@@ -1290,11 +1293,24 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 
             if (dataReport.dNgayDeNghi.HasValue && iIdChungTu != Guid.Empty)
             {
-                _vdtService.LoadGiaTriThanhToan(dataReport.iCoQuanThanhToan.Value, dataReport.dNgayDeNghi.Value, dataReport.bThanhToanTheoHopDong.Value, iIdChungTu.ToString(), dataReport.iID_NguonVonID.Value, dataReport.iNamKeHoach.Value,
-                    ref luyKeTTTN, ref luyKeTTNN, ref luyKeTUTN, ref luyKeTUNN, ref luyKeTUUngTruocTN, ref luyKeTUUngTruocNN);
+                _vdtService.LoadGiaTriThanhToanNew(dataReport.iCoQuanThanhToan.Value, dataReport.dNgayDeNghi.Value, dataReport.bThanhToanTheoHopDong.Value, iIdChungTu.ToString(), dataReport.iID_NguonVonID.Value, dataReport.iNamKeHoach.Value, dataReport.loaiCoQuanTaiChinh,
+                    ref luyKeTTTN, ref luyKeTTNN, ref luyKeTUTN, ref luyKeTUNN, ref luyKeTUUngTruocTN, ref luyKeTUUngTruocNN, ref sumTN, ref sumNN, loaiKeHoachVon);
             }
-            fr.SetValue("LuyKeTN", (dataReport.fLuyKeThanhToanTN + dataReport.fLuyKeTUChuaThuHoiKhacTN + dataReport.fLuyKeTUChuaThuHoiTN) / CheckDonViTinhIsNghinDong(dvt));
-            fr.SetValue("LuyKeNN", (dataReport.fLuyKeThanhToanNN + dataReport.fLuyKeTUChuaThuHoiNN + dataReport.fLuyKeTUChuaThuHoiKhacNN) / CheckDonViTinhIsNghinDong(dvt));
+
+            if(dataReport.iLoaiThanhToan == (int)PaymentTypeEnum.Type.THANH_TOAN)
+            {
+                fr.SetValue("ThanhToanTN", dataReport.ThanhToanTN + dataReport.ThuHoiTN);
+                fr.SetValue("ThanhToanNN", dataReport.ThanhToanNN + dataReport.ThuHoiNN);
+                fr.SetValue("LuyKeTN", (dataReport.fLuyKeThanhToanTN + dataReport.fLuyKeTUChuaThuHoiKhacTN + dataReport.fLuyKeTUChuaThuHoiTN - dataReport.ThuHoiTN) / CheckDonViTinhIsNghinDong(dvt));
+                fr.SetValue("LuyKeNN", (dataReport.fLuyKeThanhToanNN + dataReport.fLuyKeTUChuaThuHoiNN + dataReport.fLuyKeTUChuaThuHoiKhacNN - dataReport.ThuHoiNN) / CheckDonViTinhIsNghinDong(dvt));
+            }
+            else
+            {
+                fr.SetValue("ThanhToanTN", dataReport.fLuyKeThanhToanTN + dataReport.fLuyKeTUChuaThuHoiTN);
+                fr.SetValue("ThanhToanNN", dataReport.fLuyKeThanhToanNN + dataReport.fLuyKeTUChuaThuHoiNN);
+                fr.SetValue("LuyKeTN", (dataReport.ThanhToanTN + dataReport.fLuyKeTUChuaThuHoiKhacTN + dataReport.fLuyKeTUChuaThuHoiTN - dataReport.ThuHoiTN) / CheckDonViTinhIsNghinDong(dvt));
+                fr.SetValue("LuyKeNN", (dataReport.ThanhToanNN + dataReport.fLuyKeTUChuaThuHoiNN + dataReport.fLuyKeTUChuaThuHoiKhacNN - dataReport.ThuHoiNN) / CheckDonViTinhIsNghinDong(dvt));
+            }
 
             fr.UseChuKy(Username)
                  .UseChuKyForController(sControlName)

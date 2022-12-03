@@ -88,7 +88,7 @@
     <th width="14%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
     </thead>
     <thead>
-    <th width="1%"></th>
+    <th><input type="checkbox" name="cbAll_ChungTu" class="cbAll_ChungTu" /></th>
     <th width="3%">STT</th>
     <th width="10%">Số kế hoạch</th>
     <th width="16%">Ngày lập</th>
@@ -114,7 +114,7 @@
                     index++;
                         <tr style="cursor: pointer; @(!string.IsNullOrEmpty(item.sTongHop) ? "font-weight: bold;" : string.Empty)">
                             <td>
-                                <input type="checkbox" class="@item.iID_KeHoach5Nam_DeXuatID" onclick="SetState('@item.iID_KeHoach5Nam_DeXuatID');" autocomplete="off" />
+                                <input type="checkbox" class="@item.iID_KeHoach5Nam_DeXuatID" onclick="SetState('@item.iID_KeHoach5Nam_DeXuatID');" autocomplete="off" data-check="itemChecked" />
                             </td>
                             <td align="center" onclick="ChiTietKeHoach5NamDeXuat('@item.iID_KeHoach5Nam_DeXuatID')">@(pageIndex + index)</td>
 

@@ -10,31 +10,13 @@
 }
 
 <div class="main">
-    @if (@ViewBag.isStatus != "1")
-    {
-        <div div class="panel-list-item col-sm-6 dropViewBaoCaoDieuChinh" style="display: flex; padding-right: 0px; float: right; width: 385px">
-            <div>
-                <label style="width:100px">Mẫu báo cáo</label>
-            </div>
-            <div>
-                <select class="form-control" id="iLoaiBaoCao" onchange="ChonLoaiBaoCao()">
-                    <option value="2" selected="selected">BM03/TT268 - Ngân sách quốc phòng</option>
-                    <option value="3">BM04/TT268 - Ngân sách khác</option>
-                </select>
-            </div>
-
-        </div>
-    }
-
-
     <div class="panel-list-item col-sm-12">
         <div class="card">
             <div class="card-body">
                 <div class="header-create-update">
                     <span>
-                        @Html.Raw(ViewBag.Title)
+                        @Html.Raw("Báo cáo kế hoạch vốn năm đề xuất")
                     </span>
-                    <input type="hidden" value="@ViewBag.isStatus" id="txtStatusReport" />
                 </div>
                 <ul class="nav nav-tabs" style="margin-top: 10px;">
                     <li class="active"><a data-toggle="tab" href="#bcTheoDonVi">Báo cáo theo đơn vị</a></li>
@@ -54,8 +36,8 @@
     </div>
     <div class="form-group text-center panel-list-item col-sm-12">
         <button class="btn btn-back" onclick="backViewKHVNDX()"><i class="fa fa-arrow-left" aria-hidden="true"></i><span>Quay lại</span></button>
-        <button class="btn btn-warning" onclick="printBaoCao();"><i class="fa fa-file-pdf-o" aria-hidden="true"></i><span>In báo cáo</span></button>
-        @*<a class="btn-mvc" id="btnChuKy"><i class="fa fa-file-excel"></i>Sửa chữ ký</a>*@
+        <button class="btn btn-warning" onclick="printBaoCao(true);"><i class="fa fa-file-pdf-o" aria-hidden="true"></i><span>In báo cáo</span></button>
+        <button class="btn btn-info" onclick="printBaoCao(false);"><i class="fa fa-file-pdf-o" aria-hidden="true"></i><span>Xuất excel</span></button>
         <button class="btn btn-success" id="btnChuKy"><i class="fa fa-edit" aria-hidden="true"></i><span>Sửa chữ ký</span></button>
 
 
@@ -73,29 +55,15 @@
     <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
 
     <script>
-        $(document).ready(function () {
-            var isStatus = @ViewBag.isStatus;
-            $("#iLoaiBaoCao").val(isStatus);
-        });
+        function printBaoCao(isPdf) {
+            var active = $("#bcTheoDonVi").hasClass("active");
 
-        function printBaoCao() {
-            var className = $('#bcTheoDonVi').attr('class');
-            var arrClass = className.split(" ");
-            var active = (arrClass.indexOf("active") > -1);
-            console.log(active);
             if (active) {
-                printBCDV();
+                printBCDV(isPdf);
             } else {
-                printBCTH();
+                printBCTH(isPdf);
             }
         }
-        function ChonLoaiBaoCao() {
-            var iLoaiBaoCao = $("#iLoaiBaoCao").val();
-            window.location.href = "/QLVonDauTu/KeHoachVonNamDeXuat/ViewInBaoCao/?isStatus=" + iLoaiBaoCao;
-
-
-        }
-
     </script>
 }
 

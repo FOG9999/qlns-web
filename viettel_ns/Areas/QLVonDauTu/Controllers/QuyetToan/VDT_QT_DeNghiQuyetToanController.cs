@@ -146,8 +146,27 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                 }                
                 foreach (var item in listModel)
                 {
-                    result.Add(new { id = item.iID_DuAnID, text = item.sTenDuAn });
+                    result.Add(new { id = item.iID_DuAnID, text = $"{item.sMaDuAn} - {item.sTenDuAn}" });
                 }
+            }
+            return Json(new { status = true, data = result });
+        }
+
+        [HttpPost]
+        public JsonResult GetLoaiQuyetToan(string iIdDeNghiQuyetToanId)
+        {
+            var result = new List<dynamic>();
+            if(iIdDeNghiQuyetToanId != null && iIdDeNghiQuyetToanId != "")
+            {
+                int loaiQuyetToan = _vdtService.GetLoaiQuyetToan_byDeNghiQtId(Guid.Parse(iIdDeNghiQuyetToanId));
+                result.Add(new { id = loaiQuyetToan, text = (loaiQuyetToan == 1 ? "Theo hạng muc" : "Theo gói thầu") });
+            }
+
+            else
+            {
+                result.Add(new { id = 0, text = "--Chọn--" });
+                result.Add(new { id = 1, text = "Theo hạng mục"});
+                result.Add(new { id = 2, text = "Theo gói thầu" });
             }
             return Json(new { status = true, data = result });
         }
@@ -157,27 +176,50 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
         {
             VDT_QT_DeNghiQuyetToanGetDuAnModel result = _vdtService.GetDuLieuDuAnById(iIdDuAnId, Username);
             List<VDTDuToanNguonVonModel> lstNguonVon = _vdtService.GetListDuToanNguonVonByDuToanId(iIdDuToanId);
-            string sKhoiCong = _vdtService.GetPheDuyetTKTCvaTDTByID(Guid.Parse(iIdDuToanId)).sKhoiCong;
-            string sKetThuc = _vdtService.GetPheDuyetTKTCvaTDTByID(Guid.Parse(iIdDuToanId)).sKetThuc;
+            string sKhoiCong = "";
+            string sKetThuc = "";
+            var data = _vdtService.GetPheDuyetTKTCvaTDTByID(Guid.Parse(iIdDuToanId));
+            if (data != null)
+            {
+                sKhoiCong = data.sKhoiCong;
+                sKetThuc = data.sKetThuc;
+            }
+
             return Json(new { status = true, data = result, lstNguonVon = lstNguonVon, sKhoiCong = sKhoiCong, sKetThuc = sKetThuc });
         }
 
         [HttpPost]
-        public JsonResult GetListDuToanByDuAn(Guid iIdDuAnId)
+        public JsonResult GetListDuToanByDuAn(int iIdLoaiQuyetToan, Guid? iIdDuAnId)
         {
-            var result = new List<dynamic>();
-            var data = _vdtService.GetAllDuToanIdByDuAnId(iIdDuAnId);
+            var result = new List<dynamic>();            
             string sKhoiCong = "";
             string sKetThuc = "";
-            if (data != null && data.Any())
-            {                               
-                foreach (var item in data)
+            if(iIdLoaiQuyetToan == 0 || iIdDuAnId == null)
+                return Json(new { datas = result, sKhoiCong = sKhoiCong, sKetThuc = sKetThuc }, JsonRequestBehavior.AllowGet);
+            else if(iIdLoaiQuyetToan == 1)
+            {
+                var data = _vdtService.GetAllDuToanIdByDuAnId(Guid.Parse(iIdDuAnId.ToString())); 
+                if (data != null && data.Any())
+                {                               
+                    foreach (var item in data)
+                    {
+                        result.Add(new { id = item.iID_DuToanID, text = item.sSoQuyetDinh });
+                    }
+                    sKhoiCong = _vdtService.GetPheDuyetTKTCvaTDTByID(data.FirstOrDefault().iID_DuToanID).sKhoiCong;
+                    sKetThuc = _vdtService.GetPheDuyetTKTCvaTDTByID(data.FirstOrDefault().iID_DuToanID).sKetThuc;
+                }                           
+            }
+            else
+            {
+                var data = _vdtService.GetAllKHLCNTIdByDuAnId(Guid.Parse(iIdDuAnId.ToString()));
+                if (data != null && data.Any())
                 {
-                    result.Add(new { id = item.iID_DuToanID, text = item.sSoQuyetDinh });
+                    foreach (var item in data)
+                    {
+                        result.Add(new { id = item.Id, text = item.sSoQuyetDinh });
+                    }
                 }
-                sKhoiCong = _vdtService.GetPheDuyetTKTCvaTDTByID(data.FirstOrDefault().iID_DuToanID).sKhoiCong;
-                sKetThuc = _vdtService.GetPheDuyetTKTCvaTDTByID(data.FirstOrDefault().iID_DuToanID).sKetThuc;
-            }            
+            }
             return Json(new { datas = result, sKhoiCong = sKhoiCong, sKetThuc = sKetThuc }, JsonRequestBehavior.AllowGet);
         }
 
@@ -268,6 +310,31 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
 
             return Json(new { lstChiPhi = listChiPhiParent, lstHangMuc = listHangMuc, sumGiaTriQuyetToanAB = sumGiaTriQuyetToanAB, sumKetQuaKiemToan = sumKetQuaKiemToan, sumCDTDeNghiQuyetToan = sumCDTDeNghiQuyetToan }, JsonRequestBehavior.AllowGet);
         }
+        [HttpPost]
+        public JsonResult GetListGoiThau(Guid iIdKhlcNhaThau, string iIdDeNghiQuyetToan)
+        {           
+            List<VDT_DA_NhaThau_GoiThau_ViewModel> lstGoiThau = _vdtService.GetListGoiThauTheoKHLCNhaThau(iIdKhlcNhaThau).ToList();
+            List<VDT_QT_DeNghiQuyetToan_ChiTiet> lstQuyetToanChiTiet = new List<VDT_QT_DeNghiQuyetToan_ChiTiet>();
+            if(iIdDeNghiQuyetToan != null && iIdDeNghiQuyetToan != "" && iIdDeNghiQuyetToan != String.Empty)
+                lstQuyetToanChiTiet = _vdtService.GetDeNghiQuyetToanChiTiet(Guid.Parse(iIdDeNghiQuyetToan));
+
+            if(lstQuyetToanChiTiet != null && lstQuyetToanChiTiet.Count > 0)
+                foreach (VDT_DA_NhaThau_GoiThau_ViewModel itemgt in lstGoiThau)
+                {
+                    VDT_QT_DeNghiQuyetToan_ChiTiet objQuyetToanChiTiet = lstQuyetToanChiTiet.Where(x => x.iID_GoiThauId == itemgt.iID_DuAn_GoiThau).FirstOrDefault();
+                    if (objQuyetToanChiTiet != null)
+                    {
+                        itemgt.fGiaTriDeNghiQuyetToan = objQuyetToanChiTiet.fGiaTriDeNghiQuyetToan;
+                        itemgt.fGiaTriKiemToan = objQuyetToanChiTiet.fGiaTriKiemToan;
+                        itemgt.fGiaTriQuyetToanAB = objQuyetToanChiTiet.fGiaTriQuyetToanAB;
+                    }
+                }
+            var sumGiaTriQuyetToanAB = lstGoiThau.Sum(x => x.fGiaTriQuyetToanAB).HasValue ? lstGoiThau.Sum(x => x.fGiaTriQuyetToanAB).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            var sumKetQuaKiemToan = lstGoiThau.Sum(x => x.fGiaTriKiemToan).HasValue ? lstGoiThau.Sum(x => x.fGiaTriKiemToan).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            var sumCDTDeNghiQuyetToan = lstGoiThau.Sum(x => x.fGiaTriDeNghiQuyetToan).HasValue ? lstGoiThau.Sum(x => x.fGiaTriDeNghiQuyetToan).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            return Json(new { lstGoiThau = lstGoiThau, sumGiaTriQuyetToanAB = sumGiaTriQuyetToanAB, sumKetQuaKiemToan = sumKetQuaKiemToan, sumCDTDeNghiQuyetToan = sumCDTDeNghiQuyetToan }, JsonRequestBehavior.AllowGet);
+        }
+            
 
 
         // ham de quy update iSTT chi phi con, insert chiphi con theo chi phi cha
@@ -555,6 +622,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
         {
             VDT_DA_QDDauTu quyetDinhDauTu = new VDT_DA_QDDauTu();
             double giaTriDuToan = 0;
+            double TongMucDauTu = 0;
             List<ReportTongHopQuyetToanDuAnHoanThanhModel> result = new List<ReportTongHopQuyetToanDuAnHoanThanhModel>();
             List<ReportTongHopQuyetToanDuAnHoanThanhModel> chiPhi = new List<ReportTongHopQuyetToanDuAnHoanThanhModel>();
 
@@ -564,7 +632,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                 giaTriDuToan = _vdtService.GetGiaTriDuToanIdByDuAnId(denghiItem.iID_DuAnID);
                 result = GetDataNguonVonByDuAnId(denghiItem.iID_DuAnID);
                 result.Select(n => { n.Stt = (result.IndexOf(n) + 1).ToString(); return n; }).ToList();
-
+                TongMucDauTu = _vdtService.GetTongMucQddtByIdDuAn(denghiItem.iID_DuAnID);
                 chiPhi = GetDataChiPhi(denghiItem.iID_DuAnID, denghiItem);
                 chiPhi.Select(n => { n.Stt = (chiPhi.IndexOf(n) + 1).ToString(); return n; }).ToList();
             }
@@ -616,6 +684,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             fr.SetValue("sumDaThanhToan", sumDaThanhToan);
             fr.SetValue("sumMLNSDieuChinhCuoi", sumMLNSDieuChinhCuoi);
             fr.SetValue("sumMLNSKeHoach", sumMLNSKeHoach);
+            fr.SetValue("TongMucDauTu", String.Concat(TongMucDauTu.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN"))," Đồng"));
             fr.SetValue("sumMLNSDaThanhToan", sumMLNSDaThanhToan);
             fr.UseChuKy(Username)
                  .UseChuKyForController(sControlName)
@@ -628,7 +697,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
 
         private List<ReportTongHopQuyetToanDuAnHoanThanhModel> GetDataChiPhi(Guid? duanId, VDT_QT_DeNghiQuyetToanViewModel denghiItem)
         {
-            string duToanId = _vdtService.GetDuToanIdByDuAnId(Guid.Parse(duanId.ToString())).iID_DuToanID.ToString();
+            string duToanId = string.Empty;
+            VDT_DA_DuToan duan = _vdtService.GetDuToanIdByDuAnId(Guid.Parse(duanId.ToString()));
+            if(duan != null)
+                duToanId = duan.iID_DuToanID.ToString();
             if (string.IsNullOrEmpty(duToanId))
             {
                 return new List<ReportTongHopQuyetToanDuAnHoanThanhModel>();
@@ -671,7 +743,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
 
         private List<ReportTongHopQuyetToanDuAnHoanThanhModel> GetDataNguonVonByDuAnId(Guid? duanId)
         {
-            string duToanId = _vdtService.GetDuToanIdByDuAnId(Guid.Parse(duanId.ToString())).iID_DuToanID.ToString();
+            VDT_DA_DuToan dutoan = _vdtService.GetDuToanIdByDuAnId(Guid.Parse(duanId.ToString()));
+            string duToanId = String.Empty;
+            if (dutoan != null)
+                duToanId = dutoan.iID_DuToanID.ToString();
             if (string.IsNullOrEmpty(duToanId))
             {
                 return new List<ReportTongHopQuyetToanDuAnHoanThanhModel>();
@@ -692,18 +767,23 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
 
         public ExcelFile CreateReportPhuLuc(DeNghiQuyetToanPrintDataExportModel dataNhap, VDT_QT_DeNghiQuyetToanViewModel denghiItem)
         {
-            string duToanId = _vdtService.GetDuToanIdByDuAnId(Guid.Parse(denghiItem.iID_DuAnID.ToString())).iID_DuToanID.ToString();
+            VDT_DA_DuToan dutoan = _vdtService.GetDuToanIdByDuAnId(Guid.Parse(denghiItem.iID_DuAnID.ToString()));
+            string duToanId = String.Empty;
+            if(dutoan != null)
+                duToanId = dutoan.iID_DuToanID.ToString();
             if (string.IsNullOrEmpty(duToanId))
             {
                 return null;
             }
-            List<VDT_DA_DuToan_ChiPhi_ViewModel> listChiPhi = _vdtService.GetListChiPhiTheoTKTC(Guid.Parse(duToanId)).ToList();
+            List<VDT_DA_DuToan_ChiPhi_ViewModel> listChiPhi = _vdtService.GetListChiPhiHangMucTheoTKTC(Guid.Parse(duToanId)).ToList();
             List<DeNghiQuyetToanChiTietModel> listDeNghiQuyetToan = listChiPhi.Select(x => new DeNghiQuyetToanChiTietModel()
             {
                 ChiPhiId = x.iID_DuAn_ChiPhi.HasValue ? x.iID_DuAn_ChiPhi.Value : Guid.Empty,
                 GiaTriPheDuyet = x.fTienPheDuyet,
                 TenChiPhi = x.sTenChiPhi,
-                iID_ChiPhi = x.iID_ChiPhiID
+                iID_ChiPhi = x.iID_ChiPhiID,
+                IdChiPhiDuAnParent = x.iID_ChiPhi_Parent,
+                MaOrderDb = x.iSTT
             }).ToList();
 
             List<VDTQuyetDinhDauTuChiPhiModel> listChiPhiQDDT = _vdtService.GetListChiPhiQDDTByIdDuToan(Guid.Parse(duToanId)).ToList();
@@ -720,15 +800,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             }
 
             listDeNghiQuyetToan.Where(n => n.PhanCap == 1).Select(n => { n.IsShow = true; return n; }).ToList();
-            listDeNghiQuyetToan.Select(n => { n.IsChiPhi = true; return n; }).ToList();
-            CreateMaOrderItem(ref listDeNghiQuyetToan);
+            listDeNghiQuyetToan.Select(n => { n.IsChiPhi = true; return n; }).ToList();           
 
             List<VDT_QT_DeNghiQuyetToan_ChiTiet> listDbData = _vdtService.FindByDeNghiQuyetToanId(denghiItem.iID_DeNghiQuyetToanID);
             if (listDbData != null && listDbData.Count > 0)
             {
                 foreach (DeNghiQuyetToanChiTietModel dataQt in listDeNghiQuyetToan)
                 {
-                    VDT_QT_DeNghiQuyetToan_ChiTiet entity = listDbData.Where(n => n.iID_ChiPhiId == dataQt.ChiPhiId).FirstOrDefault();
+                    VDT_QT_DeNghiQuyetToan_ChiTiet entity = listDbData.Where(n => n.iID_ChiPhiId == dataQt.ChiPhiId || n.iID_ChiPhiId == dataQt.iID_HangMucId).FirstOrDefault();
                     if (entity != null)
                     {
                         dataQt.FGiaTriKiemToan = entity.fGiaTriKiemToan ?? 0;
@@ -737,9 +816,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                 }
             }
             listDeNghiQuyetToan.Where(n => n.FGiaTriKiemToan != 0 || n.FGiaTriDeNghiQuyetToan != 0).Select(n => { n.IsShow = true; return n; }).ToList();
-            listDeNghiQuyetToan = listDeNghiQuyetToan.Where(n => n.IsShow).OrderBy(n => n.MaOrderDb).ToList();
 
-            CheckHangCha(ref listDeNghiQuyetToan);
+            //CreateMaOrderItem(ref listDeNghiQuyetToan);
+            //CheckHangCha(ref listDeNghiQuyetToan);
             listDeNghiQuyetToan.Select(n =>
             {
                 n.Stt = (listDeNghiQuyetToan.IndexOf(n) + 1);
@@ -754,9 +833,23 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             XlsFile Result = new XlsFile(true);
             Result.Open(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/rptVDT_TongHopQuyetToanDuAnHoanThanhPhuLuc.xlsx"));
             FlexCelReport fr = new FlexCelReport();
+            foreach (var item in listDeNghiQuyetToan)
+            {
+                if (item.IdChiPhiDuAnParent == null || item.IdChiPhiDuAnParent == Guid.Empty)
+                {
+                    item.IsHangCha = true;
+                    if (item.MaOrderDb == "1") item.MaOrderDb = "I";
+                    if (item.MaOrderDb == "2") item.MaOrderDb = "II";
+                    if (item.MaOrderDb == "3") item.MaOrderDb = "III";
+                    if (item.MaOrderDb == "4") item.MaOrderDb = "IV";
+                    if (item.MaOrderDb == "5") item.MaOrderDb = "V";
+                    if (item.MaOrderDb == "6") item.MaOrderDb = "VI";
+                    if (item.MaOrderDb == "7") item.MaOrderDb = "VII";
+                }                    
+            }
 
             fr.AddTable("Items", listDeNghiQuyetToan);
-
+            fr.SetValue("TenDuAn", denghiItem.sTenDuAn);
             fr.SetValue("ChuDauTu", denghiItem.sTenChuDauTu);
             fr.SetValue("TieuDe", dataNhap.txt_TieuDe);
             fr.SetValue("DonViTinh", dataNhap.sDonViTinh);

@@ -39,7 +39,7 @@ function GetListData2(sDonVi2, iCurrentPage, changeTable) {
         success: function (data) {
             $("#lstDataView").html(data);
             $("#slbsDonViFilter").val(sDonVi2);
-            ChooseTable(state);
+            ChooseTable(false);
         }
     });
 }
@@ -56,7 +56,7 @@ function GetListData(sDonVi, sDuAn, sHopDong, iCurrentPage, changeTable) {
             $("#slbDonViFilter").val(sDonVi);
             $("#slbDuAnFilter").val(sDuAn);
             $("#slbDopDongFilter").val(sHopDong);
-            ChooseTable(state);
+            ChooseTable(true);
         }
     });
 }

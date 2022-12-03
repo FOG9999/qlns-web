@@ -61,6 +61,39 @@ $(document).ready(function () {
             }
         }
     }
+
+    $("#slbKHTongTheBQP").select2({
+        dropdownAutoWidth: true,
+        matcher: FilterInComboBox
+    });
+    $("#slbBQuanLy").select2({
+        dropdownAutoWidth: true,
+        matcher: FilterInComboBox
+    });
+    $("#slbDonVi").select2({
+        dropdownAutoWidth: true,
+        matcher: FilterInComboBox
+    });
+    $("#slbChuongTrinh").select2({
+        dropdownAutoWidth: true,
+        matcher: FilterInComboBox
+    });
+    $("#slbChuDauTu").select2({
+        dropdownAutoWidth: true,
+        matcher: FilterInComboBox
+    });
+    $("#slbPhanCapPheDuyet").select2({
+        dropdownAutoWidth: true,
+        matcher: FilterInComboBox
+    });
+    $("#slbTiGia").select2({
+        dropdownAutoWidth: true,
+        matcher: FilterInComboBox
+    });
+    $("#slbMaNgoaiTeKhac").select2({
+        dropdownAutoWidth: true,
+        matcher: FilterInComboBox
+    });
 });
 
 function LoadDataTenChiPhi() {
@@ -278,7 +311,6 @@ function XoaDong(nutXoa) {
 
 function ChangeGiaTien(event, element, type, num) {
     ValidateInputFocusOut(event, element, type, num)
-    console.log(ValidateInputFocusOut)
     var dongHienTai = $(element).closest("tr"); //*khi bao dongHienTai, dong element the tr
 
     if ($(element).prop("readonly")) return;//*neu o element chi doc thi return

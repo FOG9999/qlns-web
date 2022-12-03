@@ -1,9 +1,12 @@
 ﻿var CONFIRM = 0;
 var GUID_EMPTY = '00000000-0000-0000-0000-000000000000';
 var ERROR = 1;
+var listItemAfter = []
+var BangDuLieu_CoCotDuyet = false;
+var BangDuLieu_CoCotTongSo = true;
 
 $(document).ready(function () {
-    
+
 });
 
 function loadDataExcel() {
@@ -42,6 +45,7 @@ function loadDataExcel() {
         }
     });
 }
+
 function ValidateData() {
     var Title = 'Lỗi lấy dữ liệu từ file excel';
     var Messages = [];
@@ -159,3 +163,131 @@ function ImportFile() {
         });
     }
 }
+
+function SaveKhvn() {
+    var obj = {};
+    obj.iID_DonViQuanLyID = $("#iID_DonViQuanLyID").val();
+    obj.sSoQuyetDinh = $("#txtsSoQuyetDinh").val();
+    obj.dNgayQuyetDinh = $("#dNgayQuyetDinh").val();
+    obj.iID_NguonVonID = $("#iID_NguonVonID").val();
+    obj.iNamKeHoach = $("#txtNamKeHoach").val();
+
+    if (!ValidatePreImport(obj)) {
+        return false;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "/QLVonDauTu/KeHoachVonNamDeXuat/SaveImport",
+        data: { data: obj },
+        dataType: "json",
+        cache: false,
+        success: function (r) {
+            if (r.bIsComplete) {
+                $("#txt_ID_KHVonNamDeXuat").val(r.Id);
+                var url = loadFrameImport(obj.iNamKeHoach, true);
+                $("#sheetImport").attr("src", url);
+                $(".btnSaveKhvn").attr('disabled', 'disabled');
+
+
+            } else {
+                var Title = 'Lỗi lưu kế hoạch vốn năm đề xuất';
+                var messErr = [];
+                messErr.push(r.sMessage);
+                $.ajax({
+                    type: "POST",
+                    url: "/Modal/OpenModal",
+                    data: { Title: Title, Messages: messErr, Category: ERROR },
+                    success: function (data) {
+                        $("#divModalConfirm").html(data);
+                    }
+                });
+            }
+        }
+    });
+
+}
+
+function ValidatePreImport(obj) {
+
+    var Title = 'Lỗi lưu kế hoạch vốn năm đè xuất';
+    var Messages = [];
+    var check = true;
+    //var obj = {};
+    //obj.iID_DonViQuanLyID = $("#iID_DonViQuanLyID").val();
+    //obj.sSoQuyetDinh = $("#txtsSoQuyetDinh").val();
+    //obj.dNgayQuyetDinh = $("#dNgayQuyetDinh").val();
+    //obj.iID_NguonVonID = $("#iID_NguonVonID").val();
+    //obj.iNamKeHoach = $("#txtNamKeHoach").val();
+
+    if (obj.iID_DonViQuanLyID == undefined || obj.iID_DonViQuanLyID == null || obj.iID_DonViQuanLyID == "" || obj.iID_DonViQuanLyID == GUID_EMPTY) {
+        Messages.push("Đơn vị không được để trống.");
+    }
+
+    if (obj.sSoQuyetDinh == undefined || obj.sSoQuyetDinh == null || obj.sSoQuyetDinh == "") {
+        Messages.push("Số quyết định không được để trống.");
+    } else {
+        if ($.trim(obj.sSoQuyetDinh).length > 100) {
+            Messages.push("Số quyết định không được quá 100 ký tự.");
+
+        }
+    }
+
+    if (obj.dNgayQuyetDinh == undefined || obj.dNgayQuyetDinh == null || obj.dNgayQuyetDinh == "") {
+        Messages.push("Ngày quyết định không được để trống.");
+    }
+
+    if (obj.iID_NguonVonID == undefined || obj.iID_NguonVonID == null || obj.iID_NguonVonID == "" || obj.iID_NguonVonID == GUID_EMPTY) {
+        Messages.push("Nguồn vốn không được để trống.");
+    }
+
+    if (obj.iNamKeHoach == undefined || obj.iNamKeHoach == null || obj.iNamKeHoach == "" || obj.iNamKeHoach == GUID_EMPTY) {
+        Messages.push("Nguồn vốn không được để trống.");
+    }
+
+    if (Messages != null && Messages != undefined && Messages.length > 0) {
+        $.ajax({
+            type: "POST",
+            url: "/Modal/OpenModal",
+            data: { Title: Title, Messages: Messages, Category: ERROR },
+            success: function (data) {
+                $("#divModalConfirm").html(data);
+            }
+        });
+        return false;
+    } else {
+        $.ajax({
+            type: "POST",
+            url: "/QLVonDauTu/KeHoachVonNamDeXuat/ValidatePreImport",
+            data: { data: obj },
+            dataType: "json",
+            cache: false,
+            success: function (r) {
+                if (r.bIsComplete) {
+                    check = true;
+                } else {
+                    Messages.push(r.sMessError);
+                    $.ajax({
+                        type: "POST",
+                        url: "/Modal/OpenModal",
+                        data: { Title: Title, Messages: Messages, Category: ERROR },
+                        success: function (data) {
+                            $("#divModalConfirm").html(data);
+                        }
+                    });
+                    check = false;
+                }
+            }
+        });
+    }
+    if (!check) {
+        return false;
+    }
+
+    return true;
+}
+
+function loadFrameImport(iNamKeHoach,bIsImport) {
+    return "/QLVonDauTu/KeHoachVonNamDeXuat/SheetFrameImport?id=" + iNamKeHoach + "&bIsImport=" + bIsImport ;
+}
+

@@ -21,7 +21,7 @@
                             <div class="col-sm-6">
                                 <label for="txtNgayBaoCao" class="">Ngày báo cáo <span class="require">*</span></label>
                                 <div class='input-group date'>
-                                    <input type='text' required class="form-control dateFormat" placeholder="dd/MM/yyyy" id="txtNgayBaoCao" autocomplete="off" value="@ViewBag.dNgayDeNghi"/>
+                                    <input type='text' required class="form-control dateFormat" placeholder="dd/MM/yyyy" id="txtNgayBaoCao" autocomplete="off" value="@ViewBag.dNgayDeNghi" />
                                     <span class="btn-default input-group-addon">
                                         <i class="fa fa-calendar" aria-hidden="true"></i>
                                     </span>
@@ -42,26 +42,26 @@
 
                         <div class="form-group row">
                             <div class="col-sm-6">
-                                <label for="iIđuToanId" class="">Dự toán <span class="require">*</span></label>
-                                <select class="form-control" style="width:100%" id="iIđuToanId"></select>
+                                <label for="txt_LoaiQuyetToan" class="">Loại quyết toán <span class="require">*</span></label>
+                                <select class="form-control" style="width:100%" id="txt_LoaiQuyetToan" name="loaiQuyetToan"></select>
                             </div>
                             <div class="col-sm-6">
-                                <label for="txt_ChuDauTu" class="">Chủ đầu tư</label>                                
-                                <input type="text" id="txt_ChuDauTu" class="form-control" autocomplete="off" disabled/>
+                                <label for="iIđuToanId" class="">Quyết định <span class="require">*</span></label>
+                                <select class="form-control" style="width:100%" id="iIđuToanId"></select>
                             </div>
                         </div>
 
-                        @*<div class="form-group row">
-                            <div class="col-sm-12">
-                                <p id="txt_TenDuAn"></p>
-                                <p id="txt_ChuDauTu"></p>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txt_ChuDauTu" class="">Chủ đầu tư</label>
+                                <input type="text" id="txt_ChuDauTu" class="form-control" autocomplete="off" disabled />
                             </div>
-                        </div>*@
+                        </div>
 
                         <div class="form-group row">
                             <div class="col-sm-6">
                                 <label for="txtThoiGianKhoiCong" class="">Thời gian khởi công</label>
-                                <div class='input-group date'>                                    
+                                <div class='input-group date'>
                                     <input type='text' class="form-control col-sm-2 requireInput startYear" id="txtThoiGianKhoiCong" autocomplete="off" disabled />
                                     <span class="btn-default input-group-addon">
                                         <i class="fa fa-calendar" aria-hidden="true"></i>
@@ -70,7 +70,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <label for="txtThoiGianHoanThanh" class="">Thời gian hoàn thành</label>
-                                <div class='input-group date'>                                    
+                                <div class='input-group date'>
                                     <input type='text' class="form-control col-sm-2 requireInput endYear" id="txtThoiGianHoanThanh" autocomplete="off" disabled />
                                     <span class="btn-default input-group-addon">
                                         <i class="fa fa-calendar" aria-hidden="true"></i>
@@ -150,7 +150,7 @@
                                     <tr>
                                         <th width="8%" rowspan="2">STT</th>
                                         <th width="7%" rowspan="2">Loại</th>
-                                        <th width="15%" rowspan="2">Nội dung chi phí</th>
+                                        <th width="15%" rowspan="2">Nội dung</th>
                                         <th width="10%" rowspan="2">Dự toán được duyệt</th>
                                         <th width="10%" rowspan="2">Giá trị quyết toán A-B</th>
                                         <th width="10%" rowspan="2">Kết quả kiểm toán của đơn vị kiểm toán</th>

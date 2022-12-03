@@ -11,6 +11,8 @@
 <input type="hidden" id="fTiGia" value="@Model.fTiGiaChiTiet">
 <input type="hidden" id="iID_NhuCauChiQuyID" value="@Model.ID">
 <input type="hidden" id="arrChiQuy" value="@Json.Encode(Model.ListNCCQChiTiet)" />
+<input type="hidden" id="IDDonVi" value="@Model.iID_DonViID">
+<input type="hidden" id="IDBQuanLy" value="@Model.iID_BQuanLyID">
 <div class="main">
     <div class="panel-list-item col-sm-12">
         <div class="card">
@@ -59,7 +61,7 @@
                                     <tr>
                                         <th width="6%"></th>
                                         <th width="40%">Tổng cộng</th>
-                                        <th width="12%" class="cpdt_tong_ngoaiUSD text-right"></th>
+                                        <th width="12%" class="cpdt_tong_ngoaiUSD text-right">,00</th>
                                         <th width="15%" class="cpdt_tong_ngoaiVND text-right"></th>
                                         <th width="12%" class="cpdt_tong_trongVND text-right"></th>
                                         <th width="15%" class="cpdt_tong_trongUSD text-right"></th>

@@ -80,7 +80,6 @@ function ChangeVoucher() {
 
 function printBaoCao(ext) {
     var links = [];
-    var linksToHai = [];
     var url = "";
     var txtTieuDe1 = $.trim($("#txtTieuDe1").val());
     var txtTieuDe2 = $.trim($("#txtTieuDe2").val());
@@ -126,29 +125,50 @@ function printBaoCao(ext) {
     if (!ValidateDataPrint(data)) {
         return false;
     }
-    $("input:checkbox[check-group='To']").each(function () {
-        if (this.checked) {
-            var item = this.value;
-            var url = $("#urlExport").val() +
-                "?ext=" + ext + "&dvt = 1"
-                + "&txtTieuDe1=" + encodeURIComponent($("<div/>").text(txtTieuDe1).html())
-                + "&txtTieuDe2=" + encodeURIComponent($("<div/>").text(txtTieuDe2).html())
-                + "&slbDonViVND=" + slbDonViVND
-                + "&slbDonViUSD=" + slbDonViUSD
-                + "&sTenDonViCapTren=" + encodeURIComponent($("<div/>").text(sTenDonViCapTren).html())
-                + "&sTenDonViCapDuoi=" + encodeURIComponent($("<div/>").text(sTenDonViCapDuoi).html())
-                + "&iInMotTo=" + item
-                + "&sTenDonVi=" + sTenDonVi
-                + "&tabTable=" + tabTable
-                + "&iTuNam=" + iTuNam
-                + "&iDenNam=" + iDenNam
-                + "&iDonvi=" + iDonvi
-                + "&iQuyList=" + iQuyList
-                + "&iNam=" + iNam
-
-            links.push(url);
-        }
-    })
+    if (data.tabTable == 2) {
+        $("input:checkbox[check-group='To']").each(function () {
+            if (this.checked) {
+                var item = this.value;
+                var url = $("#urlExport").val() +
+                    "?ext=" + ext + "&dvt = 1"
+                    + "&txtTieuDe1=" + encodeURIComponent($("<div/>").text(txtTieuDe1).html())
+                    + "&txtTieuDe2=" + encodeURIComponent($("<div/>").text(txtTieuDe2).html())
+                    + "&slbDonViVND=" + slbDonViVND
+                    + "&slbDonViUSD=" + slbDonViUSD
+                    + "&sTenDonViCapTren=" + encodeURIComponent($("<div/>").text(sTenDonViCapTren).html())
+                    + "&sTenDonViCapDuoi=" + encodeURIComponent($("<div/>").text(sTenDonViCapDuoi).html())
+                    + "&iInMotTo=" + item
+                    + "&sTenDonVi=" + sTenDonVi
+                    + "&tabTable=" + tabTable
+                    + "&iTuNam=" + iTuNam
+                    + "&iDenNam=" + iDenNam
+                    + "&iDonvi=" + iDonvi
+                    + "&iQuyList=" + iQuyList
+                    + "&iNam=" + iNam;
+                links.push(url);
+            }
+        })
+    }
+    else {
+        url = $("#urlExport").val() +
+            "?ext=" + ext + "&dvt = 1"
+            + "&txtTieuDe1=" + encodeURIComponent($("<div/>").text(txtTieuDe1).html())
+            + "&txtTieuDe2=" + encodeURIComponent($("<div/>").text(txtTieuDe2).html())
+            + "&slbDonViVND=" + slbDonViVND
+            + "&slbDonViUSD=" + slbDonViUSD
+            + "&sTenDonViCapTren=" + encodeURIComponent($("<div/>").text(sTenDonViCapTren).html())
+            + "&sTenDonViCapDuoi=" + encodeURIComponent($("<div/>").text(sTenDonViCapDuoi).html())
+            + "&iInMotTo=" + iInMotTo
+            + "&sTenDonVi=" + sTenDonVi
+            + "&tabTable=" + tabTable
+            + "&iTuNam=" + iTuNam
+            + "&iDenNam=" + iDenNam
+            + "&iDonvi=" + iDonvi
+            + "&iQuyList=" + iQuyList
+            + "&iNam=" + iNam
+            + "&InToHai=1";
+        links.push(url);
+    }    
     openLinks(links);
 }
 function ValidateDataPrint(data) {
@@ -175,11 +195,11 @@ function ValidateDataPrint(data) {
     }
     var iCheck = 0;
     $("input:checkbox[check-group='To']").each(function () {
-        if (!this.checked) {
+        if (this.checked) {
             iCheck++;
         }
     })
-    if (iCheck > 0 && data.tabTable == 2) {
+    if (iCheck == 0 && data.tabTable == 2) {
         Messages.push("Chưa chọn số tờ!");
     }
 

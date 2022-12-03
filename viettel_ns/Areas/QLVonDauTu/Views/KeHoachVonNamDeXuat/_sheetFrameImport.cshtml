@@ -11,6 +11,7 @@
     #sTen {
         margin-left: 50px;
     }
+
     #STT {
         visibility: hidden;
     }
@@ -20,6 +21,8 @@
 @section Scripts{
     @Html.Partial("_SheetScript")
     <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsSheetFrame_KeHoachVonNamDeXuat_Import.js"></script>
+    @*<script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsKeHoachVonNamDeXuat_import.js"></script>*@
+
     <script>
 
         $(document).ready(function () {
@@ -50,11 +53,20 @@
         function setThayDoiHC() {
             for (var h = 0; h < Bang_nH; h++) {
                 for (var c = 0; c < Bang_nC; c++) {
-                    Bang_arrThayDoi[h][c] = true;
-                    Bang_arrEdit[h][c] = false;
+                    Bang_arrThayDoi[h][c] = false;
+                    Bang_arrEdit[h][c] = true;
+
+                    if ( 6 < c && c < 11) {
+                        Bang_arrEdit[h][c] = true;
+                        Bang_arrThayDoi[h][c] = true;
+                    } else {
+                        Bang_arrThayDoi[h][c] = false;
+                        Bang_arrEdit[h][c] = false;                    }
                 }
             }
         }
+
+
 
     </script>
 }

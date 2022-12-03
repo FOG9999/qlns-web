@@ -11,13 +11,13 @@
     <button class="btn btn-primary pull-right" style="margin-right:10px;" onclick="OpenCreate()" ><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
     <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
 </div>
-<table class="table table-bordered" id="tbListTaiSan">
+<table class="table table-bordered" >
     <thead class="header-search">
         <tr>
-            <th width="20%"></th>
-            <th width="20%"><input type="text" class="form-control gr_search" id="txtsTenChungTuFillter" placeholder="Tên chứng từ" /></th>
-            <th width="20%"><input type="text" class="form-control gr_search" id="txtsSochungTuFillter" placeholder="Số chứng từ" maxlength="50" /></th>
-            <th width="20%">
+            <th width="8%"></th>
+            <th width="37%"><input type="text" class="form-control gr_search" id="txtsTenChungTuFillter" placeholder="Tên chứng từ" /></th>
+            <th width="25%"><input type="text" class="form-control gr_search" id="txtsSochungTuFillter" placeholder="Số chứng từ" maxlength="50" /></th>
+            <th width="15%">
                 <div class='input-group date'>
                     <input type="text" id="dNgayChungTuFillter" autocomplete="off" class="form-control gr_search" placeholder="Ngày chứng từ" />
                     <span class="btn-default input-group-addon">
@@ -25,16 +25,16 @@
                     </span>
                 </div>
             </th>
-            <th width="20%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+            <th width="15%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
         </tr>
     </thead>
     <thead>
         <tr>
-            <th width="20%">STT</th>
-            <th width="20%">Tên chứng từ</th>
-            <th width="20%">Số chứng từ</th>
-            <th width="20%">Ngày chứng từ</th>
-            <th width="20%">Thao tác</th>
+            <th width="8%">STT</th>
+            <th width="37%">Tên chứng từ</th>
+            <th width="25%">Số chứng từ</th>
+            <th width="15%">Ngày chứng từ</th>
+            <th width="15%">Thao tác</th>
         </tr>
     </thead>
     <tbody>
@@ -45,8 +45,8 @@
                 index++;
                 <tr style="cursor: pointer">
                     <td align="center">@(pageIndex + index)</td>
-                    <td align="center">@Html.Raw(Html.Encode(item.sTenChungTu))</td>
-                    <td align="center">@Html.Raw(Html.Encode(item.sSoChungTu))</td>
+                    <td align="left">@Html.Raw(Html.Encode(item.sTenChungTu))</td>
+                    <td align="left">@Html.Raw(Html.Encode(item.sSoChungTu))</td>
                     <td align="center">@(item.dNgayChungTu.HasValue ? item.dNgayChungTu.Value.ToString("dd/MM/yyyy"): string.Empty)</td>
                     <td align="center" style="vertical-align: middle !important" class="col-sm-12">
                         <button type="button" class="btn-detail" title="Xem chi tiết" onclick="OpenDetail('@item.ID')" ><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>

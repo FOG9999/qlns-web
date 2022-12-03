@@ -616,6 +616,9 @@
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_khv_getdata_kehoach_von_ung_tonghop_by_listkhvungids.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_khv_get_thongtinchungtutonghop_by_idkhvn.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_thongtri_get_all_thongtri_export.sql" />
+    <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_thongtri_quyettoan_export.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_update_giatricapphat_khvonnamduocduyet.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_update_giatrikehoach_kh5namdexuat.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_update_giatrikehoach_kh5namduocduyet.sql" />
@@ -723,6 +726,8 @@
     <Content Include="App_Data\sql\QLVonDauTu\ThongTinGoiThau\get_QDDauTu_By_DuAnId.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\ThongTinGoiThau\dm_get_all_thongtingoithau.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\TKTCVaTongDuToan\vdt_get_hangmuc_qddautu_by_duanid.sql" />
+    <Content Include="App_Data\sql\QLVonDauTu\TKTCVaTongDuToan\vdt_get_listchiphihangmuc_dutoan_by_id.sql" />
+    <Content Include="App_Data\sql\QLVonDauTu\TKTCVaTongDuToan\vdt_get_listgoithau_nhathau_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\TKTCVaTongDuToan\vdt_get_listchiphi_dutoan_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\TKTCVaTongDuToan\vdt_get_listhangmuc_dutoan_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\TKTCVaTongDuToan\vdt_get_listnguonvon_dutoan_by_id.sql" />
@@ -1882,6 +1887,20 @@
     <Content Include="Areas\QLVonDauTu\ReportExcelForm\rpt_BaoCao_KHNam_DonVi_PheDuyet_NguonVonKhac.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\rpt_BaoCao_KHNam_DeXuat_Goc_NguonVonKhac.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\rpt_BaoCao_KHNam_DonVi_CTCT.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\rpt_BaoCao_KHNam_DonVi_CTMM.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\rpt_BaoCao_KHNam_DonVi_DieuChinh.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\KeHoachTrungHan\rpt_KeHoachtrungHanDeXuat_Export_New.xlsx" />
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\KeHoachTrungHan\rpt_KeHoachTrungHanDeXuat_ChuyenTiep_new.xlsx" />
     <None Include="Areas\QuyetToan\Controllers\ReportController.cs1" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\Index.cshtml" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\_list.cshtml" />
@@ -4774,10 +4793,14 @@
     <Content Include="ScriptDatabase\StoreChange\proc_get_all_vdt_kehoachvonungdx_paging.sql" />
     <Content Include="ScriptDatabase\StoreChange\proc_get_all_vdt_kehoachvonung_paging.sql" />
     <Content Include="ScriptDatabase\StoreChange\proc_vdt_khv_getdatakhvuduocduyet_chitiet.sql" />
+    <Content Include="ScriptDatabase\StoreChange\sp_ke_hoach_trung_han_de_xuat_chuyen_tiep_report.sql" />
+    <Content Include="ScriptDatabase\StoreChange\sp_vdt_khv_ke_hoach_5_nam_de_xuat_export_new.sql" />
     <Content Include="ScriptDatabase\StoreChange\sp_vdt_rpt_tinh_hinh_thuc_hien_du_an.sql" />
     <Content Include="ScriptDatabase\StoreChange\them_sua_cot_trong_bang_KeHoachVonUng_DeXuat_DuocDuyet.sql" />
     <Content Include="ScriptDatabase\StoreChange\VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet.sql" />
     <Content Include="ScriptDatabase\StoreChange\VDT_KHV_PhanBoVon_DonVi_ChiTiet_PheDuyet.sql" />
+    <Content Include="ScriptDatabase\Table\VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet_29-11.sql" />
+    <Content Include="ScriptDatabase\Table\VDT_KHV_KeHoachVonNam_DuocDuyet.sql" />
     <Content Include="Scripts\DanhMuc\jsImPortDMDonViBHXH.js" />
     <Content Include="Scripts\DanhMuc\jsDMLoaiCongTrinh.js" />
     <Content Include="Scripts\DanhMuc\jsDMNguon.js" />

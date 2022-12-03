@@ -145,10 +145,12 @@ namespace Viettel.Models.QLVonDauTu
         public int? IIdNguonVon { get; set; }
         public double? LuyKeVonNSQPDaBoTri { get; set; }
         public double? LuyKeVonNSQPDeNghiBoTri { get; set; }
-        public double? TongLuyKe {
-            get {
+        public double? TongLuyKe
+        {
+            get
+            {
                 return LuyKeVonNSQPDaBoTri + LuyKeVonNSQPDeNghiBoTri;
-            } 
+            }
         }
         public string SSoQuyetDinhNgayQuyetDinh { get; set; }
         public double? FHanMucDauTuQP { get; set; }
@@ -222,6 +224,20 @@ namespace Viettel.Models.QLVonDauTu
         public double? FHanMucDauTuDP { get; set; }
         public double? FHanMucDauTuOrther { get; set; }
         public int? iLevel { get; set; }
+        public double fHanmucNganhDX { get; set; }
+        public double fTongVonBoTriNganh { get; set; }
+        public double fVon5namNganhDX { get; set; }
+        public double fVonsaunamNganhDX { get; set; }
+        public double fHanmucCucTCDX { get; set; }
+        public double fTongVonBoTriCuc { get; set; }
+        public double fVon5namCTCDX { get; set; }
+        public double fVonnamthunhatCTC { get; set; }
+        public double fVonsaunamCTCDexuat { get; set; }
+        public double fCucTCDeXuat { get; set; }
+        public double fDuKienBoTriNamThu2 { get; set; }
+        public double? fTongVonBoTri { get; set; }
+        public string sTenLoaiCongTrinh { get; set; }
+
     }
 
     public class ComboboxItem
@@ -240,5 +256,57 @@ namespace Viettel.Models.QLVonDauTu
         public string SUrl { get; set; }
         public string SNameFile { get; set; }
         public string SAdversion { get; set; }
+    }
+
+    public class KH5NDXPrintDataExportNewModel : KH5NDXExport
+    {
+        public string STT { get; set; }
+        public Guid? IdLoaiCongTrinh { get; set; }
+        public Guid? IdLoaiCongTrinhParent { get; set; }
+        public string SMaLoaiCongTrinh { get; set; }
+        public string sTenLoaiCongTrinh { get; set; }
+        public int? iLoai { get; set; }
+        public int? LoaiParent { get; set; }
+        public string STenDuAn { get; set; }
+        public string STenDonVi { get; set; }
+        public string sSoQuyetDinh { get; set; }
+        public DateTime? dNgayQuyetDinh { get; set; }
+        public string sTienDo { get; set; }
+        public double fNSQP { get; set; }
+        public double fChiPhiDuPhong { get; set; }
+        public double fVonBoTriHetNam { get; set; }
+        public double fSoConLaiPhaiBoTri { get; set; }
+        public double fCucTCdexuat { get; set; }
+        public double fBoDaGiaoDuToan { get; set; }
+        public double fDuKienbotrinamthu2 { get; set; }
+        public double fSoConLaiConBotri { get; set; }
+        public double fSoTienConLaiChuaDeXuat { get; set; }
+        public bool IsHangCha { get; set; }
+        public int? IdNguonVon { get; set; }
+
+        public string DNgayQuyetDinh
+        {
+            get
+            {
+                return this.dNgayQuyetDinh.HasValue ? this.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy") : string.Empty;
+            }
+        }
+        
+        public string sSoQuyetDinhNgayQD
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(this.sSoQuyetDinh))
+                {
+                    return string.Empty;
+                }
+                else
+                {
+                    return string.Concat(this.sSoQuyetDinh," , ", this.DNgayQuyetDinh);
+                }
+            }
+        }
+
+
     }
 }

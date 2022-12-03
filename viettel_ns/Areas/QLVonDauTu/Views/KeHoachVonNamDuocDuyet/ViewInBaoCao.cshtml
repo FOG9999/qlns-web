@@ -44,7 +44,7 @@
                         </div>
                         <div class="col-sm-12 form-group">
                             <label for="txtNamKeHoach">Năm kế hoạch</label>@Helpers.Required()<br />
-                            <input type="text" class="form-control" id="txtNamKeHoach" onkeydown="ValidateInputKeydown(event, this, 1)" onblur="ValidateInputFocusOut(event, this, 6)" />
+                            <input type="text" class="form-control" id="txtNamKeHoach" onkeydown="ValidateInputKeydown(event, this, 1)" onblur="ValidateInputFocusOut(event, this, 6)" value="@DateTime.Now.ToString("yyyy")" />
                         </div>
                         <div class="col-sm-12 form-group" id="divMaNguonNganSach">
                             <label>Loại nguồn vốn</label>

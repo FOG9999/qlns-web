@@ -1,0 +1,2 @@
+ALTER TABLE VDT_KHV_KeHoachVonNam_DuocDuyet
+ADD iLoaiDuToan int

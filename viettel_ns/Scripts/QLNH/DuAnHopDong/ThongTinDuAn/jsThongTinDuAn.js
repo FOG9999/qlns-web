@@ -3,40 +3,6 @@ var GUID_EMPTY = '00000000-0000-0000-0000-000000000000';
 var ERROR = 1;
 var CURRENT_STATE = 'CREATE';
 
-$(document).ready(function ($) {
-    $("#slbKHTongTheBQP").select2({
-        dropdownAutoWidth: true,
-        matcher: FilterInComboBox
-    });
-    $("#slbBQuanLy").select2({
-        dropdownAutoWidth: true,
-        matcher: FilterInComboBox
-    });
-    $("#slbDonVi").select2({
-        dropdownAutoWidth: true,
-        matcher: FilterInComboBox
-    });
-    $("#slbChuongTrinh").select2({
-        dropdownAutoWidth: true,
-        matcher: FilterInComboBox
-    });
-    $("#slbChuDauTu").select2({
-        dropdownAutoWidth: true,
-        matcher: FilterInComboBox
-    });
-    $("#slbPhanCapPheDuyet").select2({
-        dropdownAutoWidth: true,
-        matcher: FilterInComboBox
-    });
-    $("#slbTiGia").select2({
-        dropdownAutoWidth: true,
-        matcher: FilterInComboBox
-    });
-    $("#slbMaNgoaiTeKhac").select2({
-        dropdownAutoWidth: true,
-        matcher: FilterInComboBox
-    });
-});
 function ResetChangePage(iCurrentPage = 1) {
     GetListData("", "", GUID_EMPTY, GUID_EMPTY, GUID_EMPTY, GUID_EMPTY, iCurrentPage);
 }
@@ -263,7 +229,7 @@ function GetDataDuAn() {
     data.sKhoiCong = $("<div/>").text($.trim($("#txtThoiGianThucHienTu").val())).html();
     data.sKetThuc = $("<div/>").text($.trim($("#txtThoiGianThucHienDen").val())).html();
     data.iID_TiGiaID = $("#slbTiGia").val() == GUID_EMPTY ? null : $("#slbTiGia").val();
-    data.sMaNgoaiTeKhac = $("#slbMaNgoaiTeKhac").val() == GUID_EMPTY ? null : $("#slbMaNgoaiTeKhac").val();
+    data.iID_TiGia_ChiTietID = $("#slbMaNgoaiTeKhac").val() == GUID_EMPTY ? null : $("#slbMaNgoaiTeKhac").val();
     data.sGiaTriUSD = UnFormatNumber($("<div/>").text($.trim($("#txtHopDongUSD").val())).html());
     data.sGiaTriVND = UnFormatNumber($("<div/>").text($.trim($("#txtHopDongVND").val())).html());
     data.sGiaTriEUR = UnFormatNumber($("<div/>").text($.trim($("#txtHopDongEUR").val())).html());

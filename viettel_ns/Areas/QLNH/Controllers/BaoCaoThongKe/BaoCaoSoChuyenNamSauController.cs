@@ -137,8 +137,8 @@ namespace VIETTEL.Areas.QLNH.Controllers.BaoCaoThongKe
                 donViVND = donViVND.Label,
                 txtDonVi = "Đơn vị: " + sTenDonVi,
                 txtNam = "Năm:  " + iNamKeHoach.ToString(),
-                sTenDonViCapTren = sTenDonViCapTren?.ToUpper(),
-                sTenDonViCapDuoi = sTenDonViCapDuoi?.ToUpper()
+                txtDonViCapTren = sTenDonViCapTren?.ToUpper(),
+                txtDonViCapDuoi = sTenDonViCapDuoi?.ToUpper()
             });
             //fr.SetValue("iTongSoNgayDieuTri", iTongSoNgayDieuTri.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")));
             foreach (var item in data)

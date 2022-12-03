@@ -25,7 +25,7 @@
                 <label for="txtNgayLap">Ngày lập</label>
                 @Helpers.Required()
                 <div class='input-group date'>
-                    <input type='text' class="form-control" value="@(Model.KHVonNamDeXuat.dNgayQuyetDinh == null ? Model.KHVonNamDeXuat.dNgayQuyetDinh.ToString("dd/MM/yyyy") : string.Empty)" id="dNgayQuyetDinh" autocomplete="off" />
+                    <input type='text' class="form-control dateFormat" value="@(Model.KHVonNamDeXuat.dNgayQuyetDinh == null ? Model.KHVonNamDeXuat.dNgayQuyetDinh.ToString("dd/MM/yyyy") : DateTime.Now.ToString("dd/MM/yyyy"))" id="dNgayQuyetDinh" autocomplete="off" />
                     <span class="btn-default input-group-addon">
                         <i class="fa fa-calendar" aria-hidden="true"></i>
                     </span>
@@ -39,20 +39,21 @@
             <div class="col-sm-2">
                 <label for="txtNamKeHoach">Năm kế hoạch</label>
                 @Helpers.Required()
-            <input type="text" maxlength="4" name="txtNamKeHoach" class="form-control" id="txtNamKeHoach" value="@Model.KHVonNamDeXuat.iNamKeHoach" autocomplete="off" />
+                <input type="text" maxlength="4" name="txtNamKeHoach" class="form-control yearFormat" id="txtNamKeHoach" value="@Model.KHVonNamDeXuat.iNamKeHoach" autocomplete="off" />
             </div>
         </div>
         <div class="form-group row">
             <div class="col-sm-5">
                 <label for="txt_DonViQuanLy">Chọn file excel</label>
                 @Helpers.Required()
-                <input type="file" id="FileUpload" name="FileUpload" accept=".xlsx, .xls"/>
+                <input type="file" id="FileUpload" name="FileUpload" accept=".xlsx, .xls" />
                 <p style="margin-top: 9px; font-size: 14px; font-style: italic">Vui lòng chọn tệp có định dạng xlsx, xls có dung lượng không quá 10MB</p>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-6">
                 <button class="btn btn-primary pull-left" style="margin-right:10px;margin-top: 28px;width:148px !important;" onclick="loadGridListExcel();"><i class="fa fa-database" aria-hidden="true"></i>Đồng bộ dữ liệu</button>
                 <button class="btn btn-primary pull-left" style="margin-right:10px;margin-top: 28px;width:115px !important;" onclick="loadDataExcel();"><i class="fa fa-database" aria-hidden="true"></i>Lấy dữ liệu</button>
-                <button class="btn btn-info pull-left" style="margin-top: 28px;width:115px !important;" onclick="refreshImport();"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+                <button class="btn btn-info pull-left" style="margin-top: 28px; margin-right: 10px; width: 115px !important;" onclick="refreshImport();"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+                <button class="btn btn-primary pull-left btnSaveKhvn" style="margin-right:10px;margin-top: 28px;width:115px !important;" onclick="SaveKhvn();"><i class="fa fa-database" aria-hidden="true"></i>Lưu</button>
             </div>
         </div>
     </div>
@@ -84,9 +85,11 @@
 <div id="divModalConfirm">
 
 </div>
+<script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>
+
 @using (Html.BeginScripts())
 {
-<script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function () {
             $('.date')
@@ -106,9 +109,10 @@
             });
         });
 
-        $(".btn-save").click(function () {
+    $(".btn-save").click(function () {
+        var iID_KeHoachVonNamDeXuatID = $("#txt_ID_KHVonNamDeXuat").val();
             //$("#sheetImport")[0].contentWindow.Bang_HamTruocKhiKetThuc();
-            $("#sheetImport")[0].contentWindow.KH5NamDX_Import_BangDuLieu_Save();
+        $("#sheetImport")[0].contentWindow.SaveDataDetailImport(iID_KeHoachVonNamDeXuatID);
         });
 
         loadFrame();
@@ -145,5 +149,5 @@
             data.iGiaiDoanDen = $("#iGiaiDoanDen").val();
         }
 
-</script>
+    </script>
 }

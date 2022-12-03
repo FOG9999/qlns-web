@@ -64,32 +64,54 @@ namespace Viettel.Models.QLVonDauTu
         }
     }
 
-        public class VDTTTDeNghiThanhToanChiTiet : VDT_TT_DeNghiThanhToan_ChiTiet
-        {
-            public string sLevelTab { get; set; }
-            public bool bHasChild { get; set; }
-            public Guid? iID_Parent { get; set; }
-            public string sM { get; set; }
-            public string sTM { get; set; }
-            public string sTTM { get; set; }
-            public string sNG { get; set; }
-            public string sNoiDung { get; set; }
-            public Guid? iID_LoaiCongTrinhID { get; set; }
-            public string sTenLoaiCongTrinh { get; set; }
-            public double? fGiaTriThuHoiUngNgoaiChiTieu { get; set; }
-        }
-
-        public class VDTThongTriChiTiet : VDT_ThongTri_ChiTiet
-        {
-            public string sLevelTab { get; set; }
-            public bool bHasChild { get; set; }
-            public Guid? iID_Parent { get; set; }
-            public string sM { get; set; }
-            public string sTM { get; set; }
-            public string sTTM { get; set; }
-            public string sNG { get; set; }
-            public string sNoiDung { get; set; }
-            public string sTenLoaiCongTrinh { get; set; }
-            public string sTenDuAn { get; set; }
-        }
+    public class VDTTTDeNghiThanhToanChiTiet : VDT_TT_DeNghiThanhToan_ChiTiet
+    {
+        public string sLevelTab { get; set; }
+        public bool bHasChild { get; set; }
+        public Guid? iID_Parent { get; set; }
+        public string sM { get; set; }
+        public string sTM { get; set; }
+        public string sTTM { get; set; }
+        public string sNG { get; set; }
+        public string sNoiDung { get; set; }
+        public Guid? iID_LoaiCongTrinhID { get; set; }
+        public string sTenLoaiCongTrinh { get; set; }
+        public double? fGiaTriThuHoiUngNgoaiChiTieu { get; set; }
     }
+
+    public class VDTThongTriChiTiet : VDT_ThongTri_ChiTiet
+    {
+        public string sLevelTab { get; set; }
+        public bool bHasChild { get; set; }
+        public Guid? iID_Parent { get; set; }
+        public string sM { get; set; }
+        public string sTM { get; set; }
+        public string sTTM { get; set; }
+        public string sNG { get; set; }
+        public string sNoiDung { get; set; }
+        public string sTenLoaiCongTrinh { get; set; }
+        public string sTenDuAn { get; set; }
+    }
+
+    public class VdtThongTriQuyetToanReportModel
+    {
+        public int IStt { get; set; }
+        public Guid IIdDuAnId { get; set; }
+        public string STenDuAn { get; set; }
+        public Guid? IIdLoaiCongTrinhId { get; set; }
+        public string STenLoaiCongTrinh { get; set; }
+        public string SLns { get; set; }
+        public string SL { get; set; }
+        public string SK { get; set; }
+        public string SM { get; set; }
+        public string STm { get; set; }
+        public string STtm { get; set; }
+        public string SNg { get; set; }
+        public Guid? IIdMucLucNganSach { get; set; }
+        public double FSoTien { get; set; }
+        public Guid? IIdMucId { get; set; }
+        public Guid? IIdTieuMucId { get; set; }
+        public Guid? IIdTietMucId { get; set; }
+        public Guid? IIdNganhId { get; set; }
+    }
+}

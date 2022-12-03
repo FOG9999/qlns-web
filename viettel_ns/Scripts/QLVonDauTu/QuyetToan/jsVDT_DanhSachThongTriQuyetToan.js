@@ -61,3 +61,10 @@ function xoa(id) {
         }
     });
 }
+
+function OnExportExcel() {
+    var count = 0;
+    $.each($("input[name=ck_id]:checked"),function () {
+        window.location.href = "/QLVonDauTu/QLThongTriQuyetToan/XuatFile?Id=" + $(this).val();
+    });
+}

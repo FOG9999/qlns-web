@@ -192,7 +192,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     new SheetColumn(columnName: "sMaDuAn", header: "Mã dự án", columnWidth:120, align: "left", hasSearch: true, isReadonly: false),
                     new SheetColumn(columnName: "sTenDuAn", header: "Tên dự án", columnWidth:250, align: "left", hasSearch: true, isReadonly: false),
                     new SheetColumn(columnName: "sTenCDT", header: "Chủ đầu tư", columnWidth:150, align: "left", hasSearch: false, dataType: 3, isReadonly: false),
-                    new SheetColumn(columnName: "sTenDonViQL", header: "Đơn vị thực hiện dự án", columnWidth:150, align: "left", hasSearch: false, dataType: 3, isReadonly: false),
+                    //new SheetColumn(columnName: "sTenDonViQL", header: "Đơn vị thực hiện dự án", columnWidth:150, align: "left", hasSearch: false, dataType: 3, isReadonly: false),
+                    new SheetColumn(columnName: "sDonVi", header: "Đơn vị", columnWidth:150, align: "left", hasSearch: false, dataType: 3, isReadonly: false),
                     new SheetColumn(columnName: "sDiaDiem", header: "Địa điểm thực hiện", columnWidth:150, align: "left", hasSearch: false, isReadonly: false),
 
                     new SheetColumn(columnName: "sKhoiCong", header: "Thời gian thực hiện từ", headerGroup: "THỜI GIAN KC/KT", align: "center", headerGroupIndex: 2, columnWidth:170, isReadonly: false),

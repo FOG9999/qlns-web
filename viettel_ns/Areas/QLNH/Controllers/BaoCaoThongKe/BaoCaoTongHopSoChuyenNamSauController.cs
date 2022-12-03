@@ -384,14 +384,16 @@ namespace VIETTEL.Areas.QLNH.Controllers.BaoCaoThongKe
                         var findTittle = listTittle.Find(x => x.iID_HopDongID == nameHopDong.iID_HopDongID && x.iID_KHCTBQP_NhiemVuChiID == idChuongTrinh && x.iID_DuAnID == idDuAn && x.iLoaiNoiDungChi == loaiChiPhi.iLoaiNoiDungChi);
                         var listHopDong = list.Where(x => x.iLoaiNoiDungChi == loaiChiPhi.iLoaiNoiDungChi && x.iID_HopDongID == nameHopDong.iID_HopDongID).ToList();
 
-
-                        newObjHopDongDuAn.MapFrom(findTittle);
-                        newObjHopDongDuAn.fDeNghiQTNamNay_USD = findTittle.fDeNghiQTNamNay_USD != null ? findTittle.fDeNghiQTNamNay_USD : listHopDong.Sum(x => x.fDeNghiQTNamNay_USD);
-                        newObjHopDongDuAn.fDeNghiQTNamNay_VND = findTittle.fDeNghiQTNamNay_VND != null ? findTittle.fDeNghiQTNamNay_VND : listHopDong.Sum(x => x.fDeNghiQTNamNay_VND);
-                        newObjHopDongDuAn.fDeNghiChuyenNamSau_USD = findTittle.fDeNghiChuyenNamSau_USD != null ? findTittle.fDeNghiChuyenNamSau_USD : listHopDong.Sum(x => x.fDeNghiChuyenNamSau_USD);
-                        newObjHopDongDuAn.fDeNghiChuyenNamSau_VND = findTittle.fDeNghiChuyenNamSau_VND != null ? findTittle.fDeNghiChuyenNamSau_VND : listHopDong.Sum(x => x.fDeNghiChuyenNamSau_VND);
-                        newObjHopDongDuAn.fThuaThieuKinhPhiTrongNam_USD = findTittle.fThuaThieuKinhPhiTrongNam_USD != null ? findTittle.fThuaThieuKinhPhiTrongNam_USD : listHopDong.Sum(x => x.fThuaThieuKinhPhiTrongNam_USD);
-                        newObjHopDongDuAn.fThuaThieuKinhPhiTrongNam_VND = findTittle.fThuaThieuKinhPhiTrongNam_VND != null ? findTittle.fThuaThieuKinhPhiTrongNam_VND : listHopDong.Sum(x => x.fThuaThieuKinhPhiTrongNam_VND);
+                        if(findTittle != null)
+                        {
+                            newObjHopDongDuAn.MapFrom(findTittle);
+                        }                       
+                        newObjHopDongDuAn.fDeNghiQTNamNay_USD = findTittle != null && findTittle.fDeNghiQTNamNay_USD != null ? findTittle.fDeNghiQTNamNay_USD : listHopDong.Sum(x => x.fDeNghiQTNamNay_USD);
+                        newObjHopDongDuAn.fDeNghiQTNamNay_VND = findTittle != null && findTittle.fDeNghiQTNamNay_VND != null ? findTittle.fDeNghiQTNamNay_VND : listHopDong.Sum(x => x.fDeNghiQTNamNay_VND);
+                        newObjHopDongDuAn.fDeNghiChuyenNamSau_USD = findTittle != null && findTittle.fDeNghiChuyenNamSau_USD != null ? findTittle.fDeNghiChuyenNamSau_USD : listHopDong.Sum(x => x.fDeNghiChuyenNamSau_USD);
+                        newObjHopDongDuAn.fDeNghiChuyenNamSau_VND = findTittle != null && findTittle.fDeNghiChuyenNamSau_VND != null ? findTittle.fDeNghiChuyenNamSau_VND : listHopDong.Sum(x => x.fDeNghiChuyenNamSau_VND);
+                        newObjHopDongDuAn.fThuaThieuKinhPhiTrongNam_USD = findTittle != null && findTittle.fThuaThieuKinhPhiTrongNam_USD != null ? findTittle.fThuaThieuKinhPhiTrongNam_USD : listHopDong.Sum(x => x.fThuaThieuKinhPhiTrongNam_USD);
+                        newObjHopDongDuAn.fThuaThieuKinhPhiTrongNam_VND = findTittle != null && findTittle.fThuaThieuKinhPhiTrongNam_VND != null ? findTittle.fThuaThieuKinhPhiTrongNam_VND : listHopDong.Sum(x => x.fThuaThieuKinhPhiTrongNam_VND);
 
 
                         newObjHopDongDuAn.STT = countLoaiChiPhi.ToString() + "." + countHopDong.ToString();

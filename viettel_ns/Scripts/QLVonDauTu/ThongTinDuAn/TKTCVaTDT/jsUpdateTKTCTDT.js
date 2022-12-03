@@ -99,7 +99,8 @@ function TaoMaOrderHangMucMoi(parentId) {
     var iIdDuAnChiPhi = $("#txtIdChiPhiHangMuc").val();
     var sMaOrder = "";
     var indexRow = -1;
-    var arrHangMucOrder = lstHangMuc.filter(x => x.iID_DuAn_ChiPhi == "" || x.iID_DuAn_ChiPhi == null || x.iID_DuAn_ChiPhi == iIdDuAnChiPhi).sort(comparesMaOrder);
+    //var arrHangMucOrder = lstHangMuc.filter(x => x.iID_DuAn_ChiPhi == "" || x.iID_DuAn_ChiPhi == null || x.iID_DuAn_ChiPhi == iIdDuAnChiPhi).sort(comparesMaOrder);
+    var arrHangMucOrder = lstHangMucTemp.filter(x => x.iID_DuAn_ChiPhi == "" || x.iID_DuAn_ChiPhi == null || x.iID_DuAn_ChiPhi == iIdDuAnChiPhi).sort(comparesMaOrder);
     if (parentId == "" || parentId == null) {
         var arrHangMucParent = arrHangMucOrder.filter(x => x.iID_ParentID == null);
         var sMaOrderLast = "0";
@@ -138,7 +139,10 @@ function ThemMoiHangMuc() {
     dongMoi += "<td class='fGiaTriPDDA' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control txtGiaTriPDDA' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' disabled /></td>";
     dongMoi += "<td class='fGiaTriPDTKTC' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control fTienPheDuyet' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' /></td>";
     if ($("#bIsDieuChinh").val() == "True") {
-        dongMoi += "<td class='fGiaTriPDTKTC' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control txtGiaTriPDDA' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' /></td>";
+       // <td class='fGiaTriDieuChinh' style='text-align:right' id='fGiaTriDieuChinh' value='" + FormatNumber(item.fGiaTriDieuChinh ? item.fGiaTriDieuChinh : 0) + "'>" + FormatNumber(item.fGiaTriDieuChinh ? item.fGiaTriDieuChinh : 0) + "</td>
+       // dongMoi += "<td class='fGiaTriPDTKTC' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control txtGiaTriPDDA' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' /></td>";
+      //  dongMoi += "<td class='fGiaTriDieuChinh' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control fGiaTriDieuChinh' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' /></td>";
+        dongMoi += "<td><input type='text' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' class='fTienPheDuyet form-control' id='fTienPheDuyet' style='text-align:right' value='" + FormatNumber(item.fTienPheDuyet ? item.fTienPheDuyet : 0) + "' /></td>"
     }
     dongMoi += "<td class='fChenhLech' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control fChechLech' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' disabled /></td>";
     dongMoi += "<td align='center' class='width-100'>";
@@ -180,7 +184,7 @@ function ThemMoiHangMucCon(nutThem) {
     dongMoi += "<tr style='cursor: pointer;' class='parent' data-id='" + hangMucId + "' data-iidduanchiphi='" + iIdDuAnChiPhi + "'>";
     dongMoi += "<td class='r_STT width-50'>" + objInfoDongMoi.sMaOrder + "</td>";
     dongMoi += "<td class='r_sTenHangMuc'><input type='text' id='sTenHangMuc' onblur='UpdateHangMuc(this)' class='form-control sTenHangMuc'/></td>"
-    dongMoi += "<td><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh() + "</div></td>";
+    //dongMoi += "<td><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh() + "</div></td>";
     dongMoi += "<td class='fGiaTriPDDA' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control txtGiaTriPDDA' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' disabled/></td>";
     dongMoi += "<td class='fGiaTriPDTKTC' align='right'><input type='text' id='fTienPheDuyet' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control fTienPheDuyet' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' /></td>";
     dongMoi += "<td class='fChenhLech' align='right'><input type='text' onblur='UpdateHangMuc(this)' style='text-align: right' class='form-control txtChenhLech' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' disabled/></td>";
@@ -352,7 +356,7 @@ function RenderNguonVon(lstNguonVon) {
         lstStrNguonVon.push("<td class='iID_NguonVonID'><select class='form-control'>" + strCbxNguonVon + "<select></td>");
         lstStrNguonVon.push("<td style='text-align:right'>" + FormatNumber(item.fTienPheDuyetQDDT) + "</td>");
         if (bIsDieuChinh == "True") {
-            lstStrNguonVon.push("<td class='fGiaTriDieuChinh' style='text-align:right'>" + FormatNumber(item.fGiaTriTruocDieuChinh) + "</td>");
+            lstStrNguonVon.push("<td class='fGiaTriDieuChinh' style='text-align:right'>" + FormatNumber(item.fGiaTriDieuChinh) + "</td>");
         }
         lstStrNguonVon.push("<td><input type='text' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' class='fTienPheDuyet form-control' style='text-align:right' onchange='GetTongMucDauTuTKTC();' value='" + FormatNumber(item.fTienPheDuyet) + "'/></td>");
         lstStrNguonVon.push("<td class='width-100 text-center'><button class='btn-delete'><i class='fa fa-trash-o fa-lg' aria-hidden='true' onclick='DeleteNguonVon($(this))'></i></button></td>");
@@ -374,7 +378,7 @@ function RenderChiPhi(lstChiPhi) {
         lstStrChiPhi.push("<td><input type='text' class='sTenChiPhi form-control' value='" + item.sTenChiPhi + "'></td>");
         lstStrChiPhi.push("<td style='text-align:right'>" + FormatNumber(item.fTienPheDuyetQDDT) + "</td>");
         if (bIsDieuChinh == "True") {
-            lstStrChiPhi.push("<td class='fGiaTriDieuChinh' style='text-align:right'>" + FormatNumber(item.fTienPheDuyet) + "</td>");
+            lstStrChiPhi.push("<td class='fGiaTriDieuChinh' style='text-align:right'>" + FormatNumber(item.fGiaTriDieuChinh) + "</td>");
         }
         if (!item.isParent) {
             lstStrChiPhi.push("<td><input type='text' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' class='fTienPheDuyet form-control' style='text-align:right' value='" + FormatNumber(item.fTienPheDuyet) + "'/></td>");
@@ -383,7 +387,7 @@ function RenderChiPhi(lstChiPhi) {
         }
 
         lstStrChiPhi.push("<td class='width-200 text-center'>");
-        lstStrChiPhi.push("<button class='btn-add-child'><i class='fa fa-plus fa-lg' aria-hidden='true' onclick='AddChildChiPhi(\"" + item.iID_DuAn_ChiPhi + "\", $(this).closest(\"tr\").index())'></i></button>");
+      //  lstStrChiPhi.push("<button class='btn-add-child'><i class='fa fa-plus fa-lg' aria-hidden='true' onclick='AddChildChiPhi(\"" + item.iID_DuAn_ChiPhi + "\", $(this).closest(\"tr\").index())'></i></button>");
         if (!item.isParent) {
             lstStrChiPhi.push("<button class='btn-detail' onclick='ViewHangMuc(\"" + item.iID_DuAn_ChiPhi + "\")'><i class='fa fa-eye fa-lg' aria-hidden='true'></i></button>")
         }
@@ -517,7 +521,7 @@ function AddChildChiPhi(iIdParentId, parentIndex) {
     }
     lstStrChiPhi.push("<td><input type='text' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' class='fTienPheDuyet form-control' style='text-align:right' value=''/></td>");
     lstStrChiPhi.push("<td class='width-200 text-center'>");
-    lstStrChiPhi.push("<button class='btn-add-child'><i class='fa fa-plus fa-lg' aria-hidden='true' onclick='AddChildChiPhi(\"" + iIdChiPhi + "\", $(this).closest(\"tr\").index())'></i></button>");
+    //lstStrChiPhi.push("<button class='btn-add-child'><i class='fa fa-plus fa-lg' aria-hidden='true' onclick='AddChildChiPhi(\"" + iIdChiPhi + "\", $(this).closest(\"tr\").index())'></i></button>");
     lstStrChiPhi.push("<button class='btn-detail' onclick='ViewHangMuc(\"" + iIdChiPhi + "\")'><i class='fa fa-eye fa-lg' aria-hidden='true'></i></button>")
     lstStrChiPhi.push("<button class='btn-delete'><i class='fa fa-trash-o fa-lg' aria-hidden='true' onclick='DeleteChiPhi($(this))'></i></button>");
     lstStrChiPhi.push("</td>");
@@ -774,25 +778,10 @@ async function SaveThietKeThiCong() {
     var lstNguonVon = GetNguonVonByTable();
     arrHangMucSave = lstHangMuc.filter(y => y.fTienPheDuyet != 0);
     for (var i = 0; i < arrHangMucSave.length; i++) {
-        if (bIsDieuChinh == 'True') {
-            arrHangMucSave[i].fTienPheDuyet = lstHangMuc[i].fGiaTriDieuChinh;
-        }
-        else {
-            arrHangMucSave[i].fTienPheDuyet = lstHangMuc[i].fTienPheDuyet;
-        }
+           arrHangMucSave[i].fTienPheDuyet = lstHangMuc[i].fTienPheDuyet;
     }
 
     if (!ValidateDuToan(lstNguonVon)) return;
-
-    let res = await checkExistSoQuyetDinh();
-    if (res.isExisted) {
-        let errMsg = "Số quyết định đã tồn tại";
-        let element = $("#sSoQuyetDinh").get(0);
-        element.classList.add("input-error");
-        element.setCustomValidity(errMsg);
-        element.reportValidity();
-        return;
-    }
 
     var dataHM = [];
     $("#tblChiPhiDauTu").find("tr").each(function (index) {
@@ -815,6 +804,10 @@ async function SaveThietKeThiCong() {
         cache: false,
         success: function (data) {
             if (data != null) {
+                if (data.isExisted) {
+                    PopupModal("Lỗi", (data.sMessError && data.sMessError != "") ? data.sMessError : "Lỗi lưu dữ liệu phê duyệt TKTC và TDT", ERROR);
+                    return false;
+                }
                 if (data.status == false) {
                     PopupModal("Lỗi", (data.sMessError && data.sMessError != "") ? data.sMessError : "Lỗi lưu dữ liệu phê duyệt TKTC và TDT", ERROR);
                     return false;

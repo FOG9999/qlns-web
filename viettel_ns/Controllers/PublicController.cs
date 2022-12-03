@@ -4686,7 +4686,7 @@ AND tk.iID_MaTaiKhoanDanhMucChiTiet=ct.iID_MaTaiKhoanDanhMucChiTiet AND (ct.sTen
             List<Object> list = new List<Object>();
 
             String DK = String.Format("bActive=1 ");
-            String SQL = String.Format("SELECT sMaLoaiCongTrinh, sTenLoaiCongTrinh FROM VDT_DM_LoaiCongTrinh WHERE {0} AND (sMaLoaiCongTrinh LIKE @sMaLoaiCongTrinh OR sTenLoaiCongTrinh like @sTenLoaiCongTrinh) ORDER BY sTenLoaiCongTrinh", DK);
+            String SQL = String.Format("SELECT sMaLoaiCongTrinh, sTenLoaiCongTrinh FROM VDT_DM_LoaiCongTrinh WHERE {0} AND (sMaLoaiCongTrinh LIKE @sMaLoaiCongTrinh OR sTenLoaiCongTrinh like @sTenLoaiCongTrinh) ORDER BY sMaLoaiCongTrinh", DK);
             SqlCommand cmd = new SqlCommand(SQL);
             cmd.Parameters.AddWithValue("@sMaLoaiCongTrinh", "%" + GiaTri + "%");
             cmd.Parameters.AddWithValue("@sTenLoaiCongTrinh", "%" + GiaTri + "%");
@@ -4697,7 +4697,7 @@ AND tk.iID_MaTaiKhoanDanhMucChiTiet=ct.iID_MaTaiKhoanDanhMucChiTiet AND (ct.sTen
                 //Trong trường hợp không tìm ra dữ liệu sẽ hiển thị tất cả
                 dt.Dispose();
                 DK = String.Format("bActive=1 ");
-                SQL = String.Format("SELECT sMaLoaiCongTrinh, sTenLoaiCongTrinh FROM VDT_DM_LoaiCongTrinh WHERE {0}  ORDER BY sTenLoaiCongTrinh", DK);
+                SQL = String.Format("SELECT sMaLoaiCongTrinh, sTenLoaiCongTrinh FROM VDT_DM_LoaiCongTrinh WHERE {0}  ORDER BY sMaLoaiCongTrinh", DK);
                 cmd = new SqlCommand(SQL);
                 dt = Connection.GetDataTable(cmd);
                 cmd.Dispose();

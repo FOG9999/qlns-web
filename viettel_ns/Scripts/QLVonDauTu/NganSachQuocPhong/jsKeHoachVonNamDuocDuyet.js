@@ -10,11 +10,11 @@ $(document).ready(function () {
     $("#" + TBL_DANH_SACH_DVTHDA + " .cbAll_DVQL").change(function () {
 
         if (this.checked) {
-            $("#" + TBL_DANH_SACH_DVTHDA + " .cb_DVQL").filter(function () { return $(this.parentElement).css("display") != "none" }).prop('checked', true).trigger("change");
+            $("#" + TBL_DANH_SACH_DVTHDA + " .cb_DVQL").filter(function () { return $(this.parentElement.parentElement).css("display") != "none" }).prop('checked', true).trigger("change");
         }
 
         else {
-            $("#" + TBL_DANH_SACH_DVTHDA + " .cb_DVQL").filter(function () { return $(this.parentElement).css("display") != "none" }).prop('checked', false).trigger("change");;
+            $("#" + TBL_DANH_SACH_DVTHDA + " .cb_DVQL").filter(function () { return $(this.parentElement.parentElement).css("display") != "none" }).prop('checked', false).trigger("change");;
         }
 
     })
@@ -198,6 +198,7 @@ Save = () => {
     data.dNgayQuyetDinh = $("#dNgayQuyetDinhModal").val();
     data.iID_NguonVonID = $("#iID_NguonVonIDModal").val()
     data.iNamKeHoach = $("#txtNamKeHoachModal").val();
+    data.iLoaiDuToan = $("#iLoaiDuToan").val();
 
     var isModified = $("#VoucherModified").val() == "true" ? true : false;
 
@@ -212,7 +213,9 @@ Save = () => {
             if (r.bIsComplete) {
                 bIsSaveSuccess = true;
                 $("#modalKHVonNamDeXuat").modal("hide");
-                PopupModal("Thông báo", "Lưu dữ liệu thành công", ERROR, r.iID);
+                //PopupModal("Thông báo", "Lưu dữ liệu thành công", ERROR, r.iID);
+                window.location.href = "/QLVonDauTu/KeHoachVonNamDuocDuyet/Detail?id=" + r.iID + "&isDetail=" + false;
+
             } else {
                 var Title = 'Lỗi lưu dự toán được giao';
                 var messErr = [];

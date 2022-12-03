@@ -48,22 +48,23 @@
 
                         <div class="form-group row">
                             <div class="col-sm-6">
-                                <label for="iIđuToanId" class="">Dự toán <span class="require">*</span></label>
-                                <input type="hidden" style="display:none" id="txt_DuToan_Value" value="@Model.iID_DuToanID">
-                                <select class="form-control" style="width:100%" id="iIđuToanId"></select>
+                                <label for="txt_LoaiQuyetToan" class="">Loại quyết toán <span class="require">*</span></label>
+                                <input type="hidden" style="display:none" id="txt_LoaiQuyetToan_Value" value="@Model.iID_LoaiQuyetToan">
+                                <select class="form-control" style="width:100%" id="txt_LoaiQuyetToan" name="loaiQuyetDinh"></select>
                             </div>
                             <div class="col-sm-6">
-                                <label for="txt_ChuDauTu" class="">Chủ đầu tư</label>
-                                <input type="text" id="txt_ChuDauTu" class="form-control" autocomplete="off" disabled value="@Model.sTenChuDauTu"/>
+                                <label for="iIđuToanId" class="">Quyết định <span class="require">*</span></label>
+                                <input type="hidden" style="display:none" id="txt_DuToan_Value" value="@Model.iID_DuToanID">
+                                <select class="form-control" style="width:100%" id="iIđuToanId" name="QuyetDinh"></select>
                             </div>
                         </div>
 
-                        @*<div class="form-group row">
-                            <div class="col-sm-12">
-                                <p id="txt_TenDuAn">@Model.sTenDuAn</p>
-                                <p id="txt_ChuDauTu">Chủ đầu tư: @Model.sTenChuDauTu</p>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txt_ChuDauTu" class="">Chủ đầu tư</label>
+                                <input type="text" id="txt_ChuDauTu" class="form-control" autocomplete="off" disabled value="@Model.sTenChuDauTu" />
                             </div>
-                        </div>*@
+                        </div>
 
                         <div class="form-group row">
                             <div class="col-sm-6">

@@ -110,14 +110,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                 Text = string.IsNullOrEmpty(c.sTenDuAn) ? c.sMaDuAn : (c.sMaDuAn + " - " + c.sTenDuAn)
             });
             //ViewBag.ListChuDauTu = new SelectList(GetCbxChuDauTu(), "Value", "Text");
-
-            List<NS_DonVi> lstDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
-            lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = Constants.CHON });
-            ViewBag.ListDonViQuanLy = lstDonViQuanLy.Select(c => new SelectListItem
-            {
-                Value = c.iID_MaDonVi,
-                Text = string.IsNullOrEmpty(c.iID_MaDonVi) ? c.sTen : (c.iID_MaDonVi + " - " + c.sTen)
-            });
+            ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_MaDonVi", "sMoTa");
+            //List<NS_DonVi> lstDonViQuanLy = _iQLVonDauTuService.GetListAllDonViQLByUserAndCurrentYear(Username, PhienLamViec.NamLamViec).ToList();
+            //lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = Constants.CHON });
+            //ViewBag.ListDonViQuanLy = lstDonViQuanLy.Select(c => new SelectListItem
+            //{
+            //    Value = c.iID_MaDonVi,
+            //    Text = string.IsNullOrEmpty(c.iID_MaDonVi) ? c.sTen : (c.sMoTa)
+            //});
             //Lay danh sach don vi quan ly theo user login
             List<VDT_DM_NhomDuAn> lstNhomDuAn = _iQLVonDauTuService.LayNhomDuAn().ToList();
             lstNhomDuAn.Insert(0, new VDT_DM_NhomDuAn { iID_NhomDuAnID = Guid.Empty, sTenNhomDuAn = Constants.CHON });
@@ -802,8 +802,28 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             {
                 //List<VdtKhvKeHoachVonUngChiTietModel> listDataQuery = _iQLVonDauTuService.KehoachVonUngDuocDuyetChiTietExport(id).ToList();
                 var listData = (List<VDTChuTruongDauTuViewModel>)TempData["DataSearch"];
+                
+                var grouplistData = listData.GroupBy(x => x.sDonViQuanLy?.Trim());
 
-                ExcelFile xls = CreateReportExport(listData);
+                var results = new List<VDTChuTruongDauTuViewModel>();
+
+                var index = 0;
+                foreach (var item in grouplistData)
+                {
+                    //var rowTitle = new VDTChuTruongDauTuViewModel();
+                    //rowTitle.sSTT = "";
+                    //rowTitle.sRowTitle = item.Key;
+
+                    //results.Add(rowTitle);
+                    item.ToList().First().sRowTitle = item.Key;
+                    results.AddRange(item.Select(x =>
+                    {
+                        x.sSTT = (++index).ToString();
+                        return x;
+                    }).ToList());
+                }
+
+                ExcelFile xls = CreateReportExport(results);
                 xls.PrintLandscape = true;
                 TempData["DataExport"] = xls;
 
@@ -822,18 +842,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             XlsFile Result = new XlsFile(true);
             Result.Open(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/ChuTruongDauTu/Export_DS_ChuTruongDauTu.xlsx"));
             FlexCelReport fr = new FlexCelReport();
-            var index = 0;
+            
             //var dataModel = _iQLVonDauTuService.GetKHVUDuocDuyetById(id);
             //VDTKhvkeHoachVonUngViewModel objKHVU = new VDTKhvkeHoachVonUngViewModel();
             //objKHVU.sTenDonViQuanLy = dataModel.sTenDonViQuanLy.ToUpper();
             //objKHVU.sTenNguonVon = dataModel.sTenNguonVon.Substring(dataModel.sTenNguonVon.LastIndexOf(".") + 1).ToUpper();
             //objKHVU.iNamKeHoach = dataModel.iNamKeHoach;
             //objKHVU.sSoQuyetDinh = dataModel.sSoQuyetDinh;
-            lstData.Select(x =>
-            {
-                x.sSTT = ++index;
-                return x;
-            }).ToList();
+            
             fr.AddTable<VDTChuTruongDauTuViewModel>("Items", lstData);
 
             //fr.SetValue("sTenDonVi", objKHVU.sTenDonViQuanLy);

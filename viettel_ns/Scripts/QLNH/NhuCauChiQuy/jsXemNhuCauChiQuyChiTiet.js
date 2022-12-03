@@ -202,9 +202,12 @@ function CapNhatCotSttChiQuy(idBang) {
 
 
 function LoadDataHopDong() {
+    IDDonVi = $("#IDDonVi").val();
+    IDBQuanLy = $("#IDBQuanLy").val();
     $.ajax({
         url: "/QLNH/NhuCauChiQuy/GetHopDongAll",
         type: "POST",
+        data: { iID_DonViID: IDDonVi, iID_BQuanLyID: IDBQuanLy },
         dataType: "json",
         cache: false,
         async: false,
@@ -427,7 +430,7 @@ function LoadDataViewChitiet() {
             } else {
                 dongMoi += "<td class='r_Noidung' align='right'><div class='sNoiDung' hidden></div><input type='text' class='form-control txtNoidung 'value='" + data[i].sNoiDung + "'/></td>";
             }
-            dongMoi += "<td class='r_ChingoaiteUSD' align='right'><div class='fChingoaiteUSD' hidden></div><input type='text' class='form-control txtChingoaiteUSD' value='" + FormatNumber(data[i].fChiNgoaiTeUSD) + "'/></td>";
+            dongMoi += "<td class='r_ChingoaiteUSD' align='right'><div class='fChingoaiteUSD' hidden></div><input type='text' class='form-control txtChingoaiteUSD' value='" + FormatNumber(data[i].fChiNgoaiTeUSD) + ",00'/></td>";
             dongMoi += "<td class='text-right txtChingoaiteVND'>" + FormatNumber(data[i].fChiNgoaiTeVND) + "</td>";
             dongMoi += "<td class='r_ChitrongnuocVND' align='right'><div class='fChitrongnuocVND' hidden></div><input type='text' class='form-control txtChiTrongnuocVND' value='" + FormatNumber(data[i].fChiTrongNuocVND) + "'/></td>";
             dongMoi += "<td class='text-right txtChiTrongnuocUSD'>" + FormatNumber(data[i].fChiTrongNuocUSD) + "</td>";

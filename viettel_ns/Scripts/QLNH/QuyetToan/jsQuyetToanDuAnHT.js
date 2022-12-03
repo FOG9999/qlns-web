@@ -279,7 +279,7 @@ function InBaoCaoModal() {
             success: function (data) {
                 $("#modalQTDuAn").modal("show")
                 $("#contentModalQTDuAn").empty().html(data);
-                $("#modalQTDuAnLabel").empty().html('Báo cáo toán dự án hoàn thành');
+                $("#modalQTDuAnLabel").empty().html('Báo cáo quyết toán dự án hoàn thành');
             }
         });
     }

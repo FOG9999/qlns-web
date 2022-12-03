@@ -11,6 +11,17 @@
             top: 0;
             z-index: 1;
         }
+
+    #search {
+        width: 100%; /* Full-width */
+        font-size: 14px; /* Increase font-size */
+        padding: 6px 15px 6px 20px; /* Add some padding */
+        border: 1px solid #ddd; /* Add a grey border */
+        /*margin-bottom: 12px;*/ /* Add some space below the input */
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
 </style>
 <div class="form-group col-sm-12">
     <h4 class="color-text-red">Thông tin báo cáo:</h4>
@@ -48,7 +59,7 @@
                         </div>
                         <div class="col-sm-12 form-group">
                             <label for="txtNamKeHoach">Năm kế hoạch</label>@Helpers.Required()<br />
-                            <input type="text" class="form-control yearFormat" id="txtNamKeHoach" />
+                            <input type="text" class="form-control yearFormat" id="txtNamKeHoach" value="@DateTime.Now.ToString("yyyy")" />
                         </div>
                         <div class="col-sm-12 form-group" id="divMaNguonNganSach">
                             <label>Loại nguồn vốn</label>
@@ -62,11 +73,14 @@
                         </div>
                     </div>
                     <div class="col-sm-4 form-group">
-                        <div class="col-sm-12 tableFixHead" id="">
+                        <div class="col-sm-12 tableFixHead"  style="height:350px" id="">
+                            <input type="text" id="search" onkeyup="handleSearch()" placeholder="Tìm kiếm đơn vị ">
                             <table class="table table-bordered" id="tblListDonViQuanLy">
                                 <thead>
-                                <th><input type="checkbox" name="cbAll_DVQL" class="cbAll_DVQL" id="select-all-donviquanly" /></th>
-                                <th width="90%">Đơn vị</th>
+                                    <tr>
+                                        <th><input type="checkbox" name="cbAll_DVQL" class="cbAll_DVQL" id="select-all-donviquanly" /></th>
+                                        <th width="90%">Đơn vị</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     @{
@@ -74,7 +88,7 @@
                                         {
                                             <tr style="cursor: pointer">
                                                 <td align="center"><input type="checkbox" name="cb_DVQL" class="cb_DVQL" value="@item.iID_MaDonVi" /></td>
-                                                <td align="left">@item.sTen</td>
+                                                <td align="left">@(item.iID_MaDonVi + "-"+ item.sTen)</td>
                                             </tr>
                                         }
                                     }

@@ -12,7 +12,7 @@ Set @EmptyGuid = '00000000-0000-0000-0000-000000000000'
 --select iID_DonViID from VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet
 --#DECLARE#--
 --#DECLARE#--
-SELECT dx.iID_KeHoachVonNamDeXuatID,dx.fThanhToan, ct.iID_DuAnID,ct.iID_DonViID as iID_DonViID, dv.sTen as sTenDonVi INTO #tmpfThanhToan 
+SELECT dx.iID_KeHoachVonNamDeXuatID,ct.fThanhToan, ct.iID_DuAnID,ct.iID_DonViID as iID_DonViID, dv.sTen as sTenDonVi INTO #tmpfThanhToan 
 FROM VDT_KHV_KeHoachVonNam_DeXuat dx
 INNER JOIN VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet ct on ct.iID_KeHoachVonNamDeXuatID = dx.iID_KeHoachVonNamDeXuatID
 INNER JOIN NS_DonVi dv on dv.iID_Ma = ct.iID_DonViID

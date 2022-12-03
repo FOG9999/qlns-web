@@ -5,6 +5,16 @@ var ERROR = 1;
 var data = [];
 
 $(document).ready(function () {
+    $("#" + 'tblListKH5NamDeXuat' + " .cbAll_ChungTu").change(function () {
+        if (this.checked) { 
+            $("#tblListKH5NamDeXuat input" + "[data-check='itemChecked']").prop('checked', true).trigger("change");
+            $("#tblListKH5NamDeXuat input:checked" + "[data-check='itemChecked']").each((ind, ele) => {
+                SetState($(ele).attr('class'))
+            })
+        }
+        else
+            $("#tblListKH5NamDeXuat input" + "[data-check='itemChecked']").prop('checked', false).trigger("change");
+    })    
     //$("#iGiaiDoanTu").change(function () {
     //    if (this.value != "") {
     //        $("#iGiaiDoanDen").val(parseInt(this.value) + 4);
@@ -106,8 +116,12 @@ function Save() {
                     });
                 } else {
                     if (isAggregate) {
+                        localStorage.setItem('iID_DonViQuanLyID', $("#iID_DonViQuanLyID").val());
+                        localStorage.setItem('sDonVi', $('#iID_DonViQuanLyID').select2('data')[0].text);
                         window.location.href = "/QLVonDauTu/KeHoachTrungHanDeXuat/Detail/?id=" + r.iID_KeHoach5Nam_DeXuatID + "&isTongHop=" + isAggregate;
                     } else {
+                        localStorage.setItem('iID_DonViQuanLyID', $("#iID_DonViQuanLyID").val());
+                        localStorage.setItem('sDonVi', $('#iID_DonViQuanLyID').select2('data')[0].text);
                         window.location.href = "/QLVonDauTu/KeHoachTrungHanDeXuat/Detail/?id=" + r.iID_KeHoach5Nam_DeXuatID;
                     }
                 }
@@ -156,8 +170,12 @@ function SaveTrung() {
         success: function (r) {
             if (r.bIsComplete) {
                 if (isAggregate) {
+                    localStorage.setItem('iID_DonViQuanLyID', $("#iID_DonViQuanLyID").val());
+                    localStorage.setItem('sDonVi', $('#iID_DonViQuanLyID').select2('data')[0].text);
                     window.location.href = "/QLVonDauTu/KeHoachTrungHanDeXuat/Detail/?id=" + r.iID_KeHoach5Nam_DeXuatID + "&isTongHop=" + isAggregate;
                 } else {
+                    localStorage.setItem('iID_DonViQuanLyID', $("#iID_DonViQuanLyID").val());
+                    localStorage.setItem('sDonVi', $('#iID_DonViQuanLyID').select2('data')[0].text);
                     window.location.href = "/QLVonDauTu/KeHoachTrungHanDeXuat/Detail/?id=" + r.iID_KeHoach5Nam_DeXuatID;
                 }
 
@@ -282,6 +300,16 @@ function GetListData(sSoQuyetDinh, dNgayQuyetDinhFrom, dNgayQuyetDinhTo, iID_Don
             $("#iGiaiDoanDenSearch").val(iGiaiDoanDen);
             $("#iLoaiLst").val(iLoai);
             //SetValueFormExport(sSoChungTu, sNoiDung, sMaLoaiDuToan, sSoQuyetDinh, dNgayQuyetDinhFrom, dNgayQuyetDinhTo);
+            $("#" + 'tblListKH5NamDeXuat' + " .cbAll_ChungTu").change(function () {
+                if (this.checked) {
+                    $("#tblListKH5NamDeXuat input" + "[data-check='itemChecked']").prop('checked', true).trigger("change");
+                    $("#tblListKH5NamDeXuat input:checked" + "[data-check='itemChecked']").each((ind, ele) => {
+                        SetState($(ele).attr('class'))
+                    })
+                }
+                else
+                    $("#tblListKH5NamDeXuat input" + "[data-check='itemChecked']").prop('checked', false).trigger("change");
+            })
         }
     });
 }
@@ -400,6 +428,16 @@ function OpenModalCt(idDonVi, id) {
         data: { idDonVi: idDonVi, id: id },
         success: function (data) {
             $("#modalDuAnDeXuat").html(data);
+            $("#" + 'modalDuAnDeXuat' + " .cbAll_DuAn").change(function () {
+                if (this.checked) {
+                    $("#modalDuAnDeXuat input" + "[data-check='duanChecked']").prop('checked', true).trigger("change");
+                    $("#modalDuAnDeXuat input:checked" + "[data-check='duanChecked']").each((ind, ele) => {
+                        ChooseDuAn($(ele).attr('class'))
+                    })
+                }
+                else
+                    $("#modalDuAnDeXuat input" + "[data-check='duanChecked']").prop('checked', false).trigger("change");
+            })
         }
     });
 }

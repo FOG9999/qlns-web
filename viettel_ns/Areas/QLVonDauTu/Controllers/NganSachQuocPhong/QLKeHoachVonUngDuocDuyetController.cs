@@ -289,7 +289,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
         [HttpGet]
         public JsonResult GetDonViQuanLy()
         {
-            var lstData = _iQLVonDauTuService.GetListDonViByNamLamViec(PhienLamViec.NamLamViec);
+            //var lstData = _iQLVonDauTuService.GetListDonViByNamLamViec(PhienLamViec.NamLamViec);
+            List<NS_DonVi> lstData = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
             return Json(new { status = true, datas = lstData }, JsonRequestBehavior.AllowGet);
         }
 

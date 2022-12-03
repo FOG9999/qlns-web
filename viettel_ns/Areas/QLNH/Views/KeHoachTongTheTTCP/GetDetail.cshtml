@@ -13,7 +13,7 @@
     @* Row 1 *@
     <div class="form-group row">
         <div class="col-sm-4">
-            <label for="iLoai">Loại kế hoạch</label>
+            <label for="iLoai">Loại quyết định</label>
             <select id="iLoai" class="form-control" @(ViewBag.State == "UPDATE" || ViewBag.State == "ADJUST" ? "disabled" : "")>
                 <option value="1">Theo giai đoạn</option>
                 <option value="3">Theo giai đoạn con</option>
@@ -82,17 +82,17 @@
 
 
     <div class="chao-banner1">
-        <label>Quyết định tổng thể Thủ tưởng Chính phủ phê duyệt theo giai đoạn</label>
+        <label>Quyết định tổng thể Thủ tướng Chính phủ phê duyệt theo giai đoạn</label>
     </div>
     <hr class="bg-gray" />
     <div class="form-group row">
         <div class="col-sm-4">
-            <label for="sSoKeHoach">Số kế hoạch</label>
+            <label for="sSoKeHoach">Số quyết định</label>
             @Helpers.Required()
             <input type="text" required id="txtSoKeHoach" class="form-control" value="@Html.Raw(Html.Encode(Model.sSoKeHoach))" maxlength="100" autocomplete="off" />
         </div>
         <div class="col-sm-4">
-            <label for="dNgayKeKoach">Ngày kế hoạch</label>
+            <label for="dNgayKeKoach">Ngày quyết định</label>
             <div class='input-group date'>
                 <input type='text' class="form-control" id="txtNgayKeHoach"
                        value="@Html.Raw(Model.dNgayKeHoach.HasValue ? Model.dNgayKeHoach.Value.ToString("dd/MM/yyyy") : "")"

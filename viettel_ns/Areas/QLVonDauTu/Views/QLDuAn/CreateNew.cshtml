@@ -32,7 +32,7 @@
                     <div class="form-group row">
                         <div class="col-sm-3">
                             <input type="hidden" id="iID_DuAnID" name="iID_DuAnID" value="@Model.iID_DuAnID">
-                            <label for="txt_DonViQuanLy">Đơn vị thực hiện dự án <span class="require">*</span></label>
+                            <label for="txt_DonViQuanLy">Đơn vị <span class="require">*</span></label>
                             @Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), new { @class = "form-control", @id = "iID_DonViQuanLyID" })
                         </div>
                         <div class="col-sm-6">
@@ -211,7 +211,7 @@
                     </div>
 
                     @*Hạng mục*@
-                    <div class="form-group">
+                    @*<div class="form-group">
                         <h4 class="color-text-red">Hạng mục:</h4>
                         <hr class='color-background-red' />
                         <div class="row">
@@ -254,7 +254,7 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
+                    </div>*@
                 }
 
                 @*Thông tin tài liệu đính kèm*@

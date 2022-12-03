@@ -50,9 +50,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
 
         public ActionResult CreateNew(Guid? id)
         {
-            List<DM_ChuDauTu> lstChuDauTu = _iQLVonDauTuService.LayChuDauTu(PhienLamViec.NamLamViec).ToList();
+            List<DM_ChuDauTu> lstChuDauTu = _iQLVonDauTuService.LayChuDauTu(PhienLamViec.NamLamViec).ToList();            
             lstChuDauTu.Insert(0, new DM_ChuDauTu { ID = Guid.Empty, sTenCDT = Constants.CHON });
-            ViewBag.ListChuDauTu = lstChuDauTu.ToSelectList("ID", "sTenCDT");
+            ViewBag.ListChuDauTu = lstChuDauTu.ToSelectList("ID", "sTenCDT");            
 
             List<VDT_DM_PhanCapDuAn> lstPhanCapDuAn = _iQLVonDauTuService.LayPhanCapDuAn().ToList();
             lstPhanCapDuAn.Insert(0, new VDT_DM_PhanCapDuAn { iID_PhanCapID = Guid.Empty, sTen = Constants.CHON });
@@ -116,11 +116,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                             return false;
                         string sMaDonViQuanLy = objDonViQuanLy.iID_MaDonVi;
 
-                        var objChuDauTu = conn.Get<NS_DonVi>(entityDuAn.iID_ChuDauTuID, trans);
+                        var objChuDauTu = conn.Get<DM_ChuDauTu>(entityDuAn.iID_ChuDauTuID, trans);
                         if (objChuDauTu == null)
                             return false;
-                        string sMaChuDauTu = objChuDauTu.iID_MaDonVi;
+                        string sMaChuDauTu = objChuDauTu.sId_CDT;
 
+                        entityDuAn.iID_MaDonVi = sMaDonViQuanLy;
+                        entityDuAn.iID_MaDonViThucHienDuAnID = sMaDonViQuanLy;
                         entityDuAn.sMaDuAn = string.Format("{0}-{1}-{2}", sMaDonViQuanLy, sMaChuDauTu, iMaDuAnIndex.ToString("0000"));
                         entityDuAn.iMaDuAnIndex = iMaDuAnIndex;
 

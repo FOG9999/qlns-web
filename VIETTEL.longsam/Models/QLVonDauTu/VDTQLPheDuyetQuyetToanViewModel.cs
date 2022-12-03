@@ -47,6 +47,7 @@ namespace Viettel.Models.QLVonDauTu
         public string sDuToan { get; set; }
         public Guid? iID_DuToanID { get; set; }
         public Guid? iID_DeNghiQuyetToanID { get; set; }
+        public int iID_LoaiQuyetToan { get; set; }
 
         //Noi dung quyet toan
         public IEnumerable<VDTNguonVonDauTuTableModel> arrNguonVon { get; set; }
@@ -187,5 +188,6 @@ namespace Viettel.Models.QLVonDauTu
         public VDTQLPheDuyetQuyetToanViewModel dataDuAnQT { get; set; }
         public List<VDT_DA_DuToan_ChiPhi_ViewModel> listChiPhi { get; set; }
         public List<VDT_DA_DuToan_HangMuc_ViewModel> listHangMuc { get; set; }
+        public List<VDT_DA_NhaThau_GoiThau_ViewModel> listGoiThau { get; set; }
     }
 }

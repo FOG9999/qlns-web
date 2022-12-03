@@ -12,7 +12,7 @@ Lấy danh sách dự án
 
 SELECT duan.iID_DuAnID as IdRow,
 		duan.iID_DuAnID,
-		duan.iID_DonViThucHienDuAnID as iID_DonViQuanLyID,
+		duan.iID_DonViQuanLyID,
 		duan.iID_ChuDauTuID,
 		duan.iID_DuAnKHTHDeXuatID,
 		duan.sMaDuAn,
@@ -27,7 +27,7 @@ SELECT duan.iID_DuAnID as IdRow,
 				WHEN dv.iID_MaDonVi is null THEN ''
 				ELSE CONCAT(dv.iID_MaDonVi, ' - ', dv.sTen)
 			END
-		) as sTenDonViQL,
+		) as sDonVi,
 		(
 			CASE
 				WHEN dmcdt.sId_CDT is null THEN ''
@@ -44,7 +44,7 @@ SELECT duan.iID_DuAnID as IdRow,
 		1 as iLevel,
 		CAST((case when tbl_count_chitiet.numChild > 0 then '1' else '0' end) as bit) as bLaHangCha into #TEMP_DuAn
 FROM VDT_DA_DuAn duan
-LEFT JOIN NS_DonVi dv on duan.iID_DonViThucHienDuAnID = dv.iID_Ma 
+LEFT JOIN NS_DonVi dv on duan.iID_DonViQuanLyID = dv.iID_Ma 
 LEFT JOIN DM_ChuDauTu dmcdt on duan.iID_ChuDauTuID = dmcdt.ID
 LEFT JOIN (
 	select iID_DuAnID, count(iID_DuAnID) as numChild
@@ -56,7 +56,7 @@ where 1 = 1;
 
 SELECT hangmuc.iID_DuAn_HangMucID as IdRow,
 		duan.iID_DuAnID,
-		duan.iID_DonViThucHienDuAnID as iID_DonViQuanLyID,
+		duan.iID_DonViQuanLyID,
 		duan.iID_ChuDauTuID,
 		duan.iID_DuAnKHTHDeXuatID,
 		duan.sMaDuAn,
@@ -71,7 +71,7 @@ SELECT hangmuc.iID_DuAn_HangMucID as IdRow,
 				WHEN dv.iID_MaDonVi is null THEN ''
 				ELSE CONCAT(dv.iID_MaDonVi, ' - ', dv.sTen)
 			END
-		) as sTenDonViQL,
+		) as sDonVi,
 		(
 			CASE
 				WHEN dmcdt.sId_CDT is null THEN ''
@@ -99,7 +99,7 @@ SELECT hangmuc.iID_DuAn_HangMucID as IdRow,
 		CAST('0' as bit) as bLaHangCha into #TEMP_ChiTiet
 from VDT_DA_DuAn_HangMuc hangmuc
 INNER JOIN VDT_DA_DuAn duan on hangmuc.iID_DuAnID = duan.iID_DuAnID
-LEFT JOIN NS_DonVi dv on duan.iID_DonViThucHienDuAnID = dv.iID_Ma and dv.iNamLamViec_DonVi = @iNamLamViec
+LEFT JOIN NS_DonVi dv on duan.iID_DonViQuanLyID = dv.iID_Ma and dv.iNamLamViec_DonVi = @iNamLamViec
 LEFT JOIN DM_ChuDauTu dmcdt on duan.iID_ChuDauTuID = dmcdt.ID and dmcdt.iNamLamViec = @iNamLamViec
 LEFT JOIN VDT_DM_LoaiCongTrinh lct on hangmuc.iID_LoaiCongTrinhID = lct.iID_LoaiCongTrinh
 LEFT JOIN NS_NguonNganSach nns on hangmuc.iID_NguonVonID = nns.iID_MaNguonNganSach

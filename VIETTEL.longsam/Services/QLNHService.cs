@@ -6156,6 +6156,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                     {
                         // Insert thông tri quyết toán
                         var tt = new NH_QT_ThongTriQuyetToan();
+                        tt.dNgayTao =DateTime.Now;
                         tt.sSoThongTri = input.ThongTriQuyetToan.sSoThongTri;
                         tt.dNgayLap = input.ThongTriQuyetToan.dNgayLap;
                         tt.iID_KHTT_NhiemVuChiID = input.ThongTriQuyetToan.iID_KHTT_NhiemVuChiID;

@@ -235,7 +235,8 @@ function Save() {
         success: function (r) {
             if (r.bIsComplete) {
                 if (isTongHop) {
-                    window.location.href = "/QLVonDauTu/KeHoachVonNamDeXuat/Detail?id=" + r.iID + "&isDieuChinh=" + isDieuChinh + "&bIsDetail=" + bIsDetail;
+            //        window.location.href = "/QLVonDauTu/KeHoachVonNamDeXuat/Detail?id=" + r.iID + "&isDieuChinh=" + isDieuChinh; + "&bIsDetail=" + bIsDetail;
+                    window.location.href = "/QLVonDauTu/KeHoachVonNamDeXuat/Detail?id=" + r.iID + "&isDieuChinh=" + isDieuChinh; 
                 } else {
                     window.location.href = "/QLVonDauTu/KeHoachVonNamDeXuat/Detail?id=" + r.iID + "&isDieuChinh=" + isDieuChinh;
                 }

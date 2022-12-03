@@ -32,6 +32,9 @@ $(document).ready(function () {
         ValidateMaxLength(this, 300);
     });
     ChangeNhaThau();
+    var test = FormatNumber($("#fGiaTriHopDong").val());
+    console.log(test);
+  
 });
 
 function DinhDangSo() {
@@ -638,6 +641,7 @@ function LoadGoiThauDb() {
                     });
                     $("#tblDanhSachGoiThau tbody").html(htmlGoiThau);
                     EventCheckboxGoiThau();
+                    $(".dropdown_nhathau").select2({ width: '100%', matcher: FilterInComboBox });
                 } else {
                     $("#tblDanhSachGoiThau tbody").html('');
                     arrGoiThau = [];
@@ -650,7 +654,8 @@ function LoadGoiThauDb() {
                 arrPhuLucHangMuc = [];
                 arrPhuLucChiPhi = [];
             }
-            SumGiaTriHopDong()
+            SumGiaTriHopDong(); 
+            HanleEnableGiaTriHopDong();
         },
         error: function (data) {
 
@@ -797,13 +802,17 @@ function SumGiaTriHopDong() {
 }
 
 function CaculatorGiaTriHopDong() {
-    var fTong = 0;
-    $.each($("#tblDanhSachGoiThau tbody").find(".cb_DuToan:checkbox:checked"), function (index, child) {
-        var fGiaTriPheDuyet = UnFormatNumber($(child).closest("tr").find(".fGiaTriHD").text());
-        if (fGiaTriPheDuyet != undefined && fGiaTriPheDuyet != null && fGiaTriPheDuyet != "")
-            fTong += parseFloat(fGiaTriPheDuyet);
-    });
-    $("#fGiaTriHopDong").val(FormatNumber(fTong));
+    if ($("#tblDanhSachGoiThau tbody").find(".cb_DuToan:checkbox:checked").length > 0) {
+        var fTong = 0;
+        $.each($("#tblDanhSachGoiThau tbody").find(".cb_DuToan:checkbox:checked"), function (index, child) {
+            var fGiaTriPheDuyet = UnFormatNumber($(child).closest("tr").find(".fGiaTriHD").text());
+            if (fGiaTriPheDuyet != undefined && fGiaTriPheDuyet != null && fGiaTriPheDuyet != "")
+                fTong += parseFloat(fGiaTriPheDuyet);
+        });
+
+        $("#fGiaTriHopDong").val(FormatNumber(fTong));
+    }
+    HanleEnableGiaTriHopDong();
 }
 
 function ChangeNhaThau() {
@@ -825,4 +834,13 @@ function ChangeNhaThau() {
             }
         })
     });
+}
+
+function HanleEnableGiaTriHopDong() {
+    var isEnable = $("#tblDanhSachGoiThau tbody").find(".cb_DuToan:checkbox:checked").length > 0;
+    if (isEnable) {
+        $("#fGiaTriHopDong").prop('disabled', true);
+    } else {
+        $("#fGiaTriHopDong").prop('disabled', false);
+    }
 }

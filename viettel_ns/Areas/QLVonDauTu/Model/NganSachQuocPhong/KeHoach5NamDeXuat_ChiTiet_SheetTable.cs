@@ -314,6 +314,16 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
 
             var headerGroup = "NHU CẦU BỐ TRÍ VỐN " + this.iGiaiDoanTu + " - " + (this.iGiaiDoanTu + 4);
 
+            var cNganhDeNghi = "Ngành đề nghị";
+            var cCucTaiChinhDeXuat = "Cục tài chính đề xuất";
+            var cVonBoTriNam = "Vốn bố trí năm " + (this.iGiaiDoanTu) +" - "+(this.iGiaiDoanTu+4);
+            var cVonBoTriSauNam = "Vốn bố trí sau năm " + (this.iGiaiDoanTu + 4);
+            var cRiengNamN = "Riêng năm " + (this.iGiaiDoanTu);
+            var cHanMucDauTuCongTrinhMoMoi = "Hạn mức đầu tư công trình mở mới " + (this.iGiaiDoanTu);
+            var cTongVonBoTri = "Tổng vốn bố trí";
+            var cDuKienBoTriNamThu2 = "Dự kiến bố trí vốn " + (this.iGiaiDoanTu);
+            var fCucTCDeXuat = "Cục tài chính đề xuất Kế hoạch " + this.iGiaiDoanTu + " - " + (this.iGiaiDoanTu + 4);
+
             bool isHiddenCt = true;
             bool isHiddenDc = true;
             int indexGroupHeader = 6;
@@ -342,7 +352,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     // cot fix
                     new SheetColumn(columnName: "sSTT", header: "STT", columnWidth:50, align: "left", hasSearch: false, isReadonly: true),
                     new SheetColumn(columnName: "sTen", header: "Tên Group - dự án", columnWidth:200, align: "left", hasSearch: true, isReadonly: false),
-                    new SheetColumn(columnName: "sDonViThucHienDuAn", header: "Đơn vị thực hiện dự án", columnWidth:200, align: "left", hasSearch: true, dataType: 3, isReadonly: false),
+                    //new SheetColumn(columnName: "sDonViThucHienDuAn", header: "Đơn vị thực hiện dự án", columnWidth:200, align: "left", hasSearch: true, dataType: 3, isReadonly: false),
+                    new SheetColumn(columnName: "sDonVi", header: "Đơn vị", columnWidth:200, align: "left", hasSearch: true, dataType: 3, isReadonly: true),
                     new SheetColumn(columnName: "sDiaDiem", header: "Địa điểm thực hiện", columnWidth:150, align: "left", hasSearch: true, isReadonly: false),
                     new SheetColumn(columnName: "iGiaiDoanTu", header: "Thời gian từ", columnWidth:100, align: "center", hasSearch: true, isReadonly: false, dataType: 3),
                     new SheetColumn(columnName: "iGiaiDoanDen", header: "Thời gian đến", columnWidth:100, align: "center", hasSearch: true, isReadonly: false, dataType: 3),
@@ -370,6 +381,24 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     new SheetColumn(columnName: "fGiaTriBoTri", header: cNameVonBoTri, columnWidth:170, align: "left", hasSearch: false, dataType: 1, isReadonly: true, isHidden: !isHiddenCt),
                     new SheetColumn(columnName: "fGiaTriBoTriDc", header: cNameVonBoTriModified, columnWidth:170, align: "left", hasSearch: false, dataType: 1, isReadonly: true, isHidden: isHiddenDc),
 
+                    //Add Col mo moi
+                    new SheetColumn(columnName: "fHanmucNganhDX", header: cHanMucDauTuCongTrinhMoMoi, headerGroup: cNganhDeNghi, headerGroupIndex: 4, columnWidth:120, dataType: 1, isReadonly: false,isHidden:!isHiddenCt),
+                    new SheetColumn(columnName: "fTongVonBoTriNganh", header: cTongVonBoTri, headerGroup: cNganhDeNghi, headerGroupIndex: 4, columnWidth:120, dataType: 1, isReadonly: true,isHidden:!isHiddenCt),
+                    new SheetColumn(columnName: "fVon5namNganhDX", header: cVonBoTriNam, headerGroup: cNganhDeNghi, headerGroupIndex: 4, columnWidth:120, dataType: 1, isReadonly: false,isHidden:!isHiddenCt),
+                    new SheetColumn(columnName: "fVonsaunamNganhDX", header: cVonBoTriSauNam, headerGroup: cNganhDeNghi, headerGroupIndex: 4, columnWidth:120, dataType: 1, isReadonly: false,isHidden:!isHiddenCt),
+                    
+                    new SheetColumn(columnName: "fHanmucCucTCDX", header: "Hạn mức đầu tư NSQP công trình mở mới", headerGroup: cCucTaiChinhDeXuat, headerGroupIndex: 5, columnWidth:120, dataType: 1, isReadonly: false,isHidden:!isHiddenCt),
+                    new SheetColumn(columnName: "fTongVonBoTriCuc", header: cTongVonBoTri, headerGroup: cCucTaiChinhDeXuat, headerGroupIndex: 5, columnWidth:120, dataType: 1, isReadonly: true,isHidden:!isHiddenCt),
+                    new SheetColumn(columnName: "fVon5namCTCDX", header: cVonBoTriNam, headerGroup: cCucTaiChinhDeXuat, headerGroupIndex: 5, columnWidth:120, dataType: 1, isReadonly: false,isHidden:!isHiddenCt),
+                    new SheetColumn(columnName: "fVonnamthunhatCTC", header: cRiengNamN, headerGroup: cCucTaiChinhDeXuat, headerGroupIndex: 5, columnWidth:120, dataType: 1, isReadonly: false,isHidden:!isHiddenCt),
+                    new SheetColumn(columnName: "fVonsaunamCTCDexuat", header: cVonBoTriSauNam, headerGroup: cCucTaiChinhDeXuat, headerGroupIndex: 5, columnWidth:120, dataType: 1, isReadonly: false,isHidden:!isHiddenCt),
+
+                    //Add Col mo moi
+                    new SheetColumn(columnName: "fCucTCDeXuat", header: fCucTCDeXuat, columnWidth:120, dataType: 1, isReadonly: false,isHidden:isHiddenCt),
+                    new SheetColumn(columnName: "fDuKienBoTriNamThu2", header: cDuKienBoTriNamThu2, columnWidth:120, dataType: 1, isReadonly: false,isHidden:isHiddenCt),
+
+
+
                     new SheetColumn(columnName: "sGhiChu", header: "Ghi chú", columnWidth:250, align: "left", hasSearch: false, dataType: 0, isReadonly: false),
                     
                     // cot khac
@@ -388,6 +417,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     new SheetColumn(columnName: "sFontBold",isHidden: true),
                     new SheetColumn(columnName: "iID_ParentModified", isHidden: true),
                     new SheetColumn(columnName: "iID_DuAnID", isHidden: true),
+                    new SheetColumn(columnName: "iID_DonViID", isHidden: true),
                 };
 
             #endregion

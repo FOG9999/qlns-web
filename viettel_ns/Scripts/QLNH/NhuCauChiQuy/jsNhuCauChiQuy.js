@@ -327,6 +327,7 @@ function Save() {
     data.iNamKeHoach = $("#txtnamAdd").val();
     data.iQuy = $("#iQuyListAdd").val();
     data.iID_TiGiaID = $("#iTygiaAdd").val();
+    data.dNgayTao = $("#dNgayTao").val();
     data.sMaNgoaiTeKhac = $("#iMaNgoaitekhacAdd").val();
     var dieuchinh = $("#isdieuchinh").val();
     if (!ValidateData(data)) {
@@ -724,6 +725,9 @@ function ValidateData(data) {
     }
     if (data.iID_DonViID == null || data.iID_DonViID == GUID_EMPTY) {
         Messages.push("Chưa chọn đơn vị quản lý !");
+    }
+    if (data.iQuy == null || data.iQuy == 0) {
+        Messages.push("Chưa chọn quý !");
     }
     if (data.iNamKeHoach == null || data.iNamKeHoach == "") {
         Messages.push("Chưa chọn năm !");

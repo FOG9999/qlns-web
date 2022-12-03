@@ -1,3 +1,10 @@
+
+--Check du an la chuyen tiep, mo moi dua vao iTotal > 1 la chuyen tiep ---
+	select iID_DuAnID, COUNT(iID_DuAnID) as iTotal  INTO #tmpLoaiDuAn 
+	FROM VDT_KHV_KeHoachVonNam_DuocDuyet_ChiTiet 
+	where iID_DuAnID in (select iID_DuAnID FROM VDT_KHV_KeHoachVonNam_DuocDuyet_ChiTiet where iID_KeHoachVonNam_DuocDuyetID in  (select * from dbo.f_split(@lstId)))
+	group by iID_DuAnID;
+
 if(@type = 1)
 begin
 	select 
@@ -11,8 +18,10 @@ begin
 	from VDT_KHV_KeHoachVonNam_DuocDuyet_ChiTiet ctct 
 	inner join VDT_DA_DuAn da on da.iID_DuAnID = ctct.iID_DuAnID
 	left join VDT_DA_DuAn_HangMuc dahm on da.iID_DuAnID = dahm.iID_DuAnID
+	INNER JOIN #tmpLoaiDuAn tmp on tmp.iID_DuAnID = ctct.iID_DuAnID
 	where ctct.iID_KeHoachVonNam_DuocDuyetID in (select * from dbo.f_split(@lstId))
 	and (((da.iID_LoaiCongTrinhID is not null) or (dahm.iID_LoaiCongTrinhID is not null)) and ctct.iID_KeHoachVonNam_DuocDuyetID in (select * from dbo.f_split(@lstId)))
+	and tmp.iTotal < 2
 	--and ctct.iLoaiDuAn = 1
 
 
@@ -108,19 +117,23 @@ end
 else 
 begin
 	select 
-	distinct
-	ctct.*,
-	case
-		when dahm.iID_LoaiCongTrinhID  is not null then dahm.iID_LoaiCongTrinhID else da.iID_LoaiCongTrinhID
-	end iID_LoaiCongTrinhID,
-	da.sTenDuAn
-	into #tmpDataCt
-from VDT_KHV_KeHoachVonNam_DuocDuyet_ChiTiet ctct 
-inner join VDT_DA_DuAn da on da.iID_DuAnID = ctct.iID_DuAnID
-left join VDT_DA_DuAn_HangMuc dahm on da.iID_DuAnID = dahm.iID_DuAnID
-where ctct.iID_KeHoachVonNam_DuocDuyetID in (select * from dbo.f_split(@lstId))
-and (((da.iID_LoaiCongTrinhID is not null) or (dahm.iID_LoaiCongTrinhID is not null)) and ctct.iID_KeHoachVonNam_DuocDuyetID in (select * from dbo.f_split(@lstId)))
---and ctct.iLoaiDuAn = 2
+		distinct
+		ctct.*,
+		case
+			when dahm.iID_LoaiCongTrinhID  is not null then dahm.iID_LoaiCongTrinhID else da.iID_LoaiCongTrinhID
+		end iID_LoaiCongTrinhID,
+		da.sTenDuAn
+		into #tmpDataCt
+	from VDT_KHV_KeHoachVonNam_DuocDuyet_ChiTiet ctct 
+	inner join VDT_DA_DuAn da on da.iID_DuAnID = ctct.iID_DuAnID
+	left join VDT_DA_DuAn_HangMuc dahm on da.iID_DuAnID = dahm.iID_DuAnID
+	INNER JOIN #tmpLoaiDuAn tmp on tmp.iID_DuAnID = ctct.iID_DuAnID
+
+	where ctct.iID_KeHoachVonNam_DuocDuyetID in (select * from dbo.f_split(@lstId))
+	and (((da.iID_LoaiCongTrinhID is not null) or (dahm.iID_LoaiCongTrinhID is not null)) and ctct.iID_KeHoachVonNam_DuocDuyetID in (select * from dbo.f_split(@lstId)))
+	and tmp.iTotal > 1
+
+	--and ctct.iLoaiDuAn = 2
 
 select tbl_sum.* into #tmp_tbl_kct from (
 

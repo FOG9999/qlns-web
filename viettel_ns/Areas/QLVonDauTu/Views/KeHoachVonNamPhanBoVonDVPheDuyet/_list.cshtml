@@ -81,7 +81,7 @@
 
                     <td align="center" style="vertical-align: middle !important" class="col-sm-12">
                         @{
-                            if (item.bActive.Value)
+                            if (item.bActive.Value == true)
                             {
                                 <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.Id')" data-toggle="modal" data-target="#modalKHVonNamDeXuat"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
                                 <button type="button" class="btn-detail" onclick="OpenModal('@item.Id', '@item.iID_DonViQuanLyID', true)" data-toggle="modal" data-target="#modalKHVonNamDeXuat"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>
@@ -93,9 +93,9 @@
                             else
                             {
                                 <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.Id')" data-toggle="modal" data-target="#modalKHVonNamDeXuat"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
-                                <button type="button" disabled style="color: gray !important" class="btn-edit" onclick="OpenModal('@item.Id', '@item.iID_DonViQuanLyID', true)" data-toggle="modal" data-target="#modalKHVonNamDeXuat"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>
-                                <button type="button" disabled style="color: gray !important" class="btn-edit" onclick="OpenModal('@item.Id')" data-toggle="modal" data-target="#modalKHVonNamDeXuat"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
-                                <button type="button" disabled style="color: gray !important" class="btn-delete" onclick="DeleteItem('@item.Id')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                                @*<button type="button" disabled style="color: gray !important" class="btn-edit" onclick="OpenModal('@item.Id', '@item.iID_DonViQuanLyID', true)" data-toggle="modal" data-target="#modalKHVonNamDeXuat"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" disabled style="color: gray !important" class="btn-edit" onclick="OpenModal('@item.Id')" data-toggle="modal" data-target="#modalKHVonNamDeXuat"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>*@
+                                <button type="button"   class="btn-delete" onclick="DeleteItem('@item.Id')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
                                 <button type="button" class="btn-file" hidden onclick="OpenExport('@item.Id', '@item.iID_DonViQuanLyID','@item.iNamKeHoach')"><i class="fa fa-trash-o fa-file" aria-hidden="true"></i></button>
                             }
                         }
@@ -137,6 +137,22 @@
             });
         });
         /*formatMoney();*/
+        $("#iID_NguonVonID").change(function () {
+            ChangePage();
+        });
+        $("#iID_DonViQuanLyID").change(function () {
+            ChangePage();
+        });
+
     });
+
+    document.addEventListener('keydown', eventKey);
+    function eventKey(e) {
+        if (e != null && e != undefined) {
+            if (e.key == "Enter") {
+                ChangePage();
+            }
+        }
+    }
 
 </script>

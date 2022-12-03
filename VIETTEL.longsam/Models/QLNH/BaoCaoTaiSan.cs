@@ -29,7 +29,7 @@ namespace Viettel.Models.QLNH
     }
     public class BaoCaoTaiSanModel2 : NH_QT_TaiSan
     {
-        public string sDonVi { get; set; }
+        public string sDonVi2 { get; set; }
         public string slHH { get; set; }
         public string slVH { get; set; }
         public string slChua { get; set; }

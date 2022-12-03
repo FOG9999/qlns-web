@@ -46,6 +46,7 @@ namespace Viettel.Models.QLVonDauTu
         public double? fDonViTinh { get; set; }
         public bool isTongHop { get; set; }
         public bool isModified { get; set; }
+        public Guid? iID_DonviID { get; set; }
     }
 
     public class KH5NDDPrintDataExportModel : KH5NDDExport

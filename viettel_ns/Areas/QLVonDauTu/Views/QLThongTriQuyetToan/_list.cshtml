@@ -7,38 +7,37 @@
     <button class="btn btn-primary pull-right" onclick="themMoi()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
     <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
     <div class="form-group text-right">
-        @using (Html.BeginForm("XuatFile", "QLThongTriQuyetToan", FormMethod.Post))
-        {
-            <button class="btn btn-primary" style="margin-right:10px;width:auto !important"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Excel</button>
-        }
+        <button onclick="OnExportExcel();" class="btn btn-primary" style="margin-right:10px;width:auto !important"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Excel</button>
     </div>
 </div>
 <table class="table table-bordered" id="tblListVDTThongTri">
     <thead class="header-search">
-    <th width="3%"></th>
-    <th width="13%">@Html.DropDownList("ddlDonViQuanLy", (SelectList)(ViewBag.ListDonViQuanLy), new { @class = "form-control gr_search", @id = "txtDonViQuanLy" })</th>
-    <th width="18%"><input type="text" class="form-control gr_search" id="txtMaThongTri" autocomplete="off" /></th>
-    <th width="15%">
-        <div class='input-group date'>
-            <input type='text' class="form-control gr_search dateFormat" id="txtNgayTaoThongTri" placeholder="dd/MM/yyyy" />
-            <span class="btn-default input-group-addon">
-                <i class="fa fa-calendar" aria-hidden="true"></i>
-            </span>
-        </div>
-    </th>
-    <th width="10%">  <input type="text" class="form-control gr_search yearFormat" id="txtNamThucHien" autocomplete="off" /></th>
-    <th width="15%"></th>
-    <th><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+        <th width="1%"></th>
+        <th width="2%"></th>
+        <th width="13%">@Html.DropDownList("ddlDonViQuanLy", (SelectList)(ViewBag.ListDonViQuanLy), new { @class = "form-control gr_search", @id = "txtDonViQuanLy" })</th>
+        <th width="18%"><input type="text" class="form-control gr_search" id="txtMaThongTri" autocomplete="off" /></th>
+        <th width="15%">
+            <div class='input-group date'>
+                <input type='text' class="form-control gr_search dateFormat" id="txtNgayTaoThongTri" placeholder="dd/MM/yyyy" />
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+        </th>
+        <th width="10%">  <input type="text" class="form-control gr_search yearFormat" id="txtNamThucHien" autocomplete="off" /></th>
+        <th width="15%"></th>
+        <th><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
     </thead>
-    <thead>
-    <th width="8%">STT</th>
-    <th width="15%">Tên đơn vị</th>
-    <th width="18%">Mã thông tri</th>
-    <th width="15%">Ngày tạo</th>
-    <th width="15%">Năm</th>
-    @*<th width="10%">Trạng thái cán bộ</th>*@
-    <th width="15%">Nguồn Vốn</th>
-    <th>Thao tác</th>
+        <thead>
+            <th width="3%"><input type="checkbox" class="ck_idAll"></th>
+            <th width="5%">STT</th>
+            <th width="15%">Tên đơn vị</th>
+            <th width="18%">Mã thông tri</th>
+            <th width="15%">Ngày tạo</th>
+            <th width="15%">Năm</th>
+            @*<th width="10%">Trạng thái cán bộ</th>*@
+            <th width="15%">Nguồn Vốn</th>
+            <th>Thao tác</th>
     </thead>
     <tbody>
         @{
@@ -47,6 +46,7 @@
             {
                 index++;
                 <tr style="cursor: pointer">
+                    <td align="center"><input type="checkbox" name="ck_id" value="@item.iID_ThongTriID"></td>
                     <td align="center">@index</td>
                     <td align="left">@item.sTenDonVi</td>
                     <td align="left">@item.sMaThongTri</td>

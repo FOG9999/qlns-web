@@ -3,6 +3,7 @@ var idContentView = "lstDataView";
 var sUrlListView = "DeNghiThanhToan/DeNghiThanhToanSearch";
 var _paging = {};
 var arrIdDeNghiThanhToan = [];
+var arrIdTitle = [];
 var type_baocao = 0;
 var CONFIRM = 0;
 var ERROR = 1;
@@ -26,7 +27,16 @@ function ChangePage(iCurrentPage = 1) {
     data_search.iTrangThai = $('#idtrangthai').val();
     GetListData();
 }
-
+function CreateHtmlSelectTinhTrang(value) {
+    var htmlOption = "";
+    arrIdTitle.forEach(x => {
+        if (value != undefined && value == x.valueId)
+            htmlOption += "<option value='" + x.valueId + "' selected>" + $("<div/>").text(x.labelName).html() + "</option>";
+        else
+            htmlOption += "<option value='" + x.valueId + "' >" + $("<div/>").text(x.labelName).html() + "</option>";
+    })
+    return "<select class='form-control slbTrangThai' name='iTrangThai'>" + htmlOption + "</option>";
+}
 function ResetChangePage(iCurrentPage = 1) {
     data_search = {};
     _paging.CurrentPage = iCurrentPage;
@@ -130,7 +140,6 @@ function DeleteData(id) {
             }
         }
     })
-
 }
 function ViewShowChoiceBaoCao() {
     if ($('.list-group-content').is(':visible')) {
@@ -208,11 +217,14 @@ function onInBaoCao(type_xuatbaocao) {
         var tieuDe2 = encodeURIComponent($.trim($('#idtieude2').val()));
 
         var dvt = $('#iDonViTinh').val();
+        if (dvt == 1) {
+            var txtMoneyVnd = ($.trim($("input[name=txtMoneyVnd]").val()));
+        }
         if (type_baocao == 1 || type_baocao == 2) {
             for (i = 0; i < arrIdDeNghiThanhToan.length; i++) {
                 var idThanhtoan = arrIdDeNghiThanhToan[i];
                 arrLink.push("/QLNH/DeNghiThanhToan/ExportGiayDeNghiThanhToan?idThanhtoan=" + idThanhtoan + "&idPhongBan=" + idPhongBan + "&sNoiDung=" + sNoiDung + "&idDonVi=" + idDonVi + "&tieuDe1=" + tieuDe1 + "&tieuDe2=" + tieuDe2
-                    + "&dvt=" + dvt + "&type=" + type_baocao + "&ext=" + type_xuatbaocao);
+                + "&dvt=" + dvt + "&txtMoneyVnd=" + txtMoneyVnd + "&type=" + type_baocao + "&ext=" + type_xuatbaocao);
             }
         }
         if (type_baocao == 3) {
@@ -247,7 +259,6 @@ function onInBaoCao(type_xuatbaocao) {
     else {
         showErr(ERROR);
     }
-
 }
 
 function ValidateInBaoCao() {

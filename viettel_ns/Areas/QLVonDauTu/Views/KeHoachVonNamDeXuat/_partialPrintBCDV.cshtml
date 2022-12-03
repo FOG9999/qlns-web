@@ -11,6 +11,17 @@
             top: 0;
             z-index: 1;
         }
+
+    #search {
+        width: 100%; /* Full-width */
+        font-size: 14px; /* Increase font-size */
+        padding: 6px 15px 6px 20px; /* Add some padding */
+        border: 1px solid #ddd; /* Add a grey border */
+        /*margin-bottom: 12px;*/ /* Add some space below the input */
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
 </style>
 <div class="form-group">
     <h4 class="color-text-red">Thông tin báo cáo:</h4>
@@ -21,33 +32,77 @@
 <div class="form-group row">
     <div class="col-sm-4 form-group">
         <div class="col-sm-12 form-group">
-            <label for="txt_LoaiCongTrinh">Loại công trình</label>
+            <label for="iIdLoaiChungTu">Loại chứng từ</label>
             @Helpers.Required()
-            @Html.DropDownList("iID_LoaiCongTrinhTH", (SelectList)(ViewBag.ListLoaiCongTrinh), new { @class = "form-control", @id = "iID_LoaiCongTrinhTH" })
+            <select id="iIdLoaiChungTu" name="iIdLoaiChungTu" class="form-control">
+                <option value="1" selected>Gốc</option>
+                <option value="2">Điều chỉnh</option>
+            </select>
         </div>
+
+        <div id="divMauBaoCao" class="col-sm-12 form-group" style="display:none">
+            <label for="iIdMauBaoCao">Mẫu báo cáo</label>
+            @Helpers.Required()
+            <select id="iIdMauBaoCao" name="iIdMauBaoCao" class="form-control">
+                <option value="1" selected>BM03/TT268 - Ngân sách quốc phòng</option>
+                <option value="2">BM04/TT268 - Ngân sách khác</option>
+            </select>
+        </div>
+
         <div class="col-sm-12 form-group">
             <label for="txtGiaiDoanTu">Năm kế hoạch</label>
             @Helpers.Required()
             <input type="text" id="iNamKeHoach" name="iGiaiDoanTu" class="form-control yearFormat" value="@Model.iNamKeHoach" maxlength="4" />
         </div>
-        <div class="col-sm-12 form-group">
-            <label for="txt_DonViTinh">Đơn vị tính</label>
-            @Helpers.Required()
-            @Html.DropDownList("ValueItem", (SelectList)(ViewBag.LstDonViTinh), new { @class = "form-control", @id = "ValueItem" })
-        </div>
+
         <div class="col-sm-12 form-group" id="divNguonVon">
             <label for="txtNguonVon">Nguồn vốn</label>
             @Helpers.Required()
             @Html.DropDownList("iID_MaNguonNganSach", (SelectList)(ViewBag.LstNguonVon), new { @class = "form-control", @id = "iID_MaNguonNganSach" })
         </div>
+
+        <div class="col-sm-12 form-group">
+            <label for="txt_LoaiCongTrinh">Loại công trình</label>
+            @Helpers.Required()
+            @Html.DropDownList("iID_LoaiCongTrinh", (SelectList)(ViewBag.ListLoaiCongTrinh), new { @class = "form-control", @id = "iID_LoaiCongTrinh" })
+        </div>
+
+
+        <div id="divCongTrinh" class="col-sm-12 form-group">
+            <label for="iIdCongTrinh">Công trình</label>
+            @Helpers.Required()
+            <select id="iIdCongTrinh" name="iIdCongTrinh" class="form-control">
+                <option value="0" selected>--Tất cả--</option>
+                <option value="1">Khởi công mới</option>
+                <option value="2">Chuyển tiếp</option>
+            </select>
+        </div>
+
+        <div class="col-sm-12 form-group">
+            <label for="txt_DonViTinh">Đơn vị tính</label>
+            @Helpers.Required()
+            @Html.DropDownList("ValueItem", (SelectList)(ViewBag.LstDonViTinh), new { @class = "form-control", @id = "ValueItem" })
+        </div>
+
+        <div class="col-sm-12 form-group">
+            <label for="txt_TieuDe1">Tiêu đề 1</label>
+            <input type="text" required id="txt_TieuDe1" name="txt_TieuDe1" class="form-control" value="KẾ HOẠCH ĐẦU TƯ VỐN NĂM ...." maxlength="500" />
+        </div>
+        <div class="col-sm-12 form-group">
+            <label for="txt_TieuDe2">Tiêu đề 2</label>
+            <input type="text" required id="txt_TieuDe2" name="txt_TieuDe2" class="form-control" value="(Kèm theo Báo cáo số ...... ngày ... tháng ... năm ...)" maxlength="500" />
+        </div>
     </div>
     <div class="col-sm-4 form-group">
-        <div class="col-sm-12 tableFixHead" id="">
+        <div class="col-sm-12 tableFixHead" style="height:450px" id="">
             @{
+                <input type="text" id="search" onkeyup="handleSearch()" placeholder="Tìm kiếm đơn vị ">
                 <table class="table table-bordered" id="tblListDonViQuanLy">
                     <thead>
-                    <th><input type="checkbox" name="cbAll_DVQL" class="cbAll_DVQL" /></th>
-                    <th width="90%">Đơn vị</th>
+                        <tr>
+                            <th><input type="checkbox" name="cbAll_DVQL" class="cbAll_DVQL " /></th>
+                            <th width="90%">Đơn vị</th>
+                        </tr>
                     </thead>
                     <tbody>
                         @{
@@ -55,7 +110,7 @@
                             {
                                 <tr style="cursor: pointer">
                                     <td align="center"><input type="checkbox" name="cb_DVQL" class="cb_DVQL" value="@item.iID_MaDonVi" /></td>
-                                    <td align="left">@item.sTen</td>
+                                    <td align="left">@(item.iID_MaDonVi + "-"+ item.sTen)</td>
                                 </tr>
                             }
                         }
@@ -64,157 +119,125 @@
             }
         </div>
     </div>
-    @{
-        if (ViewBag.isStatus == "3")
-        {
-            <div class="col-sm-2 tableFixHead" id="">
-                <table class="table table-bordered" id="tblListDMNguonNganSachTH">
+
+    <div class="col-sm-4 form-group" id="divTblNguonVon" style="display:none">
+        <div class="col-sm-12 tableFixHead" id="">
+            @{
+                <table class="table table-bordered" id="tblListNguonVon">
                     <thead>
                     <th><input type="checkbox" name="cbAll_NguonVon" class="cbAll_NguonVon" /></th>
                     <th width="90%">Nguồn vốn</th>
                     </thead>
                     <tbody>
                         @{
-                            foreach (var item in Model.lstDMNguonNganSach)
+                            foreach (var item in (SelectList)ViewBag.LstNguonVon)
                             {
-                                if (@item.iID_MaNguonNganSach != 1)
+                                if (item.Value != "1")
                                 {
                                     <tr style="cursor: pointer">
-                                        <td align="center"><input type="checkbox" name="cb_NguonVonModal" class="cb_NguonVonModal" value="@item.iID_MaNguonNganSach" /></td>
-                                        <td align="left">@item.sTen</td>
+                                        <td align="center"><input type="checkbox" name="cb_NguonVon" class="cb_NguonVon" value="@item.Value" /></td>
+                                        <td align="left">@item.Text</td>
                                     </tr>
                                 }
-
                             }
                         }
                     </tbody>
                 </table>
-            </div>
-
-            <div class="col-sm-2 form-group">
-                <div class="row form-group">
-                    <div class="col-sm-12">
-                        <label for="txt_TieuDe1">Tiêu đề 1</label>
-                        <input type="text" required id="txt_TieuDe1" name="txt_TieuDe1" class="form-control" value="KẾ HOẠCH ĐẦU TƯ VỐN NĂM ...." maxlength="500" />
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-sm-12">
-                        <label for="txt_TieuDe2">Tiêu đề 2</label>
-                        <input type="text" required id="txt_TieuDe2" name="txt_TieuDe2" class="form-control" value="(Kèm theo Báo cáo số ...... ngày ... tháng ... năm ...)" maxlength="500" />
-                    </div>
-                </div>
-            </div>
-        }
-        else
-        {
-            <div class="col-sm-4 form-group">
-                <div class="row form-group">
-                    <div class="col-sm-12">
-                        <label for="txt_TieuDe1">Tiêu đề 1</label>
-                        <input type="text" required id="txt_TieuDe1" name="txt_TieuDe1" class="form-control" value="KẾ HOẠCH ĐẦU TƯ VỐN NĂM ...." maxlength="500" />
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-sm-12">
-                        <label for="txt_TieuDe2">Tiêu đề 2</label>
-                        <input type="text" required id="txt_TieuDe2" name="txt_TieuDe2" class="form-control" value="(Kèm theo Báo cáo số ...... ngày ... tháng ... năm ...)" maxlength="500" />
-                    </div>
-                </div>
-            </div>
-        }
-
-    }
-
+            }
+        </div>
+    </div>
 </div>
 
 <script>
     $(document).ready(function () {
-        var isStatus = $("#txtStatusReport").val();
-        if (isStatus == "2") {
-            $('#iID_MaNguonNganSach').attr('disabled', true);
-        }
-        if (isStatus == "3") {
-            /*$('#iID_MaNguonNganSach').find('option').get(0).remove();*/
-            $('#divNguonVon').css("display", "none");
-        }
-    });
-    function printBCDV() {
-        var data = {};
-        data.iID_DonViQuanLyID = $("#iID_DonViQuanLyID").val();
-        data.iID_KeHoach5Nam_DeXuatID = $("#iID_KeHoach5Nam_DeXuatID").val();
-
-        data.iID_LoaiCongTrinh = $("#iID_LoaiCongTrinhTH").val();
-        var strIdLoaiCongTrinh = "";
-        if (data.iID_LoaiCongTrinh == GUID_EMPTY) {
-            $("#iID_LoaiCongTrinh option").each(function () {
-                if (strIdLoaiCongTrinh == "") {
-                    strIdLoaiCongTrinh += this.value;
-                } else {
-                    strIdLoaiCongTrinh += "," + this.value;
-                }
-            });
-            data.iID_LoaiCongTrinh = strIdLoaiCongTrinh;
-        }
-
-        data.txt_TieuDe1 = $("#txt_TieuDe1").val();
-        data.txt_TieuDe2 = $("#txt_TieuDe2").val();
-        data.txt_TieuDe3 = $("#txt_TieuDe3").val();
-
-        data.fDonViTinh = $("#ValueItem").val();
-        data.sDonViTinh = $("#ValueItem option:selected").text();
-        data.iIDNguonVon = $("#iID_MaNguonNganSach").val();
-        data.sTenNguonVon = $("#iID_MaNguonNganSach option:selected").text();
-        data.iNamKeHoach = $("#iNamKeHoach").val();
-
-        var arrIdNguonVon = [];
-        //$("#tblListDMNguonNganSachTH input[type=checkbox]:checked").each(function () {
-        //    var rowValue = $(this).val();
-        //    if (rowValue != 'on') {
-        //        arrIdNguonVon.push(rowValue);
-        //    }
-        //});
-        var id_NguonVon = $("#iID_MaNguonNganSach option:selected").val();
-        arrIdNguonVon.push(id_NguonVon);
-
-        var arrDonVi = [];
-        $("#tblListDonViQuanLy input[type=checkbox]:checked").each(function () {
-            var rowValue = $(this).val();
-            if (rowValue != 'on') {
-                arrDonVi.push(rowValue);
-            }
+        $("#iIdLoaiChungTu").on("change", function () {
+            ChangeUI();
         });
+        $("#iIdMauBaoCao").on("change", function () {
+            ChangeUI();
+        });
+    });
 
-        if (!ValidateDataBCDV(data, arrIdNguonVon, arrDonVi)) {
-            return false;
-        }
-
-        exportBCTheoDonVi(data, arrIdNguonVon, arrDonVi);
-    }
-
-    function ValidateDataBCDV(data, arrIdNguonVon, arrDonVi) {
-        var Title = 'Lỗi in báo cáo theo đơn vị';
-        var Messages = [];
-
-        if (data.iID_LoaiCongTrinh == null || data.iID_LoaiCongTrinh == "") {
-            Messages.push("Loại công trình chưa chọn !");
-        }
-
-        var isStatus = $("#txtStatusReport").val();
-
-        if (isStatus == "1" || isStatus == "2") {
-            if (data.iIDNguonVon == null || data.iIDNguonVon == "") {
-                Messages.push("Nguồn vốn chưa chọn !");
-            }
+    function ChangeUI() {
+        var iIdLoaiChungTu = $("#iIdLoaiChungTu").val();
+        $("#divTblNguonVon").hide();
+        $("#divNguonVon").show();
+        if (iIdLoaiChungTu == "1") {
+            $("#divCongTrinh").show();
+            $("#divMauBaoCao").hide();
         }
         else {
-            if (arrIdNguonVon.length == 0) {
-                Messages.push("Nguồn vốn chưa chọn !");
+            $("#divCongTrinh").hide();
+            $("#divMauBaoCao").show();
+            if ($("#iIdMauBaoCao").val() == "2") {
+                $("#divNguonVon").hide();
+                $("#divTblNguonVon").show();
             }
         }
+    }
 
-        if (arrDonVi.length == 0) {
-            Messages.push("Đơn vị quản lý chưa chọn !");
+
+    function ValidateDataBCDV(arrIdNguonVon, arrIdDVQL) {
+        var Title = 'Lỗi in báo cáo theo đơn vị';
+        var Messages = [];
+        var obj = {};
+
+        obj.iLoaiChungTu = $("#iIdLoaiChungTu").val();
+        obj.iIdBaoCaoMau = $("#iIdMauBaoCao").val();
+        obj.iNamKeHoach = $("#iNamKeHoach").val();
+        obj.iIDNguonVon = $("#iID_MaNguonNganSach").val();
+        obj.iID_LoaiCongTrinh = $("#iID_LoaiCongTrinh").val();
+        obj.iIdCongTrinh = $("#iIdCongTrinh").val();
+        obj.fDonViTinh = $("#ValueItem").val();
+        obj.sDonViTinh = $("#ValueItem option:selected").text();
+        obj.txt_TieuDe1 = $("#txt_TieuDe1").val();
+        obj.txt_TieuDe2 = $("#txt_TieuDe2").val();
+        if (obj.iLoaiChungTu == null || obj.iLoaiChungTu == "") {
+            Messages.push("Loại chứng từ chưa chọn !");
+        }
+        else {
+            if (arrIdDVQL == null || arrIdDVQL == []) {
+                Messages.push("Đơn vị chưa chọn !");
+            }
+            if (obj.iNamKeHoach == null || obj.iNamKeHoach == "") {
+                Messages.push("Năm kế hoạch chưa chọn !");
+            }
+
+            if (obj.iLoaiChungTu == "1") {
+                obj.iIdBaoCaoMau = null
+                if (obj.iIdCongTrinh == null || obj.iIdCongTrinh == "") {
+                    Messages.push("Công trình chưa chọn !");
+                }
+            }
+            else {
+                obj.iIdCongTrinh = null;
+                if (obj.iIdBaoCaoMau == null || obj.iIdBaoCaoMau == "") {
+                    Messages.push("Mẫu báo cáo chưa chọn !");
+                }
+            }
+            if (obj.iIdBaoCaoMau == "2" && obj.iLoaiChungTu == "2") {
+                if (arrIdNguonVon == null || arrIdNguonVon == []) {
+                    Messages.push("Nguồn vốn chưa chọn !");
+                }
+            }
+            else {
+                if (obj.iIDNguonVon == null || obj.iIDNguonVon == "") {
+                    Messages.push("Nguồn vốn chưa chọn !");
+                }
+            }
+
+            if (obj.iID_LoaiCongTrinh == null || obj.iID_LoaiCongTrinh == "") {
+                Messages.push("Loại công trình chưa chọn !");
+            }
+            if (obj.fDonViTinh == null || obj.fDonViTinh == "") {
+                Messages.push("Đơn vị tính chưa chọn !");
+            }
+            if (obj.txt_TieuDe1 == null || obj.txt_TieuDe1 == "") {
+                Messages.push("Tiêu đề 1 chưa nhập !");
+            }
+            if (obj.txt_TieuDe1 == null || obj.txt_TieuDe1 == "") {
+                Messages.push("Tiêu đề 2 chưa nhập !");
+            }
         }
 
         if (Messages != null && Messages != undefined && Messages.length > 0) {
@@ -226,11 +249,21 @@
                     $("#divModalConfirm").html(data);
                 }
             });
+            return null;
+        }
+        return obj;
+    }
+
+    function printBCDV(isPdf) {
+        var arrIdDVQL = GetDonViBCDV();
+        var arrIdNguonVon = GetNguonVonBCDV();
+        var data = ValidateDataBCDV(arrIdNguonVon, arrIdDVQL);
+        if (data == null) {
             return false;
         }
-
-        return true;
+        ExportBaoCao(data, arrIdNguonVon, arrIdDVQL, false, isPdf);
     }
+
 </script>
 <script type="text/javascript" src="/Scripts/js/js_app.js"></script>
 <script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>

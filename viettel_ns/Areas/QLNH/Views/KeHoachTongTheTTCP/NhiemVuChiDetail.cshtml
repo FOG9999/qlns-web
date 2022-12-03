@@ -17,7 +17,7 @@
 <hr class="bg-gray" />
 <div>
     <span>
-        Kế hoạch giai đoạn:
+        Quyết định giai đoạn:
         @if (Model.iLoai.HasValue)
         {
             if (Model.iLoai.Value == 1)
@@ -30,7 +30,7 @@
             }
         }
     </span><br>
-    <span>Kế hoạch tổng thể Thủ tướng Chính phủ phê duyệt: <span style="color: red">@Html.Raw(Html.Encode(Model.sSoKeHoach)) @(Model.dNgayKeHoach.HasValue ? ("- " + Model.dNgayKeHoach.Value.ToString("dd/MM/yyyy")) : "")</span></span>
+    <span>Quyết định tổng thể Thủ tướng Chính phủ phê duyệt: <span style="color: red">@Html.Raw(Html.Encode(Model.sSoKeHoach)) @(Model.dNgayKeHoach.HasValue ? ("- " + Model.dNgayKeHoach.Value.ToString("dd/MM/yyyy")) : "")</span></span>
 </div>
 
 <table class="table table-bordered mt-4" id="tblDetailKHTongTheTTCPList">

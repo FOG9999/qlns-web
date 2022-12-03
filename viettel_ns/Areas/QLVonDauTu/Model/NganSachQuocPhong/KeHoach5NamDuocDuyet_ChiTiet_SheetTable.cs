@@ -72,6 +72,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 noMappingProps.Add("sTenNganSach");
                 noMappingProps.Add("sThoiGianThucHien");
                 noMappingProps.Add("sDiaDiem");
+                noMappingProps.Add("sDonVi");
                 foreach (VDT_KHV_KeHoach5Nam_ChiTiet item in listSaved)
                 {
                     DataRow row = table.NewRow();
@@ -230,7 +231,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     // cot fix
                     new SheetColumn(columnName: "sTenLoaiCongTrinh", header: "Loại công trình", columnWidth:150, align: "left", isFixed: true, hasSearch: true, isReadonly: true),
                     new SheetColumn(columnName: "sTen", header: "Tên dự án", columnWidth:150, align: "left", isFixed: true, hasSearch: true, isReadonly: true),
-                    new SheetColumn(columnName: "sTenDonViQL", header: "Đơn vị thực hiện dự án", columnWidth:150, align: "left", isFixed: true, hasSearch: true, dataType: 3, isReadonly: true),
+                    //new SheetColumn(columnName: "sTenDonViQL", header: "Đơn vị thực hiện dự án", columnWidth:150, align: "left", isFixed: true, hasSearch: true, dataType: 3, isReadonly: true),
+                    new SheetColumn(columnName: "sDonVi", header: "Đơn vị", columnWidth:150, align: "left", isFixed: true, hasSearch: true, dataType: 3, isReadonly: true),
                     new SheetColumn(columnName: "sDiaDiem", header: "Địa điểm thực hiện", columnWidth:150, align: "left", isFixed: true, hasSearch: true, isReadonly: true),
                     new SheetColumn(columnName: "sThoiGianThucHien", header: "Thời gian thực hiện", columnWidth:150, align: "center", isFixed: true, hasSearch: false, isReadonly: true),
                     new SheetColumn(columnName: "sTenNganSach", header: "Nguồn vốn", columnWidth:150, align: "left", isFixed: true, hasSearch: false, isReadonly: true),
@@ -252,7 +254,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     new SheetColumn(columnName: "sMauSac", isHidden: true),
                     new SheetColumn(columnName: "sFontColor", isHidden: true),
                     new SheetColumn(columnName: "sFontBold",isHidden: true),
-                    new SheetColumn(columnName: "iID_ParentID",isHidden: true)
+                    new SheetColumn(columnName: "iID_ParentID",isHidden: true),
+                    new SheetColumn(columnName: "iID_DonViID", isHidden: true),
                 };
 
             #endregion

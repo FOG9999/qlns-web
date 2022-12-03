@@ -143,26 +143,11 @@ function GetListChungTu() {
                 });
 
                 if (iLoaiChungTu == 1) {
-                    // trường hợp thêm mới
-                    if ($("#iIdDuToanId").val() == '') {
-                        $("#iIdDuToanId").val($("input[name=rd_ChungTu]:checked").val());
-                    }
-                    // trường hợp update
-                    $("input[name=rd_ChungTu]:checked").val($("#iIdDuToanId").val());
+                    $("#iIdDuToanId").val($("input[name=rd_ChungTu]:checked").val());  
                 } else if (iLoaiChungTu == 2) {
-                    // trường hợp thêm mới
-                    if ($("#iIdQDDauTuId").val() == '') {
-                        $("#iIdQDDauTuId").val($("input[name=rd_ChungTu]:checked").val());
-                    }
-                    // trường hợp update
-                    $("input[name=rd_ChungTu]:checked").val($("#iIdQDDauTuId").val());
+                    $("#iIdQDDauTuId").val($("input[name=rd_ChungTu]:checked").val());
                 } else {
-                    // trường hợp thêm mới
-                    if ($("#iID_ChuTruongDauTuID").val() == '') {
-                        $("#iID_ChuTruongDauTuID").val($("input[name=rd_ChungTu]:checked").val());
-                    }
-                    // trường hợp update
-                    $("input[name=rd_ChungTu]:checked").val($("#iID_ChuTruongDauTuID").val());
+                    $("#iID_ChuTruongDauTuID").val($("input[name=rd_ChungTu]:checked").val());
                 }
                 var lstChungTu = [];
                 $.each($("input[name=rd_ChungTu]:checked"), function (index, item) {
@@ -756,7 +741,7 @@ function getGiaTriGoiThauHangMuc(hm) {
 // isAddingToItemsChungTuGoiThau: nếu đang cập nhật itemschungtuGoithau -> true
 function GetHangMucGoiThauDetail(iIdGoiThau, iIdChiPhi, isAddingToItemsChungTuGoiThau) {
     $("#iIdChiPhiChoose").val(iIdChiPhi);
-    var lstNguonVon = $.map(itemsChungTu[2], function (n) { return n.iID_NguonVonID == 0 && n.iID_ChiPhiID == iIdChiPhi && n.iID_HangMucID != null ? n : null });
+    var lstHangMuc = ($.map(itemsChungTu[2], function (n) { return n.iID_NguonVonID == 0 && n.iID_ChiPhiID == iIdChiPhi && n.iID_HangMucID != null ? n : null })).sort(sortHangMucByMaOrder);
     if (!isAddingToItemsChungTuGoiThau) {
         $("#tblHangMucChinh tbody").css("display", "block");
     }
@@ -770,7 +755,7 @@ function GetHangMucGoiThauDetail(iIdGoiThau, iIdChiPhi, isAddingToItemsChungTuGo
     } else {
         arrHangMuc = lstChungTuGoiThau[iIdGoiThau][2];
     }
-    lstNguonVon.forEach(function (item) {
+    lstHangMuc.forEach(function (item) {
         // nếu hạng mục này đã được check cho gói thầu khác, thì sẽ k cho hiển thị 
         if (!checkIfHangMucIsCheckedForOtherGoiThau(item.iID_HangMucID, iIdGoiThau)) {
             var parentIndex = arrHangMuc.map(ele => ele.iID_HangMucID).indexOf(item.iID_ParentId);
@@ -1526,4 +1511,10 @@ function isExistGoiThau(iIdGoiThau) {
     });
 
     return countNguonVon > 0;
+}
+
+function sortHangMucByMaOrder(a, b) {
+    var currentMaOrder = a.sMaOrder.toLowerCase();
+    var nextMaOrder = b.sMaOrder.toLowerCase();
+    return ((currentMaOrder < nextMaOrder) ? -1 : ((currentMaOrder > nextMaOrder) ? 1 : 0));
 }

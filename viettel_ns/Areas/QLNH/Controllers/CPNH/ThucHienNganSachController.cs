@@ -152,7 +152,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             ViewBag.ListDVUSD = lstDonViUSD;
 
             var donvi = _nganSachService.GetDonViById(PhienLamViec.NamLamViec.ToString(), iDonvi.ToString());
-            ViewBag.sTenDonVi = donvi != null ? iDonvi != Guid.Empty ? donvi.iID_MaDonVi + "-" + donvi.sTen : "Tất cả đơn vị" : string.Empty;
+            ViewBag.sTenDonVi = donvi != null ? iDonvi != Guid.Empty ? donvi.iID_MaDonVi + " - " + donvi.sTen : "Tất cả đơn vị" : string.Empty;
             ViewBag.tabTable = tabTable;
             ViewBag.iTuNam = iTuNam;
             ViewBag.iDenNam = iDenNam;
@@ -169,9 +169,10 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
                         iGiaiDoanTu = x.iGiaiDoanTu,
                         iGiaiDoanDen = x.iGiaiDoanDen
                     }).ToList();
-            ViewBag.iTo = lstGiaiDoan != null ? ((lstGiaiDoan.Count*5 + 10) / _columnCountBC1) + 1 : 1;
+            ViewBag.iTo = lstGiaiDoan != null ? (((lstGiaiDoan.Count * 5 + 10) % _columnCountBC1) == 0 ? ((lstGiaiDoan.Count * 5 + 10) / _columnCountBC1) : (((lstGiaiDoan.Count*5 + 10) / _columnCountBC1) + 1)) : 1;
             return PartialView("_modalInBaoCao");
         }
+
         public ActionResult ExportExcelBaoCao(
             string ext = "xls",
             int dvt = 1,
@@ -195,14 +196,14 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
 
             string fileName = string.Format("{0}.{1}", "BaoCaoTinhHinhThucHienNganSach", ext);
             List<CPNHThucHienNganSach_Model> list = _cpnhService.getListThucHienNganSachModels(tabTable, iTuNam, iDenNam, iDonvi, iQuyList, iNam, slbDonViUSD != null ? slbDonViUSD.Value : 1, slbDonViVND != null ? slbDonViVND.Value : 1).ToList();
-            ExcelFile xls = null;
+            ExcelFile xls;
             if (tabTable == 1 )
             {
                 xls = TaoFileBaoCao1(dvt, to , list, tabTable, iQuyList, iNam, txtTieuDe1, txtTieuDe2, sTenDonViCapTren, sTenDonViCapDuoi, slbDonViUSD , slbDonViVND);
             }
             else
             {
-                to = iInMotTo != null ? iInMotTo.Value : 0 ;
+                to = iInMotTo != null ? iInMotTo.Value : 0;
                 xls = TaoFileBaoCao2(dvt, to , list, tabTable, iTuNam, iDenNam, txtTieuDe1, txtTieuDe2,
                     sTenDonViCapTren, sTenDonViCapDuoi, slbDonViUSD, slbDonViVND, InToHai);
             }
@@ -220,7 +221,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.CPNH
             FlexCelReport fr = new FlexCelReport();
 
             int columnStart = _columnCountBC1 * (to - 1);
-                        List<CPNHThucHienNganSach_Model> listData = getList(list , null, tabTable);
+            List<CPNHThucHienNganSach_Model> listData = getList(list , null, tabTable);
             fr.AddTable<CPNHThucHienNganSach_Model>("dt", listData);
             fr.SetValue(new
             {

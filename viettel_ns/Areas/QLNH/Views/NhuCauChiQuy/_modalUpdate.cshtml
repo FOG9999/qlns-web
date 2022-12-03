@@ -4,6 +4,7 @@
 <div class="modal-body">
     <input type="hidden" id="iID_NhuCauChiQuyModal" value="@Model.ID">
     <input type="hidden" id="isdieuchinh" value="@ViewBag.dieuchinh">
+    <input type="hidden" id="dNgayTao" value="@Model.dNgayTao">
     <div class="form-group">
         <div class="form-group row">
             <div class="col-sm-6">
@@ -42,6 +43,7 @@
             </div>
             <div class="col-sm-6">
                 <label for="txtsMotaTyGia">Quý</label>
+                @Helpers.Required()
                 @Html.DropDownList("iQuy", new SelectList(ViewBag.ListQuyTypes, "Value", "Text", Model.iQuy), new { @class = "form-control", @id = "iQuyListAdd" })
             </div>
         </div>

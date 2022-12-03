@@ -96,6 +96,7 @@ namespace Viettel.Models.QLVonDauTu
         public string fUocThucHien { get; set; }
         public string fThuHoiVonUngTruoc { get; set; }
         public string fThanhToan { get; set; }
+        public string sLoaiDuAn { get; set; }
     }
 
     public class VdtKhvVonNamDeXuatDieuChinhOrtherBudgetModel : KHVNDXPrintDataExportModel
@@ -155,6 +156,12 @@ namespace Viettel.Models.QLVonDauTu
         public Guid? IdDuAn { get; set; }
         public int? IdNguonVon { get; set; }
         public int? LoaiCongTrinh { get; set; }
+        public double VonBoTri5Nam { get; set; }
+        public string dNgayPheDuyet {
+            
+            get => NgayPheDuyet.HasValue ? NgayPheDuyet.Value.ToString("dd/MM/yyyy") : string.Empty;
+                }
+
     }
 
     public class KHVNDXExportModel : KHVNDXPrintDataExportModel
@@ -186,6 +193,7 @@ namespace Viettel.Models.QLVonDauTu
         public IEnumerable<NS_DonVi> lstDonViQuanLy { get; set; }
         public int iNamKeHoach { get; set; }
         public Guid iID_DonViQuanLyID { get; set; }
+        public string iID_MaDonViQuanLyID { get; set; }
         public Guid iID_KeHoachVonNam_DeXuatID { get; set; }
         public string iID_LoaiCongTrinh { get; set; }
         public string txt_TieuDe1 { get; set; }
@@ -195,6 +203,9 @@ namespace Viettel.Models.QLVonDauTu
         public double? fDonViTinh { get; set; }
         public int iIDNguonVon { get; set; }
         public string sTenNguonVon { get; set; }
+        public int iIdBaoCaoMau { get; set; }
+        public string iLoaiChungTu { get; set; }
+        public string iIdCongTrinh { get; set; }
     }
 
     public class VdtKhvKeHoach5NamDeXuatExportModel

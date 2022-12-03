@@ -62,20 +62,20 @@
             padding-bottom: 10px;
             background: white;
         ">
-            <input type="text" id="search" onkeyup="handleSearch()" placeholder="Tìm kiếm đơn vị thực hiện dự án">
+            <input type="text" id="search" onkeyup="handleSearch()" placeholder="Tìm kiếm đơn vị quản lý">
         </div>
         <table class="table table-bordered" id="tblListDonViThucHienDuAnDd">
             <thead>
             <th style="position: sticky; top: 40px; z-index: 1;"><input type="checkbox" name="cbAll_DVTHDA" class="cbAll_DVTHDA" /></th>
-            <th width="90%" style="position: sticky; top: 40px; z-index: 1;">Đơn vị thực hiện dự án</th>
+            <th width="90%" style="position: sticky; top: 40px; z-index: 1;">Đơn vị</th>
             </thead>
             <tbody>
                 @{
-                    foreach (var item in Model.lstDonViThucHienDuAn)
+                    foreach (var item in Model.lstDonViQuanLy)
                     {
                         <tr style="cursor: pointer">
-                            <td align="center"><input type="checkbox" name="cb_DVTHDA" class="cb_DVTHDA" value="@item.iID_MaDonVi" /></td>
-                            <td align="left">@item.sTenDonVi</td>
+                            <td align="center"><input type="checkbox" name="cb_DVTHDA" class="cb_DVTHDA" value="@item.iID_Ma" /></td>
+                            <td align="left">@item.sTen</td>
                         </tr>
                     }
                 }

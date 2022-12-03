@@ -4,13 +4,13 @@
 @{
     foreach (var item in Model)
     {
-    <tr>
-        <td>
-            <input type="checkbox" data-idduan="@item.iID_DuAnID" />
-        </td>
-        <td>@item.sMaDuAn</td>
-        <td>@item.sTenDuAn</td>
-        <td>@item.sTenLoaiDuAn</td>
-    </tr>
+        <tr>
+            <td align="center">
+                <input type="checkbox" data-idduan="@item.iID_DuAnID" class="cb_duan"  />
+            </td>
+            <td>@item.sMaDuAn</td>
+            <td>@item.sTenDuAn</td>
+            <td>@item.sTenLoaiDuAn</td>
+        </tr>
     }
 }

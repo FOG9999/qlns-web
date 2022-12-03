@@ -22,7 +22,6 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
 {
     public class DeNghiThanhToanController : FlexcelReportController
     {
-
         private readonly IQLNHService _qlnhService = QLNHService.Default;
         private readonly INganSachService _nganSachService = NganSachService.Default;
         private const string sFilePathGiayDeNghiThanhToanNgoaiTe = "/Report_ExcelFrom/QLNH/rpt_GiayDeNghi_ThanhToan_NgoaiTe.xlsx";
@@ -31,22 +30,36 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
         private const string sFilePathThongBaoCapKinhPhiNgoaiTe = "/Report_ExcelFrom/QLNH/rpt_ThongBao_ChiNgoaiTe.xlsx";
         private const string sFilePathThongBaoCapKinhPhiTrongNuoc = "/Report_ExcelFrom/QLNH/rpt_ThongBaoChiTrongNuoc.xlsx";
         private const string sControlName = "DeNghiThanhToan";
+        public List<Dropdown_SelectValue> lstDonViTinh= new List<Dropdown_SelectValue>()
+            {
+                new Dropdown_SelectValue()
+                {
+                    Value = 1,
+                    Label = "Nghìn USD"
+                },
+                 new Dropdown_SelectValue()
+                {
+                    Value = 2,
+                    Label = "Nghìn VND"
+                }, new Dropdown_SelectValue()
+            };
+       
+        private List<CPNHNhuCauChiQuy_Model> lstVoucherTypes = new List<CPNHNhuCauChiQuy_Model>()
+        {
+            new CPNHNhuCauChiQuy_Model(){SQuyTypes = "--Tất cả quý--", iQuy = 0},
+            new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý I", iQuy = 1},
+            new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý II", iQuy = 2},
+            new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý III", iQuy = 3},
+            new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý IV", iQuy = 4}
+        };
 
         public ActionResult Index()
         {
             ThongTinThanhToanPagingViewModel tt = new ThongTinThanhToanPagingViewModel();
             tt._paging.CurrentPage = 1;
             tt.Items = _qlnhService.GetAllThongTinThanhToanPaging(ref tt._paging, null, null, null, null, null, null, null, null, null, null, null, null, null);
-            if (tt.Items == null)
-                tt.Items = new List<ThongTinThanhToanModel>();
-            List<CPNHNhuCauChiQuy_Model> lstVoucherTypes = new List<CPNHNhuCauChiQuy_Model>()
-                {
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "--Tất cả quý--", iQuy = 0},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 1", iQuy = 1},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 2", iQuy = 2},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 3", iQuy = 3},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 4", iQuy = 4}
-                };
+            if (tt.Items == null) tt.Items = new List<ThongTinThanhToanModel>();
+
             ViewBag.ListQuyTypes = lstVoucherTypes.ToSelectList("iQuy", "SQuyTypes");
             ViewBag.lstNSDonVi = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec, true, false).ToSelectList("iID_Ma", "sMoTa");
             ViewBag.lstNhiemVuChi = _qlnhService.GetAllNhiemVuChiByDonVi().ToSelectList("ID", "sTenNhiemVuChi");
@@ -62,14 +75,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
             data.sSoDeNghi = HttpUtility.HtmlDecode(data.sSoDeNghi);
             tt._paging.CurrentPage = data._paging.CurrentPage;
             tt.Items = _qlnhService.GetAllThongTinThanhToanPaging(ref tt._paging, data.iID_DonVi, data.sSoDeNghi, data.dNgayDeNghi, data.iLoaiNoiDungChi, data.iLoaiDeNghi, data.iID_ChuDauTuID, data.iID_KHCTBQP_NhiemVuChiID, data.iQuyKeHoach, data.iNamKeHoach, data.iNamNganSach, data.iCoQuanThanhToan, data.iID_NhaThauID, data.iTrangThai);
-            List<CPNHNhuCauChiQuy_Model> lstVoucherTypes = new List<CPNHNhuCauChiQuy_Model>()
-                {
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "--Tất cả quý--", iQuy = 0},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 1", iQuy = 1},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 2", iQuy = 2},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 3", iQuy = 3},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 4", iQuy = 4}
-                };
+
             ViewBag.ListQuyTypes = lstVoucherTypes.ToSelectList("iQuy", "SQuyTypes");
             ViewBag.lstNSDonVi = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec, true, false).ToSelectList("iID_Ma", "sMoTa");
             ViewBag.lstChuDauTu = _qlnhService.GetAllDMChuDauTu().ToSelectList("ID", "sTenChuDauTu");
@@ -96,13 +102,6 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
 
         public ActionResult Insert()
         {
-            List<CPNHNhuCauChiQuy_Model> lstVoucherTypes = new List<CPNHNhuCauChiQuy_Model>()
-                {
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 1", iQuy = 1},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 2", iQuy = 2},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 3", iQuy = 3},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 4", iQuy = 4}
-                };
             ViewBag.ListQuyTypes = lstVoucherTypes.ToSelectList("iQuy", "SQuyTypes");
             ViewBag.lstNSDonVi = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec, true, false).ToList();
             ViewBag.lstNhiemVuChi = _qlnhService.GetAllNhiemVuChiByDonVi().ToSelectList("ID", "sTenNhiemVuChi");
@@ -124,13 +123,6 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
             var lstduan = _qlnhService.GetDADuAn(thanhtoan == null ? null : thanhtoan.iID_KHCTBQP_NhiemVuChiID, thanhtoan == null ? null : thanhtoan.iID_ChuDauTuID);
             var lsthopdong = _qlnhService.GetThongTinHopDong(thanhtoan == null ? null : thanhtoan.iID_KHCTBQP_NhiemVuChiID);
 
-            List<CPNHNhuCauChiQuy_Model> lstVoucherTypes = new List<CPNHNhuCauChiQuy_Model>()
-                {
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 1", iQuy = 1},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 2", iQuy = 2},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 3", iQuy = 3},
-                    new CPNHNhuCauChiQuy_Model(){SQuyTypes = "Quý 4", iQuy = 4}
-                };
             ViewBag.ListQuyTypes = lstVoucherTypes.ToSelectList("iQuy", "SQuyTypes");
             ViewBag.lstNSDonVi = _nganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec, true, false).ToList();
             ViewBag.lstNhiemVuChi = _qlnhService.GetAllNhiemVuChiByDonVi(thanhtoan == null ? null : thanhtoan.iID_DonVi).ToSelectList("ID", "sTenNhiemVuChi");
@@ -140,7 +132,6 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
             ViewBag.lstDonViHuongThu = _qlnhService.GetAllDMNhaThau().ToSelectList("Id", "sTenNhaThau");
             ViewBag.lstHopDong = lsthopdong.ToSelectList("ID", "sTenHopDong"); ;
             ViewBag.lstDuAn = lstduan.ToSelectList("ID", "sTenDuAn");
-
             return View(model);
         }
 
@@ -161,7 +152,6 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
                 {
                     item.sDeNghiCapKyNay_USD = item.fDeNghiCapKyNay_USD != null ? DomainModel.CommonFunction.DinhDangSo(Math.Round(item.fDeNghiCapKyNay_USD.Value, 2).ToString(CultureInfo.InvariantCulture), 2) : String.Empty;
                     item.sPheDuyetCapKyNay_USD = item.fPheDuyetCapKyNay_USD != null ? DomainModel.CommonFunction.DinhDangSo(Math.Round(item.fPheDuyetCapKyNay_USD.Value, 2).ToString(CultureInfo.InvariantCulture), 2) : String.Empty;
-
                 }
             }
 
@@ -452,7 +442,6 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
                 return false;
             }
         }
-
         public JsonResult ConvertNumberToText(string number, bool suffix)
         {
             string sConvert = CommonFunction.NumberToText(Convert.ToInt64(number), suffix);
@@ -506,7 +495,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
             return Print(xls, ext, sFileName);
         }
 
-        public ExcelFile FileGiayDeNghiThanhToan(Guid? idThanhtoan, Guid? idPhongBan, string sNoiDung = "",string idDonVi = "", string tieuDe1 = "", string tieuDe2="", int dvt = 1, int type = 1)
+        public ExcelFile FileGiayDeNghiThanhToan(Guid? idThanhtoan, Guid? idPhongBan, string sNoiDung = "",string idDonVi = "", string tieuDe1 = "",string tieuDe2="", int dvt = 1, int type = 1)
         {
             XlsFile Result = new XlsFile(true);
             string sTiTle = "";
@@ -520,19 +509,13 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
                 sTiTle = "CHI TRONG NƯỚC";
                 Result.Open(Server.MapPath(sFilePathGiayDeNghiThanhToanTrongNuoc));
             }
-
             FlexCelReport fr = new FlexCelReport();
-
             ThongTinThanhToanModel thanhtoan = _qlnhService.GetThongTinThanhToanByID(idThanhtoan);
             NS_PhongBan phongban = _qlnhService.GetAllNSPhongBan().Where(x => x.iID_MaPhongBan == idPhongBan).FirstOrDefault();
-
             NH_DA_HopDong hopdong = _qlnhService.GetThongTinHopDong(thanhtoan.iID_KHCTBQP_NhiemVuChiID.Value).Where(x => x.ID == thanhtoan.iID_HopDongID).FirstOrDefault();
-            string sDuToanDuocDuyetVND = thanhtoan.sHopDongPheDuyet_VND;
-            string sDuToanDuocDuyetUSD = thanhtoan.sHopDongPheDuyet_USD;
-
             List<ThanhToanChiTietViewModel> lst = _qlnhService.GetThongTinThanhToanChiTietById(idThanhtoan).Select(x => new ThanhToanChiTietViewModel
             {
-                STT = x.STT,
+            STT = x.STT,
                 ID = x.ID,
                 iID_ThanhToanID = x.iID_ThanhToanID,
                 sTenNoiDungChi = x.sTenNoiDungChi,
@@ -541,9 +524,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
                 fPheDuyetCapKyNay_USD = x.fPheDuyetCapKyNay_USD,
                 fPheDuyetCapKyNay_VND = x.fPheDuyetCapKyNay_VND,
                 sMucLucNganSach = x.sMucLucNganSach
-
             }).ToList();
-
             string sLoaiKinhPhi = "";
             if (thanhtoan.iLoaiDeNghi == 1)
             {
@@ -557,12 +538,44 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
             {
                 sLoaiKinhPhi = "tạm ứng";
             }
-
+            double? sDuToanDuocDuyetUSD = Double.Parse(thanhtoan.sHopDongPheDuyet_USD);
+            double? sDuToanDuocDuyetVND = Double.Parse(thanhtoan.sHopDongPheDuyet_VND);
             double? fLuyKeVND = (lst.Count == 0) ? null : thanhtoan.fLuyKeVND;
             double? fLuyKeUSD = (lst.Count == 0) ? null : thanhtoan.fLuyKeUSD;
-            sDuToanDuocDuyetVND = (lst.Count == 0) ? null : sDuToanDuocDuyetVND;
-            sDuToanDuocDuyetUSD = (lst.Count == 0) ? null : sDuToanDuocDuyetUSD;
+            double? fBangSoUSD = (lst.Count == 0) ? null : thanhtoan.fChuyenKhoan_BangSo_USD;
+            double? fBangSoVND = (lst.Count == 0) ? null : thanhtoan.fChuyenKhoan_BangSo_VND;
+            double? fTongCTDeNghiCapKyNay_USD = (lst.Count == 0) ? null : thanhtoan.fTongCTDeNghiCapKyNay_USD;
+            double? fTongCTDeNghiCapKyNay_VND = (lst.Count == 0) ? null : thanhtoan.fTongCTDeNghiCapKyNay_VND;
+            double? fTongCtPheDuyetCapKyNay_USD = (lst.Count == 0) ? null : thanhtoan.fTongCtPheDuyetCapKyNay_USD;
+            double? fTongCtPheDuyetCapKyNay_VND = (lst.Count == 0) ? null : thanhtoan.fTongCTPheDuyetCapKyNay_VND;
 
+            if (dvt == 1)
+            {
+                fLuyKeUSD = fLuyKeUSD / 1000;
+                fTongCTDeNghiCapKyNay_USD = fTongCTDeNghiCapKyNay_USD / 1000;
+                fTongCtPheDuyetCapKyNay_USD = fTongCtPheDuyetCapKyNay_USD / 1000;
+                sDuToanDuocDuyetUSD = sDuToanDuocDuyetUSD / 1000;
+                foreach (var item in lst)
+                {
+                    double? fDeNghiCapKyNay_USD = item.fDeNghiCapKyNay_USD;
+                    fDeNghiCapKyNay_USD = fDeNghiCapKyNay_USD / 1000;
+                    item.fDeNghiCapKyNay_USD = fDeNghiCapKyNay_USD;
+                }
+            }
+            else
+            {
+                fLuyKeVND = fLuyKeVND / 1000;
+                fTongCTDeNghiCapKyNay_VND = fTongCTDeNghiCapKyNay_VND / 1000;
+                fTongCtPheDuyetCapKyNay_VND = fTongCtPheDuyetCapKyNay_VND / 1000;
+                sDuToanDuocDuyetVND = sDuToanDuocDuyetVND / 1000;
+                foreach (var item in lst)
+                {
+                    double? fDeNghiCapKyNay_VND = item.fDeNghiCapKyNay_VND;
+                    fDeNghiCapKyNay_VND = fDeNghiCapKyNay_VND / 1000;
+                    item.fDeNghiCapKyNay_VND = fDeNghiCapKyNay_VND;
+                }
+            }
+            
             fr.AddTable<ThanhToanChiTietViewModel>("dt", lst);
             fr.SetValue("sDuToanDuocDuyetVND", sDuToanDuocDuyetVND);
             fr.SetValue("sDuToanDuocDuyetUSD", sDuToanDuocDuyetUSD);
@@ -574,14 +587,15 @@ namespace VIETTEL.Areas.QLNH.Controllers.DanhMucNgoaiHoi
             fr.SetValue("sTieuDe1", tieuDe1);
             fr.SetValue("sTieuDe2", tieuDe2);
             fr.SetValue("sDonViThuHuong", thanhtoan.sTenNhaThau);
-            fr.SetValue("fBangSoVND", thanhtoan.fChuyenKhoan_BangSo_VND.HasValue ? thanhtoan.fChuyenKhoan_BangSo_VND.Value.ToString("###,###") : String.Empty);
+            fr.SetValue("fBangSoVND", fBangSoVND);
+            fr.SetValue("fBangSoUSD", fBangSoUSD);
             fr.SetValue("sBangChu", thanhtoan.sChuyenKhoan_BangChu);
             fr.SetValue("sNganHang", thanhtoan.sNganHang);
             fr.SetValue("sSoTaiKhoan", thanhtoan.sSoTaiKhoan);
-            fr.SetValue("fTongCTDeNghiCapKyNay_USD", thanhtoan.fTongCTDeNghiCapKyNay_USD);
-            fr.SetValue("fTongCTDeNghiCapKyNay_VND", thanhtoan.fTongCTDeNghiCapKyNay_VND);
-            fr.SetValue("fTongCtPheDuyetCapKyNay_USD", thanhtoan.fTongCtPheDuyetCapKyNay_USD);
-            fr.SetValue("fTongCTPheDuyetCapKyNay_VND", thanhtoan.fTongCTPheDuyetCapKyNay_VND);
+            fr.SetValue("fTongCTDeNghiCapKyNay_USD",fTongCTDeNghiCapKyNay_USD);
+            fr.SetValue("fTongCTDeNghiCapKyNay_VND", fTongCtPheDuyetCapKyNay_VND);
+            fr.SetValue("fTongCtPheDuyetCapKyNay_USD", fTongCtPheDuyetCapKyNay_USD);
+            fr.SetValue("fTongCTPheDuyetCapKyNay_VND", fTongCtPheDuyetCapKyNay_VND);
             fr.SetValue("sTiTle", sTiTle);
             fr.SetValue("sNoiDung", sNoiDung);
             fr.SetValue("idDonVi", idDonVi);

@@ -154,7 +154,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         public JsonResult GetHangMucByDuToan(Guid iIdDuAnId, Guid? iIdDuToan = null, bool bIsDieuChinh = false)
         {
             List<VDT_DA_DuToan_HangMuc_ViewModel> lstData = new List<VDT_DA_DuToan_HangMuc_ViewModel>();
-            if ((iIdDuToan == null || iIdDuToan == Guid.Empty) && bIsDieuChinh)
+            if (iIdDuToan == null || iIdDuToan == Guid.Empty)
             {
                 lstData = _qLVonDauTuService.GetListHangMucTheoPheDuyetDuAn(iIdDuAnId);
             }
@@ -192,6 +192,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                 {
                     if (objDuToan.iID_DuToanID == Guid.Empty || bIsDieuChinh)
                     {
+                        bool isExisted = _qLVonDauTuService.CheckExistSoQuyetDinhShare("sSoQuyetDinh", "VDT_DA_DuToan", objDuToan.sSoQuyetDinh);
+                        if (isExisted) return Json(new { isExisted, sMessError = "Số quyết định đã tồn tại!" });
+
                         objDuToan.bIsGoc = true;
                         if (bIsDieuChinh)
                         {
@@ -212,7 +215,18 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                         objDuToan.sUserCreate = Username;
                         objDuToan.iID_DuToanID = Guid.NewGuid();
                         if (!bIsDieuChinh)
+                        {
+                            //lstHangMuc.Select(x => { x.fGiaTriDieuChinh = x.fTienPheDuyet; return x; });
+                            if (lstHangMuc != null)
+                            {
+                                foreach (var hangmuc in lstHangMuc)
+                                {
+                                    hangmuc.fGiaTriDieuChinh = hangmuc.fTienPheDuyet;
+                                }
+                            }
+                           
                             objDuToan.iID_DuToanGocID = objDuToan.iID_DuToanID;
+                        }
 
                         conn.Insert(objDuToan, trans);
                         iID_DuToanID = objDuToan.iID_DuToanID;
@@ -247,6 +261,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                 {
                     trans.Rollback();
                     AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+                    return Json(new { status = false});
+
                 }
 
             }
@@ -409,7 +425,11 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             data.iID_HangMucID = dicHangMucId[item.iID_HangMucID];
             double tryParse = 0;
             data.fTienPheDuyet = Double.TryParse(item.fTienPheDuyet.ToString(), out tryParse) && tryParse > 0 ? item.fTienPheDuyet : 0;
-            data.iID_DuAn_ChiPhi = dicChiPhiId[item.iID_DuAn_ChiPhi];
+            data.iID_DuAn_ChiPhi = item.iID_DuAn_ChiPhi;
+            if (dicChiPhiId.ContainsKey(item.iID_DuAn_ChiPhi))
+            {
+                data.iID_DuAn_ChiPhi = dicChiPhiId[item.iID_DuAn_ChiPhi];
+            }
             data.fGiaTriDieuChinh = item.fGiaTriDieuChinh;
             data.fTienPheDuyetQDDT = item.fTienPheDuyetQDDT;
             return data;

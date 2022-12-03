@@ -13,10 +13,11 @@ using Viettel.Models.QLVonDauTu;
 using Viettel.Services;
 using VIETTEL.Controllers;
 using VIETTEL.Common;
+using VIETTEL.Helpers;
 
 namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
 {
-    public class QLThongTriQuyetToanController : AppController
+    public class QLThongTriQuyetToanController : FlexcelReportController
     {
         IQLVonDauTuService _iQLVonDauTuService = QLVonDauTuService.Default;
         INganSachService _iNganSachService = NganSachService.Default;
@@ -189,47 +190,27 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             return Json(null, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public ActionResult XuatFile()
+        public ActionResult XuatFile(Guid Id)
         {
-            ExcelFile excel = TaoFile();
-            using (MemoryStream stream = new MemoryStream())
-            {
-                excel.Save(stream);
-                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Danh sach thong tri thanh toan.xlsx");
-            }
+            var obj = _iQLVonDauTuService.GetThongTriById(Id.ToString());
+            var lstData = _iQLVonDauTuService.LayDanhSachThongTriXuatFile(Id);
+            XlsFile Result = new XlsFile(true);
+            Result.Open(Server.MapPath(sFilePath));
+            FlexCelReport fr = new FlexCelReport();
+            fr.AddTable<VdtThongTriQuyetToanReportModel>("dt", lstData);
+            fr.SetValue("STenDonVi", obj.TenDonVi);
+            fr.SetValue("iNamThongTri", obj.iNamThongTri);
+            fr.SetValue("sNgayHienTai", string.Format("Ngày {0} tháng {1} năm {2}", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year));
+            fr.SetValue("SumTotal", lstData.Sum(n => n.FSoTien));
+            fr.SetValue("sTienBangChu", DataHelper.NumberToText(lstData.Sum(n => n.FSoTien), true));
+            fr.Run(Result);
+            return Print(Result, "xlsx", "rpt_vdt_thongtriquyettoan.xlsx");
         }
 
         public JsonResult GetChungTuQuyetToanNienDo(Guid? iIdThongTri, string iIdMaDonVi, int iNamThucHien, int iIdNguonVon)
         {
             List<VDT_QT_BCQuyetToanNienDo> lstChungTu = _iQLVonDauTuService.GetQuyetToanNienDoInThongTri(iIdThongTri ?? Guid.Empty, iIdMaDonVi, iNamThucHien, iIdNguonVon).ToList();
             return Json(new { lstChungTu }, JsonRequestBehavior.AllowGet);
-        }
-        public ExcelFile TaoFile()
-        {
-            string sMaDonVi = string.Empty;
-            string sMaThongTri = string.Empty;
-            DateTime? dNgayThongTri = null;
-            int? iNamThongTri = null;
-
-            // get dieu kien tiem kiem
-            if (TempData["sMaDonvi"] != null)
-                sMaDonVi = (string)TempData["sMaDonvi"];
-            if (TempData["sMaThongTri"] != null)
-                sMaThongTri = (string)TempData["sMaThongTri"];
-            if (TempData["dNgayThongTri"] != null)
-                dNgayThongTri = (DateTime?)TempData["dNgayThongTri"];
-            if (TempData["iNamThongTri"] != null)
-                iNamThongTri = (int?)TempData["iNamThongTri"];
-
-            IEnumerable<VDTThongTriModel> listData = _iQLVonDauTuService.LayDanhSachThongTriXuatFile(PhienLamViec.NamLamViec, Username, sMaDonVi, sMaThongTri, iNamThongTri, dNgayThongTri);
-
-            XlsFile Result = new XlsFile(true);
-            Result.Open(Server.MapPath(sFilePath));
-            FlexCelReport fr = new FlexCelReport();
-            fr.AddTable<VDTThongTriModel>("dt", listData);
-            fr.Run(Result);
-            return Result;
         }
 
         [HttpGet]

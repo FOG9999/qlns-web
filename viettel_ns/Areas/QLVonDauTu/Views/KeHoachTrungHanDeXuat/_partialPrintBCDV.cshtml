@@ -100,7 +100,7 @@
 <div class="form-group row">
     <div class="col-sm-9">
         <label for="txt_TieuDe123">Tiêu đề 1</label>
-        <input type="text" required id="txt_TieuDe1_DV" name="txt_TieuDe1" class="form-control" value="KẾ HOẠCH ĐẦU TƯ TRUNG HẠN .... GIAI ĐOẠN ...." maxlength="500" />
+        <input type="text" required id="txt_TieuDe1_DV" name="txt_TieuDe1" class="form-control" value="@ViewBag.TitleHeader1" maxlength="500" />
     </div>
 </div>
 <div class="form-group row">
@@ -112,7 +112,7 @@
 <div class="form-group row">
    <div class="col-sm-9">
         <label for="txt_TieuDe3">Tiêu đề 3</label>
-        <input type="text" required id="txt_TieuDe3_DV" name="txt_TieuDe3" class="form-control" value="(Kèm theo Báo cáo số ...... ngày ... tháng ... năm ...)" maxlength="500" />
+        <input type="text" required id="txt_TieuDe3_DV" name="txt_TieuDe3" class="form-control" value="(Kèm theo Công văn số  ……/CTC-….. ngày  ….. tháng….. năm….)" maxlength="500" />
     </div>
 </div>
 
@@ -124,6 +124,9 @@
             } else {
                 $("#iGiaiDoanDen_DV").val("");
             }
+            var iGiaiDoanTu = $("#iGiaiDoanTu_DV").val();
+            var iGiaiDoanDen = $("#iGiaiDoanDen_DV").val();
+            GetTitleHeader1DV(iGiaiDoanTu, iGiaiDoanDen);
         });
 
         var inputGiaiDoanTu = $('#iGiaiDoanTu_DV');
@@ -258,6 +261,20 @@
         }
 
         return true;
+    }
+
+    function GetTitleHeader1DV(iGiaiDoanTu, iGiaiDoanDen) {
+
+        var titleHeader = "KẾ HOẠCH ĐẦU TƯ TRUNG HẠN NGUỒN NSQP NĂM " + iGiaiDoanTu + " - " + iGiaiDoanDen + " (CÔNG TRÌNH PHỔ THÔNG)";
+        var titleHeaderCt = "DỰ KIẾN KẾ HOẠCH ĐẦU TƯ TRUNG HẠN NGUỒN NSQP GIAI ĐOẠN " + iGiaiDoanTu + " - " + iGiaiDoanDen + " (CÔNG TRÌNH PHỔ THÔNG)";
+
+        var isCt = $("#txtRptCt").val();
+        if (isCt) {
+            $("#txt_TieuDe1_DV").val(titleHeaderCt);
+        } else {
+            $("#txt_TieuDe1_DV").val(titleHeader);
+
+        }
     }
 </script>
 

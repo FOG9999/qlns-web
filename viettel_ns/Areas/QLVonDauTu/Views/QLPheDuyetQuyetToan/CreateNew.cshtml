@@ -121,6 +121,10 @@
                             @Helpers.Required()
                             <select id="iID_DuAnID" class="form-control clearable"></select>
                         </div>
+                        <div class="col-sm-3">
+                            <label for="txt_DeNghiQuyetToan" class="">Đề Nghị quyết toán <span class="require">*</span></label>
+                            <select class="form-control" style="width:100%" id="txt_DeNghiQuyetToan" name="DeNghiQuyetToan"></select>
+                        </div>
                     }
                     else
                     {
@@ -134,24 +138,24 @@
                             <label class="control-label">Dự án</label>
                             <p id="sTenDuAn">@Model.quyetToan.sTenDuAn</p>
                         </div>
+                        <div class="col-sm-3">
+                            <label for="txt_DeNghiQuyetToan" class="">Dề Nghị quyết toán <span class="require">*</span></label>
+                            <select class="form-control disable" style="width:100%" id="txt_DeNghiQuyetToan" name="DeNghiQuyetToan"></select>
+                        </div>
                     }
                     @*<div class="row">
-                <div class="col-sm-3">
-                    <label for="txt_DonViQuanLy">Đơn vị quản lý <span class="require">*</span></label>
-                    @Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), new { @class = "form-control", @id = "iID_DonViQuanLyID" })
-                </div>
-                <div class="col-sm-4">
-                    <label for="txtDuAn">Nội dung</label>
-                    @Helpers.Required()
-                    <select id="iID_DuAnID" class="form-control clearable"></select>
-                </div>
-            </div>*@
+            <div class="col-sm-3">
+                <label for="txt_DonViQuanLy">Đơn vị quản lý <span class="require">*</span></label>
+                @Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), new { @class = "form-control", @id = "iID_DonViQuanLyID" })
+            </div>
+            <div class="col-sm-4">
+                <label for="txtDuAn">Nội dung</label>
+                @Helpers.Required()
+                <select id="iID_DuAnID" class="form-control clearable"></select>
+            </div>
+        </div>*@
                 </div>
                 <div class="form-group row">
-                    <div class="col-sm-3">
-                        <label for="txtDuAn">Dự toán</label>
-                        <p id="sDuToan">---</p>
-                    </div>
                     <div class="col-sm-3">
                         <label class="control-label">Địa điểm</label>
                         <p id="sDiaDiem">---</p>

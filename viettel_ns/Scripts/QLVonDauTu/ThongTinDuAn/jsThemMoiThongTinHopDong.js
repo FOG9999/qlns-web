@@ -361,6 +361,8 @@ function EventCheckboxGoiThau() {
             $('#txt_giatrihopdong_' + idButton).attr('disabled', true);
         }
         SumGiaTriHopDong();
+
+        HanleEnableGiaTriHopDong(arrGoiThau);
     });
 }
 
@@ -520,6 +522,7 @@ $("#iID_DuAnID").change(function () {
                         });
                         $("#tblDanhSachGoiThau tbody").html(htmlGoiThau);
                         EventGridGoiThau();
+                        $(".dropdown_nhathau").select2({ width: '100%', matcher: FilterInComboBox });
                     } else {
                         $("#tblDanhSachGoiThau tbody").html('');
                         arrGoiThau = [];
@@ -798,4 +801,15 @@ function ChangeNhaThau() {
             }
         })
     });
+}
+
+function HanleEnableGiaTriHopDong(arrGoiThau)
+{
+    var isEnable = $("#tblDanhSachGoiThau tbody").find(".cb_DuToan:checkbox:checked").length > 0;
+    if (isEnable) {
+        $("#fGiaTriHopDong").prop('disabled', true);
+    } else {
+        $("#fGiaTriHopDong").prop('disabled', false);
+    }
+
 }

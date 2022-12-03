@@ -94,9 +94,9 @@
             {
                 <div class="form-group row">
                     <div class="col-sm-12 col-md-12 col-lg-12">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered" id="tblListDuAn">
                             <thead>
-                            <th></th>
+                            <th><input type="checkbox" name="cbAll_duan" class="cbAll_duan" /></th>
                             <th>Mã dự án</th>
                             <th>Tên dự án</th>
                             <th>Loại dự án</th>
@@ -107,7 +107,7 @@
                                     {
                                         <tr>
                                             <td>
-                                                <input type="checkbox" class="@item.iID_DuAnID" onclick="SetState('@item.iID_DuAnID');" />
+                                                <input type="checkbox" class="cb_duan" onclick="SetState('@item.iID_DuAnID');" />
                                             </td>
                                             <td>@(item.sMaDuAn)</td>
                                             <td>@(item.sTenDuAn)</td>
@@ -150,6 +150,14 @@
             //if the letter is not digit then display error and don't type anything
             if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
                 return false;
+            }
+        });
+
+        $("#tblListDuAn .cbAll_duan").change(function () {
+            if (this.checked) {
+                $("#tblListDuAn .cb_duan").prop('checked', true).trigger("change");
+            } else {
+                $("#tblListDuAn .cb_duan").prop('checked', false).trigger("change");
             }
         });
 

@@ -33,6 +33,8 @@ using static VIETTEL.Common.Constants;
 using static VTS.QLNS.CTC.App.Service.UserFunction.FormatNumber;
 using VTS.QLNS.CTC.App.Service.UserFunction;
 using Spire.Xls.Core.Spreadsheet;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 {
@@ -1013,6 +1015,52 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                                     {
                                         entity.fGiaTriBoTri = !string.IsNullOrEmpty(r.Columns["fGiaTriBoTri"]) ? Double.Parse(r.Columns["fGiaTriBoTri"]) : 0;
                                     }
+                                    
+                                    if (r.Columns.ContainsKey("fHanmucNganhDX"))
+                                    {
+                                        entity.fGiaTriBoTri = !string.IsNullOrEmpty(r.Columns["fHanmucNganhDX"]) ? Double.Parse(r.Columns["fHanmucNganhDX"]) : 0;
+                                    }
+                                                                   
+                                    
+                                    if (r.Columns.ContainsKey("fVon5namNganhDX"))
+                                    {
+                                        entity.fGiaTriBoTri = !string.IsNullOrEmpty(r.Columns["fVon5namNganhDX"]) ? Double.Parse(r.Columns["fVon5namNganhDX"]) : 0;
+                                    }
+                                    
+                                    if (r.Columns.ContainsKey("fVonsaunamNganhDX"))
+                                    {
+                                        entity.fGiaTriBoTri = !string.IsNullOrEmpty(r.Columns["fVonsaunamNganhDX"]) ? Double.Parse(r.Columns["fVonsaunamNganhDX"]) : 0;
+                                    }
+                                    
+                                    if (r.Columns.ContainsKey("fHanmucCucTCDX"))
+                                    {
+                                        entity.fGiaTriBoTri = !string.IsNullOrEmpty(r.Columns["fHanmucCucTCDX"]) ? Double.Parse(r.Columns["fHanmucCucTCDX"]) : 0;
+                                    }
+                                    
+                                    if (r.Columns.ContainsKey("fVon5namCTCDX"))
+                                    {
+                                        entity.fGiaTriBoTri = !string.IsNullOrEmpty(r.Columns["fVon5namCTCDX"]) ? Double.Parse(r.Columns["fVon5namCTCDX"]) : 0;
+                                    } 
+                                    
+                                    if (r.Columns.ContainsKey("fVonnamthunhatCTC"))
+                                    {
+                                        entity.fGiaTriBoTri = !string.IsNullOrEmpty(r.Columns["fVonnamthunhatCTC"]) ? Double.Parse(r.Columns["fVonnamthunhatCTC"]) : 0;
+                                    }
+                                    
+                                    if (r.Columns.ContainsKey("fVonsaunamCTCDexuat"))
+                                    {
+                                        entity.fGiaTriBoTri = !string.IsNullOrEmpty(r.Columns["fVonsaunamCTCDexuat"]) ? Double.Parse(r.Columns["fVonsaunamCTCDexuat"]) : 0;
+                                    }
+                                    
+                                    if (r.Columns.ContainsKey("fCucTCDeXuat"))
+                                    {
+                                        entity.fGiaTriBoTri = !string.IsNullOrEmpty(r.Columns["fCucTCDeXuat"]) ? Double.Parse(r.Columns["fCucTCDeXuat"]) : 0;
+                                    }
+                                    
+                                    if (r.Columns.ContainsKey("fDuKienBoTriNamThu2"))
+                                    {
+                                        entity.fGiaTriBoTri = !string.IsNullOrEmpty(r.Columns["fDuKienBoTriNamThu2"]) ? Double.Parse(r.Columns["fDuKienBoTriNamThu2"]) : 0;
+                                    }
 
                                     if (Level == 1)
                                     {
@@ -1024,6 +1072,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                                     }
                                     entity.MapFrom(changes);
                                     entity.iID_KeHoach5Nam_DeXuatID = Guid.Parse(vm.Id);
+                                    entity.iID_DonViID = conn.Get<VDT_KHV_KeHoach5Nam_DeXuat>(vm.Id, trans).iID_DonViQuanLyID;
+                                    entity.iID_MaDonVi = conn.Get<VDT_KHV_KeHoach5Nam_DeXuat>(vm.Id, trans).iID_MaDonViQuanLy;
                                     conn.Insert(entity, trans);
                                     if (Level == 2)
                                     {
@@ -1096,6 +1146,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                                         {
                                             entity.fGiaTriBoTri = !string.IsNullOrEmpty(r.Columns["fGiaTriBoTriDc"]) ? Double.Parse(r.Columns["fGiaTriBoTriDc"]) : 0;
                                         }
+
+
                                     }
                                     conn.Update(entity, trans);
                                     #endregion
@@ -1690,6 +1742,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                                         VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet KH5NDXChiTiettCha = _iQLVonDauTuService.GetKH5NamDeXuatChiTietById(entityChiTiet.iID_ParentID);
                                         entityChiTiet.iIDReference = KH5NDXChiTiettCha.iIDReference;
                                     }
+                                    entityChiTiet.iID_DonViID = data.iID_DonViQuanLyID;
+                                    entityChiTiet.iID_MaDonVi = data.iID_MaDonViQuanLy;
                                     conn.Insert(entityChiTiet, trans);
                                     mapParentId.Add(iID_KeHoach5Nam_DeXuat_ChiTietID, entityChiTiet.iID_KeHoach5Nam_DeXuat_ChiTietID.ToString());
 
@@ -1984,8 +2038,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             vm.lstDonViQuanLy = lstDonViQuanLy;
             //vm.iGiaiDoanTu = DateTime.Now.Year;
             //vm.iGiaiDoanDen = DateTime.Now.Year + 4;
-            vm.iGiaiDoanTu = _iQLVonDauTuService.FindCurrentPeriod(PhienLamViec.NamLamViec);
-            vm.iGiaiDoanDen = vm.iGiaiDoanTu + 4;
+            var iGiaiDoanTu = _iQLVonDauTuService.FindCurrentPeriod(PhienLamViec.NamLamViec);
+            vm.iGiaiDoanTu =  iGiaiDoanTu;
+            vm.iGiaiDoanDen = iGiaiDoanTu + 4;
 
             ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_Ma", "sMoTa");
 
@@ -1996,6 +2051,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             if (isModified && !isCt)
             {
                 ViewBag.TitleDx = "In báo cáo kế hoạch trung hạn đề xuất(Điều chỉnh)";
+                ViewBag.TitleHeader1 = "DỰ KIẾN KẾ HOẠCH ĐẦU TƯ TRUNG HẠN NGUỒN NSQP GIAI ĐOẠN " + iGiaiDoanTu + " - " + (iGiaiDoanTu + 4) + " (CÔNG TRÌNH PHỔ THÔNG)";
                 ViewBag.TitleHeader2 = "(Công trình mở mới)";
                 ViewBag.isModified = "true";
                 ViewBag.isCt = "false";
@@ -2003,6 +2059,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             else if (!isModified && isCt)
             {
                 ViewBag.TitleDx = "In báo cáo kế hoạch trung hạn đề xuất(Chuyển tiếp)";
+                ViewBag.TitleHeader1 = "KẾ HOẠCH ĐẦU TƯ TRUNG HẠN NGUỒN NSQP NĂM "+ iGiaiDoanTu +" - "+ (iGiaiDoanTu+4) + " (CÔNG TRÌNH PHỔ THÔNG)";
                 ViewBag.TitleHeader2 = "(Công trình chuyển tiếp)";
                 ViewBag.isModified = "false";
                 ViewBag.isCt = "true";
@@ -2010,6 +2067,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             else
             {
                 ViewBag.TitleDx = "In báo cáo kế hoạch trung hạn đề xuất";
+                ViewBag.TitleHeader1 = "DỰ KIẾN KẾ HOẠCH ĐẦU TƯ TRUNG HẠN NGUỒN NSQP GIAI ĐOẠN "+ iGiaiDoanTu +" - "+ (iGiaiDoanTu+4) + " (CÔNG TRÌNH PHỔ THÔNG)";
                 ViewBag.TitleHeader2 = "(Công trình mở mới)";
                 ViewBag.isModified = "false";
                 ViewBag.isCt = "false";
@@ -2051,9 +2109,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 arrYearStartAndYearEnd.Add(data.iGiaiDoanTu);
                 arrYearStartAndYearEnd.Add(data.iGiaiDoanDen);
                 TempData["arrYearStartAndYearEnd"] = arrYearStartAndYearEnd;
-
+                string lstDonVi = string.Empty;
+                if (arrIdDVQL != null)
+                {
+                    lstDonVi = string.Join(",", arrIdDVQL);
+                }
                 //Lay list Chứng từ theo giai đoạn và danh sách đơn vị
-                var listID_KeHoach5Nam_DeXuatID = _iQLVonDauTuService.GetLstIdChungTuDeXuat(data.iGiaiDoanTu, data.iGiaiDoanDen, isModified, isCt, PhienLamViec.NamLamViec);
+                var listID_KeHoach5Nam_DeXuatID = _iQLVonDauTuService.GetLstIdChungTuDeXuat(data.iGiaiDoanTu, data.iGiaiDoanDen, isModified, isCt, PhienLamViec.NamLamViec, lstDonVi);
 
                 if (listID_KeHoach5Nam_DeXuatID == null || listID_KeHoach5Nam_DeXuatID.Count() == 0)
                 {
@@ -2063,12 +2125,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 data.isTongHop = false;
 
                 string strIds_KeHoach5Nam_DeXuat = string.Join(",", listID_KeHoach5Nam_DeXuatID);
-                string iID_NguonVonIDs = string.Join(",", arrIdNguonVon);
-                string lstDonVi = string.Empty;
-                if (arrIdDVQL != null)
-                {
-                    lstDonVi = string.Join(",", arrIdDVQL);
-                }
+                string iID_NguonVonIDs = string.Join(",", arrIdNguonVon);               
 
                 if (isModified && !isCt)
                 {
@@ -2078,19 +2135,24 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 }
                 else if (!isModified && isCt)
                 {
-                    List<VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel> dataReport = _iQLVonDauTuService.FindByReportKeHoachTrungHanDeXuatChuyenTiep(strIds_KeHoach5Nam_DeXuat, iID_NguonVonIDs, data.iID_LoaiCongTrinh, lstDonVi, 2, data.fDonViTinh.Value).ToList();
+                  //  List<VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel> dataReport = _iQLVonDauTuService.FindByReportKeHoachTrungHanDeXuatChuyenTiep(strIds_KeHoach5Nam_DeXuat, iID_NguonVonIDs, data.iID_LoaiCongTrinh, lstDonVi, 2, data.fDonViTinh.Value).ToList();
+                    List<KH5NDXPrintDataExportNewModel> dataReport = _iQLVonDauTuService.ReportKeHoachTrungHanDeXuatChuyenTiepNew(strIds_KeHoach5Nam_DeXuat, iID_NguonVonIDs, data.iID_LoaiCongTrinh, 1, data.fDonViTinh.Value).ToList();
 
-                    dataReport = CalculateDataReportDeXuatChuyenTiepDonVi(dataReport);
-                    dataReport = HandleDataReportDeXuatChuyenTiepDonVi(dataReport);
+                    //dataReport = CalculateDataReportDeXuatChuyenTiepDonVi(dataReport);
+                    //dataReport = HandleDataReportDeXuatChuyenTiepDonVi(dataReport);
+                    dataReport = HandleDataReportDeXuatChuyenTiepDonViNew(dataReport);
                     TempData["dataReportCt"] = dataReport;
                 }
                 else
                 {
-                    List<KH5NDXPrintDataExportModel> dataReport = _iQLVonDauTuService.GetDataReportKH5NDeXuat(strIds_KeHoach5Nam_DeXuat, data.iID_LoaiCongTrinh.ToString(), iID_NguonVonIDs, lstDonVi, 2, data.fDonViTinh.Value, PhienLamViec.NamLamViec).ToList();
+                   // List<KH5NDXPrintDataExportModel> dataReport = _iQLVonDauTuService.GetDataReportKH5NDeXuat(strIds_KeHoach5Nam_DeXuat, data.iID_LoaiCongTrinh.ToString(), iID_NguonVonIDs, lstDonVi, 2, data.fDonViTinh.Value, PhienLamViec.NamLamViec).ToList();
+                    List<KH5NDXPrintDataExportModel> dataReport = _iQLVonDauTuService.GetDataReportKH5NDeXuatNew(strIds_KeHoach5Nam_DeXuat, data.iID_LoaiCongTrinh.ToString(), iID_NguonVonIDs, data.fDonViTinh.Value, PhienLamViec.NamLamViec,1).ToList();
 
-                    dataReport = HandleDataHanMucDauTu(dataReport);
-                    dataReport = CalculateDataReportDeXuatDonVi(dataReport);
-                    dataReport = HandleDataReportDeXuatDonVi(dataReport);
+                   // dataReport = HandleDataHanMucDauTu(dataReport);
+                    //dataReport = CalculateDataReportDeXuatDonVi(dataReport);
+                    //dataReport = HandleDataReportDeXuatDonVi(dataReport);
+                    dataReport = HandleDataReportDeXuatDonViNew(dataReport);
+
 
                     TempData["dataReport"] = dataReport;
                 }
@@ -2127,19 +2189,23 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 }
                 else if (!isModified && isCt)
                 {
-                    List<VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel> dataReport = _iQLVonDauTuService.FindByReportKeHoachTrungHanDeXuatChuyenTiep(data.iID_KeHoach5Nam_DeXuatID.ToString(), iID_NguonVonIDs, data.iID_LoaiCongTrinh, lstDonVi, 1, data.fDonViTinh.Value).ToList();
-                    dataReport = CalculateDataReportDeXuatChuyenTiepTongHop(dataReport);
-                    dataReport = HandleDataReportDeXuatChuyenTiepTongHop(dataReport);
+                    //List<VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel> dataReport = _iQLVonDauTuService.FindByReportKeHoachTrungHanDeXuatChuyenTiep(data.iID_KeHoach5Nam_DeXuatID.ToString(), iID_NguonVonIDs, data.iID_LoaiCongTrinh, lstDonVi, 1, data.fDonViTinh.Value).ToList();
+                    List<KH5NDXPrintDataExportNewModel> dataReport = _iQLVonDauTuService.ReportKeHoachTrungHanDeXuatChuyenTiepNew(data.iID_KeHoach5Nam_DeXuatID.ToString(), iID_NguonVonIDs, data.iID_LoaiCongTrinh, 2, data.fDonViTinh.Value).ToList();
+                    //dataReport = CalculateDataReportDeXuatChuyenTiepTongHop(dataReport);
+                    //dataReport = HandleDataReportDeXuatChuyenTiepTongHop(dataReport);
+                    dataReport = HandleDataReportDeXuatChuyenTiepTongHopNew(dataReport);
 
                     TempData["dataReportCt"] = dataReport;
                 }
                 else
                 {
-                    List<KH5NDXPrintDataExportModel> dataReport = _iQLVonDauTuService.GetDataReportKH5NDeXuat(data.iID_KeHoach5Nam_DeXuatID.ToString(), data.iID_LoaiCongTrinh.ToString(), iID_NguonVonIDs, lstDonVi, 1, data.fDonViTinh.Value, PhienLamViec.NamLamViec).ToList();
+                    //List<KH5NDXPrintDataExportModel> dataReport = _iQLVonDauTuService.GetDataReportKH5NDeXuat(data.iID_KeHoach5Nam_DeXuatID.ToString(), data.iID_LoaiCongTrinh.ToString(), iID_NguonVonIDs, lstDonVi, 1, data.fDonViTinh.Value, PhienLamViec.NamLamViec).ToList();
+                    List<KH5NDXPrintDataExportModel> dataReport = _iQLVonDauTuService.GetDataReportKH5NDeXuatNew(data.iID_KeHoach5Nam_DeXuatID.ToString(), data.iID_LoaiCongTrinh.ToString(), iID_NguonVonIDs, data.fDonViTinh.Value, PhienLamViec.NamLamViec, 2).ToList();
 
-                    dataReport = HandleDataHanMucDauTu(dataReport);
-                    dataReport = CalculateDataReportDeXuatTongHop(dataReport);
-                    dataReport = HandleDataReportDeXuatTongHop(dataReport);
+                    //dataReport = HandleDataHanMucDauTu(dataReport);
+                    //dataReport = CalculateDataReportDeXuatTongHop(dataReport);
+                    //dataReport = HandleDataReportDeXuatTongHop(dataReport);
+                    dataReport = HandleDataReportDeXuatTongHopNew(dataReport);
 
                     TempData["dataReport"] = dataReport;
                 }
@@ -2164,7 +2230,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             string sFileName = isBaoCaoTheoDV ? "BaoCao_KeHoachTrungHan_DeXuat_TheoDonVi.xlsx" : "BaoCao_KeHoachTrungHan_DeXuat_TongHop.xlsx";
             List<KH5NDXPrintDataExportModel> dataReport = null;
             List<KH5NDXPrintDataDieuChinhExportModel> dataReportDc = null;
-            List<VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel> dataReportCt = null;
+            List<KH5NDXPrintDataExportNewModel> dataReportCt = null;
             KH5NDXPrintDataExportModel paramReport = null;
 
             paramReport = (KH5NDXPrintDataExportModel)TempData["paramReport"];
@@ -2182,7 +2248,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             {
                 if (TempData["dataReportCt"] != null)
                 {
-                    dataReportCt = (List<VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel>)TempData["dataReportCt"];
+                    dataReportCt = (List<KH5NDXPrintDataExportNewModel>)TempData["dataReportCt"];
                 }
                 else
                     return RedirectToAction("ViewInBaoCao");
@@ -2220,7 +2286,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             string sFileName = "KeHoachTrungHan_DeXuat_Report.pdf";
             List<KH5NDXPrintDataExportModel> dataReport = null;
             List<KH5NDXPrintDataDieuChinhExportModel> dataReportDc = null;
-            List<VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel> dataReportCt = null;
+            List<KH5NDXPrintDataExportNewModel> dataReportCt = null;
             KH5NDXPrintDataExportModel paramReport = null;
 
             paramReport = (KH5NDXPrintDataExportModel)TempData["paramReport"];
@@ -2238,7 +2304,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             {
                 if (TempData["dataReportCt"] != null)
                 {
-                    dataReportCt = (List<VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel>)TempData["dataReportCt"];
+                    dataReportCt = (List<KH5NDXPrintDataExportNewModel>)TempData["dataReportCt"];
                 }
                 else
                     return RedirectToAction("ViewInBaoCao");
@@ -2282,27 +2348,27 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             return xls.ToPdfContentResult(sFileName);
         }
 
-        public ExcelFile CreateReportCt(List<VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel> dataReport, KH5NDXPrintDataExportModel paramReport)
+        public ExcelFile CreateReportCt(List<KH5NDXPrintDataExportNewModel> dataReport, KH5NDXPrintDataExportModel paramReport)
         {
             XlsFile Result = new XlsFile(true);
-            Result.Open(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/KeHoachTrungHan/rptKeHoachTrungHan_DeXuat_ChuyenTiep_Report.xlsx"));
+            Result.Open(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/KeHoachTrungHan/rpt_KeHoachTrungHanDeXuat_ChuyenTiep_new.xlsx"));
             FlexCelReport fr = new FlexCelReport();
 
             VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel reportSummary = new VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel();
-            reportSummary.FHanMucDauTu = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FHanMucDauTu);
-            reportSummary.FHanMucDauTuQP = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FHanMucDauTuQP);
-            reportSummary.FHanMucDauTuNN = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FHanMucDauTuNN);
-            reportSummary.FHanMucDauTuDP = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FHanMucDauTuDP);
-            reportSummary.FHanMucDauTuOrther = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FHanMucDauTuOrther);
-            //reportSummary.TongLuyKe = dataReport.Where(x => !x.IsHangCha).Sum(x => x.TongLuyKe);
-            reportSummary.LuyKeVonNSQPDaBoTri = dataReport.Where(x => !x.IsHangCha).Sum(x => x.LuyKeVonNSQPDaBoTri);
-            reportSummary.LuyKeVonNSQPDeNghiBoTri = dataReport.Where(x => !x.IsHangCha).Sum(x => x.LuyKeVonNSQPDeNghiBoTri);
-            reportSummary.FTongSo = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FTongSo);
-            reportSummary.FGiaTriNamThuNhat = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FGiaTriNamThuNhat);
-            reportSummary.FGiaTriNamThuHai = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FGiaTriNamThuHai);
-            reportSummary.FGiaTriNamThuBa = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FGiaTriNamThuBa);
-            reportSummary.FGiaTriNamThuTu = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FGiaTriNamThuTu);
-            reportSummary.FGiaTriNamThuNam = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FGiaTriNamThuNam);
+            //reportSummary.FHanMucDauTu = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FHanMucDauTu);
+            //reportSummary.FHanMucDauTuQP = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FHanMucDauTuQP);
+            //reportSummary.FHanMucDauTuNN = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FHanMucDauTuNN);
+            //reportSummary.FHanMucDauTuDP = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FHanMucDauTuDP);
+            //reportSummary.FHanMucDauTuOrther = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FHanMucDauTuOrther);
+            ////reportSummary.TongLuyKe = dataReport.Where(x => !x.IsHangCha).Sum(x => x.TongLuyKe);
+            //reportSummary.LuyKeVonNSQPDaBoTri = dataReport.Where(x => !x.IsHangCha).Sum(x => x.LuyKeVonNSQPDaBoTri);
+            //reportSummary.LuyKeVonNSQPDeNghiBoTri = dataReport.Where(x => !x.IsHangCha).Sum(x => x.LuyKeVonNSQPDeNghiBoTri);
+            //reportSummary.FTongSo = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FTongSo);
+            //reportSummary.FGiaTriNamThuNhat = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FGiaTriNamThuNhat);
+            //reportSummary.FGiaTriNamThuHai = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FGiaTriNamThuHai);
+            //reportSummary.FGiaTriNamThuBa = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FGiaTriNamThuBa);
+            //reportSummary.FGiaTriNamThuTu = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FGiaTriNamThuTu);
+            //reportSummary.FGiaTriNamThuNam = dataReport.Where(x => !x.IsHangCha).Sum(x => x.FGiaTriNamThuNam);
 
             VDT_KHV_KeHoach5Nam_DeXuat itemQuery = _iQLVonDauTuService.GetKeHoach5NamDeXuatById(paramReport.iID_KeHoach5Nam_DeXuatID);
 
@@ -2314,14 +2380,19 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             {
                 iNamBatDau = itemQuery.iGiaiDoanTu;
                 iNamKetThuc = itemQuery.iGiaiDoanDen;
-                if (paramReport != null && paramReport.isTongHop)
-                {
-                    NS_DonVi itemDonVi = _iNganSachService.GetDonViById(PhienLamViec.iNamLamViec, paramReport.iID_DonViQuanLyID.ToString());
-                    if (itemDonVi != null)
-                    {
-                        STenDonVi = itemDonVi.sTen;
-                    }
-                }
+                //if (paramReport != null && paramReport.isTongHop)
+                //{
+                //    NS_DonVi itemDonVi = _iNganSachService.GetDonViById(PhienLamViec.iNamLamViec, paramReport.iID_DonViQuanLyID.ToString());
+                //    if (itemDonVi != null)
+                //    {
+                //        STenDonVi = itemDonVi.sTen;
+                //    }
+                //}
+            }
+            else
+            {
+                iNamBatDau = paramReport.iGiaiDoanTu;
+                iNamKetThuc = paramReport.iGiaiDoanDen;
             }
             TempData.Keep("lstDonViQL");
             // string STenDonVi = string.Empty;
@@ -2340,7 +2411,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 
             FormatNumber formatNumber = new FormatNumber(1, ExportType.PDF);
             fr.SetUserFunction("FormatNumber", formatNumber);
-            fr.AddTable<VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel>("Items", dataReport);
+            fr.AddTable<KH5NDXPrintDataExportNewModel>("Items", dataReport);
 
             fr.SetValue("TenDonVi", !string.IsNullOrEmpty(STenDonVi) ? STenDonVi.ToUpper() : string.Empty);
             fr.SetValue("Header1", paramReport.txt_TieuDe1);
@@ -2355,20 +2426,20 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             fr.SetValue("Year5", iNamBatDau + 4);
             fr.SetValue("Period", string.Format("{0} - {1}", iNamBatDau, iNamBatDau + 4));
             fr.SetValue("DonViTinh", paramReport.sDonViTinh);
-            fr.SetValue("FHanMucDauTuSum", reportSummary.FHanMucDauTu);
-            fr.SetValue("FHanMucDauTuQPSum", reportSummary.FHanMucDauTuQP);
-            fr.SetValue("FHanMucDauTuNNSum", reportSummary.FHanMucDauTuNN);
-            fr.SetValue("FHanMucDauTuDPSum", reportSummary.FHanMucDauTuDP);
-            fr.SetValue("FHanMucDauTuOrtherSum", reportSummary.FHanMucDauTuOrther);
-            fr.SetValue("TongLuyKeSum", reportSummary.TongLuyKe);
-            fr.SetValue("LuyKeVonNSQPDaBoTriSum", reportSummary.LuyKeVonNSQPDaBoTri);
-            fr.SetValue("LuyKeVonNSQPDeNghiBoTriSum", reportSummary.LuyKeVonNSQPDeNghiBoTri);
-            fr.SetValue("FTongSoSum", reportSummary.FTongSo);
-            fr.SetValue("FGiaTriNamThuNhatSum", reportSummary.FGiaTriNamThuNhat);
-            fr.SetValue("FGiaTriNamThuHaiSum", reportSummary.FGiaTriNamThuHai);
-            fr.SetValue("FGiaTriNamThuBaSum", reportSummary.FGiaTriNamThuBa);
-            fr.SetValue("FGiaTriNamThuTuSum", reportSummary.FGiaTriNamThuTu);
-            fr.SetValue("FGiaTriNamThuNamSum", reportSummary.FGiaTriNamThuNam);
+            //fr.SetValue("FHanMucDauTuSum", reportSummary.FHanMucDauTu);
+            //fr.SetValue("FHanMucDauTuQPSum", reportSummary.FHanMucDauTuQP);
+            //fr.SetValue("FHanMucDauTuNNSum", reportSummary.FHanMucDauTuNN);
+            //fr.SetValue("FHanMucDauTuDPSum", reportSummary.FHanMucDauTuDP);
+            //fr.SetValue("FHanMucDauTuOrtherSum", reportSummary.FHanMucDauTuOrther);
+            //fr.SetValue("TongLuyKeSum", reportSummary.TongLuyKe);
+            //fr.SetValue("LuyKeVonNSQPDaBoTriSum", reportSummary.LuyKeVonNSQPDaBoTri);
+            //fr.SetValue("LuyKeVonNSQPDeNghiBoTriSum", reportSummary.LuyKeVonNSQPDeNghiBoTri);
+            //fr.SetValue("FTongSoSum", reportSummary.FTongSo);
+            //fr.SetValue("FGiaTriNamThuNhatSum", reportSummary.FGiaTriNamThuNhat);
+            //fr.SetValue("FGiaTriNamThuHaiSum", reportSummary.FGiaTriNamThuHai);
+            //fr.SetValue("FGiaTriNamThuBaSum", reportSummary.FGiaTriNamThuBa);
+            //fr.SetValue("FGiaTriNamThuTuSum", reportSummary.FGiaTriNamThuTu);
+            //fr.SetValue("FGiaTriNamThuNamSum", reportSummary.FGiaTriNamThuNam);
             fr.SetValue("Muc", sMuc);
             fr.UseChuKy(Username)
                    .UseChuKyForController(sControlName)
@@ -2510,7 +2581,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             }
 
             XlsFile Result = new XlsFile(true);
-            Result.Open(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/KeHoachTrungHan/rptKeHoachTrungHan_DeXuat_Report.xlsx"));
+            Result.Open(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/KeHoachTrungHan/rpt_KeHoachtrungHanDeXuat_Export_New.xlsx"));
             FlexCelReport fr = new FlexCelReport();
 
             string sMuc = string.Join("+", dataReport.Where(x => x.LoaiParent.Equals(0)).Select(x => x.STT).ToList());
@@ -2533,22 +2604,22 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 
             VDT_KHV_KeHoach5Nam_DeXuat itemQuery = _iQLVonDauTuService.GetKeHoach5NamDeXuatById(paramReport.iID_KeHoach5Nam_DeXuatID);
 
-            int iNamBatDau = DateTime.Now.Year;
-            int iNamKetThuc = DateTime.Now.Year + 4;
+            int iNamBatDau = paramReport.iGiaiDoanTu;
+            int iNamKetThuc = paramReport.iGiaiDoanTu + 4;
 
 
             if (itemQuery != null)
             {
                 iNamBatDau = itemQuery.iGiaiDoanTu;
                 iNamKetThuc = itemQuery.iGiaiDoanDen;
-                if (paramReport != null && paramReport.isTongHop)
-                {
-                    NS_DonVi itemDonVi = _iNganSachService.GetDonViById(PhienLamViec.iNamLamViec, paramReport.iID_DonViQuanLyID.ToString());
-                    if (itemDonVi != null)
-                    {
-                        STenDonVi = itemDonVi.sTen;
-                    }
-                }
+                //if (paramReport != null && paramReport.isTongHop)
+                //{
+                //    NS_DonVi itemDonVi = _iNganSachService.GetDonViById(PhienLamViec.iNamLamViec, paramReport.iID_DonViQuanLyID.ToString());
+                //    if (itemDonVi != null)
+                //    {
+                //        STenDonVi = itemDonVi.sTen;
+                //    }
+                //}
             }
             FormatNumber formatNumber = new FormatNumber(1, ExportType.PDF);
             fr.SetUserFunction("FormatNumber", formatNumber);
@@ -2586,7 +2657,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 
             fr.Run(Result);
 
-            _iQLVonDauTuService.FormatAllRowHeight(dataReport, "STenDuAn", 12, 30, Result, 700);         //set height neu dong qua nho
+            //_iQLVonDauTuService.FormatAllRowHeight(dataReport, "STenDuAn", 12, 30, Result, 700);         //set height neu dong qua nho
             Result.SetRowHeight(11, 800);                                                                // set co dinh height Dong Tong so
 
             return Result;
@@ -2918,6 +2989,117 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             }
         }
 
+        private List<KH5NDXPrintDataExportModel> HandleDataReportDeXuatTongHopNew(List<KH5NDXPrintDataExportModel> ItemsReportDeXuat)
+        {
+            try
+            {
+                List<KH5NDXPrintDataExportModel> ItemsReportTongHop = new List<KH5NDXPrintDataExportModel>();
+                var dicLoaiCongTrinh = ItemsReportDeXuat.Where(x => x.Loai ==0).ToDictionary(k => k.IdLoaiCongTrinh,x =>x.sTenLoaiCongTrinh);
+                var sSTT = 1;
+                var sSTTChild = 1;
+
+                foreach(var item in ItemsReportDeXuat)
+                {
+                    if (dicLoaiCongTrinh.ContainsKey(item.IdLoaiCongTrinh))
+                    {
+                        var listItems = ItemsReportDeXuat.Where(x => !x.IsHangCha && x.IdLoaiCongTrinh == item.IdLoaiCongTrinh).ToList();
+
+                        if (listItems.Any() && item.IsHangCha)
+                        {
+                            sSTTChild = 1;
+                            item.FHanMucDauTu = listItems.Sum(s => s.FHanMucDauTu);
+                            item.FTongSo = listItems.Sum(x => x.FTongSo);
+                            item.FGiaTriBoTri = listItems.Sum(x => x.FGiaTriBoTri);
+                            item.fTongVonBoTri = listItems.Sum(x => x.FTongSo) + listItems.Sum(x => x.FGiaTriBoTri);
+                            item.fHanmucNganhDX = listItems.Sum(x => x.fHanmucNganhDX);
+                            item.fTongVonBoTriNganh = listItems.Sum(x => x.fTongVonBoTriNganh);
+                            item.fVon5namNganhDX = listItems.Sum(x => x.fVon5namNganhDX);
+                            item.fVonsaunamNganhDX = listItems.Sum(x => x.fVonsaunamNganhDX);
+                            item.fHanmucCucTCDX = listItems.Sum(x => x.fHanmucCucTCDX);
+                            item.fTongVonBoTriCuc = listItems.Sum(x => x.fTongVonBoTriCuc);
+                            item.fVon5namCTCDX = listItems.Sum(x => x.fVon5namCTCDX);
+                            item.fVonnamthunhatCTC = listItems.Sum(x => x.fVonnamthunhatCTC);
+                            item.fVonsaunamCTCDexuat = listItems.Sum(x => x.fVonsaunamCTCDexuat);
+                            item.fCucTCDeXuat = listItems.Sum(x => x.fCucTCDeXuat);
+                            item.fDuKienBoTriNamThu2 = listItems.Sum(x => x.fDuKienBoTriNamThu2);
+                            item.STenDuAn = dicLoaiCongTrinh[item.IdLoaiCongTrinh];
+                            item.STT = sSTT.ToString();
+
+                            ItemsReportTongHop.Add(item);
+                            foreach(var itemChild in listItems)
+                            {
+                                itemChild.STT = sSTTChild.ToString();
+                                itemChild.fTongVonBoTri = (itemChild.FTongSo + itemChild.FGiaTriBoTri);
+                                ItemsReportTongHop.Add(itemChild);
+                                sSTTChild++;
+                            }
+                            sSTT++;
+                        }
+                    }
+                }
+
+                return ItemsReportTongHop;
+            }
+            catch (Exception ex)
+            {
+                return new List<KH5NDXPrintDataExportModel>();
+
+            }
+        }
+        
+        private List<KH5NDXPrintDataExportNewModel> HandleDataReportDeXuatChuyenTiepTongHopNew(List<KH5NDXPrintDataExportNewModel> ItemsReportDeXuat)
+        {
+            try
+            {
+                List<KH5NDXPrintDataExportNewModel> ItemsReportTongHop = new List<KH5NDXPrintDataExportNewModel>();
+                var dicLoaiCongTrinh = ItemsReportDeXuat.Where(x => x.LoaiParent == 2).ToDictionary(k => k.IdLoaiCongTrinh,x =>x.sTenLoaiCongTrinh);
+                var sSTT = 1;
+                var sSTTChild = 1;
+
+                foreach(var item in ItemsReportDeXuat)
+                {
+                    if (dicLoaiCongTrinh.ContainsKey(item.IdLoaiCongTrinh))
+                    {
+                        var listItems = ItemsReportDeXuat.Where(x => !x.IsHangCha && x.IdLoaiCongTrinh == item.IdLoaiCongTrinh).ToList();
+
+                        if (listItems.Any() && item.IsHangCha)
+                        {
+                            sSTTChild = 1;
+                            item.fNSQP = listItems.Sum(s => s.fNSQP);
+                            item.fChiPhiDuPhong = listItems.Sum(x => x.fChiPhiDuPhong);
+                            item.fVonBoTriHetNam = listItems.Sum(x => x.fVonBoTriHetNam);
+                            item.fSoConLaiPhaiBoTri = listItems.Sum(x => x.fSoConLaiPhaiBoTri);
+                            item.fCucTCdexuat = listItems.Sum(x => x.fCucTCdexuat);
+                            item.fBoDaGiaoDuToan = listItems.Sum(x => x.fBoDaGiaoDuToan);
+                            item.fDuKienbotrinamthu2 = listItems.Sum(x => x.fDuKienbotrinamthu2);
+                            item.fSoConLaiConBotri = listItems.Sum(x => x.fSoConLaiConBotri);
+                            item.fSoTienConLaiChuaDeXuat = listItems.Sum(x => x.fSoTienConLaiChuaDeXuat);
+
+                            item.STenDuAn = dicLoaiCongTrinh[item.IdLoaiCongTrinh];
+                            item.STT = sSTT.ToString();
+
+                            ItemsReportTongHop.Add(item);
+                            foreach(var itemChild in listItems)
+                            {
+                                itemChild.STT = sSTTChild.ToString();
+                                ItemsReportTongHop.Add(itemChild);
+                                sSTTChild++;
+                            }
+                            sSTT++;
+                        }
+                    }
+                }
+
+                return ItemsReportTongHop;
+            }
+            catch (Exception ex)
+            {
+                return new List<KH5NDXPrintDataExportNewModel>();
+
+            }
+        }
+
+
         private List<KH5NDXPrintDataExportModel> CalculateDataReportDeXuatDonVi(List<KH5NDXPrintDataExportModel> ItemsReportDeXuat)
         {
             try
@@ -3031,7 +3213,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                                     Loai = x.Key.Loai,
                                     LoaiParent = x.Key.LoaiParent,
                                     IsHangCha = x.Key.IsHangCha
-                                }).ToList();
+                                }).OrderByDescending(x => x.IdLoaiCongTrinh).ToList();
                 return listGroup;
             }
             catch (Exception ex)
@@ -3091,6 +3273,193 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 return new List<KH5NDXPrintDataExportModel>();
             }
         }
+
+        private List<KH5NDXPrintDataExportModel> HandleDataReportDeXuatDonViNew(List<KH5NDXPrintDataExportModel> ItemsReportDeXuat)
+        {
+            try
+            {
+                var sTenDonVis = new HashSet<string>(ItemsReportDeXuat.Select(x => x.STenDonVi).Distinct());
+                var lstLoaiCongTrinh = ItemsReportDeXuat.Select(x => x.sTenLoaiCongTrinh).Distinct();
+                List<KH5NDXPrintDataExportModel> lstReport = new List<KH5NDXPrintDataExportModel>();
+                var count = 1;
+                var sSTT = 1;
+                var sLevel = 1;
+                foreach (var item in sTenDonVis)
+                {
+                    sLevel = 1;
+                    lstReport.Add(new KH5NDXPrintDataExportModel()
+                    {
+                        STT = (count).ToString(),
+                        STenDuAn = item,
+                        IsHangCha = true,
+                        LoaiParent = 1
+
+
+                    });
+                    foreach (var index in lstLoaiCongTrinh)
+                    {
+                        sSTT = 1;
+                        var listItems = ItemsReportDeXuat.Where(x => x.STenDonVi == item && x.sTenLoaiCongTrinh == index).ToList();
+                        if (listItems.Any())
+                        {
+                            lstReport.Add(new KH5NDXPrintDataExportModel()
+                            {
+                                STT = (count + "." + sLevel).ToString(),
+                                sTenLoaiCongTrinh = index,
+                                STenDuAn = index,
+                                FHanMucDauTu = listItems.Sum(x => x.FHanMucDauTu),
+                                FTongSo = listItems.Sum(x => x.FTongSo),
+                                FGiaTriBoTri = listItems.Sum(x => x.FGiaTriBoTri),
+                                fTongVonBoTri = listItems.Sum(x => x.FTongSo) + listItems.Sum(x => x.FGiaTriBoTri),
+                                fHanmucNganhDX = listItems.Sum(x => x.fHanmucNganhDX),
+                                fTongVonBoTriNganh = listItems.Sum(x => x.fTongVonBoTriNganh),
+                                fVon5namNganhDX = listItems.Sum(x => x.fVon5namNganhDX),
+                                fVonsaunamNganhDX = listItems.Sum(x => x.fVonsaunamNganhDX),
+                                fHanmucCucTCDX = listItems.Sum(x => x.fHanmucCucTCDX),
+                                fTongVonBoTriCuc = listItems.Sum(x => x.fTongVonBoTriCuc),
+                                fVon5namCTCDX = listItems.Sum(x => x.fVon5namCTCDX),
+                                fVonnamthunhatCTC = listItems.Sum(x => x.fVonnamthunhatCTC),
+                                fVonsaunamCTCDexuat = listItems.Sum(x => x.fVonsaunamCTCDexuat),
+                                fCucTCDeXuat = listItems.Sum(x => x.fCucTCDeXuat),
+                                fDuKienBoTriNamThu2 = listItems.Sum(x => x.fDuKienBoTriNamThu2),
+                                IsHangCha = true,
+                                LoaiParent = 2,
+                                STenDonVi = item
+
+                            });
+
+                            foreach (var itemReport in listItems)
+                            {
+                                itemReport.STT = sSTT.ToString();
+                                itemReport.fTongVonBoTri = itemReport.FTongSo + itemReport.FGiaTriBoTri;
+                                lstReport.Add(itemReport);
+                                sSTT++;
+                            }
+                            
+                            sLevel ++;
+
+                            //lstReport.AddRange(listItems);
+                        }
+
+                    }
+                   
+                    lstReport.Where(x => x.IsHangCha && x.LoaiParent == 1 && x.STenDuAn.Equals(item))
+                        .Select(s =>
+                        {
+                            s.FHanMucDauTu = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.FHanMucDauTu);
+                            s.FTongSo = lstReport.Where(x =>x.LoaiParent ==2 && x.STenDonVi.Equals(item)).Sum(i => i.FTongSo);
+                            s.FGiaTriBoTri = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.FTongSo);
+                            s.fTongVonBoTri = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fTongVonBoTri);
+                            s.fHanmucNganhDX = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fHanmucNganhDX);
+                            s.fTongVonBoTriNganh = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fTongVonBoTriNganh);
+                            s.fVon5namNganhDX = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fVon5namNganhDX);
+                            s.fHanmucCucTCDX = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fHanmucCucTCDX);
+                            s.fTongVonBoTriCuc = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fTongVonBoTriCuc);
+                            s.fVon5namCTCDX = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fVon5namCTCDX);
+                            s.fVonnamthunhatCTC = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fVonnamthunhatCTC);
+                            s.fVonsaunamCTCDexuat = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fVonsaunamCTCDexuat);
+                            s.fCucTCDeXuat = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fCucTCDeXuat);
+                            s.fCucTCDeXuat = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fCucTCDeXuat);
+                            s.fDuKienBoTriNamThu2 = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fDuKienBoTriNamThu2);
+                            return s;
+                        }).ToList();
+                    
+                    count++;
+                }
+                return lstReport;
+            }catch(Exception ex)
+            {
+                return new List<KH5NDXPrintDataExportModel>();
+
+            }
+        }
+        private List<KH5NDXPrintDataExportNewModel> HandleDataReportDeXuatChuyenTiepDonViNew(List<KH5NDXPrintDataExportNewModel> ItemsReportDeXuat)
+        {
+            try
+            {
+                var sTenDonVis = new HashSet<string>(ItemsReportDeXuat.Select(x => x.STenDonVi).Distinct());
+                var lstLoaiCongTrinh = ItemsReportDeXuat.Select(x => x.sTenLoaiCongTrinh).Distinct();
+                List<KH5NDXPrintDataExportNewModel> lstReport = new List<KH5NDXPrintDataExportNewModel>();
+                var count = 1;
+                var sSTT = 1;
+                var sLevel = 1;
+                foreach (var item in sTenDonVis)
+                {
+                    sLevel = 1;
+                    lstReport.Add(new KH5NDXPrintDataExportNewModel()
+                    {
+                        STT = (count).ToString(),
+                        STenDuAn = item,
+                        IsHangCha = true,
+                        LoaiParent = 1
+
+
+                    });
+                    foreach (var index in lstLoaiCongTrinh)
+                    {
+                        sSTT = 1;
+                        var listItems = ItemsReportDeXuat.Where(x => x.STenDonVi == item && x.sTenLoaiCongTrinh == index).ToList();
+                        if (listItems.Any())
+                        {
+                            lstReport.Add(new KH5NDXPrintDataExportNewModel()
+                            {
+                                STT = (count + "." + sLevel).ToString(),
+                                sTenLoaiCongTrinh = index,
+                                STenDuAn = index,
+                                fNSQP = listItems.Sum(x => x.fNSQP),
+                                fChiPhiDuPhong = listItems.Sum(x => x.fChiPhiDuPhong),
+                                fVonBoTriHetNam = listItems.Sum(x => x.fVonBoTriHetNam),
+                                fSoConLaiPhaiBoTri = listItems.Sum(x => x.fSoConLaiPhaiBoTri),
+                                fCucTCdexuat = listItems.Sum(x => x.fCucTCdexuat),
+                                fBoDaGiaoDuToan = listItems.Sum(x => x.fBoDaGiaoDuToan),
+                                fDuKienbotrinamthu2 = listItems.Sum(x => x.fDuKienbotrinamthu2),
+                                fSoConLaiConBotri = listItems.Sum(x => x.fSoConLaiConBotri),
+                                fSoTienConLaiChuaDeXuat = listItems.Sum(x => x.fSoTienConLaiChuaDeXuat),
+                                IsHangCha = true,
+                                LoaiParent = 2,
+                                STenDonVi = item
+
+                            });
+
+                            foreach (var itemReport in listItems)
+                            {
+                                itemReport.STT = sSTT.ToString();
+                                lstReport.Add(itemReport);
+                                sSTT++;
+                            }
+                            
+                            sLevel ++;
+
+                            //lstReport.AddRange(listItems);
+                        }
+
+                    }
+                   
+                    lstReport.Where(x => x.IsHangCha && x.LoaiParent == 1 && x.STenDuAn.Equals(item))
+                        .Select(s =>
+                        {
+                            s.fNSQP = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fNSQP);
+                            s.fChiPhiDuPhong = lstReport.Where(x =>x.LoaiParent ==2 && x.STenDonVi.Equals(item)).Sum(i => i.fChiPhiDuPhong);
+                            s.fVonBoTriHetNam = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fVonBoTriHetNam);
+                            s.fSoConLaiPhaiBoTri = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fSoConLaiPhaiBoTri);
+                            s.fCucTCdexuat = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fCucTCdexuat);
+                            s.fBoDaGiaoDuToan = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fBoDaGiaoDuToan);
+                            s.fDuKienbotrinamthu2 = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fDuKienbotrinamthu2);
+                            s.fSoConLaiConBotri = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fSoConLaiConBotri);
+                            s.fSoTienConLaiChuaDeXuat = lstReport.Where(x => x.LoaiParent == 2 && x.STenDonVi.Equals(item)).Sum(i => i.fSoTienConLaiChuaDeXuat);
+                            return s;
+                        }).ToList();
+                    
+                    count++;
+                }
+                return lstReport;
+            }catch(Exception ex)
+            {
+                return new List<KH5NDXPrintDataExportNewModel>();
+
+            }
+        }
+
 
         private void CalculateParentDeXuat(KH5NDXPrintDataExportModel currentItem, KH5NDXPrintDataExportModel seftItem, List<KH5NDXPrintDataExportModel> ItemsReportDeXuat)
         {

@@ -4,6 +4,7 @@ var ERROR = 1;
 var iIdDeNghiQuyetToanId = $("#iIdDeNghiQuyetToanId").val();
 var iIdDonVi = $("#txt_DonViQuanLy_Value").val();
 var iIdDuAn = $("#txt_DuAn_Value").val();
+var iIdLoaiquyettoanId = $("#txt_LoaiQuyetToan_Value").val();
 var iIdDuToan = $("#txt_DuToan_Value").val();
 var isDetail = $("#isDetail").val();
 
@@ -18,12 +19,26 @@ $(document).ready(function () {
         matcher: matchStart
     });
 
+    $("#txt_LoaiQuyetToan").select2({
+        width: 'resolve',
+        matcher: matchStart
+    });
+
+    $("#iIđuToanId").select2({
+        width: 'resolve',
+        matcher: matchStart
+    });
+
     LoadDataView();
     EventChangeValue();
 });
 
 function LoadDataView() {
+
     SetDataComboBoxDonViQuanLy();
+    LoadDataComboBoxDuAn(iIdDonVi);
+    LoadDataComboBoxLoaiQuyetToan(iIdDeNghiQuyetToanId); 
+    LoadDataComboboxDuToan(iIdLoaiquyettoanId, iIdDuAn);
 }
 
 function EventChangeValue() {
@@ -31,10 +46,9 @@ function EventChangeValue() {
     $("#txt_DonViQuanLy").attr('disabled', true);
     $("#txt_DuAn").attr('disabled', true);
     $("#idFormDonViQuanLy").attr('hidden', true);
+    $("#txt_LoaiQuyetToan").attr('disabled', true);
     $("#iIđuToanId").attr('disabled', true);
-
-    LoadDataComboBoxDuAn(iIdDonVi);
-    LoadDataComboboxDuToan(iIdDuAn);
+    
 }
 
 function RejectViewIndex() {
@@ -75,11 +89,11 @@ function LoadDataComboBoxDuAn(idDonVi) {
     });
 }
 
-function LoadDataComboboxDuToan(iIđuAnId) {
+function LoadDataComboboxDuToan(iIdLoaiQuyetToan, iIđuAnId) {
     $.ajax({
         type: "POST",
         url: "/QLVonDauTu/VDT_QT_DeNghiQuyetToan/GetListDuToanByDuAn",
-        data: { iIdDuAnId: iIđuAnId },
+        data: { iIdLoaiQuyetToan: iIdLoaiQuyetToan, iIdDuAnId: iIđuAnId },
         success: function (resp) {
             $("#iIđuToanId").empty();
             if (resp.datas != null && resp.datas.length != 0) {
@@ -87,7 +101,10 @@ function LoadDataComboboxDuToan(iIđuAnId) {
                     data: resp.datas
                 });
                 $("#iIđuToanId").val(iIdDuToan).trigger("change");
-                GetListChiPhiHangMuc(iIdDuToan);
+                if ($('#txt_LoaiQuyetToan').val() == 1)
+                    GetListChiPhiHangMuc(iIdDuToan);
+                if ($('#txt_LoaiQuyetToan').val() == 2)
+                    GetListGoiThau(iIdDuToan);
             }
             if (resp.sKhoiCong != null && resp.sKetThuc) {
                 document.getElementById("txtThoiGianKhoiCong").value = resp.sKhoiCong;
@@ -95,6 +112,23 @@ function LoadDataComboboxDuToan(iIđuAnId) {
             }
         }
     });
+}
+
+function LoadDataComboBoxLoaiQuyetToan(iIdDeNghiQuyetToanId) {
+    $.ajax({
+        type: "POST",
+        url: "/QLVonDauTu/VDT_QT_DeNghiQuyetToan/GetLoaiQuyetToan",
+        data: {iIdDeNghiQuyetToanId: iIdDeNghiQuyetToanId },
+        success: function (resp) {
+            if (resp.status == true) {
+                $("#txt_LoaiQuyetToan").select2({
+                    data: resp.data
+                });
+            }
+            LoadDataComboboxDuToan(iIdLoaiquyettoanId, iIdDuAn);
+        }
+    });
+
 }
 
 function GetDuLieuDuAn(idDuAn) {
@@ -132,6 +166,7 @@ function GetDuLieuDuAn(idDuAn) {
 
 var arrChiPhi = [];
 var arrHangMuc = [];
+var arrGoiThau = [];
 //function GetListChiPhiHangMuc(idDuAn) {
 //    arrChiPhi = [];
 //    arrHangMuc = [];
@@ -152,6 +187,25 @@ var arrHangMuc = [];
 //        });
 //    }
 //}
+function GetListGoiThau(iIdKhlcNhaThau) {
+    arrChiPhi = [];
+    arrHangMuc = [];
+    arrGoiThau = [];
+    var iIdDeNghiQuyetToan = $("#iIdDeNghiQuyetToanId").val();
+    if (iIdKhlcNhaThau != null && iIdKhlcNhaThau != "" && iIdKhlcNhaThau != GUID_EMPTY) {
+        $.ajax({
+            type: "POST",
+            url: "/QLVonDauTu/VDT_QT_DeNghiQuyetToan/GetListGoiThau",
+            data: { iIdKhlcNhaThau: iIdKhlcNhaThau, iIdDeNghiQuyetToan: iIdDeNghiQuyetToan },
+            success: function (resp) {
+                if (resp.lstGoiThau != null && resp.lstGoiThau.length > 0) {
+                    arrGoiThau = resp.lstGoiThau;
+                }
+                DrawTableGoiThau(resp.sumGiaTriQuyetToanAB, resp.sumKetQuaKiemToan, resp.sumCDTDeNghiQuyetToan);
+            }
+        });
+    }
+}
 
 function GetListChiPhiHangMuc(iIdDuToan) {
     arrChiPhi = [];
@@ -246,6 +300,95 @@ function DrawTableChiPhiHangMuc(sumGiaTriQuyetToanAB, sumKetQuaKiemToan, sumCDTD
     }
 }
 
+function DrawTableGoiThau(sumGiaTriQuyetToanAB, sumKetQuaKiemToan, sumCDTDeNghiQuyetToan) {
+    var html = "";
+    var index = 0;
+
+    //them dong tong so
+    html += "<tr style='font-weight:bold' data-id='-1'>";
+    html += "<td></td>";
+    html += "<td>Tổng số</td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td class='text-right txtTongGiaTriQuyetToanAB'>" + sumGiaTriQuyetToanAB + "</td>";
+    html += "<td class='text-right txtTongKetQuaKiemToan'>" + sumKetQuaKiemToan + "</td>";
+    html += "<td class='text-right txtTongCDTDeNghiQuyetToan'>" + sumCDTDeNghiQuyetToan + "</td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "</tr>";
+
+    arrGoiThau.forEach(function (itemCp) {
+        index++;
+        var disabled = "", isBold = "";
+        html += "<tr data-loai='1' style='" + isBold + "' data-id='" + itemCp.iID_DuAn_GoiThau + "' data-parentid='" + itemCp.iID_GoiThau_Parent + "'>";
+        html += "<td class='stt text-center'>" + index + "</td>";
+        html += "<td>Gói thầu</td>";
+        html += "<td>" + itemCp.sTenGoiThau + "</td>";
+        html += "<td class='text-right'>" + itemCp.sTienPheDuyet + "</td>";
+        html += "<td><input type='text' class='form-control clearable text-right txtGiaTriQuyetToanAB' value='" + itemCp.sGiaTriDeNghiQuyetToan + "' " + disabled + " onchange='changeGiaTriGoiThau(this)' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>";
+        html += "<td><input type='text' class='form-control clearable text-right txtKetQuaKiemToan' value='" + itemCp.sGiaTriKiemToan + "' " + disabled + " onchange='changeGiaTriGoiThau(this)' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>";
+        html += "<td><input type='text' class='form-control clearable text-right txtCDTDeNghiQuyetToan' value='" + itemCp.sGiaTriQuyetToanAB + "' " + disabled + " onchange='changeGiaTriGoiThau(this)' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>";
+        html += "<td class='text-right txtChenhLechSoVoiDuToan'></td>";
+        html += "<td class='text-right txtChenhLechSoVoiQuyetToanAB'></td>";
+        html += "<td class='text-right txtChenhLechSoVoiKetQuaKiemToan'></td>";
+        html += "</tr>";
+        $("#tblDanhSachChiTiet tbody").html(html);
+        $(".div_ChiTiet").show();
+    })
+}
+
+function changeGiaTriGoiThau(input) {
+    var dongHienTai = $(input).closest("tr");
+    var loai = $(dongHienTai).attr("data-loai");
+    var id = $(dongHienTai).attr("data-id");
+    var iIdDuAnChiPhi = "";
+
+    var objThis = "";
+    objThis = arrGoiThau.filter(x => x.iID_GoiThauID == id)[0];
+
+    var sGiaTriQuyetToanAB = $(dongHienTai).find(".txtGiaTriQuyetToanAB").val();
+    var fGiaTriQuyetToanAB = sGiaTriQuyetToanAB == "" ? 0 : parseInt(UnFormatNumber(sGiaTriQuyetToanAB));
+
+    var sGiaTriKiemToan = $(dongHienTai).find(".txtKetQuaKiemToan").val();
+    var fGiaTriKiemToan = sGiaTriKiemToan == "" ? 0 : parseInt(UnFormatNumber(sGiaTriKiemToan));
+
+    var sGiaTriDeNghiQuyetToan = $(dongHienTai).find(".txtCDTDeNghiQuyetToan").val();
+    var fGiaTriDeNghiQuyetToan = sGiaTriDeNghiQuyetToan == "" ? 0 : parseInt(UnFormatNumber(sGiaTriDeNghiQuyetToan));
+
+    var fChenhLenhSoVoiDuToan = fGiaTriDeNghiQuyetToan - objThis.fTienPheDuyet;
+    var fChenhLenhSoVoiQuyetToanAB = fGiaTriDeNghiQuyetToan - fGiaTriQuyetToanAB;
+    var fChenhLechSoVoiKetQuaKiemToan = fGiaTriDeNghiQuyetToan - fGiaTriKiemToan;
+
+    objThis.fGiaTriQuyetToanAB = fGiaTriQuyetToanAB;
+    objThis.fGiaTriKiemToan = fGiaTriKiemToan;
+    objThis.fGiaTriDeNghiQuyetToan = fGiaTriDeNghiQuyetToan;
+
+    objThis.fChenhLenhSoVoiDuToan = fChenhLenhSoVoiDuToan;
+    objThis.fChenhLenhSoVoiQuyetToanAB = fChenhLenhSoVoiQuyetToanAB;
+    objThis.fChenhLechSoVoiKetQuaKiemToan = fChenhLechSoVoiKetQuaKiemToan;
+
+    arrGoiThau = arrGoiThau.filter(function (x) { return x.iID_DuAn_GoiThau != objThis.iID_DuAn_GoiThau });
+    arrGoiThau.push(objThis);
+
+    var sumGiaTriDeNghiQuyetToan = 0;
+    var sumGiaTriQuyetToanAB = 0;
+    var sumKetQuaKiemToan = 0;
+    arrGoiThau.forEach(x => {
+        sumGiaTriDeNghiQuyetToan += x.fGiaTriDeNghiQuyetToan;
+        sumGiaTriQuyetToanAB += x.fGiaTriQuyetToanAB;
+        sumKetQuaKiemToan += x.fGiaTriKiemToan;
+    });
+    document.getElementById("txtGiaTriQuyetToan").value = sumGiaTriDeNghiQuyetToan;
+    $('*[data-id="' + "-1" + '"]').find('.txtTongGiaTriQuyetToanAB').html(FormatNumber(sumGiaTriQuyetToanAB));
+    $('*[data-id="' + "-1" + '"]').find('.txtTongKetQuaKiemToan').html(FormatNumber(sumKetQuaKiemToan));
+    $('*[data-id="' + "-1" + '"]').find('.txtTongCDTDeNghiQuyetToan').html(FormatNumber(sumGiaTriDeNghiQuyetToan));
+
+    $(dongHienTai).find(".txtChenhLechSoVoiDuToan").html(FormatNumber(fChenhLenhSoVoiDuToan));
+    $(dongHienTai).find(".txtChenhLechSoVoiQuyetToanAB").html(FormatNumber(fChenhLenhSoVoiQuyetToanAB));
+    $(dongHienTai).find(".txtChenhLechSoVoiKetQuaKiemToan").html(FormatNumber(fChenhLechSoVoiKetQuaKiemToan));
+}
+
 function GetDataBeforeSave() {
     var data = {};
 
@@ -259,7 +402,7 @@ function GetDataBeforeSave() {
 
     data.iID_DuAnID = iIdDuAn;
     data.iID_DonViID = iIdDonVi;
-
+    data.iId_LoaiQuyetToan = $("#txt_LoaiQuyetToan").val();
     data.sMoTa = $("#txtGhiChu").val();
 
     data.fChiPhiThietHai = $("#txtChiPhiThietHai").val() == "" ? null : parseFloat(UnFormatNumber($("#txtChiPhiThietHai").val()));
@@ -275,6 +418,7 @@ function GetDataBeforeSave() {
     data.listNguonVon = GetDataNguonVon();
     data.listChiPhi = arrChiPhi;
     data.listHangMuc = arrHangMuc;
+    data.listGoiThau = arrGoiThau;
     return data;
 }
 

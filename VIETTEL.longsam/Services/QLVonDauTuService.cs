@@ -3,6 +3,7 @@ using DapperExtensions;
 using DomainModel;
 using FlexCel.Core;
 using Newtonsoft.Json.Serialization;
+using NUnit.Framework.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -188,6 +189,9 @@ namespace Viettel.Services
         /// <param name="iNamLamViec">Năm làm việc</param>
         /// <returns></returns>
         IEnumerable<NS_MucLucNganSach> LayLoaiNguonVon(int iNamLamViec);
+
+        IEnumerable<VDT_DA_DuAn> GetDuAnBysMaDuAn(string listsMaDuAn);
+
         #endregion
 
         #region Thông tin dự án - QL phê duyệt TKTC & TDT
@@ -254,7 +258,9 @@ namespace Viettel.Services
         List<VDT_DA_DuToan_Nguonvon_ViewModel> GetListNguonVonTheoTKTC(Guid duToanId);
         List<VDT_DA_DuToan_ChiPhi_ViewModel> GetChiPhiTKTCTDTByDuAnId(Guid iIdDuAnId);
         IEnumerable<VDT_DA_DuToan_ChiPhi_ViewModel> GetListChiPhiTheoTKTC(Guid duToanId);
+        IEnumerable<VDT_DA_DuToan_ChiPhi_ViewModel> GetListChiPhiHangMucTheoTKTC(Guid duToanId);
         IEnumerable<VDT_DA_DuToan_HangMuc_ViewModel> GetListHangMucTheoTKTC(Guid duToanId);
+        IEnumerable<VDT_DA_NhaThau_GoiThau_ViewModel> GetListGoiThauTheoKHLCNhaThau(Guid nhaThauId);
         List<VDT_DA_DuToan_Nguonvon_ViewModel> GetListNguonVonTheoQDDT(Guid duToanId);
         List<VDT_DA_DuToan_Nguonvon_ViewModel> GetListNguonVonTheoCTDT(Guid duToanId);
         IEnumerable<VDT_DA_DuToan_ChiPhi_ViewModel> GetListChiPhiTheoQDDT(Guid duToanId);
@@ -776,6 +782,7 @@ namespace Viettel.Services
             int? iNamThongTri, DateTime? dNgayThongTri);
         //IEnumerable<VDTGetThongTriChiTietViewModel> LayDanhSachThongTriXuatFile_v1(int iNamLamViec, string sUserName, string sMaDonVi, string sMaThongTri,
         //    int? iNamThongTri, DateTime? dNgayThongTri);
+        IEnumerable<VdtThongTriQuyetToanReportModel> LayDanhSachThongTriXuatFile(Guid iIdThongTriId);
         #endregion
 
         /// <summary>
@@ -998,16 +1005,20 @@ namespace Viettel.Services
         IEnumerable<VDT_QT_DeNghiQuyetToanViewModel> GetAllDeNghiQuyetToanPaging(ref PagingInfo _paging, string sSoBaoCao = "", decimal? sGiaDeNghiTu = null, decimal? sGiaDeNghiDen = null, string sTenDuAn = "", string sMaDuAn = "", string sUserName = "");
         VDT_QT_DeNghiQuyetToan Get_VDT_QT_DeNghiQuyetToanById(Guid id);
         List<VDT_DA_DuAn> GetListAllDuAn(string idDonViQuanLy, string iIdDeNghiQuyetToanId);
+        List<VDT_QT_DeNghiQuyetToan> GetListDeNGhiQt(Guid idDuAn, Guid? iIdQuyetToanId);
         List<NS_DonVi> GetListAllDonVi(string sUserName);
         List<NS_DonVi> GetListAllDonViByCurrentYear(string sUserName, string iNamLamViec);
+        IEnumerable<NS_DonVi> GetListAllDonViQLByUserAndCurrentYear(string sUserName, int iNamLamViec);
         bool VDT_QT_DeNghiQuyetToan_SaveData(VDT_QT_DeNghiQuyetToanViewModel sModel, string sUserName);
         VDT_QT_DeNghiQuyetToanGetDuAnModel GetDuLieuDuAnById(string idDuAn, string sUserName);
         bool VDT_QT_DeNghiQuyetToan_Delete(string id, string sUserName);
         NS_DonVi GetDuLieuDonViQuanLyByIdDuAn(string idDuAn, string sUserName);
         VDT_QT_DeNghiQuyetToanViewModel GetDeNghiQuyetToanDetail(string id, string sUserName);
+        VDT_QT_DeNghiQuyetToan GetDeNghiQuyetToanById(Guid? id);
         List<VDT_QT_DeNghiQuyetToanViewModel> ExportData(string sSoBaoCao, decimal? sGiaDeNghiTu, decimal? sGiaDeNghiDen, string sTenDuAn, string sMaDuAn, string sUserName);
         List<VDT_QT_DeNghiQuyetToanViewModel> Get_VDT_QT_DeNghiQuyetToanChiTietById(Guid id);
         List<VDT_QT_DeNghiQuyetToanViewModel> Get_VDT_QT_DeNghiQuyetToan_VonDauTuById(Guid id);
+        int GetLoaiQuyetToan_byDeNghiQtId(Guid id);
         List<VDT_QT_DeNghiQuyetToanViewModel> Get_VDT_QT_DeNghiQuyetToan_TaiSanById(Guid id);
         List<VDT_QT_DeNghiQuyetToanChiTietViewModel> Get_VDT_QT_DeNghiQuyetToan_ChiPhiById(Guid id);
         #endregion
@@ -1191,15 +1202,18 @@ namespace Viettel.Services
         VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet GetKH5NamDeXuatChiTietById(Guid? Id);
         IEnumerable<NS_NguonNganSach> GetListDMNguonNganSach();
         IEnumerable<VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel> FindByReportKeHoachTrungHanDeXuatChuyenTiep(string lstId, string lstBudget, string lstLoaiCongTrinh, string lstUnit, int type, double donViTinh);
+        IEnumerable<KH5NDXPrintDataExportNewModel> ReportKeHoachTrungHanDeXuatChuyenTiepNew(string lstId, string lstIdNguonVon, string lstLoaiCongTrinh, int type, double donViTinh);
         IEnumerable<KH5NDXPrintDataDieuChinhExportModel> FindSuggestionDcReport(int type, string lstId, string lstDonVi, double menhGiaTienTe);
         IEnumerable<KH5NDXPrintDataExportModel> GetDataReportKH5NDeXuat(string id, string lct, string lstNguonVon, string lstMaDonViQL, int type, double donViTinh, int iNamLamViec);
+        IEnumerable<KH5NDXPrintDataExportModel> GetDataReportKH5NDeXuatNew(string id, string lct, string lstNguonVon, double donViTinh, int iNamLamViec, int type);
         IEnumerable<PhanBoVonDonViDieuChinhNSQPReport> GetPhanBoVonDieuChinhReport(string lstId, string lstLct, int yearPlan, int type, double donViTienTe);
         IEnumerable<VdtKhvVonNamDeXuatDieuChinhOrtherBudgetModel> GetPhanBoVonDieuChinhNguonVon(int type, string lstId, string lstLct, string lstNguonVon, double donViTienTe);
         IEnumerable<KHVNDXExportModel> GetReportKeHoachVonNam(int type, string theLoaiCongTrinh, string lstId, string lstLct, double donViTinh);
         IEnumerable<VDT_KHV_KeHoachVonNam_DeXuat> GetVoucherVonNamDeXuatByCondition(int idNguonVon, List<string> arrDonVi, List<string> arrNguonVon, int iNamLamViec, string isStatus);
-        IEnumerable<string> GetVoucherVonNamDeXuatIdByCondition(int idNguonVon, List<string> arrDonVi, List<string> arrNguonVon, int iNamLamViec, string isStatus);
-        IEnumerable<string> GetLstIdChungTuDeXuat(int iGiaiDoanTu, int iGiaiDoanDen, bool isModified, bool isCt, int iNamLanViec);
+        IEnumerable<string> GetVoucherVonNamDeXuatIdByCondition(KHVNDXPrintDataExportModel data, List<string> arrDonVi, List<string> arrNguonVon);
+        IEnumerable<string> GetLstIdChungTuDeXuat(int iGiaiDoanTu, int iGiaiDoanDen, bool isModified, bool isCt, int iNamLanViec,string lstMaDV);
         List<VDT_DM_LoaiCongTrinh> GetListParentDMLoaiCongTrinh();
+        List<VDT_DM_LoaiCongTrinh> GetAllDMLoaiCongTrinhExportKHVNDX();
 
         /// <summary>
         /// Nếu giá trị của thuộc tính propertyName quá ngắn thì set min height cho dòng đó
@@ -1234,9 +1248,10 @@ namespace Viettel.Services
         bool LockOrUnLockKeHoachVonNamDeXuat(Guid id, bool isLockOrUnLock);
         IEnumerable<VDT_DA_DuAn_HangMuc> GetDuAnHangMucByListDuAnID(string iID_KeHoachVonNamDeXuatID, string lstDuAnID);
         IEnumerable<VDTDuAnViewModel> GetDuAnKHVNDXByDonVi(Guid iID_DonViID, int iNamKeHoach, int iID_NguonVonID);
-        IEnumerable<VDT_KHV_KeHoachVonNam_DeXuat> GetListChungTuTH(Guid iID_DonViQL, int iNamKeHoach);
+        IEnumerable<VDT_KHV_KeHoachVonNam_DeXuat> GetListChungTuTH(string iIDMaDonViQL, int iNamKeHoach, int iIdLoaiChungTuTH);
         IEnumerable<KHVNDXExportExcelModel> GetKeHoachVonNamExcel(string id);
-
+        VDT_KHV_KeHoachVonNam_DeXuat SaveImportKeHoachVonNamDeXuat(VDT_KHV_KeHoachVonNam_DeXuat_ViewModel data);
+        bool SaveImportKeHoachVonNamDeXuatChiTiet(List<VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet> dataChiTiet, Guid iID_KeHoachVonNamDeXuatID);
         #endregion
 
         #region Kế hoạch vốn năm được duyệt
@@ -1726,10 +1741,12 @@ namespace Viettel.Services
         List<VDTDuToanNguonVonModel> GetListDuToanNguonVonByDuToanId(string iIdDuToanId);
         VDT_DA_DuToan GetDuToanIdByDuAnId(Guid iID_DuAnID);
         IEnumerable<VDT_DA_DuToan> GetAllDuToanIdByDuAnId(Guid iID_DuAnID);
+        IEnumerable<VDT_QDDT_KHLCNhaThau> GetAllKHLCNTIdByDuAnId(Guid iID_DuAnID);
         List<VDT_QT_DeNghiQuyetToan_ChiTiet> GetDeNghiQuyetToanChiTiet(Guid iIdDeNghiQuyetToanId);
         IEnumerable<VDT_QT_DeNghiQuyetToan> GetDeNghiQuyetToan(string sUserName = "");
         IEnumerable<VDT_QT_DeNghiQuyetToanViewModel> FindDeNghiQuyetToan(string userName = "");
         double GetGiaTriDuToanIdByDuAnId(Guid? duanId);
+        double GetTongMucQddtByIdDuAn(Guid? duanId);
         List<NguonVonQuyetToanKeHoachQuery> GetNguonVonByDuToanId(string duToanId);
         List<VdtDaDuToanChiPhiDataQuery> FindListDuToanChiPhiByDuAn(Guid? duanId);
         List<VDT_QT_DeNghiQuyetToan_ChiTiet> FindByDeNghiQuyetToanId(Guid? deNghiQuyetToanId);
@@ -2120,6 +2137,21 @@ namespace Viettel.Services
                 return items;
             }
         }
+
+        public IEnumerable<VDT_DA_DuAn> GetDuAnBysMaDuAn(string listsMaDuAn)
+        {
+            var sql = "select * FROM VDT_DA_DuAn\r\nWhere sMaDuAn in (SELECT * FROM dbo.f_split(@listsMaDuAn))";
+            using(var conn = _connectionFactory.GetConnection())
+            {
+                var items = conn.Query<VDT_DA_DuAn>(sql, param: new
+                {
+                    listsMaDuAn
+                },
+                commandType: CommandType.Text);
+                return items;
+            }
+        }
+
 
         public DuAnViewModel GetThongTinDuAnByDuAnId(Guid iId)
         {
@@ -2737,7 +2769,7 @@ namespace Viettel.Services
                     //query.AppendFormat(" (SELECT dt.iID_DuAnID FROM VDT_DA_DuToan dt WHERE dt.bLaTongDuToan = {0} AND dt.bActive = 1) AND", Constants.TONG_DU_TOAN);
                     query.AppendFormat(" (SELECT dt.iID_DuAnID FROM VDT_DA_DuToan dt WHERE dt.bLaTongDuToan = {0} AND dt.bActive = 1) AND da.iID_DuAnID IN (SELECT qddt.iID_DuAnID FROM VDT_DA_QDDauTu qddt) AND", Constants.TONG_DU_TOAN);
                 }
-                query.Append(" da.iID_MaDonViThucHienDuAnID = @iID_MaDonViQuanLyID");
+                query.Append(" da.iID_MaDonVi = @iID_MaDonViQuanLyID");
                 using (var conn = _connectionFactory.GetConnection())
                 {
                     var items = conn.Query<VDT_DA_DuAn>(query.ToString(),
@@ -3241,6 +3273,31 @@ namespace Viettel.Services
             return null;
         }
 
+        public IEnumerable<VDT_DA_DuToan_ChiPhi_ViewModel> GetListChiPhiHangMucTheoTKTC(Guid duToanId)
+        {
+            try
+            {
+                var sql = FileHelpers.GetSqlQuery("vdt_get_listchiphihangmuc_dutoan_by_id.sql");
+                using (var conn = _connectionFactory.GetConnection())
+                {
+
+                    var item = conn.Query<VDT_DA_DuToan_ChiPhi_ViewModel>(sql,
+                        param: new
+                        {
+                            duToanId
+                        },
+                        commandType: CommandType.Text);
+
+                    return item;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return null;
+        }
+
         public IEnumerable<VDT_DA_DuToan_ChiPhi_ViewModel> GetListChiPhiTheoQDDT(Guid duToanId)
         {
             try
@@ -3300,6 +3357,30 @@ namespace Viettel.Services
                         param: new
                         {
                             duToanId
+                        },
+                        commandType: CommandType.Text);
+
+                    return item;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return null;
+        }
+        public IEnumerable<VDT_DA_NhaThau_GoiThau_ViewModel> GetListGoiThauTheoKHLCNhaThau(Guid nhaThauId)
+        {
+            try
+            {
+                var sql = FileHelpers.GetSqlQuery("vdt_get_listgoithau_nhathau_by_id.sql");
+                using (var conn = _connectionFactory.GetConnection())
+                {
+
+                    var item = conn.Query<VDT_DA_NhaThau_GoiThau_ViewModel>(sql,
+                        param: new 
+                        {
+                            nhaThauId
                         },
                         commandType: CommandType.Text);
 
@@ -5929,6 +6010,21 @@ namespace Viettel.Services
                 return items;
             }
         }
+
+        public IEnumerable<VdtThongTriQuyetToanReportModel> LayDanhSachThongTriXuatFile(Guid iIdThongTriId)
+        {
+            var sql = FileHelpers.GetSqlQuery("vdt_thongtri_quyettoan_export.sql");
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var items = conn.Query<VdtThongTriQuyetToanReportModel>(sql,
+                            param: new
+                            {
+                                iIdThongTriId
+                            },
+                            commandType: CommandType.Text);
+                return items;
+            }
+        }
         #endregion
 
         #region Giải ngân - Thanh toán
@@ -6104,33 +6200,48 @@ namespace Viettel.Services
             }
 
             model.iID_KeHoachVonID = item.iID_KeHoachVonID;
-            if (item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.THANH_TOAN || item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.TAM_UNG)
+            //if (item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.THANH_TOAN || item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.TAM_UNG)
+            //{
+            // model.fGiaTriThanhToanNN = item.fGiaTriNgoaiNuoc;
+            // model.fGiaTriThanhToanTN = item.fGiaTriTrongNuoc;
+            //}
+            //else
+            //{
+            // if (item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.THU_HOI_UNG_TRUOC_NAM_NAY)
+            // {
+            // model.fGiaTriThuHoiUngTruocNamNayNN = item.fGiaTriNgoaiNuoc;
+            // model.fGiaTriThuHoiUngTruocNamNayTN = item.fGiaTriTrongNuoc;
+            // }
+            // if (item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.THU_HOI_UNG_TRUOC_NAM_TRUOC)
+            // {
+            // model.fGiaTriThuHoiUngTruocNamTruocNN = item.fGiaTriNgoaiNuoc;
+            // model.fGiaTriThuHoiUngTruocNamTruocTN = item.fGiaTriTrongNuoc;
+            // }
+            // else if (item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.THU_HOI_NAM_NAY)
+            // {
+            // model.fGiaTriThuHoiNamNayNN = item.fGiaTriNgoaiNuoc;
+            // model.fGiaTriThuHoiNamNayTN = item.fGiaTriTrongNuoc;
+            // }
+            // else if (item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.THU_HOI_NAM_TRUOC)
+            // {
+            // model.fGiaTriThuHoiNamTruocNN = item.fGiaTriNgoaiNuoc;
+            // model.fGiaTriThuHoiNamTruocTN = item.fGiaTriTrongNuoc;
+            // }
+            //}
+            if (item.iLoai == (int)PaymentTypeEnum.Type.THANH_TOAN || item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.TAM_UNG)
             {
                 model.fGiaTriThanhToanNN = item.fGiaTriNgoaiNuoc;
                 model.fGiaTriThanhToanTN = item.fGiaTriTrongNuoc;
             }
-            else
+            else if (item.iLoai == (int)PaymentTypeEnum.Type.THU_HOI_NAM_TRUOC)
             {
-                if (item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.THU_HOI_UNG_TRUOC_NAM_NAY)
-                {
-                    model.fGiaTriThuHoiUngTruocNamNayNN = item.fGiaTriNgoaiNuoc;
-                    model.fGiaTriThuHoiUngTruocNamNayTN = item.fGiaTriTrongNuoc;
-                }
-                if (item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.THU_HOI_UNG_TRUOC_NAM_TRUOC)
-                {
-                    model.fGiaTriThuHoiUngTruocNamTruocNN = item.fGiaTriNgoaiNuoc;
-                    model.fGiaTriThuHoiUngTruocNamTruocTN = item.fGiaTriTrongNuoc;
-                }
-                else if (item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.THU_HOI_NAM_NAY)
-                {
-                    model.fGiaTriThuHoiNamNayNN = item.fGiaTriNgoaiNuoc;
-                    model.fGiaTriThuHoiNamNayTN = item.fGiaTriTrongNuoc;
-                }
-                else if (item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.THU_HOI_NAM_TRUOC)
-                {
-                    model.fGiaTriThuHoiNamTruocNN = item.fGiaTriNgoaiNuoc;
-                    model.fGiaTriThuHoiNamTruocTN = item.fGiaTriTrongNuoc;
-                }
+                model.fGiaTriThuHoiNamTruocNN = item.fGiaTriNgoaiNuoc;
+                model.fGiaTriThuHoiNamTruocTN = item.fGiaTriTrongNuoc;
+            }
+            else if (item.iLoai == (int)PaymentTypeEnum.Type.THU_HOI_NAM_NAY)
+            {
+                model.fGiaTriThuHoiNamNayNN = item.fGiaTriNgoaiNuoc;
+                model.fGiaTriThuHoiNamNayTN = item.fGiaTriTrongNuoc;
             }
             return model;
         }
@@ -8318,6 +8429,19 @@ namespace Viettel.Services
                 return item.ToList();
             }
         }
+        public int GetLoaiQuyetToan_byDeNghiQtId(Guid id)
+        {
+            string sql = @"SELECT iID_LoaiQuyetToan 
+                FROM VDT_QT_DeNghiQuyetToan
+				where iID_DeNghiQuyetToanID=@id";
+
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var item = conn.Query<int>(sql, param: new { id },
+                    commandType: CommandType.Text);
+                return item.FirstOrDefault();
+            }
+        }
         public List<VDT_QT_DeNghiQuyetToanViewModel> Get_VDT_QT_DeNghiQuyetToan_TaiSanById(Guid id)
         {
             string sql = @"SELECT dnqt.*,da.sTenDuAn, da.sMaDuAn, nda.sTenNhomDuAn
@@ -8396,6 +8520,27 @@ namespace Viettel.Services
             return result;
         }
 
+        public List<VDT_QT_DeNghiQuyetToan> GetListDeNGhiQt(Guid idDuAn, Guid? iIdQuyetToanId)
+        {
+            var result = new List<VDT_QT_DeNghiQuyetToan>();
+
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                if(iIdQuyetToanId == null)
+                {
+                    var items = conn.Query<VDT_QT_DeNghiQuyetToan>(string.Format("SELECT * FROM VDT_QT_DeNghiQuyetToan WHERE iID_DuAnID = '{0}'", idDuAn), null, commandType: CommandType.Text);
+                    result.AddRange(items);
+                }
+                else
+                {
+                    var items = conn.Query<VDT_QT_DeNghiQuyetToan>(string.Format("SELECT * FROM VDT_QT_DeNghiQuyetToan WHERE iID_DeNghiQuyetToanID = '{0}'", iIdQuyetToanId), null, commandType: CommandType.Text);
+                    result.AddRange(items);
+                }
+
+            }
+            return result;
+        }
+
         // get đơn vị theo năm làm việc của user login
         public List<NS_DonVi> GetListAllDonVi(string sUserName)
         {
@@ -8449,6 +8594,26 @@ namespace Viettel.Services
 
             return result;
         }
+
+       public IEnumerable<NS_DonVi> GetListAllDonViQLByUserAndCurrentYear(string sUserName, int iNamLamViec)
+        {
+            var sql = "SELECT DISTINCT dv.iID_Ma,dv.iID_MaDonVi, CONCAT(dv.iID_MaDonVi, ' - ', dv.sTen) as sMoTa FROM NS_DonVi as dv " +               
+                "WHERE \r\n\t" +
+                "dv.iTrangThai =1 " +
+                "AND dv.iNamLamViec_DonVi =@iNamLamViec " +
+                "AND dv.sID_MaNguoiDungTao =@sUserName ";
+            using(var conn = _connectionFactory.GetConnection())
+            {
+                var items = conn.Query<NS_DonVi>(sql, param: new
+                {
+                    sUserName,
+                    iNamLamViec
+                },
+                commandType: CommandType.Text);
+                return items;
+            }
+        }
+
 
         public bool VDT_QT_DeNghiQuyetToan_SaveData(VDT_QT_DeNghiQuyetToanViewModel sModel, string sUserName)
         {
@@ -8537,6 +8702,22 @@ namespace Viettel.Services
                             objChiTiet.fGiaTriKiemToan = itemHm.fGiaTriKiemToan;
                             objChiTiet.fGiaTriDeNghiQuyetToan = itemHm.fGiaTriDeNghiQuyetToan;
                             objChiTiet.fGiaTriQuyetToanAB = itemHm.fGiaTriQuyetToanAB;
+                            //objChiTiet.sMaOrder = itemCp.iThuTu;
+
+                            conn.Insert<VDT_QT_DeNghiQuyetToan_ChiTiet>(objChiTiet, trans);
+                        }
+                    }
+
+                    if (sModel.listGoiThau != null && sModel.listGoiThau.Any())
+                    {
+                        foreach (VDT_DA_NhaThau_GoiThau_ViewModel itemGt in sModel.listGoiThau)
+                        {
+                            VDT_QT_DeNghiQuyetToan_ChiTiet objChiTiet = new VDT_QT_DeNghiQuyetToan_ChiTiet();
+                            objChiTiet.iID_DeNghiQuyetToanID = sModel.iID_DeNghiQuyetToanID;
+                            objChiTiet.iID_GoiThauId = itemGt.iID_GoiThauID;
+                            objChiTiet.fGiaTriKiemToan = itemGt.fGiaTriKiemToan;
+                            objChiTiet.fGiaTriDeNghiQuyetToan = itemGt.fGiaTriDeNghiQuyetToan;
+                            objChiTiet.fGiaTriQuyetToanAB = itemGt.fGiaTriQuyetToanAB;
                             //objChiTiet.sMaOrder = itemCp.iThuTu;
 
                             conn.Insert<VDT_QT_DeNghiQuyetToan_ChiTiet>(objChiTiet, trans);
@@ -8648,7 +8829,7 @@ namespace Viettel.Services
                     result.iID_DuAnID = model.iID_DuAnID;
                     result.iID_DonViID = model.iID_DonViID;
                     result.iID_DuToanID = model.iID_DuToanID;
-
+                    result.iID_LoaiQuyetToan = model.iID_LoaiQuyetToan;
                     result.fChiPhiThietHai = model.fChiPhiThietHai;
                     result.fChiPhiKhongTaoNenTaiSan = model.fChiPhiKhongTaoNenTaiSan;
                     result.fTaiSanDaiHanThuocCDTQuanLy = model.fTaiSanDaiHanThuocCDTQuanLy;
@@ -8687,6 +8868,15 @@ namespace Viettel.Services
                 }
             }
 
+            return result;
+        }
+        public VDT_QT_DeNghiQuyetToan GetDeNghiQuyetToanById(Guid? id)
+        {
+            var result = new VDT_QT_DeNghiQuyetToan();
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                result = conn.QueryFirstOrDefault<VDT_QT_DeNghiQuyetToan>(string.Format("SELECT * FROM VDT_QT_DeNghiQuyetToan WHERE iID_DeNghiQuyetToanID = '{0}'", id), null, commandType: CommandType.Text);
+            }
             return result;
         }
 
@@ -12836,32 +13026,34 @@ namespace Viettel.Services
                 return items;
             }
         }
-        public IEnumerable<string> GetVoucherVonNamDeXuatIdByCondition(int idNguonVon, List<string> arrDonVi, List<string> arrNguonVon, int iNamLamViec, string isStatus)
+        public IEnumerable<string> GetVoucherVonNamDeXuatIdByCondition(KHVNDXPrintDataExportModel data, List<string> arrDonVi, List<string> arrNguonVon)
         {
-            var sql =
-                @"SELECT convert(nvarchar(50), iID_KeHoachVonNamDeXuatID)
-                FROM 
-	                VDT_KHV_KeHoachVonNam_DeXuat 
-                WHERE 
-	                iID_NguonVonID = @idNguonVon
-	                AND iNamKeHoach = @iNamLamViec
-                    AND iID_MaDonViQuanLy IN (SELECT * FROM dbo.f_split(@lstMaDV))";
-            var lstMaDV = string.Join(",", arrDonVi.Select(n => n.ToString()));
+            StringBuilder sb = new StringBuilder();
+            sb.Append("SELECT CAST(iID_KeHoachVonNamDeXuatID as nvarchar(50)) FROM VDT_KHV_KeHoachVonNam_DeXuat WHERE iNamKeHoach = @iNamLamViec AND sTongHop IS NULL ");
+            sb.AppendFormat(" AND iID_MaDonViQuanLy in ({0})", string.Join(",", arrDonVi.Select(n => string.Format("'{0}'", n))));
 
-            if (isStatus.Equals("3"))
+            if (data.iIdBaoCaoMau == 2 && data.iLoaiChungTu == "2")
+                sb.AppendFormat(" AND iID_NguonVonID in ({0}) ", string.Join(",", arrNguonVon));
+            else
+                sb.Append(" AND iID_NguonVonID = @iIdNguonVonId ");
+
+            if (data.iLoaiChungTu == "1")
             {
-
+                sb.Append(" AND iID_ParentId IS NULL ");
+            }
+            else
+            {
+                sb.Append(" AND iID_ParentId IS NOT NULL AND bActive = 1 ");
             }
 
             using (var conn = _connectionFactory.GetConnection())
             {
                 var items = conn.Query<string>(new CommandDefinition(
-                     commandText: sql,
+                     commandText: sb.ToString(),
                      parameters: new
                      {
-                         idNguonVon,
-                         iNamLamViec,
-                         lstMaDV
+                         iIdNguonVonId = data.iIDNguonVon,
+                         iNamLamViec = data.iNamKeHoach
                      },
                      commandType: CommandType.Text
                  ));
@@ -12902,6 +13094,12 @@ namespace Viettel.Services
 
         public IEnumerable<PhanBoVonDonViDieuChinhNSQPReport> GetPhanBoVonDieuChinhReport(string lstId, string lstLct, int yearPlan, int type, double donViTienTe)
         {
+            if(!string.IsNullOrEmpty(lstLct) && Guid.Parse(lstLct) == Guid.Empty)
+            {
+                var data = GetAllDMLoaiCongTrinhExportKHVNDX();
+                if (data != null)
+                    lstLct = string.Join(",", data.Select(n=>n.iID_LoaiCongTrinh.ToString()));
+            }
             using (var conn = _connectionFactory.GetConnection())
             {
                 DynamicParameters lstParam = new DynamicParameters();
@@ -12932,6 +13130,22 @@ namespace Viettel.Services
             }
         }
 
+        public IEnumerable<KH5NDXPrintDataExportModel> GetDataReportKH5NDeXuatNew(string id, string lct, string lstNguonVon, double donViTinh, int iNamLamViec, int type)
+        {
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                DynamicParameters lstParam = new DynamicParameters();
+                lstParam.Add("Id", id);
+                lstParam.Add("lct", lct);
+                lstParam.Add("IdNguonVon", lstNguonVon);
+                lstParam.Add("MenhGiaTienTe", donViTinh);
+                lstParam.Add("iNamLamViec", iNamLamViec);
+                lstParam.Add("type", type);
+                var items = conn.Query<KH5NDXPrintDataExportModel>("sp_vdt_khv_ke_hoach_5_nam_de_xuat_export_new", lstParam, commandType: CommandType.StoredProcedure);
+                return items;
+            }
+        }
+
         public IEnumerable<VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel> FindByReportKeHoachTrungHanDeXuatChuyenTiep(string lstId, string lstBudget, string lstLoaiCongTrinh, string lstUnit, int type, double donViTinh)
         {
             using (var conn = _connectionFactory.GetConnection())
@@ -12945,6 +13159,21 @@ namespace Viettel.Services
                 lstParam.Add("DonViTienTe", donViTinh);
                 //var items = conn.Query<VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel>("sp_vdt_kehoach5nam_dexuat_chitiet_chuyentiep_report", lstParam, commandType: CommandType.StoredProcedure);
                 var items = conn.Query<VdtKhvKeHoach5NamDeXuatChuyenTiepReportModel>("sp_vdt_kehoach5nam_dexuat_chitiet_chuyentiep_report_test_1", lstParam, commandType: CommandType.StoredProcedure);
+                return items;
+            }
+        }
+
+        public IEnumerable<KH5NDXPrintDataExportNewModel> ReportKeHoachTrungHanDeXuatChuyenTiepNew(string lstId, string lstIdNguonVon, string lstLoaiCongTrinh, int type, double donViTinh)
+        {
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                DynamicParameters lstParam = new DynamicParameters();
+                lstParam.Add("lstId", lstId);
+                lstParam.Add("lstIdNguonVon", lstIdNguonVon);
+                lstParam.Add("lstLct", lstLoaiCongTrinh);
+                lstParam.Add("type", type);
+                lstParam.Add("DonViTienTe", donViTinh);
+                var items = conn.Query<KH5NDXPrintDataExportNewModel>("sp_ke_hoach_trung_han_de_xuat_chuyen_tiep_report", lstParam, commandType: CommandType.StoredProcedure);
                 return items;
             }
         }
@@ -12963,13 +13192,15 @@ namespace Viettel.Services
             }
         }
 
-        public IEnumerable<string> GetLstIdChungTuDeXuat(int iGiaiDoanTu, int iGiaiDoanDen, bool isModified, bool isCt, int iNamLamViec)
+        public IEnumerable<string> GetLstIdChungTuDeXuat(int iGiaiDoanTu, int iGiaiDoanDen, bool isModified, bool isCt, int iNamLamViec, string lstMaDV)
         {
             var sql =
                 @"SELECT convert(nvarchar(50), iID_KeHoach5Nam_DeXuatID)
                 FROM VDT_KHV_KeHoach5Nam_DeXuat 
                 where iGiaiDoanTu = @iGiaiDoanTu and iGiaiDoanDen = @iGiaiDoanDen
                 and bActive = 1 and bIsGoc = 1 and iLoai = 1 and sTongHop is null
+                AND iID_MaDonViQuanLy in (SELECT * FROM dbo.f_split(@lstMaDV))
+
                 ";
 
             if (isModified && !isCt)
@@ -12979,6 +13210,8 @@ namespace Viettel.Services
                 FROM VDT_KHV_KeHoach5Nam_DeXuat 
                 where iGiaiDoanTu = @iGiaiDoanTu and iGiaiDoanDen = @iGiaiDoanDen
                 and bActive = 1 and bIsGoc = 0 and iLoai = 1 and sTongHop is null
+                AND iID_MaDonViQuanLy in (SELECT * FROM dbo.f_split(@lstMaDV))
+
                 ";
             }
             else if (!isModified && isCt)
@@ -12987,7 +13220,9 @@ namespace Viettel.Services
                @"SELECT convert(nvarchar(50), iID_KeHoach5Nam_DeXuatID)
                 FROM VDT_KHV_KeHoach5Nam_DeXuat 
                 where iGiaiDoanTu = @iGiaiDoanTu and iGiaiDoanDen = @iGiaiDoanDen
-                and bActive = 1 and bIsGoc = 1 and iLoai = 2 and sTongHop is null";
+                and bActive = 1 and bIsGoc = 1 and iLoai = 2 and sTongHop is null
+                AND iID_MaDonViQuanLy in (SELECT * FROM dbo.f_split(@lstMaDV))
+                ";
             }
 
             using (var conn = _connectionFactory.GetConnection())
@@ -12998,7 +13233,8 @@ namespace Viettel.Services
                      {
                          iGiaiDoanTu,
                          iGiaiDoanDen,
-                         iNamLamViec
+                         iNamLamViec,
+                         lstMaDV
                      },
                      commandType: CommandType.Text
                  ));
@@ -13022,16 +13258,36 @@ namespace Viettel.Services
 
             return result;
         }
-        
+
+        public List<VDT_DM_LoaiCongTrinh> GetAllDMLoaiCongTrinhExportKHVNDX()
+        {
+            var result = new List<VDT_DM_LoaiCongTrinh>();
+
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var items = conn.Query<VDT_DM_LoaiCongTrinh>("SELECT * FROM VDT_DM_LoaiCongTrinh where  bActive = 1");
+                if (items != null && items.Any())
+                {
+                    result.AddRange(items);
+                }
+            }
+
+            return result;
+        }
+
         public void FormatAllRowHeight<T>(List<T> items, string propertyName, int startRowItems, int maxCharacterPerLine, ExcelFile xlsFile, int height)
         {
             int counter = 0;
             foreach (var item in items)
             {
-                if (item.GetType().GetProperty(propertyName).GetValue(item, null).ToString().Length < maxCharacterPerLine)
+                var property = item.GetType().GetProperty(propertyName).GetValue(item, null);
+                if(property != null)
                 {
-                    xlsFile.SetRowHeight(startRowItems + counter, height);
-                }
+                    if(property.ToString().Length < maxCharacterPerLine)
+                    {
+                        xlsFile.SetRowHeight(startRowItems + counter, height);
+                    }
+                }                
                 counter++;
             }
         }
@@ -13266,6 +13522,86 @@ namespace Viettel.Services
             return true;
         }
 
+        public VDT_KHV_KeHoachVonNam_DeXuat SaveImportKeHoachVonNamDeXuat(VDT_KHV_KeHoachVonNam_DeXuat_ViewModel data)
+        {
+            try
+            {
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    conn.Open();
+                    var trans = conn.BeginTransaction();
+
+                    VDT_KHV_KeHoachVonNam_DeXuat entity = new VDT_KHV_KeHoachVonNam_DeXuat();
+                    entity.MapFrom(data);
+                    var donvi = conn.Get<NS_DonVi>(data.iID_DonViQuanLyID, trans);
+                    if (donvi == null)
+                        return null;
+                    entity.sNguoiLap = data.sUserCreate;
+                    entity.iID_KeHoachVonNamDeXuatID = Guid.NewGuid();
+                    entity.bActive = true;
+                    entity.dDateCreate = DateTime.Now;
+                    entity.iID_KeHoachVonNam_DeXuatGocID = entity.iID_KeHoachVonNamDeXuatID;
+                    entity.iID_MaDonViQuanLy = donvi.iID_MaDonVi;
+
+                    conn.Insert(entity, trans);                 
+                    trans.Commit();
+                    return entity;
+                }
+            }catch(Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+                return null;
+
+            }
+        }
+
+
+        public bool SaveImportKeHoachVonNamDeXuatChiTiet(List<VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet> listDetails, Guid iID_KeHoachVonNamDeXuatID)
+        {
+            try
+            {
+                using(var conn = _connectionFactory.GetConnection())
+                {
+                    conn.Open();
+                    var trans = conn.BeginTransaction();
+                    if(listDetails != null)
+                    {
+                        VDT_KHV_KeHoachVonNam_DeXuat entity = conn.Get<VDT_KHV_KeHoachVonNam_DeXuat>(iID_KeHoachVonNamDeXuatID, trans);
+                        if(entity != null)
+                        {
+                            listDetails.Select(item =>
+                            {
+                                item.iID_KeHoachVonNamDeXuatChiTietID = Guid.NewGuid();
+                                item.iID_KeHoachVonNamDeXuatID = entity.iID_KeHoachVonNamDeXuatID;
+                                item.iID_DonViID = entity.iID_DonViQuanLyID;
+                                return item;
+                            }).ToList();
+
+                            entity.fThuHoiVonUngTruoc = listDetails.Sum(x => x.fThuHoiVonUngTruoc);
+                            entity.fThanhToan = listDetails.Sum(x => x.fThanhToan);
+
+                            conn.Insert<VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet>(listDetails, trans);
+                            conn.Update(entity, trans);
+                            trans.Commit();
+                            return true;
+
+                        }
+                        return false;
+
+                    }
+                    return false;
+
+                }
+
+            }
+            catch(Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return false;
+        }
+
+
         public List<VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet> GetKHVNDeXuatChiTietByParentId(Guid iIdParentID)
         {
             StringBuilder query = new StringBuilder();
@@ -13342,6 +13678,7 @@ namespace Viettel.Services
                         entity.fUocThucHien = item.fUocThucHien;
                         entity.fThuHoiVonUngTruoc = item.fThuHoiVonUngTruoc;
                         entity.fThanhToan = item.fThanhToan;
+                        entity.fVonKeoDaiCacNamTruoc = item.fVonKeoDaiCacNamTruoc;
                         entity.iLoaiDuAn = item.iLoaiDuAn;
                         entity.iID_DonViID = item.iID_DonViID;
                         conn.Update(entity);
@@ -14390,7 +14727,7 @@ namespace Viettel.Services
                         entity.dNgayQuyetDinh = data.dNgayQuyetDinh;
                         entity.sUserUpdate = sUserName;
                         entity.dDateUpdate = DateTime.Now;
-
+                        entity.iLoaiDuToan = data.iLoaiDuToan;
                         conn.Update(entity, trans);
                     }
                 }
@@ -14650,10 +14987,17 @@ namespace Viettel.Services
             }
         }
 
-        public IEnumerable<VDT_KHV_KeHoachVonNam_DeXuat> GetListChungTuTH(Guid iID_DonViQL, int iNamKeHoach)
+        public IEnumerable<VDT_KHV_KeHoachVonNam_DeXuat> GetListChungTuTH(string iIDMaDonViQL, int iNamKeHoach, int iIdLoaiChungTuTH)
         {
             StringBuilder query = new StringBuilder();
-            query.AppendFormat("SELECT * FROM VDT_KHV_KeHoachVonNam_DeXuat WHERE iID_DonViQuanLyID = '{0}' AND iNamKeHoach = {1} AND sTongHop IS NOT NULL ", iID_DonViQL, iNamKeHoach);
+            if(iIdLoaiChungTuTH == 1)
+            {
+                query.AppendFormat("SELECT * FROM VDT_KHV_KeHoachVonNam_DeXuat WHERE iID_MaDonViQuanLy = '{0}' AND iNamKeHoach = {1} AND sTongHop IS NOT NULL AND iID_ParentId IS NULL", iIDMaDonViQL, iNamKeHoach);
+            }
+            else
+            {
+                query.AppendFormat("SELECT * FROM VDT_KHV_KeHoachVonNam_DeXuat WHERE iID_MaDonViQuanLy = '{0}' AND iNamKeHoach = {1} AND sTongHop IS NOT NULL AND ISNULL(bActive, 0) = 1 AND iID_ParentId IS NOT NULL", iIDMaDonViQL, iNamKeHoach);
+            }
             using (var conn = _connectionFactory.GetConnection())
             {
                 var items = conn.Query<VDT_KHV_KeHoachVonNam_DeXuat>(query.ToString());
@@ -15092,7 +15436,7 @@ namespace Viettel.Services
                 });
                 lstParam.Add("@iID_KeHoach5NamID", iID_KeHoach5NamID);
                 lstParam.Add("@iNamLamViec", iNamLamViec);
-                var items = conn.Query<VDT_KHV_KeHoach5Nam_ChiTiet>("proc_get_list_kehoach5nam_chitiet_by_id", lstParam, commandType: CommandType.StoredProcedure);
+                var items = conn.Query<VDT_KHV_KeHoach5Nam_ChiTiet>("proc_get_list_kehoach5nam_chitiet_by_id_test", lstParam, commandType: CommandType.StoredProcedure);
                 return items;
             }
         }
@@ -18440,6 +18784,23 @@ namespace Viettel.Services
             }
         }
 
+        public IEnumerable<VDT_QDDT_KHLCNhaThau> GetAllKHLCNTIdByDuAnId(Guid iID_DuAnID)
+        {
+            var sql = "select * from VDT_QDDT_KHLCNhaThau where iID_DuAnID = @iID_DuAnID and bActive = 1 order by dDateCreate desc";
+
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var item = conn.Query<VDT_QDDT_KHLCNhaThau>(sql,
+                    param: new
+                    {
+                        iID_DuAnID
+                    },
+                    commandType: CommandType.Text);
+
+                return item;
+            }
+        }
+
         public List<VDT_QT_DeNghiQuyetToan_ChiTiet> GetDeNghiQuyetToanChiTiet(Guid iIdDeNghiQuyetToanId)
         {
             var sql = "select * from VDT_QT_DeNghiQuyetToan_ChiTiet where iID_DeNghiQuyetToanID = @iIdDeNghiQuyetToanId";
@@ -18493,6 +18854,31 @@ namespace Viettel.Services
                 AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
             }
             return null;
+        }
+
+        public double GetTongMucQddtByIdDuAn(Guid? duanId)
+        {
+            try
+            {
+                var sql = "select * from VDT_DA_QDDauTu where iID_DuAnID = @duanId and bActive = 1";
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    var item = conn.Query<VDT_DA_QDDauTu>(sql,
+                        param: new
+                        {
+                            duanId,
+                        }, commandType: CommandType.Text).ToList();
+                    if (item != null)
+                    {
+                        return item.Sum(n => n.fTongMucDauTuPheDuyet.HasValue ? n.fTongMucDauTuPheDuyet.Value : 0);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return 0;
         }
 
         public double GetGiaTriDuToanIdByDuAnId(Guid? duanId)

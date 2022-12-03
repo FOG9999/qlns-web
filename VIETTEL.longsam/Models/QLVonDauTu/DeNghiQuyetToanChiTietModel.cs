@@ -24,7 +24,7 @@ namespace Viettel.Models.QLVonDauTu
 
         public string TenChiPhi { get; set; }
 
-        public Guid IdChiPhiDuAnParent { get; set; }
+        public Guid? IdChiPhiDuAnParent { get; set; }
 
         public bool IsShow { get; set; }
 

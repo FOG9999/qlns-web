@@ -105,7 +105,7 @@ namespace Viettel.Models.QLVonDauTu
         {
             get
             {
-                return (fLuyKeTUTN).ToString("##,#", CultureInfo.GetCultureInfo("vi-VN"));
+                return (fLuyKeTUNN).ToString("##,#", CultureInfo.GetCultureInfo("vi-VN"));
             }
         }
 
@@ -113,7 +113,7 @@ namespace Viettel.Models.QLVonDauTu
         {
             get
             {
-                return (fLuyKeTUNN).ToString("##,#", CultureInfo.GetCultureInfo("vi-VN"));
+                return (fLuyKeTUTN).ToString("##,#", CultureInfo.GetCultureInfo("vi-VN"));
             }
         }
 
@@ -220,25 +220,25 @@ namespace Viettel.Models.QLVonDauTu
     public class PheDuyetThanhToanChiTiet : VDT_TT_PheDuyetThanhToan_ChiTiet
     {
         public string sXauNoiMa { get; set; }
-        public int? iLoaiDeNghi { get; set; }
+        public int iLoaiDeNghi { get; set; }
         public string sLoaiDeNghi
         {
             get
             {
-                return PaymentTypeEnum.Get(iLoaiDeNghi ?? 0);
+                return PaymentTypeEnum.Get(iLoaiDeNghi);
             }
         }
         public int iLoai { get; set; }
         public int iLoaiNamKH { get; set; }
         public int iCoQuanThanhToanKHV { get; set; }
-        public float? fGiaTriNgoaiNuoc { get; set; }
+        public double? fGiaTriNgoaiNuoc { get; set; }
         public string sGiaTriNgoaiNuoc {
             get
             {
                 return (fGiaTriNgoaiNuoc ?? 0).ToString("##,#", CultureInfo.GetCultureInfo("vi-VN"));
             }
         }
-        public float? fGiaTriTrongNuoc { get; set; }
+        public double ? fGiaTriTrongNuoc { get; set; }
         public string sGiaTriTrongNuoc
         {
             get

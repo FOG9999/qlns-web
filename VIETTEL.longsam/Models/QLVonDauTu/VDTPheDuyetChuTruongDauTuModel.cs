@@ -32,7 +32,7 @@ namespace Viettel.Models.QLVonDauTu
 
     public class VDTChuTruongDauTuViewModel : VDT_DA_ChuTruongDauTu
     {
-        public int sSTT { get; set; }
+        public string sSTT { get; set; }
         public string sDonViQuanLy { get; set; }
         public string sChuDauTu { get; set; }
         public string sTenNhomDuAn { get; set; }
@@ -61,6 +61,7 @@ namespace Viettel.Models.QLVonDauTu
             }
         }
 
+        public string sRowTitle { get; set; }
     }
 
     public class VDTChuTruongDauTuChiPhiModel : VDT_DA_ChuTruongDauTu_ChiPhi

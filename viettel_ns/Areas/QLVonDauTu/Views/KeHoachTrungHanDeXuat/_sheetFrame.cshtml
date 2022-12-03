@@ -97,8 +97,7 @@
             var chuyenTiep = '@Model.KH5NamDeXuat.iLoai';
             var isChuyentiep = (chuyenTiep == '2') ? true : false;
 
-            var isActive = isEnable && isTongHop;
-
+            var isActive = isEnable && false; // doi lai spec la Tong hop cung duoc chinh sua
             @*for (h = 0; h < Bang_nH; h++) {
                 var LaHangCha = Bang_arrLaHangCha[h];
                 if (!LaHangCha) {
@@ -368,7 +367,17 @@
                     fGiaTriNamThuNamDcIndex: -1,
                     fGiaTriBoTriIndex: -1,
                     fGiaTriBoTriDcIndex: -1,
-                    sGhiChuIndex: -1
+
+                    fHanmucNganhDXIndex: -1,
+                    fVon5namNganhDXIndex: -1,
+                    fVonsaunamNganhDXIndex: -1,
+                    fHanmucCucTCDXIndex: -1,
+                    fVon5namCTCDXIndex: -1,
+                    fVonnamthunhatCTCIndex: -1,
+                    fVonsaunamCTCDexuatIndex: -1,
+                    fCucTCDeXuatIndex: -1,
+                    fDuKienBoTriNamThu2Index: -1,
+                    sGhiChuIndexIndex: -1
                 };
                 for (c = 0; c < Bang_nC; c++) {
                     var sKey = Bang_arrMaCot[c];
@@ -433,6 +442,33 @@
                     else if (sKey == "fGiaTriNamThuNamDc") {
                         dataInputIndex.fGiaTriNamThuNamDcIndex = c;
                     }
+                    else if (sKey == "fHanmucNganhDX") {
+                        dataInputIndex.fHanmucNganhDXIndex = c;
+                    }
+                    else if (sKey == "fVon5namNganhDX") {
+                        dataInputIndex.fVon5namNganhDXIndex = c;
+                    }
+                    else if (sKey == "fVonsaunamNganhDX") {
+                        dataInputIndex.fVonsaunamNganhDXIndex = c;
+                    }
+                    else if (sKey == "fHanmucCucTCDX") {
+                        dataInputIndex.fHanmucCucTCDXIndex = c;
+                    }
+                    else if (sKey == "fVon5namCTCDX") {
+                        dataInputIndex.fVon5namCTCDXIndex = c;
+                    }
+                    else if (sKey == "fVonnamthunhatCTC") {
+                        dataInputIndex.fVonnamthunhatCTCIndex = c;
+                    }
+                    else if (sKey == "fVonsaunamCTCDexuat") {
+                        dataInputIndex.fVonsaunamCTCDexuatIndex = c;
+                    }
+                    else if (sKey == "fCucTCDeXuat") {
+                        dataInputIndex.fCucTCDeXuatIndex = c;
+                    }
+                    else if (sKey == "fDuKienBoTriNamThu2") {
+                        dataInputIndex.fDuKienBoTriNamThu2Index = c;
+                    }
                     else if (sKey == "sGhiChu") {
                         dataInputIndex.sGhiChuIndex = c;
                     }
@@ -458,6 +494,19 @@
                     Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuTuDcIndex"]] = false;
                     Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuNamIndex"]] = false;
                     Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuNamDcIndex"]] = false;
+                    //mo moi
+                    Bang_arrEdit[h][dataInputIndex["fHanmucNganhDXIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fVon5namNganhDXIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fVonsaunamNganhDXIndex"]] = false;
+
+                    Bang_arrEdit[h][dataInputIndex["fHanmucCucTCDXIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fVon5namCTCDXIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fVonnamthunhatCTCIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fVonsaunamCTCDexuatIndex"]] = false;
+                    //chuyen tiep
+                    Bang_arrEdit[h][dataInputIndex["fCucTCDeXuatIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fDuKienBoTriNamThu2Index"]] = false;
+
                     Bang_arrEdit[h][dataInputIndex["sGhiChuIndex"]] = true;
                 } else {
                     Bang_arrEdit[h][dataInputIndex["sTenIndex"]] = true;
@@ -480,6 +529,18 @@
                     Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuTuDcIndex"]] = true;
                     Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuNamIndex"]] = true;
                     Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuNamDcIndex"]] = true;
+                    //mo moi
+                    Bang_arrEdit[h][dataInputIndex["fHanmucNganhDXIndex"]] = true;
+                    Bang_arrEdit[h][dataInputIndex["fVon5namNganhDXIndex"]] = true;
+                    Bang_arrEdit[h][dataInputIndex["fVonsaunamNganhDXIndex"]] = true;
+
+                    Bang_arrEdit[h][dataInputIndex["fHanmucCucTCDXIndex"]] = true;
+                    Bang_arrEdit[h][dataInputIndex["fVon5namCTCDXIndex"]] = true;
+                    Bang_arrEdit[h][dataInputIndex["fVonnamthunhatCTCIndex"]] = true;
+                    Bang_arrEdit[h][dataInputIndex["fVonsaunamCTCDexuatIndex"]] = true;
+                    //chuyen tiep
+                    Bang_arrEdit[h][dataInputIndex["fCucTCDeXuatIndex"]] = true;
+                    Bang_arrEdit[h][dataInputIndex["fDuKienBoTriNamThu2Index"]] = true;
                     Bang_arrEdit[h][dataInputIndex["sGhiChuIndex"]] = true;
 
                     if (itemParent != "" && itemParent != "00000000-0000-0000-0000-000000000000") {
@@ -500,6 +561,18 @@
                         Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuHaiIndex"]] = false;
                         Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuNhatIndex"]] = false;
                         Bang_arrEdit[h][dataInputIndex["sGhiChuIndex"]] = true;
+                        //mo moi
+                        Bang_arrEdit[h][dataInputIndex["fHanmucNganhDXIndex"]] = false;
+                        Bang_arrEdit[h][dataInputIndex["fVon5namNganhDXIndex"]] = false;
+                        Bang_arrEdit[h][dataInputIndex["fVonsaunamNganhDXIndex"]] = false;
+
+                        Bang_arrEdit[h][dataInputIndex["fHanmucCucTCDXIndex"]] = false;
+                        Bang_arrEdit[h][dataInputIndex["fVon5namCTCDXIndex"]] = false
+                        Bang_arrEdit[h][dataInputIndex["fVonnamthunhatCTCIndex"]] = false;
+                        Bang_arrEdit[h][dataInputIndex["fVonsaunamCTCDexuatIndex"]] = false;
+                        //chuyen tiep
+                        Bang_arrEdit[h][dataInputIndex["fCucTCDeXuatIndex"]] = false;
+                        Bang_arrEdit[h][dataInputIndex["fDuKienBoTriNamThu2Index"]] = false;
                     }
                     else {
                     }

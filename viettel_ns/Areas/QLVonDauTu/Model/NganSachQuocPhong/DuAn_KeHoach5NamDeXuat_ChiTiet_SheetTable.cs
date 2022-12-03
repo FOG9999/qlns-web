@@ -184,7 +184,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     new SheetColumn(columnName: "isMap", header: "Chọn/Bỏ chọn", columnWidth:120, align: "center", isReadonly: false, dataType: 2),
                     new SheetColumn(columnName: "sSTT", header: "STT", columnWidth:50, align: "left", hasSearch: false, isReadonly: true),
                     new SheetColumn(columnName: "sTen", header: "Tên Group - dự án", columnWidth:200, align: "left", hasSearch: true, isReadonly: true),
-                    new SheetColumn(columnName: "sDonViThucHienDuAn", header: "Đơn vị thực hiện dự án", columnWidth:200, align: "left", hasSearch: true, isReadonly: true),
+                    //new SheetColumn(columnName: "sDonViThucHienDuAn", header: "Đơn vị thực hiện dự án", columnWidth:200, align: "left", hasSearch: true, isReadonly: true),
+                    new SheetColumn(columnName: "sDonVi", header: "Đơn vị", columnWidth:200, align: "left", hasSearch: true, isReadonly: true),
                     new SheetColumn(columnName: "sDiaDiem", header: "Địa điểm thực hiện", columnWidth:150, align: "left", hasSearch: true, isReadonly: true),
                     new SheetColumn(columnName: "iGiaiDoanTu", header: "Thời gian từ", columnWidth:100, align: "center", hasSearch: true, isReadonly: true),
                     new SheetColumn(columnName: "iGiaiDoanDen", header: "Thời gian đến", columnWidth:100, align: "center", hasSearch: true, isReadonly: true),
@@ -219,7 +220,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     new SheetColumn(columnName: "sMauSac", isHidden: true),
                     new SheetColumn(columnName: "sFontColor", isHidden: true),
                     new SheetColumn(columnName: "sFontBold",isHidden: true),
-
+                    new SheetColumn(columnName: "iID_DonViID", isHidden: true),
                 };
 
             #endregion

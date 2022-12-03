@@ -135,7 +135,7 @@ function AjaxRequire(listItemAfter, listItemDeleted) {
         async: false,
         success: function (data) {
             if (data.status == false) {
-                var Title = "Lỗi lưu kế hoạch trung hạn đề xuất chi tiết"
+                var Title = "Lỗi lưu kế hoạch vốn năm đề xuất chi tiết"
                 $.ajax({
                     type: "POST",
                     url: "/Modal/OpenModal",
@@ -194,6 +194,7 @@ function ValidateBeforeSave() {
         object.fThanhToan = Bang_arrGiaTri[i][Bang_arrCSMaCot["fThanhToan"]];
         object.iID_LoaiCongTrinh = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_LoaiCongTrinh"]];
         object.iID_DonViID = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_DonViQuanLyID"]];
+        object.iLoaiDuAn = Bang_arrGiaTri[i][Bang_arrCSMaCot["sLoaiDuAn"]] == "Mở mới" ? 1 : 2;
         if (!Bang_arrHangDaXoa[i]) {
             listItemAfter.push(object);
         }

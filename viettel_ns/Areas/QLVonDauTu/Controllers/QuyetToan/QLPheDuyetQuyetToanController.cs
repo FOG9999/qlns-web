@@ -141,6 +141,20 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                             conn.Insert<VDT_QT_QuyetToan_ChiTiet>(objChiTiet, trans);
                         }
                     }
+                    if (data.listGoiThau != null && data.listGoiThau.Count > 0)
+                    {
+                        foreach (VDT_DA_NhaThau_GoiThau_ViewModel itemHm in data.listGoiThau)
+                        {
+                            VDT_QT_QuyetToan_ChiTiet objChiTiet = new VDT_QT_QuyetToan_ChiTiet();
+                            objChiTiet.iID_QuyetToanID = entityQuyetToan.iID_QuyetToanID;
+                            objChiTiet.iID_GoiThauId = itemHm.iID_GoiThauID;
+                            objChiTiet.fGiaTriQuyetToan = itemHm.fGiaTriQuyetToan;
+                            objChiTiet.fGiaTriThamTra = itemHm.fGiaTriThamTra;
+                            objChiTiet.sUserCreate = Username;
+                            objChiTiet.dDateCreate = DateTime.Now;
+                            conn.Insert<VDT_QT_QuyetToan_ChiTiet>(objChiTiet, trans);
+                        }
+                    }
                     #endregion
 
                     //#region Them moi VDT_QT_QuyetToan_Nguonvon
@@ -194,7 +208,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
 
                     #region Sua VDT_QT_QuyetToan_ChiTiet                    
                     var lstQuyetToanChiTiet = conn.Query<VDT_QT_QuyetToan_ChiTiet>(string.Format("SELECT * FROM VDT_QT_QuyetToan_ChiTiet WHERE iID_QuyetToanID = '{0}'", data.quyetToan.iID_QuyetToanID), null, trans);
-                    if(data.listChiPhi.Count > 0)
+                    if(data.listChiPhi != null)
                     {
                         foreach(var chiPhi in data.listChiPhi)
                         {
@@ -210,13 +224,28 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                         }
                     }
 
-                    if(data.listHangMuc.Count > 0)
+                    if(data.listHangMuc != null)
                     {
                         foreach (var hangMuc in data.listHangMuc)
                         {
                             foreach (var quyetToanChiTiet in lstQuyetToanChiTiet)
                             {
                                 if (quyetToanChiTiet.iID_HangMucId == hangMuc.iID_HangMucID)
+                                {
+                                    quyetToanChiTiet.fGiaTriThamTra = hangMuc.fGiaTriThamTra;
+                                    quyetToanChiTiet.fGiaTriQuyetToan = hangMuc.fGiaTriQuyetToan;
+                                }
+                                conn.Update<VDT_QT_QuyetToan_ChiTiet>(quyetToanChiTiet, trans);
+                            }
+                        }
+                    }
+                    if (data.listGoiThau != null)
+                    {
+                        foreach (var hangMuc in data.listGoiThau)
+                        {
+                            foreach (var quyetToanChiTiet in lstQuyetToanChiTiet)
+                            {
+                                if (quyetToanChiTiet.iID_GoiThauId == hangMuc.iID_GoiThauID)
                                 {
                                     quyetToanChiTiet.fGiaTriThamTra = hangMuc.fGiaTriThamTra;
                                     quyetToanChiTiet.fGiaTriQuyetToan = hangMuc.fGiaTriQuyetToan;
@@ -324,11 +353,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
         }
 
         [HttpPost]
-        public JsonResult LayThongTinDuAn(Guid iID_DonViQuanLyID, Guid iID_DuAnID, DateTime dNgayQuyetDinh)
+        public JsonResult LayThongTinDuAn(Guid iID_DonViQuanLyID, Guid iID_DuAnID, DateTime dNgayQuyetDinh, Guid idDeNghiQuyetToan)
         {
             VDTQLPheDuyetQuyetToanViewModel data = new VDTQLPheDuyetQuyetToanViewModel();
+            VDT_QT_DeNghiQuyetToan denghi = _iQLVonDauTuService.GetDeNghiQuyetToanById(idDeNghiQuyetToan);
+            int loaidengi = denghi.iID_LoaiQuyetToan;
             data = _iQLVonDauTuService.GetThongTinDuAn(iID_DonViQuanLyID, iID_DuAnID, dNgayQuyetDinh);
-            return Json(new { bIsComplete = (data == null ? false : true), data = data }, JsonRequestBehavior.AllowGet);
+            return Json(new { bIsComplete = (data == null ? false : true), data = data, loaidengi = loaidengi }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -443,6 +474,70 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             var sumGiaTriQuyetToan = listChiPhi.Sum(x => x.fGiaTriQuyetToan).HasValue ? listChiPhi.Sum(x => x.fGiaTriQuyetToan).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
 
             return Json(new { lstChiPhi = listChiPhi, lstHangMuc = listHangMuc, sumGiaTriThamTra = sumGiaTriThamTra, sumGiaTriQuyetToan = sumGiaTriQuyetToan }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetListGoiThau(Guid? iID_DeNghiQuyetToanID, Guid? iID_QuyetToanID)
+        {
+            VDT_QT_DeNghiQuyetToan denghi = _iQLVonDauTuService.GetDeNghiQuyetToanById(iID_DeNghiQuyetToanID);
+            List<VDT_DA_NhaThau_GoiThau_ViewModel> lstGoiThauNhaThau = _iQLVonDauTuService.GetListGoiThauTheoKHLCNhaThau(denghi.iID_DuToanID.Value).ToList();
+            List<VDT_QT_DeNghiQuyetToan_ChiTiet> lstDeNghiQuyetToanChiTiet = new List<VDT_QT_DeNghiQuyetToan_ChiTiet>();
+            List<VDT_QT_QuyetToan_ChiTiet> listQuyetToanChiTiet = new List<VDT_QT_QuyetToan_ChiTiet>();
+            lstDeNghiQuyetToanChiTiet = _iQLVonDauTuService.GetDeNghiQuyetToanChiTiet(iID_DeNghiQuyetToanID.Value);
+            if(iID_QuyetToanID != Guid.Empty || iID_QuyetToanID != null)
+                listQuyetToanChiTiet = _iQLVonDauTuService.GetQuyetToanChiTiet(iID_QuyetToanID.Value);
+            if (lstDeNghiQuyetToanChiTiet != null && lstDeNghiQuyetToanChiTiet.Count > 0)
+                foreach (VDT_DA_NhaThau_GoiThau_ViewModel itemgt in lstGoiThauNhaThau)
+                {
+                    VDT_QT_DeNghiQuyetToan_ChiTiet objQuyetToanChiTiet = lstDeNghiQuyetToanChiTiet.Where(x => x.iID_GoiThauId == itemgt.iID_DuAn_GoiThau).FirstOrDefault();
+                    if (objQuyetToanChiTiet != null)
+                    {
+                        itemgt.fGiaTriDeNghiQuyetToan = objQuyetToanChiTiet.fGiaTriDeNghiQuyetToan;
+                        itemgt.fGiaTriKiemToan = objQuyetToanChiTiet.fGiaTriKiemToan;
+                        itemgt.fGiaTriQuyetToanAB = objQuyetToanChiTiet.fGiaTriQuyetToanAB;
+                    }
+                }
+            if (listQuyetToanChiTiet != null && listQuyetToanChiTiet.Count > 0)
+                foreach (VDT_DA_NhaThau_GoiThau_ViewModel itemgt in lstGoiThauNhaThau)
+                {
+                    VDT_QT_QuyetToan_ChiTiet objQuyetToanChiTiet = listQuyetToanChiTiet.Where(x => x.iID_GoiThauId == itemgt.iID_DuAn_GoiThau).FirstOrDefault();
+                    if (objQuyetToanChiTiet != null)
+                    {
+                        itemgt.fGiaTriQuyetToan = objQuyetToanChiTiet.fGiaTriQuyetToan;
+                        itemgt.fGiaTriThamTra = objQuyetToanChiTiet.fGiaTriThamTra;
+   
+                    }
+                }
+
+            var sumGiaTriThamTra = lstGoiThauNhaThau.Sum(x => x.fGiaTriThamTra).HasValue ? lstGoiThauNhaThau.Sum(x => x.fGiaTriThamTra).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            var sumGiaTriQuyetToan = lstGoiThauNhaThau.Sum(x => x.fGiaTriQuyetToan).HasValue ? lstGoiThauNhaThau.Sum(x => x.fGiaTriQuyetToan).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+
+            return Json(new { lstGoiThau = lstGoiThauNhaThau, sumGiaTriThamTra = sumGiaTriThamTra, sumGiaTriQuyetToan = sumGiaTriQuyetToan }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetDeNghiQtTheoDuAn(string idDuAn, string iIdQuyetToanId)
+        {
+            var result = new List<dynamic>();
+            bool isAdd = false;
+            List<VDT_QT_DeNghiQuyetToan> listModel = new List<VDT_QT_DeNghiQuyetToan>();
+            if (iIdQuyetToanId == null || iIdQuyetToanId == "" || iIdQuyetToanId == String.Empty || iIdQuyetToanId == Guid.Empty.ToString())
+            {               
+                isAdd = true;
+            }
+            listModel = _iQLVonDauTuService.GetListDeNGhiQt(Guid.Parse(idDuAn), null);
+            if (listModel != null && listModel.Any())
+            {
+                if (listModel.Count() != 1)
+                {
+                    result.Add(new { id = string.Empty, text = "--Chọn--" });
+                }
+                foreach (var item in listModel)
+                {
+                    result.Add(new { id = item.iID_DeNghiQuyetToanID, text = item.sSoBaoCao });
+                }
+            }
+            return Json(new { status = true, data = result, isAdd = isAdd });
         }
 
         [HttpPost]

@@ -55,8 +55,9 @@ function ValidateBeforeSave() {
         object.fTiGia = Bang_arrGiaTri[i][Bang_arrCSMaCot['fTiGia']];
         object.iID_LoaiCongTrinh = Bang_arrGiaTri[i][Bang_arrCSMaCot['iID_LoaiCongTrinh']];
         object.iId_Parent = Bang_arrGiaTri[i][Bang_arrCSMaCot['iId_Parent']];
-        object.bActive = Bang_arrGiaTri[i][Bang_arrCSMaCot['bActive']];
-        object.iLoaiDuAn = Bang_arrGiaTri[i][Bang_arrCSMaCot["iLoaiDuAn"]];
+        //object.bActive = Bang_arrGiaTri[i][Bang_arrCSMaCot['bActive']];
+        object.bActive = true;
+        object.ILoaiDuAn = Bang_arrGiaTri[i][Bang_arrCSMaCot["sLoaiDuAn"]] == "Mở mới" ? 1 : 2;
         object.sGhiChu = Bang_arrGiaTri[i][Bang_arrCSMaCot["sGhiChu"]];
         object.iID_DonViQuanLyID = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_DonViQuanLyID"]];
         object.fGiaTriDeNghi = Bang_arrGiaTri[i][Bang_arrCSMaCot["fGiaTriDeNghi"]];
