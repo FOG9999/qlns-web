@@ -1,0 +1,330 @@
+﻿@model SKTLockListViewModel
+@{
+    ViewBag.Title = L("DTKT.LockList");
+
+}
+<h2>@ViewBag.Title</h2>
+<div class="button-bar">
+    <a class="btn btn-mvc btn-mvc-green btn-edit-id" title="@L("DTKT.Lock.ChungTu.Desc")" data-id="@PhienLamViec.iNamLamViec"><i class="fa fa-lock"></i>  @L("DTKT.Lock.ChungTu")</a>
+    <a class="btn btn-mvc btn-reload" title="@L("Buttons.Reload")"><i class="fa fa-refresh"></i></a>
+</div>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th style="width:40px">#</th>
+            <th style="width:240px">Tên đơn vị</th>
+            <th style="width:60px">Khóa</th>
+            <th style="width:200px">Khóa phòng ban</th>
+            <th style="width:240px">Khóa người dùng</th>
+            <th style="width:auto">Ghi chú</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Items.Count(); i++)
+        {
+            var item = Model.Items.ElementAt(i);
+            var bg = (i % 2) == 0 ? "" : "background-color: #F8F8F8";
+
+
+            <tr style="@bg" id="@item.Id_DonVi">
+                <td>@(i + 1)</td>
+                <td>
+                    @item.TenDonVi
+                </td>
+                <td><a class="btn btn-mvc btn-mvc-small btn-edit" title="@L("Buttons.Lock")" data-id="@item.Id_DonVi"><i class="fa fa-edit"></i></a></td>
+                <td>@item.Id_PhongBan</td>
+                <td>@item.Id_User</td>
+                <td>@item.GhiChu</td>
+            </tr>
+        }
+</table>
+<div id="editor" class="modal fade" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btn-close-modal" data-dissmiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3>@L("DTKT.LockHeader")</h3>
+            </div>
+            <div class="modal-body">
+                <div id="editor-host">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-mvc btn-mvc-green btn-save">@L("Buttons.SaveChanges")</button>
+                <button type="button" class="btn btn-mvc btn-close-modal" data-dissmiss="modal">@L("Buttons.Close")</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="editor-id" class="modal fade" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btn-close-modal" data-dissmiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3>Khóa số liệu theo chứng từ</h3>
+            </div>
+            <div class="modal-body">
+                <div id="editor-host-id">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-mvc btn-mvc-green btn-save">@L("Buttons.SaveChanges")</button>
+                <button type="button" class="btn btn-mvc btn-close-modal" data-dissmiss="modal">@L("Buttons.Close")</button>
+            </div>
+        </div>
+    </div>
+</div>
+@using (Html.BeginScripts())
+{
+    <script>
+
+        $(".btn-edit").click(function () {
+            var id = $(this).data("id");
+            var url = '@Url.Action("Editor")' + "/?id_donvi=" + id;
+
+            $.get(url, function (data) {
+                $("#editor-host").html(data);
+                $("#editor").modal();
+            });
+        });
+
+        $("#editor .btn-save").click(function () {
+
+            var form = $('#editor form')[0];
+            console.log(form);
+
+            var json = $(form).serializeFormJSON();
+            var data = JSON.stringify(json);
+
+            var url = $(form).attr('action');
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: json,
+                success: function (r) {
+                    if (r.success) {
+                        swal({
+                            title: r.title,
+                            text: r.text,
+                            type: 'success',
+                            timer: 1500
+                        }).then((r) => {
+                            location.reload();
+                        });
+                    }
+                    else {
+                        swal({
+                            title: r.title,
+                            text: r.text,
+                            type: 'danger',
+                        });
+                    }
+                }
+            });
+
+        });
+
+        $(".btn-edit-id").click(function () {
+            var id = $(this).data("id");
+            var url = '@Url.Action("LockOrOpen")';
+
+            $.get(url, function (data) {
+                $("#editor-host-id").html(data);
+                $("#editor-id").modal();
+            });
+        });
+
+        $("#editor-id .btn-save").click(function () {
+
+            var json = {
+                nam : @PhienLamViec.iNamLamViec,
+                id_lock : $("#id_lock").val(),
+                iloais: getCheckedItems("iLoai"),
+                phongbans: getCheckedItems("PhongBan"),
+                users: getCheckedItems("NguoiDung"),
+                donvis: getCheckedItems("DonVi"),
+                ilans: getCheckedItems("Lan"),
+            }
+
+            var form = $('#editor-id form')[0];
+            var url = $(form).attr('action');
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: json,
+                success: function (r) {
+                    if (r.success) {
+                        swal({
+                            title: r.title,
+                            text: r.text,
+                            type: 'success',
+                            timer: 1500
+                        }).then((r) => {
+                            location.reload();
+                        });
+                    }
+                    else {
+                        swal({
+                            title: r.title,
+                            text: r.text,
+                            type: 'danger',
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script>
+        function changeLock() {
+            var id_lock = $("#id_lock").val();
+            if (id_lock == -1){
+                clearAll(0);
+            } else{
+                clearAll(1);
+                var urlLoai = '@Url.Action("Ds_Lock")' + "/?"
+                        + "nam=" + '@PhienLamViec.iNamLamViec'
+                        + "&id_lock=" + $("#id_lock").val();
+
+                fillCheckboxList("iloais", "iLoai", urlLoai)
+            }
+        }
+
+        function checkItem(group, value, checkbox) {
+            if (group == "iLoai") {
+                var values = getCheckedItems(group);
+                //check values if empty then clear phongban, user, donvi and lan checkbox
+                if (values == ""){
+                    clearAll(1);
+                } else {
+                    clearAll(2);
+                    fillPhongBan(values);
+                }
+                console.log(values);
+            } else if (group == "PhongBan") {
+                var values = getCheckedItems(group);
+                //check values if empty then clear user,donvi and lan checkbox
+                if (values == ""){
+                    clearAll(2);
+                } else {
+                    clearAll(3);
+                    fillUser(values);
+                }
+                console.log(values);
+            } else if (group == "NguoiDung") {
+                var values = getCheckedItems(group);
+                //check values if empty then clear donvi and lan checkbox
+                if (values == ""){
+                    clearAll(3);
+                } else {
+                    clearAll();
+                    fillDonVi(values);
+                }
+                console.log(values);
+            } else if (group == "DonVi") {
+                var values = getCheckedItems(group);
+                if (values == ""){
+                    clearAll();
+                } else {
+                    fillLan(values);
+                }
+                console.log(values);
+            }
+        }
+                
+        // Fill phongban list to checkbox
+        function fillPhongBan(iloais) {
+
+            var url = '@Url.Action("Ds_Lock")' + "/?"
+                        + "nam=" + '@PhienLamViec.iNamLamViec'
+                        + "&id_lock=" + $("#id_lock").val()
+                        + "&group=" + "iLoai"
+                        + "&iloais=" + iloais;
+            fillCheckboxList("phongbans", "PhongBan", url)
+        }
+
+        // Fill user list to checkbox
+        function fillUser(phongbans) {
+            var iloais = getCheckedItems("iLoai");
+
+            var url = '@Url.Action("Ds_Lock")' + "/?"
+                        + "nam=" + '@PhienLamViec.iNamLamViec'
+                        + "&id_lock=" + $("#id_lock").val()
+                        + "&group=" + "PhongBan"
+                        + "&iloais=" + iloais
+                        + "&phongbans=" + phongbans;
+            fillCheckboxList("users", "NguoiDung", url)
+        }
+
+        // Fill donvi list to checkbox
+        function fillDonVi(users) {
+            var iloais = getCheckedItems("iLoai");
+            var phongbans = getCheckedItems("PhongBan");
+
+            var url = '@Url.Action("Ds_Lock")' + "/?"
+                        + "nam=" + '@PhienLamViec.iNamLamViec'
+                        + "&id_lock=" + $("#id_lock").val()
+                        + "&group=" + "User"
+                        + "&iloais=" + iloais
+                        + "&phongbans=" + phongbans
+                        + "&users=" + users;
+            fillCheckboxList("donvis", "DonVi", url)
+        }
+
+        // Fill lan list to checkbox
+        function fillLan(donvis) {
+            var iloais = getCheckedItems("iLoai");
+            var phongbans = getCheckedItems("PhongBan");
+            var users = getCheckedItems("NguoiDung");
+
+            var url = '@Url.Action("Ds_Lock")' + "/?"
+                        + "nam=" + '@PhienLamViec.iNamLamViec'
+                        + "&id_lock=" + $("#id_lock").val()
+                        + "&group=" + "DonVi"
+                        + "&iloais=" + iloais
+                        + "&phongbans=" + phongbans
+                        + "&users=" + users
+                        + "&donvis=" + donvis;
+
+            fillCheckboxList("ilans", "Lan", url)
+        }
+
+        // Clear checkbox list by id of checkbox
+        function clearAll(int) {
+            switch(int){
+                case 0:
+                    $('#iloais div').empty();
+                    $('#phongbans div').empty();
+                    $('#users div').empty();
+                    $('#donvis div').empty();
+                    $('#ilans div').empty();
+                    break;
+                case 1:
+                    $('#phongbans div').empty();
+                    $('#users div').empty();
+                    $('#donvis div').empty();
+                    $('#ilans div').empty();
+                    break;
+                case 2:
+                    $('#users div').empty();
+                    $('#donvis div').empty();
+                    $('#ilans div').empty();
+                    break;
+                case 3:
+                    $('#donvis div').empty();
+                    $('#ilans div').empty();
+                    break;                
+                default:
+                    $('#ilans div').empty();
+                    break;
+            }
+
+        }
+    </script>
+}

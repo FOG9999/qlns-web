@@ -1,0 +1,49 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDT_KHV_KeHoachVonNam_DeXuat_ViewModel
+
+<div class="modal-body">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <label for="txt_DonViQuanLy">Đơn vị</label>
+                <p>@Html.Raw(Model.sTenDonVi)</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtSoKeHoach">Số kế hoạch</label>
+                <p>@Html.Raw(Model.sSoQuyetDinh)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtNgayLap">Ngày lập</label>
+                <p>@Html.Raw(Model.dNgayQuyetDinh.ToString("dd/MM/yyyy"))</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtNguonVon">Nguồn vốn</label>
+                <p>@Html.Raw(Model.sTenNguonVon)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtNamKeHoach">Năm kế hoạch</label>
+                <p>@Html.Raw(Model.iNamKeHoach)</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtNguoiLap">Người lập</label>
+                <p>@Html.Raw(Model.sNguoiLap)</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtTruongPhong">Trưởng phòng</label>
+                <p>@Html.Raw(Model.sTruongPhong)</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-default" onclick="ChiTietKeHoachVonNamDeXuat('@Model.iID_KeHoachVonNamDeXuatID', '@Html.Raw(Model.isDieuChinh)', 'True')"><i class="glyphicon glyphicon-info-sign"></i><span>Xem chi tiết</span></button>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+﻿@model rptTongHop_NganSachLNSViewModel
+@{
+    ViewBag.Title = "Tổng hợp tình hình thực hiện ngân sách năm " + Model.iNamLamViec + " - Theo loại ngân sách";
+}
+
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">@ViewBag.Title</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">Phòng ban:</label>
+                            <div class="col-sm-10">
+                                <input type="text" readonly value="@PhienLamViec.sTenPhongBanFull" class="form-control" />
+                                <input type="text" readonly value="@PhienLamViec.iID_MaPhongBan" class="form-control hidden" id="iID_MaPhongBan" />
+                                <hr />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">Loại ngân sách:</label>
+                            <div class="col-sm-10">
+                                @Html.DropDownList("sLNS", Model.loaiNSList, new { @class = "form-control", onchange = "change()" })
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "rptTongHopNS")">Hủy</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+
+        var iID_MaPhongBan = $("#iID_MaPhongBan").val();
+        var sLNS = $("#sLNS").val();
+        var ext = $("#ext input[type='radio']:checked").val();
+        var url = unescape('@Url.Action("Print", "rptTongHop_NganSachLNS")' +
+                                        "?ext=" + ext +
+                                        "&r=120" +
+                                        "&iID_MaPhongBan=" + iID_MaPhongBan +
+                                        "&sDsLNS=" + sLNS);
+        links.push(url);
+
+        console.log(url);
+        openLinks(links);
+    });
+
+</script>

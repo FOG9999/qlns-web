@@ -1,0 +1,136 @@
+﻿@model rptThuNop_T02NViewModel
+@{
+    ViewBag.Title = "Báo cáo các khoản thu nộp ngân sách Nhà Nước năm " + PhienLamViec.iNamLamViec;
+}
+
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">Thu Nộp - Báo cáo các khoản thu nộp ngân sách Nhà Nước năm @Model.iNamLamViec</span>
+    </div>
+    <div class="panel-body">
+        <!-- header -->
+        <div class="row">
+            <div class="col-xs-4">
+                <form action="" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Chọn phòng ban:</label>
+                        <div class="col-sm-6">
+                            @Html.DropDownList("iID_MaPhongBan", Model.PhongBanList, new { @class = "form-control", onchange = "changePhongBan()" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-xs-4">
+                <form action="" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Chọn tờ số:</label>
+                        <div class="col-sm-6">
+                            @Html.DropDownList("MaLoai", Model.ToSoList, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-xs-4">
+                <form action="" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Chọn đơn vị tính:</label>
+                        <div class="col-sm-6">
+                            @Html.DropDownList("rSo", Model.DonViTinhList, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-xs-4">
+                <form action="" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Chọn loại thời gian:</label>
+                        <div class="col-sm-6">
+                            @Html.DropDownList("MaLoaiTG", Model.LoaiThoiGianList, new { @class = "form-control", onchange = "changeLoaiThoiGian()" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-xs-4">
+                <form action="" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-3"></label>
+                        <div class="col-sm-6">
+                            @Html.DropDownList("MaTG", Model.iThoiGianList, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-xs-4">
+                <form action="" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Có chữ ký không?</label>
+                        <div class="col-sm-6">
+                            @Html.DropDownList("MaChuKy", Model.MaChuKyList, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <form action="" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-1">Mô tả:</label>
+                        <div class="col-sm-11">
+                            @Html.TextBox("sMoTa", Model.sMoTa, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <hr />
+        <div class="row text-center">
+            @if (User.Identity.Name == "trolyphongban")
+            {
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xlsth"><i class="fa fa-file-excel"></i>Xuất excel Tổng hợp</a>
+            }
+            <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i>In báo cáo</a>
+            <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+            <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "ThuNop_Report" )">Hủy</a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function changeLoaiThoiGian() {
+        var MaLoaiTG = $("#MaLoaiTG").val();
+        fillThoiGian(MaLoaiTG);
+    }
+
+    function fillThoiGian(MaLoaiTG) {
+        var url = '@Url.Action("Ds_ThoiGian")' + "/?"
+            + "sLoaiThoiGian=" + MaLoaiTG;
+
+        jQuery.ajaxSetup({ cache: false });
+
+        $.getJSON(url, function (data) {
+            document.getElementById("MaTG").innerHTML = data;
+        });
+    }
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+        var ext = $(this).data("ext");
+
+        var url = '@Url.Action("Print")' +
+            "?iID_MaPhongBan=" + $("#iID_MaPhongBan").val() +
+            "&tSo=" + $("#MaLoai").val() +
+            "&rSo=" + $("#rSo").val() +
+            "&sLoaiThoiGian=" + $("#MaLoaiTG").val() +
+            "&iThoiGian=" + $("#MaTG").val() +
+            "&MaChuKy=" + $("#MaChuKy").val() +
+            "&sMoTa=" + $("#sMoTa").val() +
+            "&ext=" + ext;
+        url = unescape(url);
+        links.push(url);
+
+        openLinks(links);
+    });
+
+</script>

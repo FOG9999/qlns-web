@@ -1,0 +1,58 @@
+﻿@model Viettel.Models.QLVonDauTu.KhoiTaoThongTinDuAnChiTietViewModel
+@{
+    ViewBag.Title = "Danh sách chi tiết khởi tạo thông tin dự án";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <input type="hidden" id="sMaDonVi" value="@Model.sMaDonVi">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body" id="lstDataView">
+                @Html.Partial("_listDetail", Model)
+            </div>
+
+            <div class="form-group text-center">
+                <button class="btn btn-default" style="width: 100%" onclick="GoBack()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                <button class="btn btn-primary" id="btnLuu" style="width: 100%" onclick="SaveData()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalChiTietThanhToan" @*tabindex="-1"*@ role="dialog" aria-labelledby="modalChiTietThanhToanLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:80%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-left" id="modalChiTietThanhToanLabel"></h3>
+            </div>
+            <div id="contentModalChiTietThanhToan">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+@section Scripts{
+    @*@Html.Partial("_SheetScript")*@
+    <script src="~/Scripts/QLVonDauTu/KhoiTao/jsChiTietKhoiTaoTTDA.js"></script>
+
+    <script>
+        var _paging = {};
+        $(document).ready(function () {
+            _paging.CurrentPage = @Model._paging.CurrentPage ;
+            _paging.ItemsPerPage = @Model._paging.ItemsPerPage ;
+        });
+    </script>
+}

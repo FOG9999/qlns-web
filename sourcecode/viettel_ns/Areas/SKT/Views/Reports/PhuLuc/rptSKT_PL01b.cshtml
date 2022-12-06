@@ -1,0 +1,197 @@
+﻿@model rptSKT_PL01ViewModel
+@{
+
+    ViewBag.Title = "Thông báo số kiểm tra dự toán ngân sách năm " + (int.Parse(PhienLamViec.iNamLamViec) + 1);
+}
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">@ViewBag.Title</span>
+    </div>
+    <div class="panel-body">
+        <!-- header -->
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-4">
+                    <label class="control-label">Chọn phòng ban:</label>
+                </div>
+                <div class="col-xs-8">
+                    <label class="control-label text-uppercase">Đơn vị:</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        @if (Model.PhongBanList == null || Model.PhongBanList.Count() <= 2)
+                        {
+                            @Html.Hidden("Id_PhongBan", PhienLamViec.iID_MaPhongBan)
+                            ;
+                            <input type="text" readonly class="form-control" value="@PhienLamViec.sTenPhongBanFull" />
+                        }
+                        else
+                        {
+                            @Html.DropDownList("Id_PhongBan", Model.PhongBanList, new { @class = "form-control", onchange = "change()" })
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Loại báo cáo:</label>
+                        <div id="loaiBaoCao">
+                            <div class="radio">
+                                <input type="radio" id="loaiBaoCao-0" name="loaiBaoCao" checked="checked" value="0" />
+                                <label for="loaiBaoCao-0">
+                                    Số BQL (Biểu trình ký)
+                                </label>
+                            </div>
+                            @if (PhienLamViec.iID_MaPhongBan.IsContains("02,11"))
+                            {
+                                <div class="radio">
+                                    <input type="radio" id="loaiBaoCao-1" name="loaiBaoCao" value="1" />
+                                    <label for="loaiBaoCao-1">
+                                        Số B2 (Biểu phụ lục)
+                                    </label>
+                                </div>
+                            }
+
+                            <hr />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-8">
+                    <div id="Id_DonVi" class="ls-box" data-check="first-only"></div>
+                    @if (PhienLamViec.iID_MaPhongBan != "02")
+                    {
+                        @Html.Partial("_CheckboxList", new ChecklistModel("Id_DonVi", Model.DonViList))
+                    }
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i>In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <span class="text-muted">|</span>
+                <a class="btn-mvc" id="btnChuKy"><i class="fa fa-file-excel"></i>Sửa chữ ký</a>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "Report", new { area="SKT" , loai = "3"} )">Hủy</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    change();
+
+    function change() {
+        if (@PhienLamViec.iID_MaPhongBan == "02"){
+            fillDonVi();
+        }
+    }
+
+    function fillDonVi() {
+        var id_phongban = $("#Id_PhongBan").val();
+
+        var url = '@Url.Action("Ds_DonVi")' + "/?"
+            + "id_phongban=" + id_phongban;
+
+        fillCheckboxList("Id_DonVi", "Id_DonVi", url);
+    }
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+        var ext = $(this).data("ext");
+        var loaiBaoCao = $("#loaiBaoCao input[type='radio']:checked").val();
+
+        var id_phongban_dich = $("#Id_PhongBan").val();
+        var id_phongban = id_phongban_dich;
+
+        // theo BQL
+        if (loaiBaoCao == 0) {
+
+        }
+            // b2
+        else {
+
+        }
+
+
+        $("input:checkbox[check-group='Id_DonVi']").each(function () {
+            if (this.checked) {
+                var item = this.value;
+
+
+                if (loaiBaoCao == "0") {
+
+                    //if (id_phongban_dich != "-1")
+                    {
+                        // khoi ngan sach su dung
+                        var url = '@Url.Action("Print")' +
+                                    "?ext=" + ext +
+                                    "&r=130" +
+                                    "&id_phongban=" + id_phongban +
+                                    "&id_phongban_dich=" + id_phongban +
+                                    "&Id_DonVi=" + item +
+                                    "&chuky=1,2" +
+                                    "&TieuDe=" + $("#TieuDe").val();
+
+                        links.push(unescape(url));
+
+                    }
+
+                } else {
+
+                    // Benh vien tu chu
+                    if (item.length > 3) {
+
+                    } else {
+
+                        // khoi doanh nghiep
+                        var url = '@Url.Action("Print")' +
+                                    "?ext=" + ext +
+                                    "&r=130" +
+                                    "&id_phongban=02" +
+                                    "&id_phongban_dich=06" +
+                                    "&Id_DonVi=" + item +
+                                    "&chuky=1,2" +
+                                    "&TieuDe=" + $("#TieuDe").val();
+                        url = unescape(url);
+                        links.push(url);
+                    }
+
+
+                    // khoi ngan sach su dung
+                    var url = '@Url.Action("Print")' +
+                                "?ext=" + ext +
+                                "&r=130" +
+                                "&id_phongban=02" +
+                                "&id_phongban_dich=07,08,10" +
+                                "&Id_DonVi=" + item +
+                                "&chuky=1,2" +
+                                "&TieuDe=" + $("#TieuDe").val();
+                    url = unescape(url);
+                    links.push(url);
+                }
+
+
+                if (loaiBaoCao == 0) {
+
+
+                }
+                @*else {
+                    var url = '@Url.Action("Print")' +
+                                "?ext=" + ext +
+                                "&r=130" +
+                                "&Id_PhongBan=" + $("#Id_PhongBan").val() +
+                                "&loaiBaoCao=" + loaiBaoCao +
+                                "&Id_DonVi=" + item +
+                                "&chuky=1,2" +
+                                "&TieuDe=" + $("#TieuDe").val();
+                    url = unescape(url);
+                    links.push(url);
+                }*@
+
+            }
+        });
+
+        openLinks(links);
+    });
+
+</script>

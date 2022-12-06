@@ -1,0 +1,66 @@
+﻿@using VIETTEL.Areas.QLNguonNganSach.Models
+@model QLPhanNguonPagingModel
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Danh sách phân nguồn BTC theo nội dung chi BQP (@Model._paging.TotalItems)</label>
+
+    </div>
+    <button class="btn btn-primary pull-right" onclick="OpenModal()" data-toggle="modal" data-target="#modalPhanNguonBTC"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="SearchData()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+</div>
+<table class="table table-bordered table-striped" id="tblListNNSPhanNguon">
+    <thead>
+    <th width="5%">STT</th>
+    <th width="10%">Số chứng từ</th>
+    <th width="10%">Số quyết định</th>
+    <th width="10%">Ngày quyết định</th>
+    <th width="40%">Nội dung</th>
+    <th width="15%">Số tiền</th>
+    <th width="10%"></th>
+    </thead>
+    <tbody>
+        @{
+            int index = Model._paging.ItemForm;
+            foreach (var item in Model.lstData)
+            {
+                <tr style="cursor: pointer;">
+                    <td align="center" onclick="BtnViewDMNguonBTCCapClick('@item.iID_PhanNguon')">@index</td>
+
+                    <td align="center" onclick="BtnViewDMNguonBTCCapClick('@item.iID_PhanNguon')">@item.sSoChungTu</td>
+
+                    <td align="center" onclick="BtnViewDMNguonBTCCapClick('@item.iID_PhanNguon')">@item.sSoQuyetDinh</td>
+
+                    <td align="center" onclick="BtnViewDMNguonBTCCapClick('@item.iID_PhanNguon')">
+                        @(item.dNgayQuyetDinh.HasValue ? item.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy") : "")
+                    </td>
+
+                    <td align="left" onclick="BtnViewDMNguonBTCCapClick('@item.iID_PhanNguon')">@item.sNoiDung</td>
+
+                    <td align="right" class="rSoTienNNSPhanNguon" onclick="BtnViewDMNguonBTCCapClick('@item.iID_PhanNguon')">
+                        @item.SoTien
+                    </td>
+
+                    <td align="center" class="col-sm-12">
+                        <button type="button" class="btn-detail"><i class="fa fa-eye fa-lg" aria-hidden="true" onclick="ViewItemDetail('@item.iID_PhanNguon')" data-toggle="modal" data-target="#modalPhanNguonBTC"></i></button>
+                        <button class="btn-edit"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true" onclick="OpenModal('@item.iID_PhanNguon')" data-toggle="modal" data-target="#modalPhanNguonBTC"></i></button>
+                        <button class="btn-delete"><i class="fa fa-trash-o fa-lg" aria-hidden="true" onclick="DeleteItem('@item.iID_PhanNguon')"></i></button>
+                    </td>
+                </tr>
+                index++;
+            }
+        }
+    </tbody>
+</table>
+@Html.BuildPagingButtons(Model._paging)
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+
+        formatMoneyOfLstPhanNguon();
+    });
+
+</script>

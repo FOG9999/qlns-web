@@ -1,0 +1,234 @@
+﻿
+<div class="modal-dialog" role="document" style="width:40%">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title text-bold text-left" id="">@ViewBag.Title</h4>
+        </div>
+        <hr />
+        <div id="contentbaocao" class="modal-body">
+            <div class="form-group row" id="ingaythang">
+                <div class="col-sm-6 ">
+                    <label for="drpPhong">Từ ngày <span class="require">*</span> </label>
+                    <div class='input-group date'>
+                        <input type='text' class="form-control txtDate" id="itungay" placeholder="dd/MM/yyyy">
+                        <span class="btn-default input-group-addon">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <label for="drpPhong">Đến ngày <span class="require">*</span> </label>
+                    <div class='input-group date'>
+                        <input type='text' class="form-control txtDate" id="idenngay" placeholder="dd/MM/yyyy">
+                        <span class="btn-default input-group-addon">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            @if (ViewBag.type == 1 || ViewBag.type == 2)
+            {
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <label>Đơn vị cấp trên <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idDonVi" class="form-control" maxlength="100" autocomplete="off" />
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <label>Đơn vị cấp trên <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idDonVi" class="form-control" maxlength="100" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Đơn vị <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idDonViCapDuoi" class="form-control" maxlength="100" autocomplete="off" />
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="form-group row" id="iphong">
+                <div class="col-sm-6 ">
+                    <label for="iID_MaPhongBan">Phòng <span class="require">*</span> </label>
+                    @Html.DropDownList("iID_MaPhongBan", (SelectList)(ViewBag.lstNSPhongBan), "--Chọn phòng ban--", new { @class = "form-control", @id = "iID_MaPhongBan" })
+                </div>
+            </div>
+            @if (ViewBag.type == 1 || ViewBag.type == 2)
+            {
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <label>Tiêu đề 1 <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idtieude1" class="form-control" maxlength="100" autocomplete="off" value="GIẤY ĐỀ NGHỊ THANH TOÁN " />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Tiêu đề 2 <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idtieude2" class="form-control" maxlength="100" autocomplete="off" value="KINH PHÍ TỪ NGUỒN QUỸ DỰ TRỮ NGOẠI HỐI" />
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (ViewBag.type == 3)
+            {
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <label>Tiêu đề 1 <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idtieude1" class="form-control" maxlength="100" autocomplete="off" value="THÔNG BÁO " />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Tiêu đề 2 <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idtieude2" class="form-control" maxlength="100" autocomplete="off" value="Chi ngân sách từ nguồn quỹ dự trữ ngoại hối" />
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (ViewBag.type == 4)
+            {
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <label>Tiêu đề 1 <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idtieude1" class="form-control" maxlength="100" autocomplete="off" value="THÔNG BÁO " />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Tiêu đề 2 <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idtieude2" class="form-control" maxlength="100" autocomplete="off" value="CẤP KINH PHÍ BẰNG NGOẠI TỆ TỪ NGUỒN QUỸ DỰ TRỮ NGOẠI HỐI" />
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <label>Tiêu đề 1 <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idtieude1" class="form-control" maxlength="100" autocomplete="off" value="THÔNG BÁO " />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Tiêu đề 2 <span class="require">*</span> </label>
+                        <div>
+                            <input type="text" id="idtieude2" class="form-control" maxlength="100" autocomplete="off" value="CẤP KINH PHÍ CHI TRONG NƯỚC TỪ NGUỒN QUỸ DỰ TRỮ NGOẠI HỐI" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="form-group row" id="inoidung">
+                <div class="col-sm-12">
+                    <label for="drpNoidung">Kính gửi <span class="require">*</span> </label>
+                    <textarea class="form-control" id="sNoiDung" style="min-height:120px"></textarea>
+                </div>
+            </div>
+            <div class="form-group row" id="icancu">
+                <div class="col-sm-12">
+                    <label for="iCanCu">Căn cứ <span class="require">*</span> </label>
+                    <textarea class="form-control" id="iCanCu" style="min-height:120px"></textarea>
+                </div>
+            </div>
+            <div class="form-group row" id="iquanly">
+                <div class="col-sm-6">
+                    <label for="iID_QuanLy">B quản lý<span class="require">*</span> </label>
+                    @Html.DropDownList("iID_QuanLy", (SelectList)(ViewBag.lstNSPhongBan), "--Chọn B quản lý--", new { @class = "form-control", @id = "iID_QuanLy" })
+                </div>
+
+            </div>
+            <div class="form-group row" id="idonvitinh">
+                <div class="col-sm-6">
+                    <label for="iDonViTinh">Đơn vị tính<span class="require">*</span> </label>
+                    <select class="form-control" id="iDonViTinh">
+                        <option value="">--Chọn đơn vị tính--</option>
+                        <option value="1"> Nghìn USD</option>
+                        <option value="2"> Nghìn VND</option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="form-group row" id="ithoigian">
+                <div class="col-sm-4">
+                    <label for="ithang">Tháng<span class="require">*</span> </label>
+                    <select class="form-control" id="ithang" onchange="onChangeBaoCaoThang()">
+                        @{
+                            for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i">Tháng @i</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label for="iquy">Quý<span class="require">*</span> </label>
+                    <select class="form-control" id="iquy">
+                        <option value="1"> Quý I</option>
+                        <option value="2"> Quý II</option>
+                        <option value="3"> Quý III</option>
+                        <option value="4"> Quý IV</option>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label for="inam">Năm<span class="require">*</span> </label>
+                    <select class="form-control" id="inam">
+                        @{
+                            int year = DateTime.Now.Year;
+                            for (int i = year; i >= year - 10; i--)
+                            {
+                                <option value="@i"> Năm @i</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <div class="text-center">
+                <button class="btn-mvc" id="btnChuKy"><i class="fa fa-file-excel"></i>Sửa chữ ký</button>
+                <button class="btn-mvc btn-mvc-green btn-print" onclick="onInBaoCao('pdf')"><span>Xuất file PDF</span></button>
+                <button class="btn-mvc btn-mvc-green btn-print" onclick="onInBaoCao('xlsx')"><span>Xuất file Excel</span></button>
+                <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Đóng</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("_ui_chuky")
+<script type="text/javascript">
+    $(document).ready(function () {
+        var isShowing = false;
+        $('.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: 'vi',
+            todayHighlight: true,
+            format: "dd/mm/yyyy"
+        }).on('hide', () => {
+            isShowing = false;
+        }).on('show', () => {
+            isShowing = true;
+        });
+
+        $(".txtDate").keydown(function (event) {
+            ValidateInputKeydown(event, this, 3);
+        }).blur(function (event) {
+            setTimeout(() => {
+                if (!isShowing) ValidateInputFocusOut(event, this, 3);
+            }, 0);
+        });
+    })
+</script>

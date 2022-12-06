@@ -1,0 +1,117 @@
+﻿@using Viettel.Domain.DomainModel
+@model VDT_QT_DeNghiQuyetToan
+
+<div class="modal-body">
+    <div class="form-group row">
+        <div class="col-md-12">
+            <h4 style="font-weight:bold;font-size:17px;">Thông tin báo cáo</h4>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6">
+                <input type="hidden" id="txt_ID_DeNghiQuyetToan" value="@Model.iID_DeNghiQuyetToanID">
+                <label for="txt_SoBaoCao">Số báo cáo</label>
+                <input type="text" required id="txt_SoBaoCao" class="form-control" value="@Model.sSoBaoCao" maxlength="50" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtNgayNhanModal">Ngày nhận</label>
+                <div class='input-group date'>
+                    <input type='text' required class="form-control" value="@(Model.dThoiGianNhanBaoCao.HasValue ? Model.dThoiGianNhanBaoCao.Value.ToString("dd/MM/yyyy") : string.Empty)" id="txtNgayNhanModal" autocomplete="off" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-6">
+                <label for="txtNgayDuyetModal">Ngày duyệt</label>
+                <div class='input-group date'>
+                    <input type='text' required class="form-control" value="@(Model.dThoiGianLapBaoCao.HasValue ? Model.dThoiGianLapBaoCao.Value.ToString("dd/MM/yyyy") : string.Empty)" id="txtNgayDuyetModal" autocomplete="off" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="txt_NguoiNhan">Người nhận</label>
+                <input type="text" required id="txt_NguoiNhan" class="form-control" value="@Model.sNguoiNhan" maxlength="255" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6">
+                <label for="txt_NguoiDuyet">Người duyệt</label>
+                <input type="text" required id="txt_NguoiDuyet" class="form-control" value="@Model.sNguoiLap" maxlength="255" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-12">
+            <h4 style="font-weight:bold;font-size:17px;">Thông tin dự án</h4>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6">
+                <label for="txt_DonViQuanLy">Đơn vị quản lý</label>
+                <select class="form-control" style="width:100%" id="txt_DonViQuanLy" name="donViQuanLy"></select>
+            </div>
+            <div class="col-md-6" id="idFormDuAn">
+                <label for="txt_DuAn">Dự án</label>
+                <select class="form-control" style="width: 100%" id="txt_DuAn" name="duAn">
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6" hidden id="idFormTenDuAn">
+                <label for="txt_TenDuAn">Tên dự án</label>
+                <input type="text" required id="txt_TenDuAn" class="form-control" maxlength="255" />
+                @*<p id="txt_TenDuAn"></p>*@
+            </div>
+            <div class="col-md-6" hidden id="idFormChuDauTu">
+                <label for="txt_ChuDauTu">Chủ đầu tư</label>
+                <input type="text" required id="txt_ChuDauTu" class="form-control" maxlength="255" />
+                @*<p id="txt_ChuDauTu"></p>*@
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-6">
+                <label for="txtThoiGianKhoiCongModal">Thời gian khởi công</label>
+                <div class='input-group date'>
+                    <input type='text' required class="form-control" value="@(Model.dThoiGianKhoiCong.HasValue ? Model.dThoiGianKhoiCong.Value.ToString("dd/MM/yyyy") : string.Empty)" id="txtThoiGianKhoiCongModal" autocomplete="off" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtThoiGianHoanThanhModal">Thời gian hoàn thành</label>
+                <div class='input-group date'>
+                    <input type='text' required class="form-control" value="@(Model.dThoiGianHoanThanh.HasValue ? Model.dThoiGianHoanThanh.Value.ToString("dd/MM/yyyy") : string.Empty)" id="txtThoiGianHoanThanhModal" autocomplete="off" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-12">
+            <h4 style="font-weight:bold;font-size:17px;">Giá trị đề nghị</h4>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6">
+                <label for="txt_GiaTriQuyetToan">Giá trị quyết toán</label>
+                <input type="text" required id="txt_GiaTriQuyetToan" class="form-control" value="@Model.fGiaTriDeNghiQuyetToan" />
+            </div>
+            <div class="col-md-6">
+                <label for="txt_GhiChu">Ghi chú</label>
+                <input type="text" required id="txt_GhiChu" class="form-control" value="@Model.sMoTa" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="SaveData()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>
+

@@ -1,0 +1,69 @@
+﻿@using VIETTEL.Areas.QLNguonNganSach.Models
+@using Viettel.Models.QLNguonNganSach
+@model RptTongHopDuToanNganSachNamModel
+
+@{
+    <div class="tableFixHead">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th width="5%">STT</th>
+                    <th width="35%">Đơn vị</th>
+                    <th width="20%">NS đã giao đầu năm</th>
+                    <th width="20%">NS bổ sung trong năm</th>
+                    <th width="20%">Tổng dự toán</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 1;
+                    string iID_MaDonVi_Pre = "";
+                }
+                @foreach (var item in Model.lstDataChiTiet)
+                {
+                    if (item.iID_MaDonVi != iID_MaDonVi_Pre)
+                    {
+                        iID_MaDonVi_Pre = item.iID_MaDonVi;
+                        <tr class="parent text-bold" data-iid="@item.iID_MaDonVi">
+                            <td align="center">@index</td>
+                            <td align="left">@item.sTenDonVi</td>
+                            <td align="right" class="dagiao"></td>
+                            <td align="right" class="bosung"></td>
+                            <td align="right" class="tongdt"></td>
+                        </tr>
+                        <tr class="child" data-parent="@iID_MaDonVi_Pre">
+                            <td align="center">-</td>
+                            <td align="left">@item.sTenPhongBan</td>
+                            <td align="right" class="dagiao">@item.sDaGiaoDauNam</td>
+                            <td align="right" class="bosung">@item.sBSTrongNam</td>
+                            <td align="right" class="tongdt">@item.sTongDuToan</td>
+                        </tr>
+                        index++;
+                    }
+                    else
+                    {
+                        <tr class="child" data-parent="@iID_MaDonVi_Pre">
+                            <td align="center">-</td>
+                            <td align="left">@item.sTenPhongBan</td>
+                            <td align="right" class="dagiao">@item.sDaGiaoDauNam</td>
+                            <td align="right" class="bosung">@item.sBSTrongNam</td>
+                            <td align="right" class="tongdt">@item.sTongDuToan</td>
+                        </tr>
+
+                    }
+                }
+            </tbody>
+            <tfoot>
+                <tr class="text-bold">
+                    <th></th>
+                    <th>Tổng</th>
+                    <th class="text-right">@Model.sTongDaGiaoDauNam</th>
+                    <th class="text-right">@Model.sTongBSTrongNam</th>
+                    <th class="text-right">@Model.sTongDuToan</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+}
+
+

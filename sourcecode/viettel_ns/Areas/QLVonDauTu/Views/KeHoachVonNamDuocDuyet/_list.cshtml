@@ -1,0 +1,157 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model KeHoachVonNamDuocDuyetViewModel
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Danh sách kế hoạch dự toán được giao (@Model._paging.TotalItems)</label>
+    </div>
+    <button class="btn btn-primary pull-right" onclick="OpenModal()" data-toggle="modal" data-target="#modalKHVonNamDeXuat"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+    <button class="btn btn-warning pull-right" style="margin-right: 10px;" onclick="ViewInBaoCao();"><i class="fa fa-print" aria-hidden="true"></i>Báo cáo</button>
+
+</div>
+<table class="table table-bordered" id="tblListKHVonNamDeXuat">
+    <thead class="header-search">
+    <th width="3%"></th>
+    <th width="10%"><input type="text" class="form-control gr_search" id="txtSoQuyetdinh" /></th>
+    <th width="16%">
+        <div style="display: flex">
+            <div class='input-group date'>
+                <input type="text" id="dNgayQuyetDinhFrom" autocomplete="off" class="form-control gr_search startDate dateFormat" placeholder="dd/MM/yyyy" />
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+            <span style="margin: 8px 5px 0px 5px;">-</span>
+            <div class='input-group date'>
+                <input type="text" id="dNgayQuyetDinhTo" autocomplete="off" class="form-control gr_search endDate dateFormat" placeholder="dd/MM/yyyy" />
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+    </th>
+    <th width="5%"><input type="text" maxlength="4" class="form-control gr_search yearFormat" id="txtNamKeHoach" autocomplete="off" /></th>
+    <th width="12%">@Html.DropDownList("iID_NguonVonID", (SelectList)(ViewBag.ListNguonVon), "--Tất cả--", new { @class = "form-control", @id = "iID_NguonVonID" })</th>
+    <th width="10%">@Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), "--Tất cả--", new { @class = "form-control", @id = "iID_DonViQuanLyID" })</th>
+    <th width="7%"></th>
+    <th width="7%"></th>
+    <th width="8%"></th>
+    <th width="10%"></th>
+    <th><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+    </thead>
+    <thead>
+        <tr>
+            <th width="3%">STT</th>
+            <th width="10%">Số quyết định</th>
+            <th width="16%">Ngày lập</th>
+            <th width="5%">Năm kế hoạch</th>
+            <th width="12%">Nguồn vốn</th>
+            <th width="10%">Đơn vị</th>
+            <th width="7%">Rút dự toán tại KBNN</th>
+            <th width="7%">Cấp bằng lệnh chi tiền</th>
+            <th width="8%">Số lần điều chỉnh</th>
+            <th width="10%">Điều chỉnh từ</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (var item in Model.Items)
+            {
+                index++;
+                <tr style="cursor: pointer">
+                    <td class="text-center" onclick="ChiTietKeHoachVonNamDuocDuyet('@item.iID_KeHoachVonNam_DuocDuyetID',true)">@(pageIndex + index)</td>
+                    <td class="text-left" onclick="ChiTietKeHoachVonNamDuocDuyet('@item.iID_KeHoachVonNam_DuocDuyetID',true)">@Html.Raw(Html.Encode(item.sSoQuyetDinh))</td>
+                    <td class="text-center" onclick="ChiTietKeHoachVonNamDuocDuyet('@item.iID_KeHoachVonNam_DuocDuyetID',true)">@Html.Raw(Html.Encode(item.dNgayQuyetDinh.HasValue ? item.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy") : string.Empty))</td>
+                    <td class="text-center" onclick="ChiTietKeHoachVonNamDuocDuyet('@item.iID_KeHoachVonNam_DuocDuyetID',true)">@Html.Raw(Html.Encode(item.iNamKeHoach))</td>
+                    <td class="text-left" onclick="ChiTietKeHoachVonNamDuocDuyet('@item.iID_KeHoachVonNam_DuocDuyetID',true)">@Html.Raw(Html.Encode(item.sTenNguonVon))</td>
+                    <td class="text-left" onclick="ChiTietKeHoachVonNamDuocDuyet('@item.iID_KeHoachVonNam_DuocDuyetID',true)">@Html.Raw(Html.Encode(item.sTenDonVi))</td>
+                    @if (item.sCapPhatBangLenhChiDC != "0" || item.sCapPhatTaiKhoBacDC != "0")
+                    {
+                        <td class="text-right sotien" onclick="ChiTietKeHoachVonNamDuocDuyet('@item.iID_KeHoachVonNam_DuocDuyetID',true)">@item.sCapPhatTaiKhoBacDC</td>
+                        <td class="text-right sotien" onclick="ChiTietKeHoachVonNamDuocDuyet('@item.iID_KeHoachVonNam_DuocDuyetID',true)">@item.sCapPhatBangLenhChiDC</td>
+
+                    }
+                    else
+                    {
+                        <td class="text-right sotien" onclick="ChiTietKeHoachVonNamDuocDuyet('@item.iID_KeHoachVonNam_DuocDuyetID',true)">@Html.Raw(Html.Encode(item.fCapPhatTaiKhoBac.HasValue ? item.fCapPhatTaiKhoBac.Value.ToString("###,###") : "0"))</td>
+                        <td class="text-right sotien" onclick="ChiTietKeHoachVonNamDuocDuyet('@item.iID_KeHoachVonNam_DuocDuyetID',true)">@Html.Raw(Html.Encode(item.fCapPhatBangLenhChi.HasValue ? item.fCapPhatBangLenhChi.Value.ToString("###,###") : "0"))</td>
+                    }
+
+                    <td class="text-center" onclick="ChiTietKeHoachVonNamDuocDuyet('@item.iID_KeHoachVonNam_DuocDuyetID',true)">@Html.Raw(Html.Encode(item.SoLanDieuChinh))</td>
+                    <td class="text-center" onclick="ChiTietKeHoachVonNamDuocDuyet('@item.iID_KeHoachVonNam_DuocDuyetID',true)">@Html.Raw(Html.Encode(item.DieuChinhTu))</td>
+                    <td class="text-center" style="vertical-align: middle !important">
+                        @{
+                            if (item.bActive.Value)
+                            {
+                                <button type="button" class="btn-detail" onclick="OpenModal('@item.iID_KeHoachVonNam_DuocDuyetID', '@item.iID_DonViQuanLyID', false, true)" data-toggle="modal" data-target="#modalKHVonNamDeXuat"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-detail" onclick="OpenModal('@item.iID_KeHoachVonNam_DuocDuyetID', '@item.iID_DonViQuanLyID', true)" data-toggle="modal" data-target="#modalKHVonNamDeXuat"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-edit" onclick="OpenModal('@item.iID_KeHoachVonNam_DuocDuyetID')" data-toggle="modal" data-target="#modalKHVonNamDeXuat"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-delete" onclick="DeleteItem('@item.iID_KeHoachVonNam_DuocDuyetID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-file" onclick="OpenExport('@item.iID_KeHoachVonNam_DuocDuyetID')"><i class="fa fa-trash-o fa-file" aria-hidden="true"></i></button>
+                                <button type="submit" class="btn-detail" onclick="SendFile('@item.iID_KeHoachVonNam_DuocDuyetID', '@item.iID_DonViQuanLyID','@item.iNamKeHoach')"><i class="fa fa-download fa-lg" aria-hidden="true"></i></button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn-detail" onclick="OpenModal('@item.iID_KeHoachVonNam_DuocDuyetID', '@item.iID_DonViQuanLyID', false, true)" data-toggle="modal" data-target="#modalKHVonNamDeXuat"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" disabled style="color: gray !important" class="btn-edit hidden" onclick="OpenModal('@item.iID_KeHoachVonNam_DuocDuyetID', '@item.iID_DonViQuanLyID', true)" data-toggle="modal" data-target="#modalKHVonNamDeXuat"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" disabled style="color: gray !important" class="btn-edit hidden" onclick="OpenModal('@item.iID_KeHoachVonNam_DuocDuyetID')" data-toggle="modal" data-target="#modalKHVonNamDeXuat"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" disabled style="color: gray !important" class="btn-delete hidden" onclick="DeleteItem('@item.iID_KeHoachVonNam_DuocDuyetID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                                <button type="button" class="btn-file" onclick="OpenExport('@item.iID_KeHoachVonNam_DuocDuyetID')"><i class="fa fa-trash-o fa-file" aria-hidden="true"></i></button>
+                                <button type="submit" class="btn-detail" onclick="SendFile('@item.iID_KeHoachVonNam_DuocDuyetID', '@item.iID_DonViQuanLyID','@item.iNamKeHoach')"><i class="fa fa-download fa-lg" aria-hidden="true"></i></button>
+                            }
+                        }
+
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript" src="/Scripts/js/js_app.js"></script>
+<script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.date')
+            .datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+                dateFormat: "dd/mm/yyyy"
+            });
+        $("#dNgayQuyetDinhFrom").keydown(function (event) {
+            ValidateInputKeydown(event, this, 3);
+        });
+        $("#dNgayQuyetDinhTo").keydown(function (event) {
+            ValidateInputKeydown(event, this, 3);
+        });
+
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+
+        $("#tblListKHVonNamDeXuat .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                if (e.which == 13) {//Enter key pressed
+                    ChangePage();
+                }
+            });
+        });
+        /*formatMoney();*/
+    });
+
+</script>

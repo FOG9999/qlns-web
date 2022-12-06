@@ -1,0 +1,89 @@
+﻿@using Viettel.Models.QLNH
+@model QuyetToan_ChungTuModelPaging
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Chứng từ tài sản (@Model._paging.TotalItems)</label>
+    </div>
+    <button class="btn btn-primary pull-right" style="margin-right:10px;" onclick="OpenCreate()" ><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+</div>
+<table class="table table-bordered" >
+    <thead class="header-search">
+        <tr>
+            <th width="8%"></th>
+            <th width="37%"><input type="text" class="form-control gr_search" id="txtsTenChungTuFillter" placeholder="Tên chứng từ" /></th>
+            <th width="25%"><input type="text" class="form-control gr_search" id="txtsSochungTuFillter" placeholder="Số chứng từ" maxlength="50" /></th>
+            <th width="15%">
+                <div class='input-group date'>
+                    <input type="text" id="dNgayChungTuFillter" autocomplete="off" class="form-control gr_search" placeholder="Ngày chứng từ" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </th>
+            <th width="15%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+        </tr>
+    </thead>
+    <thead>
+        <tr>
+            <th width="8%">STT</th>
+            <th width="37%">Tên chứng từ</th>
+            <th width="25%">Số chứng từ</th>
+            <th width="15%">Ngày chứng từ</th>
+            <th width="15%">Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (var item in Model.Items)
+            {
+                index++;
+                <tr style="cursor: pointer">
+                    <td align="center">@(pageIndex + index)</td>
+                    <td align="left">@Html.Raw(Html.Encode(item.sTenChungTu))</td>
+                    <td align="left">@Html.Raw(Html.Encode(item.sSoChungTu))</td>
+                    <td align="center">@(item.dNgayChungTu.HasValue ? item.dNgayChungTu.Value.ToString("dd/MM/yyyy"): string.Empty)</td>
+                    <td align="center" style="vertical-align: middle !important" class="col-sm-12">
+                        <button type="button" class="btn-detail" title="Xem chi tiết" onclick="OpenDetail('@item.ID')" ><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-edit" title="Sửa" onclick="OpenUpdate('@item.ID')" ><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" title="Xóa" onclick="Xoa('@item.ID')" ><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: 'vi',
+            todayHighlight: true,
+            format: "dd/mm/yyyy"
+        });
+
+        $("#dNgayChungTuFillter").keydown(function (event) {
+            ValidateInputKeydown(event, this, 3);
+        });
+
+        $("#tbListTaiSan .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                if (e.which == 13) {//Enter key pressed
+                    ChangePage();
+                }
+            });
+        });
+    });
+
+</script>

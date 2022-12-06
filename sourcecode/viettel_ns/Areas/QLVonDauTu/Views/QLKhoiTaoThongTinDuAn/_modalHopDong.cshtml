@@ -1,0 +1,111 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model HopDongKhoiTaoThongTinDuAnViewModel
+
+
+<div class="modal-body">
+    <button class="btn btn-primary pull-right mb-10" onclick="AddRowHopDong('@Model.iID_KhoiTaoDuLieuChiTietID', '@Model.iID_DuAnID')"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+
+    <input type="hidden" id="iID_KhoiTaoChiTietTTDAModal" value="">
+    <input type="hidden" id="iID_KhoiTaoDuLieuChiTietID" value="@Model.iID_KhoiTaoDuLieuChiTietID" />
+    <input type="hidden" id="iID_DuAnID" value="@Model.iID_DuAnID" />
+
+    <div class="form-group row">
+        <div class="col-sm-3">
+            <label>Tên dự án: </label>
+            <label class="label-item" id="sTenDuAn"></label>
+        </div>
+        <div class="col-sm-3">
+            <label>Nguồn vốn: </label>
+            <label class="label-item" id="sNguonVon"></label>
+        </div>
+        <div class="col-sm-3">
+            <label>Cơ quan thanh toán: </label>
+            <label class="label-item" id="sCoQuanThanhToan"></label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th rowspan="3" style="width: 200px ">Hợp đồng</th>
+                            <th rowspan="3" style="width: 200px">Nhà thầu</th>
+                            <th rowspan="3" style="width: 150px">Giá trị hợp đồng</th>
+                            <th colspan="4">Thuộc kế hoạch vốn năm</th>
+                            <th colspan="4">Thuộc kế hoạch vốn ứng nhé</th>
+                            <th rowspan="3" style="width: 45px"></th>
+                        </tr>
+                        <tr>
+                            <th colspan="2">Vốn trong nước</th>
+                            <th colspan="2">Vốn ngoài nước</th>
+                            <th colspan="2">Vốn trong nước</th>
+                            <th colspan="2">Vốn ngoài nước</th>
+                        </tr>
+                        <tr>
+                            <th>Lũy kế thanh toán KLHT</th>
+                            <th>Lũy kế tạm ứng chưa thu hồi</th>
+                            <th>Lũy kế thanh toán KLHT</th>
+                            <th>Lũy kế tạm ứng chưa thu hồi</th>
+                            <th>Lũy kế thanh toán KLHT</th>
+                            <th>Lũy kế tạm ứng chưa thu hồi</th>
+                            <th>Lũy kế thanh toán KLHT</th>
+                            <th>Lũy kế tạm ứng chưa thu hồi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyHopDongChiTiet">
+                        @{
+                            int i = 0;
+                            foreach (var item in Model.Items)
+                            {
+                                i++;
+                                <tr>
+                                    <input type="hidden" class="STT" value="@item.STT" />
+                                    <input type="hidden" class="iIDThanhToan" value="@item.iID_KhoiTaoDuLieuChiTietThanhToanID" />
+                                    <td>
+                                        @Html.DropDownList("iID_HopDong_" + i, new SelectList(ViewBag.ListHopDong, "Value", "Text", item.iID_HopDongId), new { @class = "form-control hopdong", @id = "iID_HopDong_" + i })
+                                    </td>
+                                    <td class="sTenNhaThau">@item.sTenNhaThau</td>
+                                    <td class="sGiaTriHopDong">@item.sGiaTriHD</td>
+                                    <td align="center"><input class="cs-input-ctktda fluykethanhtoantnvn tn-luykethanhtoan sotien1" type="text" value="@item.fLuyKeTTKLHTTN_KHVN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" /></td>
+                                    <td align="center"><input class="cs-input-ctktda fluykechuathuhoitnvn tn-luykechuathuhoi sotien1" type="text" value="@item.fLuyKeTUChuaThuHoiTN_KHVN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" /></td>
+                                    <td align="center"><input class="cs-input-ctktda fluykethanhtoannnvn nn-luykethanhtoan sotien1" type="text" value="@item.fLuyKeTTKLHTNN_KHVN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" /></td>
+                                    <td align="center"><input class="cs-input-ctktda fluykechuathuhoinnvn nn-luykechuathuhoi sotien1" type="text" value="@item.fLuyKeTUChuaThuHoiNN_KHVN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" /></td>
+
+                                    <td align="center"><input class="cs-input-ctktda fluykethanhtoantnvu tn-luykethanhtoan sotien1" type="text" value="@item.fLuyKeTTKLHTTN_KHVU" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" /></td>
+                                    <td align="center"><input class="cs-input-ctktda fluykechuathuhoitnvu tn-luykechuathuhoi sotien1" type="text" value="@item.fLuyKeTUChuaThuHoiTN_KHVU" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" /></td>
+                                    <td align="center"><input class="cs-input-ctktda fluykethanhtoannnvu nn-luykethanhtoan sotien1" type="text" value="@item.fLuyKeTTKLHTNN_KHVU" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" /></td>
+                                    <td align="center"><input class="cs-input-ctktda fluykechuathuhoinnvu nn-luykechuathuhoi sotien1" type="text" value="@item.fLuyKeTUChuaThuHoiNN_KHVU" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" /></td>
+                                    <td align="center" style="vertical-align: middle !important">
+                                        <button type="button" class="btn-delete" onclick="RemoveRowHopDong(@item.STT, '@Model.iID_KhoiTaoDuLieuChiTietID', '@Model.iID_DuAnID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="SaveHopDong('@Model.iID_KhoiTaoDuLieuChiTietID')"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function ($) {
+
+        $("#txtNamKhoiTaoModal").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                return false;
+            }
+        });
+
+        DinhDangSo1();
+    });
+</script>

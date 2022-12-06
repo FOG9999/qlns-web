@@ -1,0 +1,66 @@
+﻿@using Viettel.Models.QLNH
+@using System.Globalization;
+@model DanhmucNgoaiHoi_TiGiaModel
+
+<div class="modal-body">
+    <div class="form-group row">
+        <div class="col-sm-6">
+            <label>Mã tỉ giá</label>
+            <p>@Html.Raw(Html.Encode(Model.sMaTiGia))</p>
+        </div>
+        <div class="col-sm-6">
+            <label>Tên tỉ giá</label>
+            <p>@Html.Raw(Html.Encode(Model.sTenTiGia))</p>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <label>Mô tả</label>
+            <div>@Html.Raw(!string.IsNullOrEmpty(Html.Encode(Model.sMoTaTiGia)) ? Html.Encode(Model.sMoTaTiGia).Replace("\n", "<br/>") : string.Empty)</div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-6">
+            <label>Ngày lập</label>
+            <p>@Html.Raw(Html.Encode(Model.dNgayLap))</p>
+        </div>
+        <div class="col-sm-6">
+            <label>Mã tiền tệ gốc</label>
+            <p>@Html.Raw(Html.Encode(Model.sMaTienTeGoc))</p>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-12"><label>THÔNG TIN TỈ GIÁ CHI TIẾT</label></div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <table class="table table-bordered" id="tblTiGiaChiTiet">
+                <thead>
+                    <tr>
+                        <th class="col-sm-4">Mã tiền tệ gốc</th>
+                        <th class="col-sm-4">Tỉ giá</th>
+                        <th class="col-sm-4">Mã tiền tệ quy đổi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.ListTiGiaChiTietTable != null)
+                    {
+                        foreach (var item in (List<NH_DM_TiGiaChiTiet_TableModel>)ViewBag.ListTiGiaChiTietTable)
+                        {
+                            <tr>
+                                <td>@Html.Raw(Html.Encode(item.sMaTienTeGoc))</td>
+                                <td>@Html.Raw(Html.Encode(item.sFTiGia))</td>
+                                <td>@Html.Raw(Html.Encode(item.sMaTienTeQuyDoi))</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+    </div>
+</div>

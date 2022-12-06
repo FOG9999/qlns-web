@@ -1,0 +1,180 @@
+﻿@{
+    //Layout = "~/views/shared/_layout.cshtml";
+
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+
+    ViewBag.Title = "Danh sách báo cáo dự toán bổ sung năm " + PhienLamViec.iNamLamViec;
+
+    var items = new List<MenuItem>
+    {
+    //new MenuItem{
+    //     id="",
+    //     name = "DTBS - 1040100 theo đơn vị (Tờ bìa)",
+    //     url = Url.Action("Index", "rptDuToanBS_1040100_TungDonVi"),
+    //     note = ""},
+
+    new MenuItem{
+        id="",
+        name = "DTBS - Ngân sách bảo đảm theo ngành - Tờ bìa",
+        url = Url.Action("Index", "rptDuToanBS_1040100_ToBia"),
+        note = ""},
+
+    new MenuItem{
+        id="",
+        name = "DTBS - Ngân sách bảo đảm theo ngành - Chọn tờ",
+        url = Url.Action("Index", "rptDuToanBS_1040100_Nganh"),
+        note = ""},
+
+     new MenuItem{
+        id="",
+        name = "DTBS - Ngân sách nhà nước theo ngành - Tờ bìa",
+        url = Url.Action("Index", "rptDuToanBS_ToBia_NSNN"),
+        note = "Gồm cả nsk (4050100,107)"},
+
+    //new MenuItem{
+    //    id="",
+    //    name = "BTBS - Ngân sách nhà nước Chi QLHC theo ngành - Tờ bìa",
+    //    url = Url.Action("Index", "rptDuToanBS_207_ToBia"),
+    //    note = ""},
+
+       new MenuItem{
+        id="",
+        name = "DTBS - Ngân sách nhà nước theo ngành - Chọn tờ",
+        //url = Url.Action("Index", "rptDuToanBS_NSNN_Nganh"),
+        url = Url.Action("Index", "rptDuToanBS_NSNN_Nganh2"),
+        note = "Gồm cả nsk (4050100,107)"},
+
+    new MenuItem{
+        id="",
+        name = "DTBS - Ngân sách nhà nước phần chi QLHC - Chọn tờ",
+        url = Url.Action("Index", "rptDuToanBS_207_Nganh"),
+        note = ""},
+
+    new MenuItem{
+         id="",
+         name = "DTBS - In trình ký và phụ lục tờ bìa theo đơn vị",
+         url = Url.Action("Index", "rptDuToanBS_ToBia_DonVi"),
+         note = ""},
+
+    new MenuItem{
+        id="",
+        name = "DTBS - Ngân sách bảo đảm theo đợt",
+        url = Url.Action("Index", "rptDuToanBS_1040100_Dot"),
+        note = ""},
+    new MenuItem{
+        id="",
+        name = "DTBS - Báo cáo bảng kiểm số liệu phân cấp",
+        url = Url.Action("Index", "rptDuToanBS_PhanCap"),
+        note = ""},
+
+
+    //new MenuItem{
+    //    id="",
+    //    name = "DTBS - In trình ký và phụ lục quyết định dự toán bổ sung",
+    //    url = Url.Action("Index", "rptDuToanBS_ChiTieuNganSach"),
+    //    note = ""},
+
+      //new MenuItem{
+      //  id="",
+      //  name = "DTBS - In trình ký và phụ lục quyết định dự toán bổ sung",
+      //  url = Url.Action("Index", "rptDuToanBS_TongHop"),
+      //  note = ""},
+
+      new MenuItem{
+        id="",
+        name = "DTBS - In phụ lục quyết định dự toán bổ sung",
+        url = Url.Action("Index", "rptDuToanBS_PhuLuc"),
+        note = ""},
+
+      new MenuItem{
+        id="",
+        name = "DTBS - In phụ lục quyết định dự toán bổ sung - theo ngành",
+        url = Url.Action("Index", "rptDuToanBS_PhuLuc_Nganh"),
+        note = ""},
+
+
+    new MenuItem{
+        id="",
+        name = "Biểu tổng hợp chỉ tiêu đơn vị",
+        url = Url.Action("Index", "rptTongHop_ChiTieu_DonVi"),
+        note = ""},
+    new MenuItem{
+        id="",
+        name = "Báo cáo tổng hợp dự toán chi ngân sách năm",
+        url = Url.Action("Index", "rptDuToanBS_TongHop_ChiNganSach"),
+        note = ""},
+     new MenuItem{
+        id="",
+        name = "Báo cáo tổng hợp dự toán chi ngân sách năm - Chọn tờ",
+        url = Url.Action("Index", "rptDuToanBS_TongHop_ChonTo"),
+        note = ""},
+     new MenuItem{
+        id="",
+        name = "In phụ lục giao dự toán bệnh viện tự chủ",
+        url = Url.Action("Index", "rptDuToanBS_BVTC"),
+        note = ""},
+     new MenuItem{
+        id="",
+        name = "DTBS - In phụ lục quyết định dự toán bổ sung theo đợt nhập",
+        url = Url.Action("Index", "rptDuToanBS_InPhuLuc"),
+        note = ""},
+
+    };
+
+    if (PhienLamViec.userRole == 2)
+    {
+        items.AddRange(new List<MenuItem> {
+                    new MenuItem
+                    {
+                        id = "",
+                        name = "DTBS - Tổng hợp dự toán ngân sách bảo đảm theo đợt gom năm " + PhienLamViec.iNamLamViec,
+                        url = Url.Action("Index", "rptDuToanBS_TongHopDot"),
+                        note = ""
+                    },
+                }
+        );
+    }
+
+    if (User.Identity.Name == "phuongb2")
+    {
+        items.AddRange(new List<MenuItem> {
+                    new MenuItem
+                    {
+                        id = "",
+                        name = "DTBS - Phụ lục dự toán bổ sung tổng hợp theo đơn vị năm " + PhienLamViec.iNamLamViec,
+                        url = Url.Action("Index", "rptDuToanBS_InPhuLuc", new { area = "DuToanBS"}),
+                        note = "",
+                    },
+                }
+        );
+    }
+
+    if (PhienLamViec.iID_MaPhongBan == "11" || PhienLamViec.userRole == 6 || PhienLamViec.userRole == 7)
+    {
+        items.AddRange(new List<MenuItem> {
+                new MenuItem
+                {
+                    id = "",
+                    name = "DTBS - Tổng hợp dự toán ngân sách bảo đảm kĩ thuật bổ sung năm " + PhienLamViec.iNamLamViec,
+                    url = Url.Action("Index", "rptDuToanBS_BDKT"),
+                    note = "",
+                },
+                new MenuItem
+                {
+                    id = "",
+                    name = "DTBS - Phụ lục dự toán bổ sung tổng hợp theo đơn vị năm " + PhienLamViec.iNamLamViec,
+                    url = Url.Action("Index", "rptDuToanBS_InPhuLucTH", new { area = "DuToanBS"}),
+                    note = "",
+                },
+                new MenuItem
+                {
+                    id = "",
+                    name = "DTBS - Phụ lục dự toán bổ sung tổng hợp theo đơn vị năm " + PhienLamViec.iNamLamViec,
+                    url = Url.Action("Index", "rptDuToanBS_InPhuLucTHPC", new { area = "DuToanBS"}),
+                    note = "Phụ lục chi tiết phân cấp ngành",
+                },
+            }
+        );
+    }
+}
+@Html.Partial("_report_table", items)

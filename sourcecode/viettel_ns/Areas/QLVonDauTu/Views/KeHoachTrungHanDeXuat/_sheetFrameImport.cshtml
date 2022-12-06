@@ -1,0 +1,64 @@
+﻿@*@model SheetViewModel*@
+@model VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong.KeHoach5NamDeXuatChiTietGridViewModel
+@{
+    Layout = "~/Views/shared/sheet/_LayoutSheetFrame.cshtml";
+}
+@section Styles{
+    <link rel="Stylesheet" type="text/css" href="~/Content/css/sheet.css">
+}
+
+<style>
+    #sTen {
+        margin-left: 50px;
+    }
+</style>
+@*@Html.Partial("_SheetSearch", Model.Sheet)*@
+@Html.Partial("_SheetEditor", Model.Sheet)
+@section Scripts{
+    @Html.Partial("_SheetScript")
+    <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsSheetFrame_KeHoach5NamDeXuat_Import.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            messageSave = '@TempData["MessageSave"]';
+            if (messageSave != '' && messageSave != undefined) {
+                alert("Import file thành công.");
+            }
+            messageError = '@TempData["MessageError"]';
+            if (messageError != '' && messageError != undefined) {
+                alert("Dữ liệu import điều chỉnh không phải là của chứng từ được chọn.");
+            }
+            Bang_arrDSTruongTien = '@MucLucNganSachModels.strDSTruongTien'.split(',');
+            Bang_Url_getGiaTri = '@Url.Action("get_GiaTri", "Public", new { area = "" })';
+            Bang_Url_getDanhSach = '@Url.Action("get_DanhSach", "Public", new { area = "" })';
+            BangDuLieu_DuocSuaChiTiet = '@Model.Sheet.Table.IsEditable';
+
+            if (BangDuLieu_DuocSuaChiTiet) {
+                Bang_keys.fnSetFocus(null, null);
+            }
+
+            setFontWeight();
+            setThayDoiHC();
+        });
+
+        document.addEventListener('keydown', eventKey);
+        function eventKey(e) {
+            if (e != null && e != undefined) {
+                if (e.key == "F10") {
+                    KH5NamDX_Import_BangDuLieu_Save();
+                }
+            }
+        }
+
+        //function set lai edit hang
+        function setThayDoiHC() {
+            for (var h = 0; h < Bang_nH; h++) {
+                for (var c = 0; c < Bang_nC; c++) {
+                    Bang_arrThayDoi[h][c] = true;
+                    Bang_arrEdit[h][c] = false;
+                }
+            }
+        }
+
+    </script>
+}

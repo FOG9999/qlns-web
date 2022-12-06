@@ -1,0 +1,75 @@
+﻿@using Viettel.Models.QLNH
+@model  ThanhToan_ThongTriModelPaging
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="lstPheDuyetThanhToan" style="margin-top: 30px">
+    <h3>DANH SÁCH PHÊ DUYỆT THANH TOÁN</h3>
+    <table class="table table-bordered tr-hover" id="tblListPheDuyetTT">
+        <thead>
+            <tr>
+                <th width="4%"><input type="checkbox" id="icheckheader" onclick="checkAllDeNghiThanhToan()" /></th>
+                <th width="5%">STT</th>
+                <th width="15">Đơn vị</th>
+                <th width="8%">Số đề nghị</th>
+                <th width="8%">Ngày đề nghị</th>
+                <th width="8%">Loại nội dung chi</th>
+                <th width="8%">Loại đề nghị</th>
+                <th width="10%">Trạng thái</th>
+                <th width="24%" colspan="2">Số kinh phí chấp nhận phê duyệt thanh toán kỳ này</th>
+                <th width="10%">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var item in Model.thanhtoan_thongtri)
+                {
+                    <tr>
+                        <td class="text-center" data-idthanhtoan="@item.iDeNghiThanhToan">
+                            @{
+                                var disable = "";
+                                if (item.isEnable == 1)
+                                {
+                                    disable = "disabled";
+                                }
+                                if (item.iCheck == 1)
+                                {
+                                    <input type="checkbox" id="icheckitem" checked onclick="checkChonDeNghiThanhToan(this)" @disable />
+
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="icheckitem" onclick="checkChonDeNghiThanhToan(this)" @disable />
+                                }
+                            }
+                        </td>
+                        <td class="text-center">@Html.Raw(Html.Encode(item.STT))</td>
+                        <td class="text-left">@Html.Raw(Html.Encode(item.sTenDonVi))</td>
+                        <td class="text-left">@Html.Raw(Html.Encode(item.sSoDeNghi))</td>
+                        <td class="text-center">@Html.Raw(item.dNgayDeNghi.HasValue ? item.dNgayDeNghi.Value.ToString("dd/MM/yyyy") : String.Empty)</td>
+                        <td class="text-center">@Html.Raw(Html.Encode(item.sLoaiNoiDungChi))</td>
+                        <td class="text-center">@Html.Raw(Html.Encode(item.sLoaiDeNghi))</td>
+                        <td class="text-center">@Html.Raw(Html.Encode(item.sTrangThai))</td>
+                        <td width="12%" class="text-right" id="ipheduyetusd">@Html.Raw(Html.Encode(item.sTongPheDuyetUSD))</td>
+                        <td width="12%" class="text-right" id="ipheduyetvnd">@Html.Raw(Html.Encode(item.sTongPheDuyetVND))</td>
+                        <td class="text-center"><a href="#" data-toggle="modal" data-target="#iModalChiTietThanhToan" onclick="onModalChiTietDeNghi('@item.iDeNghiThanhToan')">Chi tiết phê duyệt</a></td>
+                    </tr>
+                }
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th class="text-bold text-right" colspan="8">Tổng cộng</th>
+                <th class="text-bold text-right" width="12%" id="itongpheduyetusd"></th>
+                <th class="text-bold text-right" width="12%" id="itongpheduyetvnd"></th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<div class="modal-footer"> @Html.BuildPagingButtons(Model._paging)</div>

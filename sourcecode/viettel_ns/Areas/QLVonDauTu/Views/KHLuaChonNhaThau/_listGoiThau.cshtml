@@ -1,0 +1,15 @@
+﻿@using Viettel.Domain.DomainModel
+@model List<VDT_DA_GoiThau>
+
+@foreach (var item in Model)
+{
+<tr data-id="@item.iID_GoiThauID" ondblclick="ViewGoiThauDetail('@item.iID_GoiThauID')">
+    <td class="sTenGoiThau"><input type="text" class="form-control" value="@item.sTenGoiThau"></td>
+    <td class="fGiaTri"><input type="text" class="form-control" value="@item.fGiaTri"></td>
+    <td class="sHinhThucChonNhaThau">@Html.DropDownList("sHinhThucChonNhaThau", new SelectList(ViewBag.lstHinhThucChonNT as List<SelectListItem>, item.sHinhThucChonNhaThau) , new { @class = "form-control clearable" })</td>
+    <td class="sPhuongThucDauThau">@Html.DropDownList("sPhuongThucDauThau", new SelectList(ViewBag.lstPhuongThucLuaChonNT as List<SelectListItem>, item.sPhuongThucDauThau), new { @class = "form-control clearable" })</td>
+    <td class="sHinhThucHopDong">@Html.DropDownList("sHinhThucHopDong", new SelectList(ViewBag.lstLoaiHopDong as List<SelectListItem>, item.sHinhThucHopDong), new { @class = "form-control clearable" })</td>
+    <td class="iThoiGianThucHien"><input type="text" class="form-control" value="@item.iThoiGianThucHien"></td>
+    <td><button class="btn-delete"><i class="fa fa-trash-o fa-lg" aria-hidden="true" onclick="DeleteGoiThau($(this))"></i></button></td>
+</tr>
+}

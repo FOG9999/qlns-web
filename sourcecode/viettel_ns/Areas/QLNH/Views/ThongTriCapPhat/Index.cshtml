@@ -1,0 +1,67 @@
+﻿@using Viettel.Models.QLNH
+@model  ThongTriCapPhatModelPaging
+@{
+    ViewBag.Title = "Thông tri cấp phát";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body" id="lstDataView">
+                @Html.Partial("_list", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Thông tin thông tri cấp phát-->
+<div class="modal fade" id="iModalThongTri">
+
+</div>
+
+<!--Chi tiết đề nghị thanh toán-->
+<div class="modal fade" id="iModalChiTietThanhToan" tabindex="-1" role="dialog" aria-labelledby="modalChiTietThanhToanLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width: 40%; height: calc(100% - 60px);">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-left" id="modalChiTietThanhToanLabel"></h3>
+            </div>
+            <div id="contentModalChiTietThanhToan">
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/QLNH/DanhMucNgoaiHoi/jsThongTriCapPhat.js"></script>
+    <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+    <script>
+        var sUrlListView = "/QLNH/ThongTriCapPhat/ThongTriCapPhatSearch";
+        var _paging = {};
+        $(document).ready(function () {
+             _paging.CurrentPage = @Model._paging.CurrentPage ;
+            _paging.ItemsPerPage = @Model._paging.ItemsPerPage
+
+            $('#iModalThongTri').on('hidden.bs.modal', function () {
+                sUrlListView = "/QLNH/ThongTriCapPhat/ThongTriCapPhatSearch";
+                idContentView = "lstDataView";
+                type_screen = 0;
+                iThongTri = GUID_EMPTY;
+                type_action = 0;
+                arr_thanhtoan = [];
+                ftongpheduyetusd = 0;
+                ftongpheduyetvnd = 0;
+            });
+        });
+    </script>
+}

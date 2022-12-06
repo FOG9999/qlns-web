@@ -1,0 +1,82 @@
+﻿@*@model SheetViewModel*@
+@model VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong.KeHoach5NamDeXuatChiTietGridViewModel
+@{
+    Layout = "~/Views/shared/sheet/_LayoutSheetFrame.cshtml";
+}
+@section Styles{
+    <link rel="Stylesheet" type="text/css" href="~/Content/css/sheet.css">
+}
+
+<style>
+    #sTen {
+        margin-left: 170px;
+    }
+</style>
+@*@Html.Partial("_SheetSearch_DMNoiDungChi", Model.Sheet)*@
+@Html.Partial("_SheetSearch", Model.Sheet)
+@Html.Partial("_SheetEditor", Model.Sheet)
+@section Scripts{
+    @Html.Partial("_SheetScript")
+    <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsDuAn_KeHoach5NamDeXuat_ChiTiet.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            checkAction();
+
+            Bang_arrDSTruongTien = '@MucLucNganSachModels.strDSTruongTien'.split(',');
+            Bang_Url_getGiaTri = '@Url.Action("get_GiaTri", "Public", new { area = "" })';
+            Bang_Url_getDanhSach = '@Url.Action("get_DanhSach", "Public", new { area = "" })';
+            BangDuLieu_DuocSuaChiTiet = '@Model.Sheet.Table.IsEditable';
+
+            if (BangDuLieu_DuocSuaChiTiet) {
+                Bang_keys.fnSetFocus(null, null);
+            }
+
+            setFontWeight();
+            setEditHC();
+        });
+
+        document.addEventListener('keydown', eventKey);
+        function eventKey(e) {
+            if (e != null && e != undefined) {
+                if (e.key == "F2") {
+                    var h = Bang_keys.Row();
+                    var c = Bang_keys.Col() - Bang_nC_Fixed;
+                    BangDuLieu_onKeypress_F2_NoRow(h, c);
+                }
+                if (e.key == "F3") {
+                    var h = Bang_keys.Row();
+                    var c = Bang_keys.Col() - Bang_nC_Fixed;
+                    BangDuLieu_onKeypress_F3_NoRow(h, c);
+                }
+
+                if (e.key == "F10") {
+                    KH5NamDX_ChiTiet_BangDuLieu_Save();
+                }
+
+                if (e.key == "F9") {
+                    BangDuLieu_onKeypress_F9();
+                }
+            }
+        }
+
+        //function set lai edit hang
+        function setEditHC() {
+            for (var h = 0; h < Bang_nH; h++) {
+                var LaHangCha = Bang_arrLaHangCha[h];
+                if (LaHangCha) {
+                    Bang_arrEdit[h][0] = true;
+                }
+            }
+        }
+
+        function checkAction() {
+            var isAddDuAn = '@Model.isAddDxProject';
+            var parentWindow = window.parent;
+            if (isAddDuAn == 'True') {
+                parentWindow.goBack();
+            }
+        }
+
+    </script>
+}

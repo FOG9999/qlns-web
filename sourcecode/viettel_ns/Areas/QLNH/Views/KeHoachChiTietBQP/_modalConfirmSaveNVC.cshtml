@@ -1,0 +1,49 @@
+﻿
+@using VIETTEL.Models
+@model ModalModels
+
+@{
+    const byte CONFIRM = 0;
+}
+<!-- Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width: 45%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-left" id="confirmModalLabel">@Model.Title</h3>
+            </div>
+            <div class="modal-body" id="contentConfirmModal">
+                @{ foreach (var item in Model.Messages)
+                    {
+                        <p style="font-size: 12pt">@item</p>
+                    }
+                }
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                    @{
+                        if (Model.Category == CONFIRM)
+                        {
+                            @*<button class="btn btn-primary" onclick="SaveDetail(true)" data-dismiss="modal"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>*@
+                            <button class="btn btn-primary" onclick="$('#sheet')[0].contentWindow.KHChiTietBQP_BangDuLieu_Save(true);" data-dismiss="modal"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button type="button" id="btnShowConfirmDelete" data-toggle="modal" data-target="#confirmModal"></button>
+
+<script>
+    $(document).ready(function () {
+        $("#btnShowConfirmDelete").click();
+
+        // Hide button when close modal.
+        $('#confirmModal').on('hidden.bs.modal', function () {
+            $("#btnShowConfirmDelete").hide();
+        });
+    });
+</script>

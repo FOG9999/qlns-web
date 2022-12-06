@@ -1,0 +1,95 @@
+﻿@model VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong.KeHoachVonNamDeXuatChiTietGridViewModel
+@{
+    var sheet = Model.Sheet;
+}
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        @*<label class="control-label">Danh mục nội dung chi @PhienLamViec.iNamLamViec</label>*@
+        <label class="control-label">Kế hoạch vốn năm đề xuất chi tiết</label>
+        <label class="control-label" style="padding-left:5em; color:#e17009;">Số kế hoạch: </label> &nbsp;&nbsp; <p style="margin-top: 10px; font-size:14px" id="">@Model.KHVonNamDeXuat.sSoQuyetDinh</p>
+        <label class="control-label" style="padding-left:20px; color:#e17009;">Ngày lập: </label> &nbsp;&nbsp; <p style="margin-top: 10px; font-size:14px" id="">@Html.Raw(Model.KHVonNamDeXuat.dNgayQuyetDinh.ToString("dd/MM/yyyy"))</p>
+        <label class="control-label" style="padding-left:20px; color:#e17009;">Năm kế hoạch: </label> &nbsp;&nbsp; <p style="margin-top: 10px; font-size:14px" id="">@Model.KHVonNamDeXuat.iNamKeHoach</p>
+    </div>
+
+    <div class="col-sm-4" id="task-bar">
+        @*<b>F10</b> Lưu <b>F10</b> Lưu <b>F10</b> Lưu*@
+        @*<label class="control-label pull-right">F2: Thêm dòng  -  F10: Lưu  -  Del: Xóa  -  Ent: Tìm kiếm  -  F9: Xoá tìm kiếm</label>*@
+        <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Xóa tìm kiếm</p>
+        <label class="control-label pull-right" style="padding-left:20px;">F9: </label>
+        <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Tìm kiếm</p>
+        <label class="control-label pull-right" style="padding-left:20px;">Ent: </label>
+        <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Lưu</p>
+        <label class="control-label pull-right" style="padding-left:20px;">F10: </label>
+        <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Xóa</p>
+        <label class="control-label pull-right" style="padding-left:20px;">Delete: </label>
+        @*<p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Thêm chi tiết DA</p>
+            <label class="control-label pull-right" style="padding-left:20px;">F3: </label>
+            <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Thêm dự án</p>
+            <label class="control-label pull-right" style="padding-left:20px;">F2: </label>
+            <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Thêm nhóm DA</p>*@
+        @*<label class="control-label pull-right">F1: </label>*@
+    </div>
+
+</div>
+<iframe id="sheet" name="iframe-sheet" class="iframe-sheet"></iframe>
+<div class="">
+    <div id="nhapform">
+        <div id="form2">
+            <div class="button-bar">
+                <div class="text-center">
+                    <button class="btn btn-default" id="cancel" onclick="goBack();" style="margin-right: 10px;"><i class="fa fa-ban" aria-hidden="true"></i><span id="cancel1">Hủy</span></button>
+                    <button class="btn btn-primary btn-save" id="btnLuu"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr id="hr-split" />
+<div id="ajax-div">
+</div>
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+@using (Html.BeginScripts())
+{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var bIsDetail = $("#bIsDetail").val();
+            if (bIsDetail == "true") {
+                $("#task-bar").css("display", "none");
+                $("#cancel1").text("Đóng");
+                $("#btnLuu").css("display", "none");
+
+            } else {
+                $("#task-bar").css("display", "block");
+            }
+        });
+
+        $(".btn-save").click(function () {
+            //$("#sheet")[0].contentWindow.Bang_HamTruocKhiKetThuc();
+            $("#sheet")[0].contentWindow.KHVonNamDX_ChiTiet_BangDuLieu_Save();
+            alert("Lưu dữ liệu thành công !");
+            location.reload();
+            //window.location.href = "/QLVonDauTu/KeHoachVonNamDeXuat/Index/";
+        });
+
+        loadFrame();
+
+        function goBack() {
+            window.location.href = "/QLVonDauTu/KeHoachVonNamDeXuat/Index/";
+        }
+
+        function loadFrame(option) {
+            var url = '/QLVonDauTu/KeHoachVonNamDeXuat/SheetFrame'
+                + "/?id=" + '@Model.KHVonNamDeXuat.iID_KeHoachVonNamDeXuatID';
+            console.log(url);
+            $("#sheet").attr("src", url);
+        }
+
+        function loadModal(data) {
+            $("#divModalConfirm").html(data);
+        }
+    </script>
+}

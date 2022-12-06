@@ -1,0 +1,164 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model KH5NDDPrintDataExportModel
+<style>
+    .tableFixHead {
+        overflow: auto;
+        height: 242px;
+    }
+
+    .tableFixHead thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+</style>
+
+@*Thông tin nội dung*@
+<div class="form-group">
+    <h4 class="color-text-red">Thông tin báo cáo:</h4>
+    <hr class='color-background-red' />
+</div>
+
+<div class="form-group row">
+    <div class="col-sm-6">
+        <div class="col-sm-12 form-group">
+            <label for="txt_DonViQuanLy">Đơn vị</label>
+            @Helpers.Required()
+            @Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), new { @class = "form-control", @id = "iID_DonViQuanLyID" })
+        </div>
+        <div class="col-sm-12 form-group">
+            <label for="txt_KeHoach5NamDeXuat">Chọn chứng từ</label>
+            @Helpers.Required()
+            <select id="iID_KeHoach5NamID" class="form-control clearable"></select>
+        </div>
+        <div class="col-sm-12 form-group">
+            <label for="txt_LoaiCongTrinh">Chọn nguồn vốn</label>
+            @Helpers.Required()
+            @Html.DropDownList("iID_MaNguonNganSach", (SelectList)(ViewBag.ListNguonNganSach), new { @class = "form-control", @id = "iID_MaNguonNganSach" })
+        </div>
+        <div class="col-sm-12 form-group">
+            <label for="txt_LoaiCongTrinh">Loại công trình</label>
+            @Helpers.Required()
+            @Html.DropDownList("iID_LoaiCongTrinh", (SelectList)(ViewBag.ListLoaiCongTrinh), new { @class = "form-control", @id = "iID_LoaiCongTrinh" })
+        </div>
+        <div class="col-sm-12 form-group">
+            <label for="txt_DonViTinh">Đơn vị tính</label>
+            @Helpers.Required()
+            @Html.DropDownList("ValueItem", (SelectList)(ViewBag.LstDonViTinh), new { @class = "form-control", @id = "ValueItem" })
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="col-sm-12 form-group">
+            <label for="txt_TieuDe1">Tiêu đề 1</label>
+            <input type="text" required id="txt_TieuDe1" name="txt_TieuDe1" class="form-control" value="KẾ HOẠCH ĐẦU TƯ TRUNG HẠN .... GIAI ĐOẠN ...." maxlength="500" />
+        </div>
+        <div class="col-sm-12 form-group">
+            <label for="txt_TieuDe2">Tiêu đề 2</label>
+            <input type="text" required id="txt_TieuDe2" name="txt_TieuDe2" class="form-control" value="@ViewBag.TieuDe2" maxlength="500" />
+        </div>
+        <div class="col-sm-12 form-group">
+            <label for="txt_TieuDe3">Tiêu đề 3</label>
+            <input type="text" required id="txt_TieuDe3" name="txt_TieuDe3" class="form-control" value="(Kèm theo Quyết định số ...... ngày ... tháng ... năm ...)" maxlength="500" />
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function ($) {
+        var GUID_EMPTY = '00000000-0000-0000-0000-000000000000';
+
+        $("#iID_DonViQuanLyID").change(function () {
+            if (this.value != "" && this.value != GUID_EMPTY) {
+                var isCt = $("#txtRptCt").val();
+                if (isCt == "" || isCt == undefined) isCt = false;
+                LayDanhSachChungTuDuocDuyetTheoDonViQuanLy(this.value,isCt);
+            }
+        });
+
+        getChungTuDeXuat();
+    });
+
+    function getChungTuDeXuat() {
+        var iID_DonViQuanLyID = $('#iID_DonViQuanLyID').val();
+        var isCt = $("#txtRptCt").val();
+        if (isCt == "" || isCt == undefined) isCt = false;
+        LayDanhSachChungTuDuocDuyetTheoDonViQuanLy(iID_DonViQuanLyID, isCt);
+    }
+
+    function printBCTH(isExcel) {
+        var data = {};
+        data.iID_DonViQuanLyID = $("#iID_DonViQuanLyID").val();
+        data.iID_KeHoach5NamID = $("#iID_KeHoach5NamID").val();
+        data.iID_LoaiCongTrinh = $("#iID_LoaiCongTrinh").val();
+        data.iID_NguonVonID = $("#iID_MaNguonNganSach").val();
+        data.sTenNguonVon = $("#iID_MaNguonNganSach option:selected").text();
+        data.fDonViTinh = $("#ValueItem").val();
+        data.sDonViTinh = $("#ValueItem option:selected").text();
+        var strIdLoaiCongTrinh = "";
+        if (data.iID_LoaiCongTrinh == GUID_EMPTY) {
+            $("#iID_LoaiCongTrinh option").each(function () {
+                if (strIdLoaiCongTrinh == "") {
+                    strIdLoaiCongTrinh += this.value;
+                } else {
+                    strIdLoaiCongTrinh += "," + this.value;
+                }
+            });
+            data.iID_LoaiCongTrinh = strIdLoaiCongTrinh;
+        }
+        data.txt_TieuDe1 = $("#txt_TieuDe1").val();
+        data.txt_TieuDe2 = $("#txt_TieuDe2").val();
+        data.txt_TieuDe3 = $("#txt_TieuDe3").val();
+
+        var arrIdDVQL = [];
+        $("#tblListDonViQuanLy input[type=checkbox]:checked").each(function () {
+            var rowValue = $(this).val();
+            if (rowValue != 'on') {
+                arrIdDVQL.push(rowValue);
+            }
+        });
+
+        if (!ValidateDataBCTH(data)) {
+            return false;
+        }
+        exportBCTongHop(data, isExcel);
+    }
+
+    function ValidateDataBCTH(data) {
+        var Title = 'Lỗi in báo cáo theo đơn vị';
+        var Messages = [];
+
+        if (data.iID_DonViQuanLyID == null || data.iID_DonViQuanLyID == "") {
+            Messages.push("Đơn vị quản lý chưa chọn !");
+        }
+
+        if (data.iID_KeHoach5NamID == null || data.iID_KeHoach5NamID == "") {
+            Messages.push("Chứng từ chưa chọn !");
+        }
+
+        if (data.iID_LoaiCongTrinh == null || data.iID_LoaiCongTrinh == "") {
+            Messages.push("Loại công trình chưa chọn !");
+        }
+
+        if (data.fDonViTinh == null) {
+            Messages.push("Đơn vị tính chưa chọn !");
+        }
+
+        if (data.iID_NguonVonID == null) {
+            Messages.push("Nguồn vốn chưa chọn !");
+        }
+
+        if (Messages != null && Messages != undefined && Messages.length > 0) {
+            $.ajax({
+                type: "POST",
+                url: "/Modal/OpenModal",
+                data: { Title: Title, Messages: Messages, Category: ERROR },
+                success: function (data) {
+                    $("#divModalConfirm").html(data);
+                }
+            });
+            return false;
+        }
+
+        return true;
+    }
+</script>

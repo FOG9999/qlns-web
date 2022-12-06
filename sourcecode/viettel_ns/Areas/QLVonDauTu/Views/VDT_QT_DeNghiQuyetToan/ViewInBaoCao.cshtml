@@ -1,0 +1,149 @@
+﻿@using VIETTEL.Areas.QLVonDauTu.Model.QuyetToan
+@model VDT_QT_DeNghiQuyetToanPagingModel
+@{
+    ViewBag.Title = "In báo cáo";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+<link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="header-create-update">
+                    <span>
+                        @Html.Raw(ViewBag.TitleDx)
+                    </span>
+                </div>
+            </div>
+            <div class="card-body tab-content" style="padding-top: 0px !important;">
+                <div class="form-group">
+                    <h4 class="color-text-red">Thông tin báo cáo:</h4>
+                    <hr class='color-background-red' />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-8">
+                    <div class="col-sm-6">
+                        <label for="sSoDeNghi">Đề nghị</label>
+                        @Helpers.Required()
+                        @Html.DropDownList("iID_DeNghiQuyetToanID", (SelectList)(ViewBag.sSoDeNghi), new { @class = "form-control", @id = "iID_DeNghiQuyetToanID" })
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="iItemLoaiBC">Loại báo cáo</label>
+                        @Helpers.Required()
+                        @Html.DropDownList("Value", (SelectList)(ViewBag.iItemLoaiBC), new { @class = "form-control", @id = "Value" })
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label for="txt_TieuDe">Tiêu đề</label>
+                        <input type="text" required id="txt_TieuDe" name="txt_TieuDe" class="form-control" value="TỔNG HỢP QUYẾT TOÁN DỰ ÁN HOÀN THÀNH" maxlength="500" />
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label for="txt_DiaDiem">Địa điểm</label>
+                        <input type="text" required id="txt_DiaDiem" name="txt_DiaDiem" class="form-control" maxlength="500" />
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label for="txt_KinhGui">Kính gửi</label>
+                        <input type="text" required id="txt_KinhGui" name="txt_KinhGui" class="form-control" maxlength="500" />
+                    </div>
+                    <div class="col-sm-3">
+                        <label for="dNgayChungTu">Ngày chứng từ</label>
+                        @Helpers.Required()
+                        <div class='input-group date'>
+                            <input type='text' class="form-control requireInput" value="@ViewBag.NgayChungTu" id="dNgayChungTu" name="dNgayChungTu" autocomplete="off" placeholder="dd/MM/yyyy" />
+                            <span class="btn-default input-group-addon">
+                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label for="txt_TinhHinh">Tình hình thực hiện dự án</label>
+                        <input type="text" required id="txt_TinhHinh" name="txt_TinhHinh" class="form-control" maxlength="500" />
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label for="txt_NhanXet">Nhận xét, đánh giá quá trình thực hiện dự án</label>
+                        <input type="text" required id="txt_NhanXet" name="txt_NhanXet" class="form-control" maxlength="500" />
+                    </div>
+                    <div class="col-sm-12 form-group">
+                        <label for="txt_KienNghi">Kiến nghị</label>
+                        <input type="text" required id="txt_KienNghi" name="txt_KienNghi" class="form-control" maxlength="500" />
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="sDonViTinh">Đơn vị tính</label>
+                        @Helpers.Required()
+                        @Html.DropDownList("ValueItem", (SelectList)(ViewBag.sDonViTinh), new { @class = "form-control", @id = "ValueItem" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group text-center">
+        <button class="btn btn-back" onclick="backViewDeNghiQT()"><i class="fa fa-arrow-left" aria-hidden="true"></i><span>Quay lại</span></button>
+        <button class="btn btn-warning" onclick="printBC();"><i class="fa fa-file-pdf-o" aria-hidden="true"></i><span>In báo cáo</span></button>
+        <button class="btn btn-info" onclick="printBC(true);"><i class="fa fa-file-pdf-o" aria-hidden="true"></i><span>Xuất excel</span></button>
+        <a class="btn-mvc" id="btnChuKy"><i class="fa fa-file-excel"></i>Sửa chữ ký</a>
+    </div>
+</div>
+
+@section Scripts{
+    @Html.Partial("_SheetScript")
+    <script src="~/Scripts/QLVonDauTu/QuyetToan/js_VDT_QT_DeNghiQuyetToan.js"></script>
+    <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+    <script src="/Scripts/js/js_vdtWeb.js"></script>
+    <script>
+        var _paging = {};
+
+        var sUrlListView = "";
+        $(document).ready(function () {
+            sUrlListView = '@Url.Action("GetListView", "VDT_QT_DeNghiQuyetToan")';
+            _paging.CurrentPage = @Model._paging.CurrentPage ;
+            _paging.ItemsPerPage = @Model._paging.ItemsPerPage ;
+
+            var isShowing = false;
+            $('.date').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+                format: "dd/mm/yyyy"
+            }).on('hide', () => {
+                isShowing = false;
+            }).on('show', () => {
+                isShowing = true;
+            });
+
+            $("#dNgayChungTu").keydown(function (event) {
+                ValidateInputKeydown(event, this, 3);
+            }).blur(function (event) {
+                setTimeout(() => {
+                    if (!isShowing) ValidateInputFocusOut(event, this, 3);
+                }, 0);
+            });
+        });
+    </script>
+}
+
+
+<div class="modal fade" id="modalVDTQTDeNghiQuyetToan" tabindex="-1" role="dialog" aria-labelledby="modalVDTQTDeNghiQuyetToanLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-center" id="modalVDTQTDeNghiQuyetToanLabel"></h3>
+            </div>
+            <div id="contentModalVDTQTDeNghiQuyetToan">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+</div>
+
+@Html.Partial("_ui_chuky")

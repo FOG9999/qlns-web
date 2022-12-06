@@ -1,0 +1,171 @@
+﻿
+@model rptTongHop_ChiTieu_DonViViewModel
+@{
+}
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">
+            Báo cáo tổng hợp chỉ tiêu năm @Model.iNamLamViec
+        </span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <!-- header -->
+            <div>
+                <div class="col-xs-6">
+                    <h6></h6>
+                </div>
+                <div class="col-xs-6">
+                    <h6><strong class="text-uppercase">Đơn vị:</strong></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Đợt bổ sung NS:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("iID_MaDot", Model.DotList, new { @class = "form-control", onchange = "" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Phòng ban:</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly value="@PhienLamViec.sTenPhongBanFull" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loại báo cáo:</label>
+                            <div class="col-sm-8" id="loaiBaoCao">
+                                <div class="radio">
+                                    <input type="radio" name="loaiBaoCao" id="loaiBaoCao-0" value="" checked />
+                                    <label for="loaiBaoCao-0">
+                                        Tổng hợp chỉ tiêu đầu năm + bổ sung
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="loaiBaoCao" id="loaiBaoCao-1" value="1" />
+                                    <label for="loaiBaoCao-1">
+                                        Dự toán đầu năm
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="loaiBaoCao" id="loaiBaoCao-2" value="2" />
+                                    <label for="loaiBaoCao-2">
+                                        Dự toán bổ sung
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Năm ngân sách:</label>
+                            <div class="col-sm-8" id="namNganSach">
+                                <div class="radio">
+                                    <input type="radio" name="namNganSach" id="namNganSach-0" value="2,4" checked />
+                                    <label for="namNganSach-0">
+                                        Ngân sách năm nay + năm trước chưa cấp
+                                    </label>
+                                </div>
+								
+                                <div class="radio">
+                                    <input type="radio" name="namNganSach" id="namNganSach-2" value="2" />
+                                    <label for="namNganSach-2">
+                                        Ngân sách năm nay
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="namNganSach" id="namNganSach-4" value="4" />
+                                    <label for="namNganSach-4">
+                                        Ngân sách năm trước chưa cấp
+                                    </label>
+                                </div>
+								<div class="radio">
+                                    <input type="radio" name="namNganSach" id="namNganSach-1" value="1" />
+                                    <label for="namNganSach-1">
+                                        Ngân sách năm trước đã cấp
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Đơn vị tính:</label>
+                            <div class="col-sm-8" id="dvt">
+                                <div class="radio">
+                                    <input type="radio" name="dvt" id="dvt-0" value="1000" checked />
+                                    <label for="dvt-0">
+                                        Nghìn đồng
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="dvt" id="dvt-1" value="1" />
+                                    <label for="dvt-1">
+                                        Đồng
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <div id="iID_DonVi" class="ls-box" data-check="first-only">
+                        @Html.Partial("_Checkboxlist", new ChecklistModel("DonVi", Model.DonViList))
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i> Xuất excel</a>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "DuToanBS_Report")">Hủy</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    var iID_MaPhongBan = '@Model.iID_MaPhongBan';
+
+    function changeDot() {
+
+        var iID_MaDot = $("#iID_MaDot").val();
+        fillDonVi(iID_MaDot, iID_MaPhongBan);
+    }
+
+    function fillDonVi(iID_MaDot, iID_MaPhongBan) {
+        var url = '@Url.Action("Ds_DonVi")' + "/?"
+                    + "iID_MaDot=" + iID_MaDot
+                    + "&iID_MaPhongBan=" + iID_MaPhongBan;
+        fillCheckboxList("iID_DonVi", "DonVi", url);
+    }
+
+
+    $(".btn-print").click(function () {
+
+        var ext = $(this).data("ext");
+        // lay don vi duoc chon
+        var links = [];
+
+        var loaiBaoCao = $("#loaiBaoCao input[type='radio']:checked").val();
+        var namNganSach = $("#namNganSach input[type='radio']:checked").val();
+        var dvt = $("#dvt input[type='radio']:checked").val();
+
+        $("input:checkbox[check-group='DonVi']").each(function () {
+            if (this.checked) {
+                var donvi = this.value;
+                var url = unescape('@Url.Action("Print", "rptTongHop_ChiTieu_DonVi")' +
+                    "?ext=" + ext +
+                    "&iID_MaDonVi=" + donvi +
+                    "&iID_MaDot=" + $("#iID_MaDot").val() +
+                    "&iID_MaPhongBan=" + iID_MaPhongBan) +
+                    "&loaiBaoCao=" + loaiBaoCao +
+                    "&namNganSach=" + namNganSach +
+                    "&dvt=" + dvt;
+
+                links.push(url);
+            }
+        });
+
+        openLinks(links);
+    });
+
+</script>

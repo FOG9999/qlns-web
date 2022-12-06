@@ -1,0 +1,70 @@
+﻿@model rptKiem_K4ViewModel
+@{
+
+}
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">Báo cáo dự toán nhu cầu ngân sách năm @PhienLamViec.iNamLamViec</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Phòng ban:</label>
+                            <div class="col-sm-8">
+                                @if (Model.PhongBanList == null || Model.PhongBanList.Count() <= 2)
+                                {
+                                    <input type="text" readonly value="@PhienLamViec.sTenPhongBanFull" class="form-control" />
+                                    <input id="id_phongban" type="text" value="@PhienLamViec.iID_MaPhongBan" class="form-control hide" />
+                                }
+                                else
+                                {
+
+                                    @Html.DropDownList("iID_MaPhongBan", Model.PhongBanList, new { @class = "form-control" })
+                                }
+                            </div> 
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loại hình số liệu:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("loai", Model.LoaiList, new { @class = "form-control", onchange = "change()" })
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "Reports" , new {area="SKT", loai=4})">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+
+        var ext = $(this).data("ext");
+        var id_phongban = $("#iID_MaPhongBan").val();
+        var loai = $("#loai").val();
+        if (id_phongban == undefined) {
+            id_phongban = "s";
+        }
+
+        var url = unescape('@Url.Action("Print")' +
+                    "?ext=" + ext +
+                    "&id_phongban=" + id_phongban +
+                    "&loai=" + loai +
+                    "&id_donvi=");
+
+        openNewTab(url);
+
+    });
+
+</script>

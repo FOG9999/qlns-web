@@ -1,0 +1,54 @@
+﻿@using Viettel.Domain.DomainModel
+@model VDT_DM_LoaiCongTrinh
+
+<div class="modal-body">
+    <div class="form-group row">
+        <div class="form-group">
+            <div class="form-group">
+                <div class="col-md-6">
+                    <input type="hidden" id="txt_ID_LoaiCongTrinh" value="@Model.iID_LoaiCongTrinh" />
+                    <label for="txt_MaCongTrinh">Mã công trình <span class="require">*</span></label>
+                    <input type="text" id="txt_MaCongTrinh" class="form-control" value="@Model.sMaLoaiCongTrinh" maxlength="50" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label for="txt_TenCongTrinh">Tên công trình <span class="require">*</span></label>
+                    <input type="text" required id="txt_TenCongTrinh" class="form-control" value="@Model.sTenLoaiCongTrinh" maxlength="300" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label for="txt_TenVietTat">Tên viết tắt <span class="require">*</span></label>
+                    <input type="text" required id="txt_TenVietTat" class="form-control" value="@Model.sTenVietTat" maxlength="100" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label for="txt_ThuTu">Thứ tự <span class="require">*</span></label>
+                    <input type="text" required id="txt_ThuTu" class="form-control" value="@Model.iThuTu" maxlength="4" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <label for="txt_IdParent">Mã công trình cha</label>
+                    @Html.DropDownList("iID_Parent", new SelectList(ViewBag.ListDMLoaiCongTrinh, "iID_LoaiCongTrinh", "sMaLoaiCongTrinh"), "Tất cả", new { @class = "form-control", @id = "txt_IdParent" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label for="txt_NoiDung">Ghi chú</label>
+                    <textarea id="txt_NoiDung" class="form-control">@Html.Raw(Model.sMoTa)</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="SaveData()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>
+
+<script src="/Scripts/js/js_vdtWeb.js"></script>

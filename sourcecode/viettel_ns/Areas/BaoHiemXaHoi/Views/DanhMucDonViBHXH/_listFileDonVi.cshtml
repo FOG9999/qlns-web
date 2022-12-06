@@ -1,0 +1,77 @@
+﻿@using Viettel.Models.BaoHiemXaHoi
+@model List<DanhMucBHXHDonViViewModel>
+
+
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Danh sách đơn vị BHXH</label>
+    </div>
+</div>
+<table class="table table-bordered" id="tblListDonViBHXH">
+    <thead class="header-search">
+    <th width="3%"></th>
+    <th width="10%"></th>
+    <th width="25%"></th>
+    <th width="25%"></th>
+    <th width="25%"></th>
+    <th width="7%"></th>
+    <th width="5%"></th>
+    </thead>
+    <thead>
+    <th width="3%">STT</th>
+    <th width="10%">Mã đơn vị</th>
+    <th width="25%">Tên đơn vị</th>
+    <th width="25%">Đơn vị cha</th>
+    <th width="25%">Đơn vị Mapping</th>
+    <th width="7%">Loại đơn vị</th>
+    <th width="5%"></th>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (var item in Model)
+            {
+                index++;
+                <tr style="cursor: pointer">
+                    <td align="center">@(index)</td>
+
+                    <td align="left">@item.iID_MaDonViBHXH</td>
+
+                    <td align="left">@item.sTen</td>
+
+                    <td align="center">@item.sTenBHXHDonViParent</td>
+
+                    <td align="left">@item.sTenNSDonViMapping</td>
+
+                    <td align="left">@item.sLoaiDonVi</td>
+
+                    <td align="center"></td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
+@*<button type="button" id="btnShowConfirmModal" data-toggle="modal" data-target="#confirmModal"></button>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.date')
+            .datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+            });
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+    });
+
+</script>
+

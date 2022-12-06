@@ -1,0 +1,32 @@
+﻿@using Viettel.Domain.DomainModel
+@model NH_DM_LoaiTienTe
+
+<div class="modal-body">
+    <input type="hidden" id="ID_TienTeModal" value="@Model.ID">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtMaTienTe">Mã tiền tệ</label>
+                @Helpers.Required()
+                <input type="text" id="txtsMaTienTe" class="form-control" value="@Html.Raw(Html.Encode(Model.sMaTienTe))" maxlength="50" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtTenTienTe">Tên đơn vị tiền tệ</label>
+                @Helpers.Required()
+                <input type="text" id="txtsTenTienTe" class="form-control" value="@Html.Raw(Html.Encode(Model.sTenTienTe))" maxlength="50" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtMoTaTienTe">Mô tả</label>
+                <textarea id="txtsMoTaTienTe" name="txtsMoTaTienTe" class="form-control" autocomplete="off">@Html.Raw(Html.Encode(Model.sMoTaChiTiet))</textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>

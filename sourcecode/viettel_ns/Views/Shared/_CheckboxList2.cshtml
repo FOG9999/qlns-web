@@ -1,0 +1,52 @@
+﻿@model ChecklistModel
+@{
+
+    var list = Model.List.ToList();
+    var id = Model.Id;
+
+    var isEmpty = list.Count == 0;
+}
+@if (isEmpty)
+{
+    <p>
+        <br />
+        <span class="text-muted" style="padding: 60px 10px;">Không có bản ghi</span>
+    </p>
+}
+else
+{
+    <table class="table table-bordered scroll" style="border-right: 0px;">
+        <thead style="background-color: #ccc">
+        <th style="width: 40px; text-align: center;">
+            <input type="checkbox"
+                   data-group="@id"
+                   onclick="checkListAll(this.checked, $(this).data('group'))" />
+        </th>
+        <th></th>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < list.Count; i++)
+            {
+                var item = list[i];
+                var color = i % 2 == 0 ? "" : "#f1f1f1";
+
+                <tr style="background-color: @color">
+                    <td style="width: 40px; text-align: center;">
+                        <input type="checkbox"
+                               value="@item.Value"
+                               data-value="@item.Value"
+                               data-group="@id"
+                               data-text="@item.Text"
+                               check-group="@id"
+                               onchange="checkItem('@id','@item.Value', this)" />
+                    </td>
+                    <td>
+                        <span>@item.Text</span>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+
+}

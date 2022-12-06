@@ -1,0 +1,95 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTPheDuyetVonUngNCTPagingModel
+@{
+    ViewBag.Title = "Quản lý dự án";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+<link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.0.45/css/materialdesignicons.min.css">
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <!--<div class="card">
+            <div class="card-body">
+                <div class="form-group header-card">
+                    <label class="label-title-card">Tiêu chí tìm kiếm</label>
+                    <i class="fa fa-chevron-down fa-1x close-card-condition" aria-hidden="true" data-toggle="collapse" data-target="#card-condition" aria-expanded="true" aria-controls="card-condition"></i>
+                </div>
+                <div class="card-condition collapse" id="card-condition">
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <label for="txtDonViQuanLy" class="label-item">Đơn vị quản lý</label>
+                            @Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), "", new { @class = "form-control", @id = "iID_DonViQuanLyID" })
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txtSoPheDuyet" class="label-item">Số phê duyệt</label>
+                            <input type="text" class="form-control clearable" id="sSoDeNghi" />
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="col-sm-6">
+                                <label for="tNgayLapTuNgay" class="label-item">Ngày lập từ ngày</label>
+                                <div class='input-group date'>
+                                    <input type="text" id="dNgayDeNghiFrom" class="form-control" placeholder="dd/MM/yyyy" />
+                                    <span class="btn-default input-group-addon">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="tNgayLapDenNgay" class="label-item">Đến ngày</label>
+                                <div class='input-group date'>
+                                    <input type="text" id="dNgayDeNghiTo" class="form-control" placeholder="dd/MM/yyyy" />
+                                    <span class="btn-default input-group-addon">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row" style="margin-bottom: 0px !important">
+                        <div class="col-sm-12 text-center">
+                            <button class="btn btn-info" onclick="SearchData()"><i class="fa fa-search" aria-hidden="true"></i> Tìm kiếm</button>
+                        </div>
+                    </div>-->
+
+                    @*<div class="form-group text-right">
+                            <button class="btn btn-info" onclick="SearchData()"><i class="fa fa-search" aria-hidden="true"></i> Tìm kiếm</button>
+                        </div>*@
+                <!--</div>
+            </div>
+        </div>-->
+        <div class="card">
+            <div class="card-body tab-content" id="lstDataView">
+                @Html.Partial("_partialListPDVUNCT", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsVDT_QLPheDuyetVonUngNgoaiChiTieu.js" type="text/javascript"></script>
+    <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+    <script src="~/Scripts/js/dropdowntree.js"></script>
+    <script>
+        var _paging = {};
+        var sUrlListView = "";
+        $(document).ready(function () {
+            sUrlListView = '@Url.Action("TimKiemPheDuyetVonUngNCT", "QLPheDuyetVonUngNgoaiChiTieu")';
+            _paging.CurrentPage = @Model._paging.CurrentPage ;
+            _paging.ItemsPerPage = @Model._paging.ItemsPerPage ;
+
+
+        });
+
+    </script>
+}
+
+

@@ -1,0 +1,27 @@
+﻿@model VIETTEL.Areas.DanhMuc.Models.MappingNdcMlncViewModel
+@{
+    var sheet = Model.Sheet;
+}
+
+<iframe id="sheet" name="iframe-sheet" class="iframe-sheet"></iframe>
+
+@using (Html.BeginScripts())
+{
+<script type="text/javascript">
+
+        loadFrame();
+
+        function goBack(id) {
+            window.location.href = "/QLNguonNganSach/QLDotNhan/Detail/" + id;
+        }
+
+    function loadFrame() {
+        var url = '@Url.Action("SheetFrame")'
+        $("#sheet").attr("src", url);
+    }
+
+    function btnViewMappingNdcChiTiet(iID_NoiDungChi, sMaNoiDungChi, sTenNoiDungChi) {
+        window.location.href = '/DanhMuc/MappingNdcMlncChiTiet/ViewMappingNdcMlncChiTiet?iID_NoiDungChi=' + iID_NoiDungChi + '&sMaNoiDungChi=' + sMaNoiDungChi + '&sTenNoiDungChi=' + sTenNoiDungChi;
+    }
+</script>
+}

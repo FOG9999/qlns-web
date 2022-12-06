@@ -1,0 +1,121 @@
+﻿@using Viettel.Models.QLVonDauTu;
+@using Newtonsoft.Json;
+@model KeHoach5NamViewModel
+@{
+    ViewBag.Title = "Xem Chi tiết";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+    <link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+
+        <div class="card">
+            <div class="card-body create_thdt">
+                <input type="hidden" id="txtId" />
+                <input type="hidden" id="txtParentId" />
+                <input type="hidden" id="txtXauNoiMa" />
+                <input type="hidden" id="iID_KeHoach5NamID" value="@Model.iID_KeHoach5NamID" />
+
+                    <div class="form-group">
+                        <h4 class="color-text-red">Thông tin chung:</h4>
+                        <hr class='color-background-red' />
+                        <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <label for="txtSoKeHoach" class="label-item">Số kế hoạch </label>
+                                    <div>
+                                        <label>@Model.sSoQuyetDinh</label>
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="txtNgayLap" class="label-item">Ngày lập </label>
+                                    <div>
+                                        <label>@Model.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy")</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="txtSoKeHoach" class="label-item">Giai đoạn </label>
+                                    <div style="display:flex">
+                                        <label>@Model.iGiaiDoanTu  - </label>
+                                        <label>@Model.iGiaiDoanDen</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="drpNguonNganSach" class="label-item">Nguồn vốn </label>
+                                    <div>
+                                        <label>@Model.sTenNguonVon</label>
+                                    </div>
+
+
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="drpLoaiNganSach" class="label-item">Loại ngân sách </label>
+                                    <div>
+                                        <label>@Model.sTenLoaiNganSach</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="drpLoaiKhoan" class="label-item">Loại - khoản</label>
+                                    <div>
+                                        <label>Loại: @Model.sLoai </label>
+                                        <label>Khoản:  @Model.sKhoan</label>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div id="ViewTable" style="overflow-x:auto; overflow-y:auto; max-height:300px;"></div>
+                            <table id="SumTable" class="table table-bordered">
+                                <tr>
+                                    <th width="3%"></th>
+                                    <th width="500px" style="text-align:center;"> <span style="font-size:15px;font-weight:700">&Sigma;</span> Tổng cộng:</th>
+                                    <th width="10%" id="tong_giatri" class="text-right"></th>
+                                    <th width="10%"></th>
+                                    <th width="10%" id="tong_giatriDC" class="text-right"></th>
+                                    <th width="10%" id="tong_giatrisauDC" class="text-right"></th>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button class="btn btn-back" onclick="Huy()"><i class="fa fa-arrow-left" aria-hidden="true"></i><span>Quay lại</span></button>
+                        </div>
+                    </div>
+                </div>
+
+    </div>
+</div>
+<input type="hidden" value="@(JsonConvert.SerializeObject(Model.listChiTiet)) " id="listKeHoachChiTiet" />
+
+@section Scripts{
+
+    <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsQLKeHoach5Nam_detail.js"></script>
+    <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+    <script src="~/Scripts/js/dropdowntree.js"></script>
+    <script>
+        var tblDataGrid = [];
+
+        $(document).ready(function () {
+            GetDataGridViewDefault();
+
+        });
+
+        function GetDataGridViewDefault() {
+            tblDataGrid = JSON.parse($("#listKeHoachChiTiet").val());
+            sumGiaTriDauTuVaVonUng(tblDataGrid);
+            FormatNumberTBLChiTiet(tblDataGrid);
+            FillDataToGridViewInsert(tblDataGrid);
+
+        }
+    </script>
+}
+

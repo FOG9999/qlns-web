@@ -1,0 +1,100 @@
+﻿@model SheetViewModel
+@{
+}
+<style>
+    div.sheet {
+        display: contents;
+    }
+</style>
+<form class="form-horizontal sheet-search" action="@Model.UrlGet" method="get" style="width:100%">
+    <div style="position: relative; display: flex">
+        @Html.HiddenFor(x => Model.Id)
+        @Html.HiddenFor(x => Model.Option)
+        @if (Model.Table.ColumnsSearch.Count() > 0)
+        {
+            foreach (var item in Model.Table.Columns)
+            {
+                var value = "";
+                if (Model.Filters.ContainsKey(item.ColumnName))
+                {
+                    value = Model.Filters[item.ColumnName];
+                }
+                if (item.HasSearch)
+                {
+                    if (item.ColumnName == "isMap")
+                    {
+                        <select name="@item.ColumnName" id="@item.ColumnName" style="width:@(item.ColumnWidth)px;" class="sMap-cs">
+                            <option value="0">Tất cả</option>
+                            @if (value == "1")
+                            {
+                                <option value="1" selected>Đã map</option>
+                            }
+                            else
+                            {
+                                <option value="1">Đã map</option>
+                            }
+                            @if (value == "2")
+                            {
+                                <option value="2" selected>Chưa map</option>
+                            }
+                            else
+                            {
+                                <option value="2">Chưa map</option>
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control text-@item.Align input-search" style="width:@(item.ColumnWidth)px;" title="@item.ColumnName" id="@item.ColumnName" name="@item.ColumnName" value="@value" autocomplete="off" />
+                    }
+                }
+                else if (!item.IsHidden)
+                {
+                    <input type="text" style="width: @(item.ColumnWidth)px; visibility: hidden;" />
+                }
+
+
+            }
+            <button style="display: none" id="btn-search" class="btn btn-info" type="submit">@L("Buttons.Search")</button>
+            <button style="display: none" id="btn-search-clear" class="btn btn-danger" type="button" title="@L("Buttons.SearchClear")"><span><i class="fa fa-eraser"></i></span></button>
+        }
+
+        <span class="pull-right text-muted">
+            @if (Model.Table.IsReadonly)
+            {
+                <small style="margin-right:5px">Chỉ đọc</small>
+            }
+            else
+            {
+                foreach (var item in Model.AvaiableKeys)
+                {
+                    <strong>@item.Key:</strong>
+                    <span style="margin-right:20px">@item.Value</span>
+                }
+            }
+            @if (Model.Dvt > 0)
+            {
+                <span>|     Đvt: @Model.Dvt.ToStringDvt()</span>
+            }
+        </span>
+    </div>
+</form>
+@using (Html.BeginScripts())
+{
+    <script>
+        $(".sheet-search input").keydown(function (e) {
+            //e.preventDefault();
+            //alert(e.keyCode);
+        });
+
+        $("#btn-search-clear").click(function () {
+            $(".sheet-search input.input-search").val("");
+            $(".sheet-search input.input-search").filter(":visible:first").focus();
+        });
+
+        $('.sheet-search select').keypress(function (e) {
+            e.preventDefault();
+            $(".sheet-search").submit();
+        })
+    </script>
+}

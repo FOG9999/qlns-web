@@ -1,0 +1,263 @@
+﻿.gridBang {
+    /*background: #229743;*/
+    background-color: #fff;
+    margin: 0px 0 0px 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 12px;
+}
+
+    .gridBang td {
+        padding: 2px;
+        border: solid 1px #c1c1c1;
+        border-left-width: 0px;
+        border-top-width: 0px;
+        color: #000;
+        text-align: right;
+        font-size: 13px;
+        margin-left: -1px;
+    }
+
+    .gridBang th {
+        padding: 2px;
+        /*border-color: #999;
+        border: solid;
+        border-left: 1px;
+        border-right: 1px;*/
+        border-right: solid #c1c1c1 1px;
+        /*text-transform: uppercase;*/
+        /*background-color: rgba(193, 193, 193, 0.00);*/
+        /*background: #229743;*/
+        text-align: center;
+        font-size: 13px;
+        text-wrap: normal;
+        color: white;
+        background: #06A199;
+    }
+
+    .gridBang tr {
+        /*height: 32px;*/
+        height: 41px;
+    }
+
+        .gridBang tr.hangcha {
+            font-weight: bold;
+            background-color: whitesmoke;
+        }
+
+        .gridBang tr.removed {
+            /*background: #006600;*/
+            /*    background: #229743;*/
+            background: #FF9E89;
+        }
+
+        .gridBang tr.focus_edit {
+            /*font-style: italic;*/
+            color: orangered;
+            font-size: 13px;
+            border: 3px solid black;
+        }
+
+    .gridBang td.focus {
+        background: #DDD;
+    }
+
+    .gridBang td.focus_edit {
+        background: #FAFAC5;
+        color: red;
+        font-size: 13px !important;
+    }
+
+        .gridBang td.focus_edit input {
+            color: red;
+        }
+
+    .gridBang td input {
+        margin: 0px;
+        padding: 0px;
+        border: solid 0px red;
+        font-size: 14px;
+        width: 100%;
+    }
+
+        .gridBang td input.input-right {
+            text-align: right;
+        }
+
+
+    /*.gridBang span{display: inline-block;overflow: hidden;white-space:nowrap;}*/
+    .gridBang span {
+        overflow: hidden;
+        /*white-space: nowrap;*/
+        font-size: 12px !important;
+        /*margin-top: 2px;*/
+        /*margin-bottom: 2px;*/
+    }
+
+
+.button-bar {
+    /*margin-top: 20px;*/
+}
+
+.table-cell {
+    font-size: 12px !important;
+    /*white-space: pre-wrap;*/
+    padding: 2px !important;
+    margin-left: 4px;
+    table-layout: fixed;
+}
+
+.table-header {
+    /*background-color: #006600;*/
+    background-repeat: repeat;
+}
+
+.table-border {
+    border: solid 1px #c1c1c1;
+}
+
+.table-text span {
+    display: block;
+    overflow: hidden;
+    /*white-space: nowrap;*/
+    text-overflow: ellipsis;
+    padding-left: 3px !important;
+}
+
+
+.table-text input {
+    display: block;
+    width: 100px;
+    color: purple !important;
+}
+
+
+/*heading 2*/
+.table-header2 {
+    border: solid 1px #c1c1c1;
+    border-left: 0px;
+    /*color: #bd2a38;*/
+    /*color: red;*/
+    background-color: #06A199;
+    color: whitesmoke;
+    width: initial;
+    table-layout: fixed;
+}
+
+
+.table-header1 {
+    border-bottom: solid 1px #c1c1c1;
+    height: 100%;
+    background-color: #06A199;
+    color: whitesmoke;
+}
+
+/*.table-header2 {
+    border-bottom: solid 1px #c1c1c1;
+    height: 100%;
+    background-color: #06A199;
+    color: whitesmoke;
+}*/
+
+input .input-number {
+    color: rebeccapurple;
+    width: 100px !important;
+    font-weight: 900;
+}
+
+iframe .iframe-sheet {
+    width: 100%;
+    height: auto;
+    border: 0px;
+}
+
+#sheet {
+    width: 100%;
+    height: 528px;
+    border: 0px;
+    padding: 0px;
+    margin: 0px;
+    background-color: #DDD;
+}
+
+#fade { /*--Transparent background layer--*/
+    display: none; /*--hidden by default--*/
+    background: #000;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: .40;
+    z-index: 99999999;
+}
+
+.popup_block {
+    display: none; /*--hidden by default--*/
+    background: #fff;
+    padding: 10px;
+    border: 10px solid #ddd;
+    text-decoration: none;
+    float: left;
+    font-size: 1.2em;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 9999999999;
+    /*--CSS3 Box Shadows--*/
+    -webkit-box-shadow: 0px 0px 10px #000;
+    -moz-box-shadow: 0px 0px 10px #000;
+    box-shadow: 0px 0px 10px #000;
+    /*--CSS3 Rounded Corners--*/
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    margin-left: -10%;
+    margin-top: -10%;
+}
+/*--Making IE6 Understand Fixed Positioning--*/
+*html #fade {
+    position: absolute;
+}
+
+*html .popup_block {
+    position: absolute;
+}
+
+
+/*search sheet*/
+.sheet-search {
+    margin-bottom: 2px;
+    font-size: 12px;
+}
+
+    .sheet-search input {
+        width: inherit;
+        display: inline !important;
+        padding: 2px !important;
+        height: 28px !important;
+        min-height: 32px;
+        font-size: 14px;
+        /*font-weight: bold;*/
+        /*color: indianred;*/
+    }
+
+.check {
+    background: url(../Themes/images/tick.png) no-repeat top left;
+    width: 16px;
+    height: 15px;
+    text-indent: -9999px;
+    display: inline-block;
+}
+
+.cancel {
+    background: url(../Themes/images/cross.png) no-repeat top left;
+    width: 16px;
+    height: 16px;
+    text-indent: -9999px;
+    display: block;
+}
+
+.check, .cancel {
+    behavior: url(Content/Themes/images/iepngfix.htc)
+}

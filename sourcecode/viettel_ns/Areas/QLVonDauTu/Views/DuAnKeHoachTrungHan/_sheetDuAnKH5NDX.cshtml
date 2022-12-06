@@ -1,0 +1,114 @@
+﻿@model VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong.DuAnKH5NDXGridViewModel
+@{
+    var sheet = Model.Sheet;
+}
+
+<div class="tooltip-header-search">
+    <div class="col-sm-6" style="display:flex;padding-left:0px;">
+        <label class="control-label">Kế hoạch trung hạn đề xuất chi tiết</label>
+        @*<label class="control-label" style="padding-left:5em; color:#e17009;">Số kế hoạch: </label> &nbsp;&nbsp; <p style="margin-top: 10px; font-size:14px" id="">@(Model.KH5NamDeXuat != null ? Model.KH5NamDeXuat.sSoQuyetDinh : string.Empty)</p>
+        <label class="control-label" style="padding-left:20px; color:#e17009;">Ngày lập: </label> &nbsp;&nbsp; <p style="margin-top: 10px; font-size:14px" id="">
+            @Html.Raw((Model.KH5NamDeXuat != null && Model.KH5NamDeXuat.dNgayQuyetDinh.HasValue) ? Model.KH5NamDeXuat.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy") : string.Empty)
+        </p>
+        <label class="control-label" style="padding-left:20px; color:#e17009;">Giai đoạn: </label> &nbsp;&nbsp; <p style="margin-top: 10px; font-size:14px" id="">
+            @((Model.KH5NamDeXuat != null) ?  string.Format("{0} - {1}", Model.KH5NamDeXuat.iGiaiDoanTu, Model.KH5NamDeXuat.iGiaiDoanDen) : string.Empty)
+        </p>*@
+    </div>
+    <div class="col-sm-6">
+        @*<p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Xóa tìm kiếm</p>
+        <label class="control-label pull-right" style="padding-left:20px;">F9: </label>
+        <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Tìm kiếm</p>
+        <label class="control-label pull-right" style="padding-left:20px;">Ent: </label>*@
+        <div class="row">
+            <div class="col-sm-4 col-md-4 col-lg-4" style="margin-bottom: 2rem;">
+                <label class="control-label pull-left" style="padding-left:20px;">Kế hoạch trung hạn đề xuất tổng hợp </label>
+                @Html.DropDownList("iID_KeHoach5Nam_DeXuatID", (SelectList)(ViewBag.ListKhthDxTongHop), new { @class = "form-control", @id = "iID_KeHoach5Nam_DeXuatIDCbx" })
+            </div>
+            <div class="col-sm-8 col-md-8 col-lg-8">
+                <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Lưu danh mục dự án</p>
+                <label class="control-label pull-right" style="padding-left:20px;">F10: </label>
+                <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Bỏ chọn tất cả</p>
+                <label class="control-label pull-right" style="padding-left:20px;">F3: </label>
+                <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Chọn tất cả</p>
+                <label class="control-label pull-right">F2: </label>
+            </div>
+        </div>
+    </div>
+</div>
+<iframe id="sheetDuAnKH5NDX" name="iframe-sheet" class="iframe-sheet"></iframe>
+<div class="box_tong">
+    <div id="nhapform">
+        <div id="form2">
+            <div class="button-bar">
+                <div class="text-center">
+                    <button class="btn btn-default" onclick="goBack();" style="margin-right: 10px;"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                    <button class="btn btn-primary btn-save" id="btnSave" ><i class="fa fa-download" aria-hidden="true"></i><span>Chọn dự án</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr id="hr-split" />
+<div id="ajax-div">
+</div>
+@using (Html.BeginScripts())
+{
+<script type="text/javascript">
+        $(".btn-save").click(function () {
+            var isAddDxProject = true;
+            $.ajax({
+                type: "POST",
+                url: "/QLVonDauTu/DuAnKeHoachTrungHan/setActionAddDxProject",
+                data: { isAddDxProject: isAddDxProject },
+                async: false,
+                success: function (data) {
+                    if (data.status == false) {
+                        var Title = "Lỗi chọn dự án cho kế hoạch trung hạn được duyệt"
+                        $.ajax({
+                            type: "POST",
+                            url: "/Modal/OpenModal",
+                            data: { Title: Title, Messages: data.listErrMess, Category: 1 },
+                            async: false,
+                            success: function (data) {
+                                window.parent.loadModal(data);
+                                return false;
+                            }
+                        });
+                    } else {
+                        //Bang_HamTruocKhiKetThuc();
+                        $("#sheetDuAnKH5NDX")[0].contentWindow.Bang_HamTruocKhiKetThuc();
+                    }
+                }
+            });
+        });
+
+        loadFrame(1);
+
+        function goBack() {
+            window.location.href = "/QLVonDauTu/KeHoachTrungHanDuocDuyet/Detail/" + '@Model.iID_KeHoach5NamID';
+        }
+
+        $(".btn-option").click(function () {
+            var option = $(this).data("id")
+            loadFrame(option);
+        });
+
+    function loadFrame(option) {
+        var itemSelected = $("#iID_KeHoach5Nam_DeXuatIDCbx").val();
+        var id = itemSelected != null ? itemSelected : "00000000-0000-0000-0000-000000000000";
+        var url = '@Url.Action("SheetFrameDuAnKH5NDX")'
+            + "/?id=" + id;
+        console.log(url);
+        $("#sheetDuAnKH5NDX").attr("src", url);
+    }
+
+    $("#iID_KeHoach5Nam_DeXuatIDCbx").change(function () {
+        var itemSelected = $("#iID_KeHoach5Nam_DeXuatIDCbx").val();
+        var id = itemSelected != null ? itemSelected : "00000000-0000-0000-0000-000000000000";
+        var url = '@Url.Action("SheetFrameDuAnKH5NDX")'
+            + "/?id=" + id;
+        console.log(url);
+        $("#sheetDuAnKH5NDX").attr("src", url);
+    });
+</script>
+}

@@ -1,0 +1,144 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTQuanLyDuAnInfoModel
+<div class="card-body">
+    @if (Model.dataCTDT.iID_ChuTruongDauTuID == new Guid())
+    {
+        <div class="form-group row" style="font-size: 16px !important;">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <span style="font-size: 16px !important;">Phê duyệt chủ trương đầu tư chưa có thêm mới </span><a href="@Url.Action("TaoMoi", "ChuTruongDauTu", new { })" target="_blank" style="font-size: 16px !important;">tại đây</a>
+        </div>
+    }
+    else
+    {
+        @*Thông tin chu truong dau tu*@
+        <div class="form-group">
+            <h4 class="color-text-red">Thông tin nội dung:</h4>
+            <hr class='color-background-red' />
+            <div class="row">
+                <div class="col-sm-2">
+                    <label class="control-label">Số quyết định</label>
+                    <p>@Model.dataCTDT.sSoQuyetDinh</p>
+                </div>
+                <div class="col-sm-2">
+                    <label class="control-label">Ngày quyết định</label>
+                    <p>@(Model.dataCTDT.dNgayQuyetDinh.HasValue ? Model.dataCTDT.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy") : "")</p>
+                </div>
+                <div class="col-sm-2">
+                    <label class="control-label">Phân cấp phê duyệt</label>
+                    <p>@Model.dataPhanCapDuAn.sTen</p>
+                </div>
+                <div class="col-sm-2">
+                    <label class="control-label">Người ký</label>
+                    <p>@Model.dataCTDT.sNguoiKy</p>
+                </div>
+                <div class="col-sm-2">
+                    <label class="control-label">TMĐT</label>
+                    <p>@(Model.dataCTDT.fTMDTDuKienPheDuyet.HasValue ? Model.dataCTDT.fTMDTDuKienPheDuyet.Value.ToString("###,###") : string.Empty) (VNĐ)</p>
+                </div>
+            </div>
+        </div>
+
+        @*Thông tin phê duyệt chủ trương đầu tư*@
+        <div class="form-group">
+            <h4 class="color-text-red">Danh sách phê duyệt chủ trương đầu tư:</h4>
+            <hr class='color-background-red' />
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-bordered" id="tblCTDTChiPhiDauTu">
+                        <thead>
+                            <tr>
+                                <th width="35%">Số quyết định</th>
+                                <th width="20%">Ngày quyết định</th>
+                                <th width="20%">Dự án</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int index = 0;
+                                foreach (var item in Model.listDSPDCTDT)
+                                {
+                                    index++;
+                                    <tr style="cursor: pointer;">
+
+                                        <td align="left">@item.sSoQuyetDinh</td>
+
+                                        <td align="right">@(item.dNgayQuyetDinh.HasValue ? Model.dataCTDT.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy") : "")</td>
+
+                                        <td align="right">@Model.dataDuAn.sTenDuAn</td>
+
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        @*Thông tin nguồn vốn đầu tư*@
+        <div class="form-group">
+            <h4 class="color-text-red">Nguồn vốn đầu tư:</h4>
+            <hr class='color-background-red' />
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-bordered" id="tblCTDTNguonVonDauTu">
+                        <thead>
+                            <tr>
+                                <th width="5%"></th>
+                                <th width="35%">Tên nguồn vốn</th>
+                                <th width="20%">Giá trị phê duyệt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int indexNV = 0;
+                                foreach (var item in Model.listCTDTNguonVon)
+                                {
+                                    indexNV++;
+                                    <tr style="cursor: pointer;">
+                                        <td align="center">@indexNV</td>
+
+                                        <td align="left">@item.sTenNguonGocVon</td>
+
+                                        <td align="right" class="r_GiaTriPheDuyet">@item.fTienPheDuyet</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @*Thông tin tài liệu*@
+        <div class="form-group">
+            <h4 class="color-text-red">Thông tin hạng mục:</h4>
+            <hr class='color-background-red' />
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-bordered" id="tblNguonVonDauTu">
+                        <thead>
+                            <tr>
+                                <th width="5%">STT</th>
+                                <th width="55%">Tên hạng mục</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int indexHM = 0;
+                                foreach (var item in Model.listQDDTHangMuc)
+                                {
+                                    indexHM++;
+                                    <tr style="cursor: pointer;">
+                                        <td align="center">@indexHM</td>
+
+                                        <td align="left">@item.sTenHangMuc</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

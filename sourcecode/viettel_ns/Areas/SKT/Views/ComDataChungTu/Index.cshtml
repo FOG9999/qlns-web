@@ -1,0 +1,68 @@
+﻿@model ComDataChungTuListViewModel
+@{
+    if (Model.Loai == 1)
+    {
+        ViewBag.Title = L("DuToanKT.ListDonVi");
+    }
+    else if (Model.Loai == 2)
+    {
+        ViewBag.Title = L("DuToanKT.ListNganh");
+    }
+}
+<h2>@ViewBag.Title</h2>
+<div class="button-bar">
+    <a class="btn btn-mvc btn-mvc-green" href="@Url.Action("Create", "ComDataChungTu", new { Model.Loai })">@L("Buttons.Create")</a>
+    <div class="btn-group">
+        <button class="btn btn-mvc dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="btn-test">
+            @L("Buttons.Sort")   <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            @foreach (var item in Model.OrderBys)
+            {
+                <li>
+                    <a href="@Url.Action("Index", "ComDataChungTu", new { loai = Model.Loai, orderby = item.Value })">@L(item.Text)</a>
+                </li>
+            }
+        </ul>        
+    </div>
+    <div class="btn-group">
+        <button class="btn btn-mvc dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="btn-test">
+            @L("NS.DonVi")   <span class="caret"></span>
+        </button>        
+        <ul class="dropdown-menu" role="menu">
+            @foreach (var item in Model.Dvis)
+            {
+                <li>
+                    <a href="@Url.Action("Index", "ComDataChungTu", new { loai = Model.Loai, search = item.Value })" class="text-uppercase">@item.Text</a>
+                </li>
+            }
+        </ul>
+    </div>
+    <span class="text-muted">|</span>
+    <span class="text-muted">|</span>
+    <a class="btn btn-mvc btn-reload" title="@L("Buttons.Reload")"><i class="fa fa-refresh"></i></a>
+    @if (PhienLamViec.userRole == (int)UserRoleType.TroLyTongHop) { 
+        <span class="text-muted">|</span>
+        <span class="text-muted">|</span>
+        <a class="btn btn-mvc btn-mvc-green btn-edit-id" title="@L("DTKT.Lock.ChungTu.Desc")"><i class="fa fa-lock"></i>  @L("DTKT.Lock.ChungTu")</a>
+    }    
+    @if (PhienLamViec.userRole == (int)UserRoleType.TroLyTongHop && PhienLamViec.iID_MaPhongBan == "07")
+    {
+        <span class="text-muted">|</span>
+        <span class="text-muted">|</span>
+        <a class="btn btn-mvc btn-mvc-green btn-edit-id-convert"><i class="fa fa-copy"></i> Chuyển số liệu</a>
+    }
+</div>
+@Html.Partial("_list", Model.Items)
+@*@if (Model.PagingInfo.TotalItems > 15)
+{
+    <div style="background:#06A199;color:whitesmoke;width:100%">
+        <div class="btn-group pull-left">
+            @Html.PageLinks(Model.PagingInfo, x => Url.Action("Index", new { page = x, loai = Model.Loai }))
+        </div>
+    </div>
+}*@
+@using (Html.BeginScripts())
+{
+   
+}

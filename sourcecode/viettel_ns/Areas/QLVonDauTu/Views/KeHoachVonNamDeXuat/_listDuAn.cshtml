@@ -1,0 +1,16 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model List<VDTDuAnViewModel>
+
+@{
+    foreach (var item in Model)
+    {
+    <tr>
+        <td>
+            <input type="checkbox" data-idduan="@item.iID_DuAnID" />
+        </td>
+        <td>@item.sMaDuAn</td>
+        <td>@item.sTenDuAn</td>
+        <td>@item.sTenLoaiDuAn</td>
+    </tr>
+    }
+}

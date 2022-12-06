@@ -1,0 +1,50 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTQLPheDuyetQuyetToanModel
+
+<table class="table table-bordered" id="tblHangMucChinh">
+    <thead>
+        <tr>
+            <th width="5%">STT</th>
+            <th width="35%">Tên nguồn vốn</th>
+            <th width="15%">Giá trị dự toán</th>
+            <th width="15%">Giá trị quyết toán</th>
+            <th width="15%">Thừa/Thiếu</th>
+            <th width="15%">Giá trị chênh lệch</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (var item in Model.listNguonVonChenhLech)
+            {
+                index++;
+                <tr>
+                    <td align="center">@index</td>
+
+                    <td align="left">@item.sTen</td>
+
+                    <td align="right">@(item.fGiaTriDuToan > 0 ? item.fGiaTriDuToan.ToString("###,###") : "0")</td>
+
+                    <td align="right">@item.fGiaTriQuyetToan.ToString("###,###")</td>
+
+                    <td align="right">@item.sChenhLech</td>
+
+                    <td align="right">
+                        @item.fGiaTriChenhLech.ToString("###,###")
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+    });
+
+</script>

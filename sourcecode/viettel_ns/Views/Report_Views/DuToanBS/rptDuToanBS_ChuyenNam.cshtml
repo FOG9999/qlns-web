@@ -1,0 +1,159 @@
+﻿@model rptDuToanBS_ChuyenNamViewModel
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">Báo cáo chuyển năm sau @Model.iNamLamViec - Ngân sách bảo đảm</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6">
+                    <h6></h6>
+                </div>
+                <div class="col-xs-6">
+                    <h6><strong class="text-uppercase">Đơn vị</strong></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loại báo cáo:</label>
+                            <div class="col-sm-8" id="namNganSach">
+                                <div class="radio">
+                                    <input type="radio" name="sLNS" checked="checked" value="1,5" id="r-slns-1" />
+                                    <label for="r-slns-1">
+                                        QT3.3a1 - Năm trước đã cấp
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="sLNS" value="4" id="r-slns-2" />
+                                    <label for="r-slns-2">
+                                        QT3.3a2 - Ngân sách chưa cấp
+                                    </label>
+                                </div>
+                                <hr />
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                                <label class="control-label col-sm-4">Năm ngân sách:</label>
+                                <div class="col-sm-8">
+                                    @Html.DropDownList("iID_MaNamNganSach", Model.NamNganSachList, new { @class = "form-control", onchange = "changeDot()" })
+                                </div>
+                            </div>*@
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Phòng ban:</label>
+                            <div class="col-sm-8">
+                                @if (Model.PhongBanList == null || Model.PhongBanList.Count() == 1)
+                                {
+                                    <input type="text" readonly value="@PhienLamViec.sTenPhongBanFull" class="form-control" />
+                                    <input id="iID_MaPhongBan" type="text" value="@PhienLamViec.iID_MaPhongBan" class="form-control hide" />
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("iID_MaPhongBan", Model.PhongBanList, new { @class = "form-control", onchange = "change()" })
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Tên phụ lục:</label>
+                            <div class="col-sm-8">
+                                @Html.TextArea("tieuDe", Model.TieuDe, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Căn cứ:</label>
+                            <div class="col-sm-8">
+                                @Html.TextArea("canCu", Model.CanCu, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loại báo cáo:</label>
+                            <div class="col-sm-8" id="trinhky">
+                                <div class="radio">
+                                    <input type="radio" name="trinhky" checked="checked" value="0" id="r-trinhky-phuluc" />
+                                    <label for="r-trinhky-phuluc">
+                                        Phụ lục
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="trinhky" value="1" id="r-trinhky" />
+                                    <label for="r-trinhky">
+                                        Trình ký
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <div id="iID_MaDonVi" class="ls-box" data-check="first-only">
+                        @Html.Partial("_checkboxlist", new ChecklistModel("DonVi", Model.DonViList))
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "DuToanBS_Report")">Hủy</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+
+
+    $('#namNganSach input[type="radio"]').on('change', function (e) {
+        //lns = $(this).val();
+        //var url = '@Url.Action("Ds_DonVi")' + "/?iID_MaNamNganSach=" + lns;
+        //fillCheckboxList("iID_MaDonVi", "DonVi", url);
+
+        change();
+    });
+
+    function change() {
+
+        var iID_MaPhongBan = $("#iID_MaPhongBan").val();
+        var iID_MaNamNganSach = $("#namNganSach input[type='radio']:checked").val();
+
+        var url = '@Url.Action("Ds_DonVi")' +
+                    "/?iID_MaPhongBan=" + iID_MaPhongBan +
+                    "&iID_MaNamNganSach=" + iID_MaNamNganSach;
+
+        fillCheckboxList("iID_MaDonVi", "DonVi", url);
+    }
+
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+        var ext = $(this).data("ext");
+
+        var ghichu = $("#ghiChu").val();
+        var iID_MaPhongBan = $("#iID_MaPhongBan").val();
+        var iID_MaLoaiNganSach = $("#namNganSach input[type='radio']:checked").val();
+        var trinhky = $("#trinhky input[type='radio']:checked").val();
+
+        $("input:checkbox[check-group='DonVi']").each(function () {
+            if (this.checked) {
+                var item = this.value;
+                var url = '@Url.Action("Print")' +
+                    "?ext=" + ext +
+                    "&r=" + 160 +
+                    "&iID_MaDonVi=" + item +
+                    "&iID_MaNamNganSach=" + iID_MaLoaiNganSach +
+                    "&iID_MaPhongBan=" + iID_MaPhongBan +
+                    "&trinhky=" + trinhky +
+                    "&tieuDe=" + $("#tieuDe").val() +
+                    "&canCu=" + $("#canCu").val();
+
+                url = unescape(url);
+                links.push(url);
+            }
+        });
+
+        openLinks(links);
+    });
+
+</script>

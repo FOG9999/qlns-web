@@ -1,0 +1,225 @@
+﻿@using Viettel.Models;
+@model IEnumerable<Viettel.Models.MenuLeftViewModel>
+
+@*<div class="menu-touch collapse" id="menu-touch">
+        <ul class="nav navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+                <i class="fa fa-angle-double-left fa-2x close-menu-touch" aria-hidden="true" data-toggle="collapse" data-target="#menu-touch" aria-expanded="false" aria-controls="menu-touch"></i>
+            </li>
+
+            @foreach (var item in Model.Where(n => n.menu_level == 1))
+            {
+                if (item.menu_id == ViewBag.iMenuColpanIndex)
+                {
+                    <li class="nav-item">
+                        <a href="~/" class="nav-link" data-id="@item.menu_id"><span style="color: #EC191D;">@item.menu_name</span></a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a href="~/" class="nav-link" data-id="@item.menu_id"><span>@item.menu_name</span></a>
+                    </li>
+                }
+            }
+        </ul>
+    </div>*@
+
+<div class="modal fade" id="menu-touch" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog dialog-menu-css" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <ul style="display: flex">
+                    @foreach (var item in Model.Where(n => n.menu_level == 1))
+                    {
+                        if (item.menu_id == ViewBag.iMenuColpanIndex)
+                        {
+                            <li class="nav-item">
+                                <a href="~/" class="nav-link css_a_menu_parent"  data-id="@item.menu_id">
+                                    <i class="@item.icon fa-3x color-text-red" aria-hidden="true"></i>
+                                    <span class="color-text-red">@item.menu_name</span>
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a href="~/" class="nav-link css_a_menu_parent" data-id="@item.menu_id">
+                                    <i class="@item.icon fa-3x" aria-hidden="true"></i>
+                                    <span>@item.menu_name</span>
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="banner">
+    <div class="header-app">
+        <p>HỆ THỐNG QUẢN LÝ NGÂN SÁCH</p>
+    </div>
+    <div class="menu-icon-user" style="width : 50%;margin-top:8px;display:flex;justify-content:flex-end">
+        <ul>
+            <li>
+                @{
+                    string iNamLamViec = ReportModels.LayNamLamViec(System.Web.HttpContext.Current.User.Identity.Name);
+                    string userName = System.Web.HttpContext.Current.User.Identity.Name;
+                }
+                <span class="chao-banner1">Xin chào:</span>
+                <span class="chao-banner">@userName</span>
+                <span class="chao-banner1">(Thời gian:</span>
+                <span class="chao-banner"> @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")</span>
+                <span class="chao-banner1">- Năm làm việc:</span>
+                <span class="chao-banner">@iNamLamViec</span>
+                <span class="chao-banner1">- IP:</span>
+                <span class="chao-banner">@Request.UserHostAddress</span>
+                <span class="chao-banner1">)</span>
+                <a href="#" class="close-menu-user-touch" aria-hidden="true" data-toggle="collapse" data-target="#menu-user-touch" aria-expanded="false" aria-controls="menu-user-touch">
+                    <span>
+                        @*<img src="https://www.w3schools.com/css/rwd_desktop.png" width="35" height="35" style="border-radius:50%">*@
+                        @*<img src="https://www.w3schools.com/css/img_5terre.jpg" width="35" height="35" style="border-radius:50%">*@
+                        <img src="~/Content/Themes/images/img_5terre.jpg" width="35" height="35" style="border-radius:50%">
+                        <i class="fa fa-lg fa-caret-down"></i>
+                    </span>
+                </a>
+                <div class="collapse menu-user-touch" id="menu-user-touch" aria-expanded="false">
+                    <ul>
+                        <li class="user-menu-item"><a class="dropdown-item"><span>Cập nhật thông tin</span></a></li>
+                        <li class="user-menu-item"><a class="dropdown-item" href="@Url.Action("ChangePassword", "Account")"><span>Đổi mật khẩu</span></a></li>
+                        <li class="user-menu-item"><a class="dropdown-item"><span>Hướng dẫn sử dụng</span></a></li>
+                        <li class="user-menu-item"><a class="dropdown-item" href="@Url.Action("SSOLogOff", "Account")"><span>Đăng xuất</span></a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="menu-header">
+    <div class="nav collapse navbar-collapse" style="display:inline-block">
+        <ul class="nav navbar-nav mr-auto mt-lg-0" id="menu-head-bar">
+            <i class="fa fa-bars fa-2x touch-menu home-menu" aria-hidden="true" data-toggle="modal" data-target="#menu-touch" aria-expanded="false" aria-controls="menu-touch"></i>
+            @if (Model.Count() == 0 || !Model.Any(n => n.menu_level == 2))
+            {
+                <li class="nav-item"><span>&nbsp</span></li>
+            }
+            else
+            {
+                foreach (var item in Model.Where(n => n.menu_level == 2).OrderBy(x => x.thu_tu))
+                {
+
+                    if (string.IsNullOrEmpty(item.url) || item.url.Trim().Equals("#"))
+                    {
+                        if (item.menu_id == ViewBag.iMenuHeadFocus)
+                        {
+                            <li class="nav-item">
+
+                                @if (!string.IsNullOrEmpty(item.icon))
+                                {
+                                    <a class="nav-link menu-actived" href="~/" data-id="@item.menu_id"><i class="@item.icon" aria-hidden="true"><span>@item.menu_name</span></i></a>
+                                }
+                                else
+                                {
+                                    <a class="nav-link menu-actived" href="~/" data-id="@item.menu_id">@item.menu_name</a>
+                                }
+
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+
+                                @if (!string.IsNullOrEmpty(item.icon))
+                                {
+                                    <a class="nav-link" href="~/" data-id="@item.menu_id"><i class="@item.icon" aria-hidden="true"><span>@item.menu_name</span></i></a>
+                                }
+                                else
+                                {
+                                    <a class="nav-link" href="~/" data-id="@item.menu_id">@item.menu_name</a>
+                                }
+
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        if (item.menu_id == ViewBag.iMenuHeadFocus)
+                        {
+                            <li class="nav-item">
+                                @if (!string.IsNullOrEmpty(item.icon))
+                                {
+                                    <a class="nav-link menu-actived" href="~/@item.url" data-id="@item.menu_id"><i class="@item.icon" aria-hidden="true"><span>@item.menu_name</span></i></a>
+                                }
+                                else
+                                {
+                                    <a class="nav-link menu-actived" href="~/@item.url" data-id="@item.menu_id">@item.menu_name</a>
+                                }
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                @if (!string.IsNullOrEmpty(item.icon))
+                                {
+                                    <a class="nav-link" href="~/@item.url" data-id="@item.menu_id"><i class="@item.icon" aria-hidden="true"><span>@item.menu_name</span></i></a>
+                                }
+                                else
+                                {
+                                    <a class="nav-link" href="~/@item.url" data-id="@item.menu_id">@item.menu_name</a>
+                                }
+                            </li>
+                        }
+                    }
+                }
+            }
+        </ul>
+
+        @*<div style="width: 100%;">
+                <table width="100%" cellspacing="3" cellpadding="3" border="0">
+                    <tr>
+                        <td colspan="7" style="font-weight: bold;" valign="top">
+                            <div class="box_tong" style="margin-left: 5px;">
+                                <div class="title_tong">
+                                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                        <tr>
+                                            <td>
+                                                <span>Cấu hình hệ thống</span>
+                                            </td>
+                                            <td style="width: 59px; text-align: right;" valign="top">
+                                                <b>Tháng&nbsp;</b>
+                                            </td>
+                                            <td valign="top">
+                                                @Html.DropDownList("CauHinh", slThang)
+                                                <%=MyHtmlHelper.DropDownList("CauHinh", slThang, Convert.ToString(iThang), "iThangLamViec", "", "onchange=\"ChonThangNam(this.value, 1)\" style=\"width:50px;\"")%>
+                                                <b>&nbsp; Năm</b>
+                                                <%=MyHtmlHelper.DropDownList("CauHinh", slNam, Convert.ToString(iNam), "iNamLamViec", "", "onchange=\"ChonThangNam(this.value, 2)\" style=\"width:80px;\"")%>
+                                            </td>
+                                            <td>
+                                                Năm ngân sách
+                                            </td>
+                                            <td>
+                                                <%=MyHtmlHelper.DropDownList("CauHinh", slNamNganSach, NamNS, "iID_MaNamNganSach", "", "onchange=\"ChonThangNam(this.value, 3)\" class=\"input1_2\" style=\"width: 200px\"")%>
+                                            </td>
+                                            <td>
+                                                Nguồn ngân sách
+                                            </td>
+                                            <td>
+                                                <%=MyHtmlHelper.DropDownList("CauHinh", slNguonNganSach, NguonNS, "iID_MaNguonNganSach", "", "onchange=\"ChonThangNam(this.value, 4)\" class=\"input1_2\" style=\"width: 300px\"")%>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>*@
+    </div>
+    <div id="idCauHinhHeThong" style="width:100%">
+
+    </div>
+</div>

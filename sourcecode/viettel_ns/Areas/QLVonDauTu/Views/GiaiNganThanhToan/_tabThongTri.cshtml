@@ -1,0 +1,56 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model Viettel.Models.QLVonDauTu.VDTThongTriViewModel
+@{
+    ViewBag.Title = "_tabThongTri";
+}
+
+<div class="tooltip-header-search">
+    <div class="col-sm-6" style="display: flex; padding-left: 0px;">
+        <label class="control-label">Danh sách thông tri (@Model._paging.TotalItems)</label>
+    </div>
+    @*<button class="btn btn-primary pull-right" onclick="BtnInsertDataClick()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>*@
+</div>
+<table class="table table-bordered">
+    <!--<thead class="header-search">
+        <tr>-->
+            @*<th width="2%"></th>*@
+            <!--<th width=""></th>
+            <th width=""></th>
+            <th width=""><input type="text" class="form-control clearable" id="txtSoDeNghi" autocomplete="off" /></th>
+            <th width=""><input type="text" class="form-control clearable" id="txtSoDeNghi" autocomplete="off" /></th>
+            <th width=""><input type="text" class="form-control clearable" id="txtNamKeHoach" autocomplete="off" /></th>
+            <th width=""></th>
+            <th width=""><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+        </tr>
+    </thead>-->
+    <thead>
+        <tr>
+            @*<th width="2%"></th>*@
+            <th width="3%">STT</th>
+            <th width="13%">Tên đơn vị</th>
+            <th width="10%">Mã thông tri</th>
+            <th width="">Mô tả</th>
+            <th width="">Loại thông tri</th>
+            <th width="15%">Ngày tạo</th>
+            <th width="10%">Năm làm việc</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (VDTThongTriModel item in Model.Items)
+            {
+                index++;
+                <tr style="cursor: pointer" ondblclick="OpenDetail('@item.iID_ThongTriID')">
+                    <td align="center">@index</td>
+                    <td align="left">@item.sTenDonVi</td>
+                    <td align="center">@item.sMaThongTri</td>
+                    <td align="center">@item.sMoTa</td>
+                    <td align="center">@item.sLoaiThongTri</td>
+                    <td align="center">@(item.dNgayThongTri.HasValue ? item.dNgayThongTri.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                    <td align="center">@item.iNamThongTri</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

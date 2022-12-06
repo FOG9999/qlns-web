@@ -1,0 +1,69 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model KHVNDXPrintDataExportModel
+@{
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+<link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.0.45/css/materialdesignicons.min.css">
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="header-create-update">
+                    <span>
+                        @Html.Raw("Báo cáo kế hoạch vốn năm đề xuất")
+                    </span>
+                </div>
+                <ul class="nav nav-tabs" style="margin-top: 10px;">
+                    <li class="active"><a data-toggle="tab" href="#bcTheoDonVi">Báo cáo theo đơn vị</a></li>
+                    <li><a data-toggle="tab" href="#bcTongHop">Báo cáo tổng hợp</a></li>
+                </ul>
+            </div>
+
+            <div class="card-body tab-content" style="padding-top: 0px !important;">
+                <div id="bcTheoDonVi" class="tab-pane fade in active">
+                    @Html.Partial("_partialPrintBCDV", Model)
+                </div>
+                <div id="bcTongHop" class="tab-pane fade in ">
+                    @Html.Partial("_partialPrintBCTH", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group text-center panel-list-item col-sm-12">
+        <button class="btn btn-back" onclick="backViewKHVNDX()"><i class="fa fa-arrow-left" aria-hidden="true"></i><span>Quay lại</span></button>
+        <button class="btn btn-warning" onclick="printBaoCao();"><i class="fa fa-file-pdf-o" aria-hidden="true"></i><span>In báo cáo</span></button>
+        <button class="btn btn-success" id="btnChuKy"><i class="fa fa-edit" aria-hidden="true"></i><span>Sửa chữ ký</span></button>
+
+
+    </div>
+</div>
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+@Html.Partial("_ui_chuky")
+
+@section Scripts{
+    <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsBaoCao_KHVNDX.js"></script>
+    <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+
+    <script>
+        function printBaoCao() {
+            var active = $("#bcTheoDonVi").hasClass("active");
+
+            if (active) {
+                printBCDV(true);
+            } else {
+                printBCTH(true);
+            }
+        }
+    </script>
+}
+
+

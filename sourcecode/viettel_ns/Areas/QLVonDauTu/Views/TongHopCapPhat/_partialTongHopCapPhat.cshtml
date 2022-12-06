@@ -1,0 +1,148 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model IEnumerable<VDTBaoCaoCapPhatViewModel>
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+<script src="~/Scripts/jsNumber.js"></script>
+
+@*<div class="tooltip-header-search">
+        <div class="col-sm-8" style="display:flex;padding-left:0px;">
+            <label class="control-label color-text-red">Báo cáo tổng hợp nguồn BTC cấp trong năm </label>
+        </div>
+    </div>*@
+
+<div class="tableFixHead">
+    <table class="table table-bordered" id="baocaoTHCAPPHAT">
+        <thead>
+            <tr class="text-center" style="background-color: #06A199; color:white">
+                <th style="width:50px" rowspan="2">Kí hiệu</th>
+                <th style="min-width:200px" rowspan="2">Đơn vị(phân theo ngân sách)</th>
+                <th style="width:100px" colspan="2">Dự toán đã giao năm nay</th>
+                <th colspan="4">Vốn ứng ngoài chỉ tiêu</th>
+                <th rowspan="2">Thanh toán KLHT</th>
+                <th rowspan="2">Tạm ứng</th>
+                <th rowspan="2">Thu hồi tạm ứng</th>
+                <th rowspan="2">Ghi chú</th>
+            </tr>
+            <tr class="text-center" style="background-color: #06A199; color:white">
+                <th style="min-width:120px">Cấp tại Kho bạc</th>
+                <th style="min-width:120px">Cấp bằng lệnh chi</th>
+                <th style="min-width:120px">Tổng</th>
+                <th style="min-width:120px">Cấp tại Kho bạc</th>
+                <th style="min-width:120px">Cấp bằng lệnh chi</th>
+                <th style="min-width:120px">Khác</th>
+            </tr>
+            <tr class="text-center" style="background-color: #06A199; color:white">
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5=6+7+8</th>
+                <th>6</th>
+                <th>7</th>
+                <th>8</th>
+                <th>9</th>
+                <th>10</th>
+                <th>11</th>
+                <th>12</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 0;
+                foreach (var item in Model)
+                {
+                    count++;
+                    break;
+                }
+
+                if (count > 0)
+                {
+                    <tr class="text-bold">
+                        <td align="center"></td>
+
+                        <td align="center">Tổng số</td>
+
+                        <td align="right" class="fTongCapTaiKhoBac_DT"></td>
+
+                        <td align="right" class="fTongCapBangLenhChi_DT"></td>
+
+                        <td align="right" class="fTong_VU"></td>
+
+                        <td align="right" class="fTongCapTaiKhoBac_VU"></td>
+
+                        <td align="right" class="fTongCapBangLenhChi_VU"></td>
+
+                        <td align="right" class="fTongKhac_Vu"></td>
+
+                        <td align="right" class="fTongKLHT"></td>
+
+                        <td align="right" class="fTongTamUng"></td>
+                        <td align="right" class="fTongThuHoiTamUng"></td>
+                        <td align="left"></td>
+
+                    </tr>
+                    <tr class="text-bold">
+                        <td align="center">A.</td>
+
+                        <td align="left" id="idngansach"></td>
+
+                        <td align="right" class="fTongCapTaiKhoBac_DT"></td>
+
+                        <td align="right" class="fTongCapBangLenhChi_DT"></td>
+
+                        <td align="right" class="fTong_VU"></td>
+
+                        <td align="right" class="fTongCapTaiKhoBac_VU"></td>
+
+                        <td align="right" class="fTongCapBangLenhChi_VU"></td>
+
+                        <td align="right" class="fTongKhac_Vu"></td>
+
+                        <td align="right" class="fTongKLHT"></td>
+
+                        <td align="right" class="fTongTamUng"></td>
+                        <td align="right" class="fTongThuHoiTamUng"></td>
+                        <td align="left"></td>
+
+                    </tr>
+
+
+                    int index = 0;
+                    foreach (var item in Model)
+                    {
+                        index++;
+                        <tr>
+                            <td align="center">@index</td>
+                            <td align="left">@item.sTen</td>
+
+                            <td align="right" class="r_fCapBacTaiKhoBac_DTNN">@item.fCapBacTaiKhoBac_DTNN.Value.ToString("###,###")</td>
+
+                            <td align="right" class="r_fCapBangLenhChi_DTNN">@item.fCapBangLenhChi_DTNN.Value.ToString("###,###")</td>
+
+                            <td align="right" class="r_fTong_VUNCT">@item.fTong_VUNCT.Value.ToString("###,###")</td>
+
+                            <td align="right" class="r_fCapBacTaiKhoBac_VUNCT">@item.fCapBacTaiKhoBac_VUNCT.Value.ToString("###,###")</td>
+
+                            <td align="right" class="r_fCapBangLenhChi_VUNCT">@item.fCapBangLenhChi_VUNCT.Value.ToString("###,###")</td>
+
+                            <td align="center"></td>
+
+                            <td align="right" class="r_fThanhToanKLHT">@item.fThanhToanKLHT.Value.ToString("###,###")</td>
+
+                            <td align="right" class="r_fTamUng">@item.fTamUng.Value.ToString("###,###")</td>
+                            <td align="right" class="r_fThuHoiTamUng">@item.fThuHoiTamUng.Value.ToString("###,###")</td>
+                            <td align="right">
+                                @item.sGhiChu
+                            </td>
+                        </tr>
+
+                    }
+
+                }
+            }
+
+        </tbody>
+
+    </table>
+</div>

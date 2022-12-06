@@ -1,0 +1,154 @@
+﻿{
+  "HomePage": "Trang chủ",
+  "DuToan": "Dự toán",
+  "Ng": "Ngành",
+  "ChungTu": "Chứng từ",
+  "ChungTu_ChiTiet": "Chứng từ chi tiết",
+  "ChungTu_NSQP": "Chứng từ ngân sách quốc phòng",
+
+  "DuToanBS": "Dự toán bổ sung",
+  "DuToanBS_Report": "Báo cáo dự toán bổ sung",
+  "rptDuToanBS_TongHop": "Báo cáo tổng hợp",
+  "Error.DeleteFail": "Bạn không có quyền xóa chứng từ!",
+  "Message.SaveSuccess": "Lưu dữ liệu thành công!",
+  "Message.SaveFailed": "Lưu dữ liệu không thành công!",
+
+  "QuyetToan": "Quyết toán",
+  "QT_ChungTu_NSQP": "Danh sách chứng từ quyết toán nsqp",
+
+  "NSQP": "Ngân sách quốc phòng",
+  "NSNN": "Ngân sách nhà nước",
+  "NSK": "Ngân sách khác",
+  "NSBĐ": "Ngân sách bảo đảm",
+
+  "rptTongHop_GiaoBan": "Báo cáo tổng hợp giao ban",
+
+  "rptTongHopNS": "Báo cáo tổng hợp ngân sách",
+
+  "TinhThanh": "Hà Nội",
+  "End": "Kết thúc",
+  //ui
+  "Buttons.Create": "Tạo mới",
+  "Buttons.Update": "Tạo mới",
+  "Buttons.Save": "Lưu",
+  "Buttons.SaveChanges": "Lưu thay đổi",
+  "Buttons.SaveData": "Lưu dữ liệu",
+  "Buttons.Option": "Tùy chọn",
+  "Buttons.Print": "In báo cáo",
+  "Buttons.PrintXls": "Xuất excel",
+  "Buttons.MucLuc": "In bộ mục lục",
+  "Buttons.PrintThongTri": "In thông tri",
+  "Buttons.Back": "Quay lại",
+  "Buttons.Cancel": "Hủy",
+  "Buttons.Close": "Đóng",
+  "Buttons.Quit": "Thoát",
+  "Buttons.Search": "Tìm kiếm",
+  "Buttons.SearchClear": "Xóa tìm kiếm",
+  "Buttons.Sort": "Sắp xếp",
+  "Buttons.EditChungTu": "Sửa chứng từ",
+
+
+  // membership
+
+  "Membership.PersonalInfo": "Thông tin tài khoản",
+
+  // chu ky
+
+  "ChuKy_CucTruong": "Thiếu tướng Lưu Sỹ Quý",
+  "ChuKy_CucTruong_ChucVu": "Cục trưởng",
+
+  "ChuKy_B2_TruongPhong": "Đại tá Đinh Công Quân",
+  "ChuKy_B3_TruongPhong": "Đại tá Nguyễn Tiến Luyện",
+  "ChuKy_B4_TruongPhong": "Đại tá Nguyễn Văn Bằng",
+  "ChuKy_B5_TruongPhong": "Đại tá Lê Hồng Trường",
+  "ChuKy_B6_TruongPhong": "Đại tá Đào Minh Đạo",
+  "ChuKy_B7_TruongPhong": "Đại tá Lê Văn Thuận",
+  "ChuKy_B8_TruongPhong": "Đại tá Ngô Ngọc Tường",
+  "ChuKy_B9_TruongPhong": "Đại tá Lê Đắc Văn",
+  "ChuKy_B10_TruongPhong": "Đại tá Phùng Văn Thi",
+  "ChuKy_B17_TruongPhong": "Đại tá Quân",
+
+  //labels
+  "NS.DonVi": "Đơn vị",
+  "NS.Input": "Người đề nghị",
+  "NS.NgayChungTu": "Ngày chứng từ",
+  "NS.SoChungTu": "Số chứng từ",
+  "NS.NoiDung": "Nội dung",
+  "NS.GhiChu": "Ghi chú",
+  "NS.NgayChungTu.Desc": "Ngày chứng từ ↑",
+  "NS.NgayChungTu.Asc": "Ngày chứng từ ↓",
+  "NS.Thang": "Tháng",
+  "NS.Quy": "Quý",
+  "NS.TenDonVi": "Tên đơn vị",
+  "NS.LNS": "LNS",
+
+  //cuky
+  "NS.ChuKy.Edit": "Chỉnh sửa chữ ký báo cáo",
+  "NS.ChuKy.List": "Danh sách các chữ ký báo cáo",
+
+  //Du Toan
+  // Header
+  "DuToan.rptDuToan_BaoDam_TungDonVi_ChiTiet": "DỰ TOÁN CHI NGÂN SÁCH QUỐC PHÒNG - Chi tiết phần phân cấp ngân sách bảo đảm",
+
+  //Du toan kiem tra
+  // Header
+  "DuToanKT": "Dự toán kiểm tra",
+  "DuToanKT.Create": "Tạo chứng từ dự toán kiểm tra",
+  "DuToanKT.Edit": "Sửa chứng từ dự toán kiểm tra",
+  "DuToanKT.List": "Danh sách chứng từ dự toán kiểm tra",
+  "DuToanKT.ListDonVi": "Danh sách chứng từ dự toán kiểm tra - Theo đơn vị",
+  "DuToanKT.ListNganh": "Danh sách chứng từ dự toán kiểm tra - Theo ngành",
+  "SKT": "Nhu cầu - số kiểm tra",
+  "SKT.PhongBan": "Phòng ban đề nghị",
+  "SKT.PhongBanDich": "Phòng ban quản lý đơn vị",
+  "SKT.NamNS": "Năm mục lục ngân sách",
+  "SKT.Mucluc": "Bộ mục lục nhu cầu",
+  "SKT.CreateDT": "Tạo chứng từ chi tiết số đặc thù dự toán kiểm tra",
+  "SKT.EditDT": "Sửa chứng từ chi tiết số đặc thù dự toán kiểm tra",
+  "SKT.ListDT": "Danh sách chứng từ chi tiết số đặc thù dự toán kiểm tra",
+
+  // lock
+  "DTKT.LockList": "Khóa số liệu dự toán kiểm tra",
+  "DTKT.Lock.ChungTu": "Khóa chứng từ",
+  "DTKT.Open.ChungTu": "Mở khóa chứng từ",
+  "DTKT.Lock.ChungTu.Desc": "Khóa số liệu dtkt theo chứng từ",
+  "DTKT.LockHeader": "Khóa số liệu dtkt cho đơn vị",
+  "DTKT.Lock_PhongBan": "Khóa phòng ban",
+  "DTKT.Lock_Account": "Khóa tài khoản",
+  "DTKT.Lock_Times": "Khóa lần nhập của đợt",
+
+  // report
+  "DTKT.rptDuToanKT_M04b": "M04b - Thông báo chi tiết phân cấp số kiểm tra dự toán ngân sách năm (Các ngành bảo đảm)",
+  "DTKT.rptDuToanKT_M01TH": "M01 - Tổng hợp số kiểm tra dự toán ngân sách của Bql",
+  "DTKT.rptDuToanKT_M01NG": "M01-NG - Tổng hợp số đã phân cấp cho đơn vị (Đơn vị hàng dọc - ngành hàng ngang)",
+  "DTKT.rptDuToanKT_M01a": "M01a - Tổng hợp số kiểm tra dự toán ngân sách của Bql (Số đề nghị - Số đặc thù)",
+  "DTKT.rptDuToanKT_M01b": "M01b - Tổng hợp số kiểm tra dự toán ngân sách (Bql - B2)",
+  "DTKT.rptDuToanKT_M01c": "M01c - Tổng hợp số kiểm tra dự toán ngân sách (Bql - B2 - Cục)",
+  "DTKT.rptDuToanKT_M01d": "M01d - Biểu đối chiếu số kiểm tra phần ngân sách nghiệp vụ (Ngành hàng dọc - đơn vị hàng ngang)",
+  "DTKT.rptDuToanKT_M04c": "M04c - Biểu so sánh số phân cấp đầu năm và số kiểm tra (Đơn vị hàng dọc - ngành hàng ngang)",
+  "DTKT.rptDuToanKT_M04e": "M04e - Biểu số phân cấp dự toán ngân sách đầu năm theo chuyên ngành(Đơn vị hàng dọc - ngành hàng ngang)",
+  "DTKT.rptDuToanKT_M05": "M05 - Biểu điều chỉnh tăng giảm số kiểm tra",
+  "DTKT.rptDuToanKT_M07": "M07 - Biểu điều chỉnh tăng giảm số kiểm tra - tại ngành",
+  "DTKT.rptDuToanKT_M11": "M11 - Biểu đối chiếu số kiểm tra phần ngân sách các ngành bảo đảm (Ngành hàng dọc)",
+  "DTKT.rptDuToanKT_M11b": "M11b - Biểu đối chiếu số kiểm tra phần ngân sách các ngành bảo đảm (Ngành hàng dọc, chi tiết ngành)",
+  "DTKT.rptDuToanKT_M04D1": "M04D1 - Biểu chi tiết số đặc thù theo ngành",
+  "SKT.rptSKT_Kiem_ChiTietSDT": "K2 - Biểu kiểm tra số đặc thù toàn quân",
+
+  "DTKT_QuyetDinh": "(Kèm theo Quyết định số: ................/QĐ-BQP ngày ........../........../2019 của Bộ Quốc phòng)",
+  "SKT_QuyetDinh": "(Kèm theo Quyết định số: ............/QĐ-BQP ngày ........./........../2020 của Bộ Quốc phòng)",
+  "SKT_KHNS": "(Kèm theo Công văn số: 4546/CTC-KHNS ngày 04/9/2020 của Cục Tài chính)",
+  "DTKT_TieuDe1": "Thông báo số kiểm tra dự toán ngân sách năm {0}",
+
+  //Thu nộp ngân sách
+  // Header
+  "ThuNop": "Thu nộp ngân sách",
+  "ThuNop.Create": "Tạo chứng từ thu nộp ngân sách",
+  "ThuNop.Edit": "Sửa chứng từ thu nộp ngân sách",
+  "ThuNop.List": "Danh sách chứng từ thu nộp ngân sách",
+  "ThuNop.ListDonVi": "Danh sách chứng từ thu nộp ngân sách - Theo đơn vị",
+
+
+  //Mẫu số
+  "ThongTri": "CQ07-HD",
+  "theend": "----"
+}

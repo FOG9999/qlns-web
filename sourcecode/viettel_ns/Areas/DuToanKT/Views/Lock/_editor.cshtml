@@ -1,0 +1,39 @@
+﻿@model DTKTLockViewModel
+@{
+    ViewBag.Title = L("DuToanKT.Create");
+}
+@section Styles{
+}
+@using (Html.BeginForm("Update", "Lock", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(x => x.Id)
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="form-group">
+                <div class="col-sm-4">
+                    @Html.LabelFor(x => x.TenDonVi, new { @class = "control-label-r" })
+                    @Html.HiddenFor(x => x.Id_DonVi)
+                    @Html.TextBoxFor(x => x.TenDonVi, new { @class = "form-control", @readonly = true })
+                    @Html.LabelFor(x => x.GhiChu, new { @class = "control-label-r" })
+                    @Html.TextAreaFor(x => x.GhiChu, new { @class = "form-control", @rows = 4 })
+                </div>
+                <div class="col-sm-4">
+                    @Html.LabelFor(x => x.Id_PhongBan, new { @class = "control-label-r" })
+                    @Html.TextBoxFor(x => x.Id_PhongBan, new { @class = "form-control" })
+                    @Html.LabelFor(x => x.iRequest, new { @class = "control-label-r" })
+                    @Html.TextBoxFor(x => x.iRequest, new { @class = "form-control" })
+                </div>
+                <div class="col-sm-4">
+                    @Html.LabelFor(x => x.Id_User, new { @class = "control-label-r" })
+                    @Html.TextBoxFor(x => x.Id_User, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@section Scripts{
+}

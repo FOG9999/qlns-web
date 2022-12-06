@@ -1,0 +1,60 @@
+﻿@model MenuItemViewModel
+@if (Model.Menus.Count() == 0)
+{
+    var menu_class = Model.Depth == 1 ? "menu1" : "menu2";
+    var target = Model.Url.Contains(".pdf") ? "_blank" : "";
+    <li>
+        <a class='@menu_class' href="@Model.Url" target="@target">
+            @if (Model.Title == "Trang chủ")
+            {
+                <i title="@Model.Title" class="fa fa-home" style="font-size: x-large"></i>
+            }
+            else
+            {
+                <span>@Model.Title</span>
+            }
+        </a>
+    </li>
+}
+else
+{
+    <li class="dropdown">
+        @* MENU CAP 1*@
+        @if (Model.Depth == 1)
+        {
+            <a href="#" class="dropdown-toggle menu1" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                @Model.Title
+                <span class="caret"></span>
+            </a>
+
+            if (Model.Menus.Count() > 0)
+            {
+                <ul class="dropdown-menu">
+                    @foreach (var menu in Model.Menus)
+                    {
+                        @Html.Partial("_MenuItem", menu)
+                    }
+                </ul>
+            }
+
+        }
+        else
+        {
+            <a href="#" class="dropdown-header menu-header">
+                <span class="font-weight-bold text-uppercase">*   @Model.Title</span>
+            </a>
+
+            foreach (var menu in Model.Menus)
+            {
+                var target = menu.Url.Contains(".pdf") ? "_blank" : "";
+            <li class="menu3"><a href='@menu.Url' target="@target">@menu.Title</a></li>
+
+            }
+        }
+        </li>
+
+}
+@if (!Model.IsLastMenu)
+{
+    <li role="separator" class="divider"></li>
+}

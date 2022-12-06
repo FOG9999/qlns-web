@@ -1,0 +1,52 @@
+﻿@model Viettel.Models.QLNH.NH_KHTongTheTTCPViewModel
+@{
+    ViewBag.Title = "Quyết định tổng thể Thủ tướng Chính phủ";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body" id="lstDataView">
+                @Html.Partial("ListPage", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalKHTTCP" role="dialog" aria-labelledby="modalKHTTCPLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-left" id="modalKHTTCPLabel"></h3>
+            </div>
+            <div id="contentModalKHTTCP">
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/QLNH/KeHoachTongTheTTCP/jsKeHoachTongTheTTCP.js"></script>
+
+    <script>
+        var _paging = {};
+        var sUrlListView = "";
+        $(document).ready(function () {
+            sUrlListView = '@Url.Action("ListPage", "KeHoachTongTheTTCP")';
+            _paging.CurrentPage = @Model._paging.CurrentPage;
+            _paging.ItemsPerPage = @Model._paging.ItemsPerPage;
+        });
+    </script>
+}

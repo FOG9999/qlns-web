@@ -1,0 +1,103 @@
+﻿@model Viettel.Models.QLVonDauTu.VdtKhvuDXChiTietModel
+
+<div class="modal-body">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-12">
+                @*<input type="hidden" id="txt_DieuChinh">
+        <input type="hidden" id="txt_TongHop">
+        <input type="hidden" id="txt_bIsDetail">*@
+                <input type="hidden" id="txt_iID_DonViQuanLyID" value="@Model.iID_DonViQuanLyID">
+                <input type="hidden" id="txt_iID_MaDonViQuanLy" value="@Model.iID_MaDonViQuanLy">
+                <input type="hidden" id="txt_iID_NguonVonID" value="@Model.iID_NguonVonID">
+                @*<input type="hidden" id="lst_iIDDuAnID" value="@ViewBag.lstDuAn" />*@
+                <label for="txtDonViQuanLy">Đơn vị</label>
+                @Helpers.Required()
+                @*@Html.DropDownList("iID_DonViQuanLyIDModal", new SelectList(ViewBag.ListDonViQuanLy, "Value", "Text", Model.iID_DonViQuanLyID), new { @class = "form-control", @id = "iID_DonViQuanLyIDModal" })*@
+                <input type="text" name="txtDonViQuanLy" class="form-control" value="@Model.sTenDonVi" autocomplete="off" disabled />
+                @*<label for="txtDonViQuanLy" class="form-control">@Model.sTenDonVi</label>*@
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtSoKeHoachModal">Số kế hoạch</label>
+                @Helpers.Required()
+                <input type="text" id="txtSoKeHoachModal" name="txtSoKeHoachModal" class="form-control" value="@Model.sSoDeNghi" maxlength="100" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtNgayLapModal">Ngày lập</label>
+                @Helpers.Required()
+                <div class='input-group date'>
+                    <input type='text' class="form-control" value="@(Model.sNgayDeNghi )" id="dNgayDeNghiModal" autocomplete="off" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtNguonVonModal">Nguồn vốn</label>
+                @Helpers.Required()
+                @*@Html.DropDownList("iID_NguonVonIDModal", new SelectList(ViewBag.ListNguonVon, "Value", "Text", Model.iID_NguonVonID), new { @class = "form-control", @id = "iID_NguonVonIDModal" })*@
+                <input type="text"  name="txtNguonVon" class="form-control"  value="@Model.sTenNguonVon" autocomplete="off" disabled />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtNamKeHoachModal">Năm kế hoạch</label>
+                @Helpers.Required()
+                <input type="text" maxlength="4" name="txtNamKeHoachModal" class="form-control" id="txtNamKeHoachModal" value="@Model.iNamKeHoach" autocomplete="off" disabled />
+            </div>
+        </div>
+        @*<div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtNguoiLapModal">Người lập</label>
+                <input type="text" id="txtNguoiLapModal" name="txtNguoiLapModal" class="form-control" value="@Model.sNguoiLap" maxlength="100" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtTruongPhongModal">Trưởng phòng</label>
+                <input type="text" id="txtTruongPhongModal" name="txtTruongPhongModal" class="form-control" value="@Model.sTruongPhong" maxlength="100" autocomplete="off" />
+            </div>
+        </div>*@
+        @{
+           
+                <div class="form-group row">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <table class="table table-bordered" id="tblDataTongHop">
+                            <thead>
+                            <th>Số kế hoạch</th>
+                            <th>Ngày đề nghị</th>
+                            <th>Năm kế hoạch</th>
+                            <th>Nguồn vốn</th>
+                            <th>Đơn vị</th>
+                            <th>Kế hoạch vốn ứng đề xuất</th>
+                            </thead>
+                            <tbody>
+                                @{
+                                    foreach (var item in ViewBag.LstTongHop)
+                                    {
+                                        <tr>
+                                            <input type="hidden" class="iIdKhvChild" value="@item.Id" />
+                                            <td class="text-center sSoDeNghiChild">@item.sSoDeNghi</td>
+                                            <td class="text-center dNgayDeNghiChild">@(item.dNgayDeNghi != null ? item.dNgayDeNghi.ToString("dd/MM/yyyy") : string.Empty)</td>
+                                            <td class="text-center iNamKeHoachChild">@(item.iNamKeHoach)</td>
+                                            <td class="sTenNguonVonChild">@(item.sTenNguonVon)</td>
+                                            <td class="sTenDonViChild">@(item.sTenDonVi)</td>
+                                            <td class="text-right fGiatriUngChild">@(item.fGiaTriUng != null ? item.fGiaTriUng.ToString("###,###") : "0")</td>
+                                            @*<td class="text-right">@(item.fThanhToan != null ? item.fThanhToan.ToString("###,###") : "0")</td>*@
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>          
+        }
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>
+

@@ -1,0 +1,38 @@
+﻿@using Viettel.Domain.DomainModel
+@model VDT_DM_DonViThucHienDuAn
+
+<div class="modal-body">
+    <input type="hidden" id="iID_DonViTHDAModal" value="@Model.iID_DonVi">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtMaDonViTHDA">Mã đơn vị</label>
+                @Helpers.Required()
+                <input type="text" id="txtsMaDonViTHDA" class="form-control" value="@Model.iID_MaDonVi" maxlength="20" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtTenDonViTHDA">Tên đơn vị</label>
+                @Helpers.Required()
+                <input type="text" id="txtsTenDonViTHDA" class="form-control" value="@Model.sTenDonVi" maxlength="100" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtDiaChi">Địa chỉ</label>
+                <input type="text" id="txtsDiaChi" class="form-control" value="@Model.sDiaChi" maxlength="500" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtDonViTHDACha">Đơn vị cha</label>
+                @Html.DropDownList("iID_DonViChaIDModal", new SelectList(ViewBag.ListDonViCha, "Value", "Text", Model.iID_DonViCha), new { @class = "form-control", @id = "iID_DonViChaIDModal" })
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>
+
+<script src="/Scripts/js/js_vdtWeb.js"></script>

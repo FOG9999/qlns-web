@@ -1,0 +1,346 @@
+﻿@using VIETTEL.Common
+@{
+    ViewBag.Title = "Nhập thông tin phê duyệt TKTC&TDT";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@{
+    const byte LA_TONG_DU_TOAN = (byte)Constants.LOAI_QUYET_DINH.TONG_DU_TOAN;
+    const byte LA_DU_TOAN = (byte)Constants.LOAI_QUYET_DINH.DU_TOAN;
+}
+<link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body create_thdt">
+                <div class="col-sm-5">
+                    @*Thông tin phê duyệt*@
+                    <div class="form-group">
+                        <h4 class="color-text-red">Thông tin phê duyệt</h4>
+                        <hr class='color-background-red' />
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="sSoQuyetDinh">Số quyết định</label>
+                                @Helpers.Required()
+                                <input type="text" id="sSoQuyetDinh" class="form-control" value="" name="sSoQuyetDinh" maxlength="100" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="dNgayQuyetDinh">Ngày phê duyệt</label>
+                                @Helpers.Required()
+                                <div class='input-group date'>
+                                    <input type='text' class="form-control" value="" id="dNgayQuyetDinh" name="dNgayQuyetDinh" autocomplete="off" />
+                                    <span class="btn-default input-group-addon">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <label for="sMoTa">Số quyết định</label>
+                                <textarea id="sMoTa" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtLoaiQuyetDinh">Loại quyết định</label>
+                                @Helpers.Required()
+                                <select class="form-control required" name="bLaTongDuToan" id="bLaTongDuToan">
+                                    <option value="">--Chọn--</option>
+                                    <option value="@LA_TONG_DU_TOAN">Là tổng dự toán</option>
+                                    <option value="@LA_DU_TOAN">Là dự toán</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6" id="divTenDuToan" style="display:none;">
+                                <label for="sTenDuToan">Tên dự toán</label>
+                                <input type="text" id="sTenDuToan" class="form-control" name="sTenDuToan" maxlength="300" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+
+                    @*Thông tin nội dung*@
+                    <div class="form-group">
+                        <h4 class="color-text-red">Thông tin nội dung</h4>
+                        <hr class='color-background-red' />
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtDonViQuanLy">Đơn vị quản lý</label>
+                                @Helpers.Required()
+                                <select name="iID_DonViQuanLyID" class="form-control" id="iID_DonViQuanLyID">
+                                    <option value="">--Chọn--</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtDuAn">Dự án</label>
+                                @Helpers.Required()
+                                <select name="iID_DuAnID" class="form-control" id="iID_DuAnID">
+                                    <option value="">--Chọn--</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtThoiGianThucHien">Thời gian thực hiện</label>
+                                <div style="display: flex">
+                                    <input type='text' class="form-control col-sm-2 requireInput" value="" id="sKhoiCong" name="sKhoiCong" autocomplete="off" disabled />
+                                    <span style="margin: 8px 5px 0px 5px;">-</span>
+                                    <input type='text' class="form-control col-sm-2 requireInput" value="" id="sHoanThanh" name="sHoanThanh" autocomplete="off" disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <label for="sDiaDiem">Địa điểm thực hiện</label>
+                                <textarea class="form-control" id="sDiaDiem" name="sDiaDiem" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="fTongMucDauTu">Tổng mức PĐA</label>
+                                <input type="text" id="fTongMucDauTu" class="form-control" name="fTongMucDauTu" readonly value="" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="fTongMucDauTu">Tổng mức đầu tư TKTC TDT</label>
+                                <input type="text" id="fTongMucDauTu" class="form-control" name="fTongMucDauTu" readonly value="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-sm-7">
+                    @*Nguồn vốn đầu tư*@
+                    <div class="form-group">
+                        <h4 class="color-text-red">Nguồn vốn đầu tư:</h4>
+                        <hr class='color-background-red' />
+                        <div class="form-group row">
+                            <input type="hidden" id="txtIDNguonVon" class="form-control" value="" />
+                            <div class="col-sm-12">
+                                <div class="input-group pull-right">
+                                    <div class="input-group-append">
+                                        <span class="require text-italic mr-10">(Thêm dữ liệu xuống bảng chi tiết)</span>
+                                        <button class="btn btn-primary btn-icon" type="button" onclick="ThemMoiNguonVon()">
+                                            <i class="fa fa-plus fa-lg" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered" id="tblNguonVonDauTu">
+                                    <thead>
+                                        <tr>
+                                            <th width="3%">STT</th>
+                                            <th width="47%">Tên nguồn vốn</th>
+                                            <th width="20%">Giá trị phê duyệt QĐĐT</th>
+                                            <th width="20%">Giá trị phê duyệt TKTC TDT</th>
+                                            <th width="10%">Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th style="font-weight:bold;">Còn lại</th>
+                                            <th></th>
+                                            <th id="tonggiatriconlainguonvon" class="text-right" style="font-weight:bold;"></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*Chi phí đầu tư*@
+                    <div class="form-group">
+                        <h4 class="color-text-red">Chi phí đầu tư:</h4>
+                        <hr class='color-background-red' />
+                        <div class="form-group row">
+                            <input type="hidden" id="txtIDChiPhi" class="form-control" value="" />
+
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered" id="tblChiPhiDauTu">
+                                    <thead>
+                                        <tr>
+                                            <th width="40%">Tên chi phí</th>
+                                            <th width="25%">Giá trị phê duyệt QĐĐT</th>
+                                            <th width="25%">Giá trị phê duyệt TKTC TDT</th>
+                                            <th width="10%">Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @*Thông tin tài liệu đính kèm*@
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-11">
+                            <h4 class="color-text-red">Thông tin tài liệu đính kèm</h4>
+                        </div>
+                        <div class="col-sm-1">
+                            <button class="btn btn-primary btn-icon pull-right" type="button" data-toggle="modal" data-target="#exampleModal">
+                                <span class="fa fa-plus fa-lg" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <hr class='color-background-red' />
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered" id="tblThongTinTaiLieuDinhKem">
+                                <thead>
+                                    <tr>
+                                        <th width="5%">STT</th>
+                                        <th width="75%">Tài liệu</th>
+                                        <th width="15%">Size</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group text-center">
+                    <button class="btn btn-default" style="width: 100%" onclick="Cancel()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                    <button class="btn btn-primary" id="btnSave" style="width: 100%" onclick="SaveThietKeThiCong()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Thêm tài liệu</h3>
+            </div>
+            <div class="modal-body">
+                <div id="page-upload-1">
+                    <form>
+                        <label>File:</label>
+                        <input type="file"></input>
+                        <label>Comment:</label>
+                        <input type="text" class="pageselector" placeholder="Describe your file"></input>
+                    </form>
+                </div>
+                <div id="page-upload-2" class="hide">
+                    <h4>Uploading...</h4>
+
+                    <div class="progress progress-striped active">
+                        <div class="bar" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="listDetailChiPhi">
+    <div id="modal-listdetailchiphi" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="width:1500px">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                @*<div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Danh sách hạng mục</h4>
+                    </div>*@
+                <div class="modal-body">
+                    @*Phân theo hạng mục chính*@
+                    <div class="form-group">
+                        <h4 class="color-text-red">Danh sách hạng mục theo chi phí:</h4>
+                        <div class="input-group">
+                            <span id="txtTenChiPhi"></span><span> : </span><span id="spGiaTriChiPhi"></span>
+                        </div>
+                        <hr class='color-background-red' />
+                        <input type="hidden" id="txtIdHangMuc" class="form-control" value="" />
+                        <input type="hidden" id="txtGiaTriChiPhi" class="form-control" value="" />
+                        <input type="hidden" id="txtIdChiPhiHangMuc" class="form-control" value="" />
+
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered" id="tblHangMucChinh">
+                                    <thead>
+                                        <tr>
+                                            <th width="5%">STT</th>
+                                            <th width="30%">Tên hạng mục</th>
+                                            <th width="30%">Loại công trình</th>
+                                            <th width="20%">Giá trị phê duyệt</th>
+                                            <th width="10%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th colspan="2">Còn lại</th>
+                                            <th class="cpdt_tong_giatripheduyet text-right" id="conlaihangmucpheduyet"></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="HideModalChiTietChiPhi()">Đóng</button>
+                    @*<button type="button" onclick="SaveChiTietChiPhi()" class="btn btn-primary">Lưu</button>*@
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="divModalMessage">
+
+    </div>
+</div>
+
+<div id="divModalConfirm">
+
+</div>
+
+<script src="~/Scripts/QLVonDauTu/ThongTinDuAn/TKTCVaTDT/jsThemMoiQLPheDuyetTTKCVaTDT.js"></script>
+<script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+<script src="~/Scripts/js/dropdowntree.js"></script>
+
+<style>
+    /* .table-bordered tr, td {
+        border: 1px solid
+    }*/
+    .create_thdt h4 {
+        font-size: 17px;
+    }
+
+    .r_STT {
+        text-align: center;
+    }
+
+    .table-bordered tbody {
+        /*display: block;*/
+        /*height: 150px;*/
+        overflow: auto;
+    }
+</style>

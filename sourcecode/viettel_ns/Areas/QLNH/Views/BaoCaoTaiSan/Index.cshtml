@@ -1,0 +1,52 @@
+﻿@model Viettel.Models.QLNH.BaoCaoTaiSanModelViewModel
+@{
+    ViewBag.Title = "Báo cáo tài sản hình thành theo hợp đồng, dự án";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body" id="lstDataView">
+                
+                @Html.Partial("_list", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalBaoCaoTaiSan" tabindex="-1" role="dialog" aria-labelledby="modalBaoCaoTaiSantLabel" aria-hidden="false">
+    <div class="modal-dialog" role="document" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-left" id="modalBaoCaoTaiSanLabel"></h3>
+            </div>
+            <div id="contentModalBaoCaoTaiSan">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="divModalConfirm">
+
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/QLNH/QuyetToan/JsBaoCaoTaiSan.js"></script>
+    <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+    <script>
+        var _paging = {};
+        var sUrlListView = "";
+        $(document).ready(function () {
+            sUrlListView = '@Url.Action("TimKiem", "BaoCaoTaiSan")';
+            _paging.CurrentPage = @Model._paging.CurrentPage ;
+            _paging.ItemsPerPage = @Model._paging.ItemsPerPage ;
+        });
+    </script>
+}

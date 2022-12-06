@@ -1,0 +1,237 @@
+﻿@model rptQuyetToan_ThongTriViewModel
+@{
+    ViewBag.Title = "In thông tri quyết toán năm " + PhienLamViec.iNamLamViec;
+    ViewBag.IsEditor = true;
+}
+
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">@ViewBag.Title</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal hide">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Mã chứng từ:</label>
+                            <div class="col-sm-8">
+                                <input id="iID_MaChungTu" type="text" value="@Model.chungtu.iID_MaChungTu" class="form-control" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <h6><strong class="text-uppercase">Loại ngân sách:</strong></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Phòng ban:</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly value="@PhienLamViec.sTenPhongBanFull" class="form-control" />
+                                <input id="iID_MaPhongBan" type="text" value="@PhienLamViec.iID_MaPhongBan" class="form-control hide" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Đơn vị:</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly value="@Model.chungtu.iID_MaDonVi - @Model.sTenDonVi" class="form-control" />
+                                <input id="iID_MaDonVi" type="text" value="@Model.chungtu.iID_MaDonVi" class="form-control hide" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Quý:</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly value="@Model.chungtu.iThang_Quy" class="form-control" />
+                                <input id="iThang_Quy" type="text" value="@Model.chungtu.iThang_Quy" class="form-control hide" />
+                            </div>
+                        </div>
+                        <div class="form-group" hidden>
+                            <label class="control-label col-sm-4">Năm ngân sách:</label>
+                            <div class="col-sm-8">
+                                <input id="iID_MaNamNganSach" type="text" value="@Model.chungtu.iID_MaNamNganSach" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loại thông tri:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("loaiThongTri", Model.dsloaiThongTri, new { @class = "form-control", onchange = "change()" })
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <div id="sLNS" class="ls-box" style="max-height:320px" data-check="first-only"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Dãn dòng:</label>
+                            <div class="col-sm-8">
+                                @Html.Partial("_ui_rowheight")
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        @*<div class="form-group">
+                            <label class="control-label col-sm-4">Loại báo cáo:</label>
+                            <div class="col-sm-8" id="loai">
+                                <div class="radio">
+                                    <input type="radio" name="loai" checked="checked" value="0" id="r-loai-chitiet" />
+                                    <label for="r-loai-chitiet">
+                                        Chi tiết Đơn vị
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                        <input type="radio" name="loai" value="1" id="r-loai-tonghop" />
+                                        <label for="r-loai-tonghop">
+                                            Tổng hợp các đơn vị
+                                        </label>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Số chữ ký:</label>
+                            <div class="col-sm-8" id="chuky">
+                                <div class="radio">
+                                    <input type="radio" name="chuky" checked="checked" value="1" id="r-chuky-2" />
+                                    <label for="r-chuky-2">
+                                        2 Chữ ký
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="chuky" value="0" id="r-chuky-3" />
+                                    <label for="r-chuky-3">
+                                        3 Chữ ký
+                                    </label>
+                                </div>
+                                <hr />
+                            </div>
+                        </div>*@
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Ghi chú:</label>
+                            <div class="col-sm-8">
+                                <textarea id="ghiChu" class="form-control" onchange="updateGhiChu($(this).val())">@Model.ghiChu</textarea>
+                                <span id="ghiChu_Hint" class="help"></span>
+                                <hr />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Vị trí ghi chú:</label>
+                            <div class="col-sm-8" id="upOrDown">
+                                <div class="radio">
+                                    <input type="radio" name="upOrDown" checked="checked" value="0" id="r-upOrDown-Up" />
+                                    <label for="r-upOrDown-Up">
+                                        Ghi chú phí dưới bảng số liệu
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="upOrDown" value="1" id="r-upOrDown-Down" />
+                                    <label for="r-upOrDown-Down">
+                                        Ghi chú trong bảng số liệu
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loại quyết toán:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("loaiQuyetToan", Model.dsloaiQuyetToan, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Ngày tháng in thông tri:</label>
+                            <div class="col-sm-8">
+                                @Html.Partial("_ui_printeddate")
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "QuyetToan_Report")">Hủy</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $('.date').datepicker({
+        todayBtn: "linked",
+        keyboardNavigation: false,
+        forceParse: false,
+        autoclose: true,
+        language: 'vi',
+        todayHighlight: true,
+    });
+
+    function change() {
+        var url = '@Url.Action("ds_lns")' +
+                    "/?iID_MaChungTu=" + $("#iID_MaChungTu").val() +
+            "&loaiThongTri=" + $("#loaiThongTri").val();
+        fillCheckboxList("sLNS", "lns", url);
+    }
+
+    function updateGhiChu(ghiChu) {
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("ghichu_update")',
+            data: {
+                iID_MaChungTu: $("#iID_MaChungTu").val(),
+                iID_MaDonVi: $("#iID_MaDonVi").val(),
+                sGhiChu: ghiChu
+            },
+            success: function (data) {
+            },
+        });
+    }
+
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+
+        var ext = $(this).data("ext");
+        var loaiThongTri = $("#loaiThongTri").val();
+        var iID_MaChungTu = $("#iID_MaChungTu").val();
+        var sLNS = getCheckedItems("lns");
+        var loai = $("#loai input[type='radio']:checked").val();
+        var chuky = $("#chuky input[type='radio']:checked").val();
+        var upOrDown = $("#upOrDown input[type='radio']:checked").val();
+        var url = unescape('@Url.Action("Print", "rptQuyetToan_ThongTri")' +
+                                        "?ext=" + ext +
+                                        "&iID_MaChungTu=" + $("#iID_MaChungTu").val() +
+                                        "&loaiThongTri=" + $("#loaiThongTri").val() +
+                                        "&loaiQuyetToan=" + $("#loaiQuyetToan").val() +
+                                        "&sLNS=" + sLNS +
+                                        "&loai=" + 0 +
+                                        "&chuky=" + 0 +
+                                        "&muc=" + 1 +
+                                        "&ghiChu=" + $("#ghiChu").val() +
+                                        "&date=" + $("#date").val() +
+                                        "&upOrDown=" + upOrDown +
+                                        "&khoangCachDong=" + $("#rowheight").val());
+        links.push(url);
+
+        console.log(url);
+        openLinks(links);
+    });
+
+</script>

@@ -1,0 +1,55 @@
+﻿@model Viettel.Models.QLNH.NHDAThongTinDuAnViewModel
+@{
+    ViewBag.Title = "Thông tin dự án";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body col-12" id="lstDataView">
+                @Html.Partial("_list", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalThongTinDuAn" tabindex="-1" role="dialog" aria-labelledby="modalThongTinDuAn" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-left" id="modalThongTinDuAnLabel"></h3>
+            </div>
+            <div id="contentModalThongTinDuAn">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/QLNH/DuAnHopDong/ThongTinDuAn/jsThongTinDuAn.js"></script>
+    <script src="~/Scripts/QLNH/DuAnHopDong/ThongTinDuAn/jsUpdateThongTinDuAn.js"></script>
+    <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+    <script>
+        var _paging = {};
+        var sUrlListView = "";
+        $(document).ready(function () {
+            sUrlListView = '@Url.Action("TimKiem", "ThongTinDuAn")';
+            _paging.CurrentPage = @Model._paging.CurrentPage;
+            _paging.ItemsPerPage = @Model._paging.ItemsPerPage;
+        });
+    </script>
+}

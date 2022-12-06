@@ -1,0 +1,139 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTQuanLyDuAnInfoModel
+@{
+    ViewBag.Title = "Quản lý dự án";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+<link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.0.45/css/materialdesignicons.min.css">
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+<script>
+    var arrNguonVonTemp = [];
+</script>
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            @*<div class="card-header">
+                <div class="form-group">
+                    @Html.Raw("Xem chi tiết thông tin dự án - " + @Model.dataDuAn.sMaDuAn)
+                    <hr>
+                </div>
+            </div>*@
+            <div class="card-body">
+                <div class="header-create-update">
+                    <span>
+                        @Html.Raw("Xem chi tiết thông tin dự án - " + @Model.dataDuAn.sMaDuAn)
+                    </span>
+                </div>
+                <ul class="nav nav-tabs" style="margin-top: 10px;">
+                    <li class="active"><a data-toggle="tab" href="#thongTinDuAn">Thông tin dự án</a></li>
+                    <li><a data-toggle="tab" href="#thongTinCTDT">Thông tin chủ trương đầu tư</a></li>
+                    <li><a data-toggle="tab" href="#thongTinQDDT">Thông tin phê duyệt dự án</a></li>
+                    <li><a data-toggle="tab" href="#thongTinDuToan">Thông tin phê duyệt TKTC&TDT</a></li>
+                    <li><a data-toggle="tab" href="#thongTinPDQT">Thông tin phê duyệt quyết toán</a></li>
+                </ul>
+            </div>
+
+            <div class="card-body tab-content" style="padding-top: 0px !important;">
+                <div id="thongTinDuAn" class="tab-pane fade in active">
+                    @Html.Partial("_partialInfoDuAn", Model)
+                </div>
+                <div id="thongTinCTDT" class="tab-pane fade in ">
+                    @Html.Partial("_partialInfoCTDT", Model)
+                </div>
+                <div id="thongTinQDDT" class="tab-pane fade in ">
+                    @Html.Partial("_partialInfoQDDT", Model)
+                </div>
+                <div id="thongTinDuToan" class="tab-pane fade in ">
+                    @Html.Partial("_partialInfoDuToan", Model)
+                </div>
+                <div id="thongTinPDQT" class="tab-pane fade in ">
+                    @Html.Partial("_partialInfoPDQT", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group text-center">
+        <button class="btn btn-back" onclick="CancelSaveData()"><i class="fa fa-arrow-left" aria-hidden="true"></i><span>Quay lại</span></button>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/QLVonDauTu/ThongTinDuAn/jsVDT_DanhSach_QLDuAn.js" type="text/javascript"></script>
+    <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+
+    <script>
+        var TBL_CHI_PHI_DAU_TU = "tblCTDTChiPhiDauTu";
+        var TBL_NGUON_VON_DAU_TU = "tblCTDTNguonVonDauTu";
+        var TBL_QDDT_CHI_PHI_DAU_TU = 'tblQDDTChiPhiDauTu';
+        var TBL_QDDT_NGUON_VON_DAU_TU = 'tblQDDTNguonVonDauTu';
+        var TBL_QDDT_HANG_MUC_DAU_TU = 'tblQDDTHangMucDauTu';
+        var TBL_DUTOAN_CHI_PHI_DAU_TU = 'tblDuToanChiPhiDauTu';
+
+        TinhLaiDongTong(TBL_CHI_PHI_DAU_TU);
+        TinhLaiDongTong(TBL_NGUON_VON_DAU_TU);
+        TinhLaiDongTong(TBL_QDDT_CHI_PHI_DAU_TU);
+        TinhLaiDongTong(TBL_QDDT_NGUON_VON_DAU_TU);
+        TinhLaiDongTong(TBL_QDDT_HANG_MUC_DAU_TU);
+        TinhLaiDongTong(TBL_DUTOAN_CHI_PHI_DAU_TU);
+
+        var TBL_CHI_PHI_DAU_TU_PDQT = "tblChiPhiDauTuPDQT";
+        var TBL_NGUON_VON_DAU_TU_PDQT = "tblNguonVonDauTuPDQT";
+
+        TinhLaiDongTong(TBL_CHI_PHI_DAU_TU_PDQT);
+        TinhLaiDongTong(TBL_NGUON_VON_DAU_TU_PDQT);
+
+        var arrNguonVon = [];
+        SetArrsData();
+
+        function SetArrsData() {
+            arrNguonVon = arrNguonVonTemp;
+            GetNoiDungQuyetToan(arrNguonVon);
+        }
+
+        function GetNoiDungQuyetToan(arrNguonVon) {
+            var dNgayQuyetDinh = $("#dNgayQuyetDinh").val();
+            var iID_DonViQuanLyID = $("#iID_DonViQuanLyID").val();
+            var iID_DuAnID = $("#iID_DuAnID").val();
+            var tongGiaTriPheDuyet = $("#" + TBL_NGUON_VON_DAU_TU_PDQT + " .cpdt_tong_giatripheduyet").html().replaceAll('.', '');
+            var data = {
+                arrNguonVon: arrNguonVon,
+                iID_DonViQuanLyID: iID_DonViQuanLyID,
+                iID_DuAnID: iID_DuAnID,
+                dNgayQuyetDinh: dNgayQuyetDinh,
+                tongGiaTriPheDuyet: tongGiaTriPheDuyet
+            };
+            $.ajax({
+                url: "/QLVonDauTu/QLPheDuyetQuyetToan/GetNoiDungQuyetToan",
+                type: "POST",
+                dataType: "json",
+                data: { data: data },
+                success: function (r) {
+                    if (r.bIsComplete) {
+                        $("#fTongGiaTriPhanBo").text(r.data.fTongGiaTriPhanBo != 0 ? FormatNumber(r.data.fTongGiaTriPhanBo) : 0);
+                        $("#tongGiaTriPheDuyet").text(r.data.tongGiaTriPheDuyet != 0 ? FormatNumber(r.data.tongGiaTriPheDuyet) : 0);
+                        $("#fTongGiaTriChenhLech").text(r.data.fTongGiaTriChenhLech != 0 ? FormatNumber(r.data.fTongGiaTriChenhLech) : 0);
+                        arrChenhLech = r.data.lstNoiDungQuyetToan;
+                        GetListDataNoiDungQuyetToan(r.data.lstNoiDungQuyetToan);
+                    }
+                }
+            })
+        }
+
+        function GetListDataNoiDungQuyetToan(lstNoiDungQuyetToan) {
+            $.ajax({
+                type: "POST",
+                dataType: "html",
+                url: "/QLVonDauTu/QLPheDuyetQuyetToan/GetListDataNoiDungQuyetToan",
+                data: { lstNoiDungQuyetToan: lstNoiDungQuyetToan },
+                success: function (data) {
+                    $("#lstDataView").html(data);
+                }
+            });
+        }
+    </script>
+}
+
+

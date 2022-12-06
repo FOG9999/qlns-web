@@ -1,0 +1,121 @@
+﻿@using Viettel.Models.QLNH
+@using Viettel.Domain.DomainModel
+@model NHDMNhaThauModel
+
+<div class="modal-body">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtLoai">Loại</label>
+                <p>
+                    @{
+                        if (Model.iLoai == 1)
+                        {
+                            @Html.Raw(Html.Encode("Nhà thầu"));
+                        }
+                        else
+                        {
+                            @Html.Raw(Html.Encode("Đơn vị ủy thác"));
+                        }
+                    }
+                </p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtMaNhaThau">Mã nhà thầu/ đơn vị ủy thác</label>
+                <p>@Html.Raw(Html.Encode(Model.sMaNhaThau))</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtTenNhaThau">Tên nhà thầu/ đơn vị ủy thác</label>
+                <p>@Html.Raw(Html.Encode(Model.sTenNhaThau))</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtDiaChi">Địa chỉ</label>
+                <p>@Html.Raw(Html.Encode(Model.sDiaChi))</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtDaiDien">Đại diện</label>
+                <p>@Html.Raw(Html.Encode(Model.sDaiDien))</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtChucVu">Chức vụ</label>
+                <p>@Html.Raw(Html.Encode(Model.sTenNhaThau))</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtDienThoai">Điện thoại</label>
+                <p>@Html.Raw(Html.Encode(Model.sDienThoai))</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtFax">Fax</label>
+                <p>@Html.Raw(Html.Encode(Model.sFax))</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtEmail">Email</label>
+                <p>@Html.Raw(Html.Encode(Model.sEmail))</p>
+        </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtWebsite">Website</label>
+                <p>@Html.Raw(Html.Encode(Model.sWebsite))</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtSoTK">Số tài khoản</label>
+                <p>@Html.Raw(Html.Encode(Model.sSoTaiKhoan))</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtNganHang">Ngân hàng</label>
+                <p>@Html.Raw(Html.Encode(Model.sNganHang))</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtMaNganHang">Mã ngân hàng</label>
+                <p>@Html.Raw(Html.Encode(Model.sMaNganHang))</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtMaSoThue">Mã số thuế</label>
+                <p>@Html.Raw(Html.Encode(Model.sMaSoThue))</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtNguoiLH">Người liên hệ</label>
+                <p>@Html.Raw(Html.Encode(Model.sNguoiLienHe))</p>
+            </div>
+
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtSoDTLH">SĐT người liên hệ</label>
+                <p>@Html.Raw(Html.Encode(Model.sDienThoaiLienHe))</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtMaNganHang">Số CMND</label>
+                <p>@Html.Raw(Html.Encode(Model.sSoCMND))</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtNganHang">Nơi cấp CMND</label>
+                <p>@Html.Raw(Html.Encode(Model.sNoiCapCMND))</p>
+            </div>
+            <div class="col-sm-6">
+                <label for="txtMaNganHang">Ngày cấp CMND</label>
+                <p>@Html.Raw(Html.Encode(Model.dNgayCapCMNDStr))</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+    </div>
+</div>

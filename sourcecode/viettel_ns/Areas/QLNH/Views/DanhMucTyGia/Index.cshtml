@@ -1,0 +1,84 @@
+﻿@model Viettel.Models.QLNH.DanhmucNgoaiHoi_TiGiaModelPaging
+@{
+    ViewBag.Title = "Danh mục tỉ giá hối đoái";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+    <style>
+        #tblTiGiaChiTiet {
+            display: flex;
+            flex-flow: column;
+        }
+
+        #tblTiGiaChiTiet thead {
+            flex: 0 0 auto;
+        }
+
+        #tblTiGiaChiTiet tbody {
+            flex: 1 1 auto;
+            display: block;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            max-height: 300px;
+            margin-right: -5px;
+        }
+
+        #tblTiGiaChiTiet tr {
+            width: 100%;
+            display: table;
+            table-layout: fixed;
+        }
+
+        #tblTiGiaChiTiet td, #tblTiGiaChiTiet th {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .input-error {
+            outline: 1px solid red;
+        }
+    </style>
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body" id="lstDataView">
+                @Html.Partial("_list", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalTyGia" role="dialog" aria-labelledby="modalTyGiaLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-left" id="modalTyGiaLabel"></h3>
+            </div>
+            <div id="contentModalTyGia">
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/QLNH/DanhMucNgoaiHoi/jsDanhMucTyGia.js"></script>
+    <script src="~/Scripts/jsNumber.js" type="text/javascript"></script>
+    <script>
+        var _paging = {};
+        $(document).ready(function () {
+            _paging.CurrentPage = @Model._paging.CurrentPage ;
+            _paging.ItemsPerPage = @Model._paging.ItemsPerPage ;
+        });
+    </script>
+}

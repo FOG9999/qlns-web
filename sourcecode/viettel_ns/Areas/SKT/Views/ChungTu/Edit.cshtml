@@ -1,0 +1,37 @@
+﻿@model ChungTuEditViewModel
+@{
+    ViewBag.Title = L("DuToanKT.Edit");
+    var v = string.Empty;
+}
+@section Styles{
+}
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @ViewBag.Title.ToUpper()
+        </div>
+        <div class="panel-body">
+            @using (Html.BeginForm("Edit", "ChungTu", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @*@Html.HiddenFor(x => x.iID_MaChungTu)*@
+
+                @Html.Partial("_item", Model)
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <hr />
+                        <button type="submit" class="btn btn-mvc btn-mvc-green">@L("Buttons.SaveChanges")</button>
+                        <a href="@Url.Action("Index", "ChungTu", new { loai = Model.iLoai})" class="btn btn-mvc">@L("Buttons.Cancel")</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts{
+}
+@using (Html.BeginScripts())
+{
+
+}

@@ -1,0 +1,406 @@
+﻿@model Viettel.Models.QLVonDauTu.GiaiNganThanhToanViewModel
+@{
+    ViewBag.Title = "Cập nhật đề nghị - phê duyệt thanh toán";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+
+<style>
+    .table-parent th {
+        text-align: center;
+        border-top: 2px solid #ddd;
+    }
+
+    .select2-selection__arrow b {
+        display: none !important;
+    }
+
+    .select2-selection__rendered {
+        text-align: center;
+        padding: 0 !important;
+    }
+</style>
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <input type="hidden" id="iID_DeNghiThanhToanID" value="@Model.iID_DeNghiThanhToanID" />
+        <input type="hidden" id="iID_DonViQuanLyID" value="@Model.iID_DonViQuanLyID" />
+        <input type="hidden" id="iID_NguonVonID" value="@Model.iID_NguonVonID" />
+        <input type="hidden" id="iLoaiThanhToan" value="@Model.iLoaiThanhToan" />
+        <input type="hidden" id="iID_DuAnId" value="@Model.iID_DuAnId" />
+        <input type="hidden" id="iID_HopDongId" value="@Model.iID_HopDongId" />
+        <input type="hidden" id="iID_NhaThauId" value="@Model.iID_NhaThauId" />
+        <input type="hidden" id="iCoQuanThanhToan" value="@Model.iCoQuanThanhToan" />
+        <input type="hidden" id="dNgayDeNghi" value="@Model.dNgayDeNghi.Value.ToString("dd/MM/yyyy")" />
+        <input type="hidden" id="iNamKeHoach" value="@Model.iNamKeHoach" />
+        <input type="hidden" id="loaiCoQuanTaiChinh" value="@Model.loaiCoQuanTaiChinh" />
+
+        <div class="card">
+            <div class="card-body create_thdt">
+                <div class="form-group row">
+                    @*left*@
+                    <div class="col-sm-6">
+                        <h4 class="color-text-red">Thông tin chung</h4>
+                        <hr class='color-background-red' />
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="drpDonViQuanLy" class="">Đơn vị quản lý <span class="require">*</span></label>
+                                @Html.DropDownList("drpDonViQuanLy", ViewBag.drpDonViQuanLy as List<SelectListItem>, new { @class = "form-control clearable", @disabled = "disabled" })
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtChuDauTu">Chủ đầu tư</label>
+                                @Html.DropDownList("iID_ChuDauTuID", new SelectList(ViewBag.ListChuDauTu, "Value", "Text"), new { @class = "form-control", @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="drpDuAn" class="">Dự án <span class="require">*</span></label>
+                                <select id="drpDuAn" class="form-control clearable" disabled></select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="txtSoDeNghi" class="">Số đề nghị <span class="require">*</span></label>
+                                <input type='text' class="form-control clearable" id="txtSoDeNghi" value="@Model.sSoDeNghi" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="txtNgayDeNghi" class="">Ngày đề nghị <span class="require">*</span></label>
+                                <input type='text' class="form-control" id="txtNgayDeNghi" value="@Model.sNgayDeNghi" disabled />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="txtSoCanCu" class="">Số c/cứ bảng xác định KLHT</label>
+                                <input type='text' class="form-control clearable" id="txtSoCanCu" value="@Model.sSoBangKLHT" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="txtNgayCanCu" class="">Ngày căn cứ</label>
+                                <div class='input-group date'>
+                                    <input type='text' class="form-control" id="txtNgayCanCu" value="@Model.sNgayBangKLHT" autocomplete="off" placeholder="dd/MM/yyyy" />
+                                    <span class="btn-default input-group-addon">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="txtLuyKeGiaTriKLNghiemThu" class="">Lũy kế g/trị k/lượng nghiệm thu</label>
+                                <input type='text' class="form-control clearable" id="txtLuyKeGiaTriKLNghiemThu" value="@Model.sLuyKeGiaTriNghiemThuKLHT" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="drpLoaiThanhToan" class="">Loại thanh toán</label>
+                                @Html.DropDownList("drpLoaiThanhToan", ViewBag.drpLoaiThanhToan as List<SelectListItem>, new { @class = "form-control clearable", @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <label for="sThongTinCanCu" class="">Thông tin căn cứ</label>
+                                <textarea id="sThongTinCanCu" name="sThongTinCanCu" class="form-control">@Model.sThongTinCanCu</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="txtTTtheohopdong">Thanh toán theo hợp đồng</label>
+                                <input type="checkbox" id="bThanhToanTheoHopDong" checked="@Model.bThanhToanTheoHopDong" disabled name="bThanhToanTheoHopDong" class="form-control" style="width: 17%; margin-top: 0px !important; cursor:pointer; box-shadow: none" />
+                            </div>
+                        </div>
+
+                        @if (Model.bThanhToanTheoHopDong.HasValue && Model.bThanhToanTheoHopDong.Value)
+                        {
+                            <div class="form-group row divThongTinHopDong">
+                                <div class="col-sm-6">
+                                    <label for="drpHopDong" class="">Hợp đồng</label>
+                                    <select id="drpHopDong" class="form-control clearable" disabled></select>
+                                </div>
+                            </div>
+                            <div class="form-group row divThongTinHopDong">
+                                <div class="col-sm-6">
+                                    <label for="txtGiaTriHopDong" class="">Giá trị hợp đồng</label>
+                                    <input type='text' class="form-control clearable" id="txtGiaTriHopDong" value="@Model.sTienHopDong" disabled />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="drpNhaThau" class="">Nhà thầu</label>
+                                    <select id="drpNhaThau" class="form-control clearable" disabled></select>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group row divDanhSachChiPhi">
+                                <div class="col-sm-12">
+                                    <table class="table table-bordered" id="tblDanhSachChiPhi">
+                                        <thead>
+                                            <tr>
+                                                <th width="5%"></th>
+                                                <th width="45%">Tên chi phí</th>
+                                                <th width="25%" class="text-right">Giá trị QĐ đầu tư</th>
+                                                <th class="text-right">Giá trị dự toán</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.listChiPhi.Count > 0)
+                                            {
+                                                foreach (var item in Model.listChiPhi)
+                                                {
+                                                    <tr>
+                                                        <td align="center"><input type='checkbox' disabled name='cb_chiphi' class='cb_chiphi' @(item.IsChecked ? "checked" : "")></td>
+                                                        <td align="left">@item.STenChiPhi</td>
+                                                        <td class="text-right">@item.FGiaTriPheDuyetQdDauTu</td>
+                                                        <td class="text-right">@item.FGiaTriPheDuyetDuToan</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtNguoiLap" class="">Người lập</label>
+                                <input type='text' class="form-control clearable" id="txtNguoiLap" value="@Model.sNguoiLap" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txtNamKeHoach" class="">Năm kế hoạch <span class="require">*</span></label>
+                                <input type='text' class="form-control clearable" id="txtNamKeHoach" value="@Model.iNamKeHoach" disabled />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="drpNguonNganSach" class="">Nguồn vốn</label>
+                                <select id="drpNguonNganSach" class="form-control clearable" disabled></select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="drpCoQuanThanhToan" class="">Cơ quan thanh toán</label>
+                                @Html.DropDownList("drpCoQuanThanhToan", ViewBag.drpCoQuanThanhToan as List<SelectListItem>, new { @class = "form-control clearable", @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered" id="tblDanhSachKHV">
+                                    <thead>
+                                        <tr>
+                                            <th width="5%"></th>
+                                            <th width="35%">Tên loại</th>
+                                            <th width="20%">Số quyết định</th>
+                                            <th width="20%">Ngày quyết định</th>
+                                            <th>Vốn bố trí</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.listKeHoachVon.Count > 0)
+                                        {
+                                            foreach (var item in Model.listKeHoachVon)
+                                            {
+                                                <tr>
+                                                    <td class='r_checkbox' align='center'><input type='checkbox' data-id="@item.Id" data-phanloai="@item.iPhanLoai" data-smanguoncha="@item.sMaNguonCha" disabled name='cb_KHV' class='cb_KHV' @(item.IsChecked ? "checked" : "")></td>
+                                                    <td class='r_stenloai' align='left'>@item.sTenLoai</td>
+                                                    <td class='r_ssoquyetdinh' align='left'>@item.sSoQuyetDinh</td>
+                                                    <td align='center'>@item.sNgayQuyetDinh</td>
+                                                    <td align='right'>@item.sTongGiaTri</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @*<label>THÔNG TIN ĐƠN VỊ THỤ HƯỞNG</label>
+        <div class="form-group row">
+            <div class="col-sm-3">
+                <lablel>Tên nhà thầu:</lablel>
+                <label id="txtNhaThau"></label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-3">
+                <lablel>Số tài khoản nhà thầu:</lablel>
+                <label id="txtTaiKhoanNhaThau"></label>
+            </div>
+        </div>*@
+                    </div>
+                    @*right*@
+                    <div class="col-sm-6">
+                        <h4 class="color-text-red">Thông tin thanh toán</h4>
+                        <hr class='color-background-red' />
+                        <label>Lũy kế thanh toán</label>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="fTyLeThanhToan" class="">Tỷ lệ thanh toán</label>
+                                <input type='text' class="form-control clearable" id="fTyLeThanhToan" disabled />
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="txtluyKeTTTN" class="">Thanh toán KLHT vốn trong nước</label>
+                                <input type='text' class="form-control clearable" id="txtluyKeTTTN" value="@Model.sLuyKeTTTN" disabled />
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="txtluyKeTTNN" class="">Thanh toán KLHT vốn ngoài nước</label>
+                                <input type='text' class="form-control clearable" id="txtluyKeTTNN" value="@Model.sLuyKeTTNN" disabled />
+                            </div>
+                        </div>
+                        <label>Lũy kế tạm ứng chưa thu hồi (ứng trước)</label>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtluyKeTUUngTruocTN" class="">Vốn trong nước</label>
+                                <input type='text' class="form-control clearable" id="txtluyKeTUUngTruocTN" value="@Model.sLuyKeTUUngTruocTN" disabled />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtluyKeTUUngTruocNN" class="">Vốn ngoài nước</label>
+                                <input type='text' class="form-control clearable" id="txtluyKeTUUngTruocNN" value="@Model.sLuyKeTUUngTruocNN" disabled />
+                            </div>
+                        </div>
+                        <label>Lũy kế tạm ứng chưa thu hồi (theo chế độ)</label>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtluyKeTUTN" class="">Vốn trong nước</label>
+                                <input type='text' class="form-control clearable" id="txtluyKeTUTN" value="@Model.sLuyKeTUTN" disabled />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtluyKeTUNN" class="">Vốn ngoài nước</label>
+                                <input type='text' class="form-control clearable" id="txtluyKeTUNN" value="@Model.sLuyKeTUNN" disabled />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <label for="txtNoiDung" class="">Nội dung</label>
+                                <textarea id="txtNoiDung" name="txtNoiDung" class="form-control">@Html.Raw(Model.sGhiChu)</textarea>
+                            </div>
+                        </div>
+                        <label>Số đề nghị tạm ứng, thanh toán KLHT</label>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtdntuVonTrongNuoc" class="">Vốn trong nước</label>
+                                <input type='text' class="form-control clearable" id="txtdntuVonTrongNuoc" value="@Model.sGiaTriThanhToanTN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtdntuVonNgoaiNuoc" class="">Vốn ngoài nước</label>
+                                <input type='text' class="form-control clearable" id="txtdntuVonNgoaiNuoc" value="@Model.sGiaTriThanhToanNN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                        </div>
+                        <label>Số thu hồi tạm ứng (ứng trước)</label>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtthtuUngTruocVonTrongNuoc" class="">Vốn trong nước</label>
+                                <input type='text' class="form-control clearable" id="txtthtuUngTruocVonTrongNuoc" value="@Model.sGiaTriThuHoiUngTruocTN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtthtuUngTruocVonNgoaiNuoc" class="">Vốn ngoài nước</label>
+                                <input type='text' class="form-control clearable" id="txtthtuUngTruocVonNgoaiNuoc" value="@Model.sGiaTriThuHoiUngTruocNN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                        </div>
+                        <label>Số thu hồi tạm ứng (theo chế độ)</label>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtthtuVonTrongNuoc" class="">Vốn trong nước</label>
+                                <input type='text' class="form-control clearable" id="txtthtuVonTrongNuoc" value="@Model.sGiaTriThuHoiTN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtthtuVonNgoaiNuoc" class="">Vốn ngoài nước</label>
+                                <input type='text' class="form-control clearable" id="txtthtuVonNgoaiNuoc" value="@Model.sGiaTriThuHoiNN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtthtuThueGTGT" class="">Thuế giá trị gia tăng</label>
+                                <input type='text' class="form-control clearable" id="txtthtuThueGTGT" value="@Model.sThueGiaTriGiaTang" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtthtuTienBaoHanh" class="">Chuyển tiền bảo hành</label>
+                                <input type='text' class="form-control clearable" id="txtthtuTienBaoHanh" value="@Model.sChuyenTienBaoHanh" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <h4 class="color-text-red">Thông tin thanh toán:</h4>
+                    <hr class='color-background-red' />
+
+                    <div class="form-group row">
+                        <div class="col-sm-4 col-md-3">
+                            <label for="txtNgayPheDuyet" class="">Ngày phê duyệt <span class="require">*</span></label>
+                            <div class='input-group date'>
+                                <input type='text' class="form-control" id="txtNgayPheDuyet" value="@Model.sNgayPheDuyet" autocomplete="off" placeholder="dd/MM/yyyy" />
+                                <span class="btn-default input-group-addon">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-md-3">
+                            <label for="txtthtuThueGTGTDuocDuyet" class="">Thuế giá trị gia tăng được duyệt</label>
+                            <input type='text' class="form-control clearable" id="txtthtuThueGTGTDuocDuyet" value="@Model.sThueGiaTriGiaTangDuocDuyet" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-4 col-md-3">
+                            <label for="txtthtuTienBaoHanhDuocDuyet" class="">Chuyển tiền bảo hành được duyệt</label>
+                            <input type='text' class="form-control clearable" id="txtthtuTienBaoHanhDuocDuyet" value="@Model.sChuyenTienBaoHanhDuocDuyet" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-6" id="divBtnAdd">
+                            <div style=" margin-top: 25px; ">
+                                <button class="btn btn-primary btn-icon" onclick="ThemMoiThanhToanChiTiet()"><i class="fa fa-plus" aria-hidden="true" style="margin:0px;"></i></button>
+                                <span class="require text-italic">(Thêm dữ liệu xuống bảng chi tiết)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12" style="overflow-x: auto">
+                            <table class="table table-bordered" id="tblDanhSachThanhToanChiTiet">
+                                <thead>
+                                    <tr>
+                                        <th width="3%" rowspan="2">STT</th>
+                                        <th width="9%" rowspan="2">Loại thanh toán</th>
+                                        <th width="10%" rowspan="2">Kế hoạch vốn</th>
+                                        <th width="5%" rowspan="2">LNS</th>
+                                        <th width="3%" rowspan="2">L</th>
+                                        <th width="3%" rowspan="2">K</th>
+                                        <th width="3%" rowspan="2">M</th>
+                                        <th width="3%" rowspan="2">TM</th>
+                                        <th width="3%" rowspan="2">TTM</th>
+                                        <th width="3%" rowspan="2">NG</th>
+                                        <th width="10%" rowspan="2">Nội dung</th>
+                                        <th width="16%" colspan="2">Vốn trong nước</th>
+                                        <th width="16%" colspan="2">Vốn ngoài nước</th>
+                                        <th width="8%" rowspan="2">Tổng số</th>
+                                        <th width="20%" rowspan="2">Ghi chú</th>
+                                        <th rowspan="2">Hành động</th>
+                                    </tr>
+                                    <tr>
+                                        <th width="10%">Giá trị đề nghị</th>
+                                        <th width="10%">Giá trị phê duyệt</th>
+                                        <th width="10%">Giá trị đề nghị</th>
+                                        <th width="10%">Giá trị phê duyệt</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group text-center">
+                    <button class="btn btn-default" onclick="CancelSaveData()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                    <button class="btn btn-primary" onclick="Update()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsVDT_CapNhatCapPhatThanhToan.js"></script>
+<script src="~/Scripts/sheet/jsNumber.js"></script>
+<style>
+    .table td {
+        min-width: 80px;
+    }
+</style>

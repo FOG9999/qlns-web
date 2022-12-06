@@ -1,0 +1,55 @@
+﻿@*@model SheetViewModel*@
+@model VIETTEL.Areas.DanhMuc.Models.DMNguonViewModel
+@{
+    Layout = "~/Views/shared/sheet/_LayoutSheetFrame.cshtml";
+}
+@section Styles{
+    <link rel="Stylesheet" type="text/css" href="~/Content/css/sheet.css">
+}
+
+@Html.Partial("_SheetSearch_DMNguon", Model.Sheet)
+@Html.Partial("_SheetEditorPercent", Model.Sheet)
+@section Scripts{
+    @Html.Partial("_SheetScript")
+    <script src="~/Scripts/js/sheets/jsSheet_DMNguon.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            Bang_arrDSTruongTien = '@MucLucNganSachModels.strDSTruongTien'.split(',');
+            Bang_Url_getGiaTri = '@Url.Action("get_GiaTri", "DMNguon", new { area = "" })';
+            Bang_Url_getDanhSach = '@Url.Action("get_DanhSach", "DMNguon", new { area = "" })';
+            @*Bang_Url_getGiaTri = '@Url.Action("get_GiaTri", "Public")';
+            Bang_Url_getDanhSach = '@Url.Action("get_DanhSach", "Public", new { area = "" })';*@
+            BangDuLieu_DuocSuaChiTiet = '@Model.Sheet.Table.IsEditable';
+
+            if (BangDuLieu_DuocSuaChiTiet) {
+                Bang_keys.fnSetFocus(null, null);
+            }
+
+            setFontWeight();
+        });
+        document.addEventListener('keydown', eventKey);
+        function eventKey(e) {
+            if (e != null && e != undefined) {
+                if (e.key == "F2") {
+                    var h = Bang_keys.Row();
+                    var c = Bang_keys.Col() - Bang_nC_Fixed;
+                    if (h == null) {
+                        BangDuLieu_onKeypress_F2_NoRow(0, undefined);
+                    } else {
+                        BangDuLieu_onKeypress_F2_NoRow(h, c);
+                    }
+                }
+
+                if (e.key == "F10") {
+                    DMNguon_BangDuLieu_Save();
+                }
+
+                if (e.key == "F9") {
+                    BangDuLieu_onKeypress_F9();
+                }
+            }
+        }
+    </script>
+}

@@ -1,0 +1,124 @@
+﻿@model rptSKT_BC04ViewModel
+@{
+    ViewBag.Title = "Báo cáo tổng hợp nhu cầu ngân sách sử dụng năm " + PhienLamViec.iNamLamViec;
+}
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">@ViewBag.Title</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6">
+                    <h6></h6>
+                </div>
+                <div class="col-xs-6">
+                    <h6><strong class="text-uppercase">Chọn tờ</strong></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Phòng ban:</label>
+                            <div class="col-sm-8">
+                                @if (Model.PhongBanList == null || Model.PhongBanList.Count() <= 2)
+                                {
+                                    <input type="text" readonly value="@PhienLamViec.sTenPhongBanFull" class="form-control" />
+                                    <input id="id_phongban" type="text" value="@PhienLamViec.iID_MaPhongBan" class="form-control hide" />
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("id_phongban", Model.PhongBanList, new { @class = "form-control", onchange = "change()" })
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loại hình số liệu:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("loai", Model.LoaiList, new { @class = "form-control", onchange = "change()" })
+                            </div>
+                        </div>
+                        @if (@PhienLamViec.iID_MaPhongBan == "11"){
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Loại báo cáo:</label>
+                                <div id="loaiBaoCao" class="col-sm-8">
+                                    <div class="radio">
+                                        <input type="radio" name="loaiBaoCao" value="1" id="loaiBaoCao-1" onclick="change()" checked />
+                                        <label for="loaiBaoCao-1">Số đề nghị Bql</label>
+                                    </div>
+                                    <div class="radio">
+                                        <input type="radio" name="loaiBaoCao" value="2" id="loaiBaoCao-2" onclick="change()"/>
+                                        <label for="loaiBaoCao-2">Số đề nghị B2</label>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <div id="id_to" class="ls-box" data-check="first">
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <span class="text-muted">|</span>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "Report")">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    change();
+
+    function change() {
+        var id_phongban = $("#id_phongban").val();
+        var loai = $("#loai").val();
+        var loaiBC = $("#loaiBaoCao input[type='radio']:checked").val();
+
+        if (id_phongban == undefined) {
+            id_phongban = "s";
+        }
+        var url = '@Url.Action("Ds_To")' +
+                    "/?id_phongban=" + id_phongban +
+                    "&loai=" + loai +
+                    "&loaiBC=" + loaiBC;
+        fillCheckboxList("id_to", "To", url);
+    }
+
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+        var ext = $(this).data("ext");
+
+        var loai = $("#loai").val();
+        var id_phongban = $("#id_phongban").val();
+        if (id_phongban == undefined) {
+            id_phongban = "s";
+        }
+        var loaiBC = $("#loaiBaoCao input[type='radio']:checked").val();
+
+        $("input:checkbox[check-group='To']").each(function () {
+            if (this.checked) {
+                var item = this.value;
+                var url = '@Url.Action("Print")' +
+                    "/?ext=" + ext +
+                    "&id_phongban=" + id_phongban +
+                    "&loai=" + loai +
+                    "&loaiBC=" + loaiBC +
+                    "&to=" + item;
+
+                url = unescape(url);
+                links.push(url);
+            }
+        });
+
+        openLinks(links, 100);
+    });
+
+</script>

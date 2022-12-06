@@ -1,0 +1,56 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model FileFtpModel
+<div class="modal-body">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-3">
+                <label for="drpDonViQuanLyImport" class="">Đơn vị quản lý <span class="require">*</span></label>
+                @Html.DropDownList("drpDonViQuanLyImport", ViewBag.drpDonViQuanLyImport as List<SelectListItem>, new { @class = "form-control clearable" })
+            </div>
+            <div class="col-sm-3">
+                <label for="txtNamKeHoachImport" class="">Năm kế hoạch <span class="require">*</span></label>
+                <input type='number' class="form-control clearable yearFormat" id="txtNamKeHoachImport" value="@DateTime.Now.Year" autocomplete="off" />
+            </div>
+            <div class="col-sm-3">
+                <label for="drpQuyImport" class="">Quý <span class="require">*</span></label>
+                @Html.DropDownList("drpQuyImport", ViewBag.drpQuyImport as List<SelectListItem>, new { @class = "form-control clearable" })
+            </div>
+            <div class="col-sm-3">
+                <button class="btn btn-primary pull-left" style="margin-right:10px;margin-top: 25px;width:148px !important;" onclick="loadGridListExcel();"><i class="fa fa-database" aria-hidden="true"></i>Lấy file</button>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <table class="table table-bordered">
+                    <thead>
+                    <th>Chọn</th>
+                    <th>STT</th>
+                    <th>Tên file</th>
+                    </thead>
+                    <tbody>
+                        @{
+                            if (Model.Items != null)
+                            {
+                                foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td align="center"><input type="checkbox" value="@item.SUrl" class="checkbox-header" name="checkboxInRow" /></td>
+                                        <td align="center">@item.IStt </td>
+                                        <td>@item.SNameFile </td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="DownloadFile()"><i class="fa fa-download" aria-hidden="true"></i><span>Tải file</span></button>
+    </div>
+</div>
+<script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>

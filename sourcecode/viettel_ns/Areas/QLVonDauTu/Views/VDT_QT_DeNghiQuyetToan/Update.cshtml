@@ -1,0 +1,211 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDT_QT_DeNghiQuyetToanViewModel
+
+@{
+    ViewBag.Title = "Cập nhật";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+<input type="hidden" id="iIdDeNghiQuyetToanId" value="@Model.iID_DeNghiQuyetToanID" />
+<input type="hidden" id="isDetail" value="@ViewBag.isDetail" />
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body create_thdt">
+                <div class="form-group row">
+                    @*left*@
+                    <div class="col-sm-6">
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtSoBaoCao" class="">Số báo cáo <span class="require">*</span></label>
+                                <input type="text" required id="txt_SoBaoCao" value="@Model.sSoBaoCao" class="form-control" maxlength="50" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtNgayBaoCao" class="">Ngày báo cáo <span class="require">*</span></label>
+                                <div class='input-group date'>
+                                    <input type='text' required class="form-control dateFormat" placeholder="dd/MM/yyyy" id="txtNgayBaoCao" value="@Model.sThoiGianLapBaoCao" autocomplete="off" />
+                                    <span class="btn-default input-group-addon">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txt_DonViQuanLy" class="">Đơn vị <span class="require">*</span></label>
+                                <input type="hidden" style="display:none" id="txt_DonViQuanLy_Value" value="@Model.iID_DonViID">
+                                <select class="form-control" style="width:100%" id="txt_DonViQuanLy" name="donViQuanLy"></select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txt_DuAn" class="">Dự án  <span class="require">*</span></label>
+                                <input type="hidden" style="display:none" id="txt_DuAn_Value" value="@Model.iID_DuAnID">
+                                <select class="form-control" style="width: 100%" id="txt_DuAn" name="duAn">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txt_LoaiQuyetToan" class="">Loại quyết toán <span class="require">*</span></label>
+                                <input type="hidden" style="display:none" id="txt_LoaiQuyetToan_Value" value="@Model.iID_LoaiQuyetToan">
+                                <select class="form-control" style="width:100%" id="txt_LoaiQuyetToan" name="loaiQuyetDinh"></select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="iIđuToanId" class="">Quyết định <span class="require">*</span></label>
+                                <input type="hidden" style="display:none" id="txt_DuToan_Value" value="@Model.iID_DuToanID">
+                                <select class="form-control" style="width:100%" id="iIđuToanId" name="QuyetDinh"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txt_ChuDauTu" class="">Chủ đầu tư</label>
+                                <input type="text" id="txt_ChuDauTu" class="form-control" autocomplete="off" disabled value="@Model.sTenChuDauTu" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtThoiGianKhoiCong" class="">Thời gian khởi công</label>
+                                <div class='input-group date'>
+                                    @*<input type='text' required class="form-control startDate dateFormat" placeholder="dd/MM/yyyy" id="txtThoiGianKhoiCong" value="@Model.sThoiGianKhoiCong" autocomplete="off" />*@
+                                    <input type='text' class="form-control col-sm-2 requireInput startYear" id="txtThoiGianKhoiCong" autocomplete="off" disabled />
+                                    <span class="btn-default input-group-addon">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtThoiGianHoanThanh" class="">Thời gian hoàn thành</label>
+                                <div class='input-group date'>
+                                    @*<input type='text' required class="form-control endDate dateFormat" placeholder="dd/MM/yyyy" id="txtThoiGianHoanThanh" value="@Model.sThoiGianHoanThanh" autocomplete="off" />*@
+                                    <input type='text' class="form-control col-sm-2 requireInput endYear" id="txtThoiGianHoanThanh" autocomplete="off" disabled />
+                                    <span class="btn-default input-group-addon">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtGiaTriQuyetToan" class="">Giá trị quyết toán</label>
+                                <input type="text" required id="txtGiaTriQuyetToan" class="form-control" value="@Model.sGiaTriDeNghiQuyetToan" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtGhiChu" class="">Ghi chú</label>
+                                <input type="text" required id="txtGhiChu" value="@Model.sMoTa" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    @*right*@
+                    <div class="col-sm-6">
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtChiPhiThietHai" class="">Chi phí thiệt hại do các nguyên nhân bất thường</label>
+                                <input type='text' class="form-control clearable" id="txtChiPhiThietHai" value="@Model.sChiPhiThietHai" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtChiPhiKhongTaoNenTaiSan" class="">Chi phí không tạo nên tài sản</label>
+                                <input type='text' class="form-control clearable" id="txtChiPhiKhongTaoNenTaiSan" value="@Model.sChiPhiKhongTaoNenTaiSan" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                        </div>
+                        <label>Tài sản dài hạn</label>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtTaiSanDaiHanThuocCDTQuanLy" class="">Thuộc CDT quản lý</label>
+                                <input type='text' class="form-control clearable" id="txtTaiSanDaiHanThuocCDTQuanLy" value="@Model.sTaiSanDaiHanThuocCDTQuanLy" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtTaiSanDaiHanDvKhacQuanLy" class="">Giao đơn vị khác quản lý</label>
+                                <input type='text' class="form-control clearable" id="txtTaiSanDaiHanDvKhacQuanLy" value="@Model.sTaiSanDaiHanDonViKhacQuanLy" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                        </div>
+                        <label>Tài sản ngắn hạn</label>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtTaiSanNganHanThuocCDTQuanLay" class="">Thuộc CDT quản lý</label>
+                                <input type='text' class="form-control clearable" id="txtTaiSanNganHanThuocCDTQuanLay" value="@Model.sTaiSanNganHanThuocCDTQuanLy" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtTaiSanNganHanDvKhacQuanLy" class="">Giao đơn vị khác quản lý</label>
+                                <input type='text' class="form-control clearable" id="txtTaiSanNganHanDvKhacQuanLy" value="@Model.sTaiSanNganHanDonViKhacQuanLy" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered" id="tblDanhSachNguonVon">
+                                    <thead>
+                                        <tr>
+                                            <th width="45%">Nguồn vốn</th>
+                                            <th width="25%" class="text-right">Giá trị phê duyệt</th>
+                                            @*<th class="text-right">Chủ đầu tư đề nghị quyết toán</th>*@
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.listNguonVon.Count > 0)
+                                        {
+                                            foreach (var item in Model.listNguonVon)
+                                            {
+                                                <tr data-id="@item.iID_NguonVonID">
+                                                    <td align="">@item.sTenNguonVon</td>
+                                                    <td class="text-right">@item.sTienPheDuyet</td>
+                                                    @*<td><input type='text' class='form-control txtTienCDTQuyetToan text-right' value="@item.sTienToTrinh" onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>*@
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group div_ChiTiet">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered" id="tblDanhSachChiTiet">
+                                <thead>
+                                    <tr>
+                                        <th width="3%" rowspan="2">STT</th>
+                                        <th width="7%" rowspan="2">Loại</th>
+                                        <th width="20%" rowspan="2">Nội dung chi phí</th>
+                                        <th width="10%" rowspan="2">Dự toán được duyệt</th>
+                                        <th width="10%" rowspan="2">Giá trị quyết toán A-B</th>
+                                        <th width="10%" rowspan="2">Kết quả kiểm toán của đơn vị kiểm toán</th>
+                                        <th width="10%" rowspan="2">CDT đề nghị quyết toán</th>
+                                        <th width="30%" colspan="3">Chênh lệch</th>
+                                    </tr>
+                                    <tr>
+                                        <th width="10%">So với dự toán</th>
+                                        <th width="10%">So với quyết toán A-B</th>
+                                        <th width="10%">So với kết quả Kiểm toán của đơn vị kiểm toán</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group text-center">
+                    <button class="btn btn-default" onclick="RejectViewIndex()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                    <button class="btn btn-primary btn-save" onclick="SaveData()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="divModalConfirm">
+</div>
+
+<script src="~/Scripts/QLVonDauTu/QuyetToan/jsVDT_DeNghiQTDuAnHoanThanh_Update.js" type="text/javascript"></script>
+<script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+<script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>
+
+
+

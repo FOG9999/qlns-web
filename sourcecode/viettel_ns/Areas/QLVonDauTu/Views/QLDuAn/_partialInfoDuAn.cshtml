@@ -1,0 +1,186 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTQuanLyDuAnInfoModel
+<div class="card-body">
+    @*Thông tin nội dung*@
+    <div class="form-group">
+        <h4 class="color-text-red">Thông tin nội dung:</h4>
+        <hr class='color-background-red' />
+        <div class="row">
+            <div class="col-sm-2">
+                <label class="control-label">Mã dự án</label>
+                <p>@Model.dataDuAn.sMaDuAn</p>
+            </div>
+            <div class="col-sm-2">
+                <label class="control-label">Tên dự án</label>
+                <p>@Model.dataDuAn.sTenDuAn</p>
+            </div>
+            <div class="col-sm-2">
+                <label class="control-label">Chủ đầu tư</label>
+                <p>@Model.dataDuAn.sTenChuDauTu</p>
+            </div>
+            <div class="col-sm-2">
+                <label class="control-label">Địa điểm thực hiện</label>
+                <p>@Model.dataDuAn.sDiaDiem</p>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-2">
+            <label class="control-label">Thời gian thực hiện</label>
+            <p>@Model.dataDuAn.sKhoiCong - @Model.dataDuAn.sKetThuc</p>
+        </div>
+        <div class="col-sm-2">
+            <label class="control-label">Hình thức QLDA</label>
+            <p>@Model.dataDuAn.sTenHinhThucQuanLy</p>
+        </div>
+        <div class="col-sm-2">
+            <label class="control-label">Hạn mức đầu tư(NSQP)</label>
+            <p>@Model.dataDuAn.fHanMucDauTu.Value.ToString("###,###") (VNĐ)</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <h4 class="color-text-red">Nguồn vốn đầu tư:</h4>
+        <hr class='color-background-red' />
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered" id="tblNguonVonDuAn">
+                    <thead>
+                        <tr>
+                            <th width="5%">STT</th>
+                            <th width="35%">Tên nguồn vốn</th>
+                            <th width="20%">Giá trị phê duyệt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int indexNV = 0;
+                            foreach (var item in Model.listNguonVonDuAn)
+                            {
+                                indexNV++;
+                                <tr style="cursor: pointer;">
+                                    <td align="center">@indexNV</td>
+
+                                    <td align="left">@item.sTenNguonVon</td>
+
+                                    <td align="right" class="cThanhTien" data-thanhtien="@item.fThanhTien"></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            @{
+                                double? fTongNganSach = 0;
+                                foreach (var item in Model.listNguonVonDuAn)
+                                {
+                                    fTongNganSach = fTongNganSach + item.fThanhTien;
+                                }
+                                <th colspan="2">Tổng cộng</th>
+                                <th class="tong_ngansach text-right" id="id_tong_ngansach" data-ftongngansach="@fTongNganSach"></th>
+                            }
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    @*Thông tin hạng mục*@
+    <div class="form-group">
+        <h4 class="color-text-red">Thông tin hạng mục:</h4>
+        <hr class='color-background-red' />
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered" id="tblHangMucChinh">
+                    <thead>
+                        <tr>
+                            <th width="5%">STT</th>
+                            <th width="35%">Tên hạng mục</th>
+                            <th width="20%">Hạn mức đầu tư</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var item in Model.listDuAnHangMuc)
+                            {
+                                if (item.iID_ParentID == Guid.Empty || item.iID_ParentID == null)
+                                {
+                                    <tr style="cursor: pointer;" data-idDuAnHangMuc="@item.iID_DuAn_HangMucID" data-idParentID="@item.iID_ParentID">
+                                        <td align="center" class="iIndex"></td>
+                                        <td align="left" class="sHangMuc"><b>@item.sTenHangMuc</b></td>
+                                        <td align="right" class="fTienHangMuc" data-tienhangmuc="@item.fTienHangMuc"></td>
+                                    </tr>
+                                }
+                                else
+                                {
+
+                                    <tr style="cursor: pointer;" data-idDuAnHangMuc="@item.iID_DuAn_HangMucID" data-idParentID="@item.iID_ParentID">
+                                        <td align="center" class="iIndex"></td>
+                                        <td align="left" class="sHangMuc">@item.sTenHangMuc</td>
+                                        <td align="right" class="fTienHangMuc" data-tienhangmuc="@item.fTienHangMuc"></td>
+                                    </tr>
+                                }
+
+                            }
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            @{
+                                double? fTongTienHangmuc = 0;
+                                foreach (var item in Model.listDuAnHangMuc)
+                                {
+                                    if (item.iID_ParentID == null || item.iID_ParentID == Guid.Empty)
+                                    {
+                                        fTongTienHangmuc = fTongTienHangmuc + item.fTienHangMuc;
+                                    }
+                                }
+                                <th colspan="2">Tổng cộng</th>
+                                <th class="tong_giatripheduyet text-right" id="id_tong_giatripheduyet_chiphi" data-ftongtienhangmuc="@fTongTienHangmuc"></th>
+                            }
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var index = 1;
+        $('#tblHangMucChinh tbody tr').each(function () {
+            var idParentID = $(this).data('idparentid')          
+            if (idParentID == null || idParentID == GUID_EMPTY || idParentID == undefined || idParentID == "") {
+                var tienhangmuc = $(this).find('.fTienHangMuc').data('tienhangmuc')
+                $(this).find('.iIndex').html('<b>' + index + '</b>');
+                $(this).find('.fTienHangMuc').html('<b>' + FormatNumber(tienhangmuc) + '</b>');
+                index++;
+            }
+            else {
+                var sttParent = $("#tblHangMucChinh tbody [data-idduanhangmuc='" + idParentID + "']").find('.iIndex').text();
+                $("#tblHangMucChinh tbody [data-idparentid='" + idParentID + "']").each(function (indexChild, tr) {
+                    $(tr).find('.iIndex').text(sttParent + "-" + (indexChild + 1));
+                    var tienhangmuc = $(this).find('.fTienHangMuc').data('tienhangmuc');
+                    $(this).find('.fTienHangMuc').html(FormatNumber(tienhangmuc));
+                });
+
+            }
+        })
+
+        $(".cThanhTien").each(function () {
+            var value = $(this).data('thanhtien');
+            $(this).html(FormatNumber(value));
+        });
+
+        $(".tong_ngansach").each(function () {
+            var value = $(this).data('ftongngansach');
+            $(this).html('<b>' + FormatNumber(value) + '</b>');
+        });
+
+        $(".tong_giatripheduyet").each(function () {
+            var value = $(this).data('ftongtienhangmuc');
+            $(this).html('<b>' + FormatNumber(value) + '</b>');
+        });
+
+    });
+</script>

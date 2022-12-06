@@ -1,0 +1,12 @@
+﻿@model VIETTEL.Models.SheetTable
+@{
+    var bang = Model;
+}
+<input type="hidden" id="idAction" name="idAction" value="0" />
+<input type="hidden" id="idXauDuLieuThayDoi" name="idXauDuLieuThayDoi" value="@bang.strThayDoi" />
+<input type="hidden" id="idXauLaHangCha" name="idXauLaHangCha" value="@bang.strLaHangCha" />
+<input type="hidden" id="idXauMaCacHang" name="idXauMaCacHang" value="@bang.strDSMaHang" />
+<input type="hidden" id="idXauMaCacCot" name="idXauMaCacCot" value="@bang.strDSMaCot" />
+<input type="hidden" id="idXauGiaTriChiTiet" name="idXauGiaTriChiTiet" value="@bang.strDuLieu" />
+<input type="hidden" id="idXauCacHangDaXoa" name="idXauCacHangDaXoa" value="" />
+<input type="submit" id="btnXacNhanGhi" value="XN" />

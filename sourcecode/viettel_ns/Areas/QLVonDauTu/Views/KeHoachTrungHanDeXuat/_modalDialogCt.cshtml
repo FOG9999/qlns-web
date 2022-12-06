@@ -1,0 +1,37 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model DuAnKeHoach5NamModel
+
+<div class="form-group row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <table class="table table-bordered">
+            <thead>
+                <th></th>
+                <th>Mã dự án</th>
+                <th>Tên dự án</th>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>
+                                @{
+                                    if (item.IsChecked)
+                                    {
+                                        <input type="checkbox" checked class="@item.IDDuAnID" onclick="ChooseDuAn('@item.IDDuAnID');" />
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" class="@item.IDDuAnID" onclick="ChooseDuAn('@item.IDDuAnID');" />
+                                    }
+                                }
+                            </td>
+                            <td>@item.SMaDuAn</td>
+                            <td>@item.STenDuAn</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

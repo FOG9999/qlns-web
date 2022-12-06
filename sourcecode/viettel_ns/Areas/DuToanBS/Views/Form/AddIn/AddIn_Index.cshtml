@@ -1,0 +1,45 @@
+﻿<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">Copy chứng từ dự toán bổ sung sang chứng từ B2</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">            
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">                        
+                        <div class="form-group">
+                            <label class="control-label  col-sm-4">Mã đợt (uniqueidentifier):</label>
+                            <div class="col-sm-8">
+                                <textarea id="id_chungtu" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label  col-sm-4">Mã người dùng tạo:</label>
+                            <div class="col-sm-8">
+                                <textarea id="user" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>                
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn btn-success btn-print" data-ext="pdf"><i class="fa fa-print"></i> Copy</a>
+                <a class="btn btn-default" id="btn-cancel" href="@Url.Action("Index", "Home" )"><i class="fa fa-ban" aria-hidden="true"></i> Hủy</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    
+    $(".btn-print").click(function () {
+
+        var url = '@Url.Action("CopyChungTuBQLToB2")' +
+            "?maChungTu=" + $("#id_chungtu").val() +
+            "&username=" + $("#user").val();
+
+        url = unescape(url);
+        openNewTab(url);
+    });
+
+</script>

@@ -1,0 +1,177 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTKeHoachVonUngDeXuatPagingModel
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Danh sách kế hoạch vốn ứng đề xuất (@Model._paging.TotalItems)</label>
+
+    </div>
+</div>
+<div class="row mt-10 mb-10">
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        <input id="dxChungTu" type="radio" value="1" name="groupChungTuTongHop" @Model.chungTuTabIndex onclick="ChangeChungTu()">
+        <label for="dxChungTu" style="margin-right: 1rem;">Chứng từ</label>
+        <input id="dxChungTuTongHop" type="radio" value="2" name="groupChungTuTongHop" @Model.chungTuTongHopTabIndex onclick="ChangeChungTu()">
+        <input id="txtIstongHop" type="hidden" name="txtIstongHop">
+        <label for="dxChungTuTongHop">Chứng từ tổng hợp</label>
+    </div>
+    <div class="col-sm-8 col-md-8 col-lg-8">
+        <button class="btn btn-primary pull-right" onclick="location.href='/QLVonDauTu/KeHoachVonUngDeXuat/Update'"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+        <button class="btn btn-info pull-right mr-10" onclick="OpenModal(null,true);" data-toggle="modal" data-target="#modalKHVonUngNamDeXuat"><i class="fa fa-save" aria-hidden="true"></i>Tổng hợp</button>
+        <button class="btn btn-info pull-right mr-10" onclick="SearchDataReset()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+        <button class="btn btn-default pull-right mr-10" style="color:black !important" onclick="ImportKHVUDeXuat();"><i class="fa fa-upload" aria-hidden="true"></i>Import</button>
+        @*<button class="btn btn-warning pull-right mr-10" onclick="ViewInBaoCao('false');"><i class="fa fa-print" aria-hidden="true"></i>Báo cáo</button>*@
+
+    </div>
+</div>
+<table class="table table-bordered table-striped" id="tblListVDTKHVU">
+    <thead class="header-search">
+    <th width="2%"></th>
+    <th width="3%"></th>
+    <th width="10%">
+        <input type="text" class="form-control clearable" id="sSoQuyetDinh" autocomplete="off" />
+    </th>
+    <th width="15%">
+        <div style="display: flex">
+            <div class='input-group date' style="width:49%">
+                <input type="text" id="dNgayQuyetDinhFrom " autocomplete="off" class="form-control startDate dateFormat" placeholder="dd/MM/yyyy" />
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+            <span style="margin: 8px 5px 0px 5px;">-</span>
+            <div class='input-group date' style="width:49%">
+                <input type="text" id="dNgayQuyetDinhTo " autocomplete="off" class="form-control endDate dateFormat" placeholder="dd/MM/yyyy" />
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+    </th>
+    <th width="8%"> <input type="text" class="form-control clearable yearFormat" id="iNamKeHoach" autocomplete="off" /></th>
+    <th width="15%">@Html.DropDownList("iId_NguonVon", (SelectList)(ViewBag.LstNguonVon), "--Tất cả--", new { @class = "form-control", @id = "iId_NguonVon" })</th>
+    <th width="10%">
+        @Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), "--Tất cả--", new { @class = "form-control", @id = "iID_DonViQuanLyID" })
+    </th>
+    <th width="10%"></th>
+    <th width="10%"></th>
+    <th width="5%"></th>
+    <th width="5%"></th>
+    <th width="7%">
+        <button class="btn btn-info" onclick="SearchData()"><i class="fa fa-search" aria-hidden="true"></i> Tìm kiếm</button>
+    </th>
+    </thead>
+    <thead>
+    <th width="2%"></th>
+    <th width="3%">STT</th>
+    <th width="10%">Số kế hoạch</th>
+    <th width="15%">Ngày đề nghị</th>
+    <th width="8%">Năm kế hoạch</th>
+    <th width="15%">Nguồn vốn</th>
+    <th width="10%">Đơn vị</th>
+    <th width="10%">Kế hoạch vốn ứng đề xuất</th>
+    <th width="10%">Điều chỉnh từ SKH</th>
+    <th width="5%">Số lần điều chỉnh</th>
+    <th width="5%">Trạng thái</th>
+    <th width="7%">Thao tác</th>
+    </thead>
+    <tbody id="">
+        @{
+            int index = Model._paging.ItemForm;
+            foreach (var item in Model.lstData)
+            {
+                <tr style="@(!string.IsNullOrEmpty(item.sTongHop) ? "font-weight: bold;" : string.Empty)" data-iNamKeHoach="@item.iNamKeHoach" data-iIdNguonVon="@item.iID_NguonVonID" data-id="@item.Id" data-lock="@((item.bKhoa.HasValue && item.bKhoa.Value) ? 1 : 0)">
+                    @if (!string.IsNullOrEmpty(item.sTongHop))
+                    {
+                        <td align="center"></td>
+
+                    }
+                    else
+                    {
+                        <td align="center"><input type="checkbox" class="ck_TongHop" value="@item.Id"></td>
+                    }
+                    <td align="center">@index</td>
+                    <td align="left">@item.sSoDeNghi</td>
+                    <td align="center">@(item.dNgayDeNghi.HasValue ? item.dNgayDeNghi.Value.ToString("dd/MM/yyyy") : "")</td>
+                    <td align="center">@item.iNamKeHoach</td>
+                    <td align="left">@item.sTenNguonVon</td>
+                    <td align="left">@item.sTenDonVi</td>
+                    <td align="right"><span class="fGiaTriUng">@(item.fGiaTriUng.HasValue ? item.fGiaTriUng.Value.ToString("###,###") : "0")</span></td>
+                    <td align="center">@item.sDieuChinhTuSKH</td>
+                    <td align="center">(@item.iSoLanDieuChinh)</td>
+                    <td align="center">
+                        @if (item.bKhoa.HasValue && item.bKhoa.Value)
+                        {
+                            <span style="font-size: 2rem !important;"><i class="fa fa-lock"></i></span>
+                        }
+                    </td>
+                    <td align="center" class="col-sm-12">
+                        <button type="button" class="btn-detail"><i class="fa fa-eye fa-lg" aria-hidden="true" onclick="location.href='@Url.Action("Detail", "KeHoachVonUngDeXuat", new {id = item.Id })'"></i></button>
+                        @if (item.bKhoa == null || (item.bKhoa.HasValue && !item.bKhoa.Value))
+                        {
+                            if (item.bActive == true)
+                            {
+                                <button class="btn-edit"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true" onclick="GetItemKHVU('@item.Id')"></i></button>
+                                <button class="btn-delete"><i class="fa fa-trash-o fa-lg" aria-hidden="true" onclick="DeleteItemKHVU('@item.Id', '@item.sSoDeNghi')"></i></button>
+                                <button type="button" class="btn-detail" onclick="DieuChinhKHVU('@item.Id', 'true')"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>
+
+                            }
+                            else
+                            {
+                                <button type="button" class="btn-file" onclick="ExportKHVUDeXuat('@item.Id')"><i class="fa fa-trash-o fa-file" aria-hidden="true"></i></button>
+
+                            }
+
+                        }
+                        @if (item.bKhoa.HasValue && item.bKhoa.Value)
+                        {
+                            <button type="button" class="btn-edit" onclick="LockItem('@item.Id', '@item.sSoDeNghi', '@item.bKhoa')"><i class="fa fa-unlock fa-lg" aria-hidden="true"></i></button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn-edit" onclick="LockItem('@item.Id', '@item.sSoDeNghi', '@item.bKhoa')"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></button>
+                        }
+                    </td>
+                </tr>
+                index++;
+            }
+        }
+    </tbody>
+</table>
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript" src="/Scripts/js/js_app.js"></script>
+<script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var isShowing = false;
+        $('.date')
+            .datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+            }).on('hide', () => {
+                isShowing = false;
+            }).on('show', () => {
+                isShowing = true;
+            });
+
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+
+    });
+
+    document.addEventListener('keydown', eventKey);
+    function eventKey(e) {
+        if (e != null && e != undefined) {
+            if (e.key == "Enter") {
+                SearchData();
+            }
+        }
+    }
+</script> 

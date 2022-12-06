@@ -1,0 +1,77 @@
+﻿@using Viettel.Domain.DomainModel
+@model VDT_KT_KhoiTao_DuLieu
+
+<div class="modal-body">
+    <input type="hidden" id="iID_KhoiTaoTTDAModal" value="@Model.iID_KhoiTaoID">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtNamKhoiTao">Năm khởi tạo</label>
+                @Helpers.Required()
+                <input type="text" maxlength="4" name="txtNamKhoiTaoModal" class="form-control" id="txtNamKhoiTaoModal" value="@Model.iNamKhoiTao" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtDonViQuanLy">Đơn vị</label>
+                @Helpers.Required()
+                @Html.DropDownList("iID_DonViIDModal", new SelectList(ViewBag.ListDonViQL, "Value", "Text", Model.iID_DonViID), new { @class = "form-control", @id = "iID_DonViIDModal" })
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtNgayKhoiTaoModal">Ngày khởi tạo</label>
+                @Helpers.Required()
+                <div class='input-group date'>
+                    <input type='text' class="form-control" value="@Model.dNgayKhoiTao.Value.ToString("dd/MM/yyyy")" id="dNgayKhoiTaoModal" autocomplete="off" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>
+
+<script src="/Scripts/js/js_vdtWeb.js"></script>
+<script>
+    $(document).ready(function ($) {
+        if ($("#txtNamKhoiTaoModal").val() == 0 || $("#txtNamKhoiTaoModal").val() == '0') {
+            $("#txtNamKhoiTaoModal").val("");
+        }
+        $("#txtNamKhoiTaoModal").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                return false;
+            }
+        });
+
+        var isShowing = false;
+        $('.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: 'vi',
+            todayHighlight: true,
+            format: "dd/mm/yyyy"
+        }).on('hide', () => {
+            isShowing = false;
+        }).on('show', () => {
+            isShowing = true;
+        });
+
+        $("#dNgayKhoiTaoModal").keydown(function (event) {
+            ValidateInputKeydown(event, this, 3);
+        }).blur(function (event) {
+            setTimeout(() => {
+                if (!isShowing) ValidateInputFocusOut(event, this, 3);
+            }, 0);
+        });
+
+    });
+</script>

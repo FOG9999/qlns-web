@@ -1,0 +1,172 @@
+﻿@using Viettel.Domain.DomainModel
+@using DomainModel;
+@using Viettel.Models.QLNH; 
+
+@model NH_KHTongTheTTCP
+
+<div class="modal-body">
+    <input type="hidden" id="hIdKeHoachChiTietBQP" value="@Model.ID" />
+    <input type="hidden" id="hILoai" value="@Model.iLoai" />
+    <input type="hidden" id="hiID_ParentID" value="@Model.iID_ParentID" />
+    <input type="hidden" id="hiLanDieuChinh" value="@Model.iLanDieuChinh" />
+
+    @* Row 1 *@
+    <div class="form-group row">
+        <div class="col-sm-4">
+            <label for="iLoai">Loại quyết định</label>
+            <select id="iLoai" class="form-control" @(ViewBag.State == "UPDATE" || ViewBag.State == "ADJUST" ? "disabled" : "")>
+                <option value="1">Theo giai đoạn</option>
+                <option value="3">Theo giai đoạn con</option>
+                <option value="2">Theo năm</option>
+            </select>
+        </div>
+        <div id="formParrentID" class="col-sm-4 invisible">
+            <label for="iID_ParentID">Số quyết định tổng thể TTCP giai đoạn</label>
+            @Helpers.Required()
+            @if (ViewBag.State == "UPDATE")
+            {
+                <select class="form-control" id="iID_ParentID" name="iID_ParentID" disabled>
+                    @foreach (var item in (List<LookupKHTTCP>)(ViewBag.ListKHTongTheTTCP))
+                    {
+                        <option value="@item.Id" data-fromdate="@Html.Raw(Html.Encode(item.iGiaiDoanTu))" data-todate="@Html.Raw(Html.Encode(item.iGiaiDoanDen))" @(item.Id == Model.iID_ParentID ? "selected" : "")>@Html.Raw(Html.Encode(item.DisplayName))</option>
+                    }
+                </select>
+            }
+            else if (ViewBag.State == "ADJUST")
+            {
+                <div class='input-group'>
+                    <select class="form-control" id="iID_ParentID" name="iID_ParentID" disabled>
+                        @foreach (var item in (List<LookupKHTTCP>)(ViewBag.ListKHTongTheTTCP))
+                        {
+                            <option value="@item.Id" data-fromdate="@Html.Raw(Html.Encode(item.iGiaiDoanTu))" data-todate="@Html.Raw(Html.Encode(item.iGiaiDoanDen))" @(item.Id == Model.iID_ParentID ? "selected" : "")>@Html.Raw(Html.Encode(item.DisplayName))</option>
+                        }
+                    </select>
+                    <span class="btn-default input-group-addon @(ViewBag.ParentIsActive ? "disabled" : "")"
+                          style="@(ViewBag.ParentIsActive ? "background-color: #eee" : "")"
+                          title="@(!ViewBag.ParentIsActive ? "Sử dụng bản mới nhất của quyết định tổng thể TTCP này?" : "")"
+                          onclick="UpdateParentTTCP('@Model.iID_ParentID')">
+                        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+                    </span>
+                </div>
+            }
+            else
+            {
+                <select onchange="ResetValueStage()" class="form-control" id="iID_ParentID" name="iID_ParentID" >
+                    @foreach (var item in (List<LookupKHTTCP>)(ViewBag.ListKHTongTheTTCP))
+                    {
+                        <option value="@item.Id" data-fromdate="@Html.Raw(Html.Encode(item.iGiaiDoanTu))" data-todate="@Html.Raw(Html.Encode(item.iGiaiDoanDen))" >@Html.Raw(Html.Encode(item.DisplayName))</option>
+                    }
+                </select>
+            }
+        </div>
+    </div>
+
+    @* Row 2 *@
+    <div class="form-group row">
+        <div id="formGiaiDoanTu" class="col-sm-4">
+            <label for="iGiaiDoanTu">Giai đoạn từ</label>
+            @Helpers.Required()
+            <input type="text" required id="txtGiaiDoanTu" class="form-control" onkeydown="ValidateInputKeydown(event, this, 1)" onblur="ValidateInputFocusOut(event, this, 6)" value="@Html.Raw(Html.Encode(Model.iGiaiDoanTu))" maxlength="4" autocomplete="off" />
+        </div>
+        <div id="formGiaiDoanDen" class="col-sm-4">
+            <label for="iGiaiDoanDen">Giai đoạn đến</label>
+            @Helpers.Required()
+            <input type="text" required id="txtGiaiDoanDen" class="form-control" onkeydown="ValidateInputKeydown(event, this, 1)" onblur="ValidateInputFocusOut(event, this, 6)" value="@Html.Raw(Html.Encode(Model.iGiaiDoanDen))" maxlength="4" autocomplete="off" />
+        </div>
+        <div id="formNamKeHoach" class="col-sm-4 hidden">
+            <label for="iNamKeHoach">Năm</label>
+            @Helpers.Required()
+            <input type="text" required id="txtNamKeHoach" class="form-control" onkeydown="ValidateInputKeydown(event, this, 1)" onblur="ValidateInputFocusOut(event, this, 6)" value="@Html.Raw(Html.Encode(Model.iNamKeHoach))" maxlength="4" autocomplete="off" />
+        </div>
+    </div>
+
+
+    <div class="chao-banner1">
+        <label>Quyết định tổng thể Thủ tướng Chính phủ phê duyệt theo giai đoạn</label>
+    </div>
+    <hr class="bg-gray" />
+    <div class="form-group row">
+        <div class="col-sm-4">
+            <label for="sSoKeHoach">Số quyết định</label>
+            @Helpers.Required()
+            <input type="text" required id="txtSoKeHoach" class="form-control" value="@Html.Raw(Html.Encode(Model.sSoKeHoach))" maxlength="100" autocomplete="off" />
+        </div>
+        <div class="col-sm-4">
+            <label for="dNgayKeKoach">Ngày quyết định</label>
+            <div class='input-group date'>
+                <input type='text' class="form-control" id="txtNgayKeHoach"
+                       value="@Html.Raw(Model.dNgayKeHoach.HasValue ? Model.dNgayKeHoach.Value.ToString("dd/MM/yyyy") : "")"
+                       autocomplete="off" placeholder="dd/MM/yyyy"/>
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <label for="sMoTaChiTiet">Mô tả</label>
+            <textarea rows="4" style="max-width: 100%" id="txtMoTaChiTiet" class="form-control" autocomplete="off">@Html.Raw(Html.Encode(Model.sMoTaChiTiet))</textarea>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" id="btnHuyModal" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="Save()" id="btnLuuModal"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>
+
+<script src="~/Scripts/QLNH/KeHoachTongTheTTCP/jsKeHoachTongTheTTCP.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // Set UI theo form thêm mới hoặc sửa.
+        let loai = $("#hILoai").val();
+        let parentId = $("#hiID_ParentID").val();
+
+        if (loai == '') {
+            // Tạo mới thì chưa có loại
+            $("#iLoai option[value='1']").attr("selected", "selected");
+            $("#iLoai").trigger("change");
+        } else if (loai == 1) {
+            if (parentId == '') {
+                // Theo giai đoạn
+                $("#iLoai option[value='1']").attr("selected", "selected");
+                $("#iLoai").trigger("change");
+            } else {
+                // Theo giai đoạn con
+                $("#iLoai option[value='3']").attr("selected", "selected");
+                $("#iLoai").trigger("change");
+            }
+        } else {
+            // Loại là "Theo năm"
+            $("#iLoai option[value='2']").attr("selected", "selected");
+            $("#iLoai").trigger("change");
+        }
+        var isShowing = false;
+        $('.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: 'vi',
+            todayHighlight: true,
+            format: "dd/mm/yyyy"
+        }).on('hide', () => {
+            isShowing = false;
+        }).on('show', () => {
+            isShowing = true;
+        });
+
+        $("#txtNgayKeHoach").keydown(function (event) {
+            ValidateInputKeydown(event, this, 3);
+        }).blur(function (event) {
+            setTimeout(() => {
+                if (!isShowing) ValidateInputFocusOut(event, this, 3);
+            }, 0);
+        });
+    });
+</script>

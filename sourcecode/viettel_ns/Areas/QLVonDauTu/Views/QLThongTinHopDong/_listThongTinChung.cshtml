@@ -1,0 +1,61 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTQuanLyTTHopDongViewModel
+<div class="text-right">
+    <button class="btn btn-primary" onclick="ThemMoi()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+</div>
+<table class="table table-bordered" id="tblListVDTQuanLyTTHopDong">
+    <thead>
+    <th width="3%">STT</th>
+    <th width="13%">Số hợp đồng</th>
+    <th width="8%">Ngày lập</th>
+    <th width="30%">Dự án</th>
+    <th width="20%">Gói thầu</th>
+    <th width="10%">Giá trị sau điều chỉnh</th>
+    <th width="5%">Điều chỉnh</th>
+    <th></th>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (VDT_DA_TT_HopDong_ViewModel item in Model.Items)
+            {
+                index++;
+                <tr style="cursor: pointer">
+                    <td align="center">@index</td>
+                    <td align="left">@item.sSoHopDong</td>
+                    <td align="center">@item.dNgayHopDong.ToString("dd/MM/yyyy")</td>
+                    <td align="left">@item.sTenDuAn</td>
+                    <td align="left">@item.sTenGoiThau</td>
+                    <td align="right" class="sotien">@item.fGiaTriSauDieuChinh</td>
+                    <td align="center">@string.Format("({0})", item.iTongSoDieuChinh)</td>
+                    <td align="center" class="col-sm-12">
+                        <button type="button" class="btn-detail" onclick="DieuChinh('@item.iID_HopDongID')"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-detail" onclick="ChiTiet('@item.iID_HopDongID')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-edit" onclick="Sua('@item.iID_HopDongID')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" onclick="Xoa('@item.iID_HopDongID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+
+        $('#tblListVDTQuanLyTTHopDong tr').each(function () {
+            var soTien = $(this).find(".sotien").text();
+            if (soTien) {
+                soTien = FormatNumber(soTien);
+                $(this).find(".sotien").text(soTien);
+            }
+        });
+    });
+
+</script>

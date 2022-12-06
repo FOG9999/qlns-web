@@ -1,0 +1,32 @@
+﻿@using Viettel.Domain.DomainModel
+@model DM_NoiDungChi
+
+<div class="modal-body">
+    <div class="form-group row">
+        <div class="col-sm-6">
+            <input type="hidden" id="txt_ID_NoiDungChi" value="@Model.iID_NoiDungChi">
+            <label for="txt_MaNoiDungChi">Mã nội dung chi <span class="require">*</span></label>
+            <input type="text" required id="txt_MaNoiDungChi" class="form-control" value="@Model.sMaNoiDungChi" maxlength="50" />
+        </div>
+        <div class="col-sm-6">
+            <label for="txt_TenNoiDungChi">Tên nội dung chi <span class="require">*</span></label>
+            <input type="text" required id="txt_TenNoiDungChi" class="form-control" value="@Model.sTenNoiDungChi" maxlength="500" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-6">
+            <label for="txt_NoiDungChiCha">Nội dung chi cha</label>
+            @Html.DropDownList("iID_Parent", (SelectList)(ViewBag.ListNoiDungChiCha), "--Chọn--", new { @class = "form-control", @id = "iID_Parent" })
+        </div>
+        <div class="col-sm-6">
+            <label for="txt_GhiChu">Ghi chú</label>
+            <textarea id="txt_GhiChu" class="form-control">@Html.Raw(Model.sGhiChu)</textarea>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="SaveData()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>

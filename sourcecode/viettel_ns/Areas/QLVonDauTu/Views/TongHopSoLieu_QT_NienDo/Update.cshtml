@@ -1,0 +1,484 @@
+﻿@using Viettel.Domain.DomainModel
+@model VDT_QT_TongHopSoLieu
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+<div class="pull-right">
+    <button class="btn btn-primary" onclick="Save()"><i class="fa fa-floppy-o" aria-hidden="true"></i><span>Lưu</span></button>
+    <button class="btn btn-primary" onclick="ApproveSave()"><i class="fa fa-floppy-o" aria-hidden="true"></i><span>Lưu và duyệt</span></button>
+    <button class="btn btn-default" onclick="RejectIndex()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+</div>
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body abc">
+                <div class="header-create-update">
+                    <span>Cập nhật tổng hợp số liệu</span>
+                </div>
+                <div class="form-group">
+                    <div class="color-text-red">
+                        <h4 style="padding-left:8px">Thông tin nội dung:</h4>
+                        <hr class="color-background-red" />
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <input type="hidden" id="txt_TongHopSoLieuID" value="@Model.iID_TongHopSoLieuID">
+                                <label for="txt_NamThucHien" class="">Năm thực hiện</label>
+                                <input type="text" value="@Model.iNamKeHoach" required id="txt_NamThucHien" class="form-control" maxlength="50" disabled />
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txt_DonViQuanLy" class="">Đơn vị quản lý</label>
+                                @Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonVi), "--Tất cả--", new { @class = "form-control", @id = "txt_DonViQuanLy", @disabled = "disabled" })
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="txt_NguonVon" class="">Nguồn vốn</label>
+                                @Html.DropDownList("iID_NguonVonID", (SelectList)(ViewBag.ListNguonVon), "--Tất cả--", new { @class = "form-control", @id = "txt_NguonVon", @disabled = "disabled" })
+                            </div>
+                            <div class="col-md-3">
+                                <label for="txt_NgayLap" class="">Ngày lập</label>
+                                <div class='input-group date'>
+                                    <input type='text' required class="form-control" id="txt_NgayLap" autocomplete="off" value="@Model.dNgayLap" />
+                                    <span class="btn-default input-group-addon">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-12" style="margin-top:20px">
+                        <div class="row">
+                            <div class="form-group text-center">
+                                <button class="btn btn-primary" onclick="TongHopSoLieu()"><i class="fa fa-search" aria-hidden="true"></i><span>Tổng hợp</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="active" id="tong_hop_so_lieu_tab" data-toggle="tab" href="#tong_hop_so_lieu" role="tab" aria-controls="tong_hop_so_lieu" aria-selected="true">Tổng hợp số liệu</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="" id="xy_ly_so_lieu_nam_truoc_tab" data-toggle="tab" href="#xy_ly_so_lieu_nam_truoc" role="tab" aria-controls="xy_ly_so_lieu_nam_truoc" aria-selected="false">Xử lý số liệu năm trước</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="" id="xu_ly_so_lieu_nam_nay_tab" data-toggle="tab" href="#xu_ly_so_lieu_nam_nay" role="tab" aria-controls="xu_ly_so_lieu_nam_nay" aria-selected="false">Xử lý số liệu năm nay</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade  active" id="tong_hop_so_lieu" role="tabpanel" aria-labelledby="tong_hop_so_lieu_tab" style="overflow:auto">
+                            <table class="table table-bordered" id="lstData_tonghopsolieu">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:center; min-width:150px; width:200px" rowspan="2">M-TM-TM-N</th>
+                                        <th style="text-align: center; min-width: 400px; width: 400px" rowspan="2">Nội dung danh mục</th>
+                                        <th style="text-align: center; min-width: 600px; width: 600px " colspan="3">Chỉ tiêu ngân sách</th>
+                                        <th style="text-align: center; min-width: 600px; width: 600px" colspan="3">Cấp phát</th>
+                                        <th style="text-align: center; min-width: 400px; width: 400px " colspan="2">Đơn đề nghị quyết toán</th>
+                                        <th style="text-align:center; min-width:400px; width:400px" colspan="2">Trợ lý đề nghị quyết toán</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align: center; min-width: 200px; width: 200px">Năm trước</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px">Năm nay</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px">Cộng</th>
+                                        <th style="text-align:center; min-width: 200px; width: 200px">Năm trước</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px">Năm nay</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px">Cộng</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px">Năm trước</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px">Năm nay</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px">Năm trước</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px">Năm nay</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:center">(1)</th>
+                                        <th style="text-align:center">(2)</th>
+                                        <th style="text-align:center">(3)</th>
+                                        <th style="text-align:center">(4)</th>
+                                        <th style="text-align:center">(5) = (3) + (4)</th>
+                                        <th style="text-align:center">(6)</th>
+                                        <th style="text-align:center">(7)</th>
+                                        <th style="text-align:center">(8) = (6) + (7)</th>
+                                        <th style="text-align:center">(9)</th>
+                                        <th style="text-align:center">(10)</th>
+                                        <th style="text-align:center">(11)</th>
+                                        <th style="text-align:center">(12)</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade  active" id="xy_ly_so_lieu_nam_truoc" role="tabpanel" aria-labelledby="xy_ly_so_lieu_nam_truoc_tab" style="overflow:auto">
+                            <table class="table table-bordered" id="lstData_xylysolieunamtruoc">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:center; min-width:150px;width:200px" rowspan="2">M-TM-TM-N</th>
+                                        <th style="text-align: center; min-width: 400px; width: 400px " rowspan="2">Nội dung danh mục</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px" rowspan="2">Chỉ tiêu</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px " rowspan="2">Cấp phát</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px " rowspan="2">Quyết toán</th>
+                                        <th style="text-align: center; min-width: 400px; width: 400px " colspan="2">Chênh lệch CT so với QT</th>
+                                        <th style="text-align: center; min-width: 400px; width: 400px " colspan="2">Phân tích số QT</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px " rowspan="2">Thu lại chỉ tiêu</th>
+                                        <th style="text-align: center; min-width: 600px; width: 600px " colspan="3">Chuyển chỉ tiêu năm sau</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px " rowspan="2">Thu thanh khoản</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">Thừa</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">Thiếu</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">Trong C.Tiêu</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">Ngoài C.Tiêu</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">Tổng số</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">Đã cấp</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">Chưa cấp</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align: center; min-width: 150px; width: 200px ">(1)</th>
+                                        <th style="text-align: center; min-width: 400px; width: 400px ">(2)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px ">(3)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px ">(4)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px ">(5)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">(6) = (3) - (5)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">(7) = (5) - (3)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">(8) = (5) - (7)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">(9) = (5) - (8)</th>
+                                        <th style="text-align: center; min-width: 100px; width: 150px">(10)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">(11) = (12) - (13)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">(12) = (4) - (5) - (14)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">(13) = 0</th>
+                                        <th style="text-align: center; min-width: 100px; width: 150px">(14)</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="xu_ly_so_lieu_nam_nay" role="tabpanel" aria-labelledby="xu_ly_so_lieu_nam_nay_tab" style="overflow:auto">
+                            <table class="table table-bordered" id="lstData_xylysolieunamnay">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:center; min-width:150px;width:200px" rowspan="2">M-TM-TM-N</th>
+                                        <th style="text-align: center; min-width: 400px; width: 400px " rowspan="2">Nội dung danh mục</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px" rowspan="2">Chỉ tiêu</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px " rowspan="2">Cấp phát</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px " rowspan="2">Quyết toán</th>
+                                        <th style="text-align: center; min-width: 400px; width: 400px " colspan="2">Chênh lệch CT so với QT</th>
+                                        <th style="text-align: center; min-width: 400px; width: 400px " colspan="2">Bù trừ thừa thiếu</th>
+                                        <th style="text-align: center; min-width: 400px; width: 400px " colspan="2">Phân tích số QT</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px " rowspan="2">Thu lại chỉ tiêu</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px " rowspan="2">Thu ứng</th>
+                                        <th style="text-align: center; min-width: 600px; width: 600px " colspan="3">Chuyển chỉ tiêu năm sau</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px " rowspan="2">Cấp thanh khoản</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px " rowspan="2">Thu thanh khoản</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">Thừa</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">Thiếu</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">Số bù</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">Được bù</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">Trong C.Tiêu</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">Ngoài C.Tiêu</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">Tổng số</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">Đã cấp</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">Chưa cấp</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align: center; min-width: 150px; width: 200px ">(1)</th>
+                                        <th style="text-align: center; min-width: 400px; width: 400px ">(2)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px ">(3)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px ">(4)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 250px ">(5)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">(6) = (3) - (5)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">(7) = (5) - (3)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">(8)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">(9)</th>
+                                        <th style="text-align: center; min-width: 100px; width: 150px">(10) = (5) - (7) + (9)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">(11) = (5) - (10)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">(12)</th>
+                                        <th style="text-align: center; min-width: 200px; width: 200px ">(13)</th>
+                                        <th style="text-align: center; min-width: 100px; width: 150px">(14) = (15) + (16)</th>
+                                        <th style="text-align: center; min-width: 100px; width: 150px">(15) = (4) - (5) + (17) - (18)</th>
+                                        <th style="text-align: center; min-width: 100px; width: 150px">(16) = (3) - (5) - (15) - (12)</th>
+                                        <th style="text-align: center; min-width: 100px; width: 150px">(17) = (5) - (4)</th>
+                                        <th style="text-align: center; min-width: 100px; width: 150px">(18)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="divModalConfirm">
+</div>
+
+
+<script>
+    var GUID_EMPTY = '00000000-0000-0000-0000-000000000000';
+    var CONFIRM = 0;
+    var ERROR = 1;
+
+    $(document).ready(function () {
+        TongHopSoLieu();
+    });
+
+    function Save() {
+        var item = GetDataForm();
+
+        if (!ValidateBeforeSave(item)) {
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/QLVonDauTu/TongHopSoLieu_QT_NienDo/Save",
+            data: { iID_TongHopSoLieu: item.iID_TongHopSoLieu, iNamThucHien: item.iNamThucHien, iID_DonViQuanLy: item.iID_DonViQuanLy, iID_NguonVon: item.iID_NguonVon, dNgayLap: item.dNgayLap, typeSave: "SAVE" },
+            success: function (resp) {
+                if (resp.status == false) {
+                    PopupModal("Lỗi lưu thông tin tổng hợp số liệu", [resp.message], ERROR);
+                    return false;
+                }
+                window.location.href = "/QLVonDauTu/TongHopSoLieu_QT_NienDo/Index";
+            }
+        });
+    }
+
+    function PopupModal(title, message, category) {
+        $.ajax({
+            type: "POST",
+            url: "/Modal/OpenModal",
+            data: { Title: title, Messages: message, Category: category },
+            success: function (data) {
+                $("#divModalConfirm").html(data);
+            }
+        });
+    }
+
+    function ApproveSave() {
+        var item = GetDataForm();
+
+        if (!ValidateBeforeSave(item)) {
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/QLVonDauTu/TongHopSoLieu_QT_NienDo/Save",
+            data: { iID_TongHopSoLieu: item.iID_TongHopSoLieu, iNamThucHien: item.iNamThucHien, iID_DonViQuanLy: item.iID_DonViQuanLy, iID_NguonVon: item.iID_NguonVon, dNgayLap: item.dNgayLap, typeSave: "APPROVESAVE" },
+            success: function (resp) {
+                if (resp.status == false) {
+                    PopupModal("Lỗi lưu thông tin tổng hợp số liệu", [resp.message], ERROR);
+                    return false;
+                }
+                window.location.href = "/QLVonDauTu/TongHopSoLieu_QT_NienDo/Index";
+            }
+        });
+    }
+
+    function validateNumber(x) {
+        return /^-?[\d.]+(?:e-?\d+)?$/.test(x)
+    }
+
+    function ValidateBeforeSave(item) {
+
+        var message = [];
+
+        if (!isStringEmpty(item.iID_DonViQuanLy)) {
+            message.push("Vui lòng nhập đơn vị quản lý !");
+        }
+
+        if (!isStringEmpty(item.iID_NguonVon)) {
+            message.push("Vui lòng nhập nguồn vốn !");
+        }
+
+        if (!isStringEmpty(item.iNamThucHien)) {
+            message.push("Vui lòng nhập năm thực hiện !");
+        } else {
+            if (validateNumber(item.iNamThucHien) == false) {
+                message.push("Năm thực hiện phải là số !");
+            }
+        }
+
+        if (!isStringEmpty(item.dNgayLap)) {
+            message.push("Vui lòng nhập ngày lập !");
+        }
+
+        if (message.length > 0) {
+            PopupModal("Lỗi tổng hợp số liệu", message, ERROR);
+            return false;
+        }
+
+        return true;
+    }
+
+    function RejectIndex() {
+        window.location.href = "/QLVonDauTu/TongHopSoLieu_QT_NienDo/Index";
+    }
+
+    function TongHopSoLieu() {
+        var item = GetDataForm();
+
+        if (!ValidateBeforeTongHopSoLieu(item)) {
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/QLVonDauTu/TongHopSoLieu_QT_NienDo/TongHopSoLieu",
+            data: { iNamThucHien: item.iNamThucHien, iID_DonViQuanLy: item.iID_DonViQuanLy, iID_NguonVon: item.iID_NguonVon, dNgayLap: item.dNgayLap },
+            success: function (resp) {
+                LoadDataViewTongHopSoLieu(resp.data.TongHopSoLieu);
+                LoadDataViewXuLySoLieuNamNay(resp.data.XuLySoLieuNamSau);
+                LoadDataViewXuLySoLieuNamTruoc(resp.data.XuLySoLieuNamTruoc);
+            }
+        });
+    }
+
+    function isStringEmpty(value) {
+        if (value == null || value == "" || value == undefined) {
+            return false;
+        }
+        return true;
+    }
+
+    function ValidateBeforeTongHopSoLieu(item) {
+
+        var message = [];
+
+        if (!isStringEmpty(item.iID_DonViQuanLy)) {
+            message.push("Vui lòng nhập đơn vị quản lý !");
+        }
+
+        if (!isStringEmpty(item.iID_NguonVon)) {
+            message.push("Vui lòng nhập nguồn vốn !");
+        }
+
+        if (!isStringEmpty(item.iNamThucHien)) {
+            message.push("Vui lòng nhập năm thực hiện !");
+        } else {
+            if (validateNumber(item.iNamThucHien) == false) {
+                message.push("Năm thực hiện phải là số !");
+            }
+        }
+
+        if (message.length > 0) {
+            PopupModal("Lỗi tổng hợp số liệu", message, ERROR);
+            return false;
+        }
+
+        return true;
+    }
+
+    function LoadDataViewTongHopSoLieu(item) {
+        if (item == null) {
+            return;
+        }
+
+        var html = "";
+        html += '<tr>';
+        html += '<td style="text-align=lefft">' + item.M_TM_TM_N + '</td>';
+        html += '<td style="text-align=left">' + item.NoiDungDanhMuc + '</td>';
+        html += '<td style="text-align=right">' + item.ChiTieuNamTruocAsString + '</td>';
+        html += '<td style="text-align=right">' + item.ChiTieuNamNayAsString + '</td>';
+        html += '<td style="text-align=right">' + item.TongChiTieuAsString + '</td>';
+        html += '<td style="text-align=right">' + item.CapPhatNamTruocAsString + '</td>';
+        html += '<td style="text-align=right">' + item.CapPhatNamNayAsString + '</td>';
+        html += '<td style="text-align=right">' + item.TongCapPhatAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fDonViiDeNghiQuyetToanNamTruocAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fDonViiDeNghiQuyetToanNamNayAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fTroLyDeNghiQuyetToanNamTruocAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fTroLyDeNghiQuyetToanNamNayAsString + '</td>';
+        html += '</tr>';
+
+        $("#lstData_tonghopsolieu tbody").html(html);
+    }
+
+    function LoadDataViewXuLySoLieuNamTruoc(item) {
+        if (item == null) {
+            return;
+        }
+
+        var html = "";
+        html += '<tr>';
+        html += '<td style="text-align=left">' + item.M_TM_TM_N + '</td>';
+        html += '<td style="text-align=left">' + item.NoiDungDanhMuc + '</td>';
+        html += '<td style="text-align=right">' + item.fChiTieuAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fCapPhatAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fQuyetToanAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fThuaAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fThieuAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fTrongChiTieuAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fNgoaiChiTieuAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fThuLaiAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fTongGiaTriChuyenNamSauAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fGiaTriNamTruocChuyenNamSauDaCapAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fGiaTriNamTruocChuyenNamSauChuaCapAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fThuThanhKhoanNamTruocAsString + '</td>';
+        html += '</tr>';
+
+        $("#lstData_xylysolieunamtruoc tbody").html(html);
+    }
+
+    function LoadDataViewXuLySoLieuNamNay(item) {
+        if (item == null) {
+            return;
+        }
+
+        var html = "";
+        html += '<tr>';
+        html += '<td style="text-align=left">' + item.M_TM_TM_N + '</td>';
+        html += '<td style="text-align=left">' + item.NoiDungDanhMuc + '</td>';
+        html += '<td style="text-align=right">' + item.fChiTieuAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fCapPhatAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fQuyetToanAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fThuaAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fThieuAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fSoBuAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fDuocBuAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fTrongChiTieuAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fNgoaiChiTieuAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fThuLaiAsString + '</td>';
+        html += '<td style="text-align=right"></td>';
+        html += '<td style="text-align=right">' + item.fTongGiaTriChuyenNamSauAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fGiaTriChuyenNamSauDaCapAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fGiaTriChuyenNamSauChuaCapAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fCapThanhKhoanAsString + '</td>';
+        html += '<td style="text-align=right">' + item.fThuThanhKhoanAsString + '</td>';
+        html += '</tr>';
+
+        $("#lstData_xylysolieunamnay tbody").html(html);
+    }
+
+    function GetDataForm() {
+        var idTongHopSoLieu = $("#txt_TongHopSoLieuID").val();
+        var idDonViQuanLy = $("#txt_DonViQuanLy").val();
+        var idNguonVon = $("#txt_NguonVon").val();
+        var namThucHien = $("#txt_NamThucHien").val();
+        var ngayLap = $("#txt_NgayLap").val();
+
+        return {
+            iID_TongHopSoLieu: idTongHopSoLieu,
+            iID_DonViQuanLy: idDonViQuanLy,
+            iID_NguonVon: idNguonVon,
+            iNamThucHien: namThucHien,
+            dNgayLap: ngayLap
+        };
+    }
+
+</script>

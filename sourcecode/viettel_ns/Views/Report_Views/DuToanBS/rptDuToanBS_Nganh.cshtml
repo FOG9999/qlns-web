@@ -1,0 +1,167 @@
+﻿@model rptDuToanBS_NganhViewModel
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">Biểu giao bổ sung dự toán ngân sách năm @Model.iNamLamViec - Chọn tờ</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <!-- header -->
+            <div>
+                <div class="col-xs-6">
+                    <h6></h6>
+                </div>
+                <div class="col-xs-6">
+                    <h6><strong class="text-uppercase">Chọn tờ:</strong></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loại ngân sách:</label>
+                            <div class="col-sm-8" id="loaiNganSach">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="optradio" value="104,109" />
+                                        Ngân sách bảo đảm
+                                    </label>
+                                </div>
+                                @*<div class="radio">
+                                        <label>
+                                            <input type="radio" name="optradio" value="101,102,103,105,108,18" />
+                                            Ngân sách quốc phòng
+                                        </label>
+                                    </div>*@
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="optradio" value="2,3" />
+                                        Ngân sách nhà nước
+                                    </label>
+                                </div>
+                                @*<div class="radio">
+                                        <label>
+                                            <input type="radio" name="optradio" value="4" />
+                                            Ngân sách khác
+                                        </label>
+                                    </div>*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Đợt bổ sung NS:</label>
+                            <div class="col-sm-8">
+                                @*@Html.DropDownList("iID_MaDot", Model.DotList, new { @class = "form-control", onchange = "changeData()" })*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Chọn ngành:</label>
+                            <div class="col-sm-8">
+                                <div>
+                                    <select id="iID_MaNganh" class="form-control" onchange="change()"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Chọn phòng ban:</label>
+                            <div class="col-sm-8">
+                                <select id="iID_MaPhongBan" class="form-control" onchange="change()"></select>
+                            </div>
+                        </div>
+                        <div id="nguonBaoDam" class="form-group nguon">
+                            <label class="control-label col-sm-4">Chọn nguồn:</label>
+                            <div class="col-sm-8">
+                                <div>
+                                    <select class="form-control" id="iID_MaNguon" name="iID_MaNguon" onchange="change()">
+                                        <option value="0">-- Tất cả --</option>
+                                        <option value="1040100">Từ 104</option>
+                                        <option value="109">Từ 109</option>
+                                    </select>
+                                    @*@Html.DropDownList("iID_MaNguon", Model.NguonList, new { @class = "form-control", onchange = "change()" })*@
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <div id="iID_MaTo" class="ls-box" data-check="first-only"></div>
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "DuToanBS_Report")">Hủy</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    // thay doi lua chon
+    function changeData() {
+
+        var iID_MaDot = $("#iID_MaDot").val();
+        fillNganh(iID_MaDot);
+    }
+
+    function fillNganh(iID_MaDot) {
+        var url = '@Url.Action("Ds_Nganh")' + "/?"
+                    + "iID_MaDot=" + iID_MaDot;
+        jQuery.ajaxSetup({ cache: false });
+
+        $.getJSON(url, function (data) {
+            document.getElementById("iID_MaNganh").innerHTML = data;
+
+            fillPhongBan(iID_MaDot, $("#iID_MaNganh").val());
+
+            change();
+        });
+    }
+    function fillPhongBan(iID_MaDot, iID_MaNganh) {
+
+        var url = '@Url.Action("Ds_PhongBan")' + "/?"
+                    + "iID_MaDot=" + iID_MaDot
+                    + "&iID_MaNganh=" + iID_MaNganh;
+        jQuery.ajaxSetup({ cache: false });
+
+
+        $.getJSON(url, function (data) {
+            document.getElementById("iID_MaPhongBan").innerHTML = data;
+            change();
+        });
+    }
+
+
+    function change() {
+
+        var url = '@Url.Action("Ds_ToIn")' + "/?"
+                    + "iID_MaDot=" + $("#iID_MaDot").val()
+                    + "&iID_MaNganh=" + $("#iID_MaNganh").val()
+                    + "&iID_MaPhongBan=" + $("#iID_MaPhongBan").val();
+
+        fillCheckboxList("iID_MaTo", "To", url)
+    }
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+        var ext = $(this).data("ext");
+
+        $("input:checkbox[check-group='To']").each(function () {
+            if (this.checked) {
+                var item = this.value;
+                var url = '@Url.Action("Print", "rptDuToanBS_1040100_Nganh")' +
+                    "?ext=" + ext +
+                    "&toSo=" + item +
+                    "&iID_MaDot=" + $("#iID_MaDot").val() +
+                    "&iID_MaNganh=" + $("#iID_MaNganh").val() +
+                    "&iID_MaPhongBan=" + $("#iID_MaPhongBan").val();
+                url = unescape(url);
+
+                links.push(url);
+            }
+        });
+
+        openLinks(links);
+    });
+
+</script>

@@ -1,0 +1,39 @@
+﻿@{
+
+    //Layout = "~/views/shared/_layout.cshtml";
+
+    ViewBag.Title = "Danh sách báo cáo quyết toán năm " + PhienLamViec.iNamLamViec;
+
+    var items = new List<MenuItem>
+    {
+
+    new MenuItem {
+        id="QT_2A",
+        name = "Báo cáo số liệu kết luận quyết toán ngân sách",
+        url = Url.Action("Index", "rptQuyetToanNam_2a"),
+        note = ""},
+    new MenuItem{
+        id="QT_2A_2",
+        name = "Báo cáo số liệu quyết toán bổ sung",
+        url = Url.Action("Index", "rptQuyetToanNam_2a2"),
+        note = ""},
+    new MenuItem{
+        id="",
+        name = "Số phê duyệt quyết toán ngân sách năm " + PhienLamViec.iNamLamViec,
+        url = Url.Action("Index", "rptQuyetToanNam_PheDuyet"),
+        note = ""},
+     new MenuItem{
+        id="",
+        name = "Thông báo số chuyển năm sau",
+        url = Url.Action("Index", "rptQuyetToanNam_SoChuyenNamSau"),
+        note = ""},
+
+     new MenuItem{
+        id="",
+        name = "Báo cáo tổng hợp dự toán chi ngân sách năm - Cũ",
+        url = Url.Action("Index", "rptQuyetToanNam_ThongBaoSoChuyenNamSau"),
+        note = ""},
+
+    };
+}
+@Html.Partial("_report_table", items)

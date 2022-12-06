@@ -1,0 +1,56 @@
+﻿﻿@model Viettel.Models.QLNH.QuyetToan.NH_QT_QuyetToanNienDo_ChiTietView
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+<style>
+    .m-w100 {
+        min-width: 100px;
+    }
+
+    .f-wBold {
+        font-weight: bold;
+    }
+    .mr-10{
+        margin-right:10px;
+    }
+</style>
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body" id="lstDataView">
+                @Html.Partial("_baoCaoDetail", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal*@
+<div class="modal fade modalBCSoNamSau" id="modalBCSoNamSau" role="dialog" aria-labelledby="modalBCSoNamSauLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:80%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-left" id="modalBCSoNamSauLabel"></h3>
+            </div>
+            <div id="contentModalBaoCaoSoNamSau"></div>
+        </div>
+    </div>
+</div>
+
+<div id="divModalConfirm">
+
+</div>
+@section Scripts{
+    <script src="~/Scripts/QLNH/BaoCaoThongKe/jsBaoCaoChiTietSoChuyenNamSau.js"></script>
+
+    <script>
+            var sUrlListView = "";
+            $(document).ready(function () {
+                sUrlListView = '@Url.Action("TimKiem", "BaoCaoSoChuyenNamSau")';
+                });
+        </script>
+
+}

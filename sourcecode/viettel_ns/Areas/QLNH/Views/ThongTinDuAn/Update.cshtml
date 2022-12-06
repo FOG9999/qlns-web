@@ -1,0 +1,310 @@
+﻿@using Viettel.Models.QLNH
+@using Viettel.Domain.DomainModel
+@using Viettel.Models.Shared
+@using DomainModel
+@using System.Globalization;
+@model NHDAThongTinDuAnViewModel
+@{
+    string title = string.Empty;
+    if (Model.ThongTinDuAnDetail.ID == null || Model.ThongTinDuAnDetail.ID == Guid.Empty)
+    {
+        title = "Thêm mới thông tin dự án";
+    }
+    else
+    {
+        if (ViewBag.State != null && (string)ViewBag.State == "ADJUST")
+        {
+            title = "Điều chỉnh thông tin dự án";
+        }
+        else
+        {
+            title = "Cập nhật thông tin dự án";
+        }
+    }
+    ViewBag.Title = title;
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="modal-body">
+    <input type="hidden" id="hidDuAnID" value="@Model.ThongTinDuAnDetail.ID" />
+    <input type="hidden" id="hState" value="@ViewBag.State" />
+    <div class="header-create-update">
+        <span>@Html.Raw(title)</span>
+    </div>
+    <h4 class="color-text-red">Thông tin căn cứ:</h4>
+    <hr class='color-background-red' />
+    <div class="form-group row">
+        <div class="col-sm-3">
+            <label for="slbKHTongTheBQP">Sổ kế hoạch chi tiết BQP</label>
+            @Helpers.Required()
+            <select id="slbKHTongTheBQP" name="slbKHTongTheBQP" class="form-control" onchange="ChangeBQPSelect()">
+                @if (ViewBag.ListBQP != null)
+                {
+                    foreach (var bqp in (List<NH_KHChiTietBQP_NhiemVuChiModel>)ViewBag.ListBQP)
+                    {
+
+                        <option value="@bqp.ID" @(Model.ThongTinDuAnDetail.iID_BQP == bqp.ID ? "selected" : string.Empty)>@Html.Raw(Html.Encode(bqp.sSoKeHoachBQP))</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <label for="slbBQuanLy">B Quản Lý</label>
+            <select id="slbBQuanLy" name="slbBQuanLy" class="form-control">
+                @if (ViewBag.ListPhongBan != null)
+                {
+                    foreach (var phongban in (List<NS_PhongBan>)ViewBag.ListPhongBan)
+                    {
+                        <option value="@phongban.iID_MaPhongBan" @(Model.ThongTinDuAnDetail.iID_BQuanLyID == phongban.iID_MaPhongBan ? "selected" : string.Empty)>@Html.Raw(Html.Encode(phongban.sTen))</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <label for="slbDonVi">Đơn vị</label>
+            @Helpers.Required()
+        <select id="slbDonVi" name="slbDonVi" class="form-control" onchange="ChangeDVSelect()">
+            @if (ViewBag.ListDonVi != null)
+            {
+                foreach (var donvi in (List<NS_DonVi>)ViewBag.ListDonVi)
+                {
+                    <option value="@donvi.iID_Ma" @(Model.ThongTinDuAnDetail.iID_DonViID == donvi.iID_Ma ? "selected" : string.Empty) data-madonvi="@Html.Raw(Html.Encode(donvi.iID_MaDonVi))">@Html.Raw(Html.Encode(donvi.sTen))</option>
+                }
+            }
+        </select>
+        </div>
+        <div class="col-sm-3">
+            <label for="slbChuongTrinh">Tên chương trình</label>
+            <select id="slbChuongTrinh" name="slbChuongTrinh" class="form-control">
+                @if (ViewBag.ListChuongTrinh != null)
+                {
+                    foreach (var chuongtrinh in (List<NH_KHChiTietBQP_NhiemVuChi>)ViewBag.ListChuongTrinh)
+                    {
+                        <option value="@chuongtrinh.ID" @(Model.ThongTinDuAnDetail.iID_KHCTBQP_ChuongTrinhID == chuongtrinh.ID ? "selected" : string.Empty)>@Html.Raw(Html.Encode(chuongtrinh.sTenNhiemVuChi))</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <h4 class="color-text-red">Thông tin dự án:</h4>
+        <hr class='color-background-red' />
+        <div class="form-group row">
+            @if (ViewBag.State != "CREATE")
+            {
+                <div class="col-sm-3">
+                    <label for="txtMaDuAn">Mã dự án</label>
+                    @Helpers.Required()
+                    <div><input readonly type="text" id="txtMaDuAn" class="form-control" value="@Html.Raw(Html.Encode(Model.ThongTinDuAnDetail.sMaDuAn))" maxlength="100" autocomplete="off" /></div>
+                </div>
+            }
+            <div class="col-sm-6">
+                <label for="txtTenDuAn">Tên dự án</label>
+                <textarea style="max-width: 100% ; max-height: 10%" id="txtTenDuAn" class="form-control" autocomplete="off">@Html.Raw(Html.Encode(Model.ThongTinDuAnDetail.sTenDuAn))</textarea>
+            </div>
+            <div class="col-sm-3">
+                <label for="txtSoChuTruongDauTu ">Số chủ trương đầu tư</label>
+                <div><input type="text" id="txtSoChuTruongDauTu" class="form-control" value="@Html.Raw(Html.Encode(Model.ThongTinDuAnDetail.sSoChuTruongDauTu))" maxlength="100" autocomplete="off" /></div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-3">
+            <label for="txtNgayBanHanhCTDT ">Ngày ban hành chủ trương đầu tư</label>
+            <div class='input-group date'>
+                <input id="txtNgayBanHanhCTDT" class="form-control txtDate" autocomplete="off" placeholder="dd/MM/yyyy"
+                       value="@(Model.ThongTinDuAnDetail.dNgayChuTruongDauTu.HasValue ? Model.ThongTinDuAnDetail.dNgayChuTruongDauTu.Value.ToString("dd/MM/yyyy") : string.Empty)" />
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <label for="txtSoQuyetDinhDauTu ">Quyết định phê duyệt dự án</label>
+            <div><input type="text" id="txtSoQuyetDinhDauTu" class="form-control" value="@Html.Raw(Html.Encode(Model.ThongTinDuAnDetail.sSoQuyetDinhDauTu))" maxlength="100" autocomplete="off" /></div>
+        </div>
+        <div class="col-sm-3">
+            <label for="txtNgayBanHanhQuyetDinhDauTu ">Ngày ban hành Quyết định đầu tư</label>
+            <div class='input-group date'>
+                <input id="txtNgayBanHanhQuyetDinhDauTu" class="form-control txtDate" autocomplete="off" placeholder="dd/MM/yyyy"
+                       value="@(Model.ThongTinDuAnDetail.dNgayQuyetDinhDauTu .HasValue ? Model.ThongTinDuAnDetail.dNgayQuyetDinhDauTu .Value.ToString("dd/MM/yyyy") : string.Empty)" />
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <label for="txtSoDuToanTu ">Số quyết định Thiết kế chi tiết Tổng dự toán</label>
+            <div><input type="text" id="txtSoDuToanTu" class="form-control" value="@Html.Raw(Html.Encode(Model.ThongTinDuAnDetail.sSoDuToan))" maxlength="100" autocomplete="off" /></div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-3">
+            <label for="slbChuDauTu">Chủ đầu tư</label>
+            <select id="slbChuDauTu" name="slbChuDauTu" class="form-control">
+                @if (ViewBag.ListChuDauTu != null)
+                {
+                    foreach (var chudautu in (List<DM_ChuDauTu>)ViewBag.ListChuDauTu)
+                    {
+                        <option value="@chudautu.ID" @(Model.ThongTinDuAnDetail.iID_ChuDauTuID == chudautu.ID ? "selected" : string.Empty) data-machudautu="@Html.Raw(Html.Encode(chudautu.sId_CDT))">@Html.Raw(Html.Encode(chudautu.sTenCDT))</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <label for="slbPhanCapPheDuyet">Phân cấp phê duyệt</label>
+            <select id="slbPhanCapPheDuyet" name="slbPhanCapPheDuyet" class="form-control">
+                @if (ViewBag.ListDanhMucPCPD != null)
+                {
+                    foreach (var danhMuc in (List<NH_DM_PhanCapPheDuyet>)ViewBag.ListDanhMucPCPD)
+                    {
+                        <option value="@danhMuc.ID" @(Model.ThongTinDuAnDetail.iID_CapPheDuyetID == danhMuc.ID ? "selected" : string.Empty)>@Html.Raw(Html.Encode(danhMuc.sTen))</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <label for="txtThoiGianThucHienTu ">Thời gian thực hiện từ</label>
+            <div><input type="text" id="txtThoiGianThucHienTu" class="form-control" value="@Html.Raw(Html.Encode(Model.ThongTinDuAnDetail.sKhoiCong))" maxlength="50" autocomplete="off" /></div>
+        </div>
+        <div class="col-sm-3">
+            <label for="txtThoiGianThucHienDen ">Thời gian thực hiện đến</label>
+            <div><input type="text" id="txtThoiGianThucHienDen" class="form-control" value="@Html.Raw(Html.Encode(Model.ThongTinDuAnDetail.sKetThuc))" maxlength="50" autocomplete="off" /></div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-3">
+            <label for="slbTiGia">Tỉ giá</label>
+            @Helpers.Required()
+            <select id="slbTiGia" name="slbTiGia" class="form-control" onchange="ChangeTiGiaSelect();">
+                @if (ViewBag.ListTiGia != null)
+                {
+                    foreach (var tigia in (List<NH_DM_TiGia>)ViewBag.ListTiGia)
+                    {
+                        <option value="@tigia.ID" @(Model.ThongTinDuAnDetail.iID_TiGiaID == tigia.ID ? "selected" : string.Empty) data-mg="@Html.Raw(Html.Encode(tigia.sMaTienTeGoc))">@Html.Raw(Html.Encode(tigia.sTenTiGia))</option>
+                    }
+                }
+            </select>
+            <div id="tienTeQuyDoiID" class="text-italic h5">
+                @if (ViewBag.HtmlTienTe != null)
+                {
+                    @ViewBag.HtmlTiente
+                }
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <label for="slbMaNgoaiTeKhac">Mã ngoại tệ khác</label>
+            <select id="slbMaNgoaiTeKhac" name="slbMaNgoaiTeKhac" class="form-control" onchange="ChangeNgoaiTeKhacSelect();">
+                @if (ViewBag.ListTiGiaChiTiet != null)
+                {
+                    foreach (var tigiachitiet in (List<NH_DM_TiGia_ChiTiet>)ViewBag.ListTiGiaChiTiet)
+                    {
+                        <option value="@tigiachitiet.ID" @(Model.ThongTinDuAnDetail.iID_TiGia_ChiTietID.HasValue && Model.ThongTinDuAnDetail.iID_TiGia_ChiTietID.Value == tigiachitiet.ID ? "selected" : string.Empty)>
+                            @Html.Raw(Html.Encode(tigiachitiet.sMaTienTeQuyDoi))
+                        </option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <label for="txtNgayBanHanhDuToan ">Ngày ban hành Dự toán</label>
+            <div class='input-group date'>
+                <input id="txtNgayBanHanhDuToan" class="form-control txtDate" autocomplete="off" placeholder="dd/MM/yyyy"
+                       value="@(Model.ThongTinDuAnDetail.dNgayDuToan.HasValue ? Model.ThongTinDuAnDetail.dNgayDuToan.Value.ToString("dd/MM/yyyy") : string.Empty)" />
+                <span class="btn-default input-group-addon">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+        <div class="col-sm-3">&nbsp;</div>
+    </div>
+    <div class="form-group row">
+
+
+        <div class="col-sm-3">
+            <label for="txtHopDongUSD">Tổng mức đầu tư (USD)</label>
+            <div>
+                <input readonly id="txtHopDongUSD" class="form-control" name="tmdt_USD"
+                       value="@CommonFunction.DinhDangSo((Model.ThongTinDuAnDetail.fGiaTriUSD.HasValue ? Model.ThongTinDuAnDetail.fGiaTriUSD.Value.ToString(CultureInfo.InvariantCulture) : string.Empty), 2)"
+                       autocomplete="off" />
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <label for="txtHopDongVND">Tổng mức đầu tư (VND)</label>
+            <div>
+                <input readonly id="txtHopDongVND" class="form-control"
+                       value="@CommonFunction.DinhDangSo((Model.ThongTinDuAnDetail.fGiaTriVND.HasValue ? Math.Round(Model.ThongTinDuAnDetail.fGiaTriVND.Value).ToString(CultureInfo.InvariantCulture) : string.Empty), 0)"
+                       name="tmdt_VND" />
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <label for="txtHopDongEUR">Tổng mức đầu tư (EUR)</label>
+            <div>
+                <input readonly id="txtHopDongEUR" class="form-control"
+                       value="@CommonFunction.DinhDangSo((Model.ThongTinDuAnDetail.fGiaTriEUR.HasValue ? Model.ThongTinDuAnDetail.fGiaTriEUR.Value.ToString(CultureInfo.InvariantCulture) : string.Empty), 2)"
+                       name="tmdt_EUR" />
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="text-bold">Tổng mức đầu tư (<label id="iDTenNgoaiTeKhac">Ngoại tệ khác</label>)</div>
+            <div>
+                <input readonly id="txtHopDongNgoaiTeKhac" class="form-control"
+                       value="@CommonFunction.DinhDangSo((Model.ThongTinDuAnDetail.fGiaTriNgoaiTeKhac.HasValue ? Model.ThongTinDuAnDetail.fGiaTriNgoaiTeKhac.Value.ToString(CultureInfo.InvariantCulture) : string.Empty), 2)"
+                       name="tmdt_NTK" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <h4 class="color-text-red">Thông tin chi phí</h4>
+        <hr class='color-background-red' />
+        <div class="input-group-append pull-right mr-10">
+            <span class="require text-italic mr-10">Thêm dữ liệu xuống bản chi tiết</span>
+            <button class="btn btn-primary btn-icon" type="button" onclick="ThemMoi();">
+                <span class="fa fa-plus fa-lg" aria-hidden="true"></span>
+            </button>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered tr-hover" id="tbListChiphi">
+                    <thead>
+                        <tr>
+                            <th style="width:6%;">STT</th>
+                            <th style="width:28%;">Tên chi phí</th>
+                            <th style="width:15%;">Giá trị phê duyệt (USD)</th>
+                            <th style="width:15%;">Giá trị phê duyệt (VND)</th>
+                            <th style="width:15%;">Giá trị phê duyệt (EUR)</th>
+                            <th style="width:15%;">Giá trị phê duyệt (Khác)</th>
+                            <th style="width:6%;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyTableChiPhi">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" onclick="Cancel()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="Save()" id="btnLuuModal"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        LoadDataTableChiPhi();
+        $("#slbKHTongTheBQP").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#slbBQuanLy").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#slbDonVi").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#slbChuongTrinh").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#slbChuDauTu").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#slbPhanCapPheDuyet").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#slbTiGia").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#slbMaNgoaiTeKhac").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+    });
+</script>

@@ -1,0 +1,106 @@
+﻿@model rptSKT_BC02ViewModel
+@{
+
+    ViewBag.Title = "Báo cáo số liệu nhu cầu ngành năm " + PhienLamViec.iNamLamViec;
+}
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">@ViewBag.Title</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Phòng ban:</label>
+                            <div class="col-sm-8">
+                                @if (Model.PhongBanList == null || Model.PhongBanList.Count() <= 2)
+                                {
+                                    <input type="text" readonly value="@PhienLamViec.sTenPhongBanFull" class="form-control" />
+                                    <input id="id_phongban" type="text" value="@PhienLamViec.iID_MaPhongBan" class="form-control hide" />
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("id_phongban", Model.PhongBanList, new { @class = "form-control", onchange = "change()" })
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Ngành:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("id_nganh", Model.NganhList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loại báo cáo:</label>
+                            <div id="loaiBaoCao" class="col-sm-8">
+                                <div class="radio">
+                                    <input type="radio" name="loaiBaoCao" value="1" id="loaiBaoCao-1" checked />
+                                    <label for="loaiBaoCao-1">Mua hàng cấp hiện vật</label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="loaiBaoCao" value="2" id="loaiBaoCao-2" />
+                                    <label for="loaiBaoCao-2">Đặc thù ngành phân cấp</label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="loaiBaoCao" value="3" id="loaiBaoCao-3" />
+                                    <label for="loaiBaoCao-0">Huy động tồn kho</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <span class="text-muted">|</span>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "Reports", new {area="SKT", loai =2})">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function change() {
+        var id_phongban = $("#id_phongban").val();
+        if (id_phongban == undefined) {
+            id_phongban = "s";
+        }
+        var url = '@Url.Action("Ds_Nganh")' + "/?id_phongban=" + id_phongban;
+
+        console.log(url);
+        $("#id_nganh").empty();
+        $.getJSON(url, function (data) {
+            $("#id_nganh").append(data);
+        });
+    }
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+        var ext = $(this).data("ext");
+
+        var id_phongban = $("#id_phongban").val();
+        if (id_phongban == undefined) {
+            id_phongban = "s";
+        }
+
+        var id_nganh = $("#id_nganh").val();
+        var loaiBc = $("#loaiBaoCao input[type='radio']:checked").val();
+        var url = '@Url.Action("Print")' +
+                    "/?ext=" + ext +
+                    "&r=130" +
+                    "&id_phongban=" + id_phongban +
+                    "&id_nganh=" + id_nganh +
+                    "&loaiBc=" + loaiBc;
+
+        url = unescape(url);
+
+        links.push(url);
+        openLinks(links);
+    });
+
+</script>

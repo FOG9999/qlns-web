@@ -1,0 +1,112 @@
+﻿@model IEnumerable<Viettel.Models.QLVonDauTu.ThongTinGoiThauViewModel>
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="tooltip-header-search">
+    <div class="col-sm-6" style="display: flex; padding-left: 0px;"><label class="control-label">Danh sách quản lý thông tin gói thầu</label></div>
+    @*<button class="btn btn-primary" style="float: right" onclick="BtnInsertDataClick()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>*@
+</div>
+<table class="table table-bordered">
+    <thead class="header-search">
+        <tr>
+            <th></th>
+            <th><input type="text" class="form-control clearable" id="txt_tenGoiThau" autocomplete="off" /></th>
+            <th width="12%"></th>
+            <th width="10%"></th>
+            <th width="10%"> <input type="text" class="form-control clearable" id="txt_tenDuAn" autocomplete="off" /></th>
+            <th width="15%">
+                <div style="display: flex">
+                    <input type='text' style="width: 50%" class="form-control col-sm-2" value="" id="txt_giaTriMin" autocomplete="off" />
+                    <span style="margin: 8px 5px 0px 5px;">-</span>
+                    <input type='text' style="width: 50%" class="form-control col-sm-2" value="" id="txt_giaTriMax" autocomplete="off" />
+                </div>
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>
+                <button class="btn btn-info" onclick="SearchData()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
+            </th>
+        </tr>
+    </thead>
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>Số quyết định</th>
+            <th>Ngày quyết định</th>
+            <th>Gói thầu</th>
+            <th width="10%">Dự án</th>
+            <th width="15%">Giá gói thầu được duyệt</th>
+            <th width="8%">Thời gian thực hiện(Ngày)</th>
+            <th width="10%">Đơn vị trúng thầu</th>
+            <th width="10%">Giá trị thầu sau điều chỉnh</th>
+            <th>Điều chỉnh</th>
+            <th width="10%">Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (var item in Model)
+            {
+                index++;
+                <tr style="cursor: pointer">
+                    <td align="center">@index</td>
+                    <td align="left">
+                        @item.sSoQuyetDinh
+                    </td>
+                    <td align="center">
+                        @(item.dNgayQuyetDinh == null? "": item.dNgayQuyetDinh.GetValueOrDefault().ToString("dd/MM/yyyy"))
+                    </td>
+                    <td align="left">
+                        @item.sTenGoiThau
+                    </td>
+
+                    <td align="left">
+                        @item.sTenDuAn
+                    </td>
+                    <td align="center">
+                        @item.fTienTrungThau.Value.ToString("###,###")
+                    </td>
+                    @*<input type="text" id="fTienTrungThau" disabled class="form-control text-right" value="@(Model.fTienTrungThau == null? "": Model.fTienTrungThau.Value.ToString("###,###"))" />*@
+
+                    <td align="center">
+                        @item.iThoiGianThucHien
+                    </td>
+                    <td align="left">
+                        @item.sTenNhaThau
+                    </td>
+                    <td align="center">
+                        @item.giatriDieuChinh.GetValueOrDefault().ToString("###,###")
+                    </td>
+                    <td align="center">
+                        @("(" + item.soLanDieuChinh +")")
+                    </td>
+
+                    <td align="center">
+
+                        <button type="button" class="btn-detail" onclick="xemChiTiet('@item.iID_GoiThauID')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button class="btn-edit"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true" onclick="GetItemData('@item.iID_GoiThauID')"></i></button>
+                        <button class="btn-delete"><i class="fa fa-trash-o fa-lg" aria-hidden="true" onclick="DeleteItem('@item.iID_GoiThauID')"></i></button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+    });
+
+</script>
+<script src="~/Scripts/js/js_vdtWeb.js"></script>
+
+
+

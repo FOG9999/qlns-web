@@ -1,0 +1,286 @@
+﻿@using Viettel.Models.BaoHiemXaHoi
+@model QLBenhNhanBHXHPagingViewModel
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+<div class="tooltip-header-search">
+    <input type="hidden" id="htmlDonViNS" value="@Model.htmlDonViNS" />
+    <input type="hidden" id="htmlDonViBHXH" value="@Model.htmlDonViBHXH" />
+    <input type="hidden" id="sMaDVNS" value="@Model.sMaDonViNS" />
+    <input type="hidden" id="sMaDVBHXH" value="@Model.sMaDonViBHXH" />
+    <input type="hidden" id="sThangFrom" value="@Model.iThangFrom" />
+    <input type="hidden" id="sThangTo" value="@Model.iThangTo" />
+    <input type="hidden" id="sSoNgayDieuTri" value="@Model.iSoNgayDieuTri" />
+    <input type="hidden" id="sHoTen" value="@Model.sHoTen" />
+    <input type="hidden" id="sMaThe" value="@Model.sMaThe" />
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Danh sách bệnh nhân điều trị nội trú BHXH (@Model._paging.TotalItems)</label>
+    </div>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+    <button class="btn btn-primary pull-right" style="margin-right:10px; width: 170px!important" onclick="ShowPopupInBaoCao(1)"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo tổng hợp</button>
+    <button class="btn btn-primary pull-right" style="margin-right:10px; width: 170px!important" onclick="ShowPopupInBaoCao(2)"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo chi tiết</button>
+    <button class="btn btn-default pull-right" style="margin-right:10px; color:black !important" onclick="ImportBenhNhanBHXH();"><i class="fa fa-upload" aria-hidden="true"></i>Import</button>
+
+    @*<div class="form-group text-right">
+            @using (Html.BeginForm("ExportData", "DanhMucDonViBHXH", FormMethod.Post))
+            {
+                <input type="text" name="sMaLoaiDuToan" class="form-control clearable" id="txt_sMaLoaiDuToanExcel" style="display:none" />
+                <input type="text" name="sSoChungTu" class="form-control clearable" id="txt_sSoChungTuExcel" style="display:none" />
+                <input type="text" name="sSoQuyetDinh" class="form-control clearable" id="txt_sSoQuyetDinhExcel" style="display:none" />
+                <input type="text" name="dNgayQuyetDinhTu" class="form-control clearable" id="txt_dNgayQuyetDinhTuExcel" style="display:none" />
+                <input type="text" name="dNgayQuyetDinhDen" class="form-control clearable" id="txt_dNgayQuyetDinhDenExcel" style="display:none" />
+                <input type="text" name="sNoiDung" class="form-control clearable" id="txt_sNoiDungExcel" style="display:none" />
+                <input type="text" name="sLoaiTep" value="EXCEL" class="form-control clearable" style="display:none" />
+                <button class="btn btn-primary" style="margin-right:10px;width:auto !important" onclick="Export()"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Excel</button>
+            }
+        </div>*@
+</div>
+<table class="table table-bordered" id="tblListBenhNhanBHXH">
+    <thead class="header-search">
+    <th width="3%"></th>
+    <th width="10%">
+        <input type="text" class="form-control col-sm-2" value="" id="txtHoTen" autocomplete="off" placeholder="Họ tên" />
+    </th>
+    <th width="5%"></th>
+    <th width="4%"></th>
+    <th width="5%"></th>
+    <th width="10%">
+        <input type="text" class="form-control col-sm-2" value="" id="txtMaThe" autocomplete="off" placeholder="Mã thẻ" />
+    </th>
+    <th width="6%"></th>
+    <th width="6%"></th>
+    <th width="5%">
+        <input type="text" class="form-control col-sm-2" value="" id="txtSoNgayDieuTri" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" placeholder="Số ngày điều trị" />
+    </th>
+    <th width="10%"></th>
+    <th width="10%">
+        @*<select class="form-control required" name="iThang" id="iThang">
+                <option value="">--Chọn tháng--</option>
+                <option value="1">Tháng 1</option>
+                <option value="2">Tháng 2</option>
+                <option value="3">Tháng 3</option>
+                <option value="4">Tháng 4</option>
+                <option value="5">Tháng 5</option>
+                <option value="6">Tháng 6</option>
+                <option value="7">Tháng 7</option>
+                <option value="8">Tháng 8</option>
+                <option value="9">Tháng 9</option>
+                <option value="10">Tháng 10</option>
+                <option value="11">Tháng 11</option>
+                <option value="12">Tháng 12</option>
+            </select>*@
+        <div style="display: flex">
+            <input type='text' style="width: 50%" class="form-control col-sm-2" maxlength="2" value="" id="txtThangFrom" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" placeholder="Từ tháng" />
+            <span style="margin: 8px 5px 0px 5px;">-</span>
+            <input type='text' style="width: 50%" class="form-control col-sm-2" maxlength="2" value="" id="txtThangTo" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" placeholder="Đến tháng" />
+        </div>
+    </th>
+    <th width="9%">
+        @*<select class="form-control required" name="cboDonViNS" id="cboDonViNS">
+                <option value="">--Chọn đơn vị NS--</option>
+            </select>*@
+        <select class="form-control" style="width: 100%" id="cboDonViNS" name="cboDonViNS"></select>
+    </th>
+    <th width="10%">
+        @*<select class="form-control required" name="cboDonViBHXH" id="cboDonViBHXH">
+                <option value="">--Chọn đơn vị BHXH--</option>
+            </select>*@
+        <select class="form-control" style="width: 100%" id="cboDonViBHXH" name="cboDonViBHXH"></select>
+    </th>
+    <th width="7%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+    </thead>
+    <thead>
+    <th width="3%">STT</th>
+    <th width="10%">Họ Tên</th>
+    <th width="5%">Ngày sinh</th>
+    <th width="4%">Giới tính</th>
+    <th width="5%">Cấp bậc</th>
+    <th width="10%">Mã thẻ</th>
+    <th width="6%">Ngày vào viện</th>
+    <th width="6%">Ngày ra viện</th>
+    <th width="5%">Số ngày điều trị</th>
+    <th width="10%">Bệnh viện</th>
+    <th width="10%">Tháng</th>
+    <th width="9%">Tên đơn vị</th>
+    <th width="10%">Tên đơn vị BHXH</th>
+    <th width="7%">Ghi chú</th>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (var item in Model.Items)
+            {
+                index++;
+                <tr style="cursor: pointer">
+                    <td align="center">@(pageIndex + index)</td>
+
+                    <td align="left">@item.sTen</td>
+
+                    <td align="center">@item.sNgaySinhBN</td>
+
+                    <td align="center">@item.sGioiTinh</td>
+
+                    <td align="left">@item.sCapBac</td>
+
+                    <td align="left">@item.sMaThe</td>
+
+                    <td align="center">@item.sNgayVaoVienBN</td>
+
+                    <td align="center">@item.sNgayRaVienBN</td>
+
+                    <td align="center">@(item.iSoNgayDieuTri == null ? 0 : item.iSoNgayDieuTri.Value)</td>
+
+                    <td align="left">@item.sTenBenhVien</td>
+
+                    <td align="center">@(item.iThang == null ? 0 : item.iThang.Value)</td>
+
+                    <td align="left">@item.sTenDonViMapping</td>
+
+                    <td align="left">@item.sTenDonViBHXH</td>
+
+                    <td align="left">@item.sGhiChu</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<input type="hidden" id="typeBC" value="" />
+<input type="hidden" id="urlExportBCTongHop" value="@Url.Action("ExportBaoCaoTongHop", "BaoCaoBHXH")" />
+<input type="hidden" id="urlExportBCChiTiet" value="@Url.Action("ExportFile", "BaoCaoBHXH")" />
+<!-- Modal in bao cao -->
+<div class="modal fade configBaocao" id="configBaocao" tabindex="-1" role="dialog" aria-labelledby="configBaocao" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-center" id=""></h3>
+            </div>
+            <div id="" style="overflow: hidden; padding: 0 20px 0 20px; max-height: 700px">
+                @Html.Partial("PopupConfigBaoCaoPartial")
+            </div>
+        </div>
+    </div>
+</div>
+@*<button type="button" id="btnShowConfirmModal" data-toggle="modal" data-target="#confirmModal"></button>*@
+
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.date')
+            .datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+            });
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+
+        $("#tblListBenhNhanBHXH .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                if (e.which == 13) {//Enter key pressed
+                    ChangePage();
+                }
+            });
+        });
+
+        $('#txtThangFrom').val($("#sThangFrom").val());
+        $('#txtThangTo').val($("#sThangTo").val());
+        $("#txtSoNgayDieuTri").val($("#sSoNgayDieuTri").val());
+        $("#txtHoTen").val($("#sHoTen").val());
+        $("#txtMaThe").val($("#sMaThe").val());
+
+        $('#cboDonViNS').select2({
+            width: 'resolve',
+            matcher: matchStart
+        });
+
+        $('#cboDonViBHXH').select2({
+            width: 'resolve',
+            matcher: matchStart
+        });
+
+        LoadDataComboBoxDonViNS();
+        setTimeout(function () {
+            LoadDataComboBoxDonViBHXH();
+        }, 500);
+        EventChangeDonViNS();
+        //EventChangeThang();
+    });
+
+    function matchStart(params, data) {
+        if ($.trim(params.term) === '') {
+            return data;
+        }
+
+        if (typeof data.children === 'undefined') {
+            return null;
+        }
+
+        var filteredChildren = [];
+        $.each(data.children, function (idx, child) {
+            if (child.text.toUpperCase().indexOf(params.term.toUpperCase()) == 0) {
+                filteredChildren.push(child);
+            }
+        });
+
+        if (filteredChildren.length) {
+            var modifiedData = $.extend({}, data, true);
+            modifiedData.children = filteredChildren;
+
+            return modifiedData;
+        }
+
+        return null;
+    }
+
+    function LoadDataComboBoxDonViBHXH() {
+        $.ajax({
+            url: "/BaoHiemXaHoi/QLBenhNhanBHXH/GetDataComboBoxDonViBHParent",
+            type: "POST",
+            dataType: "json",
+            //data: { id: id },
+            success: function (resp) {
+                $('#cboDonViBHXH').select2({
+                    data: resp.data
+                });
+                $('#cboDonViBHXH').val($("#sMaDVBHXH").val()).trigger('change');
+            }
+        })
+    }
+
+    function LoadDataComboBoxDonViNS() {
+        $.ajax({
+            url: "/BaoHiemXaHoi/QLBenhNhanBHXH/GetDonviNS",
+            type: "POST",
+            dataType: "json",
+            //data: { id: id },
+            success: function (resp) {
+                $('#cboDonViNS').select2({
+                    data: resp.data
+                });
+                $('#cboDonViNS').val($("#sMaDVNS").val()).trigger('change');
+            }
+        })
+    }
+
+    function ShowPopupInBaoCao(iLoaiBC) {
+        if (iLoaiBC == 1) {
+            $('#typeBC').val(1);
+            $("#divTongHop").show();
+        } else if (iLoaiBC == 2) {
+            $('#typeBC').val(2);
+            $("#divTongHop").hide();
+        }
+       
+        $('#configBaocao').modal('show');
+    }
+</script>
+

@@ -1,0 +1,149 @@
+﻿@model ChuKyViewModel
+@{
+    ViewBag.Title = L("NS.ChuKy.Edit");
+    int popup = ViewBag.IsPopup;
+    if (popup == 1)
+    {
+        Layout = "~/Views/Shared/_LayoutEmpty.cshtml";
+    }
+}
+<div class="container">
+    <div class="panel panel-danger">
+        <input type="hidden" id="isClosed" value="@ViewBag.IsClosed" />
+        <input type="hidden" id="isQLThongTriThanhToan" value="@ViewBag.isQLThongTriThanhToan" />
+        <div class="panel-heading">
+            <i class="fa fa-edit"></i>
+            @ViewBag.Title.ToUpper()
+        </div>
+        <div class="panel-body">
+            @using (Html.BeginForm("Edit", "ChuKy", FormMethod.Post, new { area = "", @class = "form-horizontal", enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(x => x.iID_MaBaoCao_ChuKy)
+                @Html.Hidden("popup", popup)
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label-r">Tên controler:</label>
+                        @Helpers.Required()
+                    </div>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(x => Model.sController, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => Model.sController)
+                        <span class="text-muted">(Nhập tên controller của báo cáo để sửa chữ ký)</span>
+                    </div>
+                    <div class="col-sm-2">
+                        <a id="btnEdit" class="btn btn-mvc-green">Sửa chữ ký</a>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label-r">Tên báo cáo:</label>
+                        @Helpers.Required()
+                    </div>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(x => Model.sTenBaoCao, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => Model.sTenBaoCao)
+                    </div>
+                    <div class="col-sm-2">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label class="control-label-r">Tên phân hệ:</label>
+                        @Helpers.Required()
+                    </div>
+                    <div class="col-sm-8">
+                        @Html.DropDownListFor(x => Model.iID_MaPhanHe, (SelectList)ViewBag.PhanHeList, new { @class = "form-control" })
+                        <hr />
+                    </div>
+                </div>
+
+                <div>
+                    <span class="text-center text-danger">QUY ƯỚC: Cục trưởng chữ ký số 5, các chữ ký khác lần lượt từ trái qua phải (1->2,3,4).</span>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-4">
+                        <label class="control-label-r">Chữ ký 1:</label>
+                        @Html.DropDownListFor(x => Model.iID_MaThuaLenh1, (SelectList)ViewBag.ChuKyList, new { @class = "form-control" })
+                        @Html.DropDownListFor(x => Model.iID_MaChucDanh1, (SelectList)ViewBag.ChuKyList, new { @class = "form-control" })
+                        @Html.DropDownListFor(x => Model.iID_MaTen1, (SelectList)ViewBag.ChuKyList, new { @class = "form-control" })
+                        <span class="text-muted">(Mặc định: Trợ lý, <a href="@Url.Action("personalinfo", "account")" target="_parent">Sửa</a>)</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="control-label-r">Chữ ký 2:</label>
+                        @Html.DropDownListFor(x => Model.iID_MaThuaLenh2, (SelectList)ViewBag.ChuKyList, new { @class = "form-control" })
+                        @Html.DropDownListFor(x => Model.iID_MaChucDanh2, (SelectList)ViewBag.ChuKyList, new { @class = "form-control" })
+                        @Html.DropDownListFor(x => Model.iID_MaTen2, (SelectList)ViewBag.ChuKyList, new { @class = "form-control" })
+                        <span class="text-muted">(Mặc định: Trưởng phòng bql)</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="control-label-r">Chữ ký 3:</label>
+                        @Html.DropDownListFor(x => Model.iID_MaThuaLenh3, (SelectList)ViewBag.ChuKyList, new { @class = "form-control" })
+                        @Html.DropDownListFor(x => Model.iID_MaChucDanh3, (SelectList)ViewBag.ChuKyList, new { @class = "form-control" })
+                        @Html.DropDownListFor(x => Model.iID_MaTen3, (SelectList)ViewBag.ChuKyList, new { @class = "form-control" })
+                        <span class="text-muted">(Mặc định: Trưởng phòng B3)</span>
+                    </div>
+                </div>
+            
+                <div class="form-group grChuKy2">
+                    <div class="col-sm-4">
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="control-label-r">Chữ ký 4:</label>
+                        @Html.DropDownListFor(x => Model.iID_MaThuaLenh4, (SelectList)ViewBag.ChuKyList, new { @class = "form-control" })
+                        @Html.DropDownListFor(x => Model.iID_MaChucDanh4, (SelectList)ViewBag.ChuKyList, new { @class = "form-control" })
+                        @Html.DropDownListFor(x => Model.iID_MaTen4, (SelectList)ViewBag.ChuKyList, new { @class = "form-control" })
+                        <span class="text-muted">(Mặc định: Trưởng phòng B2)</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="control-label-r">Chữ ký 5:</label>
+                        @Html.DropDownListFor(x => Model.iID_MaThuaLenh5, (SelectList)ViewBag.ChuKyList, new { @class = "form-control" })
+                        @Html.DropDownListFor(x => Model.iID_MaChucDanh5, (SelectList)ViewBag.ChuKyList, new { @class = "form-control" })
+                        @Html.DropDownListFor(x => Model.iID_MaTen5, (SelectList)ViewBag.ChuKyList, new { @class = "form-control" })
+                        <span class="text-muted">(Mặc định: Cục trưởng)</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <hr />
+                        <button type="submit" class="btn btn-mvc btn-mvc-green">@L("Buttons.SaveChanges")</button>
+                        <button type="button" id="btnClose" class="btn btn-mvc">@L("Buttons.Close")</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@using (Html.BeginScripts())
+{
+    <script>
+        $("#btnClose").click(function () {
+            window.close();
+            opener.window.focus();
+        });
+
+        $('#btnEdit').click(function () {
+
+            var url = '@Url.Action("Edit")' +
+                        "/?c=" + $('#sController').val();
+            window.location.href = url;
+
+        });
+
+        let isClosed = $("#isClosed").val();
+        if (isClosed == '1') {
+            window.close();
+        };
+
+        var isQLThongTriThanhToan = $("#isQLThongTriThanhToan").val();
+        if (isQLThongTriThanhToan == "true") {
+            $(".grChuKy2").css("display", "none");
+        }
+
+    </script>
+}

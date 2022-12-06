@@ -1,0 +1,1 @@
+<add name="NSach" connectionString="Data Source=192.104.78.205;Initial Catalog=NSach;User ID=sa;Password=123456;Connect Timeout=1200;" providerName="System.Data.SqlClient" />

@@ -1,0 +1,58 @@
+﻿@using Viettel.Domain.DomainModel
+@model NNS_DotNhan
+
+<div class="modal-body">
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <input type="hidden" id="txt_IDDotNhan" value="@Model.iID_DotNhan">
+                <label for="txtLoaiDuToanModal">Loại dự toán</label>
+                @Helpers.Required()
+                @Html.DropDownList("cboLoaiDuToanModal", new SelectList(ViewBag.ListLoaiDuToan, "Value", "Text", Model.sMaLoaiDuToan), new { @class = "form-control", @id = "sMaLoaiDuToan" })
+            </div>
+            <div class="col-sm-6">
+                <label for="txtNoiDungModal">Nội dung</label>
+                @Helpers.Required()
+            <textarea required id="txtNoiDungModal" class="form-control" maxlength="250" autocomplete="off">@Model.sNoiDung</textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtSoChungTuModal">Số chứng từ</label>
+                <input type="text" readonly id="txtSoChungTuModal" class="form-control" value="@Model.sSoChungTu" maxlength="50" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtNgayChungTuModal">Ngày chứng từ</label>
+                <div class='input-group date'>
+                    <input type='text' class="form-control" value="@(Model.dNgayChungTu.HasValue ? Model.dNgayChungTu.Value.ToString("dd/MM/yyyy") : string.Empty)" id="txtNgayChungTuModal" autocomplete="off" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txtSoQuyetDinhModal">Số quyết định</label>
+                @Helpers.Required()
+                <input type="text" required id="txtSoQuyetDinhModal" class="form-control" value="@Model.sSoQuyetDinh" maxlength="50" autocomplete="off" />
+            </div>
+            <div class="col-sm-6">
+                <label for="txtNgayQuyetDinhModal">Ngày quyết định</label>
+                @Helpers.Required()
+                <div class='input-group date'>
+                    <input type='text' required class="form-control" value="@(Model.dNgayQuyetDinh.HasValue ? Model.dNgayQuyetDinh.Value.ToString("dd/MM/yyyy") : string.Empty)" id="txtNgayQuyetDinhModal" autocomplete="off" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="text-center">
+        <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>

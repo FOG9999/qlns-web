@@ -1,0 +1,226 @@
+﻿@model rptQuyetToanNam_SoChuyenNamSauViewModel
+@{
+    ViewBag.Title = "Báo cáo số đề nghị chuyển năm sau " + PhienLamViec.iNamLamViec;
+}
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">@ViewBag.Title</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6"></div>
+                <div class="col-xs-6">
+                    <h6><strong class="text-uppercase">Đơn vị:</strong></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Phòng ban:</label>
+                            <div class="col-sm-9">
+                                @Html.DropDownList("iID_MaPhongBan", Model.PhongBanList, new { @class = "form-control", onchange = "change()" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Loại báo cáo:</label>
+                            <div class="col-sm-9" id="loaiBaoCao">
+                                <div class="radio">
+                                    <input type="radio" name="loaiBaoCao" id="loaiBaoCao-tonghop" checked="checked" value="tonghop" />
+                                    <label for="loaiBaoCao-tonghop">
+                                        Tổng hợp
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" id="loaiBaoCao-chitiet" name="loaiBaoCao" value="chitiet" />
+                                    <label for="loaiBaoCao-chitiet">
+                                        Chi tiết đơn vị
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Mẫu báo cáo:</label>
+                            <div class="col-sm-9" id="mauBaoCao">
+                                <div class="radio">
+                                    <input type="radio" name="mauBaoCao" id="maubaoCao-1" checked="checked" value="1" />
+                                    <label for="maubaoCao-1">
+                                        Đến LNS
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" id="maubaoCao-2" name="mauBaoCao" value="2" />
+                                    <label for="maubaoCao-2">
+                                        Đến đơn vị
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" id="maubaoCao-3" name="mauBaoCao" value="3" />
+                                    <label for="maubaoCao-3">
+                                        Đơn vị - Chi tiết tới NG
+                                    </label>
+                                </div>
+                                @*<div class="radio">
+                                        <input type="radio" id="maubaoCao-4" name="mauBaoCao" value="4" />
+                                        <label for="maubaoCao-4">
+                                            Đơn vị - LNS - Chi tiết
+                                        </label>
+                                    </div>*@
+                                <div class="radio">
+                                    <input type="radio" name="mauBaoCao" id="maubaoCao-11" value="11" />
+                                    <label for="maubaoCao-11">
+                                        Đến LNS - Mục - Đơn vị
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="mauBaoCao" id="maubaoCao-12" value="12" />
+                                    <label for="maubaoCao-12">
+                                        Đến LNS - NG - Đơn vị
+                                    </label>
+                                </div>
+                                @if (User.Identity.Name.StartsWith("trolyphongban"))
+                                {
+                                    <div class="radio" id="maubaoCao-100">
+                                        <input type="radio" id="maubaoCao-100" name="mauBaoCao" value="100" />
+                                        <label for="maubaoCao-100">
+                                            Tổng hợp số chuyển năm sau (NSSD+NSBĐ)
+                                        </label>
+                                    </div>
+                                }  
+                            </div>
+                        </div>
+                        <div class="form-group" id="option-lns">
+                            <label class="control-label col-sm-3">Loại ngân sách:</label>
+                            <div class="col-sm-9" id="lns">
+                                <div class="radio">
+                                    <input type="radio" name="lns" id="lns-1" checked="checked" value="1" />
+                                    <label for="lns-1">
+                                        Ngân sách quốc phòng
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" id="lns-2" name="lns" value="2,3" />
+                                    <label for="lns-2">
+                                        Ngân sách nhà nước
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" id="lns-4" name="lns" value="4" />
+                                    <label for="lns-4">
+                                        Ngân sách khác
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <div id="iID_MaDonVi" class="ls-box" data-check="first-only">
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "QuyetToan_Report")">Hủy</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    change();
+
+    function change() {
+
+        var iID_MaPhongBan = $("#iID_MaPhongBan").val();
+
+        var url = '@Url.Action("Ds_DonVi")' +
+                "/?iID_MaPhongBan=" + iID_MaPhongBan;
+
+        fillCheckboxList("iID_MaDonVi", "DonVi", url);
+    }
+
+    function showLNS() {
+        var mauBaoCao = $("#mauBaoCao input[type='radio']:checked").val();
+
+        var loaiBaoCao = $("#loaiBaoCao input[type='radio']:checked").val();
+        if (loaiBaoCao == "chitiet") {
+            $("#option-lns").hide();
+            $("#maubaoCao-100").hide();
+        }
+        else if (mauBaoCao == 3 || mauBaoCao == 11 || mauBaoCao == 12) {
+            $("#option-lns").show();
+        }
+        else if (loaiBaoCao == "tonghop")
+        {
+            $("#maubaoCao-100").show();
+        }
+        else {
+            $("#option-lns").hide();
+        }
+    }
+
+    $("#mauBaoCao input[type='radio']").on("change", function () {
+        showLNS();
+    });
+
+    $("#loaiBaoCao input[type='radio']").on("change", function () {
+        showLNS();
+    });
+
+
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+
+        var ext = $(this).data("ext");
+        var loaiBaoCao = $("#loaiBaoCao input[type='radio']:checked").val();
+        var mauBaoCao = $("#mauBaoCao input[type='radio']:checked").val();
+        var iID_MaPhongBan = $("#iID_MaPhongBan").val();
+
+
+        var lns = $("#lns input[type='radio']:checked").val();
+        if (mauBaoCao != 3 && mauBaoCao != 11 && mauBaoCao != 12) {
+            lns = "";
+        }
+
+        if (loaiBaoCao == "chitiet" || mauBaoCao == "4") {
+            $("input:checkbox[check-group='DonVi']").each(function () {
+                if (this.checked) {
+                    var item = this.value;
+                    var url = unescape('@Url.Action("Print")' +
+                        "?ext=" + ext +
+                        "&r=" + 140 +
+                        "&iID_MaDonVi=" + item +
+                        "&iID_MaPhongBan=" + iID_MaPhongBan +
+                        "&loaiBaoCao=" + loaiBaoCao +
+                        "&mauBaoCao=" + mauBaoCao +
+                        "&lns=" + lns);
+
+                    links.push(url);
+
+                    console.log(url);
+                }
+            });
+
+            openLinks(links);
+        }
+        else {
+            var url = unescape('@Url.Action("Print")' +
+                   "?ext=" + ext +
+                   "&r=" + 140 +
+                   "&iID_MaDonVi=" + getCheckedItems("DonVi") +
+                   "&iID_MaPhongBan=" + iID_MaPhongBan +
+                   "&loaiBaoCao=" + loaiBaoCao +
+                   "&mauBaoCao=" + mauBaoCao +
+                   "&lns=" + lns);
+            openTab(url);
+        }
+
+    });
+
+</script>

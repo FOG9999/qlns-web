@@ -1,0 +1,103 @@
+﻿@using System.Linq
+@using Viettel.Models.BaoHiemXaHoi
+@model List<ImportBHXHModel>
+
+<div class="tooltip-header-search">
+    <input type="hidden" id="bIsErrorDonVi" value="@ViewBag.bIsErrorDonVi">
+    <ul class="nav nav-tabs">
+        <li id="li_danhsach" class="active"><a data-toggle="tab" href="#danhsachDung">Danh sách</a></li>
+        <li id="li_danhsachloi"><a data-toggle="tab" href="#danhsachSai">Lỗi</a></li>
+    </ul>
+    <div class="card-body tab-content" id="danhsachBenhNhan">
+        @{
+            <div id="danhsachDung" class="tab-pane fade in active">
+                <div class="card-body" style="overflow:auto" id="showData">
+                    <div class="" style=" min-height: min-content; max-height: 850px;">
+                        <input type="hidden" id="lstIdImport" value="@ViewBag.lstIdImport">
+                        <table id="tableDung" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th width="3%">STT</th>
+                                    <th width="10%">Họ Tên</th>
+                                    <th width="5%">Ngày sinh</th>
+                                    <th width="5%">Giới tính</th>
+                                    <th width="5%">Cấp bậc</th>
+                                    @*<th width="5%">Chức vụ</th>*@
+                                    <th width="10%">Mã thẻ</th>
+                                    <th width="5%">Ngày vào viện</th>
+                                    <th width="5%">Ngày ra viện</th>
+                                    <th width="5%">Số ngày điều trị</th>
+                                    <th width="5%">Mã bệnh viện</th>
+                                    <th width="10%">Tên bệnh viện</th>
+                                    <th width="5%">Mã đơn vị</th>
+                                    <th width="10%">Tên đơn vị</th>
+                                    <th width="5%">Ghi chú</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tBodyDung">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="danhsachSai" class="tab-pane fade in">
+                <div class="card-body" style="overflow:auto" id="showData">
+                    <div class="" style="min-height: min-content; max-height: 850px; ">
+                        <table id="tableSai" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th width="3%">STT</th>
+                                    <th width="10%">Họ Tên</th>
+                                    <th width="5%">Ngày sinh</th>
+                                    <th width="5%">Giới tính</th>
+                                    <th width="5%">Cấp bậc</th>
+                                    @*<th width="5%">Chức vụ</th>*@
+                                    <th width="10%">Mã thẻ</th>
+                                    <th width="5%">Ngày vào viện</th>
+                                    <th width="5%">Ngày ra viện</th>
+                                    <th width="5%">Số ngày điều trị</th>
+                                    <th width="5%">Mã bệnh viện</th>
+                                    <th width="10%">Tên bệnh viện</th>
+                                    <th width="5%">Mã đơn vị</th>
+                                    <th width="10%">Tên đơn vị</th>
+                                    <th width="5%">Ghi chú</th>
+                                    <th width="2%"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tBodySai">
+                               
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    var iPargeIndex = 1;
+    var lstImportId = [];
+    var lstDataUpdate = [];
+
+    $(document).ready(function () {
+        lstDataUpdate = [];
+        //if ($("#bIsErrorDonVi").val() == 1) {
+        //    $("#btnLuu").css("display", "none");
+        //}
+        if ($("#lstIdImport").val() != null && $("#lstIdImport").val() != "") {
+            $("#lstIdImport").val().split(',').forEach(function (value, index) {
+                lstImportId.push(value);
+            });
+        }
+        GetDataTemp();
+    });
+
+    $(window).scroll(function () {
+        if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+            iPargeIndex = iPargeIndex + 1;
+            GetDataTemp(iPargeIndex);
+        }
+    });
+</script>

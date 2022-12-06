@@ -1,0 +1,91 @@
+﻿@using Viettel.Models.QLNH.KhoiTao
+@using Viettel.Domain.DomainModel
+@using System.Globalization;
+@using VIETTEL.Common
+@model NH_QT_KhoiTaoCapPhat_ChiTietView
+<style>
+
+    .table-wrap {
+        overflow: auto;
+    }
+
+    /*
+    .frozenCol {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        background: rgb(242, 242, 242);
+        border: 1px solid rgb(221, 221, 221);
+    }*/
+</style>
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Thông tin chi tiết (Năm : @Html.Raw(Html.Encode(Model.KhoiTaoCapPhatDetail.iNamKhoiTao)) | Đơn vị : @Html.Raw(Html.Encode(Model.KhoiTaoCapPhatDetail.sTenDonVi)))</label>
+    </div>
+    <div class="col-sm-4 @(ViewBag.IsEdit != false ? "" : "hidden")" style="display:flex;padding-left:0px; justify-content:end">
+        <button class="btn btn-info pull-right w-a" style="margin-right:10px;width:auto !important" onclick="ThemDuAn()"><i class="fa fa-plus" aria-hidden="true"></i>Tạo mới dự án</button>
+        <button class="btn btn-primary pull-right w-a" style="width: auto !important" onclick="ThemHopDong()"><i class="fa fa-plus" aria-hidden="true"></i>Tạo mới hợp đồng</button>
+    </div>
+</div>
+<input type="hidden" id="tiGiaQuyetToan" value="@Html.Raw(Html.Encode(Model.KhoiTaoCapPhatDetail.sMaTienTeGoc))" />
+<input type="hidden" id="tiGiaChiTiet" value="@Model.KhoiTaoCapPhatDetail.fDonViTiGia.Value.ToString("0." + new string('#', 399), new CultureInfo("en-US"))" />
+<input type="hidden" id="iID_KhoiTaoCapPhatID" value="@Model.KhoiTaoCapPhatDetail.ID" />
+
+
+<div class="table-wrap">
+    <table class="table table-bordered table-update tr-hover" id="tbListChiTietKhoiTaoCapPhat">
+        <thead>
+            <tr>
+                <th style="min-width: 200px" rowspan="2" class="frozenCol">Nội dung chi</th>
+                <th style="min-width: 200px" colspan="2">Quyết toán kinh phí được duyệt các năm trước </th>
+                <th style="min-width: 200px" colspan="2">Kinh phí đề nghị quyết toán trong năm</th>
+                <th style="min-width: 200px" colspan="2">Lũy kế kinh phí được cấp từ khởi đầu đến năm nay</th>
+                <th style="min-width: 200px" rowspan="2" @(ViewBag.IsEdit != false ? "" : "hidden")>Thao tác</th>
+
+            </tr>
+            <tr>
+                <th class="m-w100">USD</th>
+                <th class="m-w100">VND</th>
+                <th class="m-w100">USD</th>
+                <th class="m-w100">VND</th>
+                <th class="m-w100">USD</th>
+                <th class="m-w100">VND</th>
+            </tr>
+        </thead>
+        <tbody @(ViewBag.IsEdit != false ? "" : "hidden") name="tableCreate">
+        </tbody>
+        <tbody @(ViewBag.IsEdit == false ? "" : "hidden")>
+            @{
+                foreach (var item in Model.ListDetailKhoiTaoCapPhat)
+                {
+                    <tr style="cursor: pointer" class="row-select">
+                        <td align="center" data-name="ID" data-value="@item.ID" hidden></td>
+                        <td align="center" data-name="iID_KhoiTaoCapPhatID" data-value="@item.iID_KhoiTaoCapPhatID" hidden></td>
+                        <td align="center" data-name="@(item.iID_HopDongID == null ? "iID_DuAnID" : "iID_HopDongID")" data-value="@(item.iID_HopDongID == null ? item.iID_DuAnID : item.iID_HopDongID)">@Html.Raw(Html.Encode(item.iID_HopDongID == null ? item.sTenDuAn : item.sTenHopDong))</td>
+                        <td align="center" data-name="fQTKinhPhiDuyetCacNamTruoc_USD" data-value="@(item.fQTKinhPhiDuyetCacNamTruoc_USD)">@(item.fQTKinhPhiDuyetCacNamTruoc_USD.HasValue ? CommonFunction.DinhDangSo(item.fQTKinhPhiDuyetCacNamTruoc_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td align="center" data-name="fQTKinhPhiDuyetCacNamTruoc_VND" data-value="@(item.fQTKinhPhiDuyetCacNamTruoc_VND)">@(item.fQTKinhPhiDuyetCacNamTruoc_VND.HasValue ? CommonFunction.DinhDangSo(item.fQTKinhPhiDuyetCacNamTruoc_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                        <td align="center" data-name="fDeNghiQTNamNay_USD" data-value="@(item.fDeNghiQTNamNay_USD)">@(item.fDeNghiQTNamNay_USD.HasValue ? CommonFunction.DinhDangSo(item.fDeNghiQTNamNay_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td align="center" data-name="fDeNghiQTNamNay_VND" data-value="@(item.fDeNghiQTNamNay_VND)">@(item.fDeNghiQTNamNay_VND.HasValue ? CommonFunction.DinhDangSo(item.fDeNghiQTNamNay_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                        <td align="center" data-name="fLuyKeKinhPhiDuocCap_USD" data-value="@(item.fLuyKeKinhPhiDuocCap_USD)">@(item.fLuyKeKinhPhiDuocCap_USD.HasValue ? CommonFunction.DinhDangSo(item.fLuyKeKinhPhiDuocCap_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                        <td align="center" data-name="fLuyKeKinhPhiDuocCap_VND" data-value="@(item.fLuyKeKinhPhiDuocCap_VND)">@(item.fLuyKeKinhPhiDuocCap_VND.HasValue ? CommonFunction.DinhDangSo(item.fLuyKeKinhPhiDuocCap_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="modal-footer" @(ViewBag.IsEdit != false ? "" : "hidden")>
+    <div class="text-center">
+        <button class="btn btn-default" id="btnHuyModal" onclick="Cancel()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        <button class="btn btn-primary" onclick="Save()" id="btnLuuModal"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+    </div>
+</div>
+<div class="modal-footer" @(ViewBag.IsEdit == false ? "" : "hidden")>
+    <div class="text-center">
+        <button class="btn btn-default" style="width: 100%" onclick="Cancel()"><i class="fa fa-ban" aria-hidden="true"></i><span>Quay lại</span></button>
+    </div>
+</div>
+
+<script src="~/Scripts/jsNumber.js" type="text/javascript"></script>
+

@@ -1,0 +1,25 @@
+﻿@{
+    Layout = "~/views/shared/_layout.cshtml";
+
+    ViewBag.Title = "Danh sách báo dự toán ngân sách năm " + PhienLamViec.iNamLamViec;
+
+    var items = new List<MenuItem>
+    {
+
+    new MenuItem{
+        id="DT_K11_NG",
+        name = "Báo cáo dự toán theo ngành",
+        url = Url.Action("Index", "rptDuToan_K11_NG"),
+        note = "Đơn vị"},
+
+     new MenuItem{
+        id="DT_K11_TH",
+        name = "Báo cáo dự toán theo ngành - Tổng hợp đơn vị (Đơn vị hàng dọc - Ngành hàng ngang)",
+        url = Url.Action("Index", "rptDuToan_K11_NG_TH"),
+        note = ""},
+
+
+
+    };
+}
+@Html.Partial("_report_table", items)

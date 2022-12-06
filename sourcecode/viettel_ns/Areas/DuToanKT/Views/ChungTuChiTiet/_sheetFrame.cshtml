@@ -1,0 +1,44 @@
+﻿@model SheetViewModel
+@{
+    Layout = "~/Views/shared/sheet/_LayoutSheetFrame.cshtml";
+}
+@section Styles{
+    <link rel="Stylesheet" type="text/css" href="~/Content/css/sheet.css">
+}
+@*<div class="container-fluid">
+        <div id="sheet">
+        </div>
+    </div>*@
+@Html.Partial("_SheetSearch", Model)
+@Html.Partial("_SheetEditor", Model)
+@section Scripts{
+    @Html.Partial("_SheetScript")
+    <script src="~/Scripts/sheet/jsSheet_dtkt.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            Bang_arrDSTruongTien = '@MucLucNganSachModels.strDSTruongTien'.split(',');
+            Bang_Url_getGiaTri = '@Url.Action("get_GiaTri", "Public")';
+            Bang_Url_getDanhSach = '@Url.Action("get_DanhSach", "Public")';
+            BangDuLieu_DuocSuaChiTiet = '@Model.Table.IsEditable';
+
+            if (BangDuLieu_DuocSuaChiTiet) {
+                Bang_keys.fnSetFocus(null, null);
+            }
+        });
+        var scripts = document.getElementsByTagName('script');
+        var torefreshs = ['jsSheet_dtkt.js']; // list of js to be refresh
+        var key = 1; // change this key every time you want force a refresh
+        for (var i = 0; i < scripts.length; i++) {
+            for (var j = 0; j < torefreshs; j++) {
+                if (scripts[i].src && (scripts[i].src.indexOf(torefreshs[j]) > -1)) {
+                    new_src = scripts[i].src.replace(torefreshs[j], torefreshs[j] + 'k=' + key);
+                    scripts[i].src = new_src; // change src in order to refresh js
+                }
+            }
+        }
+
+    </script>
+}
+

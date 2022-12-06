@@ -1,0 +1,64 @@
+﻿@model Viettel.Models.QLNH.QuyetToan_ChungTuModelPaging
+@{
+    ViewBag.Title = "Tài sản";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+    <style>
+        #tbListTaiSan thead th:first-child, #tbListTaiSan tbody .r_STT {
+            min-width: 80px !important;
+            max-width: 80px !important;
+        }
+        #tbListTaiSan thead th, #tbListTaiSan tbody td {
+            min-width: 200px;
+            max-width: 200px;
+        }
+
+        html {
+            overflow-x: hidden;
+        }
+    </style>
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body" id="lstDataView">
+                @Html.Partial("_list", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalTaiSan" role="dialog" aria-labelledby="modalTaiSanLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-left" id="modalTaiSanLabel"></h3>
+            </div>
+            <div id="contentModalTaiSan">
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/QLNH/QuyetToan/jsTaiSan.js"></script>
+
+    <script>
+        var _paging = {};
+        $(document).ready(function () {
+            _paging.CurrentPage = @Model._paging.CurrentPage;
+            _paging.ItemsPerPage = @Model._paging.ItemsPerPage;
+        });
+    </script>
+}

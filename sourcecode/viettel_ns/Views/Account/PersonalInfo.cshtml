@@ -1,0 +1,35 @@
+﻿@model ProfileViewModel
+@{
+    ViewBag.Title = L("Membership.PersonalInfo");
+}
+<div class="container">
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            @ViewBag.Title.ToUpper()
+        </div>
+        <div class="panel-body">
+            @using (Html.BeginForm("PersonalInfo", "Account", FormMethod.Post, new { area = "", @class = "form-horizontal" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        @*@Html.LabelFor(x => x.FullName, new { @class = "control-label-r" })*@
+                        <label class="control-label-r">Cấp bậc & họ tên:</label>
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(x => x.FullName, new { @class = "form-control" })
+                        <i class="text-muted">(Dùng làm chữ ký)</i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <hr />
+                        <button type="submit" class="btn btn-mvc btn-mvc-green">@L("Buttons.SaveData")</button>
+                        @*<a href="@Url.Action("Index", "ChungTu", new { loai = Model.iLoai })" class="btn btn-mvc">@L("Buttons.Cancel")</a>*@
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

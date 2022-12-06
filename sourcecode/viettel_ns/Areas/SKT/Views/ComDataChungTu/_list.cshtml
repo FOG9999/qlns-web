@@ -1,0 +1,133 @@
+﻿@model IEnumerable<ComDataChungTuDetailsViewModel>
+@Html.AntiForgeryToken()
+<table class="table table-bordered">
+    <thead>
+        <tr style="background:#06A199;color:whitesmoke">
+            <th style="width:40px;text-align:center">#</th>
+            <th style="width:100px;text-align:center">Số CT</th>
+            @if (ViewBag.Loai == 1)
+            {
+                <th style="width:260px;text-align:center">Đơn vị</th>
+            }
+            else
+            {
+                <th style="width:260px;text-align:center">Ngành - đơn vị</th>
+            }
+            <th style="width:260px;text-align:center">Phòng ban quản lý</th>
+            <th style="width:120px;text-align:center">Ngày chứng từ</th>
+            <th style="width:auto;text-align:center">Nội dung</th>
+            <th style="width:100px;text-align:center">Người tạo</th>
+            <th style="width:130px;text-align:center">Thời gian tạo</th>
+            <th style="width:150px;text-align:center"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            var item = Model.ElementAt(i);
+            var url = Url.Action("Index", "ComDataChungTuChiTiet", new { area = "SKT", item.Id });
+            var bg = (i % 2) == 0 ? "" : "background-color: #F8F8F8";
+
+
+            <tr style="@bg">
+                <td>@(i + 1)</td>
+                <td style="text-align: center">
+                    <a class="link-nounderline text-danger" href="@url">
+                        @string.Format("{0}-{1}", "SKT", item.SoChungTu.GetValueOrDefault().ToString("00#"))
+                    </a>
+                </td>
+                <td>
+                    <a class="link-nounderline text-danger" href="@url">
+                        <strong>@item.TenDonVi</strong>
+                    </a>
+                </td>                
+                <td style="text-align: center">
+                    @item.TenPhongBan
+                </td>
+                <td style="text-align: center">
+                    @item.NgayChungTu.ToString("dd/MM/yyyy")
+                </td>
+                <td>
+                    <a class="link-nounderline text-danger" href="@url">
+                        @item.NoiDung
+                    </a>
+                </td>
+                <td>@item.UserCreator</td>
+                <td>@item.DateCreated.GetValueOrDefault().ToString("dd/MM/yyyy HH:mm")</td>
+                <td class="text-center">                    
+                    <a class="btn btn-mvc btn-mvc-small" title="@L("Button.Edit")" href="@Url.Action("Edit", "ComDataChungTu", new { item.Id })"><i class="fa fa-edit"></i></a>
+                    <a class="btn btn-mvc btn-mvc-small btn_delete" data-id="@item.Id" title="@L("Button.Delete")"><i class="fa fa-remove"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr style="background:#06A199;color:whitesmoke">   
+            <th style="text-align:center" colspan="9">Tổng cộng @Model.Count() đơn vị (ngành)</th>       
+        </tr>
+    </tfoot>
+</table>
+@using (Html.BeginScripts())
+{
+    <script>
+
+        $(".btn_delete").click(function () {
+            swal({
+                title: 'Xóa chứng từ?',
+                text: 'Bạn muốn xóa chứng từ!',
+                type: 'question',
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Đồng ý xóa!',
+                cancelButtonText: 'Hủy',
+            }).then((r) => {
+
+                if (r.value) {
+
+                    var id = $(this).data("id");
+                    deleteChungTu(id);
+                }
+
+            });
+        });
+        
+        function deleteChungTu(id) {
+            var url = '@Url.Action("delete", "ComDataChungTu")';
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    id,
+                    __RequestVerificationToken: token,
+                },
+                success: function (data) {
+
+                    JSON.stringify(data);
+
+                    if (data.success) {
+                        swal({
+                            title: 'Đã xóa!',
+                            text: 'Chứng từ đã được xóa thành công.',
+                            type: 'success',
+                            timer: 1500
+                        }).then((r) => {
+                            location.reload();
+                        });
+                    }
+                    else {
+                        swal(
+                        'Xóa bị lỗi!',
+                        data.msg,
+                        'error');
+                    }
+                },
+            });
+
+
+        }
+        
+
+    </script>
+}

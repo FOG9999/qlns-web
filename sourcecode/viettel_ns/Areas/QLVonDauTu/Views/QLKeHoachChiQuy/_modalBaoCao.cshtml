@@ -1,0 +1,33 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model KHChiQuyPagingModel
+<div class="modal-body">
+    <h4>Báo cáo kế hoạch chi quý</h4>
+    <div>
+
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <label>Tiêu đề 1</label>
+            <input type="text" class="form-control clearable gr_search" id="txtTieuDe1" value="Báo cáo kế hoạch chi quý ... năm ..." />
+        </div>
+        <div class="col-sm-12" style="margin-top:15px">
+            <label>Tiều đề 2</label>
+            <input type="text" class="form-control clearable gr_search" id="txtTieuDe2" value="Nguồn vốn ..." />
+        </div>
+        <div class="col-sm-12" style="margin-top:15px; margin-bottom: 5px">
+            <label>Đơn vị tính</label>
+            @Html.DropDownList("iDVTinh", (SelectList)(ViewBag.ListDVTinh), new { @class = "form-control", @id = "iVND" })
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div style="text-align : center">
+            <button class="btn btn-success" id="btnChuKy"><i class="fa fa-edit" aria-hidden="true"></i><span>Chữ ký</span></button>
+            <button class="btn btn-primary" onclick="printBaoCao('pdf')"> <i class="fa fa-download" aria-hidden="true"></i><span>Xuất PDF</span></button>
+            <button class="btn btn-primary" onclick="printBaoCao('xlsx')"> <i class="fa fa-download" aria-hidden="true"></i><span>Xuất Excel</span></button>
+            <button class="btn btn-default" id="btnHuyModal" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+        </div>
+    </div>
+</div>
+@Html.Partial("_ui_chuky")
+<input type="hidden" id="urlExportKeHoachChiQuy" value="@Url.Action("ExportFile", "QLKeHoachChiQuy")" />
+<script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>

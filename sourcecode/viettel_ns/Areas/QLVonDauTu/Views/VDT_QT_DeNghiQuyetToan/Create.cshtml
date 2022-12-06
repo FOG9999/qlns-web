@@ -1,0 +1,190 @@
+﻿@{
+    ViewBag.Title = "Thêm mới";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body create_thdt">
+                <div class="form-group row">
+                    @*left*@
+                    <div class="col-sm-6">
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtSoBaoCao" class="">Số báo cáo <span class="require">*</span></label>
+                                <input type="text" required id="txt_SoBaoCao" class="form-control" maxlength="50" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtNgayBaoCao" class="">Ngày báo cáo <span class="require">*</span></label>
+                                <div class='input-group date'>
+                                    <input type='text' required class="form-control dateFormat" placeholder="dd/MM/yyyy" id="txtNgayBaoCao" autocomplete="off" value="@ViewBag.dNgayDeNghi" />
+                                    <span class="btn-default input-group-addon">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txt_DonViQuanLy" class="">Đơn vị <span class="require">*</span></label>
+                                <select class="form-control" style="width:100%" id="txt_DonViQuanLy" name="donViQuanLy"></select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txt_DuAn" class="">Dự án  <span class="require">*</span></label>
+                                <select class="form-control" style="width: 100%" id="txt_DuAn" name="duAn">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txt_LoaiQuyetToan" class="">Loại quyết toán <span class="require">*</span></label>
+                                <select class="form-control" style="width:100%" id="txt_LoaiQuyetToan" name="loaiQuyetToan"></select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="iIđuToanId" class="">Quyết định <span class="require">*</span></label>
+                                <select class="form-control" style="width:100%" id="iIđuToanId"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txt_ChuDauTu" class="">Chủ đầu tư</label>
+                                <input type="text" id="txt_ChuDauTu" class="form-control" autocomplete="off" disabled />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtThoiGianKhoiCong" class="">Thời gian khởi công</label>
+                                <div class='input-group date'>
+                                    <input type='text' class="form-control col-sm-2 requireInput startYear" id="txtThoiGianKhoiCong" autocomplete="off" disabled />
+                                    <span class="btn-default input-group-addon">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtThoiGianHoanThanh" class="">Thời gian hoàn thành</label>
+                                <div class='input-group date'>
+                                    <input type='text' class="form-control col-sm-2 requireInput endYear" id="txtThoiGianHoanThanh" autocomplete="off" disabled />
+                                    <span class="btn-default input-group-addon">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtGiaTriQuyetToan" class="">Giá trị quyết toán</label>
+                                <input type="text" required id="txtGiaTriQuyetToan" class="form-control" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtGhiChu" class="">Ghi chú</label>
+                                <input type="text" required id="txtGhiChu" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    @*right*@
+                    <div class="col-sm-6">
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtChiPhiThietHai" class="">Chi phí thiệt hại do các nguyên nhân bất thường</label>
+                                <input type='text' class="form-control clearable" id="txtChiPhiThietHai" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtChiPhiKhongTaoNenTaiSan" class="">Chi phí không tạo nên tài sản</label>
+                                <input type='text' class="form-control clearable" id="txtChiPhiKhongTaoNenTaiSan" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                        </div>
+                        <label>Tài sản dài hạn</label>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtTaiSanDaiHanThuocCDTQuanLy" class="">Thuộc CDT quản lý</label>
+                                <input type='text' class="form-control clearable" id="txtTaiSanDaiHanThuocCDTQuanLy" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtTaiSanDaiHanDvKhacQuanLy" class="">Giao đơn vị khác quản lý</label>
+                                <input type='text' class="form-control clearable" id="txtTaiSanDaiHanDvKhacQuanLy" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                        </div>
+                        <label>Tài sản ngắn hạn</label>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="txtTaiSanNganHanThuocCDTQuanLay" class="">Thuộc CDT quản lý</label>
+                                <input type='text' class="form-control clearable" id="txtTaiSanNganHanThuocCDTQuanLay" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="txtTaiSanNganHanDvKhacQuanLy" class="">Giao đơn vị khác quản lý</label>
+                                <input type='text' class="form-control clearable" id="txtTaiSanNganHanDvKhacQuanLy" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered" id="tblDanhSachNguonVon">
+                                    <thead>
+                                        <tr>
+                                            <th width="45%">Nguồn vốn</th>
+                                            <th width="25%" class="text-right">Giá trị phê duyệt</th>
+                                            @*<th class="text-right">Chủ đầu tư đề nghị quyết toán</th>*@
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group div_ChiTiet" style="display: none">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered" id="tblDanhSachChiTiet">
+                                <thead>
+                                    <tr>
+                                        <th width="8%" rowspan="2">STT</th>
+                                        <th width="7%" rowspan="2">Loại</th>
+                                        <th width="15%" rowspan="2">Nội dung</th>
+                                        <th width="10%" rowspan="2">Dự toán được duyệt</th>
+                                        <th width="10%" rowspan="2">Giá trị quyết toán A-B</th>
+                                        <th width="10%" rowspan="2">Kết quả kiểm toán của đơn vị kiểm toán</th>
+                                        <th width="10%" rowspan="2">CDT đề nghị quyết toán</th>
+                                        <th width="30%" colspan="3">Chênh lệch</th>
+                                    </tr>
+                                    <tr>
+                                        <th width="10%">So với dự toán</th>
+                                        <th width="10%">So với quyết toán A-B</th>
+                                        <th width="10%">So với kết quả Kiểm toán của đơn vị kiểm toán</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group text-center">
+                    <button class="btn btn-default" onclick="RejectViewIndex()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                    <button class="btn btn-primary" onclick="SaveData()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="divModalConfirm">
+</div>
+
+<script src="~/Scripts/QLVonDauTu/QuyetToan/jsVDT_DeNghiQTDuAnHoanThanh_TaoMoi.js" type="text/javascript"></script>
+<script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+<script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>
+
+
+

@@ -1,0 +1,321 @@
+﻿@using Viettel.Models.QLNH
+@model  ThongTinThanhToanPagingViewModel
+
+<div class="tooltip-header-search">
+    <div class="col-sm-6" style="display:flex;padding-left:0px">
+        <label class="control-label">Đề nghị thanh toán (@Model._paging.TotalItems)</label>
+    </div>
+</div>
+<div class="row mb-10">
+    <div class="col-sm-3 col-md-3 col-lg-3"></div>
+    <div class="col-sm-9 col-md-9 col-lg-9"></div>
+
+    @*<button class="btn btn-warning pull-right mr-10" onclick="ViewShowChoiceBaoCao()"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>*@
+    <div class="dropdown pull-right mr-10">
+        <button class="btn btn-warning pull-right mr-10" onclick="ViewShowChoiceBaoCao()"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
+        <div class="dropdown-content">
+            <a href="#" class="list-group-item list-group-item-action" onclick="onModalBaoCao(1)">
+                Giấy đề nghị thanh toán (Chi ngoại tệ) - Theo QĐ435 BM03
+            </a>
+            <a href="#" class="list-group-item list-group-item-action" onclick="onModalBaoCao(2)">
+                Giấy đề nghị thanh toán (Chi trong nước) - Theo QĐ435 BM04
+            </a>
+            <a href="#" class="list-group-item list-group-item-action" onclick="onModalBaoCao(3)">
+                Thông báo chi ngân sách - Theo QĐ435 BM01
+            </a>
+            <a href="#" class="list-group-item list-group-item-action" onclick="onModalBaoCao(4)">
+                Thông báo cấp kinh phí bằng ngoại tệ - Theo QĐ435 BM05
+            </a>
+            <a href="#" class="list-group-item list-group-item-action" onclick="onModalBaoCao(5)">
+                Thông báo cấp kinh phí chi trong nước - Theo QĐ435 BM06
+            </a>
+        </div>
+    </div>
+    <button class="btn btn-primary pull-right mr-10" onclick="Insert()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-info pull-right mr-10" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+</div>
+@*<div class="dDenghithanhtoan list-group">
+    <div class="list-group-content">
+        <a href="#" class="list-group-item list-group-item-action" onclick="onModalBaoCao(1)">
+            Giấy đề nghị thanh toán (Chi ngoại tệ) - Theo QĐ435 BM03
+        </a>
+        <a href="#" class="list-group-item list-group-item-action" onclick="onModalBaoCao(2)">
+            Giấy đề nghị thanh toán (Chi trong nước) - Theo QĐ435 BM04
+        </a>
+        <a href="#" class="list-group-item list-group-item-action" onclick="onModalBaoCao(3)">
+            Thông báo chi ngân sách - Theo QĐ435 BM01
+        </a>
+        <a href="#" class="list-group-item list-group-item-action" onclick="onModalBaoCao(4)">
+            Thông báo cấp kinh phí bằng ngoại tệ - Theo QĐ435 BM05
+        </a>
+        <a href="#" class="list-group-item list-group-item-action" onclick="onModalBaoCao(5)">
+            Thông báo cấp kinh phí chi trong nước - Theo QĐ435 BM06
+        </a>
+    </div>
+   
+</div>*@
+<table class="table table-bordered tr-hover" id="tblListDeNghiThanhToan">
+    <thead class="header-search">
+        <tr>
+            <th width="2%"></th>
+            <th width="2%"></th>
+            <th width="7%">
+                @Html.DropDownList("idonvi", (SelectList)(ViewBag.lstNSDonVi), "--Chọn đơn vị--", new { @class = "form-control", @id = "idonvi", @onchange = "onChangeDonVi()" })
+            </th>
+            <th width="5%"><input placeholder="Số đề nghị" class="form-control gr_search ssodenghi" id="ssodenghi" title="Số đề nghị" maxlength="50" /></th>
+            <th width="5%">
+                <div class='input-group date'>
+                    <input type='text' class="form-control gr_search sngaydenghi" id="sngaydenghi" title="Ngày đề nghị" autocomplete="off" placeholder="dd/MM/yyyy" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </th>
+            <th width="5%">
+                <select class="form-control gr_search iloainoidung" id="iloainoidung" title="Chọn loại nội dung">
+                    <option value="">--Chọn loại nội dung--</option>
+                    <option value="1">Chi ngoại tệ</option>
+                    <option value="2">Chi trong nước</option>
+                </select>
+            </th>
+            <th width="7%">
+                @Html.DropDownList("ichudautu", (SelectList)(ViewBag.lstChuDauTu), "--Chọn chủ đầu tư--", new { @class = "form-control", @id = "ichudautu" })
+            </th>
+            <th width="6%">
+                @Html.DropDownList("itenchuongtrinh", (SelectList)(ViewBag.lstNhiemVuChi), "--Chọn nhiệm vụ chi--", new { @class = "form-control", @id = "itenchuongtrinh" })
+            </th>
+            <th width="5%">
+                <select class="form-control gr_search iloaidenghi" id="iloaidenghi" title="Chọn loại đề nghị">
+                    <option value="">--Chọn loại đề nghị--</option>
+                    <option value="1">Cấp kinh phí</option>
+                    <option value="2">Thanh toán</option>
+                    <option value="3">Tạm ứng</option>
+                </select>
+            </th>
+            <th width="5%">
+                @Html.DropDownList("iquykehoach", new SelectList(ViewBag.ListQuyTypes, "Value", "Text"), new { @class = "form-control", @id = "iquykehoach" })
+            </th>
+            <th width="5%">
+                <input type="text" id="inamkehoach" class="form-control" maxlength="500" autocomplete="off" />
+            </th>
+            <th width="5%">
+                <select class="form-control gr_search inamngansach" id="inamngansach" title="Chọn năm ngân sách">
+                    <option value="">--Chọn năm ngân sách--</option>
+                    <option value="1">Năm nay</option>
+                    <option value="2">Năm trước chuyển sang</option>
+                </select>
+            </th>
+            <th width="5%">
+                <select class="form-control gr_search icoquanthanhtoan" id="icoquanthanhtoan" title="Chọn cơ quan thanh toán">
+                    <option value="">--Chọn cơ quan thanh toán--</option>
+                    <option value="1">CTC cấp </option>
+                    <option value="2">Đơn vị cấp</option>
+                </select>
+            </th>
+            <th width="6%">
+                @Html.DropDownList("idonvihuongthu", (SelectList)(ViewBag.lstDanhMucNhaThau), "--Chọn đơn vị hưởng thụ--", new { @class = "form-control", @id = "idonvihuongthu" })
+            </th>
+            <th width="5%">
+                <select class="form-control gr_search idtrangthai" id="idtrangthai" title="Chọn trạng thái">
+                    <option value="">--Chọn trạng thái--</option>
+                    <option value="1">Lưu nháp</option>
+                    <option value="2">Chưa được duyệt</option>
+                    <option value="3">Đã được duyệt</option>
+                </select>
+            </th>
+            <th width="24%" colspan="4"></th>
+            <th width="6%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+        </tr>
+    <thead>
+    <thead>
+        <tr>
+            <th rowspan="2"><input type="checkbox" class="checkbox-header" onclick="ChoiceAllCheckBox();" /></th>
+            <th rowspan="2">STT</th>
+            <th rowspan="2">Đơn vị</th>
+            <th rowspan="2">Số đề nghị</th>
+            <th rowspan="2">Ngày đề nghị</th>
+            <th rowspan="2">Loại nội dung</th>
+            <th rowspan="2">Chủ đầu tư</th>
+            <th rowspan="2">Tên chương trình</th>
+            <th rowspan="2">Loại đề nghị</th>
+            <th rowspan="2">Quý kế hoạch</th>
+            <th rowspan="2">Năm kế hoạch</th>
+            <th rowspan="2">Năm ngân sách</th>
+            <th rowspan="2">Cơ quan thanh toán</th>
+            <th rowspan="2">Đơn vị hưởng thụ</th>
+            <th rowspan="2">Trạng thái</th>
+            <th colspan="2" width="12%">Số kinh phí đề nghị cấp kỳ này</th>
+            <th colspan="2" width="12%">Số kinh phí nhận phê quyệt kỳ này</th>
+            <th rowspan="2">Thao tác</th>
+        </tr>
+        <tr>
+            <th width="6%">USD</th>
+            <th width="6%">VND</th>
+            <th width="6%">USD</th>
+            <th width="6%">VND</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int index = 1;
+            if (Model.Items != null)
+            {
+                foreach (var item in Model.Items)
+                {
+                <tr data-idthanhtoan="@item.ID">
+                    <td class="text-center"><input type="checkbox" class="checkbox" onclick="ChoiceCheckboxRow();" /></td>
+                    <td class="text-center">@index</td>
+                    <td class="text-left">@Html.Raw(Html.Encode(item.sTen))</td>
+                    <td class="text-center">@Html.Raw(Html.Encode(item.sSoDeNghi))</td>
+                    <td class="text-center">@Html.Raw(Html.Encode(item.dNgayDeNghi.HasValue ? item.dNgayDeNghi.Value.ToString("dd/MM/yyyy") : string.Empty))</td>
+                    @if (item.iLoaiNoiDungChi.HasValue && item.iLoaiNoiDungChi.Value == 1)
+                    {
+                        <td class="text-center">Chi ngoại tệ</td>
+                    }
+                    else
+                    {
+                        <td class="text-center">Chi trong nước</td>
+                    }
+                    <td class="text-left">@Html.Raw(Html.Encode(item.sTenCDT))</td>
+                    <td class="text-left">@Html.Raw(Html.Encode(item.sTenNhiemVuChi))</td>
+                    @if (item.iLoaiDeNghi.HasValue && item.iLoaiDeNghi.Value == 1)
+                    {
+                        <td class="text-center">Cấp kinh phí</td>
+                    }
+                    else if (item.iLoaiDeNghi.HasValue && item.iLoaiDeNghi.Value == 2)
+                    {
+                        <td class="text-center">Thanh toán</td>
+                    }
+                    else
+                    {
+                        <td class="text-center">Tạm ứng</td>
+                    }
+                    <td class="text-center">Quý @Html.Raw(Html.Encode(item.iQuyKeHoach))</td>
+                    <td class="text-center">@Html.Raw(Html.Encode(item.iNamKeHoach))</td>
+                    @if (item.iNamNganSach.HasValue && item.iNamNganSach.Value == 1)
+                    {
+                        <td class="text-center">Năm nay</td>
+                    }
+                    else
+                    {
+                        <td class="text-center">Năm trước chuyển sang</td>
+                    }
+                    @if (item.iCoQuanThanhToan.HasValue && item.iCoQuanThanhToan.Value == 1)
+                    {
+                        <td class="text-center">CTC cấp</td>
+                    }
+                    else
+                    {
+                        <td class="text-center">Đơn vị cấp</td>
+                    }
+                    <td class="text-left">@Html.Raw(Html.Encode(item.sTenNhaThau))</td>
+                    @if (item.iTrangThai.HasValue && item.iTrangThai.Value == 1)
+                    {
+                        <td class="text-center">Lưu nháp</td>
+                    }
+                    else if (item.iTrangThai.HasValue && item.iTrangThai.Value == 2)
+                    {
+                        <td class="text-center">Chưa được duyệt</td>
+                    }
+                    else
+                    {
+                        <td class="text-center">Đã được duyệt</td>
+                    }
+
+                    <td class="text-right ftongdenghiusd"> @Html.Raw(Html.Encode(item.sTongCTDeNghiCapKyNay_USD))</td>
+                    <td class="text-right ftongdenghivnd"> @Html.Raw(Html.Encode(item.fTongCTDeNghiCapKyNay_VND.HasValue ? item.fTongCTDeNghiCapKyNay_VND.Value.ToString("###,###") : string.Empty))</td>
+                    <td class="text-right ftongpheduyetusd"> @Html.Raw(Html.Encode(item.sTongCtPheDuyetCapKyNay_USD))</td>
+                    <td class="text-right ftongpheduyetusd"> @Html.Raw(Html.Encode(item.fTongCTPheDuyetCapKyNay_VND.HasValue ? item.fTongCTPheDuyetCapKyNay_VND.Value.ToString("###,###") : string.Empty))</td>
+                    <td class="text-center" style="padding-left:0;padding-right:0;">
+                        @if (item.iTrangThai == 1 || item.iTrangThai == 2)
+                        {
+                            <button type="button" class="btn-detail" onclick="Detail('@item.ID')" title="Xem chi tiết"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" class="btn-edit" onclick="Update('@item.ID')" title="Sửa"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" class="btn-delete" onclick="onModalThongBaoXoa('@item.ID')" title="Xóa"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn-detail" onclick="Detail('@item.ID')" title="Xem chi tiết"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        }
+                    </td>
+                </tr>
+                    index++;
+                }
+            }
+        }
+    </tbody>
+</table>
+
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#idonvi").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#iloaidenghi").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#ichudautu").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#itenchuongtrinh").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#iloainoidung").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#inamngansach").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#icoquanthanhtoan").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#idonvihuongthu").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#idtrangthai").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+        $("#iquykehoach").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
+
+        $('.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: 'vi',
+            todayHighlight: true,
+            format: "dd/mm/yyyy"
+        });
+
+        $("#sngaydenghi").keydown(function (event) {
+            ValidateInputKeydown(event, this, 3);
+        });
+
+        $("#inamkehoach").keydown(function (event) {
+            ValidateInputKeydown(event, this, 1);
+        });
+
+        $("#tblListDeNghiThanhToan .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                //Enter key pressed
+                if (e.which == 13) {
+                    ChangePage();
+                }
+            });
+        });
+    });
+</script>
+<style>
+    .dropdown {
+        position: relative;
+    }
+
+    .dropdown-content {
+        position: absolute;
+        display: none;
+        right:0px;  
+        top:30px;
+        width: 350px;
+        height: 200px;
+        z-index: 9;
+    }
+
+    .dropdown-content button {
+        color: black;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {
+        font-weight: bold;
+        background-color: lightgray
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+</style>

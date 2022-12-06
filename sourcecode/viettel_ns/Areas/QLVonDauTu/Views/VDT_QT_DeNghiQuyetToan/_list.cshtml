@@ -1,0 +1,142 @@
+﻿@using VIETTEL.Areas.QLVonDauTu.Model.QuyetToan
+@model VDT_QT_DeNghiQuyetToanPagingModel
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+
+<div class="tooltip-header-search">
+    <div class="col-sm-6" style="display:flex;padding-left:0px; margin-bottom:5px">
+        <label class="control-label">Danh sách đề nghị quyết toán dự án hoàn thành (@Model._paging.TotalItems)</label>
+    </div>
+    <button class="btn btn-primary pull-right" onclick="ViewCreate()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ExportExcel()"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Xuất excel</button>
+    <button class="btn btn-default pull-right" style="margin-right: 10px; color: black !important" onclick="ImportDNQT()"><i class="fa fa-upload" aria-hidden="true"></i>Import</button>    
+    @*@using (Html.BeginForm("ExportExcelDeNghiQuyetToan", "VDT_QT_DeNghiQuyetToan", FormMethod.Post))
+        {
+            <input type="text" name="sSoBaoCao" class="form-control clearable" id="txt_SoBaoCaoExcel" style="display:none" />
+            <input type="text" name="sGiaDeNghiTu" class="form-control clearable" id="txt_GiaDeNghiTuExcel" style="display:none" />
+            <input type="text" name="sGiaDeNghiDen" class="form-control clearable" id="txt_GiaDeNghiDenExcel" style="display:none" />
+            <input type="text" name="sTenDuAn" class="form-control clearable" id="txt_TenDuAnExcel" style="display:none" />
+            <input type="text" name="sMaDuAn" class="form-control clearable" id="txt_MaDuAnExcel" style="display:none" />
+           // <button class="btn btn-info" title="Xuất dữ liệu ra excel" type="submit" style="float:right; margin-right: 10px"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Xuất excel</button>
+        }*@
+    <button class="btn btn-warning pull-right mr-10" onclick="ViewInBaoCao();"><i class="fa fa-print" aria-hidden="true"></i>Báo cáo</button>
+</div>
+<table class="table table-bordered" id="lstDataView">
+    <thead class="header-search">
+    <th width="5%" style="text-align:center"></th>
+    <th width="5%" style="text-align:center"></th>
+    <th width="10%" style="text-align:center"><input type="text" class="form-control clearable gr_search" id="txt_MaDuAnSearch" autocomplete="off" /></th>
+    <th width="15%" style="text-align:center"><input type="text" class="form-control clearable gr_search" id="txt_TenDuAnSearch" autocomplete="off" /></th>
+    <th width="15%" style="text-align:center"></th>
+    <th width="10%" style="text-align:center"><input type="text" class="form-control clearable gr_search" id="txt_SoBaoCaoSearch" autocomplete="off" /></th>
+    <th width="10%" style="text-align:center"></th>
+    <th width="10%" style="text-align:center"></th>
+    <th width="10%" style="text-align:center">
+        <div style="display:flex">
+            <input type="text" class="form-control clearable currently gr_search" id="txt_GiaDeNghiTuViewSearch" autocomplete="off" />
+            <input type="text" class="form-control clearable currently" style="display:none" id="txt_GiaDeNghiTuSearch" />
+            <span style="margin: 8px 5px 0px 5px;">-</span>
+            <input type="text" class="form-control clearable currently gr_search" id="txt_GiaDeNghiDenViewSearch" autocomplete="off" />
+            <input type="text" class="form-control clearable currently" style="display:none" id="txt_GiaDeNghiDenSearch" />
+        </div>
+    </th>
+    <th width="10%">
+        <button class="btn btn-info" style="width:100px" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
+    </th>
+    </thead>
+
+    <thead>
+    <th width="5%" style="text-align:center"></th>
+    <th width="5%" style="text-align:center">STT</th>
+    <th width="10%" style="text-align:center">Mã dự án</th>
+    <th width="15%" style="text-align:center">Tên dự án</th>
+    <th width="15%" style="text-align:center">Chủ đầu tư</th>
+    <th width="10%" style="text-align:center">Số báo cáo</th>
+    <th width="10%" style="text-align:center">Thời gian khởi công</th>
+    <th width="10%" style="text-align:center">Thời gian hoàn thành</th>
+    <th width="10%" style="text-align:center">Giá trị đề nghị quyết toán</th>
+    <th width="10%">Thao tác</th>
+    </thead>
+    <tbody>
+        @{
+            int index = 1;
+            foreach (var item in Model.lstData)
+            {
+                <tr style="cursor: pointer;">
+                    <td align="center"><input type='checkbox' name='cbQuyetToan' id="DNQTID" data-id="@item.iID_DeNghiQuyetToanID"></td>
+
+                    <td align="center">@(pageIndex + index)</td>
+
+                    <td align="left">@item.sMaDuAn</td>
+
+                    <td align="left">@item.sTenDuAn</td>
+
+                    <td align="left">@item.sTenChuDauTu</td>
+
+                    <td align="left">@item.sSoBaoCao</td>
+
+                    <td align="center">@item.sThoiGianKhoiCongDuAn</td>
+
+                    <td align="center">@item.sThoiGianHoanThanhDuAn</td>
+
+                    <td align="right">@item.sGiaTriDeNghiQuyetToan</td>
+
+                    <td align="center" class="col-sm-12">
+                        <button type="button" class="btn-detail" onclick="ViewDetail('@item.iID_DeNghiQuyetToanID')">  <i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-edit" onclick="ViewUpdate('@item.iID_DeNghiQuyetToanID')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" onclick="DeleteItem('@item.iID_DeNghiQuyetToanID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                index++;
+            }
+        }
+    </tbody>
+</table>
+@Html.BuildPagingButtons(Model._paging)
+<input type="hidden" id="urlExportBCChiTiet" value="@Url.Action("ExportExcelDeNghiQuyetToan", "VDT_QT_DeNghiQuyetToan")" />
+<script>
+    $("#txt_GiaDeNghiTuViewSearch").on("change", function () {
+
+        $("#txt_GiaDeNghiTuSearch").val($("#txt_GiaDeNghiTuViewSearch").val());
+
+        if ($("#txt_GiaDeNghiTuViewSearch").val() == null) {
+            $("#txt_GiaDeNghiTuViewSearch").val("");
+        } else {
+            if ($.isNumeric($("#txt_GiaDeNghiTuViewSearch").val())) {
+                var sNumber = Number($("#txt_GiaDeNghiTuViewSearch").val()).toLocaleString('vi-VN');
+                $("#txt_GiaDeNghiTuViewSearch").val(sNumber);
+            }
+            else {
+                $("#txt_GiaDeNghiTuViewSearch").val("");
+            }
+        }
+    });
+
+    $("#txt_GiaDeNghiDenViewSearch").on("change", function () {
+
+        $("#txt_GiaDeNghiDenSearch").val($("#txt_GiaDeNghiDenViewSearch").val());
+
+        if ($("#txt_GiaDeNghiDenViewSearch").val() == null) {
+            $("#txt_GiaDeNghiDenViewSearch").val("");
+        } else {
+            if ($.isNumeric($("#txt_GiaDeNghiDenViewSearch").val())) {
+                var sNumber = Number($("#txt_GiaDeNghiDenViewSearch").val()).toLocaleString('vi-VN');
+                $("#txt_GiaDeNghiDenViewSearch").val(sNumber);
+            }
+            else {
+                $("#txt_GiaDeNghiDenViewSearch").val("");
+            }
+        }
+    });
+
+    $("#lstDataView .gr_search").each(function (index, value) {
+        $(this).keypress(function (e) {
+            if (e.which == 13) {//Enter key pressed
+                ChangePage();
+            }
+        });
+    });
+</script>

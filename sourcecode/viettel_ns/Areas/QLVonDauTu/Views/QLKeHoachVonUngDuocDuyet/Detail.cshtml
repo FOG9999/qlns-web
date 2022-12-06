@@ -1,0 +1,274 @@
+﻿@using Viettel.Models.QLVonDauTu
+@model VDTQLKeHoachVonUngDuocDuyetViewModel
+@{
+    ViewBag.Title = "Xem thông tin kế hoạch vốn ứng";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+    var dieuChinh = ViewBag.isDieuChinh;
+    var isDieuChinh = false;
+    if (dieuChinh == "true")
+    {
+        isDieuChinh = true;
+    }
+
+    var dieuChinhPr = ViewBag.isDieuChinhParrent;
+    var isDieuChinhParent = false;
+    if (dieuChinhPr == "true")
+    {
+        isDieuChinhParent = true;
+    }
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+    <link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
+}
+<style>
+    [class$="_borderCustom"] {
+        border-color: black;
+        border-style: groove;
+    }
+</style>
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body create_thdt">
+                <div class="header-create-update">
+                    <span>Xem thông tin kế hoạch vốn ứng</span>
+                    <input type="hidden" class="iIdKHVonUng" value="@ViewBag.iID_KeHoachUngID" />
+                    <input type="hidden" class="isUpdate" value="@ViewBag.isUpdate" />
+                    <input type="hidden" class="isDieuChinh" value="@ViewBag.isDieuChinh" />
+                </div>
+                @*Thông tin nội dung*@
+                <div class="form-group">
+                    <h4 class="color-text-red">Thông tin nội dung:</h4>
+                    <hr class='color-background-red' />
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label for="txt_DonViQuanLy " class="label_DonViql" data-iiddonviql="@Model.dataKHVU.iID_DonViQuanLyID" data-idMaDonVi="@Model.dataKHVU.iID_MaDonViQuanLy">Đơn vị</label>
+                            <p>@Model.dataKHVU.sTenDonViQuanLy</p>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txt_SoQuyetDinh">Số kế hoạch</label>
+                            <p class="label_sSoQUyetDinh">@Model.dataKHVU.sSoQuyetDinh</p>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="txt_NgayLap">Ngày lập</label>
+                            <p class="label_sNgayQuyetDinh">@Model.dataKHVU.sNgayQuyetDinh</p>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="iNamKeHoach">Năm kế hoạch</label>
+                            <p class="label_iNamKeHoach">@Model.dataKHVU.iNamKeHoach</p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label for="iId_NguonVon" class="label_NguonVon" data-iidnguonvon="@Model.dataKHVU.iID_NguonVonID">Nguồn vốn</label>
+                            <p>@Model.dataKHVU.sTenNguonVon</p>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="iId_KeHoachVonUng" class="label_KehoachDeXuat" data-iidkehoachdexuat="@Model.dataKHVU.iID_KeHoachVonUngDeXuatID">Kế hoạch vốn ứng đề xuất</label>
+                            <p>@Model.dataKHVU.sSoDeNghi_KHVUDX</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-8 col-md-8 col-lg-8" style="text-align:center">
+                    @*<button class="btn btn-primary pull-right" onclick="location.href='/QLVonDauTu/KeHoachVonUngDeXuat/Update'"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>*@
+                    @*<span class="btn btn-info pull-right mr-10 min-width-200" onclick="SaveKVUCT();"><i class="fa fa-save" aria-hidden="true"></i>Lưu dữ liệu(F10)</span>
+                        <span class="btn btn-info pull-right mr-10" onclick="XoaDong()"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>Xóa(F4)</span>
+                        <span class="btn btn-info pull-right mr-10" onclick="Refresh()"><i class="fa fa-refresh" aria-hidden="true"></i>Tải lại(F5)</span>*@
+
+                    <span class="btn btn-info pull-right mr-10 min-width-200"><i class="fa fa-save" aria-hidden="true"></i>Lưu dữ liệu(F10)</span>
+                    <span class="btn btn-info pull-right mr-10"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>Xóa(F4)</span>
+                    <span class="btn btn-info pull-right mr-10"><i class="fa fa-refresh" aria-hidden="true"></i>Tải lại(F5)</span>
+                </div>
+                @*Thông tin chi tiết*@
+                <br />
+                <div class=" form-group row">
+                    <div class="col-sm-12">
+                        <div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-bordered" id="tblDanhSachDuAn">
+                                        <thead>
+                                            <tr>
+                                                <th width="7%">Mã dự án</th>
+                                                <th width="15%">Tên dự án</th>
+                                                <th width="5%">LNS</th>
+                                                <th width="3%">L</th>
+                                                <th width="3%">K</th>
+                                                <th width="4%">M</th>
+                                                <th width="4%">TM</th>
+                                                <th width="3%">TTM</th>
+                                                <th width="3%">NG</th>
+                                                <th width="8%" class="text-right">Tổng mức đầu tư</th>
+                                                <th width="7%" class="text-right">Giá trị đề nghị</th>
+                                                @if (isDieuChinh)
+                                                {
+                                                    <th width="5%" class="text-right">Cấp phát tại kho bạc</th>
+                                                    <th width="5%" class="text-right">Cấp phát tại kho bạc (sau điều chỉnh)</th>
+                                                }
+                                                else
+                                                {
+                                                    <th width="10%" class="text-right">Cấp phát tại kho bạc</th>
+
+                                                }
+
+                                                @if (isDieuChinh)
+                                                {
+                                                    <th width="5%" class="text-right">Cấp phát bằng lệnh chi</th>
+                                                    <th width="5%" class="text-right">Cấp phát bằng lệnh chi (sau điều chỉnh)</th>
+
+                                                }
+                                                else
+                                                {
+                                                    <th width="10%" class="text-right">Cấp phát bằng lệnh chi</th>
+                                                }
+
+                                                <th width="15%"> Ghi chú</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="ViewTable">
+                                            @foreach (var item in Model.listKHVUChiTiet)
+                                            {
+                                                <tr onclick="RowClick('@item.iID_DuAnID')">
+                                                    <input type="hidden" id="idChiTiet" value="@item.id" />
+                                                    <input type="hidden" id="sTrangThaiDuAnDangKy" value="@item.sTrangThaiDuAnDangKy" />
+                                                    <td class="text-center txt_sMaDuAn">@item.sMaDuAn</td>
+                                                    <td class="txt_sTenDuAn" data-iid_duan="@item.iID_DuAnID">@item.sTenDuAn</td>
+                                                    <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sLNS" data-iidnganhid="@item.iID_NganhID" autocomplete="off" value="@item.sLNS"></td>
+                                                    <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sL" autocomplete="off" value="@item.sL"></td>
+                                                    <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sK" autocomplete="off" value="@item.sK"></td>
+                                                    <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sM" autocomplete="off" value="@item.sM"></td>
+                                                    <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sTM" autocomplete="off" value="@item.sTM"></td>
+                                                    <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sTTM" autocomplete="off" value="@item.sTTM"></td>
+                                                    <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sNG" autocomplete="off" value="@item.sNG"></td>
+                                                    <td class="text-right txt_sTongMucDauTu">@item.sTongMucDauTu</td>
+                                                    <td class="text-right txt_sGiaTriDeNghi">@item.sGiaTriDeNghi</td>
+                                                    @if (isDieuChinh)
+                                                    {
+                                                        if (isDieuChinhParent)
+                                                        {
+                                                            <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCapKhoBac" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fCapPhatTaiKhoBacDC.HasValue ? item.sCapPhatTaiKhoBacDC : item.sCapPhatTaiKhoBac))" disabled></td>
+                                                            <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCapKhoBacDC" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.sCapPhatTaiKhoBacDC))"></td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCapKhoBac" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.sCapPhatTaiKhoBac))" ></td>
+                                                            <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCapKhoBacDC" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.sCapPhatTaiKhoBacDC))"></td>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCapKhoBac" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fCapPhatTaiKhoBacDC.HasValue ? item.fCapPhatTaiKhoBacDC : item.fCapPhatTaiKhoBac))"></td>
+
+                                                    }
+                                                    @if (isDieuChinh)
+                                                    {
+                                                        if (isDieuChinhParent)
+                                                        {
+                                                            <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCaplenhChi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fCapPhatBangLenhChiDC.HasValue ? item.sCapPhatBangLenhChiDC : item.sCapPhatBangLenhChi))" disabled></td>
+                                                            <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCaplenhChiDC" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.sCapPhatBangLenhChiDC))"></td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCaplenhChi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.sCapPhatBangLenhChi))" ></td>
+                                                            <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCaplenhChiDC" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.sCapPhatBangLenhChiDC))"></td>
+                                                        }
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCaplenhChi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fCapPhatBangLenhChiDC.HasValue ? item.sCapPhatBangLenhChiDC:item.sCapPhatBangLenhChi))"></td>
+
+                                                    }
+                                                    <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: left" type="text" class="form-control txt_sGhiChu" value="@item.sGhiChu" style="width:100% ; justify-content:end"></td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                        @*<tfoot>
+                                            <tr>
+                                                <th width="7%"></th>
+                                                <th width="15%"></th>
+                                                <th width="5%"></th>
+                                                <th width="3%"></th>
+                                                <th width="3%"></th>
+                                                <th width="4%"></th>
+                                                <th width="4%"></th>
+                                                <th width="3%"></th>
+                                                <th width="3%"></th>
+                                                <th width="8%" id="txtSumTongMucDauTu" class="text-right">@Model.sSumTongMucDauTu</th>
+                                                <th width="7%" class="text-right"></th>
+                                                @if (isDieuChinh)
+                                                {
+                                                    <th width="5%" id="txtSumCapPhatTaiKhoBac" class="text-right">@Model.sSumCapPhatTaiKhoBac</th>
+                                                    <th width="5%" id="txtSumCapPhatTaiKhoBac" class="text-right">@Model.sSumCapPhatTaiKhoBacDC</th>
+
+                                                }
+                                                else
+                                                {
+                                                    <th width="10%" id="txtSumCapPhatTaiKhoBac" class="text-right">@Model.sSumCapPhatTaiKhoBac</th>
+
+                                                }
+
+                                                @if (isDieuChinh)
+                                                {
+                                                    <th width="5%" id="txtSumCapPhatBangLenhChi" class="text-right">@Model.sSumCapPhatBangLenhChi</th>
+                                                    <th width="5%" id="txtSumCapPhatBangLenhChi" class="text-right">@Model.sSumCapPhatBangLenhChiDC</th>
+
+                                                }
+                                                else
+                                                {
+                                                    <th width="10%" id="txtSumCapPhatBangLenhChi" class="text-right">@Model.sSumCapPhatBangLenhChi</th>
+
+                                                }
+                                                <th width="15%"></th>
+                                            </tr>
+                                        </tfoot>*@
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group text-center">
+                    <button class="btn btn-back" onclick="location.href='@Url.Action("Index", "QLKeHoachVonUngDuocDuyet")'"><i class="fa fa-arrow-left" aria-hidden="true"></i><span>Quay lại</span></button>
+                    <button class="btn btn-primary" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+@*<script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsKeHoachVonUngDuocDuyet_ChiTiet.js" type="text/javascript"></script>*@
+<script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsKeHoachVonUngDuocDuyet_ChiTiet.js" type="text/javascript"></script>
+<script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+<script src="~/Scripts/js/dropdowntree.js"></script>
+<script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>
+
+@section Scripts{
+    <script>
+
+        document.addEventListener('keydown', eventKey);
+        function eventKey(e) {
+            if (e != null && e != undefined) {
+                if (e.key == "F10") {
+                    Save();
+                }
+                if (e.key == "F5") {
+                    Refresh();
+                }
+                if (e.key == "F4") {
+                    XoaDong();
+                }
+            }
+        }
+
+    </script>
+}

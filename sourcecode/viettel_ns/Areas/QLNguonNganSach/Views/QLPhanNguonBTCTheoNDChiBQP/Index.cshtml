@@ -1,0 +1,79 @@
+﻿@using VIETTEL.Areas.QLNguonNganSach.Models
+@model QLPhanNguonPagingModel
+@{
+    ViewBag.Title = "Quản lý phân nguồn BTC theo nội dung chi BQP";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-search">
+                <div class="form-group header-card">
+                    <label class="label-title-card">Tiêu chí tìm kiếm</label>
+                    <i class="fa fa-chevron-down fa-1x close-card-condition" aria-hidden="true" data-toggle="collapse" data-target="#card-condition" aria-expanded="true" aria-controls="card-condition"></i>
+                </div>
+                <div class="card-condition collapse" id="card-condition">
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <label for="txtSoChungTu" class="label-item">Số chứng từ</label>
+                            <input type="text" class="form-control clearable" id="txtSoChungTu" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="txtNoiDung" class="label-item">Nội dung</label>
+                            <input type="text" class="form-control clearable" id="txtNoiDung" />
+                        </div>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <button class="btn btn-info" onclick="SearchData()" style="margin-top: 20px; margin-bottom: 0px;"><i class="fa fa-search" aria-hidden="true"></i> Tìm kiếm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body" id="lstDataView">
+                @Html.Partial("_partialListNNSPhanNguon", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalPhanNguonBTC" tabindex="-1" role="dialog" aria-labelledby="modalPhanNguonBTCLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-bold text-left" id="modalPhanNguonBTCLabel"></h3>
+            </div>
+            <div class="modal-body" id="contentPhanNguonBTC">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+
+
+@section Scripts{
+    <script src="~/Scripts/NguonNS/jsNguonNS_PhanNguon.js"></script>
+    <script>
+        var _paging = {};
+        var sUrlListView = "";
+        $(document).ready(function () {
+            sUrlListView = '@Url.Action("TimKiemNNSPhanNguon", "QLPhanNguonBTCTheoNDChiBQP")';
+            _paging.CurrentPage = @Model._paging.CurrentPage ;
+            _paging.ItemsPerPage = @Model._paging.ItemsPerPage ;
+        });
+
+    </script>
+}
+

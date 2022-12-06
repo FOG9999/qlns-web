@@ -1,0 +1,44 @@
+﻿
+@model ChungTuListViewModel
+@{
+    if (Model.Loai == 1)
+    {
+        ViewBag.Title = L("DuToanKT.ListDonVi");
+    }
+    else if (Model.Loai == 2)
+    {
+        ViewBag.Title = L("DuToanKT.ListNganh");
+    }
+}
+<h2>@ViewBag.Title</h2>
+<div class="button-bar">
+    <a class="btn btn-mvc btn-mvc-green" href="@Url.Action("Create", "ChungTu", new {Model.Loai})">@L("Buttons.Create")</a>
+    <div class="btn-group">
+        @*<button class="btn btn-mvc" id="btn-thongtri"></button>*@
+        <button class="btn btn-mvc dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="btn-test">
+            @L("Buttons.Sort") <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            @foreach (var item in Model.OrderBys)
+            {
+                <li>
+                    <a href="@Url.Action("Index", "ChungTu", new {loai = Model.Loai, orderby = item.Value})">@L(item.Text)</a>
+                </li>
+            }
+        </ul>
+    </div>
+    <span class="text-muted">|</span>
+    <a class="btn btn-mvc @(Request.GetQueryStringValue("ireq", 0) == 1 ? "" : "btn-mvc-green")" href="@Url.Action("Index", "ChungTu", new {loai = Model.Loai, ireq = 0})">DS chứng từ nhập số đề nghị và đặc thù</a>
+    <a class="btn btn-mvc @(Request.GetQueryStringValue("ireq", 0) == 0 ? "" : "btn-mvc-green")" href="@Url.Action("Index", "ChungTu", new {loai = Model.Loai, ireq = 1})">DS chứng từ nhập số tăng và giảm nhiệm vụ</a>
+    <span class="text-muted">|</span>
+    <a class="btn btn-mvc btn-reload" title="@L("Buttons.Reload")"><i class="fa fa-refresh"></i></a>
+</div>
+
+
+
+@Html.Partial("_list", Model.Items)
+@using (Html.BeginScripts())
+{
+    <script>
+    </script>
+}

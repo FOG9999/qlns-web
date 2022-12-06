@@ -1,0 +1,115 @@
+﻿@using Viettel.Models.CPNH
+@model CPNHNhuCauChiQuy_View_Model
+
+@{
+    ViewBag.Title = "Chỉnh sửa nhu cầu chi quý chi tiết";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+<link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+
+<input type="hidden" id="fTiGia" value="@Model.fTiGiaChiTiet">
+<input type="hidden" id="iID_NhuCauChiQuyID" value="@Model.ID">
+<input type="hidden" id="arrChiQuy" value="@Json.Encode(@Model.ListNCCQChiTiet)" />
+<input type="hidden" id="isdieuchinh" value="@ViewBag.dieuchinh">
+<input type="hidden" id="IDUrl" value="@ViewBag.IDUrl">
+<input type="hidden" id="IDDonVi" value="@Model.iID_DonViID">
+<input type="hidden" id="IDBQuanLy" value="@Model.iID_BQuanLyID">
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body create_thdt">
+                @*<div class="header-create-update">
+                        <span>
+                            @Html.Raw("Thông tin nhu cầu chi quý chi tiết")
+                        </span>
+                    </div>*@
+                <div class="form-group">
+                    <h4 class="color-text-red">Thông tin nhu cầu chi quý chi tiết:</h4>
+                    <hr class='color-background-red' />
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="sSoQuyetDinh">
+                                Nhu cầu chi Quý - Số: <span style="font-size:15px" class="color-text-red">
+                                    @Html.Raw(Html.Encode(Model.sSoDeNghi))
+                                </span> - Ngày: <span style="font-size:15px" class="color-text-red">@Html.Raw(Model.dNgayDeNghiStr)</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="sSoQuyetDinh">
+                                Đơn vị: <span style="font-size:15px" class="color-text-red">
+                                    @Html.Raw(Html.Encode(Model.BPhongBan))
+                                </span> - Năm: <span style="font-size:15px" class="color-text-red">@Html.Raw(Html.Encode(Model.iNamKeHoach))</span>
+                                - Quý: <span style="font-size:15px" class="color-text-red">@Html.Raw(Model.iQuy)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                @*Nguồn vốn đầu tư*@
+                <div class="form-group">
+                    <div class="form-group row">
+                        <input type="hidden" class="" id="txtIdNguonVon" name="txtIdNguonVon" />
+                        <div class="col-sm-3 col-sm-offset-9">
+                            <label for="btn">&nbsp;</label>
+                            <div class="input-group pull-right">
+                                <div class="input-group-append">
+                                    <button class="btn btn-info pull-right" style="margin-right: 10px; width: 145px !important;
+                                        height: 40px !important; " onclick="Themhopdong()">
+                                        Thêm hợp đồng
+                                    </button>
+                                    <button class="btn btn-info pull-right" style="margin-right: 10px; width: 145px !important;
+                                        height: 40px !important;" onclick="Themnoidungchi()">
+                                        Thêm nội dung chi
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered tr-hover" id="tblNhuCauChiQuyChiTiet">
+                                <thead>
+                                    <tr>
+                                        <th width="3%">STT</th>
+                                        <th width="40%">Nội dung chi</th>
+                                        <th width="10%">Chi ngoại tệ(USD)</th>
+                                        <th width="15%">Chi ngoại tệ(Quy đổi VND)</th>
+                                        <th width="15%">Chi trong nước(VND)</th>
+                                        <th width="10%">Chi trong nước(Quy đổi USD)</th>
+                                        <th width="7%">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th width="3%"></th>
+                                        <th width="40%">Tổng cộng</th>
+                                        <th width="10%" class="cpdt_tong_ngoaiUSD text-right"></th>
+                                        <th width="15%" class="cpdt_tong_ngoaiVND text-right"></th>
+                                        <th width="15%" class="cpdt_tong_trongVND text-right"></th>
+                                        <th width="10%" class="cpdt_tong_trongUSD text-right"></th>
+                                        <th width="7%"></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group text-center">
+                    <button class="btn btn-default" style="width: 100%" onclick="Huy()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                    <button class="btn btn-primary" id="btnLuu" style="width: 100%" onclick="Luu()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="divModalConfirm">
+
+</div>
+<script src="~/Scripts/QLNH/NhuCauChiQuy/jsNhuCauChiQuyChiTiet.js" type="text/javascript"></script>
+<script src="/Scripts/jsNumber.js" type="text/javascript"></script>
+<script src="~/Scripts/js/dropdowntree.js"></script>

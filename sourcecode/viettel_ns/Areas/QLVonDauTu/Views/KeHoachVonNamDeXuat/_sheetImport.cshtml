@@ -1,0 +1,153 @@
+﻿@model VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong.KeHoachVonNamDeXuatChiTietGridViewModel
+@{
+    var sheet = Model.Sheet;
+}
+<div class="tooltip-header-search">
+    <div class="form-group">
+        <div class="header-create-update">
+            <span>
+                @Html.Raw("Import kế hoạch vốn năm đề xuất")
+            </span>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-3">
+                <input type="hidden" id="txt_ID_KHVonNamDeXuat" value="@Model.KHVonNamDeXuat.iID_KeHoachVonNamDeXuatID">
+                <label for="txt_DonViQuanLy">Đơn vị</label>
+                @Helpers.Required()
+                @Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), new { @class = "form-control", @id = "iID_DonViQuanLyID" })
+            </div>
+            <div class="col-sm-2">
+                <label for="txtSoKeHoach">Số kế hoạch</label>
+                @Helpers.Required()
+                <input type="text" id="txtsSoQuyetDinh" class="form-control" value="@Model.KHVonNamDeXuat.sSoQuyetDinh" maxlength="50" autocomplete="off" />
+            </div>
+            <div class="col-sm-2">
+                <label for="txtNgayLap">Ngày lập</label>
+                @Helpers.Required()
+                <div class='input-group date'>
+                    <input type='text' class="form-control dateFormat" value="@(Model.KHVonNamDeXuat.dNgayQuyetDinh == null ? Model.KHVonNamDeXuat.dNgayQuyetDinh.ToString("dd/MM/yyyy") : DateTime.Now.ToString("dd/MM/yyyy"))" id="dNgayQuyetDinh" autocomplete="off" />
+                    <span class="btn-default input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <label for="txtNguonVon">Nguồn vốn</label>
+                @Helpers.Required()
+                @Html.DropDownList("iID_NguonVonID", (SelectList)(ViewBag.ListNguonVon), new { @class = "form-control", @id = "iID_NguonVonID" })
+            </div>
+            <div class="col-sm-2">
+                <label for="txtNamKeHoach">Năm kế hoạch</label>
+                @Helpers.Required()
+                <input type="text" maxlength="4" name="txtNamKeHoach" class="form-control yearFormat" id="txtNamKeHoach" value="@Model.KHVonNamDeXuat.iNamKeHoach" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-5">
+                <label for="txt_DonViQuanLy">Chọn file excel</label>
+                @Helpers.Required()
+                <input type="file" id="FileUpload" name="FileUpload" accept=".xlsx, .xls" />
+                <p style="margin-top: 9px; font-size: 14px; font-style: italic">Vui lòng chọn tệp có định dạng xlsx, xls có dung lượng không quá 10MB</p>
+            </div>
+            <div class="col-sm-6">
+                <button class="btn btn-primary pull-left" style="margin-right:10px;margin-top: 28px;width:148px !important;" onclick="loadGridListExcel();"><i class="fa fa-database" aria-hidden="true"></i>Đồng bộ dữ liệu</button>
+                <button class="btn btn-primary pull-left" style="margin-right:10px;margin-top: 28px;width:115px !important;" onclick="loadDataExcel();"><i class="fa fa-database" aria-hidden="true"></i>Lấy dữ liệu</button>
+                <button class="btn btn-info pull-left" style="margin-top: 28px; margin-right: 10px; width: 115px !important;" onclick="refreshImport();"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+                <button class="btn btn-primary pull-left btnSaveKhvn" style="margin-right:10px;margin-top: 28px;width:115px !important;" onclick="SaveKhvn();"><i class="fa fa-database" aria-hidden="true"></i>Lưu</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6" style="display:flex;padding-left:0px;">
+        <label class="control-label">Kế hoạch vốn năm đề xuất chi tiết</label>
+    </div>
+    <div class="col-sm-6">
+        <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Lưu</p>
+        <label class="control-label pull-right" style="padding-left:20px;">F10: </label>
+    </div>
+</div>
+<iframe id="sheetImport" name="iframe-sheet" class="iframe-sheet"></iframe>
+<div class="">
+    <div id="nhapform">
+        <div id="form2">
+            <div class="button-bar">
+                <div class="text-center">
+                    <button class="btn btn-default" onclick="goBack();" style="margin-right: 10px;"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                    <button class="btn btn-primary btn-save" id="btnSave"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr id="hr-split" />
+<div id="ajax-div">
+</div>
+@* Modal confirm *@
+<div id="divModalConfirm">
+
+</div>
+<script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>
+
+@using (Html.BeginScripts())
+{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('.date')
+                .datepicker({
+                    todayBtn: "linked",
+                    keyboardNavigation: false,
+                    forceParse: false,
+                    autoclose: true,
+                    language: 'vi',
+                    todayHighlight: true,
+                });
+            $("#FileUpload").change(function () {
+                if (document.getElementById("FileUpload").files[0].size > 10048576) {
+                    alert("File quá lớn!");
+                    document.getElementById("FileUpload").value = "";
+                };
+            });
+        });
+
+    $(".btn-save").click(function () {
+        var iID_KeHoachVonNamDeXuatID = $("#txt_ID_KHVonNamDeXuat").val();
+            //$("#sheetImport")[0].contentWindow.Bang_HamTruocKhiKetThuc();
+        $("#sheetImport")[0].contentWindow.SaveDataDetailImport(iID_KeHoachVonNamDeXuatID);
+        });
+
+        loadFrame();
+
+        function goBack() {
+            window.location.href = "/QLVonDauTu/KeHoachVonNamDeXuat";
+        }
+
+        function loadFrame(option) {
+            var iNamKeHoach = $("#txtNamKeHoach").val();
+            var url = '@Url.Action("SheetFrameImport")'
+                + "/?id=" + iNamKeHoach;
+            console.log(url);
+            $("#sheetImport").attr("src", url);
+        }
+
+        function loadModal(data) {
+            $("#divModalConfirm").html(data);
+        }
+
+        function refreshImport() {
+            $("#txtsSoQuyetDinh").val("");
+            $("#FileUpload").val("");
+            @*$("#iGiaiDoanTu").val('@Model.KH5NamDeXuat.iGiaiDoanTu');
+            $("#iGiaiDoanDen").val('@Model.KH5NamDeXuat.iGiaiDoanDen');*@
+            loadFrame();
+        }
+
+        function getInfoKH5NDX(data) {
+            data.iID_KeHoach5Nam_DeXuatID = $("#txt_ID_KH5NamDeXuat").val();
+            data.iID_DonViQuanLyID = $("#iID_DonViQuanLyID").val();
+            data.sSoQuyetDinh = $("#txtsSoQuyetDinh").val();
+            data.iGiaiDoanTu = $("#iGiaiDoanTu").val();
+            data.iGiaiDoanDen = $("#iGiaiDoanDen").val();
+        }
+
+    </script>
+}

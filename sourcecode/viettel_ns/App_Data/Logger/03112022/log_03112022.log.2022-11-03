@@ -1,0 +1,4 @@
+[ERROR]-[03-11-2022 05:56:27] – [Controller QLNHService][Function GetMaDuAn]: @iID_DonViID is not a parameter for procedure proc_get_all_getMaDuAn_paging.
+
+[ERROR]-[03-11-2022 05:56:32] – [Controller QLNHService][Function SaveThongTinDuAn]: Object reference not set to an instance of an object.
+

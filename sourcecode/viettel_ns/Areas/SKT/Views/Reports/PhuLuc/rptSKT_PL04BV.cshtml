@@ -1,0 +1,127 @@
+﻿@model rptSKT_PL04ViewModel
+@{
+    ViewBag.Title = "Thông báo chi tiết số kiểm tra dự toán ngân sách ngành Kỹ thuật năm " + PhienLamViec.iNamLamViec;
+}
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <span class="text-uppercase font-l">@ViewBag.Title</span>
+    </div>
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6">
+                    <h6></h6>
+                </div>
+                <div class="col-xs-6">
+                    <h6><strong class="text-uppercase">Chọn tờ</strong></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <form action="" class="form-horizontal">                        
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loại báo cáo:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("loai", Model.LoaiList, new { @class = "form-control", onchange = "change()" })
+                            </div>
+                        </div>   
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Loại báo cáo:</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("muc", Model.MucList, new { @class = "form-control", onchange = "change()" })
+                            </div>
+                        </div>  
+                        @if (PhienLamViec.iID_MaPhongBan == "11")
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Lấy số liệu:</label>
+                                <div id="loaiBC" class="col-sm-8">
+                                    <div class="radio">
+                                        <input type="radio" name="loaiBaoCao" value="1" id="loaiBC-1" onclick="change()" checked />
+                                        <label for="loaiBC-1">Số đề nghị Bql</label>
+                                    </div>
+                                    <div class="radio">
+                                        <input type="radio" name="loaiBaoCao" value="2" id="loaiBC-2" onclick="change()" />
+                                        <label for="loaiBC-2">Số đề nghị B2</label>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <div id="id_to" class="ls-box" data-check="first">
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row text-center">
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="pdf"><i class="fa fa-print"></i> In báo cáo</a>
+                <a class="btn-mvc btn-mvc-green btn-print" data-ext="xls"><i class="fa fa-file-excel"></i>Xuất excel</a>
+                <span class="text-muted">|</span>
+                <a class="btn-mvc" id="btn-cancel" href="@Url.Action("Index", "Report")">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    change();
+
+    function change() {
+        var loai = $("#loai").val();
+        var muc = $("#muc").val();
+        if (loai == 2){
+            var loaiBC = $("#loaiBC input[type='radio']:checked").val();
+
+            var url = '@Url.Action("Ds_To")' +
+                        "/?loaiBC=" + loaiBC + 
+                       "&muc=" + muc;
+            fillCheckboxList("id_to", "To", url);
+        } else {
+            $('#id_to div').empty();
+        }
+    }
+
+
+    $(".btn-print").click(function () {
+
+        var links = [];
+        var ext = $(this).data("ext");
+
+        var loai = $("#loai").val();
+        var loaiBaoCao = @Model.LoaiBC;
+        var loaiBC = $("#loaiBC input[type='radio']:checked").val();
+        var muc = $("#muc").val();
+
+        if (loai == 1){
+            var url = unescape('@Url.Action("Print")' +
+                       "?ext=" + ext +
+                       "&loai=" + 1 +
+                       "&muc=" + muc +
+                       "&loaiBC=" + loaiBC +
+                       "&loaiBaoCao=" + loaiBaoCao);
+
+            openNewTab(url);
+        } else{
+            $("input:checkbox[check-group='To']").each(function () {
+                if (this.checked) {
+                    var item = this.value;
+                    var url = '@Url.Action("Print")' +
+                        "?ext=" + ext +
+                        "&loai=" + 2 +
+                        "&muc=" + muc +
+                        "&loaiBaoCao=" + loaiBaoCao +
+                        "&loaiBC=" + loaiBC + 
+                        "&to=" + item;
+
+                    url = unescape(url);
+                    links.push(url);
+                }
+            });
+
+            openLinks(links);
+        }
+    });
+
+</script>

@@ -1,0 +1,304 @@
+﻿@using Viettel.Models.QLNH.QuyetToan
+@using Viettel.Domain.DomainModel
+@using System.Globalization;
+@using DomainModel
+@model BaoCaoKetLuanQuyetToan_ModelPaging
+
+<div id="NhuCauChiQuy">
+    <div class="tooltip-header-search">
+        <div class="col-sm-4 col-md-4 col-lg-4" style="display:flex;padding-left:0px;">
+            <label class="control-label">Báo cáo kết luận quyết toán</label>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="IDTable" />
+<table class="table table-bordered" id="tblFromTimkiemBaoCaoKetLuanQuyetToan">
+    <thead class="header-search">
+        <tr>
+            <th width="25%">
+                <div style="display: flex">
+                    <div class='input-group date'>
+                        <input type="text" id="txtTuNgay" autocomplete="off" class="form-control gr_search txtDate" placeholder="Từ ngày" />
+                        <span class="btn-default input-group-addon">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <span style="margin: 8px 5px 0px 5px;">-</span>
+                    <div class='input-group date'>
+                        <input type="text" id="txtDenNgay" autocomplete="off" class="form-control gr_search txtDate" placeholder="Đến ngày" />
+                        <span class="btn-default input-group-addon">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                </div>
+            </th>
+            <th width="15%">@Html.DropDownList("iID_DonViID", (SelectList)(ViewBag.ListDonViQuanLy), new { @class = "form-control", @id = "iDonvi", @onchange = "ChangePage()" })</th>
+            <th width="81%">
+                <button class="btn btn-info pull-right mr-10" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+                <button class="btn btn-info pull-right mr-10 btn-print" data-ext="xlsx"><i class="fa fa-print" aria-hidden="true"></i>In báo cáo</button>
+                <button class="btn btn-info pull-right mr-10" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
+            </th>
+        </tr>
+    </thead>
+</table>
+
+@{
+    <div style="overflow-x:auto">
+        <table class="table table-bordered tr-hover" id="tblBaoCaoKetLuanQuyetToan">
+            <thead>
+                <tr>
+                    <th style="min-width: 50px" rowspan="3">STT</th>
+                    <th style="min-width: 200px" rowspan="3">Chương trình, danh mục VKTBKT, nội dung chi</th>
+                    @*<th style="min-width: 200px" colspan="2" rowspan="2">Giá trị hợp đồng mua sắm hoặc dự toán được duyệt</th>*@
+                    <th style="min-width: 200px" colspan="@(1 + ViewBag.SoGiaiDoan)">Kế hoạch sử dụng Quỹ dự trữ ngoại hối (NSĐB) được Thủ tướng Chính phủ phê duyệt</th>
+                    <th style="min-width: 200px" colspan="@(2 + (2 * ViewBag.SoGiaiDoan))">Kinh phí được cấp</th>
+                    <th style="min-width: 200px" colspan="@(2 + (2 * ViewBag.SoGiaiDoan))">Quyết toán được duyệt</th>
+                    <th style="min-width: 200px" colspan="2" rowspan="2">So sánh số kinh phí được cấp với số quyết toán (thừa ghi số dương, thiếu ghi số âm)</th>
+                    <th style="min-width: 200px" colspan="2" rowspan="2">Kinh phí thừa nộp trả NSNN</th>
+                </tr>
+                <tr>
+                    <th style="min-width: 150px" class="m-w100" colspan="1">Tổng số</th>
+                    @{ foreach (var item in ViewBag.GiaiDoan)
+                        {
+                            <th style="min-width: 150px" class="m-w100" colspan="1">Giai đoạn @item.iGiaiDoanTu - @item.iGiaiDoanDen</th>
+                        } }
+                    <th style="min-width: 150px" class="m-w100" colspan="2">Tổng số</th>
+                    @{ foreach (var item in ViewBag.GiaiDoan)
+                        {
+                            <th style="min-width: 150px" class="m-w100" colspan="2">Giai đoạn @item.iGiaiDoanTu - @item.iGiaiDoanDen</th>
+                        } }
+                    <th style="min-width: 300px" class="m-w100" colspan="2">Tổng số</th>
+                    @{ foreach (var item in ViewBag.GiaiDoan)
+                        {
+                            <th style="min-width: 150px" class="m-w100" colspan="2">Giai đoạn @item.iGiaiDoanTu - @item.iGiaiDoanDen</th>
+                        } }
+                </tr>
+                <tr>
+                    <th class="m-w100" colspan="1">USD</th>
+                    @{ foreach (var item in ViewBag.GiaiDoan)
+                        {
+                            <th class="m-w100" colspan="1">USD</th>
+                        } }
+                    <th class="m-w100" colspan="1">USD</th>
+                    <th class="m-w100" colspan="1">VND</th>
+                    @{ foreach (var item in ViewBag.GiaiDoan)
+                        {
+                            <th class="m-w100" colspan="1">USD</th>
+                            <th class="m-w100" colspan="1">VND</th>
+                        } }
+                    <th class="m-w100" colspan="1">USD</th>
+                    <th class="m-w100" colspan="1">VND</th>
+                    @{ foreach (var item in ViewBag.GiaiDoan)
+                        {
+                            <th class="m-w100" colspan="1">USD</th>
+                            <th class="m-w100" colspan="1">VND</th>
+                        } }
+                    <th class="m-w100">USD</th>
+                    <th class="m-w100">VND</th>
+
+                    <th class="m-w100">USD</th>
+                    <th class="m-w100">VND</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 0;
+                    foreach (var item in Model.Items)
+                    {
+                        index++;
+                                <tr style="cursor: pointer" class="row-select @item.isTitle">
+
+                                    <td class="@item.isTitle" @(item.bIsTittle == true ? "align=center" : "align=left" )>@Html.Raw(Html.Encode(item.STT))</td>
+
+                                    <td class="@item.isTitle" @(item.bIsTittle == true ? "align=center" : "align=left" ) align="left">@Html.Raw(Html.Encode(item.sTenNoiDungChi))</td>
+
+                                    @*<td align="right" data-getname="fHopDong_USD" data-getvalue="@item.fHopDong_USD">@(item.fHopDong_USD.HasValue ? CommonFunction.DinhDangSo(item.fHopDong_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+        <td align="right" data-getname="fHopDong_VND" data-getvalue="@item.fHopDong_VND">@(item.fHopDong_VND.HasValue ? CommonFunction.DinhDangSo(item.fHopDong_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>*@
+                                    <td align="right"> @(item.fKeHoach_TTCP_USD.HasValue ? CommonFunction.DinhDangSo(item.fKeHoach_TTCP_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                                    @{
+                                        if (item.bIsTittle == true)
+                                        {
+                                            foreach (var itemGiaiDoan in item.listDataTTCP)
+                                            {
+                                                <td align="right">@Html.Raw(itemGiaiDoan.valueUSD.HasValue ? CommonFunction.DinhDangSo(itemGiaiDoan.valueUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            foreach (var giaiDoan in ViewBag.GiaiDoan)
+                                            {
+                                                if ((giaiDoan.iGiaiDoanTu == item.iNamBaoCaoTu && giaiDoan.iGiaiDoanDen == item.iNamBaoCaoDen) || item.bIsTittle == true)
+                                                {
+                                                    <td align="right" data-getname="fKeHoach_TTCP_USD" data-getvalue="@item.fKeHoach_TTCP_USD">@(item.fKeHoach_TTCP_USD.HasValue ? CommonFunction.DinhDangSo(item.fKeHoach_TTCP_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                                                }
+                                                else
+                                                {
+                                                    <td align="center"></td>
+                                                }
+                                            }
+                                        }
+                                    }
+                                    <td align="center">@(item.fKinhPhiDuocCap_Tong_USD.HasValue ? CommonFunction.DinhDangSo(item.fKinhPhiDuocCap_Tong_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                                    <td align="center">@(item.fKinhPhiDuocCap_Tong_VND.HasValue ? CommonFunction.DinhDangSo(item.fKinhPhiDuocCap_Tong_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                                    @{
+                                        if (item.bIsTittle == true)
+                                        {
+                                            foreach (var itemGiaiDoan in item.listDataKPDC)
+                                            {
+                                                <td align="right">@Html.Raw(itemGiaiDoan.valueUSD.HasValue ? CommonFunction.DinhDangSo(itemGiaiDoan.valueUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                                                <td align="right">@Html.Raw(itemGiaiDoan.valueVND.HasValue ? CommonFunction.DinhDangSo(itemGiaiDoan.valueVND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            foreach (var giaiDoan in ViewBag.GiaiDoan)
+                                            {
+                                                if ((giaiDoan.iGiaiDoanTu == item.iNamBaoCaoTu && giaiDoan.iGiaiDoanDen == item.iNamBaoCaoDen) || item.bIsTittle == true)
+                                                {
+                                                    <td align="right" data-getname="fKinhPhiDuocCap_Tong_USD" data-getvalue="@item.fKinhPhiDuocCap_Tong_USD"> @(item.fKinhPhiDuocCap_Tong_USD.HasValue ? CommonFunction.DinhDangSo(item.fKinhPhiDuocCap_Tong_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                                                    <td align="right" data-getname="fKinhPhiDuocCap_Tong_VND" data-getvalue="@item.fKinhPhiDuocCap_Tong_VND"> @(item.fKinhPhiDuocCap_Tong_VND.HasValue ? CommonFunction.DinhDangSo(item.fKinhPhiDuocCap_Tong_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                                                }
+                                                else
+                                                {
+                                                    <td align="center"></td>
+                                                    <td align="center"></td>
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    <td align="center">@(item.fQuyetToanDuocDuyet_Tong_USD.HasValue ? CommonFunction.DinhDangSo(item.fQuyetToanDuocDuyet_Tong_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                                    <td align="center">@(item.fQuyetToanDuocDuyet_Tong_VND.HasValue ? CommonFunction.DinhDangSo(item.fQuyetToanDuocDuyet_Tong_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                                    @{
+                                        if (item.bIsTittle == true)
+                                        {
+                                            foreach (var itemGiaiDoan in item.listDataQTDD)
+                                            {
+                                                <td align="right">@Html.Raw(itemGiaiDoan.valueUSD.HasValue ? CommonFunction.DinhDangSo(itemGiaiDoan.valueUSD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                                                <td align="right">@Html.Raw(itemGiaiDoan.valueVND.HasValue ? CommonFunction.DinhDangSo(itemGiaiDoan.valueVND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            foreach (var giaiDoan in ViewBag.GiaiDoan)
+                                            {
+                                                if ((giaiDoan.iGiaiDoanTu == item.iNamBaoCaoTu && giaiDoan.iGiaiDoanDen == item.iNamBaoCaoDen) || item.bIsTittle == true)
+                                                {
+                                                    <td align="right" data-getname="fQuyetToanDuocDuyet_Tong_USD" data-getvalue="@item.fQuyetToanDuocDuyet_Tong_USD">@(item.fQuyetToanDuocDuyet_Tong_USD.HasValue ? CommonFunction.DinhDangSo(item.fQuyetToanDuocDuyet_Tong_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                                                    <td align="right" data-getname="fQuyetToanDuocDuyet_Tong_VND" data-getvalue="@item.fQuyetToanDuocDuyet_Tong_VND">@(item.fQuyetToanDuocDuyet_Tong_VND.HasValue ? CommonFunction.DinhDangSo(item.fQuyetToanDuocDuyet_Tong_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty)</td>
+                                                }
+                                                else
+                                                {
+                                                    <td align="center"></td>
+                                                    <td align="center"></td>
+                                                }
+                                            }
+                                        }
+                                    }
+                                    <td align="right">@Html.Raw(item.fSoSanhKinhPhi_USD.HasValue ? item.fSoSanhKinhPhi_USD >= 0 ? (item.fSoSanhKinhPhi_USD.HasValue ? CommonFunction.DinhDangSo(item.fSoSanhKinhPhi_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty) : "- " + (item.fSoSanhKinhPhi_USD.HasValue ? CommonFunction.DinhDangSo(item.fSoSanhKinhPhi_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty) : "" + (item.fSoSanhKinhPhi_USD.HasValue ? CommonFunction.DinhDangSo(item.fSoSanhKinhPhi_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty))</td>
+                                    <td align="right">@Html.Raw(item.fSoSanhKinhPhi_VND.HasValue ? item.fSoSanhKinhPhi_VND >= 0 ? (item.fSoSanhKinhPhi_VND.HasValue ? CommonFunction.DinhDangSo(item.fSoSanhKinhPhi_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty) : "- " + (item.fSoSanhKinhPhi_VND.HasValue ? CommonFunction.DinhDangSo(item.fSoSanhKinhPhi_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty) : "" + (item.fSoSanhKinhPhi_VND.HasValue ? CommonFunction.DinhDangSo(item.fSoSanhKinhPhi_VND.Value.ToString(CultureInfo.InvariantCulture), 0) : string.Empty))</td>
+                                    <td align="right">@Html.Raw(item.fThuaTraNSNN_USD.HasValue ? CommonFunction.DinhDangSo(item.fThuaTraNSNN_USD.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                                    <td align="right">@Html.Raw(item.fThuaTraNSNN_VND.HasValue ? CommonFunction.DinhDangSo(item.fThuaTraNSNN_VND.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)</td>
+                                </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<input type="hidden" id="urlExport" value="@Url.Action("ExportExcelBaoCao")" />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#iDonvi").select2({ width: '100%', matcher: FilterInComboBox });
+        var isShowing = false;
+        $('.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: 'vi',
+            todayHighlight: true,
+            format: "dd/mm/yyyy"
+        }).on('hide', () => {
+            isShowing = false;
+        }).on('show', () => {
+            isShowing = true;
+        });
+
+        $(".txtDate").keydown(function (event) {
+            ValidateInputKeydown(event, this, 3);
+        }).blur(function (event) {
+            setTimeout(() => {
+                if (!isShowing) ValidateInputFocusOut(event, this, 3);
+            }, 0);
+        });
+
+        $("#tblFromTimkiemBaoCaoKetLuanQuyetToan .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                if (e.which == 13) {//Enter key pressed
+                    ChangePage();
+                }
+            });
+        });
+    });
+    $(".btn-print").click(function () {
+        var links = [];
+        var ext = $(this).data("ext");
+        var dTuNgay = $.trim($("#txtTuNgay").val());
+        var dDenNgay = $.trim($("#txtDenNgay").val());
+
+        var iDonvi = $("#iDonvi").val();
+        //var dvt = $("#dvt").val();
+        var url = $("#urlExport").val() + "?ext=" + ext + "&dvt=1000&to=1&dTuNgay=" + dTuNgay + "&dDenNgay=" + dDenNgay + "&iDonvi=" + iDonvi;
+
+        url = unescape(url);
+        links.push(url);
+
+        openLinks(links);
+    });
+</script>
+
+<style>
+    .dropdown {
+        position: relative;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        top: 30px;
+        background-color: #f9f9f9;
+        min-width: 140px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+        .dropdown-content button {
+            color: black;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ff6002
+        }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+        background-color: #ff6002;
+    }
+
+    .font-bold {
+        font-weight: bold;
+    }
+
+    .font-bold-red {
+        font-weight: bold;
+        color: #e85c5c;
+    }
+</style>

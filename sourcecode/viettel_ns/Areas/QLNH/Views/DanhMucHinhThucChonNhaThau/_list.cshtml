@@ -1,0 +1,80 @@
+﻿@using Viettel.Models.QLNH
+@model DanhMucNgoaiHoi_DanhMucHinhThucChonNhaThauModelPaging
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Danh mục hình thức chọn nhà thầu (@Model._paging.TotalItems)</label>
+    </div>
+    <button class="btn btn-primary pull-right" style="margin-right:10px;" onclick="OpenModal()" data-toggle="modal" data-target="#modalHinhThuc"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+</div>
+<table class="table table-bordered tr-hover" id="tbListHinhThuc">
+    <thead class="header-search">
+        <tr>
+            <th width="5%"></th>
+            <th width="20%"><input type="text" class="form-control gr_search" id="txtMaHinhThuc" maxlength="50" placeholder="Mã hình thức chọn nhà thầu"/></th>
+            <th width="20%"><input type="text" class="form-control gr_search" id="txtTenVietTat" maxlength="50" placeholder="Tên viết tắt"/></th>
+            <th width="20%"><input type="text" class="form-control gr_search" id="txtTenHinhThuc" maxlength="300" placeholder="Tên hình thức chọn nhà thầu"/></th>
+            <th width="20%"><input type="text" class="form-control gr_search" id="txtMoTa" maxlength="255" placeholder="Mô tả"/></th>
+            <th width="15%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+        </tr>
+    </thead>
+    <thead>
+        <tr>
+            <th width="5%">STT</th>
+            <th width="20%">Mã hình thức chọn nhà thầu</th>
+            <th width="20%">Tên viết tắt</th>
+            <th width="20%">Tên hình thức chọn nhà thầu</th>
+            <th width="20%">Mô tả</th>
+            <th width="15%">Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (var item in Model.Items)
+            {
+                index++;
+                <tr style="cursor: pointer">
+                    <td class="text-center">@(pageIndex + index)</td>
+                    <td class="text-left">@Html.Raw(Html.Encode(item.sMaHinhThuc))</td>
+                    <td class="text-left">@Html.Raw(Html.Encode(item.sTenVietTat))</td>
+                    <td class="text-left">@Html.Raw(Html.Encode(item.sTenHinhThuc))</td>
+                    <td class="text-left">@Html.Raw(!string.IsNullOrEmpty(Html.Encode(item.sMoTa)) ? Html.Encode(item.sMoTa).Replace("\n", "<br/>") : string.Empty)</td>
+                    <td class="text-center">
+                        <button type="button" class="btn-detail" title="Xem chi tiết" onclick="OpenModalDetail('@item.ID')" data-toggle="modal" data-target="#modalHinhThuc"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-edit" title="Sửa" onclick="OpenModal('@item.ID')" data-toggle="modal" data-target="#modalHinhThuc"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" title="Xóa" onclick="Xoa('@item.ID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.date')
+            .datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+            });
+
+        $("#tbListHinhThuc .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                if (e.which == 13) {//Enter key pressed
+                    ChangePage();
+                }
+            });
+        });
+    });
+</script>
