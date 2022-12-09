@@ -67,11 +67,11 @@ function OpenModal(id, state) {
         success: function (data) {
             $("#contentmodalKHChiTietBQP").empty().html(data);
             if (state == 'CREATE') {
-                $("#modalKHChiTietBQPLabel").empty().html('Thêm mới kế hoạch chi tiết Bộ Quốc phòng phê duyệt');
+                $("#modalKHChiTietBQPLabel").empty().html('Thêm mới quyết định tổng thể Thủ tướng Chính phủ');
             } else if (state == 'UPDATE') {
-                $("#modalKHChiTietBQPLabel").empty().html('Sửa kế hoạch chi tiết Bộ Quốc phòng phê duyệt');
+                $("#modalKHChiTietBQPLabel").empty().html('Sửa quyết định tổng thể Thủ tướng Chính phủ');
             } else {
-                $("#modalKHChiTietBQPLabel").empty().html('Điều chỉnh kế hoạch chi tiết Bộ Quốc phòng phê duyệt');
+                $("#modalKHChiTietBQPLabel").empty().html('Điều chỉnh quyết định tổng thể Thủ tướng Chính phủ');
             }
         }
     });
@@ -161,64 +161,74 @@ function ValidateData(data, text) {
     var Messages = [];
 
     // Check theo loại giai đoạn
-    if (data.iLoai == 1) {
-        if ($.trim(data.iGiaiDoanTu) == '') {
-            Messages.push("Chưa có thông tin về giai đoạn từ, vui lòng nhập giai đoạn từ.");
-        }
-        if ($.trim(data.iGiaiDoanDen) == '') {
-            Messages.push("Chưa có thông tin về giai đoạn đến, vui lòng nhập giai đoạn đến.");
-        }
-        if (data.iID_KHTongTheTTCPID == GUID_EMPTY || $.trim(data.iID_KHTongTheTTCPID) == '') {
-            Messages.push("Chưa có thông tin về quyết định tổng thể TTCP phê duyệt, vui lòng chọn quyết định tổng thể TTCP phê duyệt.");
-        }
-    } else if (data.iLoai == 2) {
-        if ($.trim(data.iNamKeHoach) == '') {
-            Messages.push("Chưa có thông tin về năm quyết định, vui lòng nhập năm quyết định.");
-        }
-        if ((data.iID_ParentID == GUID_EMPTY || $.trim(data.iID_ParentID) == '') && (data.iLoaiTTCP != 2)) {
-            Messages.push("Chưa có thông tin về kế hoạch chi tiết BQP cha, vui lòng chọn kế hoạch chi tiết BQP cha.");
-        }
-        if (data.iID_KHTongTheTTCPID == GUID_EMPTY || $.trim(data.iID_KHTongTheTTCPID) == '') {
-            Messages.push("Chưa có thông tin về quyết định tổng thể TTCP phê duyệt, vui lòng chọn quyết định tổng thể TTCP phê duyệt.");
-        }
-        if (data.iLoaiTTCP != 2) {
-            if ((data.iID_ParentID != GUID_EMPTY && $.trim(data.iID_ParentID) != '') && data.iNamKeHoach) {
-                if (data.iNamKeHoach - data.fromYearBQP < 0 || data.iNamKeHoach - data.toYearBQP > 0) {
-                    Messages.push("Năm kế hoạch không nằm trong giai đoạn của kế hoạch chi tiết BQP cha.");
-                }
-            }
-        }
-    } else {
-        if (data.iID_ParentID == GUID_EMPTY || $.trim(data.iID_ParentID) == '') {
-            Messages.push("Chưa có thông tin về kế hoạch chi tiết BQP cha, vui lòng chọn kế hoạch chi tiết BQP cha.");
-        }
-        if (data.iID_KHTongTheTTCPID == GUID_EMPTY || $.trim(data.iID_KHTongTheTTCPID) == '') {
-            Messages.push("Chưa có thông tin về quyết định tổng thể TTCP phê duyệt, vui lòng chọn quyết định tổng thể TTCP phê duyệt.");
-        }
-        if ($.trim(data.iGiaiDoanTu) == '') {
-            Messages.push("Chưa có thông tin về giai đoạn từ, vui lòng nhập giai đoạn từ.");
-        }
-        if ($.trim(data.iGiaiDoanDen) == '') {
-            Messages.push("Chưa có thông tin về giai đoạn đến, vui lòng nhập giai đoạn đến.");
-        }
-        if (data.iID_ParentID != GUID_EMPTY && $.trim(data.iID_ParentID) != '' && data.iGiaiDoanTu && data.iGiaiDoanDen) {
-            if (data.iGiaiDoanTu - data.fromYearBQP < 0 || data.iGiaiDoanTu - data.toYearBQP > 0) {
-                Messages.push("Giai đoạn từ không nằm trong giai đoạn của kế hoạch chi tiết BQP cha.");
-            }
-            if (data.iGiaiDoanDen - data.fromYearBQP < 0 || data.iGiaiDoanDen - data.toYearBQP > 0) {
-                Messages.push("Giai đoạn đến không nằm trong giai đoạn của kế hoạch chi tiết BQP cha.");
-            }
-            if (data.iGiaiDoanTu - data.iGiaiDoanDen > 0) {
-                Messages.push("Giai đoạn từ không được lớn hơn giai đoạn đến.");
-            }
-        }
-    }
+    //if (data.iLoai == 1) {
+    //    if ($.trim(data.iGiaiDoanTu) == '') {
+    //        Messages.push("Chưa có thông tin về giai đoạn từ, vui lòng nhập giai đoạn từ.");
+    //    }
+    //    if ($.trim(data.iGiaiDoanDen) == '') {
+    //        Messages.push("Chưa có thông tin về giai đoạn đến, vui lòng nhập giai đoạn đến.");
+    //    }
+    //    if (data.iID_KHTongTheTTCPID == GUID_EMPTY || $.trim(data.iID_KHTongTheTTCPID) == '') {
+    //        Messages.push("Chưa có thông tin về quyết định tổng thể TTCP phê duyệt, vui lòng chọn quyết định tổng thể TTCP phê duyệt.");
+    //    }
+    //} else if (data.iLoai == 2) {
+    //    if ($.trim(data.iNamKeHoach) == '') {
+    //        Messages.push("Chưa có thông tin về năm quyết định, vui lòng nhập năm quyết định.");
+    //    }
+    //    if ((data.iID_ParentID == GUID_EMPTY || $.trim(data.iID_ParentID) == '') && (data.iLoaiTTCP != 2)) {
+    //        Messages.push("Chưa có thông tin về kế hoạch chi tiết BQP cha, vui lòng chọn kế hoạch chi tiết BQP cha.");
+    //    }
+    //    if (data.iID_KHTongTheTTCPID == GUID_EMPTY || $.trim(data.iID_KHTongTheTTCPID) == '') {
+    //        Messages.push("Chưa có thông tin về quyết định tổng thể TTCP phê duyệt, vui lòng chọn quyết định tổng thể TTCP phê duyệt.");
+    //    }
+    //    if (data.iLoaiTTCP != 2) {
+    //        if ((data.iID_ParentID != GUID_EMPTY && $.trim(data.iID_ParentID) != '') && data.iNamKeHoach) {
+    //            if (data.iNamKeHoach - data.fromYearBQP < 0 || data.iNamKeHoach - data.toYearBQP > 0) {
+    //                Messages.push("Năm kế hoạch không nằm trong giai đoạn của kế hoạch chi tiết BQP cha.");
+    //            }
+    //        }
+    //    }
+    //} else {
+    //    if (data.iID_ParentID == GUID_EMPTY || $.trim(data.iID_ParentID) == '') {
+    //        Messages.push("Chưa có thông tin về kế hoạch chi tiết BQP cha, vui lòng chọn kế hoạch chi tiết BQP cha.");
+    //    }
+    //    if (data.iID_KHTongTheTTCPID == GUID_EMPTY || $.trim(data.iID_KHTongTheTTCPID) == '') {
+    //        Messages.push("Chưa có thông tin về quyết định tổng thể TTCP phê duyệt, vui lòng chọn quyết định tổng thể TTCP phê duyệt.");
+    //    }
+    //    if ($.trim(data.iGiaiDoanTu) == '') {
+    //        Messages.push("Chưa có thông tin về giai đoạn từ, vui lòng nhập giai đoạn từ.");
+    //    }
+    //    if ($.trim(data.iGiaiDoanDen) == '') {
+    //        Messages.push("Chưa có thông tin về giai đoạn đến, vui lòng nhập giai đoạn đến.");
+    //    }
+    //    if (data.iID_ParentID != GUID_EMPTY && $.trim(data.iID_ParentID) != '' && data.iGiaiDoanTu && data.iGiaiDoanDen) {
+    //        if (data.iGiaiDoanTu - data.fromYearBQP < 0 || data.iGiaiDoanTu - data.toYearBQP > 0) {
+    //            Messages.push("Giai đoạn từ không nằm trong giai đoạn của kế hoạch chi tiết BQP cha.");
+    //        }
+    //        if (data.iGiaiDoanDen - data.fromYearBQP < 0 || data.iGiaiDoanDen - data.toYearBQP > 0) {
+    //            Messages.push("Giai đoạn đến không nằm trong giai đoạn của kế hoạch chi tiết BQP cha.");
+    //        }
+    //        if (data.iGiaiDoanTu - data.iGiaiDoanDen > 0) {
+    //            Messages.push("Giai đoạn từ không được lớn hơn giai đoạn đến.");
+    //        }
+    //    }
+    //}
 
     // Check tỉ giá
-    if (data.iID_TiGiaID == null || data.iID_TiGiaID == GUID_EMPTY) {
-        Messages.push("Chưa có thông tin về tỉ giá, vui lòng chọn tỉ giá.");
-    }
+    //if (data.iID_TiGiaID == null || data.iID_TiGiaID == GUID_EMPTY) {
+    //    Messages.push("Chưa có thông tin về tỉ giá, vui lòng chọn tỉ giá.");
+    //}
 
+    // Check giai doan
+    if ($.trim(data.iGiaiDoanTu) == '') {
+        Messages.push("Chưa có thông tin về giai đoạn từ, vui lòng nhập giai đoạn từ.");
+    }
+    if ($.trim(data.iGiaiDoanDen) == '') {
+        Messages.push("Chưa có thông tin về giai đoạn đến, vui lòng nhập giai đoạn đến.");
+    }
+    if (data.iGiaiDoanTu - data.iGiaiDoanDen > 0) {
+        Messages.push("Giai đoạn từ không được lớn hơn giai đoạn đến.");
+    }
     // Check số kế hoạch
     if ($.trim($("#txtSoKeHoach").val()) == '') {
         Messages.push("Chưa có thông tin về số quyết định, vui lòng nhập số quyết định.");
@@ -229,7 +239,7 @@ function ValidateData(data, text) {
 
     // Check ngày kế hoạch
     if ($.trim($("#txtNgayKeHoach").val()) != "" && !dateIsValid($.trim($("#txtNgayKeHoach").val()))) {
-        Messages.push("Ngày kế hoạch không hợp lệ, vui lòng nhập lại ngày kế hoạch.");
+        Messages.push("Ngày quyết định không hợp lệ, vui lòng nhập lại ngày kế hoạch.");
     }
 
     if (Messages.length > 0) {
@@ -606,22 +616,22 @@ function SaveDetail(isNotCondition = false) {
         rowData.sTenNhiemVuChi = $("<div/>").text($.trim(rowElement.find('#sTenNhiemVuChi').val())).html();
         rowData.iID_BQuanLyID = rowElement.find('#iID_BQuanLyID').val();
         rowData.bIsTTCP = ($.trim(rowElement.find('td[name="bIsTTCP"]').text()).toLowerCase() === 'true');
-        if (!rowData.bIsTTCP) {
-            rowData.iID_MaDonVi = $("<div/>").text(rowElement.find('select[name="iID_DonViID"]').find(':selected').data('madonvi')).html();
-            rowData.iID_DonViID = rowElement.find('select[name="iID_DonViID"]').val();
-            rowData.hasDonVi = true;
-        } else {
-            let selectDonVi = rowElement.find('select[name="iID_DonViID"]');
-            if (selectDonVi.length > 0) {
-                rowData.iID_MaDonVi = $("<div/>").text(selectDonVi.find(':selected').data('madonvi')).html();
-                rowData.iID_DonViID = selectDonVi.val();
-                rowData.hasDonVi = true;
-            } else {
-                rowData.iID_MaDonVi = null;
-                rowData.iID_DonViID = null;
-                rowData.hasDonVi = false;
-            }
-        }
+        //if (!rowData.bIsTTCP) {
+        //    rowData.iID_MaDonVi = $("<div/>").text(rowElement.find('select[name="iID_DonViID"]').find(':selected').data('madonvi')).html();
+        //    rowData.iID_DonViID = rowElement.find('select[name="iID_DonViID"]').val();
+        //    rowData.hasDonVi = true;
+        //} else {
+        //    let selectDonVi = rowElement.find('select[name="iID_DonViID"]');
+        //    if (selectDonVi.length > 0) {
+        //        rowData.iID_MaDonVi = $("<div/>").text(selectDonVi.find(':selected').data('madonvi')).html();
+        //        rowData.iID_DonViID = selectDonVi.val();
+        //        rowData.hasDonVi = true;
+        //    } else {
+        //        rowData.iID_MaDonVi = null;
+        //        rowData.iID_DonViID = null;
+        //        rowData.hasDonVi = false;
+        //    }
+        //}
         rowData.fGiaTriUSD = UnFormatNumber(rowElement.find('#fGiaTriBQP_USD').val());
         rowData.fGiaTriVND = UnFormatNumber(rowElement.find('#fGiaTriBQP_VND').val());
         rowData.iID_KHTTTTCP_NhiemVuChiID = rowElement.find('td[name="iID_KHTTTTCP_NhiemVuChiID"]').text();
@@ -758,11 +768,11 @@ function RemoveRowKeHoachChiTiet(e) {
                     ResetSelect2();
                 }
 
-                if (isVNDtoUSD) {
-                    rowParent.find('#fGiaTriBQP_VND').prop('disabled', false);
-                } else {
-                    rowParent.find('#fGiaTriBQP_USD').prop('disabled', false);
-                }
+                //if (isVNDtoUSD) {
+                //    rowParent.find('#fGiaTriBQP_VND').prop('disabled', false);
+                //} else {
+                //    rowParent.find('#fGiaTriBQP_USD').prop('disabled', false);
+                //}
                 rowParent.find('button.btn-delete').removeClass('disabled');
             }
         }

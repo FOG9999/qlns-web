@@ -1,97 +1,104 @@
 ﻿@using Viettel.Models.QLVonDauTu
 @using System.Globalization;
 @model List<BcquyetToanNienDoVonNamChiTietViewModel>
-<table class="table table-bordered table-parent" style="margin-bottom: 0px">
-    <thead>
-        <tr>
-            <th rowspan="3">STT</th>
-            <th rowspan="3">Nội dung</th>
-            <th rowspan="3">Tổng mức đầu tư</th>
-            <th colspan="2">Luỹ kế vốn đã thanh toán từ K/C đến hết niên độ năm trước năm quyết toán</th>
-            <th rowspan="3">Vốn tạm ứng theo chế độ chưa thu hồi của các năm trước nộp điều chỉnh giảm trong năm quyết toán.</th>
-            <th rowspan="3">Thanh toán KLHT trong năm quyết toán phần vốn TU theo chế độ chưa thu hồi từ khởi công đến hết năm ngân sách trước năm quyết toán.</th>
-            <th colspan="6">Kế hoạch và thanh toán vốn đầu tư các năm trước được kéo dài thời gian thực hiện và thanh toán sang năm 20…</th>
-            <th colspan="6">Dự toán và giải ngân vốn năm ...</th>
-            <th rowspan="3">Tổng số vốn đã thanh toán KLHT được quyết toán trong năm quyết toán.</th>
-            <th rowspan="3">Luỹ kế số vốn tạm ứng theo chế độ chưa thu hồi đến hết năn quyết toán chuyển sang các năm sau quyết toán</th>
-            <th rowspan="3">Luỹ kế số vốn đã thanh toán từ K/C đến hết năm quyết toán.</th>
-        </tr>
-        <tr>
-            <th rowspan="2">Tổng số</th>
-            <th rowspan="2">Trong đó vốn tạm ứng theo chế độ chưa thu hồi</th>
-            <th rowspan="2">Kế hoạch vốn được kéo dài</th>
-            <th colspan="3">Thanh toán</th>
-            <th rowspan="2">Kế hoạch vốn được phép kéo dài sang năm sau (nếu có)</th>
-            <th rowspan="2">Số vốn còn lại chưa thanh toán hủy bỏ (nếu có)</th>
-            <th rowspan="2">Dự toán năm ...</th>
-            <th colspan="3">Thanh toán</th>
-            <th rowspan="2">KH vốn được phép kéo dài sang năm sau (nếu có)</th>
-            <th rowspan="2">Số vốn còn lại chưa thanh toán hủy bỏ (nếu có)</th>
-        </tr>
-        <tr>
-            <th>Tổng số</th>
-            <th>Thanh toán KLHT</th>
-            <th>Vốn tạm ứng theo chế độ chưa thu hồi</th>
-            <th>Tổng số</th>
-            <th>Số vốn thanh toán KLHT</th>
-            <th>Số vốn tạm ứng theo chế độ chưa thu hồi</th>
-        </tr>
-        <tr>
-            <th>1</th>
-            <th>2</th>
-            <th>3</th>
-            <th>4</th>
-            <th>5</th>
-            <th>6</th>
-            <th>7</th>
-            <th>8</th>
-            <th>9 = 10+11</th>
-            <th>10</th>
-            <th>11</th>
-            <th>12</th>
-            <th>13 = 8-9-12</th>
-            <th>14</th>
-            <th>15 = 16+17</th>
-            <th>16</th>
-            <th>17</th>
-            <th>18</th>
-            <th>19 = 14-15-18</th>
-            <th>20 = 7+10+16</th>
-            <th>21 = 5-6-7+11+17</th>
-            <th>22</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{ int i = 0; }
-        @foreach (var item in Model)
-        {
-            { i = i + 1; }
-<tr data-iIdDuAn="@item.iID_DuAnID">
-    <td>@i</td>
-    <td>@item.sTenDuAn </td>
-    <td class="fTongMucDauTu sotien" style="text-align:right">@item.fTongMucDauTu</td>
-    <td class="fLuyKeThanhToanNamTruoc sotien" style="text-align:right">@item.fLuyKeThanhToanNamTruoc</td>
-    <td class="fTamUngTheoCheDoChuaThuHoiNamTruoc sotien" style="text-align:right">@item.fTamUngTheoCheDoChuaThuHoiNamTruoc</td>
-    <td><input type="text" class="fGiaTriTamUngDieuChinhGiam currently" style="text-align:right" value="@item.fGiaTriTamUngDieuChinhGiam"></td>
-    <td class="fTamUngNamTruocThuHoiNamNay sotien" style="text-align:right">@item.fTamUngNamTruocThuHoiNamNay</td>
-    <td class="fKHVNamTruocChuyenNamNay sotien" style="text-align:right">@item.fKHVNamTruocChuyenNamNay</td>
-    <td class="fTongThanhToanVonKeoDaiNamNay sotien" style="text-align:right">@item.fTongThanhToanVonKeoDaiNamNay</td>
-    <td class="fTongThanhToanSuDungVonNamTruoc sotien">@item.fTongThanhToanSuDungVonNamTruoc</td>
-    <td class="fTamUngTheoCheDoChuaThuHoiKeoDaiNamNay sotien" style="text-align:right">@item.fTamUngTheoCheDoChuaThuHoiKeoDaiNamNay</td>
-    <td><input type="text" class="fGiaTriNamTruocChuyenNamSau currently" style="text-align:right" value="@item.fGiaTriNamTruocChuyenNamSau"></td>
-    <td class="fVonConLaiHuyBoKeoDaiNamNay sotien" style="text-align:right">@item.fVonConLaiHuyBoKeoDaiNamNay</td>
-    <td class="fKHVNamNay sotien" style="text-align:right">@item.fKHVNamNay</td>
-    <td class="fTongKeHoachThanhToanVonNamNay sotien" style="text-align:right">@item.fTongKeHoachThanhToanVonNamNay</td>
-    <td class="fTongThanhToanSuDungVonNamNay sotien" style="text-align:right">@item.fTongThanhToanSuDungVonNamNay</td>
-    <td class="fTamUngTheoCheDoChuaThuHoiNamNay sotien" style="text-align:right">@item.fTamUngTheoCheDoChuaThuHoiNamNay</td>
-    <td><input type="text" class="fGiaTriNamNayChuyenNamSau currently" style="text-align:right" value="@item.fGiaTriNamNayChuyenNamSau"></td>
-    <td class="fVonConLaiHuyBoNamNay sotien" style="text-align:right">@item.fVonConLaiHuyBoNamNay</td>
-    <td class="fTongVonThanhToanNamNay sotien" style="text-align:right">@item.fTongVonThanhToanNamNay</td>
-    <td class="fLuyKeTamUngChuaThuHoiChuyenSangNam sotien" style="text-align:right">@item.fLuyKeTamUngChuaThuHoiChuyenSangNam</td>
-    <td class="fLuyKeConDaThanhToanHetNamNay sotien" style="text-align:right">@item.fLuyKeConDaThanhToanHetNamNay</td>
-</tr>}
-    </tbody>
-</table>
+
+<style>
+    table{
+        table-layout:fixed;
+        word-wrap:break-word;
+    }
+</style>
+
+<div class="col-md-12">
+    <div class="col-md-6">
+        <div class="row">1. STT.</div>
+        <div class="row">2. Nội dung (Dự án).</div>
+        <div class="row">3. Tổng mức đầu tư.</div>
+        <div class="row">4. Tổng số Lũy kế vốn đã giải ngân từ khởi công đến hết năm ngân sách trước năm quyết toán.</div>
+        <div class="row">5. Lũy kế vốn đã giải ngân từ khởi công đến hết năm ngân sách trước năm quyết toán (Vốn tạm ứng theo chế độ chưa thu hồi).</div>
+        <div class="row">6. Vốn tạm ứng theo chế độ chưa thu hồi của các năm trước nộp điều chỉnh giảm trong năm quyết toán.</div>
+        <div class="row">7. Thanh toán KLHT trong năm quyết toán phần vốn TU theo chế độ chưa thu hồi từ khởi công đến hết năm ngân sách trước năm quyết toán.</div>
+        <div class="row">8. Dự toán năm trước được kéo dài.</div>
+        <div class="row">9. Tổng số giải ngân.</div>
+        <div class="row">10. Dự toán năm trước được kéo dài (Giải ngân Thanh toán KLHT).</div>
+        <div class="row">11. Dự toán năm trước được kéo dài (Giải ngân vốn tạm ứng).</div>
+    </div>
+    <div class="col-md-6">
+        <div class="row">12. Dự toán năm trước được kéo dài (Dự toán đề nghị kéo dài thời gian thực hiện và giải ngân sang năm sau năm quyết toán (nếu có)).</div>
+        <div class="row">13. Dự toán năm trước được kéo dài (Số vốn còn lại chưa giải ngân hủy bỏ (nếu có)).</div>
+        <div class="row">14. Dự toán năm ...</div>
+        <div class="row">15. Tổng số giải ngân</div>
+        <div class="row">16. Giải ngân Khối lượng hoàn thành năm ...</div>
+        <div class="row">17. Giải ngân Vốn tạm ứng năm ...</div>
+        <div class="row">18. Dự toán đề nghị kéo dài thời gian thực hiện và giải ngân sang năm sau năm quyết toán (nếu có).</div>
+        <div class="row">19. Số vốn còn lại chưa giải ngân hủy bỏ (nếu có).</div>
+        <div class="row">20. Tổng số vốn đã thanh toán KLHT được quyết toán trong năm quyết toán.</div>
+        <div class="row">21. Luỹ kế số vốn tạm ứng theo chế độ chưa thu hồi đến hết năn quyết toán chuyển sang các năm sau.</div>
+        <div class="row">22. Luỹ kế số vốn đã giải ngân từ K/C đến hết năm quyết toán.</div>
+    </div>
+</div>
+
+<div>
+    <table class="table table-bordered table-parent">
+        <thead>
+            <tr>
+                <th style="width:30px">1</th>
+                <th style="width:300px">2</th>
+                <th style="width:150px">3</th>
+                <th style="width:150px">4</th>
+                <th style="width:150px">5</th>
+                <th style="width:150px">6</th>
+                <th style="width:150px">7</th>
+                <th style="width:150px">8</th>
+                <th style="width:150px">9 = 10+11</th>
+                <th style="width:150px">10</th>
+                <th style="width:150px">11</th>
+                <th style="width:150px">12</th>
+                <th style="width:150px">13 = 8-9-12</th>
+                <th style="width:150px">14</th>
+                <th style="width:150px">15 = 16+17</th>
+                <th style="width:150px">16</th>
+                <th style="width:150px">17</th>
+                <th style="width:150px">18</th>
+                <th style="width:150px">19 = 14-15-18</th>
+                <th style="width:150px">20 = 7+10+16</th>
+                <th style="width:150px">21 = 5-6-7+11+17</th>
+                <th style="width:150px">22</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ int i = 0; }
+            @foreach (var item in Model)
+            {
+                { i = i + 1; }
+                <tr data-iIdDuAn="@item.iID_DuAnID">
+                    <td>@i</td>
+                    <td>@item.sTenDuAn </td>
+                    <td class="fTongMucDauTu sotien" style="text-align:right">@item.fTongMucDauTu</td>
+                    <td class="fLuyKeThanhToanNamTruoc sotien" style="text-align:right">@item.fLuyKeThanhToanNamTruoc</td>
+                    <td class="fTamUngTheoCheDoChuaThuHoiNamTruoc sotien" style="text-align:right">@item.fTamUngTheoCheDoChuaThuHoiNamTruoc</td>
+                    <td><input type="text" class="fGiaTriTamUngDieuChinhGiam currently" style="text-align:right" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@item.fGiaTriTamUngDieuChinhGiam"></td>
+                    <td class="fTamUngNamTruocThuHoiNamNay sotien" style="text-align:right">@item.fTamUngNamTruocThuHoiNamNay</td>
+                    <td class="fKHVNamTruocChuyenNamNay sotien" style="text-align:right">@item.fKHVNamTruocChuyenNamNay</td>
+                    <td class="fTongThanhToanVonKeoDaiNamNay sotien" style="text-align:right">@item.fTongThanhToanVonKeoDaiNamNay</td>
+                    <td class="fTongThanhToanSuDungVonNamTruoc sotien">@item.fTongThanhToanSuDungVonNamTruoc</td>
+                    <td class="fTamUngTheoCheDoChuaThuHoiKeoDaiNamNay sotien" style="text-align:right">@item.fTamUngTheoCheDoChuaThuHoiKeoDaiNamNay</td>
+                    <td><input type="text" class="fGiaTriNamTruocChuyenNamSau currently" style="text-align:right" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@item.fGiaTriNamTruocChuyenNamSau"></td>
+                    <td class="fVonConLaiHuyBoKeoDaiNamNay sotien" style="text-align:right">@item.fVonConLaiHuyBoKeoDaiNamNay</td>
+                    <td class="fKHVNamNay sotien" style="text-align:right">@item.fKHVNamNay</td>
+                    <td class="fTongKeHoachThanhToanVonNamNay sotien" style="text-align:right">@item.fTongKeHoachThanhToanVonNamNay</td>
+                    <td class="fTongThanhToanSuDungVonNamNay sotien" style="text-align:right">@item.fTongThanhToanSuDungVonNamNay</td>
+                    <td class="fTamUngTheoCheDoChuaThuHoiNamNay sotien" style="text-align:right">@item.fTamUngTheoCheDoChuaThuHoiNamNay</td>
+                    <td><input type="text" class="fGiaTriNamNayChuyenNamSau currently" style="text-align:right" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@item.fGiaTriNamNayChuyenNamSau"></td>
+                    <td class="fVonConLaiHuyBoNamNay sotien" style="text-align:right">@item.fVonConLaiHuyBoNamNay</td>
+                    <td class="fTongVonThanhToanNamNay sotien" style="text-align:right">@item.fTongVonThanhToanNamNay</td>
+                    <td class="fLuyKeTamUngChuaThuHoiChuyenSangNam sotien" style="text-align:right">@item.fLuyKeTamUngChuaThuHoiChuyenSangNam</td>
+                    <td class="fLuyKeConDaThanhToanHetNamNay sotien" style="text-align:right">@item.fLuyKeConDaThanhToanHetNamNay</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 <script>
     $(document).ready(function () {

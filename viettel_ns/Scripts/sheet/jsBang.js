@@ -242,7 +242,7 @@ function Bang_txtONhapDuLieu_Autocomplete_onSource(txt, request, response) {
             $.getJSON(url, { Truong: Truong, GiaTri: request.term, DSGiaTri: Bang_GhepGiaTriCuaTruong("sTenDonVi", "iID_MaDonVi") }, response);
         }
         else if (Truong == "sTenPhongBan") {
-            $.getJSON(url, { Truong: Truong, GiaTri: request.term, DSGiaTri: Bang_GhepGiaTriCuaTruong("sTenPhongBan", "iID_BQuanLyID") }, response);
+            $.getJSON(url, { Truong: Truong, GiaTri: extractLast(request.term), DSGiaTri: Bang_GhepGiaTriCuaTruong("sTenPhongBan", "iID_BQuanLyID") }, response);
         }
         else if (Truong == "sTenDonVi") {
             $.getJSON(url, { Truong: Truong, GiaTri: request.term, DSGiaTri: Bang_GhepGiaTriCuaTruong("sTenDonVi", "iID_DonViID") }, response);
@@ -251,6 +251,13 @@ function Bang_txtONhapDuLieu_Autocomplete_onSource(txt, request, response) {
             $.getJSON(url, { Truong: Truong, GiaTri: request.term }, response);
         }
     }
+}
+
+function extractLast(term) {
+    return split(term).pop();
+}
+function split(val) {
+    return val.split(/,\s*/);
 }
 
 function Bang_txtONhapDuLieu_Autocomplete_onSelect(txt, event, ui) {

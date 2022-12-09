@@ -93,8 +93,8 @@
                 <td class="FSoCapNamTrcCs sotien" style="text-align:right">@item.FSoCapNamTrcCs</td>
                 <td class="FSoCapNamNay sotien" style="text-align:right">@item.FSoCapNamNay</td>
                 <td class="FSumSoDuocCap sotien" style="text-align:right">@item.FSumSoDuocCap</td>
-                <td><input type="text" class="FDnQuyetToanNamTrc currently" style="text-align:right" value="@item.FDnQuyetToanNamTrc"></td>
-                <td><input type="text" class="FDnQuyetToanNamNay currently" style="text-align:right" value="@item.FDnQuyetToanNamNay"></td>
+                <td><input type="text" class="FDnQuyetToanNamTrc currently" style="text-align:right" value="@item.FDnQuyetToanNamTrc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off"></td>
+                <td><input type="text" class="FDnQuyetToanNamNay currently" style="text-align:right" value="@item.FDnQuyetToanNamNay" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off"></td>
                 <td class="FSumSoDeNghiQuyetToan sotien" style="text-align:right">@item.FSumSoDeNghiQuyetToan</td>
                 <td class="FSumKeHoachVonDauTuChuaQuyetToanChuyenNamSau sotien" style="text-align:right">@item.FSumKeHoachVonDauTuChuaQuyetToanChuyenNamSau</td>
                 <td class="FSumTamUngCheDoChuaThuHoi sotien" style="text-align:right">@item.FSumTamUngCheDoChuaThuHoi</td>
@@ -104,7 +104,7 @@
                 <td class="FDuToanCnsChuaGiaiNganTaiCuc sotien" style="text-align:right">@item.FDuToanCnsChuaGiaiNganTaiCuc</td>
                 <td class="FDuToanCnsChuaGiaiNganTaiDv sotien" style="text-align:right">@item.FDuToanCnsChuaGiaiNganTaiDv</td>
                 <td class="FDuToanCnsChuaGiaiNganTaiKb sotien" style="text-align:right">@item.FDuToanCnsChuaGiaiNganTaiKb</td>
-                <td><input type="text" class="FDuToanThuHoi currently" style="text-align:right" value="@item.FDuToanThuHoi"></td>
+                <td><input type="text" class="FDuToanThuHoi currently" style="text-align:right" value="@item.FDuToanThuHoi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off"></td>
             </tr>
         }
     </tbody>

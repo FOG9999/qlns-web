@@ -178,6 +178,7 @@ function LoadDataViewChiPhi() {
         var stt = count;
         html += '<tr>';
         html += '<input type="hidden" class="r_IThuTu" value = "' + x.iThuTu + '"/> <input type="hidden" class="r_IsLoaiChiPhi" value = "' + x.IsDefault + '"/>';
+        html += '<td class="width-50" style="text-align:center;">' + x.iThuTu + "</td >"; 
         html += `<td style="${fontWeight} text-align:left;" > <input type = "text" disabled class="form-control r_TenChiPhi" value = "` + x.sTenChiPhi + '" /> </td> <input type="hidden" id="' + duanChiPhiId + '" class="r_iID_DuAn_ChiPhiID" value="' + duanChiPhiId + '"/> <input type="hidden" class="r_iID_ChiPhiParentID" value="' + x.iID_ChiPhi_Parent + '"/> <input type="hidden" class="r_iID_ChiPhiID" value = "' + x.iID_ChiPhiID + '"/>';
         html += '<td style="text-align:right"><input type="text" style="text-align: right" disabled class="form-control txtGiaTriChiPhi" onkeyup="ValidateNumberKeyUp(this); " onkeypress="return ValidateNumberKeyPress(this, event); " value="' + FormatNumber(x.fTienPheDuyet) + '"/> </td>';
         html += "<td align='center' class='width-150'>";

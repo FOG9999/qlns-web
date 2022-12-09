@@ -177,106 +177,123 @@
                         </div>
                     </div>
                     @*right*@
-                    <div class="col-sm-6">
-                        <h4 class="color-text-red">Thông tin thanh toán</h4>
-                        <hr class='color-background-red' />
-                        <label>Lũy kế thanh toán</label>
-                        <div class="form-group row">
-                            <div class="col-sm-4">
-                                <label for="fTyLeThanhToan" class="">Tỷ lệ thanh toán</label>
-                                <input type='text' class="form-control clearable" id="fTyLeThanhToan" disabled />
-                            </div>
-                            <div class="col-sm-4">
-                                <label for="txtluyKeTTTN" class="">Thanh toán KLHT vốn trong nước</label>
-                                <input type='text' class="form-control clearable" id="txtluyKeTTTN" disabled />
-                            </div>
-                            <div class="col-sm-4">
-                                <label for="txtluyKeTTNN" class="">Thanh toán KLHT vốn ngoài nước</label>
-                                <input type='text' class="form-control clearable" id="txtluyKeTTNN" disabled />
-                            </div>
+                <div class="col-sm-6">
+                    <h4 class="color-text-red">Thông tin thanh toán</h4>
+                    <hr class='color-background-red' />
+                    <label>Lũy kế thanh toán</label>
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <label for="fTyLeThanhToan" class="">Tỷ lệ thanh toán</label>
+                            <input type='text' class="form-control clearable" id="fTyLeThanhToan" disabled />
                         </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <label>Lũy kế tạm ứng chưa thu hồi (ứng trước)</label>
-                                <div class="form-group row">
-                                    <div class="col-sm-6">
-                                        <label for="txtluyKeTUUngTruocTN" class="">Vốn trong nước</label>
-                                        <input type='text' class="form-control clearable" id="txtluyKeTUUngTruocTN" disabled />
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label for="txtluyKeTUUngTruocNN" class="">Vốn ngoài nước</label>
-                                        <input type='text' class="form-control clearable" id="txtluyKeTUUngTruocNN" disabled />
-                                    </div>
+                        <div class="col-sm-4">
+                            <label for="txtluyKeTTTN" class="">Thanh toán KLHT vốn trong nước</label>
+                            <input type='text' class="form-control clearable" id="txtluyKeTTTN" disabled />
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="txtluyKeTTNN" class="">Thanh toán KLHT vốn ngoài nước</label>
+                            <input type='text' class="form-control clearable" id="txtluyKeTTNN" disabled />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>Lũy kế tạm ứng chưa thu hồi (ứng trước)</label>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <label for="txtluyKeTUUngTruocTN" class="">Vốn trong nước</label>
+                                    <input type='text' class="form-control clearable" id="txtluyKeTUUngTruocTN" disabled />
                                 </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <label>Lũy kế tạm ứng chưa thu hồi (theo chế độ)</label>
-                                <div class="form-group row">
-                                    <div class="col-sm-6">
-                                        <label for="txtluyKeTUTN" class="">Vốn trong nước</label>
-                                        <input type='text' class="form-control clearable" id="txtluyKeTUTN" disabled />
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label for="txtluyKeTUNN" class="">Vốn ngoài nước</label>
-                                        <input type='text' class="form-control clearable" id="txtluyKeTUNN" disabled />
-                                    </div>
+                                <div class="col-sm-6">
+                                    <label for="txtluyKeTUUngTruocNN" class="">Vốn ngoài nước</label>
+                                    <input type='text' class="form-control clearable" id="txtluyKeTUUngTruocNN" disabled />
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-sm-12">
-                                <label for="txtNoiDung" class="">Nội dung</label>
-                                <textarea id="txtNoiDung" name="txtNoiDung" class="form-control"></textarea>
-                            </div>
-                        </div>
-                        <label>Số đề nghị tạm ứng, thanh toán KLHT</label>
-                        <div class="form-group row">
-                            <div class="col-sm-6">
-                                <label for="txtdntuVonTrongNuoc" class="">Vốn trong nước</label>
-                                <input type='text' class="form-control clearable" id="txtdntuVonTrongNuoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="txtdntuVonNgoaiNuoc" class="">Vốn ngoài nước</label>
-                                <input type='text' class="form-control clearable" id="txtdntuVonNgoaiNuoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                            </div>
-                        </div>
-                        <label class="only-thanhtoan">Số thu hồi tạm ứng (ứng trước)</label>
-                        <div class="form-group row only-thanhtoan">
-                            <div class="col-sm-6">
-                                <label for="txtthtuUngTruocVonTrongNuoc" class="">Vốn trong nước</label>
-                                <input type='text' class="form-control clearable" id="txtthtuUngTruocVonTrongNuoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="txtthtuUngTruocVonNgoaiNuoc" class="">Vốn ngoài nước</label>
-                                <input type='text' class="form-control clearable" id="txtthtuUngTruocVonNgoaiNuoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                            </div>
-                        </div>
-                        <label class="only-thanhtoan">Số thu hồi tạm ứng (theo chế độ)</label>
-                        <div class="form-group row only-thanhtoan">
-                            <div class="col-sm-6">
-                                <label for="txtthtuVonTrongNuoc" class="">Vốn trong nước</label>
-                                <input type='text' class="form-control clearable" id="txtthtuVonTrongNuoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="txtthtuVonNgoaiNuoc" class="">Vốn ngoài nước</label>
-                                <input type='text' class="form-control clearable" id="txtthtuVonNgoaiNuoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-sm-6">
-                                <label for="txtthtuThueGTGT" class="">Thuế giá trị gia tăng</label>
-                                <input type='text' class="form-control clearable" id="txtthtuThueGTGT" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="txtthtuTienBaoHanh" class="">Chuyển tiền bảo hành</label>
-                                <input type='text' class="form-control clearable" id="txtthtuTienBaoHanh" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        <div class="col-sm-6">
+                            <label>Lũy kế tạm ứng chưa thu hồi (theo chế độ)</label>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <label for="txtluyKeTUTN" class="">Vốn trong nước</label>
+                                    <input type='text' class="form-control clearable" id="txtluyKeTUTN" disabled />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="txtluyKeTUNN" class="">Vốn ngoài nước</label>
+                                    <input type='text' class="form-control clearable" id="txtluyKeTUNN" disabled />
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label for="txtNoiDung" class="">Nội dung</label>
+                            <textarea id="txtNoiDung" name="txtNoiDung" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <label>Số đề nghị tạm ứng, thanh toán KLHT</label>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="txtdntuVonTrongNuoc" class="">Vốn trong nước</label>
+                            <input type='text' class="form-control clearable" id="txtdntuVonTrongNuoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="txtdntuVonNgoaiNuoc" class="">Vốn ngoài nước</label>
+                            <input type='text' class="form-control clearable" id="txtdntuVonNgoaiNuoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                    </div>
+                    <label class="only-thanhtoan">Số thu hồi tạm ứng (theo chế độ)</label>
+                    <div class="form-group row only-thanhtoan">
+                        <div class="col-sm-6">
+                            <label for="txtthtuVonTrongNuoc" class="">Vốn trong nước</label>
+                            <input type='text' class="form-control clearable" id="txtthtuVonTrongNuoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="txtthtuVonNgoaiNuoc" class="">Vốn ngoài nước</label>
+                            <input type='text' class="form-control clearable" id="txtthtuVonNgoaiNuoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                    </div>
+                    <label class="only-thanhtoan">Số thu hồi tạm ứng (ứng trước)</label>
+                    <div class="form-group row only-thanhtoan">
+                        <div class="col-sm-6">
+                            <label for="txtthtuUngTruocVonTrongNuoc" class="">Vốn trong nước</label>
+                            <input type='text' class="form-control clearable" id="txtthtuUngTruocVonTrongNuoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="txtthtuUngTruocVonNgoaiNuoc" class="">Vốn ngoài nước</label>
+                            <input type='text' class="form-control clearable" id="txtthtuUngTruocVonNgoaiNuoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="txtthtuThueGTGT" class="">Thuế giá trị gia tăng</label>
+                            <input type='text' class="form-control clearable" id="txtthtuThueGTGT" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="txtthtuTienBaoHanh" class="">Chuyển tiền bảo hành</label>
+                            <input type='text' class="form-control clearable" id="txtthtuTienBaoHanh" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                    </div>
+                    <label class="only-thanhtoan">Thông tin đơn vị thụ hưởng</label>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="sTenDonViTHuHuog" class="">Tên đơn vị thụ hưởng</label>
+                            <input type='text' class="form-control clearable" id="sTenDonViTHuHuog" autocomplete="off" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="sSTKDonViThuHuong" class="">Số tài khoản</label>
+                            <input type='text' class="form-control clearable" id="sSTKDonViThuHuong" autocomplete="off" disabled />
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="sMâNgnHangDonViThuHuong" class="">Mã ngân hàng</label>
+                            <input type='text' class="form-control clearable" id="sMâNgnHangDonViThuHuong" autocomplete="off" disabled />
+                        </div>
+                    </div>
+                </div>
                 </div>
 
                 <div class="form-group div_ThongTinThanhToan" style="display: none">
-                    <h4 class="color-text-red">Thông tin thanh toán:</h4>
+                    <h4 class="color-text-red">Thông tin phê duyệt thanh toán:</h4>
                     <hr class='color-background-red' />
 
                     <div class="form-group row">

@@ -40,31 +40,31 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <label for="txtSoDeNghi" class="">Số đề nghị</label>
                                 <p class="label-sua">@Model.sSoDeNghi</p>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <label for="txtNgayDeNghi" class="">Ngày đề nghị</label>
                                 <p class="label-sua">@Model.sNgayDeNghi</p>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <label for="txtSoCanCu" class="">Số c/cứ bảng xác định KLHT</label>
                                 <p class="label-sua">@Model.sSoBangKLHT</p>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <label for="txtNgayCanCu" class="">Ngày căn cứ</label>
                                 <p class="label-sua">@Model.sNgayBangKLHT</p>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <label for="txtLuyKeGiaTriKLNghiemThu" class="">Lũy kế g/trị k/lượng nghiệm thu</label>
                                 <p class="label-sua">@Model.sLuyKeGiaTriNghiemThuKLHT</p>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <label for="drpLoaiThanhToan" class="">Loại thanh toán</label>
                                 <p class="label-sua">@Model.sLoaiThanhToan</p>
                             </div>
@@ -177,7 +177,7 @@
                                                     <td class='r_stenloai' align='left'>@item.sTenLoai</td>
                                                     <td class='r_ssoquyetdinh' align='left'>@item.sSoQuyetDinh</td>
                                                     <td align='center'>@item.sNgayQuyetDinh</td>
-                                                    <td align='right'>@item.sLenhChi</td>
+                                                    <td align='right'>@item.sTongGiaTri</td>
                                                 </tr>
                                             }
                                         }
@@ -293,7 +293,7 @@
                 </div>
 
                 <div class="form-group">
-                    <h4 class="color-text-red">Thông tin thanh toán:</h4>
+                    <h4 class="color-text-red">Thông tin phê duyệt thanh toán:</h4>
                     <hr class='color-background-red' />
 
                     <div class="form-group row">
@@ -302,7 +302,10 @@
                                 <thead>
                                     <tr>
                                         <th width="3%" rowspan="2">STT</th>
-                                        <th width="9%" rowspan="2">Loại thanh toán</th>
+                                        @if (Model.iLoaiThanhToan == 1)
+                                        {
+                                            <th width="9%" rowspan="2">Loại thanh toán</th>
+                                        }                                        
                                         <th width="10%" rowspan="2">Kế hoạch vốn</th>
                                         <th width="5%" rowspan="2">LNS</th>
                                         <th width="3%" rowspan="2">L</th>
@@ -333,7 +336,10 @@
                                             index++;
                                             <tr>
                                                 <td align="center">@index</td>
-                                                <td align="center">@item.sLoaiDeNghi</td>
+                                                @if (Model.iLoaiThanhToan == 1)
+                                                {
+                                                    <td align="center">@item.sLoaiDeNghi</td>
+                                                }
                                                 <td align="center">@item.sTenKHV</td>
                                                 <td align="center">@item.sLNS</td>
                                                 <td align="center">@item.sL</td>

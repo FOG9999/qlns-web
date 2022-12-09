@@ -259,6 +259,7 @@ namespace Viettel.Services
         List<VDT_DA_DuToan_ChiPhi_ViewModel> GetChiPhiTKTCTDTByDuAnId(Guid iIdDuAnId);
         IEnumerable<VDT_DA_DuToan_ChiPhi_ViewModel> GetListChiPhiTheoTKTC(Guid duToanId);
         IEnumerable<VDT_DA_DuToan_ChiPhi_ViewModel> GetListChiPhiHangMucTheoTKTC(Guid duToanId);
+        IEnumerable<VDT_DA_DuToan_ChiPhi_ViewModel> GetListChiPhiHangMucChiTietTheoTKTC(Guid duToanId);
         IEnumerable<VDT_DA_DuToan_HangMuc_ViewModel> GetListHangMucTheoTKTC(Guid duToanId);
         IEnumerable<VDT_DA_NhaThau_GoiThau_ViewModel> GetListGoiThauTheoKHLCNhaThau(Guid nhaThauId);
         List<VDT_DA_DuToan_Nguonvon_ViewModel> GetListNguonVonTheoQDDT(Guid duToanId);
@@ -1501,7 +1502,7 @@ namespace Viettel.Services
         /// <param name="iID_DeNghiThanhToanID"></param>
         /// <param name="sUserLogin"></param>
         /// <returns></returns>
-        bool UpdatePheDuyetThanhToanChiTiet(List<PheDuyetThanhToanChiTiet> lstData, Guid iID_DeNghiThanhToanID, string sUserLogin, int iNamLamViec);
+        bool UpdatePheDuyetThanhToanChiTiet(List<PheDuyetThanhToanChiTiet> lstData, Guid iID_DeNghiThanhToanID, string sUserLogin, int iNamLamViec, double fThueGiaTriGiaTangDuocDuyet, double fChuyenTienBaoHanhDuocDuyet);
 
         /// <summary>
         /// luu thanh toan
@@ -2478,7 +2479,7 @@ namespace Viettel.Services
                 return items;
             }
         }
-
+        
         public void DeleteDataTablesOld(Guid iId)
         {
             var sql = FileHelpers.GetSqlQuery("vdt_delete_chiphi_nguonvon_hangmuc.sql");
@@ -2568,7 +2569,7 @@ namespace Viettel.Services
 
         public double GetVonBoTri5Nam(string iIdDuAnId, int iNamLamViec)
         {
-            var sql = @"select ISNULL(SUM(khthddct.fHanMucDauTu),0)
+            var sql = @"select ISNULL(SUM(khthddct.fVonBoTriTuNamDenNam),0)
                         from VDT_KHV_KeHoach5Nam khthdd
                         INNER JOIN VDT_KHV_KeHoach5Nam_ChiTiet khthddct
 	                        on khthdd.iID_KeHoach5NamID = khthddct.iID_KeHoach5NamID
@@ -3298,6 +3299,30 @@ namespace Viettel.Services
             return null;
         }
 
+        public IEnumerable<VDT_DA_DuToan_ChiPhi_ViewModel> GetListChiPhiHangMucChiTietTheoTKTC(Guid duToanId)
+        {
+            try
+            {
+                var sql = FileHelpers.GetSqlQuery("vdt_get_listchiphihangmuc_chitiet_dutoan_by_id.sql");
+                using (var conn = _connectionFactory.GetConnection())
+                {
+
+                    var item = conn.Query<VDT_DA_DuToan_ChiPhi_ViewModel>(sql,
+                        param: new
+                        {
+                            duToanId
+                        },
+                        commandType: CommandType.Text);
+
+                    return item;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return null;
+        }
         public IEnumerable<VDT_DA_DuToan_ChiPhi_ViewModel> GetListChiPhiTheoQDDT(Guid duToanId)
         {
             try
@@ -7315,7 +7340,7 @@ namespace Viettel.Services
         public IEnumerable<HangMucInfoModel> GetThongTinHangMucAll(Guid iIdHopDongId, List<Guid> listGoiThauId)
         {
             var sql = @"    select Item AS Id into #tmpTable FROM f_split(@listId) 
-                            select  
+                         select  
                          distinct gthm.iID_HangMucID as IIDHangMucID,
                          null as Id, 
                          gthm.iID_GoiThauID  as IIDGoiThauID, 
@@ -7333,22 +7358,80 @@ namespace Viettel.Services
                          dmhm.smaOrder AS MaOrDer, 
                          dmhm.sTenHangMuc as STenHangMuc, 
                          gthm.fTienGoiThau as FGiaTriDuocDuyet, 
-                         gthm.fTienGoiThau as FGiaTriConLai, " +
-                      // "isnull(cast(case when parentId.iID_ParentID is not null or dthm.iID_ParentID is null then 1 else 0 end as bit),0)  as IsHangCha INTO #tmp "+
-                      "isnull(cast(case when parentId.iID_ParentID is not null or dmhm.iID_ParentID is null then 1 else 0 end as bit),0)  as IsHangCha " +
-                      "from VDT_DA_GoiThau_HangMuc gthm " +
+                         gthm.fTienGoiThau as FGiaTriConLai,
+						 isnull(cast(case when parentId.iID_ParentID is not null or dmhm.iID_ParentID is null then 1 else 0 end as bit),0)  as IsHangCha
+					from VDT_DA_GoiThau_HangMuc gthm 
+					inner join VDT_DA_QDDauTu_DM_HangMuc dmhm ON dmhm.iID_QDDauTu_DM_HangMucID = gthm.iID_HangMucID 
+					--inner join VDT_DA_GoiThau gt on gt.iID_DuAnID = dmhm.iID_DuAnID 
+					inner join #tmpTable tbl ON tbl.Id = gthm.iID_GoiThauID 
+					left join (
+					select distinct tb2.iID_ParentID from VDT_DA_GoiThau_HangMuc tb1 
+					inner join VDT_DA_DuToan_DM_HangMuc tb2 ON tb1.iID_HangMucID = tb2.Id  
+					and tb2.iID_ParentID is not null ) as parentId 
+						ON parentId.iID_ParentID = gthm.iID_HangMucID
+					where gthm.iID_GoiThauID = '6d54003a-45cb-4c97-908d-714515e0e613'
+					--order by MaOrDer 
+					union all
+					select distinct gthm.iID_HangMucID as IIDHangMucID,
+                         null as Id, 
+                         gthm.iID_GoiThauID  as IIDGoiThauID, 
+                         gthm.iID_ChiPhiID as IIDChiPhiID, 
+                         null as IdGoiThauNhaThau, 
+                         null as IIDHopDongID, 
+                          
+                         null as IIDNhaThauID, 
+                         cast(0 as bit) as IsChecked, 
+                         null as STenChiPhi, 
+                         (CAST(0 AS float)) as FTienGoiThau, 
+                         null as IThuTu, 
+                         null as IdChiPhiDuAnParent, 
+                         dmhm.iID_ParentID as HangMucParentId, 
+                         dmhm.maOrder AS MaOrDer, 
+                         dmhm.sTenHangMuc as STenHangMuc, 
+                         gthm.fTienGoiThau as FGiaTriDuocDuyet, 
+                         gthm.fTienGoiThau as FGiaTriConLai,
+						 isnull(cast(case when parentId.iID_ParentID is not null or dmhm.iID_ParentID is null then 1 else 0 end as bit),0)  as IsHangCha
+					from VDT_DA_GoiThau_HangMuc gthm 
+					inner join VDT_DA_DuToan_DM_HangMuc dmhm ON dmhm.Id = gthm.iID_HangMucID 
+					--inner join VDT_DA_GoiThau gt on gt.iID_DuAnID = dmhm.iID_DuAnID 
+					inner join #tmpTable tbl ON tbl.Id = gthm.iID_GoiThauID 
+					left join (
+					select distinct tb2.iID_ParentID from VDT_DA_GoiThau_HangMuc tb1 
+					inner join VDT_DA_DuToan_DM_HangMuc tb2 ON tb1.iID_HangMucID = tb2.Id  
+					and tb2.iID_ParentID is not null ) as parentId 
+						ON parentId.iID_ParentID = gthm.iID_HangMucID
+					--order by MaOrDer 
+										
+					union all
+					select distinct gthm.iID_HangMucID as IIDHangMucID,
+                         null as Id, 
+                         gthm.iID_GoiThauID  as IIDGoiThauID, 
+                         gthm.iID_ChiPhiID as IIDChiPhiID, 
+                         null as IdGoiThauNhaThau, 
+                         null as IIDHopDongID,                           
+                         null as IIDNhaThauID, 
+                         cast(0 as bit) as IsChecked, 
+                         null as STenChiPhi, 
+                         (CAST(0 AS float)) as FTienGoiThau, 
+                         null as IThuTu, 
+                         null as IdChiPhiDuAnParent, 
+                         dmhm.iID_ParentID as HangMucParentId, 
+                         dmhm.smaOrder AS MaOrDer, 
+                         dmhm.sTenHangMuc as STenHangMuc, 
+                         gthm.fTienGoiThau as FGiaTriDuocDuyet, 
+                         gthm.fTienGoiThau as FGiaTriConLai,
+						 isnull(cast(case when parentId.iID_ParentID is not null or dmhm.iID_ParentID is null then 1 else 0 end as bit),0)  as IsHangCha
+					from VDT_DA_GoiThau_HangMuc gthm 
+					inner join VDT_DA_ChuTruongDauTu_DM_HangMuc dmhm ON dmhm.iID_ChuTruongDauTu_DM_HangMucID = gthm.iID_HangMucID 
+					--inner join VDT_DA_GoiThau gt on gt.iID_DuAnID = dmhm.iID_DuAnID 
+					inner join #tmpTable tbl ON tbl.Id = gthm.iID_GoiThauID 
+					left join (
+					select distinct tb2.iID_ParentID from VDT_DA_GoiThau_HangMuc tb1 
+					inner join VDT_DA_DuToan_DM_HangMuc tb2 ON tb1.iID_HangMucID = tb2.Id  
+					and tb2.iID_ParentID is not null ) as parentId 
+						ON parentId.iID_ParentID = gthm.iID_HangMucID											
 
-                      // "inner join VDT_DA_DuToan_DM_HangMuc dthm ON dthm.Id = gthm.iID_HangMucID " +
-                      "inner join VDT_DA_QDDauTu_DM_HangMuc dmhm ON dmhm.iID_QDDauTu_DM_HangMucID = gthm.iID_HangMucID  " +
-                      "inner join VDT_DA_GoiThau gt on gt.iID_DuAnID = dmhm.iID_DuAnID " +
-                      "inner join #tmpTable tbl ON tbl.Id = gthm.iID_GoiThauID " +
-                      "left join " +
-                      "(" +
-                      "select distinct tb2.iID_ParentID from VDT_DA_GoiThau_HangMuc tb1 " +
-                      "inner join VDT_DA_DuToan_DM_HangMuc tb2 ON tb1.iID_HangMucID = tb2.Id  and tb2.iID_ParentID is not null " +
-
-                      ") as parentId ON parentId.iID_ParentID = gthm.iID_HangMucID  " +
-                      "order by MaOrDer ";
+					order by MaOrDer ";
 
             if (iIdHopDongId != Guid.Empty)
             {
@@ -13198,7 +13281,7 @@ namespace Viettel.Services
                 @"SELECT convert(nvarchar(50), iID_KeHoach5Nam_DeXuatID)
                 FROM VDT_KHV_KeHoach5Nam_DeXuat 
                 where iGiaiDoanTu = @iGiaiDoanTu and iGiaiDoanDen = @iGiaiDoanDen
-                and bActive = 1 and bIsGoc = 1 and iLoai = 1 and sTongHop is null
+                 and bIsGoc = 1 and iLoai = 1 and sTongHop is null
                 AND iID_MaDonViQuanLy in (SELECT * FROM dbo.f_split(@lstMaDV))
 
                 ";
@@ -16306,7 +16389,7 @@ namespace Viettel.Services
         /// <param name="iID_DeNghiThanhToanID"></param>
         /// <param name="sUserLogin"></param>
         /// <returns></returns>
-        public bool UpdatePheDuyetThanhToanChiTiet(List<PheDuyetThanhToanChiTiet> lstData, Guid iID_DeNghiThanhToanID, string sUserLogin, int iNamLamViec)
+        public bool UpdatePheDuyetThanhToanChiTiet(List<PheDuyetThanhToanChiTiet> lstData, Guid iID_DeNghiThanhToanID, string sUserLogin, int iNamLamViec, double fThueGiaTriGiaTangDuocDuyet, double fChuyenTienBaoHanhDuocDuyet)
         {
             try
             {
@@ -16318,6 +16401,10 @@ namespace Viettel.Services
                         var trans = conn.BeginTransaction();
 
                         VDT_TT_DeNghiThanhToan objDeNghiThanhToan = GetDeNghiThanhToanByID(iID_DeNghiThanhToanID);
+                        //update entity
+                        objDeNghiThanhToan.fThueGiaTriGiaTangDuocDuyet = fThueGiaTriGiaTangDuocDuyet;
+                        objDeNghiThanhToan.fChuyenTienBaoHanhDuocDuyet = fChuyenTienBaoHanhDuocDuyet;
+                        conn.Update(objDeNghiThanhToan, trans);
                         // insert VDT_TT_PheDuyetThanhToan_ChiTiet
                         if (lstData != null && lstData.Count > 0)
                         {

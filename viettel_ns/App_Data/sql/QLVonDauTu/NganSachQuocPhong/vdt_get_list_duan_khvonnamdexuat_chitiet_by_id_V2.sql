@@ -12,10 +12,9 @@ DECLARE @checkQDDT int
 --DECLARE @sLoaiDuAn nvarchar(100)
 --DECLARE @sThoiGianThucHien nvarchar(100)
 --DECLARE @sChuDauTu nvarchar(100)
---DECLARE @iIDKHVNDeXuatId uniqueidentifier = 'b567003c-16b0-4fb9-b70f-ea313009d0a3';
-
---DECLARE @lstDuAnID nvarchar(max) = 'e7515cb1-27fb-472a-9a2a-af2e00b09cf5,0c192d95-c38f-4192-aa92-af4700bbf992';
-
+--DECLARE @iIDKHVNDeXuatId uniqueidentifier = '583af5ee-7b20-46a7-ab0c-2313766321c5';
+--DECLARE @sTenDonViQuanLy nvarchar(100)
+--DECLARE @lstDuAnID nvarchar(max) = '039fde70-b277-4172-9a4e-af6200b810ff,1e29de90-0409-4622-a05c-af62012b59f9';
 DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 	SELECT @iIdMaDonViQuanLy = iID_MaDonViQuanLy, @iNamLamViec = iNamKeHoach, @iIDNguonVonID = iID_NguonVonID, @dNgayLap = dNgayQuyetDinh
 	FROM VDT_KHV_KeHoachVonNam_DeXuat khv
@@ -66,6 +65,13 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 			left join DM_ChuDauTu dmcdt on dmcdt.ID = da.iID_ChuDauTuID
 			WHERE  da.iID_DuAnID IN (SELECT * FROM dbo.f_split(@lstDuAnID))
 		END
+
+		--truong hop du an da chon khong co trong 2 truong hop tren--
+		iNSERT INTO #tmpQDDT(iID_DuAnID,fTongMucDauTuPheDuyet, sChuDauTu,iID_ChuDauTuID)
+		SELECT DISTINCT da.iID_DuAnID, 0 as fTongMucDauTuPheDuyet,dmcdt.sTenCDT as sChuDauTu,dmcdt.ID as iID_ChuDauTuID  FROM VDT_DA_DuAn da
+		left join DM_ChuDauTu dmcdt on dmcdt.ID = da.iID_ChuDauTuID
+		WHERE  da.iID_DuAnID  IN (SELECT * FROM dbo.f_split(@lstDuAnID))
+			AND da.iID_DuAnID NOT IN (SELECT qddt.iID_DuAnID FROM #tmpQDDT as qddt)
 	END
 
 	SELECT DISTINCT tmp.iID_DuAnID INTO #tmpDuAnChuyenTiep
@@ -288,7 +294,7 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 			AND (ISNULL(@sChuDauTu,'') = '' OR tmp.sChuDauTu LIKE N'%'+@sChuDauTu+'%')
 	 END
 
-
+	 
 	DROP TABLE #tmp
 	DROP TABLE #tmpVonBoTriNam
 	DROP TABLE #tmpVonKeoDai
@@ -302,6 +308,3 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 	DROP TABLE #tmpCDT
 	DROP TABLE #tmpDonViQL
 
-
-
-	

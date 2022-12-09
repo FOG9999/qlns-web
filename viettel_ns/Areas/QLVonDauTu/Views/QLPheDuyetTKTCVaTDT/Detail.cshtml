@@ -12,6 +12,7 @@
     const byte LA_DU_TOAN = (byte)Constants.LOAI_QUYET_DINH.DU_TOAN;
     string selectedTongDuToan = Model.bLaTongDuToan == true ? "selected" : "";
     string selectedDuToan = Model.bLaTongDuToan == false ? "selected" : "";
+    var fTongMucDauTuPheDuyet = Model.fTongDuToanPheDuyet ?? 0;
 }
 <link href="~/Content/plugins/dropdowntree.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
@@ -127,11 +128,11 @@
                                 <div class="form-group row">
                                     <div class="col-sm-6">
                                         <label for="fTongMucDauTu">Tổng mức PDDA</label>
-                                        <p>@Model.fTongMucDauTu</p>
+                                        <p>@Model.fTongMucDauTu.ToString("N0").Replace(',', '.')</p>
                                     </div>
                                     <div class="col-sm-6">
                                         <label for="fTongMucDauTu">Tổng mức đầu tư TKTC TDT</label>
-                                        <p>@Model.fTongDuToanPheDuyet</p>
+                                        <p>@fTongMucDauTuPheDuyet.ToString("N0").Replace(',', '.')</p>
                                     </div>
                                 </div>
                             </div>
@@ -261,8 +262,7 @@
                                             {
                                                 <th>Giá trị phê duyệt TKTC</th>
                                             }
-                                            <th>Chênh lệch</th>
-                                            <th width="100px">Thao tác</th>
+                                            <th>Chênh lệch</th>           
                                         </tr>
                                     </thead>
                                     <tbody id="tblHangMucChinh"></tbody>
@@ -281,7 +281,6 @@
                                                 <th class="fTongGiaTriPDTKTC cpdt_tong_giatripheduyet text-right" id="conlaihangmucpheduyet"></th>
                                             }
                                             <th class="fTongChenhLech cpdt_tong_giatrichenhlech text-right"></th>
-                                            <th width="100px"></th>
                                         </tr>
                                     </tfoot>
                                 </table>

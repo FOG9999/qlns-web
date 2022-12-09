@@ -45,6 +45,7 @@ namespace Viettel.Services
         #region phongban
 
         IEnumerable<NS_PhongBan> GetBql(string username);
+        NS_PhongBan GetPhongBanById(Guid id);
 
         IEnumerable<NS_PhongBan> GetPhongBans(string kyHieu = null);
 
@@ -1616,7 +1617,25 @@ order by sXauNoiMa
                 return entity;
             }
         }
+        public NS_PhongBan GetPhongBanById(Guid id)
+        {
+           
+            var sql = @"
+            select  *
+            from    NS_PhongBan
+            where  iID_MaPhongBan=@iID_Ma
+            ";
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var entity = conn.QueryFirstOrDefault<NS_PhongBan>(sql,
+                    new
+                    {
+                        iID_Ma = id,
+                    }, null, null, CommandType.Text);
 
+                return entity;
+            }
+        }
         public VDT_DM_DonViThucHienDuAn GetDonViThucHienDuAnByID(string iID_DonVi)
         {
             if (string.IsNullOrWhiteSpace(iID_DonVi))

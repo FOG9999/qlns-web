@@ -227,100 +227,117 @@
         </div>*@
                     </div>
                     @*right*@
-                    <div class="col-sm-6">
-                        <h4 class="color-text-red">Thông tin thanh toán</h4>
-                        <hr class='color-background-red' />
-                        <label>Lũy kế thanh toán</label>
-                        <div class="form-group row">
-                            <div class="col-sm-4">
-                                <label for="fTyLeThanhToan" class="">Tỷ lệ thanh toán</label>
-                                <input type='text' class="form-control clearable" id="fTyLeThanhToan" disabled />
-                            </div>
-                            <div class="col-sm-4">
-                                <label for="txtluyKeTTTN" class="">Thanh toán KLHT vốn trong nước</label>
-                                <input type='text' class="form-control clearable" id="txtluyKeTTTN" value="@Model.sLuyKeTTTN" disabled />
-                            </div>
-                            <div class="col-sm-4">
-                                <label for="txtluyKeTTNN" class="">Thanh toán KLHT vốn ngoài nước</label>
-                                <input type='text' class="form-control clearable" id="txtluyKeTTNN" value="@Model.sLuyKeTTNN" disabled />
-                            </div>
+                <div class="col-sm-6">
+                    <h4 class="color-text-red">Thông tin thanh toán</h4>
+                    <hr class='color-background-red' />
+                    <label>Lũy kế thanh toán</label>
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <label for="fTyLeThanhToan" class="">Tỷ lệ thanh toán</label>
+                            <input type='text' class="form-control clearable" id="fTyLeThanhToan" disabled />
                         </div>
-                        <label>Lũy kế tạm ứng chưa thu hồi (ứng trước)</label>
-                        <div class="form-group row">
-                            <div class="col-sm-6">
-                                <label for="txtluyKeTUUngTruocTN" class="">Vốn trong nước</label>
-                                <input type='text' class="form-control clearable" id="txtluyKeTUUngTruocTN" value="@Model.sLuyKeTUUngTruocTN" disabled />
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="txtluyKeTUUngTruocNN" class="">Vốn ngoài nước</label>
-                                <input type='text' class="form-control clearable" id="txtluyKeTUUngTruocNN" value="@Model.sLuyKeTUUngTruocNN" disabled />
-                            </div>
+                        <div class="col-sm-4">
+                            <label for="txtluyKeTTTN" class="">Thanh toán KLHT vốn trong nước</label>
+                            <input type='text' class="form-control clearable" id="txtluyKeTTTN" value="@Model.sLuyKeTTTN" disabled />
                         </div>
-                        <label>Lũy kế tạm ứng chưa thu hồi (theo chế độ)</label>
-                        <div class="form-group row">
-                            <div class="col-sm-6">
-                                <label for="txtluyKeTUTN" class="">Vốn trong nước</label>
-                                <input type='text' class="form-control clearable" id="txtluyKeTUTN" value="@Model.sLuyKeTUTN" disabled />
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="txtluyKeTUNN" class="">Vốn ngoài nước</label>
-                                <input type='text' class="form-control clearable" id="txtluyKeTUNN" value="@Model.sLuyKeTUNN" disabled />
-                            </div>
+                        <div class="col-sm-4">
+                            <label for="txtluyKeTTNN" class="">Thanh toán KLHT vốn ngoài nước</label>
+                            <input type='text' class="form-control clearable" id="txtluyKeTTNN" value="@Model.sLuyKeTTNN" disabled />
                         </div>
-                        <div class="form-group row">
-                            <div class="col-sm-12">
-                                <label for="txtNoiDung" class="">Nội dung</label>
-                                <textarea id="txtNoiDung" name="txtNoiDung" class="form-control">@Html.Raw(Model.sGhiChu)</textarea>
-                            </div>
+                    </div>
+                    <label>Lũy kế tạm ứng chưa thu hồi (ứng trước)</label>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="txtluyKeTUUngTruocTN" class="">Vốn trong nước</label>
+                            <input type='text' class="form-control clearable" id="txtluyKeTUUngTruocTN" value="@Model.sLuyKeTUUngTruocTN" disabled />
                         </div>
-                        <label>Số đề nghị tạm ứng, thanh toán KLHT</label>
-                        <div class="form-group row">
-                            <div class="col-sm-6">
-                                <label for="txtdntuVonTrongNuoc" class="">Vốn trong nước</label>
-                                <input type='text' class="form-control clearable" id="txtdntuVonTrongNuoc" value="@Model.sGiaTriThanhToanTN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="txtdntuVonNgoaiNuoc" class="">Vốn ngoài nước</label>
-                                <input type='text' class="form-control clearable" id="txtdntuVonNgoaiNuoc" value="@Model.sGiaTriThanhToanNN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                            </div>
+                        <div class="col-sm-6">
+                            <label for="txtluyKeTUUngTruocNN" class="">Vốn ngoài nước</label>
+                            <input type='text' class="form-control clearable" id="txtluyKeTUUngTruocNN" value="@Model.sLuyKeTUUngTruocNN" disabled />
                         </div>
-                        <label>Số thu hồi tạm ứng (ứng trước)</label>
-                        <div class="form-group row">
-                            <div class="col-sm-6">
-                                <label for="txtthtuUngTruocVonTrongNuoc" class="">Vốn trong nước</label>
-                                <input type='text' class="form-control clearable" id="txtthtuUngTruocVonTrongNuoc" value="@Model.sGiaTriThuHoiUngTruocTN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="txtthtuUngTruocVonNgoaiNuoc" class="">Vốn ngoài nước</label>
-                                <input type='text' class="form-control clearable" id="txtthtuUngTruocVonNgoaiNuoc" value="@Model.sGiaTriThuHoiUngTruocNN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                            </div>
+                    </div>
+                    <label>Lũy kế tạm ứng chưa thu hồi (theo chế độ)</label>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="txtluyKeTUTN" class="">Vốn trong nước</label>
+                            <input type='text' class="form-control clearable" id="txtluyKeTUTN" value="@Model.sLuyKeTUTN" disabled />
                         </div>
-                        <label>Số thu hồi tạm ứng (theo chế độ)</label>
-                        <div class="form-group row">
-                            <div class="col-sm-6">
-                                <label for="txtthtuVonTrongNuoc" class="">Vốn trong nước</label>
-                                <input type='text' class="form-control clearable" id="txtthtuVonTrongNuoc" value="@Model.sGiaTriThuHoiTN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="txtthtuVonNgoaiNuoc" class="">Vốn ngoài nước</label>
-                                <input type='text' class="form-control clearable" id="txtthtuVonNgoaiNuoc" value="@Model.sGiaTriThuHoiNN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                            </div>
+                        <div class="col-sm-6">
+                            <label for="txtluyKeTUNN" class="">Vốn ngoài nước</label>
+                            <input type='text' class="form-control clearable" id="txtluyKeTUNN" value="@Model.sLuyKeTUNN" disabled />
                         </div>
-                        <div class="form-group row">
-                            <div class="col-sm-6">
-                                <label for="txtthtuThueGTGT" class="">Thuế giá trị gia tăng</label>
-                                <input type='text' class="form-control clearable" id="txtthtuThueGTGT" value="@Model.sThueGiaTriGiaTang" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="txtthtuTienBaoHanh" class="">Chuyển tiền bảo hành</label>
-                                <input type='text' class="form-control clearable" id="txtthtuTienBaoHanh" value="@Model.sChuyenTienBaoHanh" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                            </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label for="txtNoiDung" class="">Nội dung</label>
+                            <textarea id="txtNoiDung" name="txtNoiDung" class="form-control">@Html.Raw(Model.sGhiChu)</textarea>
+                        </div>
+                    </div>
+                    <label>Số đề nghị tạm ứng, thanh toán KLHT</label>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="txtdntuVonTrongNuoc" class="">Vốn trong nước</label>
+                            <input type='text' class="form-control clearable" id="txtdntuVonTrongNuoc" value="@Model.sGiaTriThanhToanTN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="txtdntuVonNgoaiNuoc" class="">Vốn ngoài nước</label>
+                            <input type='text' class="form-control clearable" id="txtdntuVonNgoaiNuoc" value="@Model.sGiaTriThanhToanNN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                    </div>
+                    <label>Số thu hồi tạm ứng (ứng trước)</label>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="txtthtuUngTruocVonTrongNuoc" class="">Vốn trong nước</label>
+                            <input type='text' class="form-control clearable" id="txtthtuUngTruocVonTrongNuoc" value="@Model.sGiaTriThuHoiUngTruocTN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="txtthtuUngTruocVonNgoaiNuoc" class="">Vốn ngoài nước</label>
+                            <input type='text' class="form-control clearable" id="txtthtuUngTruocVonNgoaiNuoc" value="@Model.sGiaTriThuHoiUngTruocNN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                    </div>
+                    <label>Số thu hồi tạm ứng (theo chế độ)</label>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="txtthtuVonTrongNuoc" class="">Vốn trong nước</label>
+                            <input type='text' class="form-control clearable" id="txtthtuVonTrongNuoc" value="@Model.sGiaTriThuHoiTN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="txtthtuVonNgoaiNuoc" class="">Vốn ngoài nước</label>
+                            <input type='text' class="form-control clearable" id="txtthtuVonNgoaiNuoc" value="@Model.sGiaTriThuHoiNN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="txtthtuThueGTGT" class="">Thuế giá trị gia tăng</label>
+                            <input type='text' class="form-control clearable" id="txtthtuThueGTGT" value="@Model.sThueGiaTriGiaTang" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="txtthtuTienBaoHanh" class="">Chuyển tiền bảo hành</label>
+                            <input type='text' class="form-control clearable" id="txtthtuTienBaoHanh" value="@Model.sChuyenTienBaoHanh" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                    </div>
+                    <label class="only-thanhtoan">Thông tin đơn vị thụ hưởng</label>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="sTenDonViTHuHuog" class="">Tên đơn vị thụ hưởng</label>
+                            <input type='text' class="form-control clearable" id="sTenDonViTHuHuog" autocomplete="off" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="sSTKDonViThuHuong" class="">Số tài khoản</label>
+                            <input type='text' class="form-control clearable" id="sSTKDonViThuHuong" autocomplete="off" disabled />
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="sMâNgnHangDonViThuHuong" class="">Mã ngân hàng</label>
+                            <input type='text' class="form-control clearable" id="sMâNgnHangDonViThuHuong" autocomplete="off" disabled />
                         </div>
                     </div>
                 </div>
+                </div>
 
                 <div class="form-group">
-                    <h4 class="color-text-red">Thông tin thanh toán:</h4>
+                    <h4 class="color-text-red">Thông tin phê duyệt thanh toán:</h4>
                     <hr class='color-background-red' />
 
                     <div class="form-group row">
@@ -335,11 +352,11 @@
                         </div>
                         <div class="col-sm-4 col-md-3">
                             <label for="txtthtuThueGTGTDuocDuyet" class="">Thuế giá trị gia tăng được duyệt</label>
-                            <input type='text' class="form-control clearable" id="txtthtuThueGTGTDuocDuyet" value="@Model.fThueGiaTriGiaTangDuocDuyet" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            <input type='text' class="form-control clearable" id="txtthtuThueGTGTDuocDuyet" value="@Model.sThueGiaTriGiaTangDuocDuyet" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
                         </div>
                         <div class="col-sm-4 col-md-3">
                             <label for="txtthtuTienBaoHanhDuocDuyet" class="">Chuyển tiền bảo hành được duyệt</label>
-                            <input type='text' class="form-control clearable" id="txtthtuTienBaoHanhDuocDuyet" value="@Model.fChuyenTienBaoHanhDuocDuyet" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                            <input type='text' class="form-control clearable" id="txtthtuTienBaoHanhDuocDuyet" value="@Model.sChuyenTienBaoHanhDuocDuyet" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
                         </div>
                     </div>
 
@@ -358,7 +375,10 @@
                                 <thead>
                                     <tr>
                                         <th width="3%" rowspan="2">STT</th>
-                                        <th width="9%" rowspan="2">Loại thanh toán</th>
+                                        @if(Model.iLoaiThanhToan.ToString() == "1")
+                                        {
+                                            <th width="9%" rowspan="2">Loại thanh toán</th>
+                                        }                                        
                                         <th width="10%" rowspan="2">Kế hoạch vốn</th>
                                         <th width="5%" rowspan="2">LNS</th>
                                         <th width="3%" rowspan="2">L</th>

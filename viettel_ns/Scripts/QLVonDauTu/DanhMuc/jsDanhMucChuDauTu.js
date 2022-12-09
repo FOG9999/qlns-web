@@ -113,6 +113,11 @@ function Save() {
     data.sKyHieu = $("#txtsKyHieuChuDauTu").val();
     data.sMoTa = $("#txtsMoTaChuDauTu").val()
     data.sLoai = $("#txtsLoaiChuDauTu").val();
+    data.STKTrongNuoc = $("#txtSTKTrongNuoc").val();
+    data.ChiNhanhTrongNuoc = $("#txtChiNhanhTN").val();
+    data.STKNuocNgoai = $("#txtSTKNgoaiNuoc").val();
+    data.ChiNhanhNuocNgoai = $("#txtChiNhanhNN").val();
+
     if ($("#iID_ChuDauTuChaIDModal").val() != GUID_EMPTY) {
         data.Id_Parent = $("#iID_ChuDauTuChaIDModal").val();
     }
@@ -146,7 +151,10 @@ function Save() {
 }
 
 function ValidateData(data) {
-    var Title = 'Lỗi thêm mới/chỉnh sửa chủ đầu tư';
+    var Title = 'Lỗi thêm mới chủ đầu tư';
+    if ($("#iID_ChuDauTuModal").val() != GUID_EMPTY) {
+        Title = 'Lỗi chỉnh sửa chủ đầu tư';
+    };
     var Messages = [];
 
     if (data.sId_CDT == null || data.sId_CDT == "") {

@@ -1,5 +1,6 @@
 ﻿using AutoMapper.Extensions;
 using DapperExtensions;
+using DocumentFormat.OpenXml.Spreadsheet;
 using FlexCel.Core;
 using FlexCel.Report;
 using FlexCel.XlsAdapter;
@@ -40,6 +41,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             //lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sTen = Constants.TAT_CA });
             ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_MaDonVi", "sMoTa");
             TempData["DataSearch"] = vm.Items;
+
+            // Xu ly ho tro xuat excel
+            PagingInfo pageInfo = new PagingInfo() { ItemsPerPage = vm._paging.TotalItems };
+            pageInfo.CurrentPage = 1;
+            var dataExport = _iQLVonDauTuService.LayDanhSachChuTruongDauTu(ref pageInfo, PhienLamViec.NamLamViec, Username);
+            TempData["DataExcel"] = dataExport;
+            // End Xu ly ho tro xuat excel
+
             return View(vm);
         }
 
@@ -54,6 +63,15 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             TempData.Keep("DataSearch");
             TempData["DataSearch"] = vm.Items;           
             ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_MaDonVi", "sMoTa");
+
+            // Xu ly ho tro xuat excel
+            PagingInfo pageInfo = new PagingInfo() { ItemsPerPage = vm._paging.TotalItems };
+            pageInfo.CurrentPage = 1;
+            var dataExport = _iQLVonDauTuService.LayDanhSachChuTruongDauTu(ref pageInfo, PhienLamViec.NamLamViec, Username, sSoQuyetDinh, sNoiDung, fTongMucDauTuFrom, fTongMucDauTuTo,
+                dNgayQuyetDinhFrom, dNgayQuyetDinhTo, sMaDonVi); 
+            TempData["DataExcel"] = dataExport;
+            // End Xu ly ho tro xuat excel
+
             return PartialView("_list", vm);
         }
 
@@ -801,7 +819,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             try
             {
                 //List<VdtKhvKeHoachVonUngChiTietModel> listDataQuery = _iQLVonDauTuService.KehoachVonUngDuocDuyetChiTietExport(id).ToList();
-                var listData = (List<VDTChuTruongDauTuViewModel>)TempData["DataSearch"];
+                var listData = (List<VDTChuTruongDauTuViewModel>)TempData["DataExcel"];
                 
                 var grouplistData = listData.GroupBy(x => x.sDonViQuanLy?.Trim());
 

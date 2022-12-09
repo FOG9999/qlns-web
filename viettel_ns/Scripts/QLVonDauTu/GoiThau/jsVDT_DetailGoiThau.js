@@ -205,10 +205,10 @@ function CheckChiPhiIsParent(itemId) {
 
 function ViewDetail(iidChiPhi) {
 
-    LoadViewHangMuc();
+    LoadViewHangMuc(iidChiPhi);
 }
 
-function LoadViewHangMuc() {
+function LoadViewHangMuc(iidChiPhi) {
     if (arrHangMuc.length < 1) {
         return;
     }
@@ -216,17 +216,19 @@ function LoadViewHangMuc() {
     $("#tblHangMucChinh tbody").html("");
     //var data = GetListDataHangMuc();
     for (var i = 0; i < data.length; i++) {
-        var dongMoi = "";
-        dongMoi += "<tr style='cursor: pointer;' class='parent'>";
+        if (data[i].iID_ChiPhiID == iidChiPhi) {
+            var dongMoi = "";
+            dongMoi += "<tr style='cursor: pointer;' class='parent'>";
 
-        dongMoi += "<td class='r_STT width-50'>" + data[i].maOrder + "</td><input type='hidden' id='" + data[i].iID_DuToan_DM_HangMucID + "' class='r_iID_DuAn_HangMucID' value='" + data[i].iID_DuToan_DM_HangMucID + "'/> <input type='hidden' class='r_HangMucID' value='" + data[i].iID_HangMucID + "'/> <input type='hidden' class='r_HangMucParentID' value='" + data[i].iID_ParentID + "'/> <input type='hidden' class='r_IsEdit' value='" + data[i].isEdit + "'/>";
-        dongMoi += "<td>" + (!data[i].sTenHangMuc ? "" : data[i].sTenHangMuc) + "</td>"
+            dongMoi += "<td class='r_STT width-50'>" + data[i].maOrder + "</td><input type='hidden' id='" + data[i].iID_DuToan_DM_HangMucID + "' class='r_iID_DuAn_HangMucID' value='" + data[i].iID_DuToan_DM_HangMucID + "'/> <input type='hidden' class='r_HangMucID' value='" + data[i].iID_HangMucID + "'/> <input type='hidden' class='r_HangMucParentID' value='" + data[i].iID_ParentID + "'/> <input type='hidden' class='r_IsEdit' value='" + data[i].isEdit + "'/>";
+            dongMoi += "<td>" + (!data[i].sTenHangMuc ? "" : data[i].sTenHangMuc) + "</td>"
 
-        dongMoi += "<td align='right'> " + FormatNumber(data[i].fTienGoiThau) + "</td>";
+            dongMoi += "<td align='right'> " + FormatNumber(data[i].fTienGoiThau) + "</td>";
 
-        dongMoi += "</tr>";
+            dongMoi += "</tr>";
 
-        $("#tblHangMucChinh tbody").append(dongMoi);
+            $("#tblHangMucChinh tbody").append(dongMoi);
+        }
     }
 }
 

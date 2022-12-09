@@ -5,6 +5,22 @@ var bIsSaveSuccess = false;
 var data = [];
 var lstDuAn = [];
 
+//$(document).ready(function () {
+
+//    $("#" + TBL_DANH_SACH_DUAN + " .cbAll_duan").change(function () {
+
+//        if (this.checked) {
+//            $("#" + TBL_DANH_SACH_DUAN + " .cb_duan").filter(function () { return $(this.parentElement.parentElement).css("display") != "none" }).prop('checked', true).trigger("change");
+//        }
+
+//        else {
+//            $("#" + TBL_DANH_SACH_DUAN + " .cb_duan").filter(function () { return $(this.parentElement.parentElement).css("display") != "none" }).prop('checked', false).trigger("change");;
+//        }
+
+//    });
+//});
+
+
 function ResetChangePage(iCurrentPage = 1) {
     var sSoQuyetDinh = "";
     var dNgayQuyetDinhFrom = "";
@@ -69,7 +85,7 @@ function OpenModal(id, isDieuChinh, isTongHop, bIsDetail, isUpdate) {
                 if (jsonData != null && jsonData.bIsComplete == false) {
                     //document.getElementById('modalKHVonNamDeXuat').classList.toggle("hidden");
                   //  $('#modalKHVonNamDeXuat').modal('toggle');
-                    var Title = 'Lỗi tổng hợp kế hoạch vốn năm đề xuất!';
+                    var Title = 'Lỗi tổng hợp nhu cầu vốn đơn vị đề xuất!';
                     var messErr = [];
                     messErr.push(jsonData.sMessError);
                     $.ajax({
@@ -92,21 +108,21 @@ function OpenModal(id, isDieuChinh, isTongHop, bIsDetail, isUpdate) {
            
             if (id == null || id == GUID_EMPTY || id == undefined) {
                 if (isTongHop === 'true') {
-                    $("#modalKHVonNamDeXuatLabel").html('Tổng hợp kế hoạch vốn năm đề xuất');
+                    $("#modalKHVonNamDeXuatLabel").html('Tổng hợp nhu cầu vốn đơn vị đề xuất');
                 }
                 else {
-                    $("#modalKHVonNamDeXuatLabel").html('Thêm mới kế hoạch vốn năm đề xuất');
+                    $("#modalKHVonNamDeXuatLabel").html('Thêm mới nhu cầu vốn đơn vị đề xuất');
                 }
             }
             else {
                 if (isDieuChinh === 'true') {
-                    $("#modalKHVonNamDeXuatLabel").html('Điều chỉnh kế hoạch vốn năm đề xuất');
+                    $("#modalKHVonNamDeXuatLabel").html('Điều chỉnh nhu cầu vốn đơn vị đề xuất');
                 } else {
                     if (isUpdate) {
-                        $("#modalKHVonNamDeXuatLabel").html('Sửa kế hoạch vốn năm đề xuất');
+                        $("#modalKHVonNamDeXuatLabel").html('Sửa kế nhu cầu vốn đơn vị đề xuất');
 
                     } else {
-                        $("#modalKHVonNamDeXuatLabel").html('Sửa kế hoạch vốn năm đề xuất tổng hợp');
+                        $("#modalKHVonNamDeXuatLabel").html('Sửa kế nhu cầu vốn đơn vị đề xuất');
 
                     }
                 }
@@ -124,7 +140,7 @@ function OpenModal(id, isDieuChinh, isTongHop, bIsDetail, isUpdate) {
 }
 
 function LockItem(id, sSoQuyetDinh, iKhoa) {
-    var Title = 'Xác nhận ' + (iKhoa ? 'mở' : 'khóa') + ' kế hoạch vốn năm đề xuất';
+    var Title = 'Xác nhận ' + (iKhoa ? 'mở' : 'khóa') + ' nhu cầu vốn đơn vị đề xuất';
     var Messages = [];
     Messages.push('Bạn có chắc chắn muốn ' + (iKhoa ? 'mở' : 'khóa') + ' chứng từ ' + sSoQuyetDinh + '?');
     var FunctionName = "Lock('" + id + "')";
@@ -174,7 +190,7 @@ function OpenModalDetail(id) {
         data: { id: id },
         success: function (data) {
             $("#contentModalKHVonNamDeXuat").html(data);
-            $("#modalKHVonNamDeXuatLabel").html('Chi tiết kế hoạch vốn năm đề xuất');
+            $("#modalKHVonNamDeXuatLabel").html('Chi tiết nhu cầu vốn đơn vị đề xuất');
             $(".date").datepicker({
                 todayBtn: "linked",
                 language: "vi",
@@ -242,7 +258,7 @@ function Save() {
                 }
                 
             } else {
-                var Title = 'Lỗi lưu kế hoạch vốn năm đề xuất';
+                var Title = 'Lỗi lưu nhu cầu vốn đơn vị đề xuất';
                 var messErr = [];
                 messErr.push(r.sMessError);
                 $.ajax({
@@ -259,7 +275,7 @@ function Save() {
 }
 
 function ValidateData(data) {
-    var Title = 'Lỗi thêm mới kế hoạch vốn năm đề xuất';
+    var Title = 'Lỗi thêm mới nhu cầu vốn đơn vị đề xuất';
     var Messages = [];
 
     if (data.iID_DonViQuanLyID == null || data.iID_DonViQuanLyID == "") {
@@ -298,7 +314,7 @@ function ValidateData(data) {
 }
 
 function DeleteItem(id, sSoQuyetDinh = '') {
-    var Title = 'Xác nhận xóa kế hoạch vốn năm đề xuất';
+    var Title = 'Xác nhận xóa nhu cầu vốn đơn vị đề xuất';
     var Messages = [];
     Messages.push('Bạn có chắc chắn muốn xóa chứng từ ' + sSoQuyetDinh + '?');
     var FunctionName = "Delete('" + id + "')";
@@ -372,3 +388,54 @@ function ChooseDuAn(key) {
     sessionStorage.setItem('DuAnChecked', JSON.stringify(data));
 }
 
+function handleSearch() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("search");
+    filter = removeVietnameseTones(input.value.toUpperCase());
+    table = document.getElementById("tblListDuAn");
+    tr = table.getElementsByTagName("tr");
+
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 1; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[2];
+        if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (removeVietnameseTones(txtValue.toUpperCase()).indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+
+
+function removeVietnameseTones(str) {
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+    str = str.replace(/đ/g, "d");
+    str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+    str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+    str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+    str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+    str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+    str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+    str = str.replace(/Đ/g, "D");
+    // Some system encode vietnamese combining accent as individual utf-8 characters
+    // Một vài bộ encode coi các dấu mũ, dấu chữ như một kí tự riêng biệt nên thêm hai dòng này
+    str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ""); // ̀ ́ ̃ ̉ ̣  huyền, sắc, ngã, hỏi, nặng
+    str = str.replace(/\u02C6|\u0306|\u031B/g, ""); // ˆ ̆ ̛  Â, Ê, Ă, Ơ, Ư
+    // Remove extra spaces
+    // Bỏ các khoảng trắng liền nhau
+    str = str.replace(/ + /g, " ");
+    str = str.trim();
+    // Remove punctuations
+    // Bỏ dấu câu, kí tự đặc biệt
+    str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, " ");
+    return str;
+}

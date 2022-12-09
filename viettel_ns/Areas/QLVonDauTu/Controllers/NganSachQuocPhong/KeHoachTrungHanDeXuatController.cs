@@ -693,6 +693,19 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             RptSummary.FGiaTriBoTri = lstData.Where(x => x.IsStatus.Equals(projectType)).Sum(x => x.FGiaTriBoTri);
             RptSummary.FTongSo = lstData.Where(x => x.IsStatus.Equals(projectType)).Sum(x => x.FTongSo);
 
+            RptSummary.fHanmucNganhDX = lstData.Where(x => x.IsStatus.Equals(projectType)).Sum(x => x.fHanmucNganhDX);
+            RptSummary.fTongVonBoTriNganh = lstData.Where(x => x.IsStatus.Equals(projectType)).Sum(x => x.fTongVonBoTriNganh);
+            RptSummary.fVon5namNganhDX = lstData.Where(x => x.IsStatus.Equals(projectType)).Sum(x => x.fVon5namNganhDX);
+            RptSummary.fVonsaunamNganhDX = lstData.Where(x => x.IsStatus.Equals(projectType)).Sum(x => x.fVonsaunamNganhDX);
+
+            RptSummary.fHanmucCucTCDX = lstData.Where(x => x.IsStatus.Equals(projectType)).Sum(x => x.fHanmucCucTCDX);
+            RptSummary.fTongVonBoTriCuc = lstData.Where(x => x.IsStatus.Equals(projectType)).Sum(x => x.fTongVonBoTriCuc);
+            RptSummary.fVon5namCTCDX = lstData.Where(x => x.IsStatus.Equals(projectType)).Sum(x => x.fVon5namCTCDX);
+            RptSummary.fVonnamthunhatCTC = lstData.Where(x => x.IsStatus.Equals(projectType)).Sum(x => x.fVonnamthunhatCTC);
+            RptSummary.fVonsaunamCTCDexuat = lstData.Where(x => x.IsStatus.Equals(projectType)).Sum(x => x.fVonsaunamCTCDexuat);
+            RptSummary.fCucTCDeXuat = lstData.Where(x => x.IsStatus.Equals(projectType)).Sum(x => x.fCucTCDeXuat);
+            RptSummary.fDuKienBoTriNamThu2 = lstData.Where(x => x.IsStatus.Equals(projectType)).Sum(x => x.fDuKienBoTriNamThu2);
+
             fr.AddTable<VdtKhvKeHoach5NamDeXuatExportModel>("Items", lstData);
             fr.AddTable<VDT_DM_DonViThucHienDuAn>("dv", lstUnit);
 
@@ -713,6 +726,18 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             fr.SetValue("FGiaTriNamThuTuSum", RptSummary.FGiaTriNamThuTu);
             fr.SetValue("FGiaTriNamThuNamSum", RptSummary.FGiaTriNamThuNam);
             fr.SetValue("FGiaTriBoTriSum", RptSummary.FGiaTriBoTri);
+
+            fr.SetValue("fHanmucNganhDXSum", RptSummary.fHanmucNganhDX);
+            fr.SetValue("fTongVonBoTriNganhSum", RptSummary.fTongVonBoTriNganh);
+            fr.SetValue("fVon5namNganhDXSum", RptSummary.fVon5namNganhDX);
+            fr.SetValue("fVonsaunamNganhDXSum", RptSummary.fVonsaunamNganhDX);
+            fr.SetValue("fHanmucCucTCDXSum", RptSummary.fHanmucCucTCDX);
+            fr.SetValue("fTongVonBoTriCucSum", RptSummary.fTongVonBoTriCuc);
+            fr.SetValue("fVon5namCTCDXSum", RptSummary.fVon5namCTCDX);
+            fr.SetValue("fVonnamthunhatCTCSum", RptSummary.fVonnamthunhatCTC);
+            fr.SetValue("fVonsaunamCTCDexuatSum", RptSummary.fVonsaunamCTCDexuat);
+            fr.SetValue("fCucTCDeXuatSum", RptSummary.fCucTCDeXuat);
+            fr.SetValue("fDuKienBoTriNamThu2Sum", RptSummary.fDuKienBoTriNamThu2);
 
             fr.Run(Result);
             return Result;

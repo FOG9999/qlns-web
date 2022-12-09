@@ -1,0 +1,2 @@
+alter table NH_TT_ThanhToan
+add iID_MaPhongBan uniqueidentifier 

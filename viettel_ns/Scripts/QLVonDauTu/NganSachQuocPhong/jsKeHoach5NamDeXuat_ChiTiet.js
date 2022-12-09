@@ -745,8 +745,31 @@ function ValidateData() {
     var Title = 'Lỗi lưu kế hoạch trung hạn đề xuất chi tiết';
     var listItemChiTiet = [];
 
+
     for (var j = 0; j < Bang_nH; j++) {
         var itemDelete = Bang_arrHangDaXoa[j];
+        var fGiaTriNamThuNhat = Bang_arrGiaTri[j][Bang_arrCSMaCot["fGiaTriNamThuNhat"]];
+        var fGiaTriNamThuHai = Bang_arrGiaTri[j][Bang_arrCSMaCot["fGiaTriNamThuHai"]];
+        var fGiaTriNamThuBa = Bang_arrGiaTri[j][Bang_arrCSMaCot["fGiaTriNamThuBa"]];
+        var fGiaTriNamThuTu = Bang_arrGiaTri[j][Bang_arrCSMaCot["fGiaTriNamThuTu"]];
+        var fGiaTriNamThuNam = Bang_arrGiaTri[j][Bang_arrCSMaCot["fGiaTriNamThuNam"]];
+
+        var fGiaTriNamThuNhatDc = Bang_arrGiaTri[j][Bang_arrCSMaCot["fGiaTriNamThuNhatDc"]];
+        var fGiaTriNamThuHaiDc = Bang_arrGiaTri[j][Bang_arrCSMaCot["fGiaTriNamThuHaiDc"]];
+        var fGiaTriNamThuBaDc = Bang_arrGiaTri[j][Bang_arrCSMaCot["fGiaTriNamThuBaDc"]];
+        var fGiaTriNamThuTuDc = Bang_arrGiaTri[j][Bang_arrCSMaCot["fGiaTriNamThuTuDc"]];
+        var fGiaTriNamThuNamDc = Bang_arrGiaTri[j][Bang_arrCSMaCot["fGiaTriNamThuNamDc"]];
+
+        var fHanMucDauTu = Bang_arrGiaTri[j][Bang_arrCSMaCot["fHanMucDauTu"]];
+
+        var fTongSo = fGiaTriNamThuNhat + fGiaTriNamThuHai + fGiaTriNamThuBa + fGiaTriNamThuTu + fGiaTriNamThuNam;
+        var fTongSoDc = fGiaTriNamThuNhatDc + fGiaTriNamThuHaiDc + fGiaTriNamThuBaDc + fGiaTriNamThuTuDc + fGiaTriNamThuNamDc;
+        var fGiaTriSau5Nam = fHanMucDauTu - fTongSo;
+        var fGiaTriSau5NamDC = fHanMucDauTu - fTongSoDc;
+        if (fGiaTriSau5Nam < 0 || fGiaTriSau5NamDC < 0) {
+            sMessError.push('Tổng vốn bố trí không được vượt quá hạn mức đầu tư.');
+        }
+
         if (itemDelete != true) {
             var itemParent = Bang_LayGiaTri(j, "iID_ParentModified");
             var itemValue = Bang_LayGiaTri(j, "fGiaTriBoTri");
@@ -803,7 +826,7 @@ function ValidateData() {
                 objectCt.iID_DuAnID = Bang_arrGiaTri[j][Bang_arrCSMaCot["iID_DuAnID"]];
                 objectCt.iID_MaDonVi = Bang_arrGiaTri[j][Bang_arrCSMaCot["iID_MaDonVi"]];
                 listItemChiTiet.push(objectCt);
-            }
+            }            
         }
     }
 

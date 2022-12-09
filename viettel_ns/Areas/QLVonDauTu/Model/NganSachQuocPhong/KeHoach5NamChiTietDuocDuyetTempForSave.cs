@@ -18,6 +18,11 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
         IQLVonDauTuService _iQLVonDauTuService = QLVonDauTuService.Default;
         IDanhMucService _danhMucService = DanhMucService.Default;
 
+        public Guid keyID // trường này để phân biệt những chi tiết dự án được chọn ở lần thứ n(chưa lưu), và những chi tiết dự án được chọn nhưng chưa lưu ở lần thứ n+1
+        {
+            get; set;
+        }
+
         public string sTenLoaiCongTrinh
         {
             get => getTenLoaiCongTrinh(iID_LoaiCongTrinhID);

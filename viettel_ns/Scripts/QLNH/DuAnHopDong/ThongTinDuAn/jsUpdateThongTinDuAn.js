@@ -109,15 +109,42 @@ function LoadDataTenChiPhi() {
     });
 }
 
-function ChangeBQPSelect() {
+//KhaiPD
+function ChangeChuongTrinhSelect() {
     var id = $("#slbKHTongTheBQP").val();
     $.ajax({
         type: "POST",
-        url: "/QLNH/ThongTinDuAn/GetChuongTrinhTheoKHBQP",
+        url: "/QLNH/ThongTinDuAn/GetChuongTrinhTheoQDTongThe",
         data: { id: id },
         success: function (data) {
             if (data) {
-                $("#slbDonVi").empty().html(data.htmlDV);
+                $("#slbChuongTrinh").empty().html(data.htmlChuongTrinh);
+            }
+        }
+    });
+}
+function ChangeBQuanLySelect() {
+    var id = $("#slbChuongTrinh").val();
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/ThongTinDuAn/GetBQuanLyTheoChuongTrinh",
+        data: { id: id },
+        success: function (data) {
+            if (data) {
+                $("#slbBQuanLy").empty().html(data.htmlQuanLy);
+            }
+        }
+    });
+}
+function ChangeDonViSelect() {
+    var id = $("#slbBQuanLy").val();
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/ThongTinDuAn/GetDonViTheoBQuanLy",
+        data: { id: id },
+        success: function (data) {
+            if (data) {
+                $("#slbDonVi").empty().html(data.htmlDonVi);
             }
         }
     });
@@ -158,20 +185,20 @@ function ChangeDVSelectImport(element) {
     });
 }
 
-function ChangeDVSelect() {
-    var idBQP = $("#slbKHTongTheBQP").val();
-    var id = $("#slbDonVi").val();
-    $.ajax({
-        type: "POST",
-        url: "/QLNH/ThongTinDuAn/GetChuongTrinhTheoDV",
-        data: { id: id, idBQP: idBQP},
-        success: function (data) {
-            if (data) {
-                $("#slbChuongTrinh").empty().html(data.htmlCT);
-            }
-        }
-    });
-}
+//function ChangeDVSelect() {
+//    var idBQP = $("#slbKHTongTheBQP").val();
+//    var id = $("#slbDonVi").val();
+//    $.ajax({
+//        type: "POST",
+//        url: "/QLNH/ThongTinDuAn/GetChuongTrinhTheoDV",
+//        data: { id: id, idBQP: idBQP},
+//        success: function (data) {
+//            if (data) {
+//                $("#slbChuongTrinh").empty().html(data.htmlCT);
+//            }
+//        }
+//    });
+//}
 
 function CreateHtmlSelectTenChiPhi(value) {
     var htmlOption = "<option value='" + GUID_EMPTY + "' selected>--Chọn chi phí--</option>";

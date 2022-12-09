@@ -43,9 +43,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.DanhMucQLVonDauTu
                 data = _dmService.GetDanhMucChuDauTuById(id.Value);
             }
 
-            List<DM_ChuDauTu> lstChuDauTuCha = _dmService.GetListChuDauTuCha(id, PhienLamViec.NamLamViec).ToList();
-            lstChuDauTuCha.Insert(0, new DM_ChuDauTu { ID = Guid.Empty, sTenCDT = "--Chọn--" });
-            ViewBag.ListChuDauTuCha = lstChuDauTuCha.ToSelectList("ID", "sTenCDT");
+            List<VDT_DM_ChuDauTu_ViewModel> lstChuDauTuCha = _dmService.GetListChuDauTuCha(id, PhienLamViec.NamLamViec).ToList();
+            lstChuDauTuCha.Insert(0, new VDT_DM_ChuDauTu_ViewModel { ID = Guid.Empty, sTenChuDauTuCha = "--Chọn--" });
+            ViewBag.ListChuDauTuCha = lstChuDauTuCha.ToSelectList("ID", "sTenChuDauTuCha");
             return PartialView("_modalUpdate", data);
         }
 
@@ -65,7 +65,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.DanhMucQLVonDauTu
         [HttpPost]
         public JsonResult ChuDauTuSave(DM_ChuDauTu data)
         {
-            List<DM_ChuDauTu> lstChuDauTu = _dmService.GetListChuDauTuCha(data.ID, PhienLamViec.NamLamViec).ToList();
+            List<VDT_DM_ChuDauTu_ViewModel> lstChuDauTu = _dmService.GetListChuDauTuCha(data.ID, PhienLamViec.NamLamViec).ToList();
             var check = lstChuDauTu.FirstOrDefault(x => x.sId_CDT == data.sId_CDT && x.ID != data.ID);
             if (check != null)
             {

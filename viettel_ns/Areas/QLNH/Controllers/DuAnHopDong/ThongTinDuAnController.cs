@@ -125,7 +125,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
             ViewBag.ListTiGia = lstTiGia;
 
             List<NH_KHChiTietBQP_NhiemVuChiModel> listChiTieBQL = qlnhService.GetNHKeHoachChiTietBQPNhiemVuChiListDuAn().ToList();
-            listChiTieBQL.Insert(0, new NH_KHChiTietBQP_NhiemVuChiModel { ID = Guid.Empty, sSoKeHoachBQP = "--Chọn kế hoạch chi tiết BQP--" });
+            listChiTieBQL.Insert(0, new NH_KHChiTietBQP_NhiemVuChiModel { ID = Guid.Empty, sSoKeHoachBQP = "--Chọn kế hoạch tổng thể TTCP--" });
             ViewBag.ListBQP = listChiTieBQL;
 
             List<NH_DM_TiGia_ChiTiet> lstTiGiaChiTiet = qlnhService.GetNHDMTiGiaChiTietList(null).ToList();
@@ -142,10 +142,11 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
 
             return PartialView("Update", vm);
         }
+
         [HttpPost]
-        public JsonResult GetChuongTrinhTheoKHBQP(Guid? id)
+        public JsonResult GetDonViTheoBQuanLy(Guid id) //KhaiPD
         {
-            List<NS_DonVi> lstDonVi = qlnhService.GetListDonViToBQP(id).ToList();
+            List<NS_DonVi> lstDonVi = qlnhService.GetListDvByPhongBan(id, Convert.ToInt32(PhienLamViec.iNamLamViec)).ToList();
             StringBuilder htmlDonVi = new StringBuilder();
             htmlDonVi.AppendFormat("<option value='{0}' selected>{1}</option>", Guid.Empty, "--Chọn đơn vị--");
             if (lstDonVi != null && lstDonVi.Count > 0)
@@ -155,13 +156,29 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
                     htmlDonVi.AppendFormat("<option value='{0}' data-madonvi={1}>{2}</option>", lstDonVi[i].iID_Ma, lstDonVi[i].iID_MaDonVi, WebUtility.HtmlEncode(lstDonVi[i].iID_MaDonVi + " - " + lstDonVi[i].sTen));
                 }
             }
-            return Json(new { htmlDV = htmlDonVi.ToString() }, JsonRequestBehavior.AllowGet);
+            return Json(new { htmlDonVi = htmlDonVi.ToString() }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public JsonResult GetChuongTrinhTheoDV(Guid? id, Guid? idBQP)
+        public JsonResult GetBQuanLyTheoChuongTrinh(Guid id) //KhaiPD
         {
-            List<NH_KHChiTietBQP_NhiemVuChi> lstChuongTrinh = qlnhService.GetListCTbyDV(id, idBQP).ToList();
+            List<NS_PhongBan> llstThongTinDuAn = qlnhService.GetListPhongBanByNhiemVuChi(id).ToList();
+            StringBuilder htmlDonVi = new StringBuilder();
+            htmlDonVi.AppendFormat("<option value='{0}' selected>{1}</option>", Guid.Empty, "--Chọn B quản lý--");
+            if (llstThongTinDuAn != null && llstThongTinDuAn.Count > 0)
+            {
+                for (int i = 0; i < llstThongTinDuAn.Count; i++)
+                {
+                    htmlDonVi.AppendFormat("<option value='{0}' data-madonvi={1}>{2}</option>", llstThongTinDuAn[i].iID_MaPhongBan, llstThongTinDuAn[i].sTen, WebUtility.HtmlEncode(llstThongTinDuAn[i].sTen + " - " + llstThongTinDuAn[i].sMoTa));
+                }
+            }
+            return Json(new { htmlQuanLy = htmlDonVi.ToString() }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetChuongTrinhTheoQDTongThe(Guid id) //KhaiPD
+        {
+            List<NH_KHChiTietBQP_NhiemVuChi> lstChuongTrinh = qlnhService.GetListCTbyQDTongThe(id).ToList();
             StringBuilder htmlChuongTrinh = new StringBuilder();
             htmlChuongTrinh.AppendFormat("<option value='{0}' selected>{1}</option>", Guid.Empty, "--Chọn chương trình--");
             if (lstChuongTrinh != null && lstChuongTrinh.Count > 0)
@@ -171,7 +188,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
                     htmlChuongTrinh.AppendFormat("<option value='{0}'>{1}</option>", lstChuongTrinh[i].ID, WebUtility.HtmlEncode(lstChuongTrinh[i].sTenNhiemVuChi));
                 }
             }
-            return Json(new { htmlCT = htmlChuongTrinh.ToString() }, JsonRequestBehavior.AllowGet);
+            return Json(new { htmlChuongTrinh = htmlChuongTrinh.ToString() }, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetKHBQPTheoNHV(Guid? id)

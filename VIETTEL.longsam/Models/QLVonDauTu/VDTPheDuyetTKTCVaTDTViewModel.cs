@@ -90,7 +90,7 @@ namespace Viettel.Models.QLVonDauTu
         {
             get
             {
-                return (fGiaTriQuyetToan ?? 0) - fGiaTriDeNghiQuyetToan;
+                return (fGiaTriQuyetToan == null ? 0 : fGiaTriQuyetToan) - fGiaTriDeNghiQuyetToan;
             }
         }
 
@@ -98,7 +98,7 @@ namespace Viettel.Models.QLVonDauTu
         {
             get
             {
-                return (fGiaTriQuyetToan ?? 0) - fTienPheDuyet;
+                return (fGiaTriQuyetToan == null ? 0 : fGiaTriQuyetToan) - fTienPheDuyet;
             }
         }
 
@@ -121,21 +121,21 @@ namespace Viettel.Models.QLVonDauTu
         {
             get
             {
-                return fGiaTriDeNghiQuyetToan ?? 0 - fTienPheDuyet;
+                return (fGiaTriDeNghiQuyetToan == null ? 0 : fGiaTriDeNghiQuyetToan) - fTienPheDuyet;
             }
         }
         public double? fChenhLenhSoVoiQuyetToanAB
         {
             get
             {
-                return fGiaTriDeNghiQuyetToan ?? 0 - fGiaTriQuyetToanAB ?? 0;
+                return (fGiaTriDeNghiQuyetToan == null ? 0 : fGiaTriDeNghiQuyetToan) - (fGiaTriQuyetToanAB ?? 0);
             }
         }
         public double? fChenhLechSoVoiKetQuaKiemToan
         {
             get
             {
-                return fGiaTriDeNghiQuyetToan ?? 0 - fGiaTriKiemToan ?? 0;
+                return (fGiaTriDeNghiQuyetToan ?? 0) - (fGiaTriKiemToan ?? 0);
             }
         }
         public string sTienPheDuyet
@@ -259,21 +259,21 @@ namespace Viettel.Models.QLVonDauTu
         {
             get
             {
-                return fGiaTriDeNghiQuyetToan ?? 0 - fTienPheDuyet;
+                return (fGiaTriDeNghiQuyetToan ?? 0) - fTienPheDuyet;
             }
         }
         public double? fChenhLenhSoVoiQuyetToanAB
         {
             get
             {
-                return fGiaTriDeNghiQuyetToan ?? 0 - fGiaTriQuyetToanAB ?? 0;
+                return (fGiaTriDeNghiQuyetToan ?? 0) - (fGiaTriQuyetToanAB ?? 0);
             }
         }
         public double? fChenhLechSoVoiKetQuaKiemToan
         {
             get
             {
-                return fGiaTriDeNghiQuyetToan ?? 0 - fGiaTriKiemToan ?? 0;
+                return (fGiaTriDeNghiQuyetToan ?? 0) - (fGiaTriKiemToan ?? 0);
             }
         }
         public string sTienPheDuyet
@@ -404,21 +404,21 @@ namespace Viettel.Models.QLVonDauTu
         {
             get
             {
-                return fGiaTriDeNghiQuyetToan ?? 0 - fTienPheDuyet;
+                return (fGiaTriDeNghiQuyetToan ?? 0) - fTienPheDuyet;
             }
         }
         public double? fChenhLenhSoVoiQuyetToanAB
         {
             get
             {
-                return fGiaTriDeNghiQuyetToan ?? 0 - fGiaTriQuyetToanAB ?? 0;
+                return (fGiaTriDeNghiQuyetToan ?? 0) - (fGiaTriQuyetToanAB ?? 0);
             }
         }
         public double? fChenhLechSoVoiKetQuaKiemToan
         {
             get
             {
-                return fGiaTriDeNghiQuyetToan ?? 0 - fGiaTriKiemToan ?? 0;
+                return (fGiaTriDeNghiQuyetToan ?? 0) - (fGiaTriKiemToan ?? 0);
             }
         }
         public string sTienPheDuyet

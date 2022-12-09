@@ -18,31 +18,30 @@
                 @ViewBag.Title
             </span>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" style="margin-left:3px;">
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-4 col-md-4 col-lg-4">
                     <input type="hidden" id="Id" value="@Model.Id">
-                    <label for="txt_DonViQuanLy"> Đơn vị</label>
                     @*@Helpers.Required()*@
                     <label for="txt_DonViQuanLy">Đơn vị <span class="require">*</span></label>
                     <select id="iID_DonViQuanLyID" class="form-control"></select>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-4 col-md-4 col-lg-4">
                     <label for="iId_NguonVon"> Nguồn vốn <span class="require">*</span></label>
                     @Html.DropDownList("iId_NguonVon", new SelectList(ViewBag.LstNguonVon, "Value", "Text", Model.iID_NguonVonID), new { @class = "form-control", @id = "iId_NguonVon" })
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-4 col-md-4 col-lg-4">
                     <label for="txt_DonViQuanLy">Năm</label>
                     <input type="number" id="iNamKeHoach" name="iNamKeHoach" class="form-control" value="@Model.iNamKeHoach" maxlength="4" />
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-4 col-md-4 col-lg-4">
                     <label for="txtSoKeHoach">Số kế hoạch</label>
                     @*@Helpers.Required()*@
                     <input type="text" id="txt_SoKeHoach" name="txt_SoKeHoach" class="form-control" value="@Model.sSoDeNghi" maxlength="100" />
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-4 col-md-4 col-lg-4">
                     <label for="dNgayDeNghi">Ngày đề nghị <span class="require">*</span></label>
                     <div class='input-group date'>
                         <input type="text" id="dNgayDeNghi" name="dNgayDeNghi" class="form-control" placeholder="dd/MM/yyyy" value="@Model.dNgayDeNghi.Value.ToString("dd/MM/yyyy")" />

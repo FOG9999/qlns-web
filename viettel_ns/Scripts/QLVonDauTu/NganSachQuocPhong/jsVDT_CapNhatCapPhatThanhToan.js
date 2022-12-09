@@ -46,9 +46,7 @@ $(document).ready(function () {
     dNgayDeNghiOld = $("#dNgayDeNghi").val();
     iNamKeHoachOld = $("#iNamKeHoach").val();
     iid_NhaThauOldId = $("#iID_NhaThauId").val();
-    loaiCoQuanTaiChinh = $("#loaiCoQuanTaiChinh").val();
-
-    GetListDropdownPheDuyet();
+    loaiCoQuanTaiChinh = $("#loaiCoQuanTaiChinh").val();    
 
     $("#iID_ChuDauTuID").change(function () {
         var sidCDT = $("#iID_ChuDauTuID :selected").html();
@@ -91,6 +89,7 @@ $(document).ready(function () {
         $("#drpHopDong").empty();
         GetDataDropdownHopDong();
         GetDataDropdownNguonVon();
+        GetListDropdownPheDuyet();
     });
 
     $("#txtdntuVonTrongNuoc").on('keyup', () => {
@@ -166,6 +165,36 @@ $(document).ready(function () {
     })
     $("#drpCoQuanThanhToan").trigger("change")
     // $("#drpCoQuanThanhToan").val(iCoQuanThanhToanOld).trigger("change");
+    $("#txtluyKeTTTN").on('keyup', () => {
+        recalculateTyLeThanhToan();
+    })
+    $("#txtluyKeTTNN").on('keyup', () => {
+        recalculateTyLeThanhToan();
+    })
+    $("#txtluyKeTUUngTruocTN").on('keyup', () => {
+        recalculateTyLeThanhToan();
+    })
+    $("#txtluyKeTUUngTruocNN").on('keyup', () => {
+        recalculateTyLeThanhToan();
+    })
+    $("#txtluyKeTUTN").on('keyup', () => {
+        recalculateTyLeThanhToan();
+    })
+    $("#txtluyKeTUNN").on('keyup', () => {
+        recalculateTyLeThanhToan();
+    })
+
+    $("#drpNhaThau").change(function (e) {
+        let selectedNhaThau = $(this).find(':selected');
+        let tenNhaThau = selectedNhaThau.html();
+        let stkNhaThau = selectedNhaThau.attr('data-stkNhaThau');
+        let maNganHang = selectedNhaThau.attr('data-maNganHang');
+        if ($(this).val() != GUID_EMPTY) {
+            $('#sTenDonViTHuHuog').val(tenNhaThau);
+            $('#sSTKDonViThuHuong').val(stkNhaThau);
+            $('#sMâNgnHangDonViThuHuong').val(maNganHang);
+        }
+    })
 });
 
 function GetArrKeHoachVon() {
@@ -217,6 +246,7 @@ function LoadPheDuyetChiTiet() {
         success: function (r) {
             if (r.lstPheDuyet != null && r.lstPheDuyet.length > 0) {
                 var html = "";
+                iLoaiThanhToan = $("#drpLoaiThanhToan option:selected").val();
                 r.lstPheDuyet.forEach(function (item) {
                     var dongMoi = "";
                     dongMoi += "<tr style='cursor: pointer;' class='parent' data-xoa='0' data-iloaidenghi='" + item.iLoaiDeNghi + "' data-iloainamkehoach='" + item.iLoaiNamKH + "'>";
@@ -252,8 +282,13 @@ function LoadPheDuyetChiTiet() {
                 $("#" + TBL_DANH_SACH_THANH_TOAN_CHITIET + " tbody").append(html);
                 CapNhatCotStt(TBL_DANH_SACH_THANH_TOAN_CHITIET);
                 EventValidate();
-
-                $("#" + TBL_DANH_SACH_THANH_TOAN_CHITIET + " tbody tr td.r_Loai select").trigger("change");
+                if (iLoaiThanhToan != TAM_UNG)
+                    $("#" + TBL_DANH_SACH_THANH_TOAN_CHITIET + " tbody tr td.r_Loai select").trigger("change");
+                else {
+                    $("#" + TBL_DANH_SACH_THANH_TOAN_CHITIET + " tbody tr").each((index, row) => {
+                        onChangeLoaiThanhToan(row);
+                    })
+                }
             }
         }
     });
@@ -495,8 +530,8 @@ function UpdateDeNghiThanhToan() {
 function SavePheDuyetThanhToanChiTiet() {
     var data = GetListThanhToanChiTiet(iID_DeNghiThanhToanID);
     var dNgayPheDuyet = $('#txtNgayPheDuyet').val();
-    var fThueGiaTriGiaTangDuocDuyet = $('#txtthtuThueGTGTDuocDuyet').val();
-    var fChuyenTienBaoHanhDuocDuyet = $('#txtthtuTienBaoHanhDuocDuyet').val();
+    var fThueGiaTriGiaTangDuocDuyet = UnFormatNumber($('#txtthtuThueGTGTDuocDuyet').val());
+    var fChuyenTienBaoHanhDuocDuyet = UnFormatNumber($('#txtthtuTienBaoHanhDuocDuyet').val());
 
     $.ajax({
         type: "POST",

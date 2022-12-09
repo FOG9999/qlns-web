@@ -14,6 +14,7 @@ using Viettel.Models.QLVonDauTu;
 using System.ComponentModel;
 using Viettel.Models.QLNH;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace Viettel.Services
 {
@@ -292,6 +293,8 @@ namespace Viettel.Services
         VDT_DM_ChiPhi_ViewModel GetDanhMucLoaiChiPhiById(Guid iID_ChiPhiID);
         bool DeleteLoaiChiPhi(Guid iID_ChiPhiID);
         bool SaveLoaiChiPhi(VDT_DM_ChiPhi data, string sUserName);
+        bool CheckExistMaLoaiChiPhi(string sMaLoaiChiPhi, Guid iID_ChiPhi);
+        bool CheckExistIthuTu(int iThuTu, Guid iID_ChiPhi);
         #endregion
 
         #region Danh mục loại công trình
@@ -383,7 +386,7 @@ namespace Viettel.Services
         VDT_DM_ChuDauTu_ViewModel GetDanhMucChuDauTuDetailById(Guid iID_ChuDauTu);
         bool DeleteChuDauTu(Guid iID_ChuDauTu, string sUserName);
         bool SaveChuDauTu(DM_ChuDauTu data, int iNamLamViec, string sUserName);
-        IEnumerable<DM_ChuDauTu> GetListChuDauTuCha(Guid? iID_ChuDauTu, int iNamLamViec);
+        IEnumerable<VDT_DM_ChuDauTu_ViewModel> GetListChuDauTuCha(Guid? iID_ChuDauTu, int iNamLamViec);
         #endregion
 
         #region Danh mục Ngoại hối - Loại đơn vị tiền tệ
@@ -1346,6 +1349,60 @@ namespace Viettel.Services
             }
             return true;
         }
+
+        public bool CheckExistMaLoaiChiPhi(string sMaLoaiChiPhi, Guid iID_ChiPhi)
+        {
+            try
+            {
+                var sql = "SELECT * FROM VDT_DM_ChiPhi WHERE (@iID_ChiPhi IS NULL OR iID_ChiPhi != @iID_ChiPhi) and sMaChiPhi = @sMaLoaiChiPhi\r\n";
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    var item = conn.Query<VDT_DM_ChiPhi>(
+                        sql,
+                        param: new
+                        {
+                            iID_ChiPhi,
+                            sMaLoaiChiPhi
+                        },
+                        commandType: CommandType.Text);
+
+                    return item.ToList().Count > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return false;
+        }
+
+
+        public bool CheckExistIthuTu(int iThuTu, Guid iID_ChiPhi)
+        {
+            try
+            {
+                var sql = "SELECT * FROM VDT_DM_ChiPhi WHERE (@iID_ChiPhi IS NULL OR iID_ChiPhi != @iID_ChiPhi) and iThuTu = @iThuTu\r\n";
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    var item = conn.Query<VDT_DM_ChiPhi>(
+                        sql,
+                        param: new
+                        {
+                            iID_ChiPhi,
+                            iThuTu
+                        },
+                        commandType: CommandType.Text);
+
+                    return item.ToList().Count > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return false;
+        }
+
         #endregion
 
         #region Danh mục loại công trình
@@ -1439,25 +1496,30 @@ namespace Viettel.Services
 
         public bool InsertDMLoaiCongTrinh(VDT_DM_LoaiCongTrinh data, string sUserLogin)
         {
-            var sql = FileHelpers.GetSqlQuery("vdt_insert_loaicongtrinh.sql");
-            using (var conn = _connectionFactory.GetConnection())
+            try
             {
-                var r = conn.Execute(
-                    sql,
-                    param: new
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    conn.Open();
+                    if (data.iID_LoaiCongTrinh == null || data.iID_LoaiCongTrinh == new Guid())
                     {
-                        data.sMaLoaiCongTrinh,
-                        data.sTenLoaiCongTrinh,
-                        data.sTenVietTat,
-                        iParentID = data.iID_Parent,
-                        data.iThuTu,
-                        data.sMoTa,
-                        sUserLogin
-                    },
-                    commandType: CommandType.Text);
-
-                return r > 0;
+                        VDT_DM_LoaiCongTrinh entity = new VDT_DM_LoaiCongTrinh();
+                        entity.MapFrom(data);
+                        entity.bActive = true;
+                        entity.dNgayTao = DateTime.Now;
+                        entity.sID_MaNguoiDungSua = sUserLogin;
+                        entity.iID_LoaiCongTrinh = Guid.NewGuid();
+                        conn.Insert(entity);
+                        conn.Close();
+                    }
+                    return true;
+                }
             }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return false;
         }
 
         public bool UpdateDMLoaiCongTrinh(VDT_DM_LoaiCongTrinh data, string sUserLogin, bool bPublic)
@@ -1477,7 +1539,16 @@ namespace Viettel.Services
                         data.iThuTu,
                         data.sMoTa,
                         sUserLogin,
-                        bPublic
+                        bPublic,
+                        data.L,
+                        data.LNS,
+                        data.K,
+                        data.M,
+                        data.TM,
+                        data.TTM,
+                        data.NG,
+                        data.TNG1,
+                        data.TNG2
                     },
                     commandType: CommandType.Text);
 
@@ -1723,7 +1794,7 @@ namespace Viettel.Services
         #endregion
 
         #region Danh mục VĐT - Nhà Thầu
-        public IEnumerable<VDT_DM_NhaThau_ViewModel> GetAllDanhMucNhaThau(ref PagingInfo _paging, string sMaNhaThau = "", string sTenNhaThau = "", string sDaiDien = "", string sChucVu = "", string sDiaChi = "", 
+        public IEnumerable<VDT_DM_NhaThau_ViewModel> GetAllDanhMucNhaThau(ref PagingInfo _paging, string sMaNhaThau = "", string sTenNhaThau = "", string sDaiDien = "", string sChucVu = "", string sDiaChi = "",
             string sDienThoai = "", string sFax = "", string sEmail = "", string sWebsite = "", string sSoTaiKhoan = "", string sNganHang = "", string sMaSoThue = "", string sNguoiLienHe = "", string sDienThoaiLienHe = "", string sMaNganHang = "")
         {
             using (var conn = _connectionFactory.GetConnection())
@@ -1916,7 +1987,7 @@ namespace Viettel.Services
         }
 
         public VDT_DM_DonViThucHienDuAn GetDonViThucHienDuAnById(Guid iID_DonVi)
-        {           
+        {
             try
             {
                 StringBuilder query = new StringBuilder();
@@ -1930,10 +2001,10 @@ namespace Viettel.Services
                     return items;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
-            }            
+            }
         }
 
         public NS_DonVi GetNSDonViById(Guid iID_DonVi)
@@ -2080,6 +2151,10 @@ namespace Viettel.Services
                     entity.Id_Parent = data.Id_Parent;
                     entity.sUserModifier = sUserName;
                     entity.dDateModified = DateTime.Now;
+                    entity.STKNuocNgoai = data.STKNuocNgoai;
+                    entity.STKTrongNuoc = data.STKTrongNuoc;
+                    entity.ChiNhanhNuocNgoai = data.ChiNhanhNuocNgoai;
+                    entity.ChiNhanhTrongNuoc = data.ChiNhanhTrongNuoc;
                     conn.Update(entity, trans);
                 }
                 // commit to db
@@ -2088,17 +2163,17 @@ namespace Viettel.Services
             return true;
         }
 
-        public IEnumerable<DM_ChuDauTu> GetListChuDauTuCha(Guid? iID_ChuDauTu, int iNamLamViec)
+        public IEnumerable<VDT_DM_ChuDauTu_ViewModel> GetListChuDauTuCha(Guid? iID_ChuDauTu, int iNamLamViec)
         {
             StringBuilder query = new StringBuilder();
-            query.Append("SELECT * FROM DM_ChuDauTu ");
+            query.Append("SELECT ID, CONCAT(sId_CDT, ' - ', sTenCDT) as sTenChuDauTuCha,sTenCDT, sId_CDT FROM DM_ChuDauTu ");
             query.AppendFormat("WHERE iTrangThai = 1 AND iNamLamViec = {0} ", iNamLamViec);
             if (iID_ChuDauTu != null && iID_ChuDauTu != Guid.Empty)
                 query.AppendFormat("AND ID <> '{0}' ", iID_ChuDauTu);
             query.Append("ORDER BY sTenCDT");
             using (var conn = _connectionFactory.GetConnection())
             {
-                var items = conn.Query<DM_ChuDauTu>(query.ToString(), commandType: CommandType.Text);
+                var items = conn.Query<VDT_DM_ChuDauTu_ViewModel>(query.ToString(), commandType: CommandType.Text);
                 return items;
             }
         }
@@ -2128,7 +2203,7 @@ namespace Viettel.Services
             string query = "SELECT * FROM NH_DM_LoaiTienTe WHERE ID = @ID";
             using (var conn = _connectionFactory.GetConnection())
             {
-                var item = conn.QueryFirstOrDefault<NH_DM_LoaiTienTeModel>(query.ToString(), param: new { ID = id}, commandType: CommandType.Text);
+                var item = conn.QueryFirstOrDefault<NH_DM_LoaiTienTeModel>(query.ToString(), param: new { ID = id }, commandType: CommandType.Text);
                 return item;
             }
         }

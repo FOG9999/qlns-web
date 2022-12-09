@@ -96,41 +96,46 @@ $(document).ready(function () {
     }
 });
 
-function ChangeDonViSelect() {
-    var iDonVi = $("#slbDonVi").val();
-    var maDonVi = $("<div/>").text($("#slbDonVi").find("option:selected").data("madonvi")).html();
-    $.ajax({
-        type: "POST",
-        url: "/QLNH/QLThongTinHopDong/GetChuongTrinhTheoDonVi",
-        data: { iDonVi: iDonVi, maDonVi: maDonVi },
-        success: function (data) {
-            if (data) {
-                $("#slbChuongTrinh").empty().html(data.htmlCT);
-                $("#slbDuAn").empty().html(data.htmlDA);
-                $("#slbGoiThau").empty().html(data.htmlGT);
-
-                $("#slbChuongTrinh").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
-                $("#slbDuAn").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
-                $("#slbGoiThau").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
-            }
-        }
-    });
-}
-
 function ChangeChuongTrinhSelect() {
-    var iChuongTrinh = $("#slbChuongTrinh").val();
+    var id = $("#slbKHTongTheBQP").val();
     $.ajax({
         type: "POST",
-        url: "/QLNH/QLThongTinHopDong/GetDuAnTheoChuongTrinh",
-        data: { iChuongTrinh: iChuongTrinh },
+        url: "/QLNH/QLThongTinHopDong/GetChuongTrinhTheoQDTongThe",
+        data: { id: id },
         success: function (data) {
             if (data) {
-                $("#slbDuAn").empty().html(data);
-                $("#slbDuAn").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbChuongTrinh").empty().html(data.htmlChuongTrinh);
             }
         }
     });
 }
+function ChangeBQuanLySelect() {
+    var id = $("#slbChuongTrinh").val();
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/QLThongTinHopDong/GetBQuanLyTheoChuongTrinh",
+        data: { id: id },
+        success: function (data) {
+            if (data) {
+                $("#slbBQuanLy").empty().html(data.htmlQuanLy);
+            }
+        }
+    });
+}
+function ChangeDonViSelect() {
+    var id = $("#slbBQuanLy").val();
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/QLThongTinHopDong/GetDonViTheoBQuanLy",
+        data: { id: id },
+        success: function (data) {
+            if (data) {
+                $("#slbDonVi").empty().html(data.htmlDonVi);
+            }
+        }
+    });
+}
+
 
 function ChangeLoaiSelect() {
     var loaiVal = $("#slbLoai").val();
@@ -380,6 +385,8 @@ function Save() {
 function GetDataHopDong() {
     var data = {};
     data.ID = $("#hidTTHopDongID").val();
+    data.iID_MaPhongBan = $("#slbBQuanLy").val();
+    data.iID_NH_KHChiTietBQP = $("#slbKHTongTheBQP").val();
     data.iID_HopDongGocID = ($("#hidTTHopDongGocID").val() == "" || $("#hidTTHopDongGocID").val() == GUID_EMPTY) ? null : $("#hidTTHopDongGocID").val();
     data.iLanDieuChinh = $("#hidLanDieuChinh").val() == '' ? 0 : parseInt($("#hidLanDieuChinh").val());
     data.iID_DonViID = $("#slbDonVi").val();
@@ -389,10 +396,9 @@ function GetDataHopDong() {
     data.iPhanLoai = loai;
     if (loai == 1 || loai == 3) {
         data.iID_DuAnID = $("#slbDuAn").val();
-        data.iID_BQuanLyID = $("#slbDuAn").find("option:selected").data("bql");
+        //data.iID_BQuanLyID = $("#slbDuAn").find("option:selected").data("bql");
     } else {
         data.iID_DuAnID = null;
-        data.iID_BQuanLyID = null;
     }
     data.sSoHopDong = $("<div/>").text($.trim($("#txtSoHopDong").val())).html();
     data.dNgayHopDong = $("<div/>").text($.trim($("#txtNgayKyHopDong").val())).html();
@@ -414,9 +420,17 @@ function ValidateData(data) {
     var Messages = [];
 
     if (data.iID_DonViID == null || data.iID_DonViID == GUID_EMPTY) {
-        Messages.push("Đơn vị quản lý chưa chọn !");
+        Messages.push("Đơn vị chưa chọn !");
     }
 
+    if (data.iID_MaPhongBan == null || data.iID_DonViID == GUID_EMPTY) {
+        Messages.push("B quản lý chưa chọn !");
+    }
+
+    if (data.iID_KHCTBQP_ChuongTrinhID == null || data.iID_DonViID == GUID_EMPTY) {
+        Messages.push("Số quyết định tổng thể TTCP  chưa chọn !");
+    }
+    
     if (data.iID_KHCTBQP_ChuongTrinhID == null || data.iID_KHCTBQP_ChuongTrinhID == GUID_EMPTY) {
         Messages.push("Tên chương trình chưa chọn !");
     }

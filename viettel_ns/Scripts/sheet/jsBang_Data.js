@@ -15,7 +15,7 @@ var Bang_arrLaHangCha; // Mảng xác định 1 hàng là hàng cha
 var Bang_arrHangDaXoa = new Array(); //Mảng các mã hàng đã xóa
 var Bang_arrMaHang; // Mảng các mã hàng
 var Bang_arrMaCot; // Mảng các mã cột
-var Bang_arrType; // Mảng kiểu mã của các cột: 0:Kieu xau; 1: Kieu so; 2:checkbox; 3:Autocomplete; 4:datetime
+var Bang_arrType; // Mảng kiểu mã của các cột: 0:Kieu xau; 1: Kieu so; 2:checkbox; 3:Autocomplete; 4:datetime; 5:AutocompleteMultiple
 var Bang_arrFormat; // Mảng các định dạng
 
 var Bang_nH = 0; // Số các hàng
@@ -467,6 +467,9 @@ function Bang_Ready() {
                 case 3:
                     strType = "autocomplete";
                     break;
+                case 5:
+                    strType = "multipleselect";
+                    break;
             }
 
             /* Khoa bang khong cho phep nhap o khac */
@@ -478,7 +481,7 @@ function Bang_Ready() {
                 var h = nCell.parentNode.rowIndex + Bang_Viewport_hMin;
                 var c = AnhXaCot_Slide_DuLieu(nCell.cellIndex);
                 var okCoChuyenDenOTiep = true;
-                if (Bang_arrType[c0] == 3) {
+                if (Bang_arrType[c0] == 3 || Bang_arrType[c0] == 5) {
                     $("#txtONhapDuLieu_Autocomplete").autocomplete("close");
                 }
                 if (Bang_GanGiaTriO(h, c, sVal)) {
@@ -565,7 +568,7 @@ function Bang_GanMangGiaTri_Bang_arrGiaTri() {
                 if ((typeof (isSetILevel) !== 'undefined' && j == Bang_arrCSMaCot['iLevel']) ||
                     (typeof (isSetIdDuAn) !== 'undefined' && j == Bang_arrCSMaCot['iID_DuAnID']) ||
                     (typeof (isSetTenLoaiCongTrinh) !== 'undefined' && j == Bang_arrCSMaCot['sTenLoaiCongTrinh']) ||
-                    (typeof (isSetTenDonViQL) !== 'undefined' && j == Bang_arrCSMaCot['sTenDonViQL']) ||
+                    (typeof (isSetTenDonViQL) !== 'undefined' && j == Bang_arrCSMaCot['sDonVi']) ||
                     (typeof (isSetTenCDT) !== 'undefined' && j == Bang_arrCSMaCot['sTenCDT']) ||
                     (typeof (isSetTenNganSach) !== 'undefined' && j == Bang_arrCSMaCot['sTenNganSach'])
                 ) {
@@ -786,7 +789,6 @@ function Bang_LayDuLieuHienThiCuaO(h, c) {
             //GTHienThi = '<span title="' + Bang_arrGiaTri[h][c] + '" style="width:' + Bang_arrDoRongCot[c] + 'px;">' + Bang_arrGiaTri[h][c] + '</span>';
             //GTHienThi = Bang_arrGiaTri[h][c];
             GTHienThi = '<span title="' + Bang_arrGiaTri[h][c] + '">' + Bang_arrGiaTri[h][c] + '</span>';
-
             break;
 
         case 2:
@@ -800,6 +802,17 @@ function Bang_LayDuLieuHienThiCuaO(h, c) {
             else {
                 GTHienThi = '';
             }
+            break;
+
+        case 5:
+            var giaTriHienThi = "";
+            if (typeof (Bang_GiaTriO_BeforEdit) !== 'undefined' && Bang_GiaTriO_BeforEdit != "") {
+                giaTriHienThi = Bang_GiaTriO_BeforEdit + (Bang_arrGiaTri[h][c] != "" ? (", " + Bang_arrGiaTri[h][c]) : "");
+            }
+            Bang_arrHienThi[h][c] = giaTriHienThi != "" ? giaTriHienThi : Bang_arrGiaTri[h][c];
+            Bang_arrGiaTri[h][c] = Bang_arrHienThi[h][c];
+            GTHienThi = '<span title="' + Bang_arrHienThi[h][c] + '">' + Bang_arrHienThi[h][c] + '</span>';
+            Bang_GiaTriO_BeforEdit = "";
             break;
 
         default:

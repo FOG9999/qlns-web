@@ -108,6 +108,24 @@ $(document).ready(function () {
         ResetThanhToanChiTiet();
         GetDataKeHoachVon();
     });
+    $("#txtluyKeTTTN").on('keyup', () => {
+        recalculateTyLeThanhToan();
+    })
+    $("#txtluyKeTTNN").on('keyup', () => {
+        recalculateTyLeThanhToan();
+    })
+    $("#txtluyKeTUUngTruocTN").on('keyup', () => {
+        recalculateTyLeThanhToan();
+    })
+    $("#txtluyKeTUUngTruocNN").on('keyup', () => {
+        recalculateTyLeThanhToan();
+    })
+    $("#txtluyKeTUTN").on('keyup', () => {
+        recalculateTyLeThanhToan();
+    })
+    $("#txtluyKeTUNN").on('keyup', () => {
+        recalculateTyLeThanhToan();
+    })
 
     $("#drpHopDong").change(function (e) {
         GetDataDropdownNhaThau();
@@ -137,6 +155,18 @@ $(document).ready(function () {
         LoadLuyKeThanhToan();
         GetDataKeHoachVon();
         GetDataChiPhi();
+    })
+
+    $("#drpNhaThau").change(function (e) {
+        let selectedNhaThau = $(this).find(':selected');
+        let tenNhaThau = selectedNhaThau.html();
+        let stkNhaThau = selectedNhaThau.attr('data-stkNhaThau');
+        let maNganHang = selectedNhaThau.attr('data-maNganHang');
+        if ($(this).val() != GUID_EMPTY) {
+            $('#sTenDonViTHuHuog').val(tenNhaThau);
+            $('#sSTKDonViThuHuong').val(stkNhaThau);
+            $('#sMâNgnHangDonViThuHuong').val(maNganHang);
+        }        
     })
 
     $("#drpLoaiThanhToan").change(function (e) {
@@ -463,6 +493,7 @@ function LoadLuyKeThanhToan() {
                 $("#txtluyKeTUUngTruocNN").val(FormatNumber(r.luyKeTUUngTruocNN));
                 $("#txtluyKeTUTN").val(FormatNumber(r.luyKeTUTN));
                 $("#txtluyKeTUNN").val(FormatNumber(r.luyKeTUNN));
+                recalculateTyLeThanhToan();
                 bLoaded = true;
             }
         });
@@ -863,13 +894,14 @@ function EventValidate() {
             $(this).blur();
         }
     });
-    $("td.sotien[contenteditable='true']").on('keyup', function(event) {
+
+    $("td[contenteditable='true']").on("keyup", function (e) {
         $(this).html(FormatNumber($(this).html() == "" ? 0 : UnFormatNumber($(this).html())));
         // select all the content in the element
         document.execCommand('selectAll', false, null);
         // collapse selection to the end
         document.getSelection().collapseToEnd();
-    })
+    });
 }
 
 function GetKeHoachVonTT() {
@@ -887,6 +919,39 @@ function GetKeHoachVonTT() {
 
 function onChangeLoaiThanhToan(obj) {
     var thisDong = $(obj).closest("tr");
+    // update giá trị đề nghị của các dòng chi tiết khi loại thanh toán thay đổi
+    var dataDeNghi = GetThongTinDeNghi();
+    var iLoaiThanhToan = $("#drpLoaiThanhToan option:selected").val();
+    var iLoaiDeNghi = "";
+    if (iLoaiThanhToan == THANH_TOAN)
+        iLoaiDeNghi = THANH_TOAN;
+    else
+        iLoaiDeNghi = TAM_UNG;
+
+    var fDefaultValueTN, fDefaultValueNN;
+    if (iLoaiDeNghi == THANH_TOAN) {
+        $("#" + TBL_DANH_SACH_THANH_TOAN_CHITIET + " tbody tr").each((ind, row) => {
+            let iLoaiThanhToanCurrentRow = $(row).find('.r_Loai select option:selected').val();
+            // thanh toán
+            if (iLoaiThanhToanCurrentRow == THANH_TOAN) {
+                fDefaultValueTN = dataDeNghi.fGiaTriThanhToanTN;
+                fDefaultValueNN = dataDeNghi.fGiaTriThanhToanNN;
+            }
+            // thu hồi năm trước
+            else if (iLoaiThanhToanCurrentRow == THU_HOI_NAM_TRUOC) {
+                fDefaultValueTN = dataDeNghi.fGiaTriThuHoiUngTruocTN;
+                fDefaultValueNN = dataDeNghi.fGiaTriThuHoiUngTruocNN;
+            }
+            // thu hồi theo chế độ
+            else if (iLoaiThanhToanCurrentRow == THU_HOI_NAM_NAY) {
+                fDefaultValueTN = dataDeNghi.fGiaTriThuHoiTN;
+                fDefaultValueNN = dataDeNghi.fGiaTriThuHoiNN;
+            }
+
+            $($(row).find('.r_fGiaTriDeNghiTN')[0]).html(FormatNumber(fDefaultValueTN))
+            $($(row).find('.r_fGiaTriDeNghiNN')[0]).html(FormatNumber(fDefaultValueNN))
+        })
+    }
 
     var htmlOption = "";
     arrKeHoachVonThanhToan.forEach(function (item) {

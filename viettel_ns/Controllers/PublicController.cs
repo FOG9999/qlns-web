@@ -2510,7 +2510,8 @@ AND tk.iID_MaTaiKhoanDanhMucChiTiet=ct.iID_MaTaiKhoanDanhMucChiTiet  ORDER BY ct
             Object item = new
             {
                 value = "",
-                label = ""
+                label = "",
+                showLabel = false
             };
             List<Object> list = new List<Object>();
             String SQL = String.Format("SELECT iID_MaPhongBan, CONCAT(sTen, IIF(sMoTa = '', '', CONCAT(' - ', sMoTa))) AS DisplayName FROM NS_PhongBan WHERE iTrangThai=1 AND sTen LIKE @sTen ORDER BY sTen");

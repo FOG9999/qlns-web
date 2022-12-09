@@ -250,9 +250,10 @@ function DrawTableChiPhiHangMuc(sumGiaTriQuyetToanAB, sumKetQuaKiemToan, sumCDTD
         var arrHangMucByChiPhi = arrHangMuc.filter(x => x.iID_DuAn_ChiPhi == itemCp.iID_DuAn_ChiPhi);
         var disabled = "", isBold = "";
         if ((arrChiPhiChild != null && arrChiPhiChild.length > 0) || (arrHangMucByChiPhi != null && arrHangMucByChiPhi.length > 0)) {
-            isBold = "font-weight: bold;";
+            
             disabled = "disabled";
         }
+        isBold = "font-weight: bold;";
         html += "<tr data-loai='1' style='" + isBold+"' data-id='" + itemCp.iID_DuAn_ChiPhi + "' data-parentid='" + itemCp.iID_ChiPhi_Parent+"'>";
         html += "<td class='stt'></td>";
         html += "<td>Chi phí</td>";
@@ -273,7 +274,7 @@ function DrawTableChiPhiHangMuc(sumGiaTriQuyetToanAB, sumKetQuaKiemToan, sumCDTD
                 isBold = "";
                 var arrHangMucChild = arrHangMucByChiPhi.filter(x => x.iID_ParentID == itemHm.iID_HangMucID);
                 if (arrHangMucChild != null && arrHangMucChild.length > 0) {
-                    isBold = "font-weight: bold;";
+                    //isBold = "font-weight: bold;";
                     disabled = "disabled";
                 }
                 html += "<tr style='" + isBold+"' data-loai='2' data-id='" + itemHm.iID_HangMucID + "' data-parentid='" + itemHm.iID_ParentID + "' data-chiphi='" + itemHm.iID_DuAn_ChiPhi + "'>";
@@ -329,9 +330,9 @@ function DrawTableGoiThau(sumGiaTriQuyetToanAB, sumKetQuaKiemToan, sumCDTDeNghiQ
         html += "<td><input type='text' class='form-control clearable text-right txtGiaTriQuyetToanAB' value='" + itemCp.sGiaTriDeNghiQuyetToan + "' " + disabled + " onchange='changeGiaTriGoiThau(this)' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>";
         html += "<td><input type='text' class='form-control clearable text-right txtKetQuaKiemToan' value='" + itemCp.sGiaTriKiemToan + "' " + disabled + " onchange='changeGiaTriGoiThau(this)' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>";
         html += "<td><input type='text' class='form-control clearable text-right txtCDTDeNghiQuyetToan' value='" + itemCp.sGiaTriQuyetToanAB + "' " + disabled + " onchange='changeGiaTriGoiThau(this)' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>";
-        html += "<td class='text-right txtChenhLechSoVoiDuToan'></td>";
-        html += "<td class='text-right txtChenhLechSoVoiQuyetToanAB'></td>";
-        html += "<td class='text-right txtChenhLechSoVoiKetQuaKiemToan'></td>";
+        html += "<td class='text-right txtChenhLechSoVoiDuToan'>" + itemCp.sChenhLenhSoVoiDuToan + "</td>";
+        html += "<td class='text-right txtChenhLechSoVoiQuyetToanAB'>" + itemCp.sChenhLenhSoVoiQuyetToanAB + "</td>";
+        html += "<td class='text-right txtChenhLechSoVoiKetQuaKiemToan'>" + itemCp.sChenhLechSoVoiKetQuaKiemToan + "</td>";
         html += "</tr>";
         $("#tblDanhSachChiTiet tbody").html(html);
         $(".div_ChiTiet").show();

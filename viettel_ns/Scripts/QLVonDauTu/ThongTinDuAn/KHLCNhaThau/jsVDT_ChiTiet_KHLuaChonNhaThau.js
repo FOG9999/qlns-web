@@ -150,6 +150,7 @@ function DisplayNguonVonChiPhi(arrDuToanID, idDisplayNguonVon, idDisplayChiPhi) 
         }
 
         if (objDuToan.ListChiPhi != null && objDuToan.ListChiPhi.length > 0) {
+            objDuToan.ListChiPhi.sort((a,b) => a.iThuTu - b.iThuTu);
             objDuToan.ListChiPhi.forEach(function (objChiPhi) {
                 if (arrChiPhi.filter(function (x) { return x.sTenChiPhi == objChiPhi.sTenChiPhi }).length == 0) {
                     arrChiPhi.push({
@@ -189,7 +190,7 @@ function DisplayNguonVonChiPhi(arrDuToanID, idDisplayNguonVon, idDisplayChiPhi) 
         { sTitle: "Chi phí", sField: "sTenChiPhi", iWidth: "70%", sTextAlign: "left", bHaveIcon: 0, iMain: 1 },
         { sTitle: "Giá trị phê duyệt", sField: "fTienPheDuyet", iWidth: "30%", sTextAlign: "right", sClass: "sotien" }];
     var button = { bUpdate: 0, bDelete: 0, bInfo: 0 };
-    var sHtml = GenerateTreeTableKHLuaChonNhaThau(arrChiPhi, columns, button, "", false)
+    var sHtml = GenerateTreeTableKHLuaChonNhaThau(arrChiPhi, columns, button, "", true)
 
     $("#" + idDisplayChiPhi).html(sHtml);
 }

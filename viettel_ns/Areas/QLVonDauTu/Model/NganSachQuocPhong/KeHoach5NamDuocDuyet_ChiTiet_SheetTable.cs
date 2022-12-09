@@ -22,7 +22,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
 
         }
 
-        public KeHoach5NamDuocDuyet_ChiTiet_SheetTable(string iID_KeHoach5NamID, int iNamLamViec, int iGiaiDoanTu, Dictionary<string, string> query, List<KeHoach5NamChiTietDuocDuyetTempForSave> listKHVChiTiet)
+        public KeHoach5NamDuocDuyet_ChiTiet_SheetTable(string iID_KeHoach5NamID, int iNamLamViec, int iGiaiDoanTu, Dictionary<string, string> query, List<KeHoach5NamChiTietDuocDuyetTempForSave> listKHVChiTiet, List<KeHoach5NamChiTietDuocDuyetTempForSave> currentShowingList)
         {
             this.iGiaiDoanTu = iGiaiDoanTu;
             this._idKeHoach5Nam = !string.IsNullOrEmpty(iID_KeHoach5NamID) ? Guid.Parse(iID_KeHoach5NamID) : Guid.Empty;
@@ -33,13 +33,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     filters.Add(c.ColumnName, query.ContainsKey(c.ColumnName) ? query[c.ColumnName] : "");
                 });
 
-            fillSheet(iID_KeHoach5NamID, iNamLamViec, filters, listKHVChiTiet);
+            fillSheet(iID_KeHoach5NamID, iNamLamViec, filters, listKHVChiTiet, currentShowingList);
         }
 
 
         #region private methods
 
-        private void fillSheet(string iID_KeHoach5NamID, int iNamLamViec, Dictionary<string, string> filters, List<KeHoach5NamChiTietDuocDuyetTempForSave> listKHVChiTiet)
+        private void fillSheet(string iID_KeHoach5NamID, int iNamLamViec, Dictionary<string, string> filters, List<KeHoach5NamChiTietDuocDuyetTempForSave> listKHVChiTiet, List<KeHoach5NamChiTietDuocDuyetTempForSave> currentShowingList)
         {
 
             _filters = filters ?? new Dictionary<string, string>();
@@ -57,12 +57,32 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 DataTable table = new DataTable();
                 foreach (PropertyDescriptor prop in properties)
                     table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
-                foreach (KeHoach5NamChiTietDuocDuyetTempForSave item in listKHVChiTiet)
+                List<Guid> listKeyID = new List<Guid>();
+                // list đang hiện nhưng chưa lưu                
+                foreach (KeHoach5NamChiTietDuocDuyetTempForSave item in currentShowingList)
                 {
+                    listKeyID.Add(item.keyID);
                     DataRow row = table.NewRow();
                     foreach (PropertyDescriptor prop in properties)
+                    {
                         row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+                    }
                     table.Rows.Add(row);
+                }
+                // list mới chọn thêm
+                foreach (KeHoach5NamChiTietDuocDuyetTempForSave item in listKHVChiTiet)
+                {
+                    Guid g = item.keyID;
+                    if (!listKeyID.Contains(g))
+                    {
+                        DataRow row = table.NewRow();
+                        foreach (PropertyDescriptor prop in properties)
+                        {
+                       
+                            row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+                        }
+                        table.Rows.Add(row);
+                    }                        
                 }
                 // kết hợp với danh sách đã lưu
                 List<VDT_KHV_KeHoach5Nam_ChiTiet> listSaved = _iQLVonDauTuService.GetListKH5NamDuocDuyetChiTietByIdInList(iID_KeHoach5NamID, iNamLamViec, _filters).ToList();
@@ -73,6 +93,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 noMappingProps.Add("sThoiGianThucHien");
                 noMappingProps.Add("sDiaDiem");
                 noMappingProps.Add("sDonVi");
+                noMappingProps.Add("keyID");
                 foreach (VDT_KHV_KeHoach5Nam_ChiTiet item in listSaved)
                 {
                     DataRow row = table.NewRow();
@@ -256,6 +277,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     new SheetColumn(columnName: "sFontBold",isHidden: true),
                     new SheetColumn(columnName: "iID_ParentID",isHidden: true),
                     new SheetColumn(columnName: "iID_DonViID", isHidden: true),
+                    new SheetColumn(columnName: "keyID", isHidden: true),
                 };
 
             #endregion

@@ -24,32 +24,36 @@
                     <hr class="color-background-red" />
                     <div class="form-group row">
                         <div class="col-sm-3">
-                            <label>Đơn vị quản lý</label>
-                            <div>@Html.Raw(Html.Encode(Model.sTenDonVi))</div>
+                            <label>Số quyết định tổng thể TTCP</label>
+                            <div>@Html.Raw(Html.Encode(Model.sSoKeHoachBQP))</div>
                         </div>
                         <div class="col-sm-3">
                             <label>Tên chương trình</label>
                             <div>@Html.Raw(Html.Encode(Model.sTenChuongTrinh))</div>
                         </div>
                         <div class="col-sm-3">
-                            <label>Loại</label>
-                            <div>@Model.sLoai</div>
+                            <label>B quản lý</label>
+                            <div>@Html.Raw(Html.Encode(Model.sTen))</div>
                         </div>
                         <div class="col-sm-3">
-                            @if (Model.iPhanLoai == 1 || Model.iPhanLoai == 3)
-                            {
-                                <label>Tên dự án</label>
-                                <div>@Html.Raw(Html.Encode(Model.sTenDuAn))</div>
-                            }
+                            <label>Đơn vị</label>
+                            <div>@Html.Raw(Html.Encode(Model.sTenDonVi))</div>
                         </div>
+
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-3">
-                        <label for="slbGoiThau">Tên gói thầu</label>
-                        <div>@Html.Raw(Html.Encode(Model.sTenGoiThau))</div>
+                        <label>Loại</label>
+                        <div>@Model.sLoai</div>
                     </div>
-                    <div class="col-sm-3">&nbsp;</div>
+                    <div class="col-sm-3">
+                        @if (Model.iPhanLoai == 1 || Model.iPhanLoai == 3)
+                        {
+                            <label>Tên dự án</label>
+                            <div>@Html.Raw(Html.Encode(Model.sTenDuAn))</div>
+                        }
+                    </div>
                     <div class="col-sm-3">&nbsp;</div>
                     <div class="col-sm-3">&nbsp;</div>
                 </div>

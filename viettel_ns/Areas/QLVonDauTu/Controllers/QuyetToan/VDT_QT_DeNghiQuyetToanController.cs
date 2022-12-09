@@ -303,8 +303,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                 }
 
             }
-
-            var sumGiaTriQuyetToanAB = listChiPhi.Sum(x => x.fGiaTriQuyetToanAB).HasValue ? listChiPhi.Sum(x => x.fGiaTriQuyetToanAB).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+                var sumGiaTriQuyetToanAB = listChiPhi.Sum(x => x.fGiaTriQuyetToanAB).HasValue ? listChiPhi.Sum(x => x.fGiaTriQuyetToanAB).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
             var sumKetQuaKiemToan = listChiPhi.Sum(x => x.fGiaTriKiemToan).HasValue ? listChiPhi.Sum(x => x.fGiaTriKiemToan).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
             var sumCDTDeNghiQuyetToan = listChiPhi.Sum(x => x.fGiaTriDeNghiQuyetToan).HasValue ? listChiPhi.Sum(x => x.fGiaTriDeNghiQuyetToan).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
 
@@ -527,7 +526,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
         {
             List<SelectListItem> lstData = new List<SelectListItem>();
             lstData.Add(new SelectListItem() { Value = "0", Text = "Tổng hợp quyết toán dự án hoàn thành tờ trình" });
-            lstData.Add(new SelectListItem() { Value = "1", Text = "Tổng hợp quyết toán dự án hoàn thành phụ lục" });
+            lstData.Add(new SelectListItem() { Value = "1", Text = "Tổng hợp quyết toán dự án hoàn thành phụ lục (Tổng quát)" });
+            lstData.Add(new SelectListItem() { Value = "2", Text = "Tổng hợp quyết toán dự án hoàn thành phụ lục (Chi tiết)" });
             return lstData;
         }
 
@@ -583,6 +583,11 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                 sFileName = "DeNghiQuyetToanHoanThanh_ReportPhuLuc.xlsx";
                 xls = (XlsFile) CreateReportPhuLuc(dataNhap, denghiItem);
             }
+            else if (dataNhap.iItemLoaiBC == 2)
+            {
+                sFileName = "DeNghiQuyetToanHoanThanh_ReportPhuLuc.xlsx";
+                xls = (XlsFile)CreateReportPhuLucChiTiet(dataNhap, denghiItem);
+            }
             xls.PrintLandscape = true;
 
             return xls.ToFileResult(sFileName);
@@ -612,6 +617,11 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             {
                 sFileName = "DeNghiQuyetToanHoanThanh_ReportPhuLuc.pdf";
                 xls = CreateReportPhuLuc(dataNhap, denghiItem);
+            }
+            else if (dataNhap.iItemLoaiBC == 2)
+            {
+                sFileName = "DeNghiQuyetToanHoanThanh_ReportPhuLuc.pdf";
+                xls = CreateReportPhuLucChiTiet(dataNhap, denghiItem);
             }
             xls.PrintLandscape = true;
 
@@ -759,7 +769,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                 {
                     DieuChinhCuoi = item.GiaTriPheDuyet,
                     NoiDung = item.TenNguonVon,
-                    KeHoach = item.fCapPhatBangLenhChi + item.fCapPhatTaiKhoBac
+                    KeHoach = item.fCapPhatBangLenhChi + item.fCapPhatTaiKhoBac,
+                    DaThanhToan = item.fGiaTriThanhToanTN + item.fGiaTriThanhToanNN
                 });
             }
             return listResult;
@@ -807,11 +818,19 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             {
                 foreach (DeNghiQuyetToanChiTietModel dataQt in listDeNghiQuyetToan)
                 {
-                    VDT_QT_DeNghiQuyetToan_ChiTiet entity = listDbData.Where(n => n.iID_ChiPhiId == dataQt.ChiPhiId || n.iID_ChiPhiId == dataQt.iID_HangMucId).FirstOrDefault();
-                    if (entity != null)
+                    VDT_QT_DeNghiQuyetToan_ChiTiet entitycp = listDbData.Where(n => n.iID_ChiPhiId == dataQt.ChiPhiId).FirstOrDefault();
+                    if (entitycp != null && dataQt.iID_HangMucId == null)
                     {
-                        dataQt.FGiaTriKiemToan = entity.fGiaTriKiemToan ?? 0;
-                        dataQt.FGiaTriDeNghiQuyetToan = entity.fGiaTriDeNghiQuyetToan ?? 0;
+                        dataQt.FGiaTriKiemToan = entitycp.fGiaTriKiemToan ?? 0;
+                        dataQt.FGiaTriDeNghiQuyetToan = entitycp.fGiaTriDeNghiQuyetToan ?? 0;
+                        dataQt.fGiaTriQuyetToanAB = entitycp.fGiaTriQuyetToanAB ?? 0;
+                    }
+                    VDT_QT_DeNghiQuyetToan_ChiTiet entityhm = listDbData.Where(n => n.iID_HangMucId == dataQt.iID_ChiPhi).FirstOrDefault();
+                    if (entityhm != null && dataQt.IdChiPhiDuAnParent != null)
+                    {
+                        dataQt.FGiaTriKiemToan = entityhm.fGiaTriKiemToan ?? 0;
+                        dataQt.FGiaTriDeNghiQuyetToan = entityhm.fGiaTriDeNghiQuyetToan ?? 0;
+                        dataQt.fGiaTriQuyetToanAB = entityhm.fGiaTriQuyetToanAB ?? 0;
                     }
                 }
             }
@@ -835,6 +854,119 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             FlexCelReport fr = new FlexCelReport();
             foreach (var item in listDeNghiQuyetToan)
             {
+                item.MaOrderDb = item.MaOrderDb.Replace('-', '.');
+                if (item.IdChiPhiDuAnParent == null || item.IdChiPhiDuAnParent == Guid.Empty)
+                {
+                    item.IsHangCha = true;
+                    
+                    if (item.MaOrderDb == "1") item.MaOrderDb = "I";
+                    if (item.MaOrderDb == "2") item.MaOrderDb = "II";
+                    if (item.MaOrderDb == "3") item.MaOrderDb = "III";
+                    if (item.MaOrderDb == "4") item.MaOrderDb = "IV";
+                    if (item.MaOrderDb == "5") item.MaOrderDb = "V";
+                    if (item.MaOrderDb == "6") item.MaOrderDb = "VI";
+                    if (item.MaOrderDb == "7") item.MaOrderDb = "VII";
+                    if (item.MaOrderDb == "8") item.MaOrderDb = "VIII";
+                    if (item.MaOrderDb == "9") item.MaOrderDb = "IX";
+                    if (item.MaOrderDb == "10") item.MaOrderDb = "X";
+                }                    
+            }
+
+            fr.AddTable("Items", listDeNghiQuyetToan);
+            fr.SetValue("TenDuAn", denghiItem.sTenDuAn);
+            fr.SetValue("ChuDauTu", denghiItem.sTenChuDauTu);
+            fr.SetValue("TieuDe", dataNhap.txt_TieuDe);
+            fr.SetValue("DonViTinh", dataNhap.sDonViTinh);
+            fr.SetValue("Diadiem", dataNhap.txt_DiaDiem);
+            fr.SetValue("Ngay", dataNhap.dNgayChungTu.HasValue ? dataNhap.dNgayChungTu.Value.Day.ToString() : "...");
+            fr.SetValue("Thang", dataNhap.dNgayChungTu.HasValue ? dataNhap.dNgayChungTu.Value.Month.ToString() : "...");
+            fr.SetValue("Nam", dataNhap.dNgayChungTu.HasValue ? dataNhap.dNgayChungTu.Value.Year.ToString() : "...");
+            fr.UseChuKy(Username)
+                 .UseChuKyForController(sControlName)
+                 .UseForm(this);
+
+            fr.Run(Result);
+            return Result;
+        }
+        public ExcelFile CreateReportPhuLucChiTiet(DeNghiQuyetToanPrintDataExportModel dataNhap, VDT_QT_DeNghiQuyetToanViewModel denghiItem)
+        {
+            VDT_DA_DuToan dutoan = _vdtService.GetDuToanIdByDuAnId(Guid.Parse(denghiItem.iID_DuAnID.ToString()));
+            string duToanId = String.Empty;
+            if (dutoan != null)
+                duToanId = dutoan.iID_DuToanID.ToString();
+            if (string.IsNullOrEmpty(duToanId))
+            {
+                return null;
+            }
+            List<VDT_DA_DuToan_ChiPhi_ViewModel> listChiPhi = _vdtService.GetListChiPhiHangMucChiTietTheoTKTC(Guid.Parse(duToanId)).ToList();
+            List<DeNghiQuyetToanChiTietModel> listDeNghiQuyetToan = listChiPhi.Select(x => new DeNghiQuyetToanChiTietModel()
+            {
+                ChiPhiId = x.iID_DuAn_ChiPhi.HasValue ? x.iID_DuAn_ChiPhi.Value : Guid.Empty,
+                GiaTriPheDuyet = x.fTienPheDuyet,
+                TenChiPhi = x.sTenChiPhi,
+                iID_ChiPhi = x.iID_ChiPhiID,
+                IdChiPhiDuAnParent = x.iID_ChiPhi_Parent,
+                MaOrderDb = x.iSTT
+            }).ToList();
+
+            List<VDTQuyetDinhDauTuChiPhiModel> listChiPhiQDDT = _vdtService.GetListChiPhiQDDTByIdDuToan(Guid.Parse(duToanId)).ToList();
+            if (listChiPhiQDDT != null && listChiPhiQDDT.Count > 0)
+            {
+                foreach (DeNghiQuyetToanChiTietModel dataQt in listDeNghiQuyetToan)
+                {
+                    VDTQuyetDinhDauTuChiPhiModel entity = listChiPhiQDDT.Where(n => n.iID_ChiPhi == dataQt.iID_ChiPhi).FirstOrDefault();
+                    if (entity != null)
+                    {
+                        dataQt.GiaTriPheDuyetQDDT = entity.fTienPheDuyet ?? 0;
+                    }
+                }
+            }
+
+            listDeNghiQuyetToan.Where(n => n.PhanCap == 1).Select(n => { n.IsShow = true; return n; }).ToList();
+            listDeNghiQuyetToan.Select(n => { n.IsChiPhi = true; return n; }).ToList();
+
+            List<VDT_QT_DeNghiQuyetToan_ChiTiet> listDbData = _vdtService.FindByDeNghiQuyetToanId(denghiItem.iID_DeNghiQuyetToanID);
+            if (listDbData != null && listDbData.Count > 0)
+            {
+                foreach (DeNghiQuyetToanChiTietModel dataQt in listDeNghiQuyetToan)
+                {
+                    VDT_QT_DeNghiQuyetToan_ChiTiet entitycp = listDbData.Where(n => n.iID_ChiPhiId == dataQt.ChiPhiId).FirstOrDefault();
+                    if (entitycp != null && dataQt.iID_HangMucId == null)
+                    {
+                        dataQt.FGiaTriKiemToan = entitycp.fGiaTriKiemToan ?? 0;
+                        dataQt.FGiaTriDeNghiQuyetToan = entitycp.fGiaTriDeNghiQuyetToan ?? 0;
+                        dataQt.fGiaTriQuyetToanAB = entitycp.fGiaTriQuyetToanAB ?? 0;
+                    }
+                    VDT_QT_DeNghiQuyetToan_ChiTiet entityhm = listDbData.Where(n => n.iID_HangMucId == dataQt.iID_ChiPhi).FirstOrDefault();
+                    if (entityhm != null && dataQt.IdChiPhiDuAnParent != null)
+                    {
+                        dataQt.FGiaTriKiemToan = entityhm.fGiaTriKiemToan ?? 0;
+                        dataQt.FGiaTriDeNghiQuyetToan = entityhm.fGiaTriDeNghiQuyetToan ?? 0;
+                        dataQt.fGiaTriQuyetToanAB = entityhm.fGiaTriQuyetToanAB ?? 0;
+                    }
+                }
+            }
+            listDeNghiQuyetToan.Where(n => n.FGiaTriKiemToan != 0 || n.FGiaTriDeNghiQuyetToan != 0).Select(n => { n.IsShow = true; return n; }).ToList();
+
+            //CreateMaOrderItem(ref listDeNghiQuyetToan);
+            //CheckHangCha(ref listDeNghiQuyetToan);
+            listDeNghiQuyetToan.Select(n =>
+            {
+                n.Stt = (listDeNghiQuyetToan.IndexOf(n) + 1);
+                n.GiaTriPheDuyet = n.GiaTriPheDuyet.HasValue ? n.GiaTriPheDuyet.Value / (Double)(dataNhap.fDonViTinh) : 0;
+                n.GiaTriPheDuyetQDDT = n.GiaTriPheDuyetQDDT.HasValue ? n.GiaTriPheDuyetQDDT.Value / (Double)(dataNhap.fDonViTinh) : 0;
+                n.FGiaTriKiemToan = n.FGiaTriKiemToan.HasValue ? n.FGiaTriKiemToan.Value / (Double)(dataNhap.fDonViTinh) : 0;
+                n.FGiaTriDeNghiQuyetToan /= (Double)(dataNhap.fDonViTinh);
+                n.FGiaTriAB /= (Double)(dataNhap.fDonViTinh);
+                return n;
+            }).ToList();
+
+            XlsFile Result = new XlsFile(true);
+            Result.Open(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/rptVDT_TongHopQuyetToanDuAnHoanThanhPhuLuc.xlsx"));
+            FlexCelReport fr = new FlexCelReport();
+            foreach (var item in listDeNghiQuyetToan)
+            {
+                item.MaOrderDb = item.MaOrderDb.Replace('-', '.');
                 if (item.IdChiPhiDuAnParent == null || item.IdChiPhiDuAnParent == Guid.Empty)
                 {
                     item.IsHangCha = true;
@@ -845,7 +977,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                     if (item.MaOrderDb == "5") item.MaOrderDb = "V";
                     if (item.MaOrderDb == "6") item.MaOrderDb = "VI";
                     if (item.MaOrderDb == "7") item.MaOrderDb = "VII";
-                }                    
+                }
             }
 
             fr.AddTable("Items", listDeNghiQuyetToan);

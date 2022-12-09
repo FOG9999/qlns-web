@@ -678,7 +678,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 
         public JsonResult GetDataNguonVon(Guid iIdDuAn)
         {
-            List<NS_NguonNganSach> data = _vdtService.LayDanhSachNguonVonTheoDuAnInQDDauTu(iIdDuAn).ToList();
+            List<NS_NguonNganSach> data = _vdtService.LayNguonVon().ToList();
             StringBuilder htmlString = new StringBuilder();
             if (data != null && data.Count() > 0)
             {
@@ -700,7 +700,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 htmlString.AppendFormat("<option value='{0}'>{1}</option>", Guid.Empty, Constants.CHON);
                 for (int i = 0; i < data.Count(); i++)
                 {
-                    htmlString.AppendFormat("<option value='{0}'>{1}</option>", data[i].iID_NhaThauID, data[i].sTenNhaThau);
+                    htmlString.AppendFormat("<option data-stkNhaThau='{2}' data-maNganHang='{3}' value='{0}'>{1}</option>", data[i].iID_NhaThauID, data[i].sTenNhaThau, data[i].sSoTaiKhoan, data[i].sMaNganHang);
                 }
             }
             return Json(htmlString.ToString(), JsonRequestBehavior.AllowGet);
@@ -717,9 +717,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 {
                     if (data[i].iID_NhaThauID.Equals(selectedNhaThau))
                     {
-                        htmlString.AppendFormat("<option value='{0}' selected>{1}</option>", data[i].iID_NhaThauID, data[i].sTenNhaThau);
+                        htmlString.AppendFormat("<option data-stkNhaThau='{2}' data-maNganHang='{3}' value='{0}' selected>{1}</option>", data[i].iID_NhaThauID, data[i].sTenNhaThau, data[i].sSoTaiKhoan, data[i].sMaNganHang);
                     }
-                    else htmlString.AppendFormat("<option value='{0}'>{1}</option>", data[i].iID_NhaThauID, data[i].sTenNhaThau);
+                    else htmlString.AppendFormat("<option data-stkNhaThau='{2}' data-maNganHang='{3}' value='{0}'>{1}</option>", data[i].iID_NhaThauID, data[i].sTenNhaThau, data[i].sSoTaiKhoan, data[i].sMaNganHang);
                 }
             }
             return Json(htmlString.ToString(), JsonRequestBehavior.AllowGet);
@@ -1106,9 +1106,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
         }
 
         [HttpPost]
-        public JsonResult UpdatePheDuyetThanhToanChiTiet(List<PheDuyetThanhToanChiTiet> lstData, Guid iID_DeNghiThanhToanID)
+        public JsonResult UpdatePheDuyetThanhToanChiTiet(List<PheDuyetThanhToanChiTiet> lstData, Guid iID_DeNghiThanhToanID, double fThueGiaTriGiaTangDuocDuyet, double fChuyenTienBaoHanhDuocDuyet)
         {
-            return Json(new { bIsComplete = _vdtService.UpdatePheDuyetThanhToanChiTiet(lstData, iID_DeNghiThanhToanID, Username, PhienLamViec.NamLamViec) }, JsonRequestBehavior.AllowGet);
+            return Json(new { bIsComplete = _vdtService.UpdatePheDuyetThanhToanChiTiet(lstData, iID_DeNghiThanhToanID, Username, PhienLamViec.NamLamViec, fThueGiaTriGiaTangDuocDuyet, fChuyenTienBaoHanhDuocDuyet) }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

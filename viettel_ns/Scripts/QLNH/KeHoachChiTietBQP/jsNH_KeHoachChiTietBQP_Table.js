@@ -4,23 +4,32 @@ var GUID_EMPTY = "00000000-0000-0000-0000-000000000000";
 var ERROR = 1;
 var Bang_arrGiaTriTemp = Bang_arrGiaTri;
 
-//function BangDuLieu_onKeypress_F1_NoRow(h, c) {
-//    if (c == undefined) {
-//        BangDuLieu_ThemHangMoi(h, c, true);
-//    } else {
-//        if (!Bang_arrHangDaXoa[h]) {
-//            BangDuLieu_ThemHangMoi(h + 1, h, true);
-//        }
-//    }
-//}
+function BangDuLieu_onKeypress_F1_NoRow(h, c) {
+    if (c == undefined) {
+        BangDuLieu_ThemHangMoi(h, c, true);
+    } else {
+        if (!Bang_arrHangDaXoa[h]) {
+            BangDuLieu_ThemHangMoi(h + 1, h, true);
+        }
+    }
+}
 
 function BangDuLieu_onKeypress_F2_NoRow(h, c) {
     if (c != undefined) {
-        if (!Bang_arrHangDaXoa[h] && (Bang_arrGiaTri[h][Bang_arrCSMaCot["bIsAction"]] == "True" || Bang_arrGiaTri[h][Bang_arrCSMaCot["bIsTTCP"]] == "False")) {
+        if (!Bang_arrHangDaXoa[h]) {
             BangDuLieu_ThemHangMoi(h + 1, h, false);
         }
     }
 }
+
+
+//function BangDuLieu_onKeypress_F2_NoRow(h, c) {
+//    if (c != undefined) {
+//        if (!Bang_arrHangDaXoa[h] && (Bang_arrGiaTri[h][Bang_arrCSMaCot["bIsAction"]] == "True" || Bang_arrGiaTri[h][Bang_arrCSMaCot["bIsTTCP"]] == "False")) {
+//            BangDuLieu_ThemHangMoi(h + 1, h, false);
+//        }
+//    }
+//}
 
 function BangDuLieu_ThemHangMoi(h, hGiaTri, isSameLevel) {
     var csH = 0;
@@ -147,13 +156,16 @@ function BangDuLieu_ThemHangMoi(h, hGiaTri, isSameLevel) {
     Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["fGiaTriBQP_VND"], '');
     Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["fGiaTriTTCP_USD"], '');
     Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["bIsHasChild"], 'False');
-    Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["bIsTTCP"], 'False');
+    //Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["bIsTTCP"], 'False');
     if (!isSameLevel) {
         Bang_arrLaHangCha[h - 1] = true;
         Bang_arrLaHangCha[rowPositionMaxStt] = false;
-    }
-    else {
-        Bang_arrLaHangCha[rowPositionMaxStt] = Bang_arrGiaTri[h - 1][Bang_arrCSMaCot["iID_ParentID"]] == "";
+    } else {
+        if (h == 0) {
+            Bang_arrLaHangCha[rowPositionMaxStt] = true;
+        } else {
+            Bang_arrLaHangCha[rowPositionMaxStt] = Bang_arrGiaTri[h - 1][Bang_arrCSMaCot["iID_ParentID"]] == "";
+        }
     }
 
     setActiveHC();
@@ -262,7 +274,7 @@ function DanhLaiSTT(parentID, Bang_arrGiaTriTemp, STTCha) {
 function KHChiTietBQP_BangDuLieu_Save(isConfirm = false) {
     if (!isConfirm) {
         if (!ValidateData()) return false;
-        if (!ConfirmGiaTriPheDuyet()) return false;
+        //if (!ConfirmGiaTriPheDuyet()) return false;
     }
 
     let state = $("#currentState").val();
@@ -284,17 +296,17 @@ function KHChiTietBQP_BangDuLieu_Save(isConfirm = false) {
         rowData.ID = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["ID"]];
         rowData.sMaThuTu = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["sMaThuTu"]];
         rowData.sTenNhiemVuChi = $("<div/>").text($.trim(Bang_arrGiaTriNew[i][Bang_arrCSMaCot["sTenNhiemVuChi"]])).html();
-        rowData.iID_BQuanLyID = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["iID_BQuanLyID"]];
-        rowData.bIsTTCP = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["bIsTTCP"]] == 'True';
-        if (Bang_arrGiaTriNew[i][Bang_arrCSMaCot["iID_DonViID"]] != "") {
-            rowData.iID_MaDonVi = $("<div/>").text(Bang_arrGiaTriNew[i][Bang_arrCSMaCot["iID_MaDonVi"]]).html();
-            rowData.iID_DonViID = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["iID_DonViID"]];
-            rowData.hasDonVi = true;
-        } else {
-            rowData.iID_MaDonVi = null;
-            rowData.iID_DonViID = null;
-            rowData.hasDonVi = false;
-        }
+        //rowData.iID_BQuanLyID = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["iID_BQuanLyID"]];
+        //rowData.bIsTTCP = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["bIsTTCP"]] == 'True';
+        //if (Bang_arrGiaTriNew[i][Bang_arrCSMaCot["iID_DonViID"]] != "") {
+        //    rowData.iID_MaDonVi = $("<div/>").text(Bang_arrGiaTriNew[i][Bang_arrCSMaCot["iID_MaDonVi"]]).html();
+        //    rowData.iID_DonViID = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["iID_DonViID"]];
+        //    rowData.hasDonVi = true;
+        //} else {
+        //    rowData.iID_MaDonVi = null;
+        //    rowData.iID_DonViID = null;
+        //    rowData.hasDonVi = false;
+        //}
 
         rowData.iID_ParentID = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["iID_ParentID"]];
         rowData.isAdd = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["isAdd"]];
@@ -303,6 +315,7 @@ function KHChiTietBQP_BangDuLieu_Save(isConfirm = false) {
         rowData.fGiaTriVND = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["fGiaTriBQP_VND"]];
         rowData.iID_KHTTTTCP_NhiemVuChiID = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["iID_KHTTTTCP_NhiemVuChiID"]];
         rowData.fGiaTriTTCP_USD = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["fGiaTriTTCP_USD"]];
+        rowData.sMaBQuanLys = Bang_arrGiaTriNew[i][Bang_arrCSMaCot["sTenPhongBan"]];
         tableNhiemVuChi.push(rowData);
     }
 
@@ -360,19 +373,19 @@ function ValidateData() {
                     sGiaTriUSD += Bang_arrGiaTri[j][Bang_arrCSMaCot["sMaThuTu"]] + ", ";
                 }
 
-                var iDDonVi = Bang_LayGiaTri(j, "iID_DonViID");
-                var bIsTTCP = Bang_LayGiaTri(j, "bIsTTCP");
-                if ((iDDonVi == '' || iDDonVi == GUID_EMPTY) && (bIsTTCP == "False" || (bIsTTCP == "True" && Bang_LayGiaTri(j, "bIsHasChild") == "False"))) {
-                    sDonVi += Bang_arrGiaTri[j][Bang_arrCSMaCot["sMaThuTu"]] + ", ";
-                }
+                //var iDDonVi = Bang_LayGiaTri(j, "iID_DonViID");
+                //var bIsTTCP = Bang_LayGiaTri(j, "bIsTTCP");
+                //if ((iDDonVi == '' || iDDonVi == GUID_EMPTY) && (bIsTTCP == "False" || (bIsTTCP == "True" && Bang_LayGiaTri(j, "bIsHasChild") == "False"))) {
+                //    sDonVi += Bang_arrGiaTri[j][Bang_arrCSMaCot["sMaThuTu"]] + ", ";
+                //}
             }
         }
         if (sChuongTrinh != "") {
             sMessError.push('Hãy nhập tên chương trình, nhiệm vụ chi dòng số ' + sChuongTrinh.substring(0, sChuongTrinh.length - 2) + '.');
         }
-        if (sDonVi != "") {
-            sMessError.push('Dòng ' + sDonVi.substring(0, sDonVi.length - 2) + ' chưa có thông tin đơn vị.');
-        }
+        //if (sDonVi != "") {
+        //    sMessError.push('Dòng ' + sDonVi.substring(0, sDonVi.length - 2) + ' chưa có thông tin đơn vị.');
+        //}
         if (sGiaTriUSD != "") {
             sMessError.push('Dòng ' + sGiaTriUSD.substring(0, sGiaTriUSD.length - 2) + ' cần nhập thông tin giá trị BQP phê duyệt (USD).');
         }
@@ -455,17 +468,29 @@ function Bang_onKeypress_F(strKeyEvent) {
 
 
 function BangDuLieu_onCellAfterEdit(h, c) {
-    if (c == Bang_arrCSMaCot["fGiaTriBQP_USD"]) {
+    //if (c == Bang_arrCSMaCot["fGiaTriBQP_USD"]) {
+    //    CalculateSum(h, c);
+    //    var fGiaTriBQP_VND = parseFloat(noExponents(Bang_arrGiaTri[h][c])) * parseFloat(noExponents(Bang_arrGiaTri[h][Bang_arrCSMaCot["TiGia"]]));
+    //    Bang_GanGiaTriThatChoO(h, Bang_arrCSMaCot["fGiaTriBQP_VND"], fGiaTriBQP_VND);
+    //    CalculateSum(h, Bang_arrCSMaCot["fGiaTriBQP_VND"]);
+    //}
+    //else if (c == Bang_arrCSMaCot["fGiaTriBQP_VND"]) {
+    //    CalculateSum(h, c);
+    //    var fGiaTriBQP_USD = parseFloat(noExponents(Bang_arrGiaTri[h][c])) * parseFloat(noExponents(Bang_arrGiaTri[h][Bang_arrCSMaCot["TiGia"]]));
+    //    Bang_GanGiaTriThatChoO(h, Bang_arrCSMaCot["fGiaTriBQP_USD"], fGiaTriBQP_USD);
+    //    CalculateSum(h, Bang_arrCSMaCot["fGiaTriBQP_USD"]);
+    //}
+    if (c == Bang_arrCSMaCot["fGiaTriTTCP_USD"]) {
         CalculateSum(h, c);
-        var fGiaTriBQP_VND = parseFloat(noExponents(Bang_arrGiaTri[h][c])) * parseFloat(noExponents(Bang_arrGiaTri[h][Bang_arrCSMaCot["TiGia"]]));
-        Bang_GanGiaTriThatChoO(h, Bang_arrCSMaCot["fGiaTriBQP_VND"], fGiaTriBQP_VND);
-        CalculateSum(h, Bang_arrCSMaCot["fGiaTriBQP_VND"]);
+        var fGiaTriBQP_USD = parseFloat(noExponents(Bang_arrGiaTri[h][c]));
+        Bang_GanGiaTriThatChoO(h, Bang_arrCSMaCot["fGiaTriBQP_USD"], fGiaTriBQP_USD);
+        CalculateSum(h, Bang_arrCSMaCot["fGiaTriBQP_USD"]);
+    }
+    else if (c == Bang_arrCSMaCot["fGiaTriBQP_USD"]) {
+        CalculateSum(h, c);
     }
     else if (c == Bang_arrCSMaCot["fGiaTriBQP_VND"]) {
         CalculateSum(h, c);
-        var fGiaTriBQP_USD = parseFloat(noExponents(Bang_arrGiaTri[h][c])) * parseFloat(noExponents(Bang_arrGiaTri[h][Bang_arrCSMaCot["TiGia"]]));
-        Bang_GanGiaTriThatChoO(h, Bang_arrCSMaCot["fGiaTriBQP_USD"], fGiaTriBQP_USD);
-        CalculateSum(h, Bang_arrCSMaCot["fGiaTriBQP_USD"]);
     }
     return true;
 }
@@ -522,8 +547,9 @@ function BangDuLieu_XoaHang(cs) {
 function BangDuLieu_onKeypress_Delete(h, c) {
     var bHasChild = Bang_arrGiaTri[h][Bang_arrCSMaCot["bIsHasChild"]];
     var iID_ParentID = Bang_arrGiaTri[h][Bang_arrCSMaCot["iID_ParentID"]];
-    var bIsTTCP = Bang_arrGiaTri[h][Bang_arrCSMaCot["bIsTTCP"]];
-    if (BangDuLieu_DuocSuaChiTiet && h != null && bHasChild == 'False' && bIsTTCP == "False") {
+    //var bIsTTCP = Bang_arrGiaTri[h][Bang_arrCSMaCot["bIsTTCP"]];
+    //if (BangDuLieu_DuocSuaChiTiet && h != null && bHasChild == 'False' && bIsTTCP == "False") {
+    if (BangDuLieu_DuocSuaChiTiet && h != null && bHasChild == 'False') {
         // check xem hàng h đã bị xóa chưa, nếu chưa bị xóa thì xóa, nếu xóa r thì thôi
         if (!Bang_arrHangDaXoa[h]) {
             BangDuLieu_XoaHang(h);
@@ -543,8 +569,11 @@ function BangDuLieu_onKeypress_Delete(h, c) {
             if (countRow == 0) {
                 Bang_GanGiaTriThatChoO(numParent, Bang_arrCSMaCot["bIsHasChild"], 'False');
                 Bang_arrLaHangCha[numParent] = false;
-                var nameColumn = Bang_arrGiaTri[numParent][Bang_arrCSMaCot["IsVNDToUSD"]] == "True" ? "fGiaTriBQP_VND" : "fGiaTriBQP_USD";
-                Bang_arrEdit[numParent][Bang_arrCSMaCot[nameColumn]] = true;
+                //var nameColumn = Bang_arrGiaTri[numParent][Bang_arrCSMaCot["IsVNDToUSD"]] == "True" ? "fGiaTriBQP_VND" : "fGiaTriBQP_USD";
+                //Bang_arrEdit[numParent][Bang_arrCSMaCot[nameColumn]] = true;
+                Bang_arrEdit[numParent][Bang_arrCSMaCot["fGiaTriTTCP_USD"]] = true;
+                Bang_arrEdit[numParent][Bang_arrCSMaCot["fGiaTriBQP_VND"]] = true;
+                Bang_arrEdit[numParent][Bang_arrCSMaCot["fGiaTriBQP_USD"]] = true;
             }
 
         } else {
@@ -560,20 +589,25 @@ function BangDuLieu_onKeypress_Delete(h, c) {
                     if (Bang_arrGiaTri[p][Bang_arrCSMaCot["ID"]] == iID_ParentID) {
                         Bang_GanGiaTriThatChoO(p, Bang_arrCSMaCot["bIsHasChild"], 'True');
                         Bang_arrLaHangCha[p] = true;
-                        var nameColumn = Bang_arrGiaTri[p][Bang_arrCSMaCot["IsVNDToUSD"]] == "True" ? "fGiaTriBQP_VND" : "fGiaTriBQP_USD";
-                        Bang_arrEdit[p][Bang_arrCSMaCot[nameColumn]] = false;
+                        //var nameColumn = Bang_arrGiaTri[p][Bang_arrCSMaCot["IsVNDToUSD"]] == "True" ? "fGiaTriBQP_VND" : "fGiaTriBQP_USD";
+                        //Bang_arrEdit[p][Bang_arrCSMaCot[nameColumn]] = false;
+                        Bang_arrEdit[p][Bang_arrCSMaCot["fGiaTriTTCP_USD"]] = true;
+                        Bang_arrEdit[p][Bang_arrCSMaCot["fGiaTriBQP_VND"]] = true;
+                        Bang_arrEdit[p][Bang_arrCSMaCot["fGiaTriBQP_USD"]] = true;
                     }
                 }
             }
         }
         Bang_HienThiDuLieu();
+        CalculateSum(h, Bang_arrCSMaCot["fGiaTriTTCP_USD"]);
         CalculateSum(h, Bang_arrCSMaCot["fGiaTriBQP_VND"]);
         CalculateSum(h, Bang_arrCSMaCot["fGiaTriBQP_USD"]);
     }
 }
 
 function BangDuLieu_onKeypress_F9(h, c) {
-    $("#sTenNhiemVuChi, #sTenPhongBan, #sTenDonVi").val("");
+    //$("#sTenNhiemVuChi, #sTenPhongBan, #sTenDonVi").val("");
+    $("#sTenNhiemVuChi").val("");
     $(".sheet-search input.input-search").filter(":visible:first").focus();
     $("form.sheet-search").submit();
 }

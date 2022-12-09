@@ -9,8 +9,8 @@
 }
 
 <div class="tooltip-header-search">
-    <div class="col-sm-6" style="padding-left:0px;">
-        <span>
+    <div class="col-sm-5" style="padding-left:0px;">
+        @*<span>
             Kế hoạch giai đoạn - Năm:
             @if (Model.KHChiTietBQP_NVC.iLoai.HasValue)
             {
@@ -23,11 +23,11 @@
                     <span style="color: red">@Model.KHChiTietBQP_NVC.iNamKeHoach</span>
                 }
             }
-        </span><br />
-        <span>Kế hoạch tổng thể Thủ tướng Chính phủ phê duyệt: <span style="color: red">@Html.Raw(Html.Encode(Model.KHChiTietBQP_NVC.sSoKeHoachTTCP)) @(Model.KHChiTietBQP_NVC.dNgayKeHoachTTCP.HasValue ? "- " + Model.KHChiTietBQP_NVC.dNgayKeHoachTTCP.Value.ToString("dd/MM/yyyy") : "")</span></span><br />
-        <span>Kế hoạch chi tiết Bộ Quốc phòng phê duyệt: <span style="color: red">@Html.Raw(Html.Encode(Model.KHChiTietBQP_NVC.sSoKeHoachBQP)) @(Model.KHChiTietBQP_NVC.dNgayKeHoachBQP.HasValue ? "- " + Model.KHChiTietBQP_NVC.dNgayKeHoachBQP.Value.ToString("dd/MM/yyyy") : "")</span></span>
+        </span><br />*@
+        <span>Quyết định giai đoạn: <span style="color: red">@Model.KHChiTietBQP_NVC.iGiaiDoanTu - @Model.KHChiTietBQP_NVC.iGiaiDoanDen</span></span><br />
+        <span>Quyết định tổng thể Thủ tướng Chính phủ phê duyệt: <span style="color: red">@Html.Raw(Html.Encode(Model.KHChiTietBQP_NVC.sSoKeHoachBQP)) @(Model.KHChiTietBQP_NVC.dNgayKeHoachBQP.HasValue ? "- " + Model.KHChiTietBQP_NVC.dNgayKeHoachBQP.Value.ToString("dd/MM/yyyy") : "")</span></span>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-7">
         <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Xóa tìm kiếm</p>
         <label class="control-label pull-right" style="padding-left:20px;">F9: </label>
         <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Tìm kiếm</p>
@@ -36,8 +36,12 @@
         <label class="control-label pull-right" style="padding-left:20px;">F10: </label>
         <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Xóa</p>
         <label class="control-label pull-right" style="padding-left:20px;">Delete: </label>
-        <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Thêm chi tiết BQP</p>
-        <label class="control-label pull-right" style="color:red;">F2: </label>
+        @*<p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Thêm chi tiết BQP</p>
+        <label class="control-label pull-right" style="color:red;">F2: </label>*@
+        <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Thêm chương trình con</p>
+        <label class="control-label pull-right" style="padding-left:20px;color:red;">F2: </label>
+        <p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Thêm chương trình</p>
+        <label class="control-label pull-right" style="padding-left:20px;color:red;">F1: </label>
         @*<p class="pull-right" style="margin-top: 10px; font-size:14px">&nbsp;&nbsp;Thêm chi tiết BQP</p>
         <label class="control-label pull-right">F1: </label>*@
     </div>
@@ -78,7 +82,6 @@
             + "&iID_BQuanLyID=" + "@Model.NH_KHChiTietBQPModel.iID_BQuanLyID"
             + "&iID_DonViID=" + "@Model.NH_KHChiTietBQPModel.iID_DonViID"
             + "&isUseLastTTCP=" + "@Model.IsUseLastTTCP.ToString().ToLower()"
-            + "&IsVNDToUSD=" + "@ViewBag.IsVNDToUSD.ToString().ToLower()"
             + "&iID_TiGiaID=" + "@Model.iID_TiGiaID";
         $("#sheet").attr("src", url);
     }

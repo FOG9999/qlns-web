@@ -726,6 +726,7 @@
     <Content Include="App_Data\sql\QLVonDauTu\ThongTinGoiThau\get_QDDauTu_By_DuAnId.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\ThongTinGoiThau\dm_get_all_thongtingoithau.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\TKTCVaTongDuToan\vdt_get_hangmuc_qddautu_by_duanid.sql" />
+    <Content Include="App_Data\sql\QLVonDauTu\TKTCVaTongDuToan\vdt_get_listchiphihangmuc_chitiet_dutoan_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\TKTCVaTongDuToan\vdt_get_listchiphihangmuc_dutoan_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\TKTCVaTongDuToan\vdt_get_listgoithau_nhathau_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\TKTCVaTongDuToan\vdt_get_listchiphi_dutoan_by_id.sql" />
@@ -1901,6 +1902,12 @@
     </Content>
     <Content Include="Areas\QLVonDauTu\ReportExcelForm\KeHoachTrungHan\rpt_KeHoachtrungHanDeXuat_Export_New.xlsx" />
     <Content Include="Areas\QLVonDauTu\ReportExcelForm\KeHoachTrungHan\rpt_KeHoachTrungHanDeXuat_ChuyenTiep_new.xlsx" />
+	<Content Include="Areas\QLVonDauTu\ReportExcelForm\ThucHienThanhToan\rpt_vdt_thuchienthanhtoan_danhsach.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\ThongTri\rpt_vdt_thongtri_danhsach.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Areas\QuyetToan\Controllers\ReportController.cs1" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\Index.cshtml" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\_list.cshtml" />
@@ -4794,6 +4801,7 @@
     <Content Include="ScriptDatabase\StoreChange\proc_get_all_vdt_kehoachvonung_paging.sql" />
     <Content Include="ScriptDatabase\StoreChange\proc_vdt_khv_getdatakhvuduocduyet_chitiet.sql" />
     <Content Include="ScriptDatabase\StoreChange\sp_ke_hoach_trung_han_de_xuat_chuyen_tiep_report.sql" />
+    <Content Include="ScriptDatabase\StoreChange\sp_vdt_khlcnt_get_goithau_detail_by_chungtu_2.sql" />
     <Content Include="ScriptDatabase\StoreChange\sp_vdt_khv_ke_hoach_5_nam_de_xuat_export_new.sql" />
     <Content Include="ScriptDatabase\StoreChange\sp_vdt_rpt_tinh_hinh_thuc_hien_du_an.sql" />
     <Content Include="ScriptDatabase\StoreChange\them_sua_cot_trong_bang_KeHoachVonUng_DeXuat_DuocDuyet.sql" />
@@ -6950,7 +6958,9 @@
     </Content>
     <Content Include="Report_ExcelFrom\QLNH\rpt_ThucHienNganSach_GiaiDoanTo.xlsx" />
     <Content Include="Report_ExcelFrom\QLNH\rpt_BaoCaoThucHienNganSach.xlsx" />
-    <None Include="Report_ExcelFrom\VonDauTu\rpt_ThongTriQuyetToan.xls" />
+    <None Include="Report_ExcelFrom\VonDauTu\rpt_ThongTriQuyetToan.xls">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Webh.Debug.config">
       <DependentUpon>Webh.config</DependentUpon>
     </None>

@@ -62,11 +62,34 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.DanhMuc
         [HttpPost]
         public JsonResult LoaiChiPhiSave(VDT_DM_ChiPhi data)
         {
-            if (!_dmService.SaveLoaiChiPhi(data, Username))
+            if(data == null)
             {
-                return Json(new { bIsComplete = false, sMessError = "Không cập nhật được dữ liệu !" }, JsonRequestBehavior.AllowGet);
+                return Json(new { bIsComplete = false, sMessError = "Không có dữ liệu. Vui lòng nhập dữ liệu !" }, JsonRequestBehavior.AllowGet);
+
             }
-            return Json(new { bIsComplete = true }, JsonRequestBehavior.AllowGet);
+            else
+            {
+
+                if (_dmService.CheckExistMaLoaiChiPhi(data.sMaChiPhi,data.iID_ChiPhi))
+                {
+                    return Json(new { bIsComplete = false, sMessError = "Mã chi phí không được trùng nhau. Vui lòng nhập lại mã chi phí !" }, JsonRequestBehavior.AllowGet);
+
+                }
+
+                if (_dmService.CheckExistIthuTu(data.iThuTu,data.iID_ChiPhi))
+                {
+                    return Json(new { bIsComplete = false, sMessError = "Thứ tự không được trùng nhau. Vui lòng nhập lại thứ tự !" }, JsonRequestBehavior.AllowGet);
+
+                }
+
+                if (!_dmService.SaveLoaiChiPhi(data, Username))
+                {
+                    return Json(new { bIsComplete = false, sMessError = "Không cập nhật được dữ liệu !" }, JsonRequestBehavior.AllowGet);
+                }
+                return Json(new { bIsComplete = true }, JsonRequestBehavior.AllowGet);
+            }
+
+
         }
 
     }

@@ -142,7 +142,11 @@ function Save() {
 }
 
 function ValidateData(data) {
-    var Title = 'Lỗi thêm mới/chỉnh sửa đơn vị thực hiện dự án';
+    var Title = 'Lỗi thêm mới đơn vị thực hiện dự án';
+    if (data.iID_DonVi != undefined && data.iID_DonVi != null && data.iID_DonVi != '' && data.iID_DonVi != GUID_EMPTY) {
+        Title = 'Lỗi chỉnh sửa đơn vị thực hiện dự án';
+    }
+
     var Messages = [];
 
     if (data.iID_MaDonVi == null || data.iID_MaDonVi == "") {

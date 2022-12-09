@@ -375,6 +375,7 @@ function RenderChiPhi(lstChiPhi) {
     var lstStrChiPhi = [];
     $.each(lstChiPhi, function (index, item) {
         lstStrChiPhi.push("<tr data-id='" + item.iID_DuAn_ChiPhi + "' data-parent='" + item.iID_ChiPhi_Parent + "' data-fTienPheDuyetQDDT='" + item.fTienPheDuyetQDDT + "' data-iIDChiPhiID='" + item.iID_ChiPhiID + "'>");
+        lstStrChiPhi.push('<td class="width-50" style="text-align: center;">' + (index + 1) + "</td>");
         lstStrChiPhi.push("<td><input type='text' class='sTenChiPhi form-control' value='" + item.sTenChiPhi + "'></td>");
         lstStrChiPhi.push("<td style='text-align:right'>" + FormatNumber(item.fTienPheDuyetQDDT) + "</td>");
         if (bIsDieuChinh == "True") {

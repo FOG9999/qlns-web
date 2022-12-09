@@ -65,13 +65,16 @@ namespace Viettel.Domain.DomainModel
         public virtual string TM { get; set; }
         public virtual string TTM { get; set; }
         public virtual string NG { get; set; }
+        public virtual string TNG1 { get; set; }
+        public virtual string TNG2 { get; set; }
+        public virtual Guid? iID_MucLucNS { get; set; }
     }
 
     /// <summary>
     /// A class which represents the DM_VatTu_NhaCungCap table.
     /// </summary>
-	/*[Table("DM_VatTu_NhaCungCap")]*/
-	public partial class DM_VatTu_NhaCungCap
+    /*[Table("DM_VatTu_NhaCungCap")]*/
+    public partial class DM_VatTu_NhaCungCap
 	{
 		[Key]
 		public virtual Guid iID_VatTu_NhaCungCap { get; set; }
@@ -4249,6 +4252,7 @@ namespace Viettel.Domain.DomainModel
 		[MaxLength(50)]
 		public virtual string iID_MaDonVi { get; set; }
 		public virtual Guid? iID_DonViID { get; set; }
+		public virtual double? fGiaTriTTCP_USD { get; set; }
 		public virtual double? fGiaTriUSD { get; set; }
 		public virtual double? fGiaTriVND { get; set; }
 		[MaxLength(255)]
@@ -4259,9 +4263,21 @@ namespace Viettel.Domain.DomainModel
 		public virtual Guid? iID_ParentAdjustID { get; set; }
 	}
 
-    /// <summary>
-    /// A class which represents the L_DanhMucLoaiCongThuc table.
-    /// </summary>
+	/// <summary>
+	/// A class which represents the NH_KHChiTietBQPNhiemVuChi_PhongBan table.
+	/// </summary>
+	/*[Table("NH_KHChiTietBQPNhiemVuChi_PhongBan")]*/
+	public partial class NH_KHChiTietBQPNhiemVuChi_PhongBan
+	{
+		[Key]
+		public virtual Guid ID { get; set; }
+		public virtual Guid? iID_KHChiTietBQP_NhiemVuChiID { get; set; }
+		public virtual Guid? iID_NS_PhongBanID { get; set; }
+	}
+
+	/// <summary>
+	/// A class which represents the L_DanhMucLoaiCongThuc table.
+	/// </summary>
 	/*[Table("L_DanhMucLoaiCongThuc")]*/
 	public partial class L_DanhMucLoaiCongThuc
 	{
@@ -10486,6 +10502,7 @@ namespace Viettel.Domain.DomainModel
 		[Key]
 		public virtual Guid ID { get; set; }
 		public virtual Guid? iID_DonVi { get; set; }
+		public virtual Guid? iID_MaPhongBan { get; set; }
 		public virtual string iID_MaDonVi { get; set; }
 		public virtual string sSoDeNghi { get; set; }
 		public virtual DateTime? dNgayDeNghi { get; set; }
@@ -11145,6 +11162,8 @@ namespace Viettel.Domain.DomainModel
 		public virtual Guid ID { get; set; }
 		public virtual Guid? iID_HopDongGocID { get; set; }
 		public virtual Guid? iID_BQuanLyID { get; set; }
+		public virtual Guid? iID_NH_KHChiTietBQP { get; set; }
+		public virtual Guid? iID_MaPhongBan { get; set; }
 		public virtual string iID_MaDonVi { get; set; }
 		public virtual Guid? iID_DonViID { get; set; }
 		public virtual Guid? iID_KHCTBQP_ChuongTrinhID { get; set; }

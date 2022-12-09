@@ -54,6 +54,16 @@ function SaveData() {
     data.iThuTu = parseInt($("#txt_ThuTu").val());
     data.iID_Parent = $("#txt_IdParent :selected").val();
 
+    data.L = $("#txt_L").val();
+    data.K = $("#txt_K").val();
+    data.LNS = $("#txt_LNS").val();
+    data.M = $("#txt_M").val();
+    data.TM = $("#txt_TM").val();
+    data.TTM = $("#txt_TTM").val();
+    data.NG = $("#txt_NG").val();
+    data.TNG1 = $("#txt_TNG1").val();
+    data.TNG2 = $("#txt_TNG2").val();
+
     if (!ValidateData(data)) {
         return false;
     }
@@ -146,6 +156,9 @@ function ViewDetail(id) {
 
 function ValidateData(data) {
     var Title = "Lỗi thêm mới danh mục loại chi phí";
+    if ($("#txt_ID_LoaiCongTrinh").val() != GUID_EMPTY) {
+        Title = "Lỗi chỉnh sửa danh mục loại chi phí";
+    }
     var sMessError = [];
 
     if (data.sMaLoaiCongTrinh == null || data.sMaLoaiCongTrinh == "") {

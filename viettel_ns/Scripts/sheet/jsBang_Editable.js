@@ -331,8 +331,13 @@
                     });
                 }
 
+                var isSubmited = false;
                 form.submit(function (e) {
-
+                    if (isSubmited) {
+                        isSubmited = false;
+                        return false;
+                    }
+                    isSubmited = true;
                     if (t) {
                         clearTimeout(t);
                     }
@@ -522,6 +527,14 @@
                     return (input);
                 }
             },
+            multipleselect: {
+                element: function (settings, original) {
+                    var input = $('<input id="txtONhapDuLieu_Autocomplete" onfocus="txtONhapDuLieu_OnFocus(this);"/>');
+                    input.attr('autocomplete', 'off');
+                    $(this).append(input);
+                    return (input);
+                }
+            },
             datetime: {
                 element: function (settings, original) {
                     var input = $('<input id="txtONhapDuLieu_datetime"/>');
@@ -624,7 +637,6 @@ function txtONhapDuLieu_OnFocus(txt) {
         //var height0 = Bang_DoRongHang;
         //$(txt).css('width', width0);
         //$(txt).css('height', height0 - 5);
-
         switch (Bang_arrType[c_DuLieu]) {
             case 3:
                 $(txt).autocomplete({
@@ -646,6 +658,33 @@ function txtONhapDuLieu_OnFocus(txt) {
                     return Bang_txtONhapDuLieu_Autocomplete_renderItem(txt, ul, item);
                 }
                 break;
+            case 5:
+                $(txt).autocomplete({
+                    minLength: 0,
+                    source: function (request, response) {
+                        // delegate back to autocomplete, but extract the last term
+                        Bang_txtONhapDuLieu_Autocomplete_onSource(txt, request, response);
+                    },
+                    focus: function (event, ui) {
+                        event.preventDefault();
+                        return false;
+                    },
+                    select: function (event, ui) {
+                        var terms = split(this.value);
+                        // remove the current input
+                        terms.pop();
+                        // add the selected item
+                        terms.push(ui.item.label);
+                        // add placeholder to get the comma-and-space at the end
+                        terms.push("");
+                        this.value = terms.join(", ");
+                        this.value = this.value.substring(0, this.value.length - 2);
+                        $(txt).val(this.value);
+                        Bang_txtONhapDuLieu_Autocomplete_onSelect(txt, event, ui);
+                        return false;
+                    }
+                });
+                break;
         }
 
         if (typeof $(txt).attr('sKyTuVuaNhap') == "undefined" || $(txt).attr('sKyTuVuaNhap') == "") {
@@ -662,10 +701,13 @@ function txtONhapDuLieu_OnFocus(txt) {
                 $(txt).val(KyTuVuaNhap);
             }
 
-            setSelectionRange(txt, 1, 1);
+            if (Bang_arrType[c_DuLieu] == 5) {
 
+            } else {
+                setSelectionRange(txt, 1, 1);
+            }
 
-            if (Bang_arrType[c_DuLieu] == 3) {
+            if (Bang_arrType[c_DuLieu] == 3 || Bang_arrType[c_DuLieu] == 5) {
                 //Truong hop doi tuong la Autocomplete se hien thi list
                 $(txt).autocomplete("search", KyTuVuaNhap);
             }
@@ -684,4 +726,12 @@ function txtONhapDuLieu_OnFocus(txt) {
    */
 
     Bang_dSoLanFocus = 0;
+
+    function split(val) {
+        return val.split(/,\s*/);
+    }
+
+    function extractLast(term) {
+        return split(term).pop();
+    }
 }

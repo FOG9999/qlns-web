@@ -80,9 +80,9 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
             ViewBag.ListKHChiTietBQP = lstKHBQP;
             ViewBag.ListKHTongTheTTCP = _qlnhService.getLookupKHTTCP().ToList();
 
-            var lstTiGia = _qlnhService.GetNHDMTiGiaList().ToList();
-            lstTiGia.Insert(0, new NH_DM_TiGia { ID = Guid.Empty, sTenTiGia = "--Chọn tỉ giá--" });
-            ViewBag.ListTiGia = lstTiGia;
+            //var lstTiGia = _qlnhService.GetNHDMTiGiaList().ToList();
+            //lstTiGia.Insert(0, new NH_DM_TiGia { ID = Guid.Empty, sTenTiGia = "--Chọn tỉ giá--" });
+            //ViewBag.ListTiGia = lstTiGia;
 
             return PartialView("_modalCreateOrUpdate", result);
         }
@@ -94,11 +94,11 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
             try
             {
                 //keHoachChiTietBQP = HttpUtility.HtmlDecode(keHoachChiTietBQP);
-                foreach (var item in lstNhiemVuChis)
-                {
-                    item.iID_MaDonVi = HttpUtility.HtmlDecode(item.iID_MaDonVi);
-                    item.sTenNhiemVuChi = HttpUtility.HtmlDecode(item.sTenNhiemVuChi);
-                }
+                //foreach (var item in lstNhiemVuChis)
+                //{
+                //    item.iID_MaDonVi = HttpUtility.HtmlDecode(item.iID_MaDonVi);
+                //    item.sTenNhiemVuChi = HttpUtility.HtmlDecode(item.sTenNhiemVuChi);
+                //}
 
                 var kHChiTietBQP = TempData["KHChiTietBQP"];
                 //var khct = JsonConvert.DeserializeObject<NH_KHChiTietBQP>(keHoachChiTietBQP);
@@ -221,17 +221,17 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
                 result.sSoKeHoachBQP = input.sSoKeHoach;
                 result.dNgayKeHoachBQP = input.dNgayKeHoach;
 
-                if (input.iID_TiGiaID.HasValue)
-                {
-                    var lstTiGiaChiTiet = _qlnhService.GetTiGiaChiTietByTiGiaId(input.iID_TiGiaID.Value);
-                    var checkTiGiaFromVND = lstTiGiaChiTiet.FirstOrDefault(x => x.sMaTienTeGoc.Trim().ToUpper() == "VND");
-                    ViewBag.IsVNDToUSD = checkTiGiaFromVND != null;
-                }
-                else
-                {
-                    ViewBag.ListTiGiaChiTiet = new List<NH_DM_TiGia_ChiTiet_ViewModel>();
-                    ViewBag.IsVNDToUSD = false;
-                }
+                //if (input.iID_TiGiaID.HasValue)
+                //{
+                //    var lstTiGiaChiTiet = _qlnhService.GetTiGiaChiTietByTiGiaId(input.iID_TiGiaID.Value);
+                //    var checkTiGiaFromVND = lstTiGiaChiTiet.FirstOrDefault(x => x.sMaTienTeGoc.Trim().ToUpper() == "VND");
+                //    ViewBag.IsVNDToUSD = checkTiGiaFromVND != null;
+                //}
+                //else
+                //{
+                //    ViewBag.ListTiGiaChiTiet = new List<NH_DM_TiGia_ChiTiet_ViewModel>();
+                //    ViewBag.IsVNDToUSD = false;
+                //}
 
                 KeHoachChiTietBQPGridViewModel khChiTietGridViewModel = new KeHoachChiTietBQPGridViewModel();
                 khChiTietGridViewModel.KHChiTietBQP_NVC = result;
@@ -242,7 +242,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
             }
         }
 
-        public ActionResult SheetFrame(string state, Guid? KHTTCP_ID, Guid? KHBQP_ID, Guid? iID_BQuanLyID, Guid? iID_DonViID, bool isUseLastTTCP, bool IsVNDToUSD, Guid? iID_TiGiaID, string sTenNhiemVuChi, string sTenPhongBan, string sTenDonVi, string filter = null)
+        public ActionResult SheetFrame(string state, Guid? KHTTCP_ID, Guid? KHBQP_ID, Guid? iID_BQuanLyID, Guid? iID_DonViID, bool isUseLastTTCP, Guid? iID_TiGiaID, string sTenNhiemVuChi, string sTenPhongBan, string sTenDonVi, string filter = null)
         {
             var filters = filter == null ? Request.QueryString.ToDictionary() : JsonConvert.DeserializeObject<Dictionary<string, string>>(filter);
             var sheet = new KeHoachChiTietBQP_SheetTable(state, KHTTCP_ID, KHBQP_ID, iID_BQuanLyID, iID_DonViID, isUseLastTTCP, iID_TiGiaID, sTenNhiemVuChi, sTenPhongBan, sTenDonVi, filters);
@@ -259,7 +259,7 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
                 KHChiTietBQP_NVC = KHChiTietBQP
             };
             vm.Sheet.AvaiableKeys = new Dictionary<string, string>();
-            ViewBag.IsVNDToUSD = IsVNDToUSD;
+            //ViewBag.IsVNDToUSD = IsVNDToUSD;
             if (TempData["KHChiTietBQP"] != null)
             {
                 TempData.Keep("KHChiTietBQP");

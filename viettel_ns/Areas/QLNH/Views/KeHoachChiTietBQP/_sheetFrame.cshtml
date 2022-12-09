@@ -25,7 +25,6 @@
     @Html.Partial("_SheetScript")
     <script src="~/Scripts/QLNH/KeHoachChiTietBQP/jsNH_KeHoachChiTietBQP_Table.js"></script>
     <script>
-        var isVNDToUSD = "@ViewBag.IsVNDToUSD";
         $(document).ready(function () {
             Bang_Url_getDanhSach = '@Url.Action("GetCustomList", "Public", new { area = "" })';
             Bang_Url_getGiaTri = '@Url.Action("GetCustomGiaTri", "Public", new { area = "" })';
@@ -41,15 +40,15 @@
         document.addEventListener('keydown', eventKey);
         function eventKey(e) {
             if (e != undefined && e != null) {
-                //if (e.key == "F1") {
-                //    var h = Bang_keys.Row();
-                //    var c = Bang_keys.Col() - Bang_nC_Fixed;
-                //    if (h == null) {
-                //        BangDuLieu_onKeypress_F1_NoRow(0, undefined);
-                //    } else {
-                //        BangDuLieu_onKeypress_F1_NoRow(h, c);
-                //    }
-                //}
+                if (e.key == "F1") {
+                    var h = Bang_keys.Row();
+                    var c = Bang_keys.Col() - Bang_nC_Fixed;
+                    if (h == null) {
+                        BangDuLieu_onKeypress_F1_NoRow(0, undefined);
+                    } else {
+                        BangDuLieu_onKeypress_F1_NoRow(h, c);
+                    }
+                }
                 if (e.key == "F2") {
                     var h = Bang_keys.Row();
                     var c = Bang_keys.Col() - Bang_nC_Fixed;
@@ -75,7 +74,7 @@
                     sMaThuTuIndex: -1,
                     sTenNhiemVuChiIndex: -1,
                     sTenPhongBanIndex: -1,
-                    sTenDonViIndex: -1,
+/*                    sTenDonViIndex: -1,*/
                     fGiaTriTTCP_USDIndex: -1,
                     fGiaTriBQP_USDIndex: -1,
                     fGiaTriBQP_VNDIndex: -1,
@@ -100,9 +99,9 @@
                     else if (sKey == "sTenPhongBan") {
                         dataInputIndex.sTenPhongBanIndex = c;
                     }
-                    else if (sKey == "sTenDonVi") {
-                        dataInputIndex.sTenDonViIndex = c;
-                    }
+                    //else if (sKey == "sTenDonVi") {
+                    //    dataInputIndex.sTenDonViIndex = c;
+                    //}
                     else if (sKey == "fGiaTriTTCP_USD") {
                         dataInputIndex.fGiaTriTTCP_USDIndex = c;
                     }
@@ -118,36 +117,41 @@
                     else if (sKey == "iID_BQuanLyID") {
                         dataInputIndex.iID_BQuanLyIDIndex = c;
                     }
-                    else if (sKey == "bIsTTCP") {
-                        dataInputIndex.bIsTTCPIndex = c;
-                    }
+                    //else if (sKey == "bIsTTCP") {
+                    //    dataInputIndex.bIsTTCPIndex = c;
+                    //}
                     else if (sKey == "iID_KHTTTTCP_NhiemVuChiID") {
                         dataInputIndex.iID_KHTTTTCP_NhiemVuChiIDIndex = c;
                     }
                     else if (sKey == "iID_ParentID") {
                         dataInputIndex.iID_ParentIDIndex = c;
                     }
-                    else if (sKey == "iID_DonViID") {
-                        dataInputIndex.iID_DonViIDIndex = c;
-                    }
-                    else if (sKey == "iID_MaDonVi") {
-                        dataInputIndex.iID_MaDonViIndex = c;
-                    }
+                    //else if (sKey == "iID_DonViID") {
+                    //    dataInputIndex.iID_DonViIDIndex = c;
+                    //}
+                    //else if (sKey == "iID_MaDonVi") {
+                    //    dataInputIndex.iID_MaDonViIndex = c;
+                    //}
                     else if (sKey == "bIsHasChild") {
                         dataInputIndex.bIsHasChildIndex = c;
                     }
-                    else if (sKey == "bIsAction") {
-                        dataInputIndex.bIsActionIndex = c;
-                    }
+                    //else if (sKey == "bIsAction") {
+                    //    dataInputIndex.bIsActionIndex = c;
+                    //}
                 }
-                var bIsTTCP = Bang_arrGiaTri[h][dataInputIndex["bIsTTCPIndex"]];
-                var bIsHasChild = Bang_arrGiaTri[h][dataInputIndex["bIsHasChildIndex"]];
-                Bang_arrEdit[h][dataInputIndex["sTenNhiemVuChiIndex"]] = !(bIsTTCP == "True");
-                Bang_arrEdit[h][dataInputIndex["sTenPhongBanIndex"]] = false;
-                Bang_arrEdit[h][dataInputIndex["sTenDonViIndex"]] = (bIsTTCP != "True" || (bIsTTCP == "True" && bIsHasChild != "True"));
-                Bang_arrEdit[h][dataInputIndex["fGiaTriTTCP_USDIndex"]] = false;
-                Bang_arrEdit[h][dataInputIndex["fGiaTriBQP_USDIndex"]] = (bIsHasChild == "True" ? false : (isVNDToUSD == "True" ? false : true));
-                Bang_arrEdit[h][dataInputIndex["fGiaTriBQP_VNDIndex"]] = (bIsHasChild == "True" ? false : (isVNDToUSD != "True" ? false : true));
+                //var bIsTTCP = Bang_arrGiaTri[h][dataInputIndex["bIsTTCPIndex"]];
+                //var bIsHasChild = Bang_arrGiaTri[h][dataInputIndex["bIsHasChildIndex"]];
+                //Bang_arrEdit[h][dataInputIndex["sTenNhiemVuChiIndex"]] = !(bIsTTCP == "True");
+                Bang_arrEdit[h][dataInputIndex["sTenNhiemVuChiIndex"]] = true;
+                Bang_arrEdit[h][dataInputIndex["sTenPhongBanIndex"]] = true;
+                //Bang_arrEdit[h][dataInputIndex["sTenPhongBanIndex"]] = false;
+                /*Bang_arrEdit[h][dataInputIndex["sTenDonViIndex"]] = (bIsTTCP != "True" || (bIsTTCP == "True" && bIsHasChild != "True"));*/
+                //Bang_arrEdit[h][dataInputIndex["fGiaTriTTCP_USDIndex"]] = false;
+                //Bang_arrEdit[h][dataInputIndex["fGiaTriBQP_USDIndex"]] = (bIsHasChild == "True" ? false : (isVNDToUSD == "True" ? false : true));
+                //Bang_arrEdit[h][dataInputIndex["fGiaTriBQP_VNDIndex"]] = (bIsHasChild == "True" ? false : (isVNDToUSD != "True" ? false : true));
+                Bang_arrEdit[h][dataInputIndex["fGiaTriTTCP_USDIndex"]] = true;
+                Bang_arrEdit[h][dataInputIndex["fGiaTriBQP_USDIndex"]] = true;
+                Bang_arrEdit[h][dataInputIndex["fGiaTriBQP_VNDIndex"]] = true;
             }
         }
     </script>

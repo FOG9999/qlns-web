@@ -75,13 +75,7 @@ namespace VIETTEL.Areas.DanhMuc.Controllers
 
             if (data != null)
             {
-                model.iID_LoaiCongTrinh = data.iID_LoaiCongTrinh;
-                model.iID_Parent = data.iID_Parent;
-                model.sMaLoaiCongTrinh = data.sMaLoaiCongTrinh;
-                model.sTenLoaiCongTrinh = data.sTenLoaiCongTrinh;
-                model.sTenVietTat = data.sTenVietTat;
-                model.sMoTa = data.sMoTa;
-                model.iThuTu = data.iThuTu;
+                model.MapFrom(data);
                 var listModel = _aService.GetAllDMLoaiCongTrinh();
                 if (listModel != null && listModel.Any())
                 {

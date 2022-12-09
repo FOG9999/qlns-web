@@ -110,7 +110,7 @@ function GetDataModel() {
 function Save() {
     var listObjSave = [];
     var data = GetDataModel();
-    if (!ValidationBeforeSave()) return;
+   // if (!ValidationBeforeSave()) return;
     listObjSave = GetDataChiTietTable();
     $.ajax({
         type: "POST",

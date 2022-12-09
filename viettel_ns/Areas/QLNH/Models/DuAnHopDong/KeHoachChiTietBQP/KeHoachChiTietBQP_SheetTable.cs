@@ -35,10 +35,10 @@ namespace VIETTEL.Areas.QLNH.Models.DuAnHopDong.KeHoachChiTietBQP
                 {
                     conditions.Add(c.ColumnName, KHBQP_ID.ToString());
                 }
-                else if (c.ColumnName == "IsVNDToUSD")
-                {
-                    conditions.Add(c.ColumnName, "");
-                }
+                //else if (c.ColumnName == "IsVNDToUSD")
+                //{
+                //    conditions.Add(c.ColumnName, "");
+                //}
                 else 
                 {
                     conditions.Add(c.ColumnName, filters.ContainsKey(c.ColumnName) ? filters[c.ColumnName] : "");
@@ -54,8 +54,8 @@ namespace VIETTEL.Areas.QLNH.Models.DuAnHopDong.KeHoachChiTietBQP
             NH_KHChiTietBQP_NVCViewModel khBQP_NVCViewModel = _qlnhService.GetDetailKeHoachChiTietBQP(state, kHTTCP_ID, kHBQP_ID, iID_BQuanLyID, iID_DonViID, sTenNhiemVuChi, sTenPhongBan, sTenDonVi, isUseLastTTCP);
 
             dtChiTiet = ToDataTable<NH_KHChiTietBQP_NVCModel>(khBQP_NVCViewModel.Items);
-            dtChiTiet.Columns.Add("IsVNDToUSD", typeof(bool));
-            dtChiTiet.Columns.Add("TiGia", typeof(float));
+            //dtChiTiet.Columns.Add("IsVNDToUSD", typeof(bool));
+            //dtChiTiet.Columns.Add("TiGia", typeof(float));
 
             dtChiTiet_Cu = dtChiTiet.Copy();
 
@@ -68,7 +68,7 @@ namespace VIETTEL.Areas.QLNH.Models.DuAnHopDong.KeHoachChiTietBQP
 
         private void fillData(Guid? iID_TiGiaID)
         {
-            updateSumRows(iID_TiGiaID);
+            //updateSumRows(iID_TiGiaID);
             updateColumnIDsKHCTBQP("ID");
             updateColumns();
             updateColumnsParent();
@@ -201,24 +201,24 @@ namespace VIETTEL.Areas.QLNH.Models.DuAnHopDong.KeHoachChiTietBQP
                 // cot fix
                 new SheetColumn(columnName: "sMaThuTu", header: "STT", columnWidth: 100, align: "left", isReadonly: true),
                 new SheetColumn(columnName: "sTenNhiemVuChi", header: "Tên chương trình, nhiệm vụ chi", hasSearch: true, columnWidth: 300, align: "left", isReadonly: false),
-                new SheetColumn(columnName: "sTenPhongBan", header: "B Quản lý", hasSearch: true, columnWidth: 220, align: "left", isReadonly: true),
-                new SheetColumn(columnName: "sTenDonVi", header: "Đơn vị", hasSearch: true, columnWidth: 220, align: "left", dataType: 3, isReadonly: false),
-                new SheetColumn(columnName: "fGiaTriTTCP_USD", header: "Giá trị TTCP phê duyệt (USD)", columnWidth: 200, align: "right", isReadonly: true, dataType: 1),
+                new SheetColumn(columnName: "sTenPhongBan", header: "B Quản lý", columnWidth: 220, align: "left", isReadonly: false, dataType: 5),
+                //new SheetColumn(columnName: "sTenDonVi", header: "Đơn vị", hasSearch: true, columnWidth: 220, align: "left", dataType: 3, isReadonly: false),
+                new SheetColumn(columnName: "fGiaTriTTCP_USD", header: "Giá trị TTCP phê duyệt (USD)", columnWidth: 200, align: "right", isReadonly: false, dataType: 1),
                 new SheetColumn(columnName: "fGiaTriBQP_USD", header: "Giá trị BQP phê duyệt (USD)", columnWidth: 200, align: "right", isReadonly: false, dataType: 1, format: "2"),
                 new SheetColumn(columnName: "fGiaTriBQP_VND", header: "Giá trị BQP phê duyệt (VND)", columnWidth: 200, align: "right", isReadonly: false, dataType: 1),
 
                 // cot khac
                 new SheetColumn(columnName: "ID", isHidden: true),
-                new SheetColumn(columnName: "iID_BQuanLyID", isHidden: true),
-                new SheetColumn(columnName: "bIsTTCP", isHidden: true),
+                //new SheetColumn(columnName: "iID_BQuanLyID", isHidden: true),
+                //new SheetColumn(columnName: "bIsTTCP", isHidden: true),
                 new SheetColumn(columnName: "iID_KHTTTTCP_NhiemVuChiID", isHidden: true),
                 new SheetColumn(columnName: "iID_ParentID", isHidden: true),
-                new SheetColumn(columnName: "iID_DonViID", isHidden: true),
-                new SheetColumn(columnName: "iID_MaDonVi", isHidden: true),
+                //new SheetColumn(columnName: "iID_DonViID", isHidden: true),
+                //new SheetColumn(columnName: "iID_MaDonVi", isHidden: true),
                 new SheetColumn(columnName: "bIsHasChild", isHidden: true),
                 new SheetColumn(columnName: "bIsAction", isHidden: true),
-                new SheetColumn(columnName: "IsVNDToUSD", isHidden: true, hasSearch: true),
-                new SheetColumn(columnName: "TiGia", isHidden: true),
+                //new SheetColumn(columnName: "IsVNDToUSD", isHidden: true, hasSearch: true),
+                //new SheetColumn(columnName: "TiGia", isHidden: true),
                 new SheetColumn(columnName: "isAdd", isHidden: true),
                 new SheetColumn(columnName: "state", isHidden: true, hasSearch: true),
                 new SheetColumn(columnName: "KHTTCP_ID", isHidden: true, hasSearch: true),

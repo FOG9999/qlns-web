@@ -168,8 +168,6 @@ function RenderHangMuc(lstHangMucByChiPhi) {
             lstStrHangMuc.push("<td class='fChenhLech' style='text-align:right'></td>");
         }
 
-        lstStrHangMuc.push("<td class='width-100 text-center'>");
-        lstStrHangMuc.push("</td>");
         lstStrHangMuc.push("</tr>");
         if (item.iID_ParentID == null) {
             fGiaTriPheDuyetDuAn = fGiaTriPheDuyetDuAn + item.fTienPheDuyetQDDT;

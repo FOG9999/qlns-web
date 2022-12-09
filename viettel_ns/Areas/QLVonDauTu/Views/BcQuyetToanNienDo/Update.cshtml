@@ -141,19 +141,19 @@
             $("#drpDonViQuanLy").change(function (e) {
                 RenderGridView();
             });
-            $(".currently").on("change", function () {
-                if ($(this).val() == null) {
-                    $(this).val(0);
-                } else {
-                    if ($.isNumeric($(this).val())) {
-                        var sNumber = Number($(this).val()).toLocaleString('vi-VN');
-                        $(this).val(sNumber);
-                    }
-                    else {
-                        $(this).val(0);
-                    }
-                }
-            });
+            //$(".currently").on("change", function () {
+            //    if ($(this).val() == null) {
+            //        $(this).val(0);
+            //    } else {
+            //        if ($.isNumeric($(this).val())) {
+            //            var sNumber = Number($(this).val()).toLocaleString('vi-VN');
+            //            $(this).val(sNumber);
+            //        }
+            //        else {
+            //            $(this).val(0);
+            //        }
+            //    }
+            //});
             /*$("#drpLoaiThanhToan").change();*/
         });
     </script>

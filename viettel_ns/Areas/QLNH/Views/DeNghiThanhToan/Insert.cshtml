@@ -22,9 +22,36 @@
                         <hr class='color-background-red' />
                         <div class="form-group row">
                             <div class="col-sm-2">
-                                <label for="idonvi">Đơn vị</label>
+                                <label for="slbChuongTrinh">Tên chương trình</label>
                                 @Helpers.Required()
-                                <select id="idonvi" name="idonvi" class="form-control" onchange="onChangeDonVi();">
+                                <select id="slbChuongTrinh" name="slbChuongTrinh" class="form-control" onchange="ChangeBQuanLySelect()">
+                                    @if (ViewBag.ListChuongTrinh != null)
+                                    {
+                                        foreach (var chuongtrinh in (List<NH_KHChiTietBQP_NhiemVuChi>)ViewBag.ListChuongTrinh)
+                                        {
+                                            <option value="@chuongtrinh.ID">@Html.Raw(Html.Encode(chuongtrinh.sTenNhiemVuChi))</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="slbBQuanLy">B quản lý</label>
+                                @Helpers.Required()
+                                <select id="slbBQuanLy" name="slbBQuanLy" class="form-control" onchange="ChangeDonViSelect()">
+                                    @if (ViewBag.ListPhongBan != null)
+                                    {
+                                        foreach (var phongban in (List<NS_PhongBan>)ViewBag.ListPhongBan)
+                                        {
+                                            <option value="@phongban.iID_MaPhongBan" >@Html.Raw(Html.Encode(phongban.sTen))</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <label for="slbDonVi">Đơn vị</label>
+                                @Helpers.Required()
+                                <select id="slbDonVi" name="slbDonVi" class="form-control">
                                     <option value="" data-madonvi="">--Chọn đơn vị--</option>
                                     @if (ViewBag.lstNSDonVi != null)
                                     {
@@ -58,11 +85,10 @@
                                     <option value="2">Chi trong nước</option>
                                 </select>
                             </div>
-                            <div class="col-sm-2">
-                                <label for="itenchuongtrinh">Tên chương trình</label>
-                                @Helpers.Required()
-                                @Html.DropDownList("itenchuongtrinh", (SelectList)(ViewBag.lstNhiemVuChi), "--Chọn nhiệm vụ chi--", new { @class = "form-control", @id = "itenchuongtrinh", @onchange = "onChangeNhiemVuChi();" })
-                            </div>
+
+                        </div>
+
+                        <div class="form-group row">
                             <div class="col-sm-2">
                                 <label for="ichudautu">Chủ đầu tư</label>
                                 @Helpers.Required()
@@ -77,9 +103,6 @@
                                     }
                                 </select>
                             </div>
-                        </div>
-
-                        <div class="form-group row">
                             <div class="col-sm-2">
                                 <label for="ithanhtoantheo">Thanh toán theo</label>
                                 @Helpers.Required()

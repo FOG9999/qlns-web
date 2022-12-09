@@ -1,7 +1,7 @@
 ﻿@using Viettel.Models.QLVonDauTu
 @model VDTQLKeHoachVonUngDuocDuyetModel
 @{
-    ViewBag.Title = "Nhập thông tin phê duyệt chủ trương đầu tư";
+    ViewBag.Title = "Nhập thông tin kế hoạch vốn ứng được duyệt";
     Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
 }
 
@@ -26,7 +26,15 @@
                         }
                         else
                         {
-                            @Html.Raw("Cập nhật thông tin kế hoạch vốn ứng được duyệt")
+                            if (ViewBag.isDieuChinh == "true")
+                            {
+                                @Html.Raw("Điều chỉnh thông tin kế hoạch vốn ứng được duyệt")
+
+                            }
+                            else
+                            {
+                                @Html.Raw("Cập nhật thông tin kế hoạch vốn ứng được duyệt")
+                            }
                         }
                     </span>
                 </div>

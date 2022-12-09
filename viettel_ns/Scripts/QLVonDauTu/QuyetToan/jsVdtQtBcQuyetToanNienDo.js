@@ -935,7 +935,7 @@ function CheckIsUpdate() {
 
 //------- Event KHVN
 function fnChangeGiaTriTamUngDieuChinhGiam(e) {
-    var fGiaTriTamUngDieuChinhGiam = $(e).val();
+    var fGiaTriTamUngDieuChinhGiam = UnFormatNumber($(e).val());
     if (fGiaTriTamUngDieuChinhGiam == null || !$.isNumeric(fGiaTriTamUngDieuChinhGiam)) {
         fGiaTriTamUngDieuChinhGiam = 0
     }
@@ -951,7 +951,7 @@ function fnChangeGiaTriTamUngDieuChinhGiam(e) {
 }
 
 function fnChangeGiaTriNamTruocChuyenNamSau(e) {
-    var fGiaTriNamTruocChuyenNamSau = $(e).val();
+    var fGiaTriNamTruocChuyenNamSau = UnFormatNumber($(e).val());
     if (fGiaTriNamTruocChuyenNamSau == null || !$.isNumeric(fGiaTriNamTruocChuyenNamSau)) {
         fGiaTriNamTruocChuyenNamSau = 0
     }
@@ -964,7 +964,7 @@ function fnChangeGiaTriNamTruocChuyenNamSau(e) {
 }
 
 function fnChangeGiaTriNamNayChuyenNamSau(e) {
-    var fGiaTriNamNayChuyenNamSau = $(e).val();
+    var fGiaTriNamNayChuyenNamSau = UnFormatNumber($(e).val());
     if (fGiaTriNamNayChuyenNamSau == null || !$.isNumeric(fGiaTriNamNayChuyenNamSau)) {
         fGiaTriNamNayChuyenNamSau = 0
     }
@@ -978,7 +978,7 @@ function fnChangeGiaTriNamNayChuyenNamSau(e) {
 
 // Event KHVU
 function onChangeGiaTriThuHoiTheoGiaiNganThucTe(e) {
-    var fGiaTriThuHoiTheoGiaiNganThucTe = $(e).val();
+    var fGiaTriThuHoiTheoGiaiNganThucTe = UnFormatNumber($(e).val());
     if (fGiaTriThuHoiTheoGiaiNganThucTe == null || !$.isNumeric(fGiaTriThuHoiTheoGiaiNganThucTe)) {
         fGiaTriThuHoiTheoGiaiNganThucTe = 0
     }
@@ -988,7 +988,7 @@ function onChangeGiaTriThuHoiTheoGiaiNganThucTe(e) {
 // Event Phan tich
 
 function fnChangeDnQuyetToanNamTrc(e) {
-    var FDnQuyetToanNamTrc = $(e).val();
+    var FDnQuyetToanNamTrc = UnFormatNumber($(e).val());
     if (FDnQuyetToanNamTrc == null || !$.isNumeric(FDnQuyetToanNamTrc)) {
         FDnQuyetToanNamTrc = 0
     }
@@ -1002,7 +1002,7 @@ function fnChangeDnQuyetToanNamTrc(e) {
 }
 
 function fnChangeDnQuyetToanNamNay(e) {
-    var FDnQuyetToanNamNay = $(e).val();
+    var FDnQuyetToanNamNay = UnFormatNumber($(e).val());
     if (FDnQuyetToanNamNay == null || !$.isNumeric(FDnQuyetToanNamNay)) {
         FDnQuyetToanNamNay = 0
     }
@@ -1016,7 +1016,7 @@ function fnChangeDnQuyetToanNamNay(e) {
 }
 
 function fnChangeDuToanThuHoi(e) {
-    var FDuToanThuHoi = $(e).val();
+    var FDuToanThuHoi = UnFormatNumber($(e).val());
     if (FDuToanThuHoi == null || !$.isNumeric(FDuToanThuHoi)) {
         FDuToanThuHoi = 0
     }

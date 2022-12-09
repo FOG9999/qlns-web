@@ -51,7 +51,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 {
                     foreach (DataRow dataRow in dtChiTiet.Rows)
                     {
-                        if (dataRow["sTen"].ToString().ToLower() == row["sTen"].ToString().ToLower())
+                        if (checkIfItemIsChecked(row, dataRow))
                         {                            
                             dataRow["isMap"] = true;
                         }
@@ -67,6 +67,22 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
             #endregion
 
             fillData();
+        }
+
+        private bool checkIfItemIsChecked(DataRow dataRow, DataRow rowToCheck)
+        {
+            string sTenLoaiCongTrinh = rowToCheck["sTenLoaiCongTrinh"].ToString().Split('-').Last().ToLower().Trim();
+            string sTenNganSachRowToCheck = rowToCheck["sTenNganSach"].ToString().Split('.').Last().ToLower().Trim();
+            string sTenNganSachRowChecked = rowToCheck["sTenNganSach"].ToString().Split('.').Last().ToLower().Trim();
+            if (
+                dataRow["sTen"].ToString().ToLower() == rowToCheck["sTen"].ToString().ToLower()
+                && dataRow["sTenLoaiCongTrinh"].ToString().ToLower() == sTenLoaiCongTrinh
+                && sTenNganSachRowChecked == sTenNganSachRowToCheck
+            )
+            {
+                return true;
+            }
+            return false;
         }
 
         private void fillData()

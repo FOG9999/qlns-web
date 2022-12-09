@@ -172,6 +172,20 @@ namespace Viettel.Models.QLVonDauTu
         public string sTenHopDong { get; set; }
         public int iLoaiThanhToan { get; set; }
         public int iSTT { get; set; }
+        public string sThueGiaTriGiaTangDuocDuyet
+        {
+            get
+            {
+                return (fThueGiaTriGiaTangDuocDuyet ?? 0).ToString("##,#", CultureInfo.GetCultureInfo("vi-VN"));
+            }
+        }
+        public string sChuyenTienBaoHanhDuocDuyet
+        {
+            get
+            {
+                return (fChuyenTienBaoHanhDuocDuyet ?? 0).ToString("##,#", CultureInfo.GetCultureInfo("vi-VN"));
+            }
+        }
     }
 
     public class DeNghiThanhToanValueQuery

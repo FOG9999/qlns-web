@@ -759,12 +759,13 @@ function ValidateBeforeSave() {
 function GetData() {
     //lấy thông tin thanh toán
     tt_thanhtoan.ID = $('#hidthanhtoan').val();
-    tt_thanhtoan.iID_DonVi = $('#idonvi').val();
-    tt_thanhtoan.iID_MaDonVi = $("<div/>").text($.trim($('#idonvi').find('option:selected').data('madonvi'))).html();
+    tt_thanhtoan.iID_DonVi = $('#slbDonVi').val();
+    tt_thanhtoan.iID_MaPhongBan = $('#slbBQuanLy').val();
+    tt_thanhtoan.iID_MaDonVi = $("<div/>").text($.trim($('#slbDonVi').find('option:selected').data('madonvi'))).html();
     tt_thanhtoan.sSoDeNghi = $("<div/>").text($.trim($('#isodenghi').val())).html();
     tt_thanhtoan.dNgayDeNghi = $('#ingaydenghi').val();
     tt_thanhtoan.iLoaiNoiDungChi = $('#iloainoidung').val();
-    tt_thanhtoan.iID_KHCTBQP_NhiemVuChiID = $('#itenchuongtrinh').val();
+    tt_thanhtoan.iID_KHCTBQP_NhiemVuChiID = $('#slbChuongTrinh').val();
     tt_thanhtoan.iID_ChuDauTuID = $('#ichudautu').val();
     tt_thanhtoan.iID_MaChuDauTu = $("<div/>").text($.trim($('#ichudautu').find('option:selected').data('machudautu'))).html();
     tt_thanhtoan.iThanhToanTheo = $('#ithanhtoantheo').val();
@@ -850,4 +851,31 @@ function SaveData() {
 
 function CancelSaveData() {
     window.location.href = "/QLNH/DeNghiThanhToan";
+}
+
+function ChangeBQuanLySelect() {
+    var id = $("#slbChuongTrinh").val();
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/DeNghiThanhToan/GetBQuanLyTheoChuongTrinh",
+        data: { id: id },
+        success: function (data) {
+            if (data) {
+                $("#slbBQuanLy").empty().html(data.htmlQuanLy);
+            }
+        }
+    });
+}
+function ChangeDonViSelect() {
+    var id = $("#slbBQuanLy").val();
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/DeNghiThanhToan/GetDonViTheoBQuanLy",
+        data: { id: id },
+        success: function (data) {
+            if (data) {
+                $("#slbDonVi").empty().html(data.htmlDonVi);
+            }
+        }
+    });
 }

@@ -13,7 +13,11 @@ namespace Viettel.Models.QLNH
 
     public class NH_DA_HopDongModel : NH_DA_HopDong
     {
+        public Guid iID_BQP { get; set; }
+        public Guid iID_MaPhongBan { get; set; }
         public string sTenDonVi { get; set; }
+        public string sTen { get; set; }
+        public string sSoKeHoachBQP { get; set; }
         public string sTenDuAn { get; set; }
         public string sTenChuongTrinh { get; set; }
         public string sTenLoaiHopDong { get; set; }

@@ -11,57 +11,72 @@
     <button class="btn btn-primary pull-right" style="margin-right:10px;" onclick="OpenModal()" data-toggle="modal" data-target="#modalChuDauTu"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
     <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
 </div>
-<table class="table table-bordered tr-hover" id="tblListChuDauTu">
-    <thead class="header-search">
-        <tr>
-            <th width="3%"></th>
-            <th width="10%"><input type="text" class="form-control gr_search" id="txtMaChuDauTu" placeholder="Mã chủ đầu tư" maxlength="50"/></th>
-            <th width="20%"><input type="text" class="form-control gr_search" id="txtTenChuDauTu" placeholder="Tên chủ đầu tư" maxlength="500"/></th>
-            <th width="10%"></th>
-            <th width="20%"></th>
-            <th width="10%"></th>
-            <th width="16%"></th>
-            <th width="11%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
-        </tr>
-    </thead>
-    <thead>
-        <tr>
-            <th width="3%">STT</th>
-            <th width="10%">Mã chủ đầu tư</th>
-            <th width="20%">Tên chủ đầu tư</th>
-            <th width="10%">Ký hiệu</th>
-            <th width="20%">Mô tả</th>
-            <th width="10%">Loại</th>
-            <th width="16%">Đơn vị cấp trên</th>
-            <th width="11%">Thao tác</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int index = 0;
-            foreach (var item in Model.Items)
-            {
-                index++;
-                <tr style="cursor: pointer">
-                    <td class="text-center">@(pageIndex + index)</td>
-                    <td class="text-left">@Html.Raw(Html.Encode(item.sId_CDT))</td>
-                    <td class="text-left">@Html.Raw(Html.Encode(item.sTenCDT))</td>
-                    <td class="text-left">@Html.Raw(Html.Encode(item.sKyHieu))</td>
-                    <td class="text-left">@Html.Raw(!string.IsNullOrEmpty(Html.Encode(item.sMoTa)) ? Html.Encode(item.sMoTa).Replace("\n", "<br/>") : string.Empty)</td>
-                    <td class="text-left">@Html.Raw(Html.Encode(item.sLoai))</td>
-                    <td class="text-left">@Html.Raw(Html.Encode(item.sTenChuDauTuCha))</td>
-                    <td class="text-center" style="vertical-align: middle !important">
-                        <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.ID')" data-toggle="modal" data-target="#modalChuDauTu"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
-                        <button type="button" class="btn-edit" onclick="OpenModal('@item.ID')" data-toggle="modal" data-target="#modalChuDauTu"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
-                        <button type="button" class="btn-delete" onclick="DeleteItem('@item.ID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
-                    </td>
-                </tr>
+<div class="tableFixHead">
+    <table class="table table-bordered tr-hover" id="tblListChuDauTu">
+        <thead class="header-search">
+            <tr>
+                <th width="3%"></th>
+                <th width="10%"><input type="text" class="form-control gr_search" id="txtMaChuDauTu" placeholder="Mã chủ đầu tư" maxlength="50" /></th>
+                <th width="20%"><input type="text" class="form-control gr_search" id="txtTenChuDauTu" placeholder="Tên chủ đầu tư" maxlength="500" /></th>
+                <th width="10%"></th>
+                <th width="20%"></th>
+                <th width="10%"></th>
+                <th width="16%"></th>
+                <th width="11%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th width="3%">STT</th>
+                <th width="10%">Mã chủ đầu tư</th>
+                <th width="20%">Tên chủ đầu tư</th>
+                <th width="10%">Ký hiệu</th>
+                <th width="20%">Mô tả</th>
+                <th width="10%">Loại</th>
+                <th width="16%">Đơn vị cấp trên</th>
+                <th width="11%">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody style="overflow-y:auto;height:65vh">
+            @{
+                int index = 0;
+                foreach (var item in Model.Items)
+                {
+                    index++;
+                    <tr style="cursor: pointer">
+                        <td class="text-center">@(pageIndex + index)</td>
+                        <td class="text-left">@Html.Raw(Html.Encode(item.sId_CDT))</td>
+                        <td class="text-left">@Html.Raw(Html.Encode(item.sTenCDT))</td>
+                        <td class="text-left">@Html.Raw(Html.Encode(item.sKyHieu))</td>
+                        <td class="text-left">@Html.Raw(!string.IsNullOrEmpty(Html.Encode(item.sMoTa)) ? Html.Encode(item.sMoTa).Replace("\n", "<br/>") : string.Empty)</td>
+                        <td class="text-left">@Html.Raw(Html.Encode(item.sLoai))</td>
+                        <td class="text-left">@Html.Raw(Html.Encode(item.sTenChuDauTuCha))</td>
+                        <td class="text-center" style="vertical-align: middle !important">
+                            <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.ID')" data-toggle="modal" data-target="#modalChuDauTu"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" class="btn-edit" onclick="OpenModal('@item.ID')" data-toggle="modal" data-target="#modalChuDauTu"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" class="btn-delete" onclick="DeleteItem('@item.ID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                        </td>
+                    </tr>
+                }
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+
+</div>
 
 @Html.BuildPagingButtons(Model._paging)
+<style>
+    .tableFixHead {
+        overflow: auto;
+        height: 330px;
+    }
+
+        .tableFixHead thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+</style>
 
 <script type="text/javascript">
     $(document).ready(function () {

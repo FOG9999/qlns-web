@@ -18,6 +18,7 @@ namespace Viettel.Models.QLNH
     public class ThongTinThanhToanModel : NH_TT_ThanhToan
     {
         public string sTen { get; set; }
+        public string sTenPhongBan { get; set; }
         public string sTenCDT { get; set; }
         public string sTenNhiemVuChi { get; set; }
         public string sTenNhaThau { get; set; }
@@ -153,6 +154,8 @@ namespace Viettel.Models.QLNH
     {
         public ThongTinThanhToanModel thongtinthanhtoan { get; set; }
         public IEnumerable<ThanhToanChiTietViewModel> thanhtoan_chitiet { get; set; }
+        public virtual Guid? iID_KHCTBQP_ChuongTrinhID { get; set; }
+        public virtual Guid? iID_MaPhongBan { get; set; }
     }
 
     public class ThanhToanChiTietViewModel : NH_TT_ThanhToan_ChiTiet

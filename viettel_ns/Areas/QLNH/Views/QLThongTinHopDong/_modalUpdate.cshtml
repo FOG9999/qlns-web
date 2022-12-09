@@ -45,14 +45,14 @@
                     <hr class="color-background-red" />
                     <div class="form-group row">
                         <div class="col-sm-3">
-                            <label for="slbDonVi">Đơn vị quản lý</label>
+                            <label for="slbKHTongTheBQP">Số quyết định tổng thể TTCP</label>
                             @Helpers.Required()
-                            <select id="slbDonVi" name="slbDonVi" class="form-control" onchange="ChangeDonViSelect();">
-                                @if (ViewBag.ListDonVi != null)
+                            <select id="slbKHTongTheBQP" name="slbKHTongTheBQP" class="form-control" onchange="ChangeChuongTrinhSelect()">
+                                @if (ViewBag.ListBQP != null)
                                 {
-                                    foreach (var donvi in (List<NS_DonVi>)ViewBag.ListDonVi)
+                                    foreach (var bqp in (List<NH_KHChiTietBQP_NhiemVuChiModel>)ViewBag.ListBQP)
                                     {
-                                        <option value="@donvi.iID_Ma" @(Model.iID_DonViID == donvi.iID_Ma ? "selected" : string.Empty) data-madonvi="@Html.Raw(Html.Encode(donvi.iID_MaDonVi))">@Html.Raw(Html.Encode(donvi.sMoTa))</option>
+                                        <option value="@bqp.ID" @(Model.iID_NH_KHChiTietBQP == bqp.ID ? "selected" : string.Empty)>@Html.Raw(Html.Encode(bqp.sSoKeHoachBQP))</option>
                                     }
                                 }
                             </select>
@@ -60,51 +60,71 @@
                         <div class="col-sm-3">
                             <label for="slbChuongTrinh">Tên chương trình</label>
                             @Helpers.Required()
-                            @Html.DropDownList("slbChuongTrinh", (SelectList)ViewBag.ListChuongTrinh, new { @class = "form-control", @id = "slbChuongTrinh", @onchange = "ChangeChuongTrinhSelect()" })
-                        </div>
-                        <div class="col-sm-3">
-                            <label for="slbLoai">Loại</label>
-                            @Helpers.Required()
-                            <select id="slbLoai" name="slbLoai" class="form-control" onchange="ChangeLoaiSelect();">
-                                <option value="0" @(Model.iPhanLoai == 0 ? "selected" : "")>--Chọn loại--</option>
-                                <option value="1" @(Model.iPhanLoai == 1 ? "selected" : "")>Dự án, Trong nước</option>
-                                <option value="2" @(Model.iPhanLoai == 2 ? "selected" : "")>Mua sắm, Trong nước</option>
-                                <option value="3" @(Model.iPhanLoai == 3 ? "selected" : "")>Dự án, Ngoại thương</option>
-                                <option value="4" @(Model.iPhanLoai == 4 ? "selected" : "")>Mua sắm, Ngoại thương</option>
+                            <select id="slbChuongTrinh" name="slbChuongTrinh" class="form-control" onchange="ChangeBQuanLySelect()">
+                                @if (ViewBag.ListChuongTrinh != null)
+                                {
+                                    foreach (var chuongtrinh in (List<NH_KHChiTietBQP_NhiemVuChi>)ViewBag.ListChuongTrinh)
+                                    {
+                                        <option value="@chuongtrinh.ID" @(Model.iID_KHCTBQP_ChuongTrinhID == chuongtrinh.ID ? "selected" : string.Empty)>@Html.Raw(Html.Encode(chuongtrinh.sTenNhiemVuChi))</option>
+                                    }
+                                }
                             </select>
                         </div>
                         <div class="col-sm-3">
-                            <div id="divTenDuAn">
-                                <label for="slbDuAn">Tên dự án</label>
-                                @Helpers.Required()
-                                <select id="slbDuAn" name="slbDuAn" class="form-control">
-                                    @if (ViewBag.ListDuAn != null)
+                            <label for="slbBQuanLy">B Quản Lý</label>
+                            @Helpers.Required()
+                            <select id="slbBQuanLy" name="slbBQuanLy" class="form-control" onchange="ChangeDonViSelect()">
+                                @if (ViewBag.ListPhongBan != null)
+                                {
+                                    foreach (var phongban in (List<NS_PhongBan>)ViewBag.ListPhongBan)
                                     {
-                                        foreach (var duan in (List<NH_DA_DuAn>)ViewBag.ListDuAn)
-                                        {
-                                            <option value="@duan.ID" @(Model.iID_DuAnID == duan.ID ? "selected" : string.Empty) data-bql="@duan.iID_BQuanLyID">@Html.Raw(Html.Encode(duan.sTenDuAn))</option>
-                                        }
+                                        <option value="@phongban.iID_MaPhongBan" @(Model.iID_MaPhongBan == phongban.iID_MaPhongBan ? "selected" : string.Empty)>@Html.Raw(Html.Encode(phongban.sTen))</option>
                                     }
-                                </select>
-                            </div>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="slbDonVi">Đơn vị</label>
+                            @Helpers.Required()
+                            <select id="slbDonVi" name="slbDonVi" class="form-control">
+                                @if (ViewBag.ListDonVi != null)
+                                {
+                                    foreach (var donvi in (List<NS_DonVi>)ViewBag.ListDonVi)
+                                    {
+                                        <option value="@donvi.iID_Ma" @(Model.iID_DonViID == donvi.iID_Ma ? "selected" : string.Empty) data-madonvi="@Html.Raw(Html.Encode(donvi.iID_MaDonVi))">@Html.Raw(Html.Encode(donvi.sTen))</option>
+                                    }
+                                }
+                            </select>
                         </div>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-3">
-                        <label for="slbGoiThau">Tên gói thầu</label>
+                        <label for="slbLoai">Loại</label>
+                        @Helpers.Required()
+                        <select id="slbLoai" name="slbLoai" class="form-control" onchange="ChangeLoaiSelect();">
+                            <option value="0" @(Model.iPhanLoai == 0 ? "selected" : "")>--Chọn loại--</option>
+                            <option value="1" @(Model.iPhanLoai == 1 ? "selected" : "")>Dự án, Trong nước</option>
+                            <option value="2" @(Model.iPhanLoai == 2 ? "selected" : "")>Mua sắm, Trong nước</option>
+                            <option value="3" @(Model.iPhanLoai == 3 ? "selected" : "")>Dự án, Ngoại thương</option>
+                            <option value="4" @(Model.iPhanLoai == 4 ? "selected" : "")>Mua sắm, Ngoại thương</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <div id="divTenDuAn">
+                            <label for="slbDuAn">Tên dự án</label>
                             @Helpers.Required()
-                            <select id="slbGoiThau" name="slbGoiThau" class="form-control">
-                                @if (ViewBag.ListGoiThau != null)
+                            <select id="slbDuAn" name="slbDuAn" class="form-control">
+                                @if (ViewBag.ListDuAn != null)
                                 {
-                                    foreach (var goithau in (List<NH_DA_GoiThau>)ViewBag.ListGoiThau)
+                                    foreach (var duan in (List<NH_DA_DuAn>)ViewBag.ListDuAn)
                                     {
-                                        <option value="@goithau.ID" @(Model.iID_DonViID == goithau.iID_DonViID ? "selected" : string.Empty)>@Html.Raw(Html.Encode(goithau.sTenGoiThau))</option>
+                                        <option value="@duan.ID" @(Model.iID_DuAnID == duan.ID ? "selected" : string.Empty) data-bql="@duan.iID_BQuanLyID">@Html.Raw(Html.Encode(duan.sTenDuAn))</option>
                                     }
                                 }
                             </select>
+                        </div>
                     </div>
-                    <div class="col-sm-3">&nbsp;</div>
                     <div class="col-sm-3">&nbsp;</div>
                     <div class="col-sm-3">&nbsp;</div>
                 </div>

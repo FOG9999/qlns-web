@@ -211,6 +211,7 @@ function Save() {
 function GetDataDuAn() {
     var data = {};
     data.ID = $("#hidDuAnID").val();
+    data.iID_BQP = $("#slbKHTongTheBQP").val();
     data.iID_DonViID = $("#slbDonVi").val();
     data.iID_BQuanLyID = $("#slbBQuanLy").val();
     data.iID_MaDonVi = $("<div/>").text($("#slbDonVi").find("option:selected").data("madonvi")).html();
@@ -249,11 +250,20 @@ function ValidateData(data) {
     if ($.trim($("#txtMaDuAn").val()) != "" && $.trim($("#txtMaDuAn").val()).length > 100) {
         Messages.push("Mã dự án vượt quá 100 kí tự !");
     }
-    if (data.sTenDuAn == null || data.sTenDuAn == "") {
-        Messages.push("Tên dự án chưa nhập !");
+    if (data.iID_BQP == null || data.iID_BQP == GUID_EMPTY) {
+        Messages.push("Số quyết định tổng thể BQP chưa chọn !");
+    }
+    if (data.iID_KHCTBQP_ChuongTrinhID == null || data.iID_KHCTBQP_ChuongTrinhID == GUID_EMPTY) {
+        Messages.push("Tên chương chình chưa chọn !");
+    }
+    if (data.iID_BQuanLyID == null || data.iID_BQuanLyID == GUID_EMPTY) {
+        Messages.push("B quản lý chưa chọn !");
     }
     if (data.iID_DonViID == null || data.iID_DonViID == GUID_EMPTY) {
         Messages.push("Tên đơn vị chưa chọn !");
+    }
+    if (data.sTenDuAn == null || data.sTenDuAn == "") {
+        Messages.push("Tên dự án chưa nhập !");
     }
     if (data.iID_TiGiaID == null || data.iID_TiGiaID == GUID_EMPTY) {
         Messages.push("Tỉ giá chưa chọn !");

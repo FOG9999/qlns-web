@@ -254,5 +254,16 @@ namespace Viettel.Models.QLVonDauTu
         public int? IndexCode { get; set; }
         public string STongHop { get; set; }
         public bool IsHangCha { get; set; }
+        public double fHanmucNganhDX { get; set; }
+        public double fTongVonBoTriNganh { get; set; }
+        public double fVon5namNganhDX { get; set; }
+        public double fVonsaunamNganhDX { get; set; }
+        public double fHanmucCucTCDX { get; set; }
+        public double fTongVonBoTriCuc { get; set; }
+        public double fVon5namCTCDX { get; set; }
+        public double fVonnamthunhatCTC { get; set; }
+        public double fVonsaunamCTCDexuat { get; set; }
+        public double fCucTCDeXuat { get; set; }
+        public double fDuKienBoTriNamThu2 { get; set; }
     }
 }

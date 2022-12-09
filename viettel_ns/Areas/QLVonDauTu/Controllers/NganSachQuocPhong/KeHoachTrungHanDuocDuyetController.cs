@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
+using System.Data;
 using System.Web.Mvc;
 using Viettel.Domain.DomainModel;
 using Viettel.Extensions;
@@ -49,6 +50,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
         private const string sControlName = "KeHoachTrungHanDuocDuyet";
 
         List<KeHoach5NamChiTietDuocDuyetTempForSave> listTemp = new List<KeHoach5NamChiTietDuocDuyetTempForSave>();
+        List<KeHoach5NamChiTietDuocDuyetTempForSave> currentShowingList = new List<KeHoach5NamChiTietDuocDuyetTempForSave>();
 
         // GET: QLVonDauTu/KeHoachTrungHanDuocDuyet
         public ActionResult Index()
@@ -259,23 +261,6 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 listTemp = lstData;
             }
             TempData.Keep();
-            //().ForEach(item =>
-            //{
-            //    KeHoach5NamChiTietDuocDuyetTempForSave newItem = new KeHoach5NamChiTietDuocDuyetTempForSave();
-            //    var entityKH5NChiTiet = new KeHoach5NamChiTietDuocDuyetTempForSave();
-            //    entityKH5NChiTiet.iID_KeHoach5NamID = item.iID_KeHoach5NamID;
-            //    entityKH5NChiTiet.iID_DuAnID = item.iID_DuAnID;
-            //    entityKH5NChiTiet.iID_DonViQuanLyID = item.iID_DonViQuanLyID;
-            //    entityKH5NChiTiet.sTen = item.sTen;
-            //    entityKH5NChiTiet.iID_NguonVonID = item.iID_NguonVonID;
-            //    entityKH5NChiTiet.iID_LoaiCongTrinhID = item.iID_LoaiCongTrinhID;
-            //    entityKH5NChiTiet.fHanMucDauTu = item.fHanMucDauTu;
-            //    entityKH5NChiTiet.iID_MaDonVi = item.iID_MaDonVi;
-            //    entityKH5NChiTiet.iID_KeHoach5Nam_ChiTietID = item.iID_KeHoach5Nam_ChiTietID;
-            //    entityKH5NChiTiet.sDiaDiem = item.sDiaDiem;
-            //    TempData.Keep();
-            //    listTemp.Add(newItem);
-            //});
         }
 
         public ActionResult SheetFrame(string id, string filter = null)
@@ -287,7 +272,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             }
             var filters = filter == null ? Request.QueryString.ToDictionary() : JsonConvert.DeserializeObject<Dictionary<string, string>>(filter);
             VDT_KHV_KeHoach5Nam KH5Nam = _iQLVonDauTuService.GetKeHoach5NamDuocDuyetById(Guid.Parse(id));
-            var sheet = new KeHoach5NamDuocDuyet_ChiTiet_SheetTable(id, int.Parse(PhienLamViec.iNamLamViec), KH5Nam.iGiaiDoanTu, filters, listTemp.Count > 0 ? listTemp : null);
+            // kết hợp danh sách các chi tiết dự án đã chọn nhưng chưa lưu (trong currentListKHV5NamChiTiet) với danh sách vừa mới chọn (listTemp)
+            if (TempData["currentListKHV5NamChiTiet_NotSaved"] != null)
+            {
+                TempData.Keep();
+                currentShowingList = (List<KeHoach5NamChiTietDuocDuyetTempForSave>)TempData["currentListKHV5NamChiTiet_NotSaved"];
+                TempData.Keep();
+            }
+            var sheet = new KeHoach5NamDuocDuyet_ChiTiet_SheetTable(id, int.Parse(PhienLamViec.iNamLamViec), KH5Nam.iGiaiDoanTu, filters, listTemp.Count > 0 ? listTemp : null, currentShowingList);
             var vm = new KeHoach5NamDuocDuyetChiTietGridViewModel
             {
                 Sheet = new SheetViewModel(
@@ -299,7 +291,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                    ),
                 KH5NamDuocDuyet = KH5Nam
             };
-            vm.Sheet.AvaiableKeys = new Dictionary<string, string>();
+            vm.Sheet.AvaiableKeys = new Dictionary<string, string>();            
             TempData["currentListKHV5NamChiTiet"] = sheet.dtChiTiet;
             return View("_sheetFrame", vm);
         }
@@ -310,6 +302,12 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             try
             {
                 cloneFromTempData();
+                if (TempData["currentListKHV5NamChiTiet_NotSaved"] != null)
+                {
+                    TempData.Keep();
+                    currentShowingList = (List<KeHoach5NamChiTietDuocDuyetTempForSave>)TempData["currentListKHV5NamChiTiet_NotSaved"];
+                    TempData.Keep();
+                }
                 var rows = vm.Rows.Where(x => !x.IsParent).ToList();
                 //var rows = vm.Rows.ToList();
                 if (rows.Count > 0)
@@ -326,47 +324,53 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                             var changes = r.Columns.Where(c => columns.Any(x => x.ColumnName == c.Key));
                             var entity = (VDT_KHV_KeHoach5Nam_ChiTiet)listTemp.Where(x => x.iID_KeHoach5Nam_ChiTietID.ToString() == iID_KeHoach5Nam_ChiTietID).FirstOrDefault();
                             bool isUpdate = false;
-                            if(entity == null)
+                            if (entity == null)
+                            {
+                                entity = currentShowingList.Where(x => x.iID_KeHoach5Nam_ChiTietID.ToString() == iID_KeHoach5Nam_ChiTietID).FirstOrDefault();
+                            }
+                            if (entity == null)
                             {
                                 entity = conn.Get<VDT_KHV_KeHoach5Nam_ChiTiet>(iID_KeHoach5Nam_ChiTietID, trans);
                                 isUpdate = true;
                             }
+                            if (entity != null)
+                            {
+                                if (changes.Any())
+                                {
+                                    if (r.Columns.ContainsKey("fVonDaGiao"))
+                                    {
+                                        entity.fVonDaGiao = Double.Parse(r.Columns["fVonDaGiao"]);
+                                    }
+                                    if (r.Columns.ContainsKey("fVonBoTriTuNamDenNam"))
+                                    {
+                                        entity.fVonBoTriTuNamDenNam = Double.Parse(r.Columns["fVonBoTriTuNamDenNam"]);
+                                    }
+                                    // entity.MapFrom(changes);
+                                    if (r.Columns.ContainsKey("fVonDaGiaoDc"))
+                                    {
+                                        entity.fVonDaGiao = Double.Parse(r.Columns["fVonDaGiaoDc"]);
+                                    }
+                                    if (r.Columns.ContainsKey("fVonBoTriTuNamDenNamDc"))
+                                    {
+                                        entity.fVonBoTriTuNamDenNam = Double.Parse(r.Columns["fVonBoTriTuNamDenNamDc"]);
+                                    }
+                                    if (r.Columns.ContainsKey("sGhiChu"))
+                                    {
+                                        entity.sGhiChu = r.Columns["sGhiChu"];
+                                    }
+                                    entity.fGiaTriBoTri = (entity.fHanMucDauTu ?? 0) - (entity.fVonBoTriTuNamDenNam ?? 0);
 
-                            if (changes.Any())
-                            {
-                                if (r.Columns.ContainsKey("fVonDaGiao"))
-                                {
-                                    entity.fVonDaGiao = Double.Parse(r.Columns["fVonDaGiao"]);
                                 }
-                                if (r.Columns.ContainsKey("fVonBoTriTuNamDenNam"))
+                                if (isUpdate)
                                 {
-                                    entity.fVonBoTriTuNamDenNam = Double.Parse(r.Columns["fVonBoTriTuNamDenNam"]);
+                                    if (r.IsDeleted)
+                                    {
+                                        conn.Delete(entity, trans);
+                                    }
+                                    else conn.Update(entity, trans);
                                 }
-                                // entity.MapFrom(changes);
-                                if (r.Columns.ContainsKey("fVonDaGiaoDc"))
-                                {
-                                    entity.fVonDaGiao = Double.Parse(r.Columns["fVonDaGiaoDc"]);
-                                }
-                                if (r.Columns.ContainsKey("fVonBoTriTuNamDenNamDc"))
-                                {
-                                    entity.fVonBoTriTuNamDenNam = Double.Parse(r.Columns["fVonBoTriTuNamDenNamDc"]);
-                                }
-                                if (r.Columns.ContainsKey("sGhiChu"))
-                                {
-                                    entity.sGhiChu = r.Columns["sGhiChu"];
-                                }
-                                entity.fGiaTriBoTri = (entity.fHanMucDauTu ?? 0) - (entity.fVonBoTriTuNamDenNam ?? 0);                                
-                                
-                            }
-                            if (isUpdate)
-                            {
-                                if (r.IsDeleted)
-                                {
-                                    conn.Delete(entity, trans);
-                                }
-                                else conn.Update(entity, trans);
-                            }
-                            else conn.Insert(entity, trans);
+                                else conn.Insert(entity, trans);
+                            }                    
                             // commit to db
                             trans.Commit();
                         });
@@ -376,7 +380,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 
                 // Update Gia Tri Duoc Duyet
                 _iQLVonDauTuService.UpdateGiaTriKeHoachDuocDuyet(vm.Id);
-                TempData["listNewKHV5NamChiTietNew"] = null;
+                TempData.Clear();
             }
             catch (Exception ex)
             {

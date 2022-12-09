@@ -72,15 +72,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-8 col-md-8 col-lg-8" style="text-align:center">
+                <div class=" form-group text-center" >
                     @*<button class="btn btn-primary pull-right" onclick="location.href='/QLVonDauTu/KeHoachVonUngDeXuat/Update'"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>*@
                     @*<span class="btn btn-info pull-right mr-10 min-width-200" onclick="SaveKVUCT();"><i class="fa fa-save" aria-hidden="true"></i>Lưu dữ liệu(F10)</span>
                         <span class="btn btn-info pull-right mr-10" onclick="XoaDong()"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>Xóa(F4)</span>
                         <span class="btn btn-info pull-right mr-10" onclick="Refresh()"><i class="fa fa-refresh" aria-hidden="true"></i>Tải lại(F5)</span>*@
 
-                    <span class="btn btn-info pull-right mr-10 min-width-200"><i class="fa fa-save" aria-hidden="true"></i>Lưu dữ liệu(F10)</span>
-                    <span class="btn btn-info pull-right mr-10"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>Xóa(F4)</span>
-                    <span class="btn btn-info pull-right mr-10"><i class="fa fa-refresh" aria-hidden="true"></i>Tải lại(F5)</span>
+                    @*<span class="btn btn-info pull-right mr-10 min-width-200"><i class="fa fa-save" aria-hidden="true"></i>Lưu dữ liệu(F10)</span>*@
+                    @*<span class="btn btn-info  mr-10"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>Xóa(F4)</span>
+                    <span class="btn btn-info  mr-10"><i class="fa fa-refresh" aria-hidden="true"></i>Tải lại(F5)</span>*@
                 </div>
                 @*Thông tin chi tiết*@
                 <br />
@@ -94,13 +94,13 @@
                                             <tr>
                                                 <th width="7%">Mã dự án</th>
                                                 <th width="15%">Tên dự án</th>
-                                                <th width="5%">LNS</th>
+                                                @*<th width="5%">LNS</th>
                                                 <th width="3%">L</th>
                                                 <th width="3%">K</th>
                                                 <th width="4%">M</th>
                                                 <th width="4%">TM</th>
                                                 <th width="3%">TTM</th>
-                                                <th width="3%">NG</th>
+                                                <th width="3%">NG</th>*@
                                                 <th width="8%" class="text-right">Tổng mức đầu tư</th>
                                                 <th width="7%" class="text-right">Giá trị đề nghị</th>
                                                 @if (isDieuChinh)
@@ -136,13 +136,13 @@
                                                     <input type="hidden" id="sTrangThaiDuAnDangKy" value="@item.sTrangThaiDuAnDangKy" />
                                                     <td class="text-center txt_sMaDuAn">@item.sMaDuAn</td>
                                                     <td class="txt_sTenDuAn" data-iid_duan="@item.iID_DuAnID">@item.sTenDuAn</td>
-                                                    <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sLNS" data-iidnganhid="@item.iID_NganhID" autocomplete="off" value="@item.sLNS"></td>
+                                                    @*<td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sLNS" data-iidnganhid="@item.iID_NganhID" autocomplete="off" value="@item.sLNS"></td>
                                                     <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sL" autocomplete="off" value="@item.sL"></td>
                                                     <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sK" autocomplete="off" value="@item.sK"></td>
                                                     <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sM" autocomplete="off" value="@item.sM"></td>
                                                     <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sTM" autocomplete="off" value="@item.sTM"></td>
                                                     <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sTTM" autocomplete="off" value="@item.sTTM"></td>
-                                                    <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sNG" autocomplete="off" value="@item.sNG"></td>
+                                                    <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sNG" autocomplete="off" value="@item.sNG"></td>*@
                                                     <td class="text-right txt_sTongMucDauTu">@item.sTongMucDauTu</td>
                                                     <td class="text-right txt_sGiaTriDeNghi">@item.sGiaTriDeNghi</td>
                                                     @if (isDieuChinh)
@@ -234,7 +234,7 @@
 
                 <div class="form-group text-center">
                     <button class="btn btn-back" onclick="location.href='@Url.Action("Index", "QLKeHoachVonUngDuocDuyet")'"><i class="fa fa-arrow-left" aria-hidden="true"></i><span>Quay lại</span></button>
-                    <button class="btn btn-primary" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                    <button class="btn btn-primary" onclick="Save()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu (F10)</span></button>
                 </div>
             </div>
         </div>

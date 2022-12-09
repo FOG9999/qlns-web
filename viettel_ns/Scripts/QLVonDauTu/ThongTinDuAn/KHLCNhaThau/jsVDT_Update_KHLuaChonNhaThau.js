@@ -193,6 +193,8 @@ function GetAllChungTuDetail(lstChungTu) {
                 }
             });
             if (lstAllNguonVon.length != 0) RenderNguonVonAll("tblDanhSachNguonVon", lstAllNguonVon);
+
+            sortChiPhi(lstAllChiPhi);
             if (lstAllChiPhi != null && lstAllChiPhi != []) RenderNguonVonAll("tblDanhSachChiPhi", lstAllChiPhi);
             GetDanhSachGoiThau();
             getTMDTPheDuyet();
@@ -202,11 +204,15 @@ function GetAllChungTuDetail(lstChungTu) {
 
 function RenderNguonVonAll(iIdTable, Items) {
     var sItem = [];
+    var isChiPhi = iIdTable == "tblDanhSachChiPhi";
+    var count = 1;
     Object.keys(Items).forEach(function (key) {
         sItem.push("<tr>");
-        sItem.push("<td>" + Items[key].sNoiDung + "</td>");
+        sItem.push("<td>" + (isChiPhi ? (count + '. ') : '') + Items[key].sNoiDung + "</td>");
         sItem.push("<td class='text-right'>" + FormatNumber(Items[key].fGiaTriPheDuyet) + "</td>");
         sItem.push("</tr>");
+
+        count++;
     });
     $("#" + iIdTable + " tbody").html(sItem.join(""));
 }
@@ -226,6 +232,7 @@ function GetChungTuDetailByKhlcnt() {
 
 function GetAllGoiThauByKhlcntId() {
     var id = $("#iIdKeHoachLuaChonNhaThau").val();
+    var isDieuChinh = $("#bIsDieuChinh").val() == 1 ? true : false;
     if (id == "" || id == guidEmpty) return;
     $.ajax({
         url: "/QLVonDauTu/KHLuaChonNhaThau/GetAllGoiThauByKhlcntId",
@@ -236,19 +243,35 @@ function GetAllGoiThauByKhlcntId() {
             if (result.data == null) return;
             var sItem = []
             result.data.forEach(function (item) {
-                var sDisable = '';
-                if (isExistGoiThau(item.iID_GoiThauID)) sDisable = 'disabled';
-                sItem.push("<tr data-id='" + item.iID_GoiThauID + "' data-parentid='" + item.iID_ParentID + "' ondblclick='ViewGoiThauDetail(\"" + item.iID_GoiThauID + "\")'>");
-                sItem.push("<td class='width-200'><input type='text'class='form-control sTenGoiThau' value='" + item.sTenGoiThau + "'></td>");
-                sItem.push(`<td class='text-right'> <input onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' type='text' class= 'form-control fGiaTri text-right' value ='${FormatNumber(item.fTienTrungThau)}' ${sDisable}></td>`);
-                //sItem.push("<td>" + sCbxHinhThuc + "</td>");
-                //sItem.push("<td>" + sCbxPhuongThuc + "</td>");
-                //sItem.push("<td '><input type='text' class='form-control sThoiGianTCLCNT' 'text-right' value='" + item.sThoiGianTCLCNT + "'></td>");
-                sItem.push("<td>" + sCbxLoaiHD + "</td>");
-                sItem.push("<td '><input type='text' class='form-control iThoiGianThucHien' 'text-right' value='" + item.iThoiGianThucHien + "'></td>");
-                //sItem.push("<td class='width-50 text-center'><button class='btn-detail'><i class='fa fa-eye fa-lg' aria-hidden='true' onclick=DetailGoiThau('" + item.iID_GoiThauID + "')></i></button><button class='btn-delete'><i class='fa fa-trash-o fa-lg' aria-hidden='true' onclick=DeleteGoiThau($(this))></i></button></td>");
-                sItem.push("<td class='width-50 text-center'><button class='btn-detail'><i class='fa fa-eye fa-lg' aria-hidden='true' onclick=ViewGoiThauDetail('" + item.iID_GoiThauID + "')></i></button><button class='btn-delete'><i class='fa fa-trash-o fa-lg' aria-hidden='true' onclick=DeleteGoiThau($(this))></i></button></td>");
-                sItem.push("</tr>");
+                if (isDieuChinh) {
+                    var sDisable = '';
+                    if (isExistGoiThau(item.iID_GoiThauID)) sDisable = 'disabled';
+                    sItem.push("<tr data-id='" + item.iID_GoiThauID + "' data-parentid='" + item.iID_ParentID + "' ondblclick='ViewGoiThauDetail(\"" + item.iID_GoiThauID + "\")'>");
+                    sItem.push("<td class='width-200'><input type='text'class='form-control sTenGoiThau' value='" + item.sTenGoiThau + "'></td>");
+                    sItem.push(`<td class='text-right'> <input onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' type='text' class= 'form-control fGiaTri text-right' value ='${FormatNumber(item.fTienTrungThau)}' ${sDisable}></td>`);
+                    //sItem.push("<td>" + sCbxHinhThuc + "</td>");
+                    //sItem.push("<td>" + sCbxPhuongThuc + "</td>");
+                    //sItem.push("<td '><input type='text' class='form-control sThoiGianTCLCNT' 'text-right' value='" + item.sThoiGianTCLCNT + "'></td>");
+                    sItem.push("<td>" + sCbxLoaiHD + "</td>");
+                    sItem.push("<td '><input type='text' class='form-control iThoiGianThucHien' 'text-right' value='" + item.iThoiGianThucHien + "'></td>");
+                    //sItem.push("<td class='width-50 text-center'><button class='btn-detail'><i class='fa fa-eye fa-lg' aria-hidden='true' onclick=DetailGoiThau('" + item.iID_GoiThauID + "')></i></button><button class='btn-delete'><i class='fa fa-trash-o fa-lg' aria-hidden='true' onclick=DeleteGoiThau($(this))></i></button></td>");
+                    sItem.push("<td class='width-50 text-center'><button class='btn-detail'><i class='fa fa-eye fa-lg' aria-hidden='true' onclick=ViewGoiThauDetail('" + item.iID_GoiThauID + "')></i></button><button class='btn-delete'><i class='fa fa-trash-o fa-lg' aria-hidden='true' onclick=DeleteGoiThau($(this))></i></button></td>");
+                    sItem.push("</tr>");
+                } else {
+                    var sDisable = '';
+                    if (isExistGoiThau(item.iID_GoiThauID)) sDisable = 'disabled';
+                    sItem.push("<tr data-id='" + item.iID_GoiThauID + "' data-parentid='" + item.iID_ParentID + "' ondblclick='ViewGoiThauDetail(\"" + item.iID_GoiThauID + "\")'>");
+                    sItem.push("<td class='width-200'><input type='text'class='form-control sTenGoiThau' value='" + item.sTenGoiThau + "'></td>");
+                    sItem.push(`<td class='text-right'> <input onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' type='text' class= 'form-control fGiaTri text-right' value ='${FormatNumber(item.fTienTrungThau)}' ${sDisable}></td>`);
+                    //sItem.push("<td>" + sCbxHinhThuc + "</td>");
+                    //sItem.push("<td>" + sCbxPhuongThuc + "</td>");
+                    //sItem.push("<td '><input type='text' class='form-control sThoiGianTCLCNT' 'text-right' value='" + item.sThoiGianTCLCNT + "'></td>");
+                    sItem.push("<td>" + sCbxLoaiHD + "</td>");
+                    sItem.push("<td '><input type='text' class='form-control iThoiGianThucHien' 'text-right' value='" + item.iThoiGianThucHien + "'></td>");
+                    //sItem.push("<td class='width-50 text-center'><button class='btn-detail'><i class='fa fa-eye fa-lg' aria-hidden='true' onclick=DetailGoiThau('" + item.iID_GoiThauID + "')></i></button><button class='btn-delete'><i class='fa fa-trash-o fa-lg' aria-hidden='true' onclick=DeleteGoiThau($(this))></i></button></td>");
+                    sItem.push("<td class='width-50 text-center'><button class='btn-detail'><i class='fa fa-eye fa-lg' aria-hidden='true' onclick=ViewGoiThauDetail('" + item.iID_GoiThauID + "')></i></button><button class='btn-delete'><i class='fa fa-trash-o fa-lg' aria-hidden='true' onclick=DeleteGoiThau($(this))></i></button></td>");
+                    sItem.push("</tr>");
+                }
             });
             $("#tblGoiThau").html(sItem.join(''));
 
@@ -378,7 +401,7 @@ function GetDuAn() {
             lstDuAn = result.data;
             if (lstDuAn != null || lstDuAn != []) {
                 $.each(lstDuAn, function (index, item) {
-                    $("#iID_DuAnID").append("<option value='" + item.iID_DuAnID + "' data-smaduan='" + item.sMaDuAn + "' data-ftongmucdautu='" + item.fTongMucDauTu + "' data-iidmacdt='" + item.iID_MaCDT + "'>" + item.sTenDuAn + "</option>");
+                    $("#iID_DuAnID").append("<option value='" + item.iID_DuAnID + "' data-smaduan='" + item.sMaDuAn + "' data-ftongmucdautu='" + item.fTongMucDauTu + "' data-iidmacdt='" + item.iID_MaCDT + "'>" + item.sMaDuAn + ' - ' + item.sTenDuAn + "</option>");
                 });
                 var iIdDuAn = $("#iIdDuAnId").val();
                 if (iIdDuAn != guidEmpty) {
@@ -615,6 +638,9 @@ function GetChiPhiGoiThauDetail(iIdGoiThau) {
         arrChiPhi = lstChungTuGoiThau[iIdGoiThau][1];
     }
 
+    sortChiPhi(lstNguonVon);
+
+    var countSTTChiPhi = 1;
     lstNguonVon.forEach(function (item) {
         // nếu chi phí này đã được check cho gói thầu khác và có giá trị còn lại <= 0 => ẩn đi
         // nếu chưa được check cho gói thâu nào thì cứ hiện
@@ -645,6 +671,7 @@ function GetChiPhiGoiThauDetail(iIdGoiThau) {
             sItem.push("<tr data-id='" + item.iID_ChiPhiID + "' data-parent='" + item.iID_ParentId + "'>");
             sItem.push("<td class='width-50 text-center'><input type='checkbox' class='ck_ChiPhi' value='" + item.iID_ChiPhiID +
                 (childIndex >= 0 || parentIndex >= 0 ? "\' checked " : "\'") + " onClick='CheckChiPhi(this)'></td>");
+            sItem.push("<td class='width-50 text-center'>" + (countSTTChiPhi++) + "</td>")
             sItem.push("<td class='sNoiDung'>" + item.sNoiDung + "</td>");
             sItem.push("<td class='fGiaTriPheDuyet text-right'>" + FormatNumber(item.fGiaTriPheDuyet) + "</td>");
             // update ke hoach lua chon nha thau
@@ -1518,3 +1545,34 @@ function sortHangMucByMaOrder(a, b) {
     var nextMaOrder = b.sMaOrder.toLowerCase();
     return ((currentMaOrder < nextMaOrder) ? -1 : ((currentMaOrder > nextMaOrder) ? 1 : 0));
 }
+
+const sortChiPhi = (array) => {
+    var keyArray = Object.keys(array);
+    
+    for (let i = 0; i < keyArray.length; i++) {
+        isOrdered = true;
+        for (let x = 0; x < keyArray.length - 1 - i; x++) {
+            if (array[keyArray[x]].iThuTu > array[keyArray[x + 1]].iThuTu) {
+                [array[keyArray[x]], array[keyArray[x + 1]] = array[keyArray[x + 1]], array[keyArray[x]]];
+
+                var temp = array[keyArray[x + 1]]
+                array[keyArray[x + 1]] = array[keyArray[x]]
+                array[keyArray[x]] = temp;
+            }
+        }
+    }
+
+    return array;
+
+    //Object.keys(Items).forEach(function (key) {
+    //    sItem.push("<tr>");
+    //    sItem.push("<td>" + (isChiPhi ? (count + '. ') : '') + Items[key].sNoiDung + "</td>");
+    //    sItem.push("<td class='text-right'>" + FormatNumber(Items[key].fGiaTriPheDuyet) + "</td>");
+    //    sItem.push("</tr>");
+
+    //    count++;
+    //});
+}
+
+
+

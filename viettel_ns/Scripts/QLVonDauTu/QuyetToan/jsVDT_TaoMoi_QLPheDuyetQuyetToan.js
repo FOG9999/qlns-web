@@ -33,7 +33,7 @@ $(document).ready(function ($) {
     $("#iID_DonViQuanLyID").change(function () {
         var dNgayQuyetDinh = $("#dNgayQuyetDinh").val();
 
-        if (this.value != "" && this.value != GUID_EMPTY && dNgayQuyetDinh == "") {
+        if (this.value != "" && this.value != GUID_EMPTY && dNgayQuyetDinh != "") {
             LayDanhSachDuAnTheoDonViQuanLyVaNgayQuyetDinh(this.value, dNgayQuyetDinh)
             ClearThongTinDuAn();
         } else {

@@ -529,9 +529,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                             NS_DonVi donvi = null;
                             string sId_CDT = "";
                             DM_ChuDauTu chudautu = null;
-                            if (r.Columns.ContainsKey("sTenDonViQL"))
+                            if (r.Columns.ContainsKey("sDonVi"))
                             {
-                                sMaDonVi = r.Columns["sTenDonViQL"].Split(new string[] { "-" }, StringSplitOptions.None)[0];
+                                sMaDonVi = r.Columns["sDonVi"].Split(new string[] { " - " }, StringSplitOptions.None)[0];
                                 donvi = _iNganSachService.GetDonViByMaDonVi(PhienLamViec.iNamLamViec, sMaDonVi);
                             }
                             if (r.Columns.ContainsKey("sTenCDT"))
@@ -550,7 +550,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                                     dDateCreate = DateTime.Now,
                                     sTrangThaiDuAn = "KHTH"
                                 };
-                                if (r.Columns.ContainsKey("sTenDonViQL"))
+                                if (r.Columns.ContainsKey("sDonVi"))
                                 {
                                     entityDuAn.iID_DonViQuanLyID = donvi?.iID_Ma;
                                     entityDuAn.iID_MaDonViThucHienDuAnID = sMaDonVi;
@@ -591,7 +591,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                                 var entityDuAn = _iQLVonDauTuService.GetDuAnByIdDuAn(Guid.Parse(iID_DuAnID));
                                 entityDuAn.sUserUpdate = Username;
                                 entityDuAn.dDateUpdate = DateTime.Now;
-                                if (r.Columns.ContainsKey("sTenDonViQL"))
+                                if (r.Columns.ContainsKey("sDonVi"))
                                 {
                                     entityDuAn.iID_DonViQuanLyID = donvi?.iID_Ma;
                                 }
@@ -608,6 +608,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                                 conn.Update(entityDuAn, trans);
                             }
                         }
+
                         // commit to db
                         trans.Commit();
                     });
@@ -648,22 +649,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                             NS_DonVi donvi = null;
                             string sId_CDT = "";
                             DM_ChuDauTu chudautu = null;
-                            if (rCT.Columns.ContainsKey("sTenDonViQL"))
-                            {
-                                entityDuAn.iID_DonViQuanLyID = donvi?.iID_Ma;
-                                entityDuAn.iID_MaDonViThucHienDuAnID = sMaDonVi;
-                                entityDuAn.iID_DonViThucHienDuAnID = donvi?.iID_Ma;
-                                sMaDonVi = rCT.Columns["sTenDonViQL"].Split(new string[] { "-" }, StringSplitOptions.None)[0];
-                                donvi = _iNganSachService.GetDonViByMaDonVi(PhienLamViec.iNamLamViec, sMaDonVi);
-                            }
                             if (rCT.Columns.ContainsKey("sDonVi"))
                             {
+                                sMaDonVi = rCT.Columns["sDonVi"].Split(new string[] { "-" }, StringSplitOptions.None)[0];
+                                donvi = _iNganSachService.GetDonViByMaDonVi(PhienLamViec.iNamLamViec, sMaDonVi);
                                 entityDuAn.iID_DonViQuanLyID = donvi?.iID_Ma;
                                 entityDuAn.iID_MaDonViThucHienDuAnID = sMaDonVi;
                                 entityDuAn.iID_MaDonVi = sMaDonVi;
-                                entityDuAn.iID_DonViThucHienDuAnID = donvi?.iID_Ma;
-                                sMaDonVi = rCT.Columns["sDonVi"].Split(new string[] { "-" }, StringSplitOptions.None)[0];
-                                donvi = _iNganSachService.GetDonViByMaDonVi(PhienLamViec.iNamLamViec, sMaDonVi);
+                                entityDuAn.iID_DonViThucHienDuAnID = donvi?.iID_Ma;                                
                             }
                             if (rCT.Columns.ContainsKey("sTenCDT"))
                             {
@@ -741,7 +734,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                         }
                         #endregion
                     });
-
+                    // nếu listNewKHV5NamChiTietNew mà k trống, thì tức trước đó đang chọn vài chi tiết mà vẫn chưa lưu vào DB
+                    TempData["currentListKHV5NamChiTiet_NotSaved"] = TempData["listNewKHV5NamChiTietNew"];
                     TempData["listNewKHV5NamChiTietNew"] = listTempData;
                     #endregion
                 }
@@ -755,7 +749,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             var entityKH5NChiTiet = new KeHoach5NamChiTietDuocDuyetTempForSave();
             entityKH5NChiTiet.iID_KeHoach5NamID = idKhddParent;
             entityKH5NChiTiet.iID_DuAnID = item.iID_DuAnID;
-            entityKH5NChiTiet.iID_DonViQuanLyID = item.iID_DonViQuanLyID;
+            entityKH5NChiTiet.iID_DonViID = item.iID_DonViQuanLyID;
             entityKH5NChiTiet.sTen = item.sTenDuAn;
             entityKH5NChiTiet.iID_NguonVonID = iID_NguonVonID;
             entityKH5NChiTiet.iID_LoaiCongTrinhID = item.iID_LoaiCongTrinhID;
@@ -763,6 +757,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             entityKH5NChiTiet.iID_MaDonVi = item.iID_MaDonVi;
             entityKH5NChiTiet.sDiaDiem = item.sDiaDiem;
             entityKH5NChiTiet.sThoiGianThucHien = item.sKhoiCong + " - " + item.sKetThuc;
+            entityKH5NChiTiet.keyID = Guid.NewGuid();
             return entityKH5NChiTiet;
         }
 

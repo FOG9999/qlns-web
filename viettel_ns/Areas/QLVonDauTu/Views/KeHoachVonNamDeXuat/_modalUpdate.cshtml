@@ -1,6 +1,29 @@
 ﻿@using Viettel.Models.QLVonDauTu
 @model VDT_KHV_KeHoachVonNam_DeXuat_ViewModel
 
+<style>
+    .tableFixHead {
+        overflow: auto;
+        height: 242px;
+    }
+
+        .tableFixHead thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+    #search {
+        width: 100%; /* Full-width */
+        font-size: 14px; /* Increase font-size */
+        padding: 6px 15px 6px 20px; /* Add some padding */
+        border: 1px solid #ddd; /* Add a grey border */
+        /*margin-bottom: 12px;*/ /* Add some space below the input */
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+</style>
 
 <div class="modal-body">
     <div class="form-group">
@@ -93,8 +116,9 @@
             else
             {
                 <div class="form-group row">
-                    <div class="col-sm-12 col-md-12 col-lg-12">
-                        <table class="table table-bordered" id="tblListDuAn">
+                    <div class="col-sm-12 col-md-12 col-lg-12 tableFixHead" style="height:450px" ;>
+                        <input type="text" id="search" onkeyup="handleSearch()" placeholder="Tìm kiếm dự án ">
+                        <table class="table table-bordered " id="tblListDuAn">
                             <thead>
                             <th><input type="checkbox" name="cbAll_duan" class="cbAll_duan" /></th>
                             <th>Mã dự án</th>
@@ -132,6 +156,23 @@
 
 <script>
     $(document).ready(function ($) {
+
+        var TBL_DANH_SACH_DUAN = "tblListDuAn";
+        $("#" + TBL_DANH_SACH_DUAN + " .cbAll_duan").change(function () {
+
+            console.log("a");
+            if (this.checked) {
+                $("#" + TBL_DANH_SACH_DUAN + " .cb_duan").filter(function () { return $(this.parentElement.parentElement).css("display") != "none" }).prop('checked', true).trigger("change");
+                console.log(this.parentElement.parentElement)
+            }
+
+            else {
+                $("#" + TBL_DANH_SACH_DUAN + " .cb_duan").filter(function () { return $(this.parentElement.parentElement).css("display") != "none" }).prop('checked', false).trigger("change");
+                console.log(this.parentElement.parentElement)
+            }
+
+        });
+
         var isDieuChinh = $("#txt_DieuChinh").val();
         var iID_DonViID = $("#iID_DonViQuanLyIDModal").val();
         var iNamKeHoach = $("#txtNamKeHoachModal").val();
@@ -153,13 +194,6 @@
             }
         });
 
-        $("#tblListDuAn .cbAll_duan").change(function () {
-            if (this.checked) {
-                $("#tblListDuAn .cb_duan").prop('checked', true).trigger("change");
-            } else {
-                $("#tblListDuAn .cb_duan").prop('checked', false).trigger("change");
-            }
-        });
 
         LoadDuAn(iID_DonViID, iNamKeHoach, iID_NguonVonID);
         var isShowing = false;

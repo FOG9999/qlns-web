@@ -417,7 +417,7 @@ namespace VIETTEL.Common
             {
                 public const string DAU_NAM = "Đầu năm";
                 public const string BO_SUNG = "Bổ sung";
-                public const string NAM_TRUOC_CHUYEN_SANG = "Năm Trước chuyển sang";
+                public const string NAM_TRUOC_CHUYEN_SANG = "Năm trước chuyển sang";
             }
         }
 

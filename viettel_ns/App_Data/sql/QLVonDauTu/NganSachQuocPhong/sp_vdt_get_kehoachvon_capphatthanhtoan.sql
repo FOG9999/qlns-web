@@ -85,17 +85,27 @@ CREATE TABLE #tmp(
 	IF(@iCoQuanThanhToan = 1)
 	BEGIN
 		INSERT INTO #tmpMaNguon(sMaNguon)
-		VALUES('101'), ('121a'), ('111'), ('131')
+		VALUES('101'), ('121a'), ('111'), ('131')		
 		UPDATE #tmp 
-		SET fTongGiaTri =(SELECT fCapPhatTaiKhoBac from VDT_KHV_KeHoachVonNam_DuocDuyet khvn_dd where khvn_dd.iID_KeHoachVonNam_DuocDuyetID=Id)
-		WHERE Id in (SELECT Id FROM #tmpChungTuVonNam)
+		SET fTongGiaTri =
+		-- Kế hoạch vốn năm
+		case when sMaNguonCha = '101' then (SELECT fCapPhatTaiKhoBac from VDT_KHV_KeHoachVonNam_DuocDuyet khvn_dd where khvn_dd.iID_KeHoachVonNam_DuocDuyetID=Id)
+		-- Kế hoạch vốn ứng
+		else (SELECT fGiaTriUng from VDT_KHV_KeHoachVonUng khvu_dd where khvu_dd.Id=Id) end
+		-- Kế hoạch năm trước chuyển sang (111) và kế hoạch vốn ứng năm trước chuyển sang (131) chưa clear
+		WHERE Id in (SELECT Id FROM #tmp)
 	END
 	ELSE
 	BEGIN
 		INSERT INTO #tmpMaNguon(sMaNguon)
 		VALUES('102'), ('122a'), ('112'), ('132')
 		UPDATE #tmp 
-		SET fTongGiaTri =(SELECT fCapPhatBangLenhChi from VDT_KHV_KeHoachVonNam_DuocDuyet khvn_dd where khvn_dd.iID_KeHoachVonNam_DuocDuyetID=Id)
+		SET fTongGiaTri =
+		-- Kế hoạch vốn năm
+		case when sMaNguonCha = '101' then (SELECT fCapPhatBangLenhChi from VDT_KHV_KeHoachVonNam_DuocDuyet khvn_dd where khvn_dd.iID_KeHoachVonNam_DuocDuyetID=Id)
+		-- Kế hoạch vốn ứng
+		else (SELECT fGiaTriUng from VDT_KHV_KeHoachVonUng khvu_dd where khvu_dd.Id=Id) end		
+		-- Kế hoạch năm trước chuyển sang (112) và kế hoạch vốn ứng năm trước chuyển sang (132) chưa clear
 		WHERE Id in (SELECT Id FROM #tmpChungTuVonNam) 
 	END
 

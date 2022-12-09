@@ -17,6 +17,16 @@
                         <hr class='color-background-red' />
                         <div class="form-group row">
                             <div class="col-sm-2">
+                                <label>Tên chương trình</label>
+                                @Helpers.Required()
+                                <p>@Html.Raw(Html.Encode(Model.thongtinthanhtoan.sTenNhiemVuChi))</p>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>B quản lý</label>
+                                @Helpers.Required()
+                                <p>@Html.Raw(Html.Encode(Model.thongtinthanhtoan.sTenPhongBan))</p>
+                            </div>
+                            <div class="col-sm-2">
                                 <label>Đơn vị</label>
                                 @Helpers.Required()
                                 <p>@Html.Raw(Html.Encode(Model.thongtinthanhtoan.sTen))</p>
@@ -44,19 +54,16 @@
                                     }
                                 }
                             </div>
-                            <div class="col-sm-2">
-                                <label>Tên chương trình</label>
-                                @Helpers.Required()
-                                <p>@Html.Raw(Html.Encode(Model.thongtinthanhtoan.sTenNhiemVuChi))</p>
-                            </div>
+
+                           
+                        </div>
+
+                        <div class="form-group row">
                             <div class="col-sm-2">
                                 <label>Chủ đầu tư</label>
                                 @Helpers.Required()
                                 <p>@Html.Raw(Html.Encode(Model.thongtinthanhtoan.sTenCDT))</p>
                             </div>
-                        </div>
-
-                        <div class="form-group row">
                             <div class="col-sm-2">
                                 <label>Thanh toán theo</label>
                                 @Helpers.Required()

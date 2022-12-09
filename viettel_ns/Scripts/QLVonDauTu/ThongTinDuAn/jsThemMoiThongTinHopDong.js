@@ -105,7 +105,7 @@ function ShowChiPhi(id, idGoiThauNhaThau) {
                         htmlChiPhi += "<td>" + x.STenChiPhi + "</td>";
                         htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right' >" + FormatNumber(x.FGiaTriDuocDuyet) + "</td>";
                         htmlChiPhi += "<td>" + `<input style="text-align: right;" ${disable} class="r_fGiaTrungThau sotien form-control" type="text" value='${fTienGoiThau}' onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" onblur="SumGiaTriGoiThau('${x.IIDChiPhiID}')"/>` + "</td>";//giá trị trúng thầu
-                        htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriConLai) + "</td>";
+                        htmlChiPhi += "<td class='fGiaTriConLai sotien' align='right'>" + FormatNumber(x.FGiaTriConLai) + "</td>";
                         if (newArray.length > 0) {
                             htmlChiPhi += "<td align='center'> <button id='btn_chitiet_chiphi_" + x.IIDChiPhiID + "' style='width: 120px !important' onclick = ShowHangMuc('" + x.IIDChiPhiID + "') class='btn btn-primary btnShowHangMuc'><span>Chi tiết hạng mục</span></button>" +
                                 "</td > ";
@@ -185,6 +185,7 @@ function SumGiaTriGoiThau(idChiPhi) {
     var tienGoiThau = rowChiPhi.find('.r_fGiaTrungThau').val() == "" ? 0 : parseFloat(UnFormatNumber(rowChiPhi.find('.r_fGiaTrungThau').val()));
     var phuLucChiPhiTemp = listPhuLucChiPhi.find(x => x.IIDChiPhiID == idChiPhi);
     var phuLucChiPhi = arrPhuLucChiPhi.find(x => x.IIDChiPhiID == idChiPhi);
+    var giaTriPheDuyet = rowChiPhi.find('.r_fGiaGoiThau').html() == "" ? 0 : parseFloat(UnFormatNumber(rowChiPhi.find('.r_fGiaGoiThau').html()));
 
     if (isChecked) {
         var rowChiPhi = $("#tblDanhSachPhuLucChiPhi tbody").find('tr#' + idChiPhi);
@@ -213,6 +214,10 @@ function SumGiaTriGoiThau(idChiPhi) {
             .reduce((pre, curr) => pre + curr, 0);
         rowGoiThau.find('.r_fGiaTriGoiThau').html(FormatNumber(arrGoiThau[indexOfGoiThau].fGiaTriGoiThau));
     }
+
+    // tinh gia tri con lai
+    var giaTriConLai = giaTriPheDuyet - tienGoiThau;
+    rowChiPhi.find('.fGiaTriConLai').html(FormatNumber(giaTriConLai));
 }
 
 
@@ -683,6 +688,8 @@ function CheckLoi(hopDong) {
     if (loaiHopDong == HOP_DONG_KINH_TE && (hopDong.iID_GoiThauID == "" || hopDong.iID_GoiThauID == GUID_EMPTY))
         messErr.push("Hãy chọn gói thầu");
 
+    if (hopDong.dKhoiCongDuKien > hopDong.dKetThucDuKien)
+        messErr.push("Thời gian kết thúc không được nhỏ hơn Thời gian bắt đầu");
 
     var newArray = arrGoiThau.filter(function (el) {
         return (el.IIdNhaThauId == '' || el.IIdNhaThauId == '00000000-0000-0000-0000-000000000000')

@@ -140,6 +140,8 @@ namespace Viettel.Models.QLVonDauTu
         public double TienDeNghi { get; set; }
         public double fCapPhatTaiKhoBac { get; set; }
         public double fCapPhatBangLenhChi { get; set; }
+        public double fGiaTriThanhToanTN { get; set; }
+        public double fGiaTriThanhToanNN { get; set; }
     }
 
     public class VdtDaDuToanChiPhiDataQuery: VDT_DA_DuToan_Nguonvon

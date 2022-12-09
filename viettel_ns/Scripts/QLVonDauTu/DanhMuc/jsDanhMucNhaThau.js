@@ -191,7 +191,11 @@ function Save() {
 }
 
 function ValidateData(data) {
-    var Title = 'Lỗi thêm mới/chỉnh sửa nhà thầu';
+    var Title = 'Lỗi thêm mới nhà thầu';
+    if ($("#iID_NhaThauModal").val() != GUID_EMPTY) {
+        Title = 'Lỗi chỉnh sửa nhà thầu';
+    }
+
     var Messages = [];
 
     if (data.sMaNhaThau == null || data.sMaNhaThau == "") {
@@ -201,6 +205,80 @@ function ValidateData(data) {
     if (data.sTenNhaThau == null || data.sTenNhaThau == "") {
         Messages.push("Tên nhà thầu chưa nhập !");
     }
+
+    if ($.trim($("#txtsEmail").val()) != "" && !CheckEmail($.trim($("#txtsEmail").val()))) {
+        Messages.push("Email không đúng định dạng!");
+    }
+
+    if ($.trim($("#txtsFax").val()) != "" && !CheckPhoneOrFax($.trim($("#txtsFax").val()))) {
+        Messages.push("Số fax nhập không hợp lệ!");
+    }
+
+    if ($.trim($("#txtsDTLH").val()) != "" && !CheckPhoneOrFax($.trim($("#txtsDTLH").val()))) {
+        Messages.push("Số điện thoại liên hệ không đúng định dạng!");
+    }
+
+    if ($.trim($("#txtsMaSoThue").val()) != "" && !CheckAlphanumeric($.trim($("#txtsMaSoThue").val()))) {
+        Messages.push("Mã số thuế nhập không hợp lệ!");
+    }
+
+    if ($.trim($("#txtsSoTK").val()) != "" && !CheckAlphanumeric($.trim($("#txtsSoTK").val()))) {
+        Messages.push("Số tài khoản nhập không hợp lệ!");
+    }
+
+    if ($.trim($("#txtsMaNhaThau").val()) != "" && $.trim($("#txtsMaNhaThau").val()).length > 100) {
+        Messages.push("Mã nhà thầu vượt quá 100 kí tự !");
+    }
+
+    if ($.trim($("#txtsTenNhaThau").val()) != "" && $.trim($("#txtsTenNhaThau").val()).length > 300) {
+        Messages.push("Tên nhà thầu vượt quá 300 kí tự !");
+    }
+
+    if ($.trim($("#txtsDiaChi").val()) != "" && $.trim($("#txtsDiaChi").val()).length > 300) {
+        Messages.push("Địa chỉ vượt quá 300 kí tự !");
+    }
+    if ($.trim($("#txtsDaiDien").val()) != "" && $.trim($("#txtsDaiDien").val()).length > 100) {
+        Messages.push("Đại diện vượt quá 100 kí tự !");
+    }
+
+    if ($.trim($("#txtsWebsite").val()) != "" && $.trim($("#txtsWebsite").val()).length > 300) {
+        Messages.push("Website vượt quá 300 kí tự !");
+    }
+
+    if ($.trim($("#txtsMaSoThue").val()) != "" && $.trim($("#txtsMaSoThue").val()).length > 100) {
+        Messages.push("Mã số thuế vượt quá 100 kí tự !");
+    }
+
+    if ($.trim($("#txtsNganHang").val()) != "" && $.trim($("#txtsNganHang").val()).length > 100) {
+        Messages.push("Ngân hàng vượt quá 100 kí tự !");
+    }
+
+    if ($.trim($("#txtsSoTK").val()) != "" && $.trim($("#txtsSoTK").val()).length > 100) {
+        Messages.push("Số tài khoản vượt quá 100 kí tự !");
+    }
+
+    if ($.trim($("#txtsChucVu").val()) != "" && $.trim($("#txtsChucVu").val()).length > 100) {
+        Messages.push("Chức vụ vượt quá 100 kí tự !");
+    }
+
+    if ($.trim($("#txtsDienThoai").val()) != "" && $.trim($("#txtsDienThoai").val()).length > 100) {
+        Messages.push("Điện thoại vượt quá 100 kí tự !");
+    }
+
+    if ($.trim($("#txtsFax").val()) != "" && $.trim($("#txtsFax").val()).length > 100) {
+        Messages.push("Fax vượt quá 100 kí tự !");
+    }
+
+    if ($.trim($("#txtsNguoiLH").val()) != "" && $.trim($("#txtsNguoiLH").val()).length > 300) {
+        Messages.push("Người liên hệ vượt quá 300 kí tự !");
+    }
+    if ($.trim($("#txtsEmail").val()) != "" && $.trim($("#txtsEmail").val()).length > 100) {
+        Messages.push("Email vượt quá 100 kí tự !");
+    }
+    if ($.trim($("#txtsDTLH").val()) != "" && $.trim($("#txtsDTLH").val()).length > 100) {
+        Messages.push("Số điện thoại liên hệ vượt quá 100 kí tự !");
+    }
+
 
     //if (CheckExistMaNhaThau(data.sMaNhaThau)) {
     //    Messages.push("Đã tồn tại mã nhà thầu !");

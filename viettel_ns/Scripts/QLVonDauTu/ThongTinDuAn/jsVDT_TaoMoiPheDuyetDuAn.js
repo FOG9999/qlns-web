@@ -104,6 +104,7 @@ function LoadDataViewChiPhi() {
     arrChiPhiSave.forEach(x => {
         html += '<tr data-id="' + x.id + '" data-iidduanchiphi="' + x.iID_DuAn_ChiPhi + '">';
         html += '<input type="hidden" class="r_IThuTu" value = "' + x.iThuTu + '"/> <input type="hidden" class="r_IsLoaiChiPhi" value = "' + x.IsDefault + '"/>';
+        html += '<td class="width-50" style="text-align:center;">' + x.iThuTu + "</td >"; 
         html += '<td style="font-weight:bold;text-align:left;" ><input type = "text" onblur="UpdateChiPhi(this)" class="form-control r_TenChiPhi" value = "' + x.sTenChiPhi + '" /> </td> <input type="hidden" class="r_iID_DuAn_ChiPhiID" value=""/> <input type="hidden" class="r_iID_ChiPhiParentID" /> <input type="hidden" class="r_iID_ChiPhiID" value = "' + x.iID_ChiPhiID + '"/>';
         html += '<td style="text-align:right"><input type="text" onblur="UpdateChiPhi(this)" style="text-align: right" class="form-control txtGiaTriChiPhi" onkeyup="ValidateNumberKeyUp(this); " onkeypress="return ValidateNumberKeyPress(this, event); " /> </td>';
         html += "<td class='width-200' align='center'>";

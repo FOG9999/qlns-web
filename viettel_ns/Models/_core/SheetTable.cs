@@ -916,6 +916,7 @@ namespace VIETTEL.Models
         /// 2:  Bool
         /// 3:  Autocomplete
         /// 4:  Datetime
+        /// 5:  AutocompleteMultiple
         /// </summary>
         public int DataType { get; set; }
 

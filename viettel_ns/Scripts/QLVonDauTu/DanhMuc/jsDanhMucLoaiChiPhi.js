@@ -146,8 +146,15 @@ function Save() {
 }
 
 function ValidateData(data) {
-    var Title = 'Lỗi thêm mới/chỉnh sửa loại chi phí';
+    var Title = 'Lỗi thêm mới loại chi phí';
+    if ($("#iID_LoaiChiPhiModal").val() != GUID_EMPTY) {
+        Title = 'Lỗi chỉnh sửa loại chi phí';
+    } 
     var Messages = [];
+
+    if (data.iThuTu == null || data.iThuTu == "") {
+        Messages.push("Thứ tự chưa nhập !");
+    } 
 
     if (data.sMaChiPhi == null || data.sMaChiPhi == "") {
         Messages.push("Mã chi phí chưa nhập !");
@@ -183,3 +190,4 @@ function ValidateData(data) {
 function CheckExistMaLoaiChiPhi(sMaChiPhi) {
 
 }
+

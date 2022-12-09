@@ -75,6 +75,7 @@ namespace Viettel.Models.KeHoachChiTietBQP
         public virtual Guid? iID_BQuanLyID { get; set; }
         public virtual string iID_MaDonVi { get; set; }
         public virtual Guid? iID_DonViID { get; set; }
+        public virtual string fGiaTriTTCP_USD { get; set; }
         public virtual string fGiaTriUSD { get; set; }
         public virtual string fGiaTriVND { get; set; }
         public virtual string sMaThuTu { get; set; }
@@ -82,6 +83,14 @@ namespace Viettel.Models.KeHoachChiTietBQP
         public virtual Guid? iID_ParentID { get; set; }
         public virtual bool bIsTTCP { get; set; }
         public virtual bool isAdd { get; set; }
+        public virtual string sMaBQuanLys { get; set; }
+    }
+
+    public class NH_KHChiTietBQPNhiemVuChi_PhongBanCreateDto
+    {
+        public virtual Guid ID { get; set; }
+        public virtual Guid? iID_KHChiTietBQP_NhiemVuChiID { get; set; }
+        public virtual Guid? iID_NS_PhongBanID { get; set; }
     }
 
     public class NH_DM_TiGia_ChiTiet_ViewModel

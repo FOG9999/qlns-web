@@ -155,7 +155,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             }
             else
             {
-                var lstDataDieuChinh = lstData.Select(n => { n.iID_ParentID = n.iID_GoiThauID; n.iID_GoiThauID = Guid.NewGuid(); return n; });
+               // var lstDataDieuChinh = lstData.Select(n => { n.iID_ParentID = n.iID_GoiThauID; n.iID_GoiThauID = Guid.NewGuid(); return n; });
+                var lstDataDieuChinh = lstData.Select(n => { n.iID_ParentID = n.iID_GoiThauID; return n; });
                 return Json(new { data = lstDataDieuChinh }, JsonRequestBehavior.AllowGet);
             }
         }
