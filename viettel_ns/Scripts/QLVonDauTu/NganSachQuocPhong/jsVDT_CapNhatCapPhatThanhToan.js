@@ -6,6 +6,8 @@ var TBL_DANH_SACH_KHV = "tblDanhSachKHV";
 var THANH_TOAN = 1;
 var TAM_UNG = 2;
 var THU_HOI_UNG = 3;
+var THU_HOI_NAM_TRUOC = 4;
+var THU_HOI_NAM_NAY = 5;
 
 var NAM_TRUOC = 1;
 var NAM_NAY = 2;
@@ -147,7 +149,7 @@ $(document).ready(function () {
     })
 
     $("#drpNguonNganSach").change(function (e) {
-        ResetThanhToanChiTiet();
+        //ResetThanhToanChiTiet();
         GetArrKeHoachVon();
         //LoadLuyKeThanhToan();
     });
@@ -693,6 +695,9 @@ function ThemMoiThanhToanChiTiet() {
     EventValidate();
 
     $("#" + TBL_DANH_SACH_THANH_TOAN_CHITIET + " tbody tr:last-child td.r_Loai select").trigger("change");
+    if (iLoaiThanhToan == TAM_UNG) {
+        GetKeHoachVonTT();
+    }
 }
 
 function CreateHtmlSelectLoai(value) {
@@ -805,6 +810,39 @@ function EventValidate() {
 
 function onChangeLoaiThanhToan(obj) {
     var thisDong = $(obj).closest("tr");
+    // update giá trị đề nghị của các dòng chi tiết khi loại thanh toán thay đổi
+    var dataDeNghi = GetThongTinDeNghi();
+    var iLoaiThanhToan = $("#drpLoaiThanhToan option:selected").val();
+    var iLoaiDeNghi = "";
+    if (iLoaiThanhToan == THANH_TOAN)
+        iLoaiDeNghi = THANH_TOAN;
+    else
+        iLoaiDeNghi = TAM_UNG;
+
+    var fDefaultValueTN, fDefaultValueNN;
+    if (iLoaiDeNghi == THANH_TOAN) {
+        $("#" + TBL_DANH_SACH_THANH_TOAN_CHITIET + " tbody tr").each((ind, row) => {
+            let iLoaiThanhToanCurrentRow = $(row).find('.r_Loai select option:selected').val();
+            // thanh toán
+            if (iLoaiThanhToanCurrentRow == THANH_TOAN) {
+                fDefaultValueTN = dataDeNghi.fGiaTriThanhToanTN;
+                fDefaultValueNN = dataDeNghi.fGiaTriThanhToanNN;
+            }
+            // thu hồi năm trước
+            else if (iLoaiThanhToanCurrentRow == THU_HOI_NAM_TRUOC) {
+                fDefaultValueTN = dataDeNghi.fGiaTriThuHoiUngTruocTN;
+                fDefaultValueNN = dataDeNghi.fGiaTriThuHoiUngTruocNN;
+            }
+            // thu hồi theo chế độ
+            else if (iLoaiThanhToanCurrentRow == THU_HOI_NAM_NAY) {
+                fDefaultValueTN = dataDeNghi.fGiaTriThuHoiTN;
+                fDefaultValueNN = dataDeNghi.fGiaTriThuHoiNN;
+            }
+
+            $($(row).find('.r_fGiaTriDeNghiTN')[0]).html(FormatNumber(fDefaultValueTN))
+            $($(row).find('.r_fGiaTriDeNghiNN')[0]).html(FormatNumber(fDefaultValueNN))
+        })
+    }
 
     var htmlOption = "";
     arrKeHoachVonThanhToan.forEach(function (item) {
