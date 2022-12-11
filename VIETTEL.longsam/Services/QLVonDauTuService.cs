@@ -1505,6 +1505,13 @@ namespace Viettel.Services
         bool UpdatePheDuyetThanhToanChiTiet(List<PheDuyetThanhToanChiTiet> lstData, Guid iID_DeNghiThanhToanID, string sUserLogin, int iNamLamViec, double fThueGiaTriGiaTangDuocDuyet, double fChuyenTienBaoHanhDuocDuyet);
 
         /// <summary>
+        /// Xóa phê duyệt thanh toán của đề nghị thanh toán này để có thể sửa hoặc tạo phê duyệt mới
+        /// </summary>
+        /// <param name="deNghiThanhToanID"></param>
+        /// <returns></returns>
+        bool DeletePheDuyetThanhToanByDeNghiThanhToanId(Guid iID_DeNghiThanhToanID);
+
+        /// <summary>
         /// luu thanh toan
         /// </summary>
         /// <param name="data"></param>
@@ -16426,6 +16433,39 @@ namespace Viettel.Services
                 }
             }
             catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return false;
+        }
+        /// <summary>
+        /// Xóa phê duyệt thanh toán của đề nghị thanh toán này để có thể sửa hoặc tạo phê duyệt mới
+        /// </summary>
+        /// <param name="deNghiThanhToanID"></param>
+        /// <returns></returns>
+        public bool DeletePheDuyetThanhToanByDeNghiThanhToanId(Guid iID_DeNghiThanhToanID)
+        {
+            try
+            {
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    if (DeletePheDuyetThanhToanChiTietByThanhToanId(iID_DeNghiThanhToanID))
+                    {
+                        conn.Open();
+                        var trans = conn.BeginTransaction();
+                        VDT_TT_DeNghiThanhToan objDeNghiThanhToan = GetDeNghiThanhToanByID(iID_DeNghiThanhToanID);
+                        //update entity
+                        objDeNghiThanhToan.fThueGiaTriGiaTangDuocDuyet = null;
+                        objDeNghiThanhToan.fChuyenTienBaoHanhDuocDuyet = null;
+                        objDeNghiThanhToan.dNgayPheDuyet = null;
+                        conn.Update(objDeNghiThanhToan, trans);
+                        trans.Commit();
+                        return true;
+                    }
+                    else return false;
+                }
+            }
+            catch(Exception ex)
             {
                 AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
             }

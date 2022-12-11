@@ -1135,6 +1135,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             return true;
         }
 
+        [HttpPost]
+        public JsonResult DeletePheDuyetThanhToanByDeNghiThanhToanID(Guid iID_DeNghiThanhToanID)
+        {
+            bool isSuccessful = _vdtService.DeletePheDuyetThanhToanByDeNghiThanhToanId(iID_DeNghiThanhToanID);
+            return Json(new { bIsComplete = isSuccessful }, JsonRequestBehavior.AllowGet);
+        }
+
         #endregion
 
         #region Export
