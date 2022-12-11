@@ -865,18 +865,22 @@ function onChangeKeHoachVon(obj) {
             text: ''
         })
         lstMlns.forEach(function (item) {
-            if (sLNSValue != null && sLNSValue != "" && sLNSValue == item.LNS) {
-                arrSelect.push({
-                    id: item.LNS,
-                    text: item.LNS,
-                    selected: true
-                })
-            } else {
-                arrSelect.push({
-                    id: item.LNS,
-                    text: item.LNS
-                })
+            // nếu chưa có thì mới push
+            if (arrSelect.filter(x => x.id == item.LNS).length == 0) {
+                if (sLNSValue != null && sLNSValue != "" && sLNSValue == item.LNS) {
+                    arrSelect.push({
+                        id: item.LNS,
+                        text: item.LNS,
+                        selected: true
+                    })
+                } else {
+                    arrSelect.push({
+                        id: item.LNS,
+                        text: item.LNS
+                    })
+                }
             }
+            
         })
         $(thisDong).find(".r_Lns select").select2({
             data: arrSelect
@@ -902,19 +906,21 @@ function onChangeLNS(obj) {
         })
         lstMlns.forEach(function (item) {
             if (item.LNS == sLNS) {
-                if (sLValue != null && sLValue != "" && sLValue == item.L) {
-                    arrSelect.push({
-                        id: item.L,
-                        text: item.L,
-                        selected: true
-                    })
-                } else {
-                    arrSelect.push({
-                        id: item.L,
-                        text: item.L
-                    })
-                }
-
+                // nếu chưa có thì mới push
+                if (arrSelect.filter(x => x.id == item.L).length == 0) {
+                    if (sLValue != null && sLValue != "" && sLValue == item.L) {
+                        arrSelect.push({
+                            id: item.L,
+                            text: item.L,
+                            selected: true
+                        })
+                    } else {
+                        arrSelect.push({
+                            id: item.L,
+                            text: item.L
+                        })
+                    }
+                }                
             }
         })
         $(thisDong).find(".r_L select").select2({
@@ -939,21 +945,24 @@ function onChangeL(obj) {
             text: ''
         })
         lstMlns.forEach(function (item) {
-            if (item.LNS == sLNS && item.L == sL) {
-                if (sKValue != null && sKValue != "" && sKValue == item.K) {
-                    arrSelect.push({
-                        id: item.K,
-                        text: item.K,
-                        selected: true
-                    })
+            // nếu chưa có thì mới push
+            if (arrSelect.filter(x => x.id == item.K).length == 0) {
+                if (item.LNS == sLNS && item.L == sL) {
+                    if (sKValue != null && sKValue != "" && sKValue == item.K) {
+                        arrSelect.push({
+                            id: item.K,
+                            text: item.K,
+                            selected: true
+                        })
+                    }
+                    else {
+                        arrSelect.push({
+                            id: item.K,
+                            text: item.K
+                        })
+                    }
                 }
-                else {
-                    arrSelect.push({
-                        id: item.K,
-                        text: item.K
-                    })
-                }
-            }
+            }            
         })
         $(thisDong).find(".r_K select").select2({
             data: arrSelect
@@ -978,18 +987,21 @@ function onChangeK(obj) {
             text: ''
         })
         lstMlns.forEach(function (item) {
-            if (item.LNS == sLNS && item.L == sL && item.K == sK) {
-                if (sMValue != null && sMValue != "" && sMValue == item.M) {
-                    arrSelect.push({
-                        id: item.M,
-                        text: item.M,
-                        selected: true
-                    })
-                } else {
-                    arrSelect.push({
-                        id: item.M,
-                        text: item.M
-                    })
+            // nếu chưa có thì mới push
+            if (arrSelect.filter(x => x.id == item.M).length == 0) {
+                if (item.LNS == sLNS && item.L == sL && item.K == sK) {
+                    if (sMValue != null && sMValue != "" && sMValue == item.M) {
+                        arrSelect.push({
+                            id: item.M,
+                            text: item.M,
+                            selected: true
+                        })
+                    } else {
+                        arrSelect.push({
+                            id: item.M,
+                            text: item.M
+                        })
+                    }
                 }
             }
         })
@@ -1017,18 +1029,21 @@ function onChangeM(obj) {
             text: ''
         })
         lstMlns.forEach(function (item) {
-            if (item.LNS == sLNS && item.L == sL && item.K == sK && item.M == sM) {
-                if (sTmValue != null && sTmValue != "" && sTmValue == item.TM) {
-                    arrSelect.push({
-                        id: item.TM,
-                        text: item.TM,
-                        selected: true
-                    })
-                } else {
-                    arrSelect.push({
-                        id: item.TM,
-                        text: item.TM
-                    })
+            // nếu chưa có thì mới push
+            if (arrSelect.filter(x => x.id == item.TM).length == 0) {
+                if (item.LNS == sLNS && item.L == sL && item.K == sK && item.M == sM) {
+                    if (sTmValue != null && sTmValue != "" && sTmValue == item.TM) {
+                        arrSelect.push({
+                            id: item.TM,
+                            text: item.TM,
+                            selected: true
+                        })
+                    } else {
+                        arrSelect.push({
+                            id: item.TM,
+                            text: item.TM
+                        })
+                    }
                 }
             }
         })
@@ -1059,18 +1074,21 @@ function onChangeTM(obj) {
             text: ''
         })
         lstMlns.forEach(function (item) {
-            if (item.LNS == sLNS && item.L == sL && item.K == sK && item.M == sM && item.TM == sTM) {
-                if (sTtmValue != null && sTtmValue != "" && sTtmValue == item.TTM) {
-                    arrSelect.push({
-                        id: item.TTM,
-                        text: item.TTM,
-                        selected: true
-                    })
-                } else {
-                    arrSelect.push({
-                        id: item.TTM,
-                        text: item.TTM
-                    })
+            // nếu chưa có thì mới push
+            if (arrSelect.filter(x => x.id == item.TTM).length == 0) {
+                if (item.LNS == sLNS && item.L == sL && item.K == sK && item.M == sM && item.TM == sTM) {
+                    if (sTtmValue != null && sTtmValue != "" && sTtmValue == item.TTM) {
+                        arrSelect.push({
+                            id: item.TTM,
+                            text: item.TTM,
+                            selected: true
+                        })
+                    } else {
+                        arrSelect.push({
+                            id: item.TTM,
+                            text: item.TTM
+                        })
+                    }
                 }
             }
         })
@@ -1101,23 +1119,28 @@ function onChangeTTM(obj) {
             text: ''
         })
         lstMlns.forEach(function (item) {
-            if (item.LNS == sLNS && item.L == sL && item.K == sK && item.M == sM && item.TM == sTM && item.TTM == sTTM) {
-                if (sNgValue != null && sNgValue != "" && sNgValue == item.NG) {
-                    arrSelect.push({
-                        id: item.NG,
-                        text: item.NG,
-                        selected: true
-                    })
-                } else {
-                    arrSelect.push({
-                        id: item.NG,
-                        text: item.NG
-                    })
+            // nếu chưa có thì mới push
+            if (arrSelect.filter(x => x.id == item.NG).length == 0) {
+                if (item.LNS == sLNS && item.L == sL && item.K == sK && item.M == sM && item.TM == sTM && item.TTM == sTTM) {
+                    if (sNgValue != null && sNgValue != "" && sNgValue == item.NG) {
+                        arrSelect.push({
+                            id: item.NG,
+                            text: item.NG,
+                            selected: true
+                        })
+                    } else {
+                        arrSelect.push({
+                            id: item.NG,
+                            text: item.NG
+                        })
+                    }
                 }
             }
         })
         $(thisDong).find(".r_Ng select").select2({
             data: arrSelect
+        }).change(e => {
+            onChangeNG(e.target);
         })
 
         GetNoiDungMLNS(obj);
