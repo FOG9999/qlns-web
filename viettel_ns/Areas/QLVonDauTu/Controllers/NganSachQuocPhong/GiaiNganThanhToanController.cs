@@ -559,14 +559,25 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 if (item.iLoaiDeNghi == (int)Constants.LoaiThanhToan.Type.THANH_TOAN || item.iLoaiDeNghi == (int)Constants.LoaiThanhToan.Type.TAM_UNG)
                 {
                     item.fDefaultValueTN = data.fGiaTriThanhToanTN;
-                    item.fDefaultValueNN = data.fGiaTriThanhToanNN;                    
+                    item.fDefaultValueNN = data.fGiaTriThanhToanNN;
+                    // trường này để lựa chọn giá trị cho dropdown loại thanh toán của phê duyệt chi tiết
+                    item.iLoai = data.iLoaiThanhToan == (int)Constants.LoaiThanhToan.Type.THANH_TOAN ? (int)PaymentTypeEnum.Type.THANH_TOAN : (int)PaymentTypeEnum.Type.TAM_UNG; 
                 }
                 else
                 {
-                    item.fDefaultValueTN = data.fGiaTriThuHoiTN;
-                    item.fDefaultValueNN = data.fGiaTriThuHoiNN;
+                    if(item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.THU_HOI_NAM_NAY)
+                    {
+                        item.fDefaultValueTN = data.fGiaTriThuHoiTN;
+                        item.fDefaultValueNN = data.fGiaTriThuHoiNN;
+                    }
+                    else if(item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.THU_HOI_NAM_TRUOC)
+                    {
+                        item.fDefaultValueTN = data.fGiaTriThuHoiUngTruocTN;
+                        item.fDefaultValueNN = data.fGiaTriThuHoiUngTruocNN;
+                    }
+                    item.iLoai = item.iLoaiDeNghi;
                 }
-                item.iLoai = data.iLoaiThanhToan == (int)Constants.LoaiThanhToan.Type.THANH_TOAN ? item.iLoaiDeNghi : (int)Constants.LoaiThanhToan.Type.TAM_UNG; // trường này để lựa chọn giá trị cho dropdown loại thanh toán của phê duyệt chi tiết
+                
                 item.fTongSo = item.fGiaTriNgoaiNuoc.Value + item.fGiaTriTrongNuoc.Value;
                 item.iLoaiNamKH = objKHVTT.ILoaiNamKhv;
 
