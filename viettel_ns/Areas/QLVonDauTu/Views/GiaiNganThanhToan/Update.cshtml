@@ -284,19 +284,8 @@
                             <input type='text' class="form-control clearable" id="txtdntuVonNgoaiNuoc" value="@Model.sGiaTriThanhToanNN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
                         </div>
                     </div>
-                    <label>Số thu hồi tạm ứng (ứng trước)</label>
-                    <div class="form-group row">
-                        <div class="col-sm-6">
-                            <label for="txtthtuUngTruocVonTrongNuoc" class="">Vốn trong nước</label>
-                            <input type='text' class="form-control clearable" id="txtthtuUngTruocVonTrongNuoc" value="@Model.sGiaTriThuHoiUngTruocTN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                        </div>
-                        <div class="col-sm-6">
-                            <label for="txtthtuUngTruocVonNgoaiNuoc" class="">Vốn ngoài nước</label>
-                            <input type='text' class="form-control clearable" id="txtthtuUngTruocVonNgoaiNuoc" value="@Model.sGiaTriThuHoiUngTruocNN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
-                        </div>
-                    </div>
-                    <label>Số thu hồi tạm ứng (theo chế độ)</label>
-                    <div class="form-group row">
+                    <label class="only-thanhtoan">Số thu hồi tạm ứng (theo chế độ)</label>
+                    <div class="form-group row only-thanhtoan">
                         <div class="col-sm-6">
                             <label for="txtthtuVonTrongNuoc" class="">Vốn trong nước</label>
                             <input type='text' class="form-control clearable" id="txtthtuVonTrongNuoc" value="@Model.sGiaTriThuHoiTN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
@@ -306,6 +295,18 @@
                             <input type='text' class="form-control clearable" id="txtthtuVonNgoaiNuoc" value="@Model.sGiaTriThuHoiNN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
                         </div>
                     </div>
+                    <label class="only-thanhtoan">Số thu hồi tạm ứng (ứng trước)</label>
+                    <div class="form-group row only-thanhtoan">
+                        <div class="col-sm-6">
+                            <label for="txtthtuUngTruocVonTrongNuoc" class="">Vốn trong nước</label>
+                            <input type='text' class="form-control clearable" id="txtthtuUngTruocVonTrongNuoc" value="@Model.sGiaTriThuHoiUngTruocTN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="txtthtuUngTruocVonNgoaiNuoc" class="">Vốn ngoài nước</label>
+                            <input type='text' class="form-control clearable" id="txtthtuUngTruocVonNgoaiNuoc" value="@Model.sGiaTriThuHoiUngTruocNN" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
+                        </div>
+                    </div>
+
                     <div class="form-group row">
                         <div class="col-sm-6">
                             <label for="txtthtuThueGTGT" class="">Thuế giá trị gia tăng</label>
@@ -316,6 +317,7 @@
                             <input type='text' class="form-control clearable" id="txtthtuTienBaoHanh" value="@Model.sChuyenTienBaoHanh" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
                         </div>
                     </div>
+
                     <label class="only-thanhtoan">Thông tin đơn vị thụ hưởng</label>
                     <div class="form-group row">
                         <div class="col-sm-6">
@@ -336,7 +338,7 @@
                 </div>
                 </div>
 
-                <div class="form-group">
+                <div id="thongTinPheDuyet" class="form-group">
                     <h4 class="color-text-red">Thông tin phê duyệt thanh toán:</h4>
                     <hr class='color-background-red' />
 
@@ -410,6 +412,10 @@
 
                 <div class="form-group text-center">
                     <button class="btn btn-default" onclick="CancelSaveData()"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                    <button id="deletePheDuyetBtn" class="btn btn-danger" onclick="deleteThongTinPheDuyet()" style="width: auto !important">
+                        <span class="fa fa-trash-o fa-lg" aria-hidden="true"></span>
+                        <span style="margin-left: 5px">Xóa phê duyệt thanh toán</span>
+                    </button>
                     <button class="btn btn-primary" onclick="Update()"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
                 </div>
             </div>

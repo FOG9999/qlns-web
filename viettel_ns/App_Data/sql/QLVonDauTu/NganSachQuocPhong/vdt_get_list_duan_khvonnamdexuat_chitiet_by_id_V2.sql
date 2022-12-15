@@ -12,7 +12,8 @@ DECLARE @checkQDDT int
 --DECLARE @sLoaiDuAn nvarchar(100)
 --DECLARE @sThoiGianThucHien nvarchar(100)
 --DECLARE @sChuDauTu nvarchar(100)
---DECLARE @iIDKHVNDeXuatId uniqueidentifier = '583af5ee-7b20-46a7-ab0c-2313766321c5';
+--DECLARE @iIDKHVNDeXuatId uniqueidentifier = '7ec4cdb9-73a8-4dfb-9f64-af6901045b20';
+--DECLARE @iID_KeHoachVonNamDeXuatID_DieuChinh uniqueidentifier = '00000000-0000-0000-0000-000000000000';
 --DECLARE @sTenDonViQuanLy nvarchar(100)
 --DECLARE @lstDuAnID nvarchar(max) = '039fde70-b277-4172-9a4e-af6200b810ff,1e29de90-0409-4622-a05c-af62012b59f9';
 DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
@@ -208,7 +209,33 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 	LEFT JOIN #tmpLCTCDT as tmpLCTCDT on tmpLCTCDT.iID_DuAnID = tmdt.iID_DuAnID
 	LEFT JOIN #tmpCDT as tmpCDT on tmpCDT.iID_DuAnID = tmdt.iID_DuAnID
 	WHERE tmdt.iID_DuAnID IN (SELECT * FROM f_split(@lstDuAnID))
-
+	--lay gia tri dieu chinh--
+	BEGIN
+		CREATE TABLE #tmpGetfDieuChinh(iID_DuAnID uniqueidentifier,iID_KeHoachVonNamDeXuatChiTietID uniqueidentifier, FUocThucHienDC float,FThuHoiVonUngTruocDC  float,FThanhToanDC  float)
+		IF(@iID_KeHoachVonNamDeXuatID_DieuChinh <> @guidEmpty)
+		BEGIN
+			IF((SELECT COUNT(*) FROM VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet WHERE iID_KeHoachVonNamDeXuatID = @iID_KeHoachVonNamDeXuatID_DieuChinh ) > 0 )
+				INSERT INTO #tmpGetfDieuChinh(iID_DuAnID,iID_KeHoachVonNamDeXuatChiTietID,FUocThucHienDC,FThuHoiVonUngTruocDC,FThanhToanDC)
+				SELECT 
+				ISNULL(ct.iID_DuAnID, @guidEmpty),ISNULL(ct.iID_KeHoachVonNamDeXuatChiTietID, @guidEmpty),ISNULL(ct.fUocThucHien,0),ISNULL(ct.fThuHoiVonUngTruoc,0),ISNULL(ct.fThanhToan,0) FROM VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet ct
+				WHERE ct.iID_KeHoachVonNamDeXuatID = @iID_KeHoachVonNamDeXuatID_DieuChinh
+			ELSE
+				INSERT INTO #tmpGetfDieuChinh(iID_DuAnID,iID_KeHoachVonNamDeXuatChiTietID,FUocThucHienDC,FThuHoiVonUngTruocDC,FThanhToanDC)
+				SELECT 
+				ISNULL(ct.iID_DuAnID, @guidEmpty), @guidEmpty ,ISNULL(ct.fUocThucHien,0),ISNULL(ct.fThuHoiVonUngTruoc,0),ISNULL(ct.fThanhToan,0) FROM VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet ct
+				WHERE ct.iID_KeHoachVonNamDeXuatID = @iIDKHVNDeXuatId
+		END
+		ELSE
+		BEGIN
+			DECLARE @iID_Parent uniqueidentifier = (SELECT iID_ParentId FROM VDT_KHV_KeHoachVonNam_DeXuat WHERE iID_KeHoachVonNamDeXuatID = @iIDKHVNDeXuatId)
+			IF(@iID_Parent IS NOT NULL)
+				INSERT INTO #tmpGetfDieuChinh(iID_DuAnID,iID_KeHoachVonNamDeXuatChiTietID,FUocThucHienDC,FThuHoiVonUngTruocDC,FThanhToanDC)
+				SELECT 
+				ISNULL(ct.iID_DuAnID, @guidEmpty),ISNULL(ct.iID_KeHoachVonNamDeXuatChiTietID, @guidEmpty),ISNULL(ct.fUocThucHien,0),ISNULL(ct.fThuHoiVonUngTruoc,0),ISNULL(ct.fThanhToan,0) FROM VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet ct
+				WHERE ct.iID_KeHoachVonNamDeXuatID = @iID_Parent
+		END
+	END
+	--end--
 	/*
 		SELECT OUT 
 		@type = 0: ko phai chung tu Tong hop
@@ -256,7 +283,11 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 		END
 	ELSE
 		BEGIN
-				SELECT Distinct @iIDKHVNDeXuatId as iID_KeHoachVonNamDeXuatID,ISNULL(dt.iID_KeHoachVonNamDeXuatChiTietID, @guidEmpty) as iID_KeHoachVonNamDeXuatChiTietID, tmp.iID_DuAnID, tmp.sMaDuAn, tmp.sTenDuAn, tmp.sTenLoaiDuAn, tmp.sThoiGianThucHien, tmp.sTenLoaiCongTrinh, tmp.sCapPheDuyet, tmp.sChuDauTu, dt.fThuHoiVonUngTruoc,
+			if(@iID_KeHoachVonNamDeXuatID_DieuChinh <> @guidEmpty)
+			SELECT Distinct  
+				(CASE WHEN  @iID_KeHoachVonNamDeXuatID_DieuChinh = @guidEmpty THEN  @iIDKHVNDeXuatId ELSE @iID_KeHoachVonNamDeXuatID_DieuChinh END) as iID_KeHoachVonNamDeXuatID ,
+				(CASE  WHEN @iID_KeHoachVonNamDeXuatID_DieuChinh = @guidEmpty THEN ISNULL(dt.iID_KeHoachVonNamDeXuatChiTietID, @guidEmpty) ELSE fDieuChinh.iID_KeHoachVonNamDeXuatChiTietID END)as iID_KeHoachVonNamDeXuatChiTietID,
+				tmp.iID_DuAnID, tmp.sMaDuAn, tmp.sTenDuAn, tmp.sTenLoaiDuAn, tmp.sThoiGianThucHien, tmp.sTenLoaiCongTrinh, tmp.sCapPheDuyet, tmp.sChuDauTu, dt.fThuHoiVonUngTruoc,
 				(CASE WHEN dt.iID_DuAnID IS NULL THEN tmp.fTongMucDauTuDuocDuyet ELSE dt.fTongMucDauTuDuocDuyet END) as fTongMucDauTuDuocDuyet,
 				tmp.fLuyKeVonNamTruoc as fLuyKeVonNamTruoc,
 				tmp.fKeHoachVonDuocDuyetNamNay as fKeHoachVonDuocDuyetNamNay,
@@ -274,7 +305,12 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 				tmpDonViQL.iID_DonViQuanLyID as iID_DonViQuanLyID,
 				tmpDonViQL.sTenDonViQuanLy as sTenDonViQuanLy,
 				da.iID_DonViThucHienDuAnID as iID_DonViThucHienDuAn,
-				dv.sTen as sTen
+				dv.sTen as sTen,
+				fDieuChinh.FThanhToanDC as fThanhToanDC,
+				fDieuChinh.FUocThucHienDC as fUocThucHienDC,
+				fDieuChinh.FThuHoiVonUngTruocDC as fThuHoiVonUngTruocDC
+
+				
 
 			FROM #tmp as tmp
 			LEFT JOIN VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet as dt on tmp.iID_DuAnID = dt.iID_DuAnID AND dt.iID_KeHoachVonNamDeXuatID = @iIDKHVNDeXuatId
@@ -286,6 +322,53 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 			LEFT JOIN #tmpVonBoTriNam as vbthn on tmp.iID_DuAnID = vbthn.iID_DuAnID 
 			LEFT JOIN #tmpKhTh as khth on tmp.iID_DuAnID = khth.iID_DuAnID
 			CROSS JOIN #tmpDonViQL as tmpDonViQL
+			LEFT JOIN #tmpGetfDieuChinh fDieuChinh on fDieuChinh.iID_DuAnID = tmp.iID_DuAnID
+			WHERE (ISNULL(@sMaDuAn,'') = '' OR tmp.sMaDuAn LIKE N'%'+@sMaDuAn+'%')
+			AND (ISNULL(@sTenDuAn,'') = '' OR tmp.sTenDuAn LIKE N'%'+@sTenDuAn+'%')
+			AND (ISNULL(@sTenDonViQuanLy,'') = '' OR tmpDonViQL.sTenDonViQuanLy LIKE N'%'+@sTenDonViQuanLy+'%')
+			AND (ISNULL(@sLoaiDuAn,'') = '' OR (CASE WHEN dact.iID_DuAnID IS NULL THEN N'Mở mới' ELSE N'Chuyển tiếp' END) LIKE N'%'+@sLoaiDuAn+'%')
+			AND (ISNULL(@sThoiGianThucHien,'') = '' OR tmp.sThoiGianThucHien LIKE N'%'+@sThoiGianThucHien+'%')
+			AND (ISNULL(@sChuDauTu,'') = '' OR tmp.sChuDauTu LIKE N'%'+@sChuDauTu+'%')
+			ELSE
+						SELECT Distinct  
+				(CASE WHEN  @iID_KeHoachVonNamDeXuatID_DieuChinh = @guidEmpty THEN  @iIDKHVNDeXuatId ELSE @iID_KeHoachVonNamDeXuatID_DieuChinh END) as iID_KeHoachVonNamDeXuatID ,
+				(CASE  WHEN @iID_KeHoachVonNamDeXuatID_DieuChinh = @guidEmpty THEN ISNULL(dt.iID_KeHoachVonNamDeXuatChiTietID, @guidEmpty) ELSE fDieuChinh.iID_KeHoachVonNamDeXuatChiTietID END)as iID_KeHoachVonNamDeXuatChiTietID,
+				tmp.iID_DuAnID, tmp.sMaDuAn, tmp.sTenDuAn, tmp.sTenLoaiDuAn, tmp.sThoiGianThucHien, tmp.sTenLoaiCongTrinh, tmp.sCapPheDuyet, tmp.sChuDauTu, dt.fThuHoiVonUngTruocDC,
+				(CASE WHEN dt.iID_DuAnID IS NULL THEN tmp.fTongMucDauTuDuocDuyet ELSE dt.fTongMucDauTuDuocDuyet END) as fTongMucDauTuDuocDuyet,
+				tmp.fLuyKeVonNamTruoc as fLuyKeVonNamTruoc,
+				tmp.fKeHoachVonDuocDuyetNamNay as fKeHoachVonDuocDuyetNamNay,
+				--tmp.fVonKeoDaiCacNamTruoc as fVonKeoDaiCacNamTruoc,
+				dt.fVonKeoDaiCacNamTruoc as fVonKeoDaiCacNamTruoc,
+				(CASE WHEN dt.iID_DuAnID IS NULL THEN 0 ELSE dt.fUocThucHien END) as fUocThucHienDC,
+				(CASE WHEN dt.iID_DuAnID IS NULL THEN 0 ELSE dt.fUocThucHien END) as fUocThucHienDC,
+				(CASE WHEN dt.iID_DuAnID IS NULL THEN 0 ELSE dt.fThanhToan END) as fThanhToanDC,
+				ISNULL(vbthn.fLuyKeVonDaBoTriHetNam, 0) as fLuyKeVonDaBoTriHetNam,
+				ISNULL(khth.fKeHoachTrungHanDuocDuyet, 0) as fKeHoachTrungHanDuocDuyet1,
+				tmp.iThoiGianThucHien AS iThoiGianThucHien,
+				ISNULL((SELECT TOP(1) fVonBoTriTuNamDenNam  FROM VDT_KHV_KeHoach5Nam_ChiTiet WHERE iID_DuAnID = tmp.iID_DuAnID AND iID_NguonVonID = @iIDNguonVonID), 0) as fKeHoachTrungHanDuocDuyet,
+				(CASE WHEN dact.iID_DuAnID IS NULL THEN N'Mở mới' ELSE N'Chuyển tiếp' END) as sLoaiDuAn,
+				tmp.iID_LoaiCongTrinh,tmp.iID_ChuDauTuID,
+				tmpDonViQL.iID_DonViQuanLyID as iID_DonViQuanLyID,
+				tmpDonViQL.sTenDonViQuanLy as sTenDonViQuanLy,
+				da.iID_DonViThucHienDuAnID as iID_DonViThucHienDuAn,
+				dv.sTen as sTen,
+				fDieuChinh.FThanhToanDC as fThanhToan,
+				fDieuChinh.FUocThucHienDC as fUocThucHien,
+				fDieuChinh.FThuHoiVonUngTruocDC as fThuHoiVonUngTruoc
+
+				
+
+			FROM #tmp as tmp
+			LEFT JOIN VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet as dt on tmp.iID_DuAnID = dt.iID_DuAnID AND dt.iID_KeHoachVonNamDeXuatID = @iIDKHVNDeXuatId
+			LEFT JOIN VDT_DA_DuAn  da on  tmp.iID_DuAnID = da.iID_DuAnID
+			LEFT JOIN #tmpDuAnChuyenTiep as dact on tmp.iID_DuAnID = dact.iID_DuAnID
+			--LEFT JOIN VDT_DM_DonViThucHienDuAn dv on da.iID_DonViThucHienDuAnID = dv.iID_DonVi
+			LEFT JOIN NS_DonVi dv on da.iID_DonViQuanLyID = dv.iID_Ma
+			LEFT JOIN #tmpThDd khvnct on dt.iID_DuAnID = khvnct.iID_DuAnID and dt.iID_LoaiCongTrinh = khvnct.iID_LoaiCongTrinhID and khvnct.iID_NguonVonID = @iIDNguonVonID
+			LEFT JOIN #tmpVonBoTriNam as vbthn on tmp.iID_DuAnID = vbthn.iID_DuAnID 
+			LEFT JOIN #tmpKhTh as khth on tmp.iID_DuAnID = khth.iID_DuAnID
+			CROSS JOIN #tmpDonViQL as tmpDonViQL
+			LEFT JOIN #tmpGetfDieuChinh fDieuChinh on fDieuChinh.iID_DuAnID = tmp.iID_DuAnID
 			WHERE (ISNULL(@sMaDuAn,'') = '' OR tmp.sMaDuAn LIKE N'%'+@sMaDuAn+'%')
 			AND (ISNULL(@sTenDuAn,'') = '' OR tmp.sTenDuAn LIKE N'%'+@sTenDuAn+'%')
 			AND (ISNULL(@sTenDonViQuanLy,'') = '' OR tmpDonViQL.sTenDonViQuanLy LIKE N'%'+@sTenDonViQuanLy+'%')
@@ -307,4 +390,5 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 	DROP TABLE #tmpLCTCDT
 	DROP TABLE #tmpCDT
 	DROP TABLE #tmpDonViQL
+	DROP TABLE #tmpGetfDieuChinh
 

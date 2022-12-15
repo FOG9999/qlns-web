@@ -51,7 +51,7 @@ function GetChiPhiHangMucTheoQDDauTu() {
                     var item = {
                         id: uuidv4(),
                         iID_QDDauTu_ChiPhiID: null,
-                        iID_ChiPhiID: x.iID_ChiPhi,
+                        iID_ChiPhiID: x.iID_ChiPhiID,
                         iID_DuAn_ChiPhi: x.iID_DuAn_ChiPhi,
                         sTenChiPhi: x.sTenChiPhi,
                         iID_ChiPhi_Parent: x.iID_ChiPhi_Parent,
@@ -338,7 +338,7 @@ async function Luu() {
             }
             var objectId = resp.ID;
             DieuChinhUploadFile(objectId, 103);
-            PopupModalSave("Thông báo", ["Lưu dữ liệu thành công"], ERROR);
+            PopupModalSave("Thông báo", resp.sMessage, ERROR);
         }
     })
     

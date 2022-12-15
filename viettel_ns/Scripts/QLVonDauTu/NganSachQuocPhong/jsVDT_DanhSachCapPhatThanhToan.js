@@ -57,7 +57,7 @@ function GetListData(sSoDeNghi, iNamKeHoach, iLoaiThanhToan, sDonViQuanLy, iid_D
         url: "/QLVonDauTu/GiaiNganThanhToan/GiaiNganThanhToanView",
         data: { sSoDeNghi: sSoDeNghi, iNamKeHoach: iNamKeHoach, iLoaiThanhToan: iLoaiThanhToan, sDonViQuanLy: sDonViQuanLy, iid_DuAnID: iid_DuAnID, _paging: _paging, dNgayDeNghiFrom: dNgayDeNghiFrom, dNgayDeNghiTo: dNgayDeNghiTo },
         success: function (data) {
-            $("#lstDataView").html(data);
+            $("#lstDataViewThanhToan").html(data);
             $("#txtSoDeNghi").val(sSoDeNghi);
             $("#txtNamKeHoach").val(iNamKeHoach);
             $("#drpDonViQuanLy").val(sDonViQuanLy);
@@ -69,19 +69,31 @@ function GetListData(sSoDeNghi, iNamKeHoach, iLoaiThanhToan, sDonViQuanLy, iid_D
             $("#dToNgayDeNghiXuatDanhSach").val(dNgayDeNghiTo);
             $("#iNamKeHoachXuatDanhSach").val(iNamKeHoach);
             $("#sMaDonViXuatDanhSach").val(sDonViQuanLy);
+            tabThongTri();
         }
     });
 }
 
 function ChangePage(iCurrentPage = 1) {
-    var sSoDeNghi = $("#txtSoDeNghi").val().trim();
-    var iNamKeHoach = $("#txtNamKeHoach").val();
-    var dNgayDeNghiFrom = $("#txtNgayDeNghiFrom").val();
-    var dNgayDeNghiTo = $("#txtNgayDeNghiTo").val();
-    var sDonViQuanLy = $("#drpDonViQuanLy option:selected").val();
-    var iid_DuAnID = $("#drpDuAn option:selected").val();
-    var iLoaiThanhToan = $("#drpLoaiThanhToan option:selected").val();
-    GetListData(sSoDeNghi, iNamKeHoach, iLoaiThanhToan, sDonViQuanLy, iid_DuAnID, iCurrentPage, dNgayDeNghiFrom, dNgayDeNghiTo);
+    if (checkIfTabThongTriActive()) {
+        var sMaDonVi = $("#txtDonViQuanLy").val();
+        var sMaThongTri = $("#txtMaThongTri").val();
+        var dNgayThongTri = $("#txtNgayTaoThongTri").val();
+        var iNamThongTri = $("#txtNamThucHien").val();
+
+        GetListDataThongTri(sMaDonVi, sMaThongTri, dNgayThongTri, iNamThongTri, iCurrentPage);
+    }
+    else {
+        var sSoDeNghi = $("#txtSoDeNghi").val().trim();
+        var iNamKeHoach = $("#txtNamKeHoach").val();
+        var dNgayDeNghiFrom = $("#txtNgayDeNghiFrom").val();
+        var dNgayDeNghiTo = $("#txtNgayDeNghiTo").val();
+        var sDonViQuanLy = $("#drpDonViQuanLy option:selected").val();
+        var iid_DuAnID = $("#drpDuAn option:selected").val();
+        var iLoaiThanhToan = $("#drpLoaiThanhToan option:selected").val();
+        GetListData(sSoDeNghi, iNamKeHoach, iLoaiThanhToan, sDonViQuanLy, iid_DuAnID, iCurrentPage, dNgayDeNghiFrom, dNgayDeNghiTo);        
+    }
+    
 }
 
 function DeleteItemList(id) {
@@ -133,10 +145,10 @@ function OpenModal() {
     var iLoaiThanhToan = -1;
     var iID_DonViQuanLyID = -1;
 
-    if ($("#lstDataView input[type=checkbox]:checked").length == 0) {
+    if ($("#lstDataViewThanhToan input[type=checkbox]:checked").length == 0) {
         Messages.push("Chọn ít nhất một trường");
     } else {
-        jQuery.each($("#lstDataView input[type=checkbox]:checked"), function (index, item) {
+        jQuery.each($("#lstDataViewThanhToan input[type=checkbox]:checked"), function (index, item) {
             if (iNguonVon == -1) {
                 iNguonVon = $(item).data("iidnguonvon");
             } else {
@@ -299,6 +311,10 @@ function tabThongTri() {
         success: function (data) {
             if (data != null && data != "") {
                 $("#thongtri").html(data);
+                $("#txtDonViQuanLy").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $('#txtDonViQuanLy').on('change', e => {
+                    ChangePage();
+                })
             }
         },
         error: function (data) {
@@ -333,4 +349,226 @@ function XuatDanhSach() {
     var sMaDonViXuatDanhSach = $("#sMaDonViXuatDanhSach").val();
 
     window.location.href = `/QLVonDauTu/GiaiNganThanhToan/XuatDanhSach?sSoDeNghi=${sSoDeNghiXuatDanhSach}&iNamKeHoach=${iNamKeHoachXuatDanhSach}&iLoaiThanhToan=${null}&sDonViQuanLy=${sMaDonViXuatDanhSach}&dNgayDeNghiFrom=${dFromNgayDeNghiXuatDanhSach}&iid_DuAnID=${null}&dNgayDeNghiTo=${dToNgayDeNghiXuatDanhSach}`;
+}
+
+
+
+// Thông tri thanh toán
+// các hàm CRUD bên trên liên quan đến thông tri k sử dụng
+
+//var GUID_EMPTY = '00000000-0000-0000-0000-000000000000';
+//var CONFIRM = 0;
+//var ERROR = 1;
+
+//var _paging = {};
+
+//function ResetChangePage(iCurrentPage = 1) {
+//    var iID_DonViQuanLy = "";
+//    var sMaThongTri = "";
+//    var dNgayTaoThongTri = "";
+//    var iNamThucHien = "";
+//    var sNguoiLap = "";
+//    var sTruongPhong = "";
+//    var sThuTruongDonVi = "";
+
+//    $("#txt_DonViQuanLySearch").val("");
+//    $("#txt_MaThongTriSearch").val("");
+//    $("#txt_NgayTaoThongTriSearch").val("");
+//    $("#txt_NamThucHienSearch").val("");
+//    $("#txt_NgayLapSearch").val("");
+//    $("#txt_TruongPhongBanTaiChinhSearch").val("");
+//    $("#txt_ThuTruongDonViSearch").val("");
+
+//    GetListData(iID_DonViQuanLy, sMaThongTri, dNgayTaoThongTri, iNamThucHien, sNguoiLap, sTruongPhong, sThuTruongDonVi, iCurrentPage);
+//    SetValueFormExportExcel(iID_DonViQuanLy, sMaThongTri, dNgayTaoThongTri, iNamThucHien, sNguoiLap, sTruongPhong, sThuTruongDonVi);
+//}
+
+//function SetValueFormExportExcel(iID_DonViQuanLy, sMaThongTri, dNgayTaoThongTri, iNamThucHien, sNguoiLap, sTruongPhong, sThuTruongDonVi) {
+//    $("#txt_iIDonViQuanLyExcel").val(iID_DonViQuanLy);
+//    $("#txt_sMaThongTriExcel").val(sMaThongTri);
+//    $("#txt_dNgayTaoThongTriExcel").val(dNgayTaoThongTri);
+//    $("#txt_iNamThucHienExcel").val(iNamThucHien);
+//    $("#txt_sNguoiLapExcel").val(sNguoiLap);
+//    $("#txt_sTruongPhongExcel").val(sTruongPhong);
+//    $("#txt_sThuTruongDonViExcel").val(sThuTruongDonVi);
+//}
+
+//function ChangePage(iCurrentPage = 1) {
+//    var iID_DonViQuanLy = $("#txt_DonViQuanLySearch").val();
+//    var sMaThongTri = $("#txt_MaThongTriSearch").val();
+//    var dNgayTaoThongTri = $("#txt_NgayTaoThongTriSearch").val();
+//    var iNamThucHien = $("#txt_NamThucHienSearch").val();
+//    var sNguoiLap = $("#txt_NgayLapSearch").val();
+//    var sTruongPhong = $("#txt_TruongPhongBanTaiChinhSearch").val();
+//    var sThuTruongDonVi = $("#txt_ThuTruongDonViSearch").val();
+
+//    GetListData(iID_DonViQuanLy, sMaThongTri, dNgayTaoThongTri, iNamThucHien, sNguoiLap, sTruongPhong, sThuTruongDonVi, iCurrentPage);
+//    SetValueFormExportExcel(iID_DonViQuanLy, sMaThongTri, dNgayTaoThongTri, iNamThucHien, sNguoiLap, sTruongPhong, sThuTruongDonVi);
+//}
+
+//function GetListData(iID_DonViQuanLy, sMaThongTri, dNgayTaoThongTri, iNamThucHien, sNguoiLap, sTruongPhong, sThuTruongDonVi, iCurrentPage) {
+//    _paging.CurrentPage = iCurrentPage;
+//    $.ajax({
+//        type: "POST",
+//        dataType: "html",
+//        url: sUrlListView,
+//        data: { _paging: _paging, iID_DonViQuanLy: iID_DonViQuanLy, sMaThongTri: sMaThongTri, dNgayTaoThongTri: dNgayTaoThongTri, iNamThucHien: iNamThucHien, sNguoiLap: sNguoiLap, sTruongPhong: sTruongPhong, sThuTruongDonVi: sThuTruongDonVi },
+//        success: function (data) {
+//            $("#lstDataViewThanhToan").html(data);
+//            $("#txt_DonViQuanLySearch").val(iID_DonViQuanLy);
+//            $("#txt_MaThongTriSearch").val(sMaThongTri);
+//            $("#txt_NgayTaoThongTriSearch").val(dNgayTaoThongTri);
+//            $("#txt_NamThucHienSearch").val(iNamThucHien);
+//            $("#txt_NgayLapSearch").val(sNguoiLap);
+//            $("#txt_TruongPhongBanTaiChinhSearch").val(sTruongPhong);
+//            $("#txt_ThuTruongDonViSearch").val(sThuTruongDonVi);
+
+//            SetValueFormExportExcel(iID_DonViQuanLy, sMaThongTri, dNgayTaoThongTri, iNamThucHien, sNguoiLap, sTruongPhong, sThuTruongDonVi);
+//        }
+//    });
+//}
+
+//function ViewCreate() {
+//    window.location.href = "/QLVonDauTu/VDT_ThongTri/Create";
+//}
+
+//function ViewUpdate(id) {
+//    window.location.href = "/QLVonDauTu/VDT_ThongTri/Update/" + id;
+//}
+
+//function ViewDetail(id) {
+//    window.location.href = "/QLVonDauTu/VDT_ThongTri/Detail/" + id;
+//}
+
+//function DeleteItem(id) {
+//    var Title = 'Xác nhận xóa giao dự toán cho đơn vị';
+//    var Messages = [];
+//    Messages.push('Bạn có chắc chắn muốn xóa?');
+//    var FunctionName = "Delete('" + id + "')";
+//    $.ajax({
+//        type: "POST",
+//        url: "/Modal/OpenModal",
+//        data: { Title: Title, Messages: Messages, Category: CONFIRM, FunctionName: FunctionName },
+//        success: function (data) {
+//            $("#divModalConfirm").html(data);
+//        }
+//    });
+//}
+
+//function Delete(id) {
+//    $.ajax({
+//        type: "POST",
+//        url: "/QLVonDauTu/VDT_ThongTri/Delete",
+//        data: { id: id },
+//        success: function (r) {
+//            if (r.status == true) {
+//                ChangePage();
+//            }
+//        }
+//    });
+//}
+
+
+// tab thông tri
+
+function xemChiTiet(id) {
+    window.location.href = "/QLVonDauTu/QLThongTriThanhToan/ChiTiet/" + id;
+}
+
+function sua(id) {
+    window.location.href = "/QLVonDauTu/QLThongTriThanhToan/Sua/" + id;
+}
+
+function xoa(id) {
+    if (!confirm("Bạn có chắc chắn muốn xóa?")) return;
+    $.ajax({
+        type: "POST",
+        url: "/QLVonDauTu/QLThongTriThanhToan/Xoa",
+        data: { id: id },
+        success: function (r) {
+            if (r == true) {
+                ChangePage();
+            }
+        }
+    });
+}
+
+function XuatFileThongTri() {
+    var Messages = [];
+    var lstGuidChecked = [];
+
+    if ($("#tblListVDTThongTri  input[type=checkbox]:checked").length == 0) {
+        Messages.push("Chọn ít nhất một trường");
+    } else {
+        jQuery.each($("#lstDataView input[type=checkbox]:checked"), function (index, item) {
+            lstGuidChecked[index] = $(item).val();
+        });
+    }
+
+    if (lstGuidChecked.length == 0) {
+        Messages.push("Hãy chọn ít nhất một cấp phát thanh toán");
+    }
+
+    lstGuidChecked.forEach(id => {
+        window.location.href = "/QLVonDauTu/QLThongTriThanhToan/ExportReport?id=" + id;
+    });
+}
+
+function OpenXuatBaoCao() {
+    lstGuidChecked = [];
+    if ($("#tblListVDTThongTri  input[type=checkbox]:checked").length != 1) {
+        alert("Chọn một trường");
+    } else {
+        jQuery.each($("#lstDataView input[type=checkbox]:checked"), function (index, item) {
+            lstGuidChecked[index] = $(item).val();
+        });
+    }
+
+    lstGuidChecked.forEach(id => {
+        window.location.href = `/QLVonDauTu/QLThongTriThanhToan/XuatFilePage?id=${id}`;
+    });
+}
+
+function XuatDanhSachThongTri() {
+    var sMaDonVi = $("#sMaDonViXuatDanhSach").val();
+    var sMaThongTri = $("#sMaThongTriXuatDanhSach").val();
+    var dNgayThongTri = $("#dNgayThongTriXuatDanhSach").val();
+    var iNamThongTri = $("#iNamThongTriXuatDanhSach").val();
+
+    window.location.href =
+        `/QLVonDauTu/QLThongTriThanhToan/XuatDanhSachThanhToanView?sMaDonVi=${sMaDonVi ? sMaDonVi : ''}&sMaThongTri=${sMaThongTri ? sMaThongTri : ''}&dNgayThongTri=${dNgayThongTri ? dNgayThongTri : ''}&iNamThongTri=${iNamThongTri ? iNamThongTri : ''
+}`;
+}
+
+function GetListDataThongTri(sMaDonVi, sMaThongTri, dNgayThongTri, iNamThongTri, iCurrentPage) {
+    _paging.CurrentPage = iCurrentPage;
+    $.ajax({
+        type: "POST",
+        dataType: "html",
+        url: sUrlListView,
+        data: {
+            sMaDonVi: sMaDonVi, sMaThongTri: sMaThongTri, dNgayThongTri: dNgayThongTri, iNamThongTri: iNamThongTri, _paging: _paging
+        },
+        success: function (data) {
+            $("#lstDataView").html(data);
+            $("#txtDonViQuanLy").val(sMaDonVi);
+            $("#txtMaThongTri").val(sMaThongTri);
+            $("#txtNgayTaoThongTri").val(dNgayThongTri);
+            $("#txtNamThucHien").val(iNamThongTri);
+
+            $("#sMaDonViXuatDanhSach").val(sMaDonVi);
+            $("#sMaThongTriXuatDanhSach").val(sMaThongTri);
+            $("#dNgayThongTriXuatDanhSach").val(dNgayThongTri);
+            $("#iNamThongTriXuatDanhSach").val(iNamThongTri);
+
+            $("#txtDonViQuanLy").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+            $('#txtDonViQuanLy').on('change', e => {
+                ChangePage();
+            })
+        }
+    });
+}
+
+function checkIfTabThongTriActive() {
+    return $("#thongtri").attr('class').split(/\s+/).indexOf('active') >= 0;
 }

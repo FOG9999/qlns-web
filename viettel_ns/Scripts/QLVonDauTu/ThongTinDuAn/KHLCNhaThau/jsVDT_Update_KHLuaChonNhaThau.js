@@ -140,15 +140,38 @@ function GetListChungTu() {
                 $('input:radio[name="rd_ChungTu"]').change(function () {
                     var iIdChungTu = $(this).val();
                     ConvertItemsChungTu($.map(lstChungTuAll, function (n) { return n.iID_ChungTu == iIdChungTu ? n : null }));
+                    // clear danh sách gói thầu khi change chứng từ
+                    $("#tblGoiThau").html('');
+                    lstChungTuGoiThau = [];
                 });
 
-                if (iLoaiChungTu == 1) {
-                    $("#iIdDuToanId").val($("input[name=rd_ChungTu]:checked").val());  
-                } else if (iLoaiChungTu == 2) {
-                    $("#iIdQDDauTuId").val($("input[name=rd_ChungTu]:checked").val());
+                if ($("#iIdKeHoachLuaChonNhaThau").val() != guidEmpty) {
+                    // trường hopwj update và khi có 2 dự toán => checked dự toán đã được lưu
+                    if (iLoaiChungTu == 1) {
+                        var iIdDuToanId = $("#iIdDuToanId").val();
+                        $(`input[name=rd_ChungTu][value=${iIdDuToanId}]`).prop("checked", "true");
+                    } else if (iLoaiChungTu == 2) {
+                        var iIdQDDauTuId = $("#iIdQDDauTuId").val();
+                        $(`input[name=rd_ChungTu][value=${iIdQDDauTuId}]`).prop("checked", "true");
+                    } else {
+                        var iID_ChuTruongDauTuID = $("#iID_ChuTruongDauTuID").val();
+                        $(`input[name=rd_ChungTu][value=${iID_ChuTruongDauTuID}]`).prop("checked", "true");
+                    }
+
+                    // ẩn dự toán không được lưu ban đầu
+                    $("input[name=rd_ChungTu]:not(:checked)").parent().parent().css("display", "none");
                 } else {
-                    $("#iID_ChuTruongDauTuID").val($("input[name=rd_ChungTu]:checked").val());
+                    // truong hop them moi
+                    if (iLoaiChungTu == 1) {
+                        $("#iIdDuToanId").val($("input[name=rd_ChungTu]:checked").val());
+                    } else if (iLoaiChungTu == 2) {
+                        $("#iIdQDDauTuId").val($("input[name=rd_ChungTu]:checked").val());
+                    } else {
+                        $("#iID_ChuTruongDauTuID").val($("input[name=rd_ChungTu]:checked").val());
+                    }
                 }
+
+             
                 var lstChungTu = [];
                 $.each($("input[name=rd_ChungTu]:checked"), function (index, item) {
                     lstChungTu.push($(item).val());
@@ -568,7 +591,7 @@ function GetNguonVonGoiThauDetail(iIdGoiThau) {
     }
     lstNguonVon.forEach(function (item) {
         var indexInArrGoiThauNguonVon = arrNguonVon.map(ele => ele.iID_NguonVonID).indexOf(item.iID_NguonVonID);
-        if (getNguonVonForCurrentGoiThau(iIdGoiThau, item) >= 0) {
+        if (getNguonVonForCurrentGoiThau(iIdGoiThau, item) > 0 || arrNguonVon.length > 0) {
             sItem.push("<tr data-id='" + item.iID_NguonVonID + "'>");
             sItem.push("<td class='width-50 text-center'><input type='checkbox' class='ck_NguonVon' value='" + item.iID_NguonVonID + (indexInArrGoiThauNguonVon >= 0 ? '\' checked ' : '\'') + "></td>");
             sItem.push("<td class='sNoiDung'>" + item.sNoiDung + "</td>");
@@ -622,7 +645,7 @@ function SetLstNguonVon() {
         obj.sNoiDung = $(child).closest("tr").find(".sNoiDung").text();
         obj.iThuTu = $(child).closest("tr").index();
         obj.fGiaTriPheDuyet = parseFloat($(child).closest("tr").find(".fGiaTriPheDuyet").text().replaceAll(".", ""));
-        obj.fGiaTriGoiThau = parseFloat($(child).closest("tr").find(".fGiaTriGoiThau").val().replaceAll(".", ""));
+        obj.fGiaTriGoiThau = parseFloat(($(child).closest("tr").find(".fGiaTriGoiThau").val() || "0").replaceAll(".", ""));
         itemsChungTuGoiThau[0].push(obj);
     });
 }
@@ -679,11 +702,12 @@ function GetChiPhiGoiThauDetail(iIdGoiThau) {
                 sItem.push(
                     "<td><input type='text' disabled='disabled' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' class='fGiaTriGoiThau form-control' style='text-align:right' value='0'/></td>");
             else {
+                var fGiaTriGoiThau = childIndex >= 0
+                    ? (arrChiPhi[childIndex].fGiaTriGoiThau ? arrChiPhi[childIndex].fGiaTriGoiThau : arrChiPhi[childIndex].fTienGoiThau)
+                    : (arrChiPhi[parentIndex].fGiaTriGoiThau ? arrChiPhi[parentIndex].fGiaTriGoiThau : arrChiPhi[parentIndex].fTienGoiThau)
                 sItem.push(
                     "<td><input type='text' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' class='fGiaTriGoiThau form-control' style='text-align:right' value='" +
-                    (childIndex >= 0
-                        ? (arrChiPhi[childIndex].fGiaTriGoiThau ? arrChiPhi[childIndex].fGiaTriGoiThau : arrChiPhi[childIndex].fTienGoiThau)
-                        : (arrChiPhi[parentIndex].fGiaTriGoiThau ? arrChiPhi[parentIndex].fGiaTriGoiThau : arrChiPhi[parentIndex].fTienGoiThau)) +
+                    (FormatNumber(fGiaTriGoiThau)) +
                     "'/></td>");
             }
             sItem.push("<td class='fGiaTriConLai text-right'>" + FormatNumber(currGiaTriConLai) + "</td>");
@@ -1315,7 +1339,7 @@ async function SaveKHLCNT() {
         async: false,
         success: function (result) {
             if (result.bIsComplete) {
-                alert("Cập nhật dữ liệu thành công !");
+                alert(result.sMessage);
                 location.href = "/QLVonDauTu/KHLuaChonNhaThau";
             } else {
                 if (result.messError)

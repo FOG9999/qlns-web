@@ -206,6 +206,9 @@ function Loc() {
                     if (bIsActive == false) {
                         $("#kinhphi").addClass("active");
                         $("#tabKinhPhi").addClass("active");
+                        $("#tabTamUng").addClass("hidden");
+                        $("#tabHopThuc").addClass("hidden");
+                        $("#tabThuHoi").addClass("hidden");
                     }
                     bIsActive = true;
                     $("#tabKinhPhi").removeClass("hidden");
@@ -231,6 +234,9 @@ function Loc() {
                     if (bIsActive == false) {
                         $("#hopthuc").addClass("active");
                         $("#tabHopThuc").addClass("active");
+                        $("#tabTamUng").addClass("hidden");
+                        $("#tabThuHoi").addClass("hidden");
+                        $("#tabKinhPhi").addClass("hidden");
                     }
                     $("#tabHopThuc").removeClass("hidden");
                     bIsActive = true;

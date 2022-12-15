@@ -2,6 +2,45 @@
 var GUID_EMPTY = '00000000-0000-0000-0000-000000000000';
 var ERROR = 1;
 
+$(document).ready(function () {
+    $('.date')
+        .datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: 'vi',
+            todayHighlight: true,
+        });
+    $("tr").hover(function () {
+        $(this).css("background-color", "#e7f8fe");
+        $(this).css("background-color", "");
+    });
+
+    $("#tblListNhaThau .gr_search").each(function (index, value) {
+        $(this).keypress(function (e) {
+            if (e.which == 13) {//Enter key pressed
+                ChangePage();
+            }
+        });
+    });
+
+    $("#txtsEmail").keypress(function (event) {
+        CheckExitEmail(this);
+    });
+
+      $("#txtEmail").keypress(function (event) {
+        CheckExitEmail(this);
+    });
+
+    $("#txtsFax").keypress(function (event) {
+        CheckExitkPhoneOrFax(this);
+    });
+
+    $("#txtsDienThoai").keypress(function (event) {
+        CheckExitkPhoneOrFax(this);
+    });
+});
 function ResetChangePage(iCurrentPage = 1) {
     var sMaNhaThau = "";
     var sTenNhaThau = "";
@@ -207,15 +246,15 @@ function ValidateData(data) {
     }
 
     if ($.trim($("#txtsEmail").val()) != "" && !CheckEmail($.trim($("#txtsEmail").val()))) {
-        Messages.push("Email không đúng định dạng!");
+        Messages.push("Vui lòng nhập email đúng định dạng!");
     }
 
     if ($.trim($("#txtsFax").val()) != "" && !CheckPhoneOrFax($.trim($("#txtsFax").val()))) {
-        Messages.push("Số fax nhập không hợp lệ!");
+        Messages.push("Vui lòng nhập fax đúng định dạng!");
     }
 
     if ($.trim($("#txtsDTLH").val()) != "" && !CheckPhoneOrFax($.trim($("#txtsDTLH").val()))) {
-        Messages.push("Số điện thoại liên hệ không đúng định dạng!");
+        Messages.push("Vui lòng nhập số điện thoại đúng định dạng!");
     }
 
     if ($.trim($("#txtsMaSoThue").val()) != "" && !CheckAlphanumeric($.trim($("#txtsMaSoThue").val()))) {

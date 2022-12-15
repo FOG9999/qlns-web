@@ -21,9 +21,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
         public bool isDieuChinh { get; set; }
         public bool bIsDetail { get; set; }
         public string lstDuAnID { get; set; }
-        public KeHoachVonNamDeXuat_ChiTiet_SheetTable() 
+        public string iID_KeHoachVonNamDeXuatID { get; set; }
+        public KeHoachVonNamDeXuat_ChiTiet_SheetTable()
         {
-            
+
         }
 
         public KeHoachVonNamDeXuat_ChiTiet_SheetTable(string iID_KeHoachVonNamDeXuatID, int iNamKeHoach, DateTime dNgayLap, string sMaDonViQL, int iNguonVonID, bool isDieuChinh, bool bIsDetail, string lstDuAnID, Dictionary<string, string> query)
@@ -35,6 +36,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
             this.isDieuChinh = isDieuChinh;
             this.bIsDetail = bIsDetail;
             this.lstDuAnID = lstDuAnID;
+            this.iID_KeHoachVonNamDeXuatID = iID_KeHoachVonNamDeXuatID;
             Guid IdKHVNDX = Guid.Parse(iID_KeHoachVonNamDeXuatID);
             VDT_KHV_KeHoachVonNam_DeXuat itemquery = _qLVonDauTuService.GetKeHoachVonNamDeXuatById(IdKHVNDX);
             if (itemquery != null)
@@ -46,7 +48,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 else
                     isTongHop = false;
             }
-                var filters = new Dictionary<string, string>();
+            var filters = new Dictionary<string, string>();
             ColumnsSearch.ToList()
                 .ForEach(c =>
                 {
@@ -62,18 +64,29 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
             _filters = filters ?? new Dictionary<string, string>();
             Dictionary<string, List<VDT_DA_DuAn_HangMuc>> dicHangMuc = new Dictionary<string, List<VDT_DA_DuAn_HangMuc>>();
             //dtChiTiet = _qLVonDauTuService.GetListKHVonNamDeXuatChiTietById(iID_KeHoachVonNamDeXuatID, _filters);
+            var iID_Parrent = _qLVonDauTuService.GetKeHoachVonNamDeXuatById(Guid.Parse(iID_KeHoachVonNamDeXuatID)).iID_ParentId;
+            DataTable data = new DataTable();
+            if ((iID_Parrent != null || iID_Parrent != new Guid()) && isDieuChinh)
+            {
+                 data = _qLVonDauTuService.GetListKHVonNamDeXuatChiTietById(iID_Parrent.ToString(), iID_KeHoachVonNamDeXuatID, lstDuAnID, _filters);
 
-            DataTable dt = _qLVonDauTuService.GetListKHVonNamDeXuatChiTietById(iID_KeHoachVonNamDeXuatID, lstDuAnID, _filters);
-            if (dt == null)
-                dt = new DataTable();
+            }
+            else
+            {
+               // if(iID_Parrent != null) this.isDieuChinh = true;
+                data = _qLVonDauTuService.GetListKHVonNamDeXuatChiTietById(iID_KeHoachVonNamDeXuatID,(new Guid()).ToString(), lstDuAnID, _filters);
+            
+            }
+            if (data == null)
+                data = new DataTable();
 
-            dtChiTiet = dt.Clone();
+            dtChiTiet = data.Clone();
 
             List<VDT_DA_DuAn_HangMuc> lstHangMuc = _qLVonDauTuService.GetDuAnHangMucByListDuAnID(iID_KeHoachVonNamDeXuatID, lstDuAnID).ToList();
-            Dictionary<Guid, VDT_DM_LoaiCongTrinh> dicLoaiCongTrinh = _qLVonDauTuService.GetListDMLoaiCongTrinh().ToDictionary(n=>n.iID_LoaiCongTrinh, n=>n);
+            Dictionary<Guid, VDT_DM_LoaiCongTrinh> dicLoaiCongTrinh = _qLVonDauTuService.GetListDMLoaiCongTrinh().ToDictionary(n => n.iID_LoaiCongTrinh, n => n);
             if (lstHangMuc != null)
                 dicHangMuc = lstHangMuc.GroupBy(n => n.iID_DuAnID).ToDictionary(n => n.Key.ToString(), n => n.ToList());
-            foreach (DataRow dr in dt.Rows)
+            foreach (DataRow dr in data.Rows)
             {
                 //Guid iIdChiTiet = Guid.Parse(Convert.ToString(dr["iID_KeHoachVonNamDeXuatChiTietID"]));
                 //if (iIdChiTiet == Guid.Empty && dicHangMuc.ContainsKey(Convert.ToString(dr["iID_DuAnID"])))
@@ -88,18 +101,18 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 //}
                 //else
                 //{
-                    Guid iIdLoaiCongTrinhId = Guid.Empty;
-                    if(Guid.TryParse(Convert.ToString(dr["iID_LoaiCongTrinh"]), out iIdLoaiCongTrinhId))
+                Guid iIdLoaiCongTrinhId = Guid.Empty;
+                if (Guid.TryParse(Convert.ToString(dr["iID_LoaiCongTrinh"]), out iIdLoaiCongTrinhId))
+                {
+                    if (iIdLoaiCongTrinhId != Guid.Empty && dicLoaiCongTrinh.ContainsKey(iIdLoaiCongTrinhId))
                     {
-                        if(iIdLoaiCongTrinhId != Guid.Empty && dicLoaiCongTrinh.ContainsKey(iIdLoaiCongTrinhId))
-                        {
-                            DataRow drNew = dr;
-                            drNew["sTenLoaiCongTrinh"] = dicLoaiCongTrinh[iIdLoaiCongTrinhId].sTenLoaiCongTrinh;
-                            dtChiTiet.Rows.Add(drNew.ItemArray);
-                            continue;
-                        }
+                        DataRow drNew = dr;
+                        drNew["sTenLoaiCongTrinh"] = dicLoaiCongTrinh[iIdLoaiCongTrinhId].sTenLoaiCongTrinh;
+                        dtChiTiet.Rows.Add(drNew.ItemArray);
+                        continue;
                     }
-                    dtChiTiet.Rows.Add(dr.ItemArray);
+                }
+                dtChiTiet.Rows.Add(dr.ItemArray);
                 //}
             }
 
@@ -143,6 +156,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
             var cNameVonDaBoTriHetNam = "Lũy kế vốn đã được bố trí hết năm " + (this.iNamKeHoach - 1);
             var cNameUocThucHien = "Ước thực hiện năm " + (this.iNamKeHoach - 1);
             var cNameUocThucHienDC = "Ước thực hiện năm " + (this.iNamKeHoach - 1) + " (Sau điều chỉnh)";
+            var iID_Parrent = _qLVonDauTuService.GetKeHoachVonNamDeXuatById(Guid.Parse(iID_KeHoachVonNamDeXuatID)).iID_ParentId;
+            if (iID_Parrent != null) isDieuChinh = true;
+
 
             var list = new List<SheetColumn>();
 
@@ -163,7 +179,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     new SheetColumn(columnName: "sChuDauTu", header: "Chủ đầu tư", columnWidth:150, align: "left", isFixed: true, hasSearch: true, isReadonly: true),
                     new SheetColumn(columnName: "fTongMucDauTuDuocDuyet", header: "Tổng mức đầu tư được duyệt", columnWidth:100, align: "right", dataType: 1, isReadonly: true),
                     new SheetColumn(columnName: "fKeHoachTrungHanDuocDuyet", header: "KHTH được duyệt", columnWidth:100, align: "right", dataType: 1, isReadonly: true),
-                    
+
                     new SheetColumn(columnName: "fLuyKeVonNamTruoc", header: cNameNamLuyKe, columnWidth:100, align: "right", dataType: 1, isReadonly: true),
 
                     new SheetColumn(columnName: "fLuyKeVonDaBoTriHetNam", header: cNameVonDaBoTriHetNam, columnWidth:120, align: "right", dataType: 1, isReadonly: true),

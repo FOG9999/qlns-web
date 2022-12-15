@@ -43,12 +43,49 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             return View(vm);
         }
 
+        /// <summary>
+        /// tìm kiếm thông tri trên trang thông tri - full 4 loại
+        /// </summary>
+        /// <param name="_paging"></param>
+        /// <param name="sMaDonVi"></param>
+        /// <param name="sMaThongTri"></param>
+        /// <param name="dNgayThongTri"></param>
+        /// <param name="iNamThongTri"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult TimKiem(PagingInfo _paging, string sMaDonVi, string sMaThongTri, DateTime? dNgayThongTri, int? iNamThongTri)
         {
             VDTThongTriViewModel vm = new VDTThongTriViewModel();
             vm._paging = _paging;
             vm.Items = _iQLVonDauTuService.LayDanhSachThongTri(ref vm._paging, PhienLamViec.NamLamViec, Username, false, sMaDonVi, sMaThongTri, iNamThongTri, dNgayThongTri);
+            List<NS_DonVi> lstDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
+            lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = Constants.TAT_CA });
+            ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_MaDonVi", "sMoTa");
+
+            // luu dieu kien tim kiem
+            TempData["sMaDonvi"] = sMaDonVi;
+            TempData["sMaThongTri"] = sMaThongTri;
+            TempData["dNgayThongTri"] = dNgayThongTri;
+            TempData["iNamThongTri"] = iNamThongTri;
+
+            return PartialView("_list", vm);
+        }
+
+        /// <summary>
+        /// tìm kiếm thông tri trên trang thanh toán - chỉ 2 loại: thanh toán, tạm ứng
+        /// </summary>
+        /// <param name="_paging"></param>
+        /// <param name="sMaDonVi"></param>
+        /// <param name="sMaThongTri"></param>
+        /// <param name="dNgayThongTri"></param>
+        /// <param name="iNamThongTri"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult TimKiemThanhToanView(PagingInfo _paging, string sMaDonVi, string sMaThongTri, DateTime? dNgayThongTri, int? iNamThongTri)
+        {
+            VDTThongTriViewModel vm = new VDTThongTriViewModel();
+            vm._paging = _paging;
+            vm.Items = _iQLVonDauTuService.LayDanhSachThongTri(ref vm._paging, PhienLamViec.NamLamViec, Username, true, sMaDonVi, sMaThongTri, iNamThongTri, dNgayThongTri);
             List<NS_DonVi> lstDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
             lstDonViQuanLy.Insert(0, new NS_DonVi { iID_Ma = Guid.Empty, sMoTa = Constants.TAT_CA });
             ViewBag.ListDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_MaDonVi", "sMoTa");
@@ -661,6 +698,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             fr.SetValue("Ve", string.Format("Tháng {0} năm {1}", DateTime.Now.Month, DateTime.Now.Year));
             fr.SetValue("Mota", "");
             fr.SetValue("NoiDung", "");
+            if(sTieuDeMot != "")
+            {
+                fr.SetValue("TieuDe1", sTieuDeMot);
+            }
+            if (sTieuDeHai != "")
+            {
+                fr.SetValue("TieuDe2", sTieuDeHai);
+            }            
             fr.SetValue("Ngay", string.Format("Ngày {0} tháng {1} năm {2}", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year));
             fr.SetValue("TongChiTieu", lstChiTiet.Sum(n => n.FSoTien));
             fr.SetValue("TienBangChu", DataHelper.NumberToText(lstChiTiet.Sum(n => n.FSoTien), true));
@@ -698,11 +743,41 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             return Print(Result, "pdf", "rpt_BC_ThongTriThanhToan.pdf");
         }
 
+        /// <summary>
+        /// xuất danh sách trang thông tri - 4 loại
+        /// </summary>
+        /// <param name="sMaDonVi"></param>
+        /// <param name="sMaThongTri"></param>
+        /// <param name="dNgayThongTri"></param>
+        /// <param name="iNamThongTri"></param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult XuatDanhSach(string sMaDonVi, string sMaThongTri, DateTime? dNgayThongTri, int? iNamThongTri)
         {
             PagingInfo temp = new PagingInfo();
             IEnumerable<VDTThongTriModel> items = _iQLVonDauTuService.LayDanhSachThongTri(ref temp, PhienLamViec.NamLamViec, Username, false, sMaDonVi, sMaThongTri, iNamThongTri, dNgayThongTri, true);
+            XlsFile Result = new XlsFile(true);
+            FlexCelReport fr = new FlexCelReport();
+
+            fr.AddTable("Items", items);
+            Result.Open(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/ThongTri/rpt_vdt_thongtri_danhsach.xlsx"));
+            fr.Run(Result);
+            return Print(Result, "xlsx", "rpt_vdt_thongtri_danhsach.xlsx");
+        }
+
+        /// <summary>
+        /// xuất danh sách trang thanh toán - 2 loại
+        /// </summary>
+        /// <param name="sMaDonVi"></param>
+        /// <param name="sMaThongTri"></param>
+        /// <param name="dNgayThongTri"></param>
+        /// <param name="iNamThongTri"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult XuatDanhSachThanhToanView(string sMaDonVi, string sMaThongTri, DateTime? dNgayThongTri, int? iNamThongTri)
+        {
+            PagingInfo temp = new PagingInfo();
+            IEnumerable<VDTThongTriModel> items = _iQLVonDauTuService.LayDanhSachThongTri(ref temp, PhienLamViec.NamLamViec, Username, true, sMaDonVi, sMaThongTri, iNamThongTri, dNgayThongTri, true);
             XlsFile Result = new XlsFile(true);
             FlexCelReport fr = new FlexCelReport();
 

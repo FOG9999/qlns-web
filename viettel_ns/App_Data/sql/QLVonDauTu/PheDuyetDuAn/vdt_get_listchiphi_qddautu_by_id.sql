@@ -14,7 +14,7 @@ select dacp.iID_DuAn_ChiPhi,
 	qdcp.fTienPheDuyet,
 	qdcp.fTienPheDuyet - isnull(qdcp.fGiaTriDieuChinh,0) as fGiaTriTruocDieuChinh,
 	0 as fGiaTriDieuChinh,
-	qdcp.iID_DuAn_ChiPhi as iID_ChiPhiID,
+	dacp.iID_ChiPhi as iID_ChiPhiID,
 	dacp.sTenChiPhi,
 	dacp.iThuTu,
 	qdcp.iID_QDDauTuID

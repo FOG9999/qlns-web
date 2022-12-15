@@ -54,10 +54,18 @@
         }
         function setEditHC() {
             for (var h = 0; h < Bang_nH; h++) {
-                var active = $("#modelActive").val();
+                //var active = $("#modelActive").val();
+                //for (c = 0; c < Bang_nC; c++) {
+                //    if (active == false) {
+                //        Bang_arrEdit[h][c] = active;
+                //    }
+                //}
                 for (c = 0; c < Bang_nC; c++) {
-                    if (active == false) {
-                        Bang_arrEdit[h][c] = active;
+                    if (4 < c && c < 9) {
+                        Bang_arrEdit[h][c] = true;
+                    } else {
+                        Bang_arrEdit[h][c] = false;
+
                     }
                 }
             }

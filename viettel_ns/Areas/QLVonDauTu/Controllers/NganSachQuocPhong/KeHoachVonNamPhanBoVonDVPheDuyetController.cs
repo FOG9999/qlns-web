@@ -296,27 +296,53 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             if (aListModel != null && aListModel.Any())
             {
                 var listVonNamPheDuyetChiTietIds = aListModel.Select(model => model.iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID).ToList();
-                _lstPhanBoVonDVChiTiet = aListModel.Select(model => new
+                if (aListModel.Where(x => x.fGiaTriPhanBoDC != null && x.fGiaTriPhanBoDC > 0).ToList().Any())
+                {
+                    _lstPhanBoVonDVChiTiet = aListModel.Select(model => new
                     VDT_KHV_PhanBoVon_DonVi_ChiTiet_PheDuyet
                     ()
+                    {
+                        Id = model.iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID,
+                        iID_PhanBoVon_DonVi_PheDuyet_ID = model.iID_PhanBoVon_DonVi_PheDuyet_ID,
+                        iID_DuAnID = model.iID_DuAnID,
+                        fGiaTriPhanBo = model.fGiaTriPhanBoDC,
+                        fGiaTriThuHoi = model.fGiaTriThuHoi,
+                        iID_DonViTienTeID = model.iID_DonViTienTeID,
+                        iID_TienTeID = model.iID_TienTeID,
+                        fTiGiaDonVi = model.fTiGiaDonVi,
+                        fTiGia = model.fTiGia,
+                        iID_LoaiCongTrinh = model.iID_LoaiCongTrinh,
+                        iId_Parent = model.iID_Parent,
+                        bActive = model.bActive,
+                        ILoaiDuAn = model.iLoaiDuAn,
+                        sGhiChu = model.sGhiChu,
+                        fGiaTriDeNghi = model.fGiaTriDeNghi,
+                    }).ToList();
+
+                }
+                else
                 {
-                    Id = model.iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID,
-                    iID_PhanBoVon_DonVi_PheDuyet_ID = model.iID_PhanBoVon_DonVi_PheDuyet_ID,
-                    iID_DuAnID = model.iID_DuAnID,
-                    fGiaTriPhanBo = model.fGiaTriPhanBo,
-                    fGiaTriThuHoi = model.fGiaTriThuHoi,
-                    iID_DonViTienTeID = model.iID_DonViTienTeID,
-                    iID_TienTeID = model.iID_TienTeID,
-                    fTiGiaDonVi = model.fTiGiaDonVi,
-                    fTiGia = model.fTiGia,
-                    iID_LoaiCongTrinh = model.iID_LoaiCongTrinh,
-                    iId_Parent = model.iID_Parent,
-                    bActive = model.bActive,
-                    ILoaiDuAn = model.iLoaiDuAn,
-                    sGhiChu = model.sGhiChu,     
-                    fGiaTriDeNghi = model.fGiaTriDeNghi,
-                }).ToList();
-                
+                    _lstPhanBoVonDVChiTiet = aListModel.Select(model => new
+                        VDT_KHV_PhanBoVon_DonVi_ChiTiet_PheDuyet
+                        ()
+                    {
+                        Id = model.iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID,
+                        iID_PhanBoVon_DonVi_PheDuyet_ID = model.iID_PhanBoVon_DonVi_PheDuyet_ID,
+                        iID_DuAnID = model.iID_DuAnID,
+                        fGiaTriPhanBo = model.fGiaTriPhanBo,
+                        fGiaTriThuHoi = model.fGiaTriThuHoi,
+                        iID_DonViTienTeID = model.iID_DonViTienTeID,
+                        iID_TienTeID = model.iID_TienTeID,
+                        fTiGiaDonVi = model.fTiGiaDonVi,
+                        fTiGia = model.fTiGia,
+                        iID_LoaiCongTrinh = model.iID_LoaiCongTrinh,
+                        iId_Parent = model.iID_Parent,
+                        bActive = model.bActive,
+                        ILoaiDuAn = model.iLoaiDuAn,
+                        sGhiChu = model.sGhiChu,
+                        fGiaTriDeNghi = model.fGiaTriDeNghi,
+                    }).ToList();
+                }
                 //if (!_qLVonDauTuService.checkExistDonViVonNamPheDuyetChiTiet(listVonNamPheDuyetChiTietIds))
                 //{
                 //    listErrMess.Add("Không tồn tại bản ghi vốn năm phê duyệt chi tiết");

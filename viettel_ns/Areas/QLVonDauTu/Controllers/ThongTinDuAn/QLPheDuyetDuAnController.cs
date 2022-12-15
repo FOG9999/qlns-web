@@ -91,6 +91,16 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         public JsonResult Save(VDTPheDuyetDuAnCreateModel model, bool isDieuChinh = false, bool isTaoMoi = false, string fTongMucPheDuyetTheoChuTruong = null)
         {
             var iID_QDDauTuID = Guid.Empty;
+            var sMessage = string.Format("Thêm mới bản ghi {0} thành công", model.sSoQuyetDinh);
+            if (model.iID_QDDauTuID == null || model.iID_QDDauTuID == Guid.Empty)
+            {
+                if (model.iID_ParentID != null) sMessage = sMessage.Replace("Thêm mới", "Điều chỉnh");
+            }
+            else
+            {
+                sMessage = sMessage.Replace("Thêm mới", "Cập nhật");
+            }
+
             if (model == null)
             {
                 return Json(new { status = false, message = "Dữ liệu truyền lên không chính xác." });
@@ -415,7 +425,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                 }
             }
 
-            return Json(new { status = true, ID = iID_QDDauTuID });
+            return Json(new { status = true, ID = iID_QDDauTuID, sMessage = sMessage });
         }
 
         public ActionResult ChiTiet(string id)
@@ -489,6 +499,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         public JsonResult Xoa(string id)
         {
             bool xoa = false;
+            var sSoQuyetDinh = "";
+            var sMessage = "";
+
             try
             {
                 List<VDT_DA_DuToan> lstItem = _iQLVonDauTuService.GetListDuToanByQDDT(!string.IsNullOrEmpty(id) ? Guid.Parse(id) : Guid.Empty).ToList();
@@ -496,13 +509,43 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                 {
                     return Json(xoa, JsonRequestBehavior.AllowGet);
                 }
+
+                // update du an
+                using (var conn = ConnectionFactory.Default.GetConnection())
+                {
+                    conn.Open();
+                    var trans = conn.BeginTransaction();
+                    var qdDauTu = conn.Get<VDT_DA_QDDauTu>(id, trans);
+                    if (qdDauTu != null && qdDauTu.iID_ParentID != null)
+                    {
+                        sSoQuyetDinh = qdDauTu.sSoQuyetDinh;
+                        var qdDauTuParent = conn.Get<VDT_DA_QDDauTu>(qdDauTu.iID_ParentID, trans);
+                        if (qdDauTuParent != null && qdDauTuParent.iID_DuAnID != null && qdDauTuParent.iID_DuAnID != Guid.Empty)
+                        {
+                            var duAn = conn.Get<VDT_DA_DuAn>(qdDauTuParent.iID_DuAnID, trans);
+                            if (duAn != null)
+                            {
+                                duAn.fTongMucDauTu = qdDauTuParent.fTongMucDauTuPheDuyet;
+                                duAn.sDiaDiem = qdDauTuParent.sDiaDiem;
+                                duAn.sUserUpdate = Username;
+                                duAn.dDateUpdate = DateTime.Now;
+                                conn.Update<VDT_DA_DuAn>(duAn, trans);
+                            }
+                        }
+                    }
+                    trans.Commit();
+                }
+                
+
                 xoa = _iQLVonDauTuService.XoaQuyetDinhDauTu(Guid.Parse(id));
+                sMessage = string.Format("Xóa bản ghi {0} thành công", sSoQuyetDinh);
+
             }
             catch (Exception ex)
             {
                 AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
             }
-            return Json(xoa, JsonRequestBehavior.AllowGet);
+            return Json(new {status =xoa, sMessage = sMessage }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult DieuChinh(string id)

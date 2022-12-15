@@ -157,6 +157,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 new SheetColumn(columnName: "TM", header: "TM", columnWidth:60, align: "center", hasSearch: false, isReadonly: _isDetals),
                 new SheetColumn(columnName: "TTM", header: "TTM", columnWidth:60, align: "center", hasSearch: false, isReadonly: _isDetals),
                 new SheetColumn(columnName: "NG", header: "NG", columnWidth:60, align: "center", hasSearch: false, isReadonly: _isDetals),
+                new SheetColumn(columnName: "fGiaTriDeNghi", header: "Giá trị đề nghị", columnWidth:100, align: "center",dataType:1, hasSearch: false, isReadonly: true),
 
                 new SheetColumn(columnName: "fCapPhatTaiKhoBac", header: "Rút dự toán tại KBNN", columnWidth:100, align: "right", dataType: 1, hasSearch: true, isReadonly: _isModified),
                 new SheetColumn(columnName: "fCapPhatTaiKhoBacSauDC", header: "Rút dự toán tại KBNN(Sau Điều chỉnh)", columnWidth:100, align: "right", dataType: 1, hasSearch: true, isReadonly: false, isHidden: !_isModified),

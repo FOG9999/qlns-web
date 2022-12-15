@@ -242,7 +242,7 @@ function Luu() {
                 PopupModal("Lỗi thêm mới phê duyệt dự án !", [resp.message], ERROR);
                 return false;
             }
-            PopupModalSave("Thông báo", ["Lưu dữ liệu thành công"], ERROR);
+            PopupModalSave("Thông báo", [resp.sMessage], ERROR);
 
         }
     })
@@ -569,7 +569,7 @@ function SetListDataChiPhiDefaultAjax(resp) {
         var item = {
             id: x.Id,
             iID_QDDauTu_ChiPhiID: x.iID_QDDauTu_ChiPhiID,
-            iID_ChiPhiID: x.iID_ChiPhi,
+            iID_ChiPhiID: x.iID_ChiPhiID,
             iID_DuAn_ChiPhi: x.iID_DuAn_ChiPhi,
             sTenChiPhi: x.sTenChiPhi,
             iID_ChiPhi_Parent: x.iID_ChiPhi_Parent,

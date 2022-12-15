@@ -236,6 +236,15 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         [HttpPost]
         public JsonResult Save(VDT_DA_ChuTruongDauTuCreateModel model)
         {
+            var sMessage = string.Format("Thêm mới bản ghi {0} thành công", model.sSoQuyetDinh);
+            if(model.iID_ChuTruongDauTuID == null || model.iID_ChuTruongDauTuID == Guid.Empty)
+            {
+                if (model.iID_ParentID != null) sMessage = sMessage.Replace("Thêm mới", "Điều chỉnh");
+            }
+            else
+            {
+                sMessage = sMessage.Replace("Thêm mới", "Cập nhật");
+            }
             if (model.ListNguonVon == null)
                 model.ListNguonVon = new List<VDTChuTruongDauTuNguonVonModel>();
             if (model.ListHangMuc == null)
@@ -472,9 +481,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                 }
 
                 trans.Commit();
+                
             }
 
-            return Json(new { status = true, iID_ChuTruongDauTuID= model.iID_ChuTruongDauTuID });
+            return Json(new { status = true, iID_ChuTruongDauTuID= model.iID_ChuTruongDauTuID, sMessage = sMessage });
         }
 
         [HttpPost]
@@ -694,10 +704,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         [HttpPost]
         public JsonResult Xoa(string id)
         {
+            var sMessage = "Bản ghi đã được sử dụng trong bảng quyết định đầu tư. Bạn không thể thực hiện thao tác này.";
+            var entity = _iQLVonDauTuService.GetThongTinChuTruongDauTuById(Guid.Parse(id));
             bool xoa = _iQLVonDauTuService.XoaChuTruongDauTu(Guid.Parse(id));
             if (xoa)
-                return Json(new { status = xoa }, JsonRequestBehavior.AllowGet);
-            return Json(new { status = xoa, messeger = "Bản ghi đã được sử dụng trong bảng quyết định đầu tư. Bạn không thể thực hiện thao tác này." }, JsonRequestBehavior.AllowGet);
+                sMessage = string.Format("Xóa bản ghi {0} thành công", entity.sSoQuyetDinh);
+                return Json(new { status = xoa, sMessage = sMessage }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = xoa, sMessage = sMessage }, JsonRequestBehavior.AllowGet);
         }
 
         #region common

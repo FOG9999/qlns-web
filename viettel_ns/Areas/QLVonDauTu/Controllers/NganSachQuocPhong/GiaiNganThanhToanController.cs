@@ -1117,9 +1117,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
         }
 
         [HttpPost]
-        public JsonResult UpdatePheDuyetThanhToanChiTiet(List<PheDuyetThanhToanChiTiet> lstData, Guid iID_DeNghiThanhToanID, double fThueGiaTriGiaTangDuocDuyet, double fChuyenTienBaoHanhDuocDuyet)
+        public JsonResult UpdatePheDuyetThanhToanChiTiet(List<PheDuyetThanhToanChiTiet> lstData, Guid iID_DeNghiThanhToanID, double fThueGiaTriGiaTangDuocDuyet, double fChuyenTienBaoHanhDuocDuyet, DateTime dNgayPheDuyet)
         {
-            return Json(new { bIsComplete = _vdtService.UpdatePheDuyetThanhToanChiTiet(lstData, iID_DeNghiThanhToanID, Username, PhienLamViec.NamLamViec, fThueGiaTriGiaTangDuocDuyet, fChuyenTienBaoHanhDuocDuyet) }, JsonRequestBehavior.AllowGet);
+            return Json(new { bIsComplete = _vdtService.UpdatePheDuyetThanhToanChiTiet(lstData, iID_DeNghiThanhToanID, Username, PhienLamViec.NamLamViec, fThueGiaTriGiaTangDuocDuyet, fChuyenTienBaoHanhDuocDuyet, dNgayPheDuyet) }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -1140,6 +1140,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
         {
             bool isSuccessful = _vdtService.DeletePheDuyetThanhToanByDeNghiThanhToanId(iID_DeNghiThanhToanID);
             return Json(new { bIsComplete = isSuccessful }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult GetMoTaMLNSByMa(string sLNS, string sL, string sK, string sM, string sTM, string sTTM, string sNG, string sTNG)
+        {
+            string sMoTa = _vdtService.GetMoTaMLNSByMa(sLNS, sL, sK, sM, sTM, sTTM, sNG, sTNG);
+            return Json(new { sMoTa = sMoTa }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion

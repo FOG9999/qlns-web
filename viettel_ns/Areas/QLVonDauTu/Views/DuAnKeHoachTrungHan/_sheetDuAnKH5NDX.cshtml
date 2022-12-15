@@ -54,6 +54,14 @@
 @using (Html.BeginScripts())
 {
 <script type="text/javascript">
+        $(document).ready(function () {
+            $('#iID_KeHoach5Nam_DeXuatIDCbx').select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+            $('input[type=text]').blur(function (e) {
+                let currVal = e.target.value;
+                $(this).val($.trim(currVal));
+            });
+        });
+
         $(".btn-save").click(function () {
             var isAddDxProject = true;
             $.ajax({

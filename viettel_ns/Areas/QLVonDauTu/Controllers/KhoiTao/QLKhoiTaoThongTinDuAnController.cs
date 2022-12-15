@@ -91,8 +91,25 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.KhoiTao
             vm.Items = _qLVonDauTuService.GetKhoiTaoTTDAChiTietByIdKhoiTao(iID_KhoiTao);
             TempData["KhoiTaoChiTiet"] = vm.Items;
             List<VDT_DA_DuAn> lstDuAn = _qLVonDauTuService.GetDuAnByMaDonViQL(sMaDonVi).ToList();
-            lstDuAn.Insert(0, new VDT_DA_DuAn { iID_DuAnID = Guid.Empty, sTenDuAn = "--Chọn--" });
-            ViewBag.ListDuAn = lstDuAn.ToSelectList("iID_DuAnID", "sTenDuAn");
+            List<VDTDuAnDropViewModel> lstDuAnShow = new List<VDTDuAnDropViewModel>();
+            foreach (var item in lstDuAn)
+            {
+                lstDuAnShow.Add(new VDTDuAnDropViewModel
+                {
+                    iID_DuAnID = item.iID_DuAnID,
+                    sTenDuAn = item.sTenDuAn,
+                    sMaDuAn = item.sMaDuAn,
+                    iID_DonViQuanLyID = item.iID_DonViQuanLyID,
+                    iID_ChuDauTuID = item.iID_ChuDauTuID,
+                    iID_DonViThucHienDuAnID = item.iID_DonViThucHienDuAnID,
+                    iID_LoaiDuAnId = item.iID_LoaiDuAnId,
+                    iID_MaDonVi = item.iID_MaDonVi,
+                    iID_MaCDT = item.iID_MaCDT,
+                    iID_NhomDuAnID= item.iID_NhomDuAnID
+                });
+            }
+            lstDuAnShow.Insert(0, new VDTDuAnDropViewModel { iID_DuAnID = Guid.Empty, sTenDuAn = "--Chọn--" });
+            ViewBag.ListDuAn = lstDuAnShow.ToSelectList("iID_DuAnID", "sTenDuAnShow");
 
             List<VDT_KT_KhoiTao_DuLieu_ChiTiet_ThanhToan_ViewModel> lstTotalHopDong = _qLVonDauTuService.GetListHopDongKhoiTaoTTDAByKhoiTaoID(iID_KhoiTao).ToList();
             TempData["TotalHopDongKhoiTao"] = lstTotalHopDong;

@@ -4801,6 +4801,7 @@
     <Content Include="ScriptDatabase\StoreChange\proc_get_all_vdt_kehoachvonung_paging.sql" />
     <Content Include="ScriptDatabase\StoreChange\proc_vdt_khv_getdatakhvuduocduyet_chitiet.sql" />
     <Content Include="ScriptDatabase\StoreChange\sp_ke_hoach_trung_han_de_xuat_chuyen_tiep_report.sql" />
+    <Content Include="ScriptDatabase\StoreChange\sp_vdt_get_ke_hoach_von_nam_Excel.sql" />
     <Content Include="ScriptDatabase\StoreChange\sp_vdt_khlcnt_get_goithau_detail_by_chungtu_2.sql" />
     <Content Include="ScriptDatabase\StoreChange\sp_vdt_khv_ke_hoach_5_nam_de_xuat_export_new.sql" />
     <Content Include="ScriptDatabase\StoreChange\sp_vdt_rpt_tinh_hinh_thuc_hien_du_an.sql" />
@@ -6958,9 +6959,9 @@
     </Content>
     <Content Include="Report_ExcelFrom\QLNH\rpt_ThucHienNganSach_GiaiDoanTo.xlsx" />
     <Content Include="Report_ExcelFrom\QLNH\rpt_BaoCaoThucHienNganSach.xlsx" />
-    <None Include="Report_ExcelFrom\VonDauTu\rpt_ThongTriQuyetToan.xls">
+    <Content Include="Report_ExcelFrom\VonDauTu\rpt_ThongTriQuyetToan.xls">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="Webh.Debug.config">
       <DependentUpon>Webh.config</DependentUpon>
     </None>

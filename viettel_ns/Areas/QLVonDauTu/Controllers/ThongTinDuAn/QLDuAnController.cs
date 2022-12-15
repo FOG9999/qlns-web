@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Http.Results;
 using System.Web.Mvc;
 using Viettel.Domain.DomainModel;
 using Viettel.Models.QLVonDauTu;
@@ -231,6 +232,19 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                         entity.dDateUpdate = DateTime.Now;
                         conn.Update(entity, trans);
                         #endregion
+
+                        #region Sua VDT_DA_DuAn_NguonVon
+                        if (data.listChuTruongDauTuNguonVon != null && data.listChuTruongDauTuNguonVon.Count() > 0)
+                        {
+                            foreach (var nguonVonDuAn in data.listChuTruongDauTuNguonVon)
+                            {
+                                var entityNguonVon = conn.Get<VDT_DA_DuAn_NguonVon>(nguonVonDuAn.Id, trans);
+                                entityNguonVon.iID_NguonVonID = nguonVonDuAn.iID_NguonVonID;
+                                entityNguonVon.fThanhTien = nguonVonDuAn.fThanhTien;
+                                conn.Update(entityNguonVon, trans);
+                            }
+                        }
+                        #endregion
                     }
                     // commit to db
                     trans.Commit();
@@ -274,7 +288,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                 topHopThongTin.dataQuyetToan = dataQuyetToan != null ? dataQuyetToan : new VDT_QT_QuyetToan();
                 topHopThongTin.dataPhanCapDuAn = dataPhanCapDuAn != null ? dataPhanCapDuAn : new VDT_DM_PhanCapDuAn();
                 /*Bổ sung hiển thị thông tin nguồn vốn - Tab thông tin dự án*/
-                IEnumerable<VDTDuAnListNguonVonTTDuAnModel> listNguonVonDuAn = _iQLVonDauTuService.GetListDuAnNguonVonTTDuAn(id);
+                IEnumerable<VDTDuAnListNguonVonTTDuAnModel> listNguonVonDuAn = _iQLVonDauTuService.GetListDuAnNguonVonTTDuAn(id).OrderBy(x=>x.sTenNguonVon);
                 topHopThongTin.listNguonVonDuAn = listNguonVonDuAn;
 
                 IEnumerable<VDT_DA_DuAn_HangMucModel> listDuAnHangMuc = _iQLVonDauTuService.GetListDuAnHangMucTTDuAn(id);
@@ -422,6 +436,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                 }
             }
             return Json(new { status = true, data = result });
+        }
+
+        public JsonResult GetListNguonVonByDuAn(Guid id)
+        {
+            IEnumerable<VDTDuAnListNguonVonTTDuAnModel> listNguonVonDuAn = _iQLVonDauTuService.GetListDuAnNguonVonTTDuAn(id).OrderBy(x=>x.sTenNguonVon);
+            if(!listNguonVonDuAn.Any()) listNguonVonDuAn = new List<VDTDuAnListNguonVonTTDuAnModel>();
+            return Json(new { status = true, data = listNguonVonDuAn }, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -72,6 +72,13 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThucHienDauTu
         {
             using (var conn = ConnectionFactory.Default.GetConnection())
             {
+                var sMessage = string.Format("Thêm mới bản ghi {0} thành công", model.sSoQuyetDinh);
+                if (model.iID_GoiThauID != null || model.iID_GoiThauID != Guid.Empty)
+                {
+                    sMessage = sMessage.Replace("Thêm mới", "Cập nhật");
+
+                } 
+
                 try
                 {
                     conn.Open();

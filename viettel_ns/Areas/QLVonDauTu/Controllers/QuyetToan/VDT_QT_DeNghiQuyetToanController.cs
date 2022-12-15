@@ -681,8 +681,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             fr.SetValue("DuyetDieuChinhLanCuoi", (quyetDinhDauTu != null && quyetDinhDauTu.iID_QDDauTuID != Guid.Empty && quyetDinhDauTu.fTongMucDauTuPheDuyet.HasValue) ? quyetDinhDauTu.fTongMucDauTuPheDuyet / dataNhap.fDonViTinh : 0);
             fr.SetValue("DuToanDuocDuyetCuoi", giaTriDuToan / dataNhap.fDonViTinh);
             fr.SetValue("DonViTinh", dataNhap.sDonViTinh);
-            fr.SetValue("NguyenNhanBatKhaKhang", denghiItem.fChiPhiThietHai.HasValue ? denghiItem.fChiPhiThietHai.Value : 0);
-            fr.SetValue("ChiPhiKhongTaoTaiSan", denghiItem.fChiPhiKhongTaoNenTaiSan.HasValue ? denghiItem.fChiPhiKhongTaoNenTaiSan.Value : 0);
+            fr.SetValue("NguyenNhanBatKhaKhang", denghiItem.sChiPhiThietHai);
+            fr.SetValue("ChiPhiKhongTaoTaiSan", denghiItem.sChiPhiKhongTaoNenTaiSan);
             fr.SetValue("TaiSanDaiHan", taiSanDaiHan);
             fr.SetValue("TaiSanNganHan", taiSanNganHan);
             fr.SetValue("SumTaiSan", taiSanDaiHan + taiSanNganHan);
@@ -791,6 +791,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             {
                 ChiPhiId = x.iID_DuAn_ChiPhi.HasValue ? x.iID_DuAn_ChiPhi.Value : Guid.Empty,
                 GiaTriPheDuyet = x.fTienPheDuyet,
+                GiaTriPheDuyetQDDT = x.fTienPheDuyetQDDT,
                 TenChiPhi = x.sTenChiPhi,
                 iID_ChiPhi = x.iID_ChiPhiID,
                 IdChiPhiDuAnParent = x.iID_ChiPhi_Parent,
@@ -903,6 +904,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             {
                 ChiPhiId = x.iID_DuAn_ChiPhi.HasValue ? x.iID_DuAn_ChiPhi.Value : Guid.Empty,
                 GiaTriPheDuyet = x.fTienPheDuyet,
+                GiaTriPheDuyetQDDT = x.fTienPheDuyetQDDT,
                 TenChiPhi = x.sTenChiPhi,
                 iID_ChiPhi = x.iID_ChiPhiID,
                 IdChiPhiDuAnParent = x.iID_ChiPhi_Parent,

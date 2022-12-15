@@ -168,7 +168,7 @@
 
 
                     @*Nguồn vốn đầu tư*@
-                    <div class="form-group">
+                   <!--<div class="form-group">
                         <h4 class="color-text-red">Nguồn vốn đầu tư:</h4>
                         <hr class='color-background-red' />
                         <div class="row">
@@ -208,7 +208,7 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
 
                     @*Hạng mục*@
                     @*<div class="form-group">
@@ -251,11 +251,51 @@
                                         </tr>
                                     </tfoot>
 
-                                </table>
+                    </table>*@
+                }
+
+                @*Nguồn vốn đầu tư*@
+                <div class="form-group">
+                    <h4 class="color-text-red">Nguồn vốn đầu tư:</h4>
+                    <hr class='color-background-red' />
+                    <div class="row">
+                        <div class="col-sm-3 col-sm-offset-9">
+                            <div class="input-group pull-right">
+                                <div class="input-group-append">
+                                    <span class="require text-italic mr-10">(Thêm dữ liệu xuống bảng chi tiết)</span>
+                                    <button class="btn btn-primary btn-icon" type="button" onclick="ThemMoiNguonVonDauTu()">
+                                        <i class="fa fa-plus fa-lg" aria-hidden="true"></i>
+                                    </button>
+
+                                </div>
                             </div>
                         </div>
-                    </div>*@
-                }
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered" id="tblNguonVonDauTu">
+                                <thead>
+                                    <tr>
+                                        <th width="3%">STT</th>
+                                        <th width="60%">Tên nguồn vốn</th>
+                                        <th width="25%">Giá trị phê duyệt</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th>Tổng cộng</th>
+                                        <th class="cpdt_tong_giatripheduyet text-right" id="id_tong_giatripheduyet_nguonvon"></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
                 @*Thông tin tài liệu đính kèm*@
                 <div class="form-group">

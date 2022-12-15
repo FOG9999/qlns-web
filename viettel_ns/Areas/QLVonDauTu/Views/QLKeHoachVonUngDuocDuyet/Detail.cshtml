@@ -118,7 +118,6 @@
                                                 {
                                                     <th width="5%" class="text-right">Cấp phát bằng lệnh chi</th>
                                                     <th width="5%" class="text-right">Cấp phát bằng lệnh chi (sau điều chỉnh)</th>
-
                                                 }
                                                 else
                                                 {
@@ -160,7 +159,7 @@
                                                     }
                                                     else
                                                     {
-                                                        <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCapKhoBac" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fCapPhatTaiKhoBacDC.HasValue ? item.fCapPhatTaiKhoBacDC : item.fCapPhatTaiKhoBac))"></td>
+                                                        <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCapKhoBac" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fCapPhatTaiKhoBacDC.HasValue ? item.fCapPhatTaiKhoBacDC : null))"></td>
 
                                                     }
                                                     @if (isDieuChinh)

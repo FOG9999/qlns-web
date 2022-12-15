@@ -177,7 +177,10 @@ function ValidateBeforeSave() {
             sTrangThaiDuAnDangKy: "",
             iLoaiDuAn: 0,
             iID_LoaiCongTrinh: "",
-            iID_DonViID:""
+            iID_DonViID: "",
+            fUocThucHienDC: 0,
+            fThuHoiVonUngTruocDC: 0,
+            fThanhToanDC: 0
 
         };
 
@@ -192,6 +195,9 @@ function ValidateBeforeSave() {
         object.fUocThucHien = Bang_arrGiaTri[i][Bang_arrCSMaCot["fUocThucHien"]];
         object.fThuHoiVonUngTruoc = Bang_arrGiaTri[i][Bang_arrCSMaCot["fThuHoiVonUngTruoc"]];
         object.fThanhToan = Bang_arrGiaTri[i][Bang_arrCSMaCot["fThanhToan"]];
+        object.fUocThucHienDC = Bang_arrGiaTri[i][Bang_arrCSMaCot["fUocThucHienDC"]];
+        object.fThuHoiVonUngTruocDC = Bang_arrGiaTri[i][Bang_arrCSMaCot["fThuHoiVonUngTruocDC"]];
+        object.fThanhToanDC = Bang_arrGiaTri[i][Bang_arrCSMaCot["fThanhToanDC"]];
         object.iID_LoaiCongTrinh = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_LoaiCongTrinh"]];
         object.iID_DonViID = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_DonViQuanLyID"]];
         object.iLoaiDuAn = Bang_arrGiaTri[i][Bang_arrCSMaCot["sLoaiDuAn"]] == "Mở mới" ? 1 : 2;

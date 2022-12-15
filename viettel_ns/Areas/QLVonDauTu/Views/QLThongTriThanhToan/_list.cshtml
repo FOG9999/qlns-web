@@ -30,6 +30,8 @@
             <th width="3%"></th>
             <th width="13%">@Html.DropDownList("ddlDonViQuanLy", (SelectList)(ViewBag.ListDonViQuanLy), new { @class = "form-control", @id = "txtDonViQuanLy" })</th>
             <th width="18%"><input type="text" class="form-control" id="txtMaThongTri" autocomplete="off" /></th>
+            <th width=""></th>
+            <th width=""></th>
             <th width="15%">
                 <div class='input-group date'>
                     <input type='text' class="form-control" id="txtNgayTaoThongTri" placeholder="dd/MM/yyyy" />
@@ -39,7 +41,7 @@
                 </div>
             </th>
             <th width="10%">  <input type="text" class="form-control" id="txtNamThucHien" autocomplete="off" /></th>
-            <th width="5%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+            <th width="5%"><button class="btn btn-info" onclick="ChangePage()" id="btnTimKiem"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
         </tr>
     </thead>
     <thead>
@@ -48,6 +50,8 @@
             <th width="3%">STT</th>
             <th width="13%">Tên đơn vị</th>
             <th width="18%">Mã thông tri</th>
+            <th width="10%">Mô tả</th>
+            <th width="10%">Loại thông tri</th>
             <th width="15%">Ngày tạo</th>
             <th width="10%">Năm làm việc</th>
             <th width="5%">Thao tác</th>
@@ -65,6 +69,8 @@
                     <td align="center">@index</td>
                     <td align="left">@item.sTenDonVi</td>
                     <td align="left">@item.sMaThongTri</td>
+                    <td align="center">@item.sMoTa</td>
+                    <td align="center">@item.sLoaiThongTri</td>
                     <td align="center">@(item.dNgayThongTri.HasValue ? item.dNgayThongTri.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
                     <td align="center">@item.iNamThongTri</td>
                     <td align="center" class="col-sm-12" width="5%">
@@ -95,7 +101,16 @@
         }, function () {
             $(this).css("background-color", "");
         });
+
+        document.addEventListener('keydown', timKiem);
     });
+
+    function timKiem(event) {
+        console.log(event.key)
+        if (event.key === "Enter") {
+            $("#btnTimKiem").click()
+        }
+    }
 
 </script>
 

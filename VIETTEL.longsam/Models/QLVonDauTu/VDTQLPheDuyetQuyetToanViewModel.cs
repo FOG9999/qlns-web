@@ -19,6 +19,7 @@ namespace Viettel.Models.QLVonDauTu
         public string sGhiChu { get; set; }
         public string sMaDuAn { get; set; }
         public string sTenDuAn { get; set; }
+        public string sTenDeNghi { get; set; }
         public string sTen { get; set; }
         public int IdNguonVon { get; set; }
         public string sDiaDiem { get; set; }

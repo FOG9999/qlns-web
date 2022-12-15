@@ -428,7 +428,7 @@ function Luu() {
                 }
                 else {
                     bIsSaveSuccess = true;
-                    PopupModal("Thông báo", "Lưu dữ liệu thành công", ERROR);
+                    PopupModal("Thông báo", data.sMessage, ERROR);
                 }
             }
         },

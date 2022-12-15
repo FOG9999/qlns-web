@@ -33,6 +33,7 @@ function LoadThongTinDonVi() {
         success: function (result) {
             if (result) {
                 $('#idDonVi').empty().html(result.htmlCT);
+                $('#idDonVi').change();
             }
         }
     });

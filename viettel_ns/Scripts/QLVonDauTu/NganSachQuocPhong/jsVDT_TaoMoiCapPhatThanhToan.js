@@ -629,6 +629,7 @@ function SavePheDuyetThanhToanChiTiet() {
 }
 
 function GetListThanhToanChiTiet() {
+    var iLoaiThanhToan = $("#drpLoaiThanhToan option:selected").val();
     var lstData = [];
     $("#" + TBL_DANH_SACH_THANH_TOAN_CHITIET + " tbody tr").each(function () {
         var iID_PheDuyetThanhToan_ChiTietID = $(this).find(".r_iID_ThanhToanChiTietID").val();
@@ -649,20 +650,32 @@ function GetListThanhToanChiTiet() {
         //var fGiaTriTrongNuoc = parseInt(UnFormatNumber($(this).find(".r_vontrongnuoc").text()));
         var sGhiChu = $(this).find(".r_ghichu").text();
 
-        var sLNS = $(this).find(".r_Lns option:selected").text();
-        var sL = $(this).find(".r_L option:selected").text();
-        var sK = $(this).find(".r_K option:selected").text();
-        var sM = $(this).find(".r_M option:selected").text();
-        var sTM = $(this).find(".r_Tm option:selected").text();
-        var sTTM = $(this).find(".r_Ttm option:selected").text();
-        var sNG = $(this).find(".r_Ng option:selected").text();
+        var sLNS, sL, sM, sK, sTM, sTTM, sNG;
+        if (iLoaiThanhToan != TAM_UNG) {
+            sLNS = $(this).find(".r_Lns option:selected").text();
+            sL = $(this).find(".r_L option:selected").text();
+            sK = $(this).find(".r_K option:selected").text();
+            sM = $(this).find(".r_M option:selected").text();
+            sTM = $(this).find(".r_Tm option:selected").text();
+            sTTM = $(this).find(".r_Ttm option:selected").text();
+            sNG = $(this).find(".r_Ng option:selected").text();
+        }
+        else {
+            sLNS = $(this).find(".sLNS").val();
+            sL = $(this).find(".sL").val();
+            sK = $(this).find(".sK").val();
+            sM = $(this).find(".sM").val();
+            sTM = $(this).find(".sTM").val();
+            sTTM = $(this).find(".sTTM").val();
+            sNG = $(this).find(".sNG").val();
+        }
 
         var sXauNoiMa = sLNS + "-" + sL + "-" + sK + "-" + sM + "-" + sTM + "-" + sTTM + "-" + sNG;
         sXauNoiMa = sXauNoiMa.replace(/[-]+$/g, '');
 
         lstData.push({
             iID_PheDuyetThanhToan_ChiTietID: iID_PheDuyetThanhToan_ChiTietID,
-            iLoai: iLoai,
+            iLoai: iLoai ? iLoai : 2, // vì tạm ứng sẽ ẩn r_loai select đi
             sLNS: sLNS,
             sL: sL,
             sK: sK,
@@ -747,17 +760,29 @@ function ThemMoiThanhToanChiTiet() {
     dongMoi += "<tr style='cursor: pointer;' class='parent' data-xoa='0' data-iloaidenghi='" + iLoaiDeNghi + "' data-iloainamkehoach='" + iLoaiNamKeHoach + "'>";
     dongMoi += "<td class='r_STT' align='center'></td>";
     dongMoi += "<input type='hidden' class='r_iID_ThanhToanChiTietID' value='" + iID_ThanhToanChiTietID + "'/>";
-    if (iLoaiThanhToan != TAM_UNG)
+    if (iLoaiThanhToan != TAM_UNG) {
         dongMoi += "<td class='r_Loai'>" + CreateHtmlSelectLoai() + "</td>";
-    dongMoi += "<td class='r_KeHoachVon'><select class='form-control' onchange='onChangeKeHoachVon(this)'></option></td>";
-    dongMoi += "<td class='r_Lns'><select class='form-control' onchange='onChangeLNS(this)'></option></td>";
-    dongMoi += "<td class='r_L'><select class='form-control' onchange='onChangeL(this)'></option></td>";
-    dongMoi += "<td class='r_K'><select class='form-control' onchange='onChangeK(this)'></option></td>";
-    dongMoi += "<td class='r_M'><select class='form-control' onchange='onChangeM(this)'></option></td>";
-    dongMoi += "<td class='r_Tm'><select class='form-control' onchange='onChangeTM(this)'></option></td>";
-    dongMoi += "<td class='r_Ttm'><select class='form-control' onchange='onChangeTTM(this)'></option></td>";
-    dongMoi += "<td class='r_Ng'><select class='form-control'></option></td>";
-    dongMoi += "<td class='r_NoiDung'></td>";
+        dongMoi += "<td class='r_KeHoachVon'><select class='form-control' onchange='onChangeKeHoachVon(this)'></option></td>";
+        dongMoi += "<td class='r_Lns'><select class='form-control' onchange='onChangeLNS(this)'></option></td>";
+        dongMoi += "<td class='r_L'><select class='form-control' onchange='onChangeL(this)'></option></td>";
+        dongMoi += "<td class='r_K'><select class='form-control' onchange='onChangeK(this)'></option></td>";
+        dongMoi += "<td class='r_M'><select class='form-control' onchange='onChangeM(this)'></option></td>";
+        dongMoi += "<td class='r_Tm'><select class='form-control' onchange='onChangeTM(this)'></option></td>";
+        dongMoi += "<td class='r_Ttm'><select class='form-control' onchange='onChangeTTM(this)'></option></td>";
+        dongMoi += "<td class='r_Ng'><select class='form-control'></option></td>";
+        dongMoi += "<td class='r_NoiDung'></td>";
+    }
+    else {
+        dongMoi += "<td class='r_KeHoachVon'><select class='form-control' onchange='onChangeKeHoachVon(this)'></option></td>";
+        dongMoi += "<td class='r_Lns'> <input class='sLNS' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' /> </td>";
+        dongMoi += "<td class='r_L'><input class='sL' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' /></td>";
+        dongMoi += "<td class='r_K'><input class='sK' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' /></td>";
+        dongMoi += "<td class='r_M'><input class='sM' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' /></td>";
+        dongMoi += "<td class='r_Tm'><input class='sTM' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' /></td>";
+        dongMoi += "<td class='r_Ttm'><input class='sTTM' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' /></td>";
+        dongMoi += "<td class='r_Ng'><input class='sNG' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' /></td>";
+        dongMoi += "<td class='r_NoiDung'></td>";
+    }
     dongMoi += "<td class='r_fGiaTriDeNghiTN sotien' align='right'>" + FormatNumber(fDefaultValueTN) + "</td>";
     dongMoi += "<td class='r_vontrongnuoc sotien' contenteditable='true' align='right'></td>";
     dongMoi += "<td class='r_fGiaTriDeNghiNN sotien' align='right'>" + FormatNumber(fDefaultValueNN) + "</td>";
@@ -1252,4 +1277,25 @@ function CheckTrungSoDeNghi() {
         }
     })
     return check;
+}
+
+function onChangeMLNS(obj) {
+    let currRow = $(obj).closest('tr');
+
+    let sLNS = $(currRow).find('.sLNS').val();
+    let sK = $(currRow).find('.sK').val();
+    let sL = $(currRow).find('.sL').val();
+    let sM = $(currRow).find('.sM').val();
+    let sTM = $(currRow).find('.sTM').val();
+    let sTTM = $(currRow).find('.sTTM').val();
+    let sNG = $(currRow).find('.sNG').val();
+
+    $.ajax({
+        type: "GET",
+        url: "/QLVonDauTu/GiaiNganThanhToan/GetMoTaMLNSByMa",
+        data: { sLNS, sL, sM, sTM, sNG, sK, sTTM },
+        success: function (r) {
+            $(currRow).find('.r_NoiDung').html(r.sMoTa)
+        }
+    })
 }

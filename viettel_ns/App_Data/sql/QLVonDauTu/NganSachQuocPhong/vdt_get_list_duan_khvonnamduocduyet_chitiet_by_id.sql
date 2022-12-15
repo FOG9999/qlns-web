@@ -1,5 +1,5 @@
-DECLARE @phanBoVonId uniqueidentifier set @phanBoVonId = '30dd50ba-9fda-4a14-954f-ae4a00b6e493'
-DECLARE @iIdPhanBoVonDeXuat uniqueidentifier set @iIdPhanBoVonDeXuat = null
+DECLARE @phanBoVonId uniqueidentifier set @phanBoVonId = '55c39019-52a9-478d-a4ab-3fc40d9ed7d0'
+DECLARE @iIdPhanBoVonDeXuat uniqueidentifier set @iIdPhanBoVonDeXuat = '3d6a1692-9c92-4601-84ff-7b6ca8a553c5'
 DECLARE @sTenDuAn nvarchar(50) set @sTenDuAn=null
 DECLARE @sLoaiDuAn nvarchar(50) set @sLoaiDuAn=null
 DECLARE @sTenDonViThucHienDuAn nvarchar(50) set @sTenDonViThucHienDuAn=null
@@ -46,7 +46,9 @@ select
 	cast(0 as float) as fCapPhatBangLenhChiSauDC,
 	cast(0 as float) as fGiaTriThuHoiNamTruocKhoBacSauDC,
 	cast(0 as float) as fGiaTriThuHoiNamTruocLenhChiSauDC,
-
+	CASE
+		WHEN khvndxct.fThanhToanDC is not null THEN khvndxct.fThanhToanDC ELSE khvndxct.fThanhToan
+	END fGiaTriDeNghi,
 	1 as Loai,
 	'' as STT
 from
@@ -61,6 +63,8 @@ on da.iID_DuAnID = kh5nct.iID_DuAnID
 left join
 	VDT_DM_LoaiCongTrinh lct
 on da.iID_LoaiCongTrinhID = lct.iID_LoaiCongTrinh or dahm.iID_LoaiCongTrinhID = lct.iID_LoaiCongTrinh
+Left join VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet khvndxct
+on da.iID_DuAnID = khvndxct.iID_DuAnID
 where
 	da.iID_DuAnID in (
 		select 
@@ -125,7 +129,9 @@ select
 	khvnddct.fCapPhatBangLenhChiDC as fCapPhatBangLenhChiSauDC,
 	khvnddct.fGiaTriThuHoiNamTruocKhoBacDC as fGiaTriThuHoiNamTruocKhoBacSauDC,
 	khvnddct.fGiaTriThuHoiNamTruocLenhChiDC as fGiaTriThuHoiNamTruocLenhChiSauDC,
-
+	CASE
+		WHEN khvnct.fThanhToanDC is not null THEN khvnct.fThanhToanDC ELSE khvnct.fThanhToan
+	END fGiaTriDeNghi,
 	2 as Loai,
 	'' as STT
 from
@@ -140,6 +146,9 @@ on khvnddct.iID_Parent = khvnddctpr.iID_KeHoachVonNam_DuocDuyet_ChiTietID
 left join
 	VDT_DM_LoaiCongTrinh lct
 on khvnddct.iID_LoaiCongTrinh = lct.iID_LoaiCongTrinh
+LEFT JOIN 
+	VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet khvnct
+on khvnct.iID_DuAnID = khvnddct.iID_DuAnID AND khvnct.iID_KeHoachVonNamDeXuatID = @iIdPhanBoVonDeXuat
 where
 	khvnddct.iID_KeHoachVonNam_DuocDuyetID = @phanBoVonId
 	and dv.iID_Ma = (SELECT iID_DonViQuanLyID FROM VDT_KHV_KeHoachVonNam_DuocDuyet where iID_KeHoachVonNam_DuocDuyetID = @phanBoVonId)
@@ -148,3 +157,4 @@ where
 where (@sTenDuAn = '' or @sTenDuAn is null or sTenDuAn is null or sTenDuAn like @sTenDuAn)
 and (@sLoaiDuAn = '' or @sLoaiDuAn is null or sLoaiDuAn is null or sLoaiDuAn like @sLoaiDuAn)
 and (@sTenDonViThucHienDuAn = '' or @sTenDonViThucHienDuAn is null or sTenDonViThucHienDuAn is null or sTenDonViThucHienDuAn like @sTenDonViThucHienDuAn)
+

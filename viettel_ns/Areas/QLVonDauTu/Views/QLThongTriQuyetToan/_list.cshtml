@@ -7,7 +7,8 @@
     <button class="btn btn-primary pull-right" onclick="themMoi()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
     <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
     <div class="form-group text-right">
-        <button onclick="OnExportExcel();" class="btn btn-primary" style="margin-right:10px;width:auto !important"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Excel</button>
+        <button onclick="OnExportExcel('xlsx');" class="btn btn-primary" style="margin-right:10px;width:auto !important"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Excel</button>
+        <button onclick="OnExportExcel('pdf');" class="btn btn-primary" style="margin-right:10px;width:auto !important"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF </button>
     </div>
 </div>
 <table class="table table-bordered" id="tblListVDTThongTri">

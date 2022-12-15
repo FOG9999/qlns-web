@@ -145,6 +145,13 @@ namespace Viettel.Models.QLVonDauTu
                 return fTienPheDuyet.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN"));
             }
         }
+        public string sTienPheDuyetQDDT
+        {
+            get
+            {
+                return fTienPheDuyetQDDT.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN"));
+            }
+        }
         public string sGiaTriKiemToan
         {
             get

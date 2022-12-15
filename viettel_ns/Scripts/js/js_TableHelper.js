@@ -30,12 +30,12 @@ function GenerateTreeTable(data, columns, button, idTable, haveSttColumn = true,
         TableView.push("<thead class='header-search'>");
         TableView.push("<tr>");
         TableView.push("<th width='4%'></th>");
-        TableView.push("<th width='10%'><input type='text' class='form-control clearable' placeholder='Mã loại công trình' id='txtMaLoai' autocomplete='off' /></th>");
-        TableView.push("<th width='10%''><input type='text' class='form-control clearable' placeholder='Tên viết tắt' id='txtTenVietTat' autocomplete='off' /></th>");
-        TableView.push("<th width='24%''><input type='text' class='form-control clearable' placeholder='Tên loại công trình' id='txtTenLoaiCongTrinh' autocomplete='off' /></th>");
-        TableView.push("<th width='19%'><input type='text' class='form-control clearable' placeholder='Mô tả' id='txtMoTa' autocomplete='off' /></th>");
-        TableView.push("<th width='5%'><input type='text' class='form-control clearable' placeholder='Thứ tự' id='txtThuTu' autocomplete='off' /></th>");
-        TableView.push("<th width='15%'><input type='text' class='form-control clearable' placeholder='Loại công trình cha' id='txtLoaiCongTrinhCha' autocomplete='off' style='display: none' /></th>");
+        TableView.push("<th width='10%'><input type='text' class='form-control clearable'  id='txtMaLoai' autocomplete='off' /></th>");
+        TableView.push("<th width='10%''><input type='text' class='form-control clearable'  id='txtTenVietTat' autocomplete='off' /></th>");
+        TableView.push("<th width='24%''><input type='text' class='form-control clearable'  id='txtTenLoaiCongTrinh' autocomplete='off' /></th>");
+        TableView.push("<th width='19%'><input type='text' class='form-control clearable'  id='txtMoTa' autocomplete='off' /></th>");
+        TableView.push("<th width='5%'><input type='text' class='form-control clearable'  id='txtThuTu' autocomplete='off' /></th>");
+        TableView.push("<th width='15%'><input type='text' class='form-control clearable'  id='txtLoaiCongTrinhCha' autocomplete='off' style='display: none' /></th>");
         TableView.push("<th width='300px'><button class='btn btn-info' onclick='GetListData_By_Name()'><i class='fa fa-search'></i>Tìm kiếm</button> </th>");
         TableView.push("</tr>");
         TableView.push("</thead>");
@@ -43,12 +43,12 @@ function GenerateTreeTable(data, columns, button, idTable, haveSttColumn = true,
     if (isShowSearchDMLoaiCongTrinh == true && haveSttColumn == false) {
         TableView.push("<thead class='header-search'>");
         TableView.push("<tr>");
-        TableView.push("<th width='10%'><input type='text' class='form-control clearable' placeholder='Mã loại công trình' id='txtMaLoai' autocomplete='off' /></th>");
-        TableView.push("<th width='10%''><input type='text' class='form-control clearable' placeholder='Tên viết tắt' id='txtTenVietTat' autocomplete='off' /></th>");
-        TableView.push("<th width='24%''><input type='text' class='form-control clearable' placeholder='Tên loại công trình' id='txtTenLoaiCongTrinh' autocomplete='off' /></th>");
-        TableView.push("<th width='19%'><input type='text' class='form-control clearable' placeholder='Mô tả' id='txtMoTa' autocomplete='off' /></th>");
-        TableView.push("<th width='5%'><input type='text' class='form-control clearable' placeholder='Thứ tự' id='txtThuTu' autocomplete='off' /></th>");
-        TableView.push("<th width='15%'><input type='text' class='form-control clearable' placeholder='Loại công trình cha' id='txtLoaiCongTrinhCha' autocomplete='off' style='display: none' /></th>");
+        TableView.push("<th width='10%'><input type='text' class='form-control clearable'  id='txtMaLoai' autocomplete='off' /></th>");
+        TableView.push("<th width='10%''><input type='text' class='form-control clearable'  id='txtTenVietTat' autocomplete='off' /></th>");
+        TableView.push("<th width='24%''><input type='text' class='form-control clearable'  id='txtTenLoaiCongTrinh' autocomplete='off' /></th>");
+        TableView.push("<th width='19%'><input type='text' class='form-control clearable'  id='txtMoTa' autocomplete='off' /></th>");
+        TableView.push("<th width='5%'><input type='text' class='form-control clearable'  id='txtThuTu' autocomplete='off' /></th>");
+        TableView.push("<th width='15%'><input type='text' class='form-control clearable'  id='txtLoaiCongTrinhCha' autocomplete='off' style='display: none' /></th>");
         TableView.push("<th width='300px'><button class='btn btn-info' onclick='GetListData_By_Name()'><i class='fa fa-search'></i>Tìm kiếm</button> </th>");
         TableView.push("</tr>");
         TableView.push("</thead>");

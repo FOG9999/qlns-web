@@ -85,6 +85,8 @@ namespace Viettel.Models.QLVonDauTu
         public Guid? iID_KeHoachVonNam_DuocDuyet_ChiTietID { get; set; }
         public Guid? iID_KeHoachVonNam_DuocDuyetID { get; set; }
         public string sTenDonViThucHienDuAn { get; set; }
+        public double? fGiaTriDeNghi { get; set; }
+
     }
 
     public class VDTKeHoachVonNamDuocDuyetExport

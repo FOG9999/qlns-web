@@ -255,7 +255,7 @@ function DrawTableChiPhiHangMuc(sumGiaTriQuyetToanAB, sumKetQuaKiemToan, sumCDTD
         }
         isBold = "font-weight: bold;";
         html += "<tr data-loai='1' style='" + isBold+"' data-id='" + itemCp.iID_DuAn_ChiPhi + "' data-parentid='" + itemCp.iID_ChiPhi_Parent+"'>";
-        html += "<td class='stt'></td>";
+        html += "<td class='stt'>" + itemCp.iSTT + "</td>";
         html += "<td>Chi phí</td>";
         html += "<td>" + itemCp.sTenChiPhi + "</td>";
         html += "<td class='text-right'>" + itemCp.sTienPheDuyet + "</td>";

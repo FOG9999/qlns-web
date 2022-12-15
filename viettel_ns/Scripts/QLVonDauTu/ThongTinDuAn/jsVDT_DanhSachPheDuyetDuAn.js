@@ -108,7 +108,8 @@ function Delete(id) {
         url: "/QLVonDauTu/QLPheDuyetDuAn/Xoa",
         data: { id: id },
         success: function (r) {
-            if (r == true) {
+            if (r.status == true) {
+                PopupModal("Xóa thành công", r.sMessage, ERROR);
                 ChangePage();
             }
             else {

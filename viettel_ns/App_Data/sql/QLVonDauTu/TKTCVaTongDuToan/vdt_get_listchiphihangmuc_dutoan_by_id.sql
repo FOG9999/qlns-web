@@ -8,11 +8,12 @@ AS
 		dtcp.fTienPheDuyet,
 		dtcp.fGiaTriDieuChinh,
 		dtcp.fTienPheDuyetQDDT,
-		dacp.iThuTu,
-		CAST( ROW_NUMBER() OVER (PARTITION BY dacp.iID_ChiPhi_Parent  Order by  dacp.iID_ChiPhi_Parent ) as varchar(100))as iSTT,
+		dmcp.iThuTu,
+		CAST( dmcp.iThuTu as varchar(100))as iSTT,
 		CONCAT(dacp.iID_ChiPhi_Parent, dacp.iID_DuAn_ChiPhi) as ord
 	from VDT_DA_DuToan_ChiPhi dtcp
 	inner join VDT_DM_DuAn_ChiPhi dacp ON dacp.iID_DuAn_ChiPhi = dtcp.iID_DuAn_ChiPhi 
+	left join VDT_DM_ChiPhi dmcp ON dtcp.iID_ChiPhiID = dmcp.iID_ChiPhi
 	where dtcp.iID_DuToanID = @duToanId and dacp.iID_ChiPhi_Parent  is null
 	union all
 	select  dthm.iID_DuAn_ChiPhi,

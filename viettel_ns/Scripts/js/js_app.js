@@ -492,7 +492,7 @@ function ValidateInputFocusOut(event, textbox, type, nTofix, bCoDau1000, isNotFo
             break;
         case 3:
             if (!dateIsValid(textbox.value)) {
-                textbox.setCustomValidity("Không đúng định dạng dd/MM/yyyy hoặc không hợp lệ!");
+                textbox.setCustomValidity("Vui lòng nhập ngày tháng đúng định dạng!");
                 textbox.reportValidity();
                 return false;
             } else {

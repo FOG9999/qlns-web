@@ -459,7 +459,8 @@ function Luu() {
                     bIsSaveSuccess = true;
                     var objectId = data.iID_ChuTruongDauTuID;
                     DieuChinhUploadFile(objectId, 102);
-                    PopupModal("Thông báo", "Lưu dữ liệu thành công", ERROR);
+        success: function (data) {
+            PopupModal("Thông báo", data.sMessage, ERROR);
                 }
             }
         },

@@ -101,30 +101,7 @@
 </table>
 
 @Html.BuildPagingButtons(Model._paging)
+<script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>
+@*<script type="text/javascript">
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.date')
-            .datepicker({
-                todayBtn: "linked",
-                keyboardNavigation: false,
-                forceParse: false,
-                autoclose: true,
-                language: 'vi',
-                todayHighlight: true,
-            });
-        $("tr").hover(function () {
-            $(this).css("background-color", "#e7f8fe");
-        }, function () {
-            $(this).css("background-color", "");
-        });
-
-        $("#tblListNhaThau .gr_search").each(function (index, value) {
-            $(this).keypress(function (e) {
-                if (e.which == 13) {//Enter key pressed
-                    ChangePage();
-                }
-            });
-        });
-    });
-</script>
+</script>*@

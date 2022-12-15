@@ -132,9 +132,23 @@ function ValidateMaxLength(textbox, maxlength) {
     textbox.setCustomValidity('');
     textbox.setAttribute("maxlength", maxlength);
     if (textbox.value.length >= maxlength) {
-        textbox.setCustomValidity(`Độ dài ký tự tối đa là ${maxlength}`);
+        //textbox.setCustomValidity(`Độ dài ký tự tối đa là ${maxlength}`);
+        textbox.setCustomValidity(`Vui lòng nhập đúng phạm vi ký tự cho phép`);
         textbox.reportValidity();
     }
+}
+
+//Ham check maxlength the input
+function CheckExitMaxlengthInput() {
+    $("input").each(function (index, item) {
+        $(item).keyup(function (event) {
+            var maxlengthInput = ((item).getAttribute('maxlength'));
+            if (maxlengthInput == undefined || maxlengthInput == null || maxlengthInput == "") maxlengthInput = 0;
+            if (maxlengthInput > 0) {
+                ValidateMaxLength(item, maxlengthInput);
+            }
+        });       
+    });
 }
 
 //Hàm chuyển từ số có định dạng về dạng không định dạng
@@ -218,6 +232,37 @@ function Tooltip() {
     }
 }
 
+function CheckExitEmail(textbox) {
+    textbox.setCustomValidity('');
+    var mail = textbox.value;
+    var regexMail = /^[a-zA-Z0-9]+(([-._]{1}[a-zA-Z0-9]+)*)@(([a-zA-Z0-9\-]+\.)+[a-zA-Z0-9]{2,})$/;
+    if (!regexMail.test(mail)) {
+        textbox.setCustomValidity(`Vui lòng nhập email đúng định dạng`);
+        textbox.reportValidity();
+
+    } 
+}       
+
+function CheckAllExitEmail() {
+    $('input.mail').each(function (index, item) {
+        $(item).keypress(function (event) {
+            CheckExitEmail(item);
+            
+        });
+    });
+}
+
+function CheckExitkPhoneOrFax(textbox) {
+    var regex = /^(([+]?([\s]?[0-9]+))|([(][+]?([\s]?[0-9]+)[)]))?([\s]?[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/;
+    textbox.setCustomValidity('');
+    var numberPhone = textbox.value;
+    if (!regex.test(numberPhone)) {
+        textbox.setCustomValidity(`Vui lòng nhập số điện thoại đúng định dạng`);
+        textbox.reportValidity();
+
+    }
+}
+
 function CallFunctionCommon() {
     FilterSelectList();
     TrimSpaceAllTextInput();
@@ -227,6 +272,8 @@ function CallFunctionCommon() {
     ValidateInputOnTable();
     ValidateStartYearEndYear();
     Tooltip();
+    CheckExitMaxlengthInput();
+    CheckAllExitEmail();
 }
 
 CallFunctionCommon();

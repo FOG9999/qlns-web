@@ -3,7 +3,8 @@
 
  SELECT da.iID_DuAnID, da.sMaDuAn, da.sTenDuAn INTO #tmp
 FROM VDT_DA_DuAn da
-WHERE da.iID_MaDonVi = @iIdMaDonViQuanLy AND (da.iID_DuAnID IN (SELECT ctdt.iID_DuAnID FROM VDT_KHV_KeHoach5Nam_ChiTiet ctdt))
+--WHERE (da.iID_MaDonVi = @iIdMaDonViQuanLy ) AND (da.iID_DuAnID IN (SELECT ctdt.iID_DuAnID FROM VDT_KHV_KeHoach5Nam_ChiTiet ctdt))
+WHERE ( da.iID_DonViQuanLyID = @iIdDonViQuanLy) AND (da.iID_DuAnID IN (SELECT ctdt.iID_DuAnID FROM VDT_KHV_KeHoach5Nam_ChiTiet ctdt))
 
 SELECT DISTINCT tmp.iID_DuAnID INTO #tmpDuAnChuyenTiep
 	FROM #tmp as tmp

@@ -559,7 +559,7 @@ function Luu() {
             else {
                 bIsSaveSuccess = true;
                 UploadFile(resp.iID_ChuTruongDauTuID, 102);
-                PopupModal("Thông báo", "Lưu dữ liệu thành công", ERROR);
+                PopupModal("Thông báo", resp.sMessage, ERROR);
             }
             /*window.location.href = "/QLVonDauTu/ChuTruongDauTu/Index";*/
         },

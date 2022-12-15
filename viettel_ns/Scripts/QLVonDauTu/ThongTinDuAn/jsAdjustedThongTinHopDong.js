@@ -751,7 +751,8 @@ function LoadGoiThau() {
 function Save() {
     var hopDong = {};
 
-    hopDong.iID_HopDongID = $("#iIDHopDongId").val();
+   hopDong.iID_HopDongID = $("#iIDHopDongId").val();
+   // hopDong.iID_HopDongID = null;
     //Thông tin hợp đồng
     hopDong.sSoHopDong = $("#sSoHopDong").val();
     hopDong.dNgayHopDong = $("#dNgayHopDong").val();
@@ -778,6 +779,7 @@ function Save() {
             cache: false,
             success: function (data) {
                 if (data != null && data.status == true) {
+                    alert(data.sMessage);
                     window.location.href = "/QLVonDauTu/QLThongTinHopDong";
                 }
             },

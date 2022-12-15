@@ -246,8 +246,22 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         [HttpPost]
         public JsonResult OnSave(VDTKHLuaChonNhaThauModel data)
         {
-            try
+            var sMessage = "";
+            if (data != null)
             {
+                 sMessage = string.Format("Thêm mới bản ghi {0} thành công", data.objKHLuaChonNhaThau.sSoQuyetDinh);
+                if (data.objKHLuaChonNhaThau.Id == null || data.objKHLuaChonNhaThau.Id == Guid.Empty)
+                {
+                    if (data.objKHLuaChonNhaThau.iID_ParentID != null) sMessage = sMessage.Replace("Thêm mới", "Điều chỉnh");
+                }
+                else
+                {
+                    sMessage = sMessage.Replace("Thêm mới", "Cập nhật");
+                }
+            }
+
+            try
+            {               
                 using (var conn = ConnectionFactory.Default.GetConnection())
                 {
                     conn.Open();
@@ -402,7 +416,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                 var err = ex.Message;
                 return Json(new { bIsComplete = false }, JsonRequestBehavior.AllowGet);
             }
-            return Json(new { bIsComplete = true }, JsonRequestBehavior.AllowGet);
+            return Json(new { bIsComplete = true, sMessage = sMessage }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Detail(Guid id)

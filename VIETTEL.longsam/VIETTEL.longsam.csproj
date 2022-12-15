@@ -265,6 +265,7 @@
     <Compile Include="Models\QLVonDauTu\VDTDuAnPagingModel.cs" />
     <Compile Include="Models\QLVonDauTu\VDTDuAnThongTinDuToanModel.cs" />
     <Compile Include="Models\QLVonDauTu\VDTDuAnThongTinPheDuyetModel.cs" />
+    <Compile Include="Models\QLVonDauTu\VDTDuAnDropModel.cs" />
     <Compile Include="Models\QLVonDauTu\VDTDuAnViewModel.cs" />
     <Compile Include="Models\QLVonDauTu\VDTKeHoachVonUngDeXuatModel.cs" />
     <Compile Include="Models\QLVonDauTu\VDTKeHoachVonUngDeXuatPagingModel.cs" />

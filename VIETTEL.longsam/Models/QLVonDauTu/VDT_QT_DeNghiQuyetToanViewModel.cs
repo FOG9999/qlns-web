@@ -14,10 +14,10 @@ namespace Viettel.Models.QLVonDauTu
         public int iID_MaNguonNganSach { get; set; }
         public string sMaDuAn { get; set; }
         public string sTen { get; set; }
-        public float fTienPheDuyet { get; set; }
-        public float fCapPhatBangLenhChi { get; set; }
-        public float fCapPhatTaiKhoBac { get; set; }
-        public float SumKeHoachVon { get; set; }
+        public double fTienPheDuyet { get; set; }
+        public double fCapPhatBangLenhChi { get; set; }
+        public double fCapPhatTaiKhoBac { get; set; }
+        public double SumKeHoachVon { get; set; }
         public double? SumCDTQuanLy { get; set; }
         public double? SumKhacQuanLy { get; set; }
         public string sTenDuAn { get; set; }

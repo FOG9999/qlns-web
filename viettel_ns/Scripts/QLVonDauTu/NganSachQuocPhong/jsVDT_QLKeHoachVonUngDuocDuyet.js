@@ -876,8 +876,8 @@ function Insert() {
                     }
                 });
             } else {
-                if (messError)
-                    alert(messError);
+                if (result.messError)
+                    alert(result.messError);
                 else
                     alert("Có lỗi xảy ra khi lưu dữ liệu.");
             }

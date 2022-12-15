@@ -61,8 +61,10 @@ function BangDuLieu_onCellAfterEdit(h, c) {
 
     var fVon5namNganhDX = Bang_arrGiaTri[h][Bang_arrCSMaCot["fVon5namNganhDX"]];
     var fVonsaunamNganhDX = Bang_arrGiaTri[h][Bang_arrCSMaCot["fVonsaunamNganhDX"]];
+    var fHanmucNganhDX = Bang_arrGiaTri[h][Bang_arrCSMaCot["fHanmucNganhDX"]];
     var fVon5namCTCDX = Bang_arrGiaTri[h][Bang_arrCSMaCot["fVon5namCTCDX"]];
     var fVonsaunamCTCDexuat = Bang_arrGiaTri[h][Bang_arrCSMaCot["fVonsaunamCTCDexuat"]];
+    var fHanmucCucTCDX = Bang_arrGiaTri[h][Bang_arrCSMaCot["fHanmucCucTCDX"]];
 
     var modelParent = $("#ModelParentId").val();
 
@@ -74,10 +76,12 @@ function BangDuLieu_onCellAfterEdit(h, c) {
     var fGiaTriSau5Nam = fHanMucDauTu - fTongSo;
     var fTongVonBoTriNganh = fVon5namNganhDX + fVonsaunamNganhDX;
     var fTongVonBoTriCuc = fVon5namCTCDX + fVonsaunamCTCDexuat;
+    var fGiaTriSauNganh = fHanmucNganhDX - fTongVonBoTriNganh;
+    var fGiaTriSauCuc = fHanmucCucTCDX - fTongVonBoTriCuc;
 
     var Title = "Cảnh báo"
     var sMessError = [];
-    if (fGiaTriSau5Nam < 0) {
+    if (fGiaTriSau5Nam < 0 || fGiaTriSauNganh < 0 || fGiaTriSauCuc < 0) {
         sMessError.push('Tổng vốn bố trí không được vượt quá hạn mức đầu tư.');
     }
     if (sMessError != null && sMessError != undefined && sMessError.length > 0) {
@@ -740,6 +744,7 @@ function KH5NamDX_ChiTiet_BangDuLieu_Save() {
     ValidateBeforeSave();
 }
 
+
 function ValidateData() {
     var sMessError = [];
     var Title = 'Lỗi lưu kế hoạch trung hạn đề xuất chi tiết';
@@ -762,11 +767,23 @@ function ValidateData() {
 
         var fHanMucDauTu = Bang_arrGiaTri[j][Bang_arrCSMaCot["fHanMucDauTu"]];
 
+        var fVon5namNganhDX = Bang_arrGiaTri[h][Bang_arrCSMaCot["fVon5namNganhDX"]];
+        var fVonsaunamNganhDX = Bang_arrGiaTri[h][Bang_arrCSMaCot["fVonsaunamNganhDX"]];
+        var fHanmucNganhDX = Bang_arrGiaTri[h][Bang_arrCSMaCot["fHanmucNganhDX"]];
+        var fVon5namCTCDX = Bang_arrGiaTri[h][Bang_arrCSMaCot["fVon5namCTCDX"]];
+        var fVonsaunamCTCDexuat = Bang_arrGiaTri[h][Bang_arrCSMaCot["fVonsaunamCTCDexuat"]];
+        var fHanmucCucTCDX = Bang_arrGiaTri[h][Bang_arrCSMaCot["fHanmucCucTCDX"]];
+        var fTongVonBoTriNganh = fVon5namNganhDX + fVonsaunamNganhDX;
+        var fTongVonBoTriCuc = fVon5namCTCDX + fVonsaunamCTCDexuat;
+        var fGiaTriSauNganh = fHanmucNganhDX - fTongVonBoTriNganh;
+        var fGiaTriSauCuc = fHanmucCucTCDX - fTongVonBoTriCuc;
+
         var fTongSo = fGiaTriNamThuNhat + fGiaTriNamThuHai + fGiaTriNamThuBa + fGiaTriNamThuTu + fGiaTriNamThuNam;
         var fTongSoDc = fGiaTriNamThuNhatDc + fGiaTriNamThuHaiDc + fGiaTriNamThuBaDc + fGiaTriNamThuTuDc + fGiaTriNamThuNamDc;
         var fGiaTriSau5Nam = fHanMucDauTu - fTongSo;
         var fGiaTriSau5NamDC = fHanMucDauTu - fTongSoDc;
-        if (fGiaTriSau5Nam < 0 || fGiaTriSau5NamDC < 0) {
+
+        if (fGiaTriSau5Nam < 0 || fGiaTriSau5NamDC < 0 || fGiaTriSauNganh < 0 || fGiaTriSauCuc < 0 ) {
             sMessError.push('Tổng vốn bố trí không được vượt quá hạn mức đầu tư.');
         }
 

@@ -241,7 +241,7 @@ function ShowHangMucDb(id) {
                             htmlChiPhi += "<td>" + x.MaOrDer + "</td>";
                             htmlChiPhi += "<td>" + x.STenHangMuc + "</td>";
                             htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriDuocDuyet) + "</td>";
-                            htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriConLai) + "</td>";
+                            /*htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriConLai) + "</td>";*/
                             htmlChiPhi += "</tr>";
                         }
                     });
@@ -287,7 +287,7 @@ function ShowHangMuc(id) {
                         htmlChiPhi += "<td>" + x.MaOrDer + "</td>";
                         htmlChiPhi += "<td>" + x.STenHangMuc + "</td>";
                         htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriDuocDuyet) + "</td>";
-                        htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriConLai) + "</td>";
+                        /*htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriConLai) + "</td>";*/
                         htmlChiPhi += "</tr>";
                     });
 

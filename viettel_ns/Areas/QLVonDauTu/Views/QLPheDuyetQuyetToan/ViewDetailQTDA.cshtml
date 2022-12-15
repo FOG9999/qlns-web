@@ -106,8 +106,9 @@
                             <p id="sTenDuAn">@Model.quyetToan.sTenDuAn</p>
                         </div>
                         <div class="col-sm-3">
-                            <label for="txt_DeNghiQuyetToan" class="">Dề Nghị quyết toán <span class="require">*</span></label>
-                            <select class="form-control disable" style="width:100%" id="txt_DeNghiQuyetToan" name="DeNghiQuyetToan"></select>
+                            <input type="hidden" id="txt_DeNghiQuyetToan" name="DeNghiQuyetToan" value="@Model.quyetToan.iID_DeNghiQuyetToanID">
+                            <label class="control-label">Đề nghị quyết toán</label>
+                            <p id="sTenDeNghi">@Model.quyetToan.sTenDeNghi</p>
                         </div>
                     </div>
                 </div>

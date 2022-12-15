@@ -115,14 +115,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             {
                 if (CheckExistSoQuyetDinh(null, data.dataKHVU.sSoQuyetDinh))
                 {
-                    return Json(new { status = true, messError = string.Format("Số quyết định {0} đã tồn tại.", data.dataKHVU.sSoQuyetDinh) }, JsonRequestBehavior.AllowGet);
+                    return Json(new { status = false, messError = string.Format("Số quyết định {0} đã tồn tại.", data.dataKHVU.sSoQuyetDinh) }, JsonRequestBehavior.AllowGet);
                 }
             }
             else
             {
                 if (CheckExistSoQuyetDinh(data.dataKHVU.Id, data.dataKHVU.sSoQuyetDinh))
                 {
-                    return Json(new { status = true, messError = string.Format("Số quyết định {0} đã tồn tại.", data.dataKHVU.sSoQuyetDinh) }, JsonRequestBehavior.AllowGet);
+                    return Json(new { status = false, messError = string.Format("Số quyết định {0} đã tồn tại.", data.dataKHVU.sSoQuyetDinh) }, JsonRequestBehavior.AllowGet);
                 }
 
             }

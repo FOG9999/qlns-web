@@ -31,7 +31,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 });
             if (bIsImport)
             {
-                DataTable dataImport = _qLVonDauTuService.GetListKHVonNamDeXuatChiTietById(iID_KeHoachVonNamDeXuatID.ToString(), listIdDuAns, filters);
+                DataTable dataImport = _qLVonDauTuService.GetListKHVonNamDeXuatChiTietById(iID_KeHoachVonNamDeXuatID.ToString(), new Guid().ToString(), listIdDuAns, filters);
 
                 fillSheet(dataImport, iNamLamViec, filters);
             }

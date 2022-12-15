@@ -252,6 +252,20 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         {
             try
             {
+                var sMessage = string.Format("Thêm mới bản ghi {0} thành công", model.sSoHopDong);
+                if (model.iID_HopDongID != null || model.iID_HopDongID != Guid.Empty)
+                {
+                    if (isDieuChinh)
+                    {
+                        sMessage = sMessage.Replace("Thêm mới", "Điều chỉnh");
+                    }
+                    else
+                    {
+                        sMessage = sMessage.Replace("Thêm mới", "Cập nhật");
+
+                    }
+                }
+
                 using (var conn = ConnectionFactory.Default.GetConnection())
                 {
                     conn.Open();
@@ -406,8 +420,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                                 itemGoiThau.iID_NhaThauID = item.IIdNhaThauId;
                                 itemGoiThau.fGiaTriHD = item.fGiaTriHD;
                                 itemGoiThau.Id = Guid.NewGuid();
-                                chiphi.Where(n => n.IdGoiThauNhaThau.Value == item.Id).Select(n => { n.IdGoiThauNhaThau = itemGoiThau.Id; return n; }).ToList();
-                                hangmuc.Where(n => n.IdGoiThauNhaThau.Value == item.Id).Select(n => { n.IdGoiThauNhaThau = itemGoiThau.Id; return n; }).ToList();
+                                if (chiphi != null)
+                                {
+                                    chiphi.Where(n => n.IdGoiThauNhaThau.Value == item.Id).Select(n => { n.IdGoiThauNhaThau = itemGoiThau.Id; return n; }).ToList();
+                                }
+                                if (hangmuc != null)
+                                {
+                                    hangmuc.Where(n => n.IdGoiThauNhaThau.Value == item.Id).Select(n => { n.IdGoiThauNhaThau = itemGoiThau.Id; return n; }).ToList();
+                                }
                                 conn.Insert(itemGoiThau, trans);
                             }
                         }
@@ -455,7 +475,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                     // commit to db
                     trans.Commit();
                 }
-                return Json(new { status = true }, JsonRequestBehavior.AllowGet);
+                return Json(new { status = true, sMessage = sMessage }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -472,9 +492,12 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         [HttpPost]
         public JsonResult Xoa(string id)
         {
+            var entity = _qLVonDauTuService.GetThongTinHopdongById(Guid.Parse(id));
             bool xoa = _qLVonDauTuService.XoaQLThongTinHopDong(Guid.Parse(id));
+            var sMessage = string.Format("Xóa bản ghi {0} thành công", entity.sSoHopDong);
+
             _qLVonDauTuService.DeleteHopDongDetail(Guid.Parse(id));
-            return Json(xoa, JsonRequestBehavior.AllowGet);
+            return Json(new { status = xoa, sMessage = sMessage }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Sua(string id)
@@ -552,19 +575,19 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             return Json(fTien, JsonRequestBehavior.AllowGet);
         }
 
-        public bool IsHasHangMuc(string iID_DuAnID,string chiphiId, string goiThauId)
+        public bool IsHasHangMuc(string iID_DuAnID, string chiphiId, string goiThauId)
         {
             if (string.IsNullOrEmpty(chiphiId) || string.IsNullOrEmpty(iID_DuAnID))
             {
                 return false;
             }
 
-            List<GoiThauInfoModel> goithau; 
+            List<GoiThauInfoModel> goithau;
             List<VDT_DA_GoiThau> ltGoiThau = new List<VDT_DA_GoiThau>();
-         
+
             ltGoiThau = _qLVonDauTuService.getListGoiThauKHLCNhaThau(Guid.Parse(goiThauId)).ToList();
             goithau = new List<GoiThauInfoModel>();
-            
+
 
             List<HangMucInfoModel> hangMucAll = new List<HangMucInfoModel>();
             if (goithau != null && goithau.Count() > 0)
@@ -578,14 +601,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             }
 
             List<HangMucInfoModel> list = hangMucAll.Where(n => n.IIDChiPhiID.HasValue && n.IIDChiPhiID.Value != Guid.Empty && n.IIDChiPhiID.Value == Guid.Parse(chiphiId)).OrderBy(n => n.MaOrDer).ToList();
-            
+
             return list.Count > 0;
         }
-        
+
         public JsonResult GetSoTaiKhoanNhaThauByIdNhaThau(Guid? iID_NhaThauID)
-        {         
+        {
             var data = _qLVonDauTuService.GetSoTaiKhoanNhaThauByIdNhaThau(iID_NhaThauID);
-            return Json(new { data = data},JsonRequestBehavior.AllowGet);
+            return Json(new { data = data }, JsonRequestBehavior.AllowGet);
         }
     }
 }

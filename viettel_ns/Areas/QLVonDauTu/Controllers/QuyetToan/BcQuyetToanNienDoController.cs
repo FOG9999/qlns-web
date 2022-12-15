@@ -21,6 +21,8 @@ using VIETTEL.Controllers;
 using VIETTEL.Flexcel;
 using VIETTEL.Helpers;
 using VIETTEL.Models;
+using static VTS.QLNS.CTC.App.Service.UserFunction.FormatNumber;
+using VTS.QLNS.CTC.App.Service.UserFunction;
 
 namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
 {
@@ -259,7 +261,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                     List<VDTQtBcquyetToanNienDoExportModel> dataReportChild = _vdtService.GetDataBCQuyetToanNienDoDetail(dataPrintReport.iID_DonViQuanLyID, dataPrintReport.IIdNguonVonId, dataPrintReport.INamKeHoach);
                     dataReportParent.AddRange(dataReportChild);
                     List<VDTQtBcquyetToanNienDoExportModel> dataReport = dataReportParent;
-                    ExcelFile xls = CreateReport(dataReport, dataPrintReport);
+                    ExcelFile xls = CreateReport(dataReport, dataPrintReport, (isPdf ? ExportType.PDF : ExportType.EXCEL));
                     TempData["DataReportXls"] = xls;
                     FlexCelPdfExport pdf = new FlexCelPdfExport(xls, true);
                     var bufferPdf = new MemoryStream();
@@ -277,7 +279,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                     var dataTongHop = _model.GetQuyetToanVonNam(iIDQuyetToan, objDonVi.iID_MaDonVi, dataPrintReport.INamKeHoach, dataPrintReport.IIdNguonVonId);
                     var dataPhanTich = _model.GetQuyetToanVonNam_PhanTich(iIDQuyetToan, objDonVi.iID_MaDonVi, dataPrintReport.INamKeHoach, dataPrintReport.IIdNguonVonId);
 
-                    ExcelFile xls = CreateReportBcQuyetToanVonNam(dataTongHop, dataPhanTich, dataPrintReport);
+                    ExcelFile xls = CreateReportBcQuyetToanVonNam(dataTongHop, dataPhanTich, dataPrintReport, (isPdf ? ExportType.PDF : ExportType.EXCEL));
                     TempData["DataReportXls"] = xls;
                     FlexCelPdfExport pdf = new FlexCelPdfExport(xls, true);
                     var bufferPdf = new MemoryStream();
@@ -294,7 +296,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             return Json(new { status = true, isPdf = isPdf }, JsonRequestBehavior.AllowGet);
         }
 
-        public ExcelFile CreateReport(List<VDTQtBcquyetToanNienDoExportModel> dataReport, VdtQtBcQuyetToanNienDoPrintDataExportModel paramReport)
+        public ExcelFile CreateReport(List<VDTQtBcquyetToanNienDoExportModel> dataReport, VdtQtBcQuyetToanNienDoPrintDataExportModel paramReport, ExportType exportType)
         {
             XlsFile Result = new XlsFile(true);
             FlexCelReport fr = new FlexCelReport();
@@ -308,6 +310,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             fr.SetValue("Cap1", string.Empty);
             fr.SetValue("DiaDiem", string.Empty);
             fr.SetValue("h2", string.Format("Đơn vị tính: {0}", paramReport.sDonViTinh));
+            FormatNumber formatNumber = new FormatNumber(int.Parse(paramReport.sValueDonViTinh), exportType);
+            fr.SetUserFunction("FormatNumber", formatNumber);
             fr.UseChuKy(Username)
                   .UseChuKyForController(sControlName)
                   .UseForm(this);
@@ -315,7 +319,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             return Result;
         }
 
-        public ExcelFile CreateReportBcQuyetToanVonNam(List<BcquyetToanNienDoVonNamChiTietViewModel> lstDataTongHop, List<BcquyetToanNienDoVonNamPhanTichChiTietViewModel> lstDataPhanTich, VdtQtBcQuyetToanNienDoPrintDataExportModel paramReport)
+        public ExcelFile CreateReportBcQuyetToanVonNam(List<BcquyetToanNienDoVonNamChiTietViewModel> lstDataTongHop, List<BcquyetToanNienDoVonNamPhanTichChiTietViewModel> lstDataPhanTich, VdtQtBcQuyetToanNienDoPrintDataExportModel paramReport, ExportType exportType)
         {
             XlsFile Result = new XlsFile(true);
             FlexCelReport fr = new FlexCelReport();
@@ -337,6 +341,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             fr.SetValue("h2", string.Format("Đơn vị tính: {0}", paramReport.sDonViTinh));
             fr.SetValue("Title1", string.Format(paramReport.txt_TieuDe1, paramReport.INamKeHoach));
             fr.SetValue("Title2", paramReport.txt_TieuDe2);
+            FormatNumber formatNumber = new FormatNumber(int.Parse(paramReport.sValueDonViTinh), exportType);
+            fr.SetUserFunction("FormatNumber", formatNumber);
             fr.UseChuKy(Username)
                  .UseChuKyForController(sControlName)
                  .UseForm(this);

@@ -32,12 +32,25 @@ var arrLoaiThanhToan = [];
 var arrKeHoachVonThanhToan = [];
 var arrMlns = {};
 
+var isDeNghiThanhToanPheduyet = false;
+
 const LOAI_CO_QUAN_TAI_CHINH = {
     CQTC: "Cơ quan tài chính bộ quốc phòng",
     CTC: "Cục tài chính"
 }
 
 $(document).ready(function () {
+
+    $('#thongTinPheDuyet').hide();
+    $('#deletePheDuyetBtn').hide();
+    let txtNgayPheDuyet = $('#txtNgayPheDuyet').val();
+    if (txtNgayPheDuyet) {
+        toggleDisableFieldsDeNghiThanhToan(true);
+        isDeNghiThanhToanPheduyet = true;
+        $('#thongTinPheDuyet').show();
+        $('#deletePheDuyetBtn').show();
+    }
+
     iID_DeNghiThanhToanID = $("#iID_DeNghiThanhToanID").val();
     iID_DonViQuanLyIDOld = $("#iID_DonViQuanLyID").val();
     iID_NguonVonIDOld = $("#iID_NguonVonID").val();
@@ -136,12 +149,19 @@ $(document).ready(function () {
     $("#drpLoaiThanhToan").val(iLoaiThanhToanOld);
     if (iCoQuanThanhToanOld == 1) {
         $("#drpCoQuanThanhToan").val(iCoQuanThanhToanOld)
+        // display các số đề nghị tạm ứng
+        $(".only-thanhtoan").each((index, ele) => {
+            $(ele).show();
+        })
     }
     else {
         if (loaiCoQuanTaiChinh == 0) {
             $("#drpCoQuanThanhToan").prop("selectedIndex", 1);
         }
         else $("#drpCoQuanThanhToan").prop("selectedIndex", 2);
+        $(".only-thanhtoan").each((index, ele) => {
+            $(ele).hide();
+        })
     }
     $("#drpCoQuanThanhToan").change(function (e) {
         GetArrKeHoachVon();
@@ -254,18 +274,30 @@ function LoadPheDuyetChiTiet() {
                     dongMoi += "<tr style='cursor: pointer;' class='parent' data-xoa='0' data-iloaidenghi='" + item.iLoaiDeNghi + "' data-iloainamkehoach='" + item.iLoaiNamKH + "'>";
                     dongMoi += "<td class='r_STT' align='center'></td>";
                     dongMoi += "<input type='hidden' class='r_iID_ThanhToanChiTietID' value='" + item.iID_PheDuyetThanhToan_ChiTietID + "'/>";
-                    if (iLoaiThanhToan != TAM_UNG)
+                    if (iLoaiThanhToan != TAM_UNG) {
                         dongMoi += "<td class='r_Loai'>" + CreateHtmlSelectLoai(item.iLoai) + "</td>";
-                    dongMoi += "<td class='r_KeHoachVon' data-value='" + item.iID_KeHoachVonID + "'><select class='form-control' onchange='onChangeKeHoachVon(this)'></option></td>";
-                    dongMoi += "<td class='r_Lns' data-value='" + item.sLNS + "'><select class='form-control' onchange='onChangeLNS(this)'></option></td>";
-                    dongMoi += "<td class='r_L' data-value='" + item.sL + "'><select class='form-control' onchange='onChangeL(this)'></option></td>";
-                    dongMoi += "<td class='r_K' data-value='" + item.sK + "'><select class='form-control' onchange='onChangeK(this)'></option></td>";
-                    dongMoi += "<td class='r_M' data-value='" + item.sM + "'><select class='form-control' onchange='onChangeM(this)'></option></td>";
-                    dongMoi += "<td class='r_Tm' data-value='" + item.sTM + "'><select class='form-control' onchange='onChangeTM(this)'></option></td>";
-                    dongMoi += "<td class='r_Ttm' data-value='" + item.sTTM + "'><select class='form-control' onchange='onChangeTTM(this)'></option></td>";
-                    dongMoi += "<td class='r_Ng' data-value='" + item.sNG + "'><select class='form-control'></option></td>";
+                        dongMoi += "<td class='r_KeHoachVon' data-value='" + item.iID_KeHoachVonID + "'><select class='form-control' onchange='onChangeKeHoachVon(this)'></option></td>";
+                        dongMoi += "<td class='r_Lns' data-value='" + item.sLNS + "'><select class='form-control' onchange='onChangeLNS(this)'></option></td>";
+                        dongMoi += "<td class='r_L' data-value='" + item.sL + "'><select class='form-control' onchange='onChangeL(this)'></option></td>";
+                        dongMoi += "<td class='r_K' data-value='" + item.sK + "'><select class='form-control' onchange='onChangeK(this)'></option></td>";
+                        dongMoi += "<td class='r_M' data-value='" + item.sM + "'><select class='form-control' onchange='onChangeM(this)'></option></td>";
+                        dongMoi += "<td class='r_Tm' data-value='" + item.sTM + "'><select class='form-control' onchange='onChangeTM(this)'></option></td>";
+                        dongMoi += "<td class='r_Ttm' data-value='" + item.sTTM + "'><select class='form-control' onchange='onChangeTTM(this)'></option></td>";
+                        dongMoi += "<td class='r_Ng' data-value='" + item.sNG + "'><select class='form-control'></option></td>";
 
-                    dongMoi += "<td class='r_NoiDung'>" + (item.sMoTa != null ? item.sMoTa : "") + "</td>";
+                        dongMoi += "<td class='r_NoiDung'>" + (item.sMoTa != null ? item.sMoTa : "") + "</td>";
+                    }
+                    else {
+                        dongMoi += "<td class='r_KeHoachVon'><select class='form-control' onchange='onChangeKeHoachVon(this)'></option></td>";
+                        dongMoi += "<td class='r_Lns'> <input class='sLNS' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' value='" + item.sLNS +"' /> </td>";
+                        dongMoi += "<td class='r_L'><input class='sL' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' value='"+item.sL+"' /></td>";
+                        dongMoi += "<td class='r_K'><input class='sK' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' value='" + item.sK +"' /></td>";
+                        dongMoi += "<td class='r_M'><input class='sM' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' value='" + item.sM +"' /></td>";
+                        dongMoi += "<td class='r_Tm'><input class='sTM' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' value='" + item.sTM +"' /></td>";
+                        dongMoi += "<td class='r_Ttm'><input class='sTTM' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' value='" + item.sTTM +"' /></td>";
+                        dongMoi += "<td class='r_Ng'><input class='sNG' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' value='" + item.sNG +"' /></td>";
+                        dongMoi += "<td class='r_NoiDung'></td>";
+                    }
                     dongMoi += "<td class='r_fGiaTriDeNghiTN sotien' align='right'>" + item.sDefaultValueTN + "</td>";
                     //dongMoi += "<td class='r_vontrongnuoc sotien' contenteditable='true' align='right'>" + item.sGiaTriTrongNuoc + "</td>";
                     dongMoi += "<td> <input class='r_vontrongnuoc sotien' style='border: none; background: none; height: 30px; text-align: right' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' value=" + item.sGiaTriTrongNuoc + " > </td>"
@@ -289,6 +321,7 @@ function LoadPheDuyetChiTiet() {
                 else {
                     $("#" + TBL_DANH_SACH_THANH_TOAN_CHITIET + " tbody tr").each((index, row) => {
                         onChangeLoaiThanhToan(row);
+                        onChangeMLNS(row);
                     })
                 }
             }
@@ -485,7 +518,12 @@ function CancelSaveData() {
 
 function Update() {
     if (!ValidateDataInsert()) return;
-    UpdateDeNghiThanhToan();
+    if (!isDeNghiThanhToanPheduyet) {
+        UpdateDeNghiThanhToan();
+    }
+    else {
+        SavePheDuyetThanhToanChiTiet();
+    }
 }
 
 function UpdateDeNghiThanhToan() {
@@ -520,13 +558,40 @@ function UpdateDeNghiThanhToan() {
             data: data
         },
         success: function (r) {
-            if (r.bIsComplete && $('#txtNgayPheDuyet').val()) {
-                SavePheDuyetThanhToanChiTiet();
+            if (r.bIsComplete) {
+                //SavePheDuyetThanhToanChiTiet();
+                alert('Cập nhật thanh toán thành công.');
+                isDeNghiThanhToanPheduyet = true;
+                toggleDisableFieldsDeNghiThanhToan(true);
+                $('#thongTinPheDuyet').show();
             } else {
                 alert("Cập nhật thanh toán thất bại.");
             }
         }
     });
+}
+
+function toggleDisableFieldsDeNghiThanhToan(isDisbled) {
+    const FIELD_IDS = [
+        'txtSoDeNghi',
+        'txtSoCanCu',
+        'txtNgayCanCu',
+        'txtLuyKeGiaTriKLNghiemThu',
+        'txtNguoiLap',
+        'txtdntuVonTrongNuoc',
+        'txtdntuVonNgoaiNuoc',
+        'txtthtuVonTrongNuoc',
+        'txtthtuVonNgoaiNuoc',
+        'txtthtuUngTruocVonTrongNuoc',
+        'txtthtuUngTruocVonNgoaiNuoc',
+        'txtthtuThueGTGT',
+        'txtthtuTienBaoHanh',
+        'txtNoiDung',
+        'sThongTinCanCu',
+    ];
+    FIELD_IDS.forEach(f => {
+        $(`#${f}`).prop('disabled', isDisbled);
+    })
 }
 
 function SavePheDuyetThanhToanChiTiet() {
@@ -558,6 +623,7 @@ function SavePheDuyetThanhToanChiTiet() {
 }
 
 function GetListThanhToanChiTiet(iID_DeNghiThanhToanID) {
+    var iLoaiThanhToan = $("#drpLoaiThanhToan option:selected").val();
     var lstData = [];
     $("#" + TBL_DANH_SACH_THANH_TOAN_CHITIET + " tbody tr").each(function () {
         var iID_PheDuyetThanhToan_ChiTietID = $(this).find(".r_iID_ThanhToanChiTietID").val();
@@ -575,20 +641,32 @@ function GetListThanhToanChiTiet(iID_DeNghiThanhToanID) {
         var fGiaTriTrongNuoc = parseIntEmptyStr(UnFormatNumber($(this).find(".r_vontrongnuoc").val() ?? ''));
         var sGhiChu = $(this).find(".r_ghichu").text();
 
-        var sLNS = $(this).find(".r_Lns option:selected").text();
-        var sL = $(this).find(".r_L option:selected").text();
-        var sK = $(this).find(".r_K option:selected").text();
-        var sM = $(this).find(".r_M option:selected").text();
-        var sTM = $(this).find(".r_Tm option:selected").text();
-        var sTTM = $(this).find(".r_Ttm option:selected").text();
-        var sNG = $(this).find(".r_Ng option:selected").text();
+        var sLNS, sL, sM, sK, sTM, sTTM, sNG;
+        if (iLoaiThanhToan != TAM_UNG) {
+            sLNS = $(this).find(".r_Lns option:selected").text();
+            sL = $(this).find(".r_L option:selected").text();
+            sK = $(this).find(".r_K option:selected").text();
+            sM = $(this).find(".r_M option:selected").text();
+            sTM = $(this).find(".r_Tm option:selected").text();
+            sTTM = $(this).find(".r_Ttm option:selected").text();
+            sNG = $(this).find(".r_Ng option:selected").text();
+        }
+        else {
+            sLNS = $(this).find(".sLNS").val();
+            sL = $(this).find(".sL").val();
+            sK = $(this).find(".sK").val();
+            sM = $(this).find(".sM").val();
+            sTM = $(this).find(".sTM").val();
+            sTTM = $(this).find(".sTTM").val();
+            sNG = $(this).find(".sNG").val();
+        }
 
         var sXauNoiMa = sLNS + "-" + sL + "-" + sK + "-" + sM + "-" + sTM + "-" + sTTM + "-" + sNG;
         sXauNoiMa = sXauNoiMa.replace(/[-]+$/g, '');
 
         lstData.push({
             iID_PheDuyetThanhToan_ChiTietID: iID_PheDuyetThanhToan_ChiTietID,
-            iLoai: iLoai,
+            iLoai: iLoai ? iLoai : 2, // vì tạm ứng sẽ ẩn r_loai select đi
             sLNS: sLNS,
             sL: sL,
             sK: sK,
@@ -669,17 +747,29 @@ function ThemMoiThanhToanChiTiet() {
     dongMoi += "<tr style='cursor: pointer;' class='parent' data-xoa='0' data-iloaidenghi='" + iLoaiDeNghi + "' data-iloainamkehoach='" + iLoaiNamKeHoach + "'>";
     dongMoi += "<td class='r_STT' align='center'></td>";
     dongMoi += "<input type='hidden' class='r_iID_ThanhToanChiTietID' value='" + iID_ThanhToanChiTietID + "'/>";
-    if (iLoaiThanhToan != TAM_UNG)
+    if (iLoaiThanhToan != TAM_UNG) {
         dongMoi += "<td class='r_Loai'>" + CreateHtmlSelectLoai() + "</td>";
-    dongMoi += "<td class='r_KeHoachVon'><select class='form-control' onchange='onChangeKeHoachVon(this)'></option></td>";
-    dongMoi += "<td class='r_Lns'><select class='form-control' onchange='onChangeLNS(this)'></option></td>";
-    dongMoi += "<td class='r_L'><select class='form-control' onchange='onChangeL(this)'></option></td>";
-    dongMoi += "<td class='r_K'><select class='form-control' onchange='onChangeK(this)'></option></td>";
-    dongMoi += "<td class='r_M'><select class='form-control' onchange='onChangeM(this)'></option></td>";
-    dongMoi += "<td class='r_Tm'><select class='form-control' onchange='onChangeTM(this)'></option></td>";
-    dongMoi += "<td class='r_Ttm'><select class='form-control' onchange='onChangeTTM(this)'></option></td>";
-    dongMoi += "<td class='r_Ng'><select class='form-control'></option></td>";
-    dongMoi += "<td class='r_NoiDung'></td>";
+        dongMoi += "<td class='r_KeHoachVon'><select class='form-control' onchange='onChangeKeHoachVon(this)'></option></td>";
+        dongMoi += "<td class='r_Lns'><select class='form-control' onchange='onChangeLNS(this)'></option></td>";
+        dongMoi += "<td class='r_L'><select class='form-control' onchange='onChangeL(this)'></option></td>";
+        dongMoi += "<td class='r_K'><select class='form-control' onchange='onChangeK(this)'></option></td>";
+        dongMoi += "<td class='r_M'><select class='form-control' onchange='onChangeM(this)'></option></td>";
+        dongMoi += "<td class='r_Tm'><select class='form-control' onchange='onChangeTM(this)'></option></td>";
+        dongMoi += "<td class='r_Ttm'><select class='form-control' onchange='onChangeTTM(this)'></option></td>";
+        dongMoi += "<td class='r_Ng'><select class='form-control'></option></td>";
+        dongMoi += "<td class='r_NoiDung'></td>";
+    }
+    else {
+        dongMoi += "<td class='r_KeHoachVon'><select class='form-control' onchange='onChangeKeHoachVon(this)'></option></td>";
+        dongMoi += "<td class='r_Lns'> <input class='sLNS' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' /> </td>";
+        dongMoi += "<td class='r_L'><input class='sL' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' /></td>";
+        dongMoi += "<td class='r_K'><input class='sK' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' /></td>";
+        dongMoi += "<td class='r_M'><input class='sM' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' /></td>";
+        dongMoi += "<td class='r_Tm'><input class='sTM' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' /></td>";
+        dongMoi += "<td class='r_Ttm'><input class='sTTM' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' /></td>";
+        dongMoi += "<td class='r_Ng'><input class='sNG' style='border: none; width: 90%;; background: none; height: 30px;' onChange='onChangeMLNS(this)' /></td>";
+        dongMoi += "<td class='r_NoiDung'></td>";
+    }
     dongMoi += "<td class='r_fGiaTriDeNghiTN sotien' align='right'>" + FormatNumber(fDefaultValueTN) + "</td>";
     //dongMoi += "<td class='r_vontrongnuoc sotien' contenteditable='true' align='right'></td>";
     dongMoi += "<td > <input class='r_vontrongnuoc sotien' style='border: none; background: none; height: 30px; text-align: right' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' value='' /> </td>"
@@ -1256,4 +1346,58 @@ function recalculateTyLeThanhToan() {
     catch (e) {
         console.error(e)
     }
+}
+
+function deleteThongTinPheDuyet() {
+    if (!confirm('Bạn chắc chắn muốn xóa thông tin phê duyệt thanh toán này?')) return;
+    $.ajax({
+        type: "POST",
+        url: "/QLVonDauTu/GiaiNganThanhToan/DeletePheDuyetThanhToanByDeNghiThanhToanID",
+        data: { iID_DeNghiThanhToanID },
+        success: function (r) {
+            if (r.bIsComplete) {
+                isDeNghiThanhToanPheduyet = false;
+                $('#thongTinPheDuyet').hide();
+                toggleDisableFieldsDeNghiThanhToan(false);
+                $('#deletePheDuyetBtn').hide();
+            } else {
+                alert('Xóa phê duyệt thanh toán thất bại');
+            }
+        }
+    });
+}
+
+
+function GetKeHoachVonTT() {
+    /*var thisDong = $(obj).closest("tr");*/
+
+
+    var htmlOption = "";
+    arrKeHoachVonThanhToan.forEach(function (item) {
+        htmlOption += "<option value='" + item.IIdKeHoachVonId + "' data-iloaikehoachvon='" + item.ILoaiKeHoachVon + "' data-icoquanthanhtoankhv='" + item.ICoQuanThanhToan + "'>" + item.SDisplayName + "</option>";
+    })
+
+    $('#tblDanhSachThanhToanChiTiet').find(".r_KeHoachVon select").html(htmlOption);
+    $('#tblDanhSachThanhToanChiTiet').find(".r_KeHoachVon select").trigger("change");
+}
+
+function onChangeMLNS(obj) {
+    let currRow = $(obj).closest('tr');
+
+    let sLNS = $(currRow).find('.sLNS').val();
+    let sK = $(currRow).find('.sK').val();
+    let sL = $(currRow).find('.sL').val();
+    let sM = $(currRow).find('.sM').val();
+    let sTM = $(currRow).find('.sTM').val();
+    let sTTM = $(currRow).find('.sTTM').val();
+    let sNG = $(currRow).find('.sNG').val();
+
+    $.ajax({
+        type: "GET",
+        url: "/QLVonDauTu/GiaiNganThanhToan/GetMoTaMLNSByMa",
+        data: { sLNS, sL, sM, sTM, sNG, sK, sTTM },
+        success: function (r) {
+            $(currRow).find('.r_NoiDung').html(r.sMoTa)
+        }
+    })
 }

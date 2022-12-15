@@ -83,7 +83,36 @@ namespace VIETTEL.Areas.QLNguonNganSach.Models
                 lstData = _vdtService.GetQuyetToanVonNamById(iIDQuyetToan);
                 if (lstData != null && lstData.Count != 0) return lstData;
             }
-            return _vdtService.GetQuyetToanVonNam(iIdMaDonVi, iNamKeHoach, iIdNguonVon);
+            return SetipBcQuyetToanNienDoVonNam(_vdtService.GetQuyetToanVonNam(iIdMaDonVi, iNamKeHoach, iIdNguonVon));
+        }
+
+        public List<BcquyetToanNienDoVonNamChiTietViewModel> SetipBcQuyetToanNienDoVonNam(List<BcquyetToanNienDoVonNamChiTietViewModel> lstData)
+        {
+            if (lstData == null) return new List<BcquyetToanNienDoVonNamChiTietViewModel>();
+            return lstData.GroupBy(n => new { n.iID_DuAnID, n.sMaDuAn, n.sDiaDiem, n.sTenDuAn, n.fTongMucDauTu })
+                .Select(n => new BcquyetToanNienDoVonNamChiTietViewModel()
+                {
+                    iID_DuAnID = n.Key.iID_DuAnID,
+                    sMaDuAn = n.Key.sMaDuAn,
+                    sDiaDiem = n.Key.sDiaDiem,
+                    sTenDuAn = n.Key.sTenDuAn,
+                    fTongMucDauTu = n.Key.fTongMucDauTu,
+                    fGiaTriNamNayChuyenNamSau = n.Sum(m=> m.fGiaTriNamNayChuyenNamSau),
+                    fGiaTriNamTruocChuyenNamSau = n.Sum(m => m.fGiaTriNamTruocChuyenNamSau),
+                    fGiaTriTamUngDieuChinhGiam = n.Sum(m => m.fGiaTriTamUngDieuChinhGiam),
+                    fKHVNamNay = n.Sum(m => m.fKHVNamNay),
+                    fKHVNamTruocChuyenNamNay = n.Sum(m => m.fKHVNamTruocChuyenNamNay),
+                    fLuyKeThanhToanNamTruoc = n.Sum(m => m.fLuyKeThanhToanNamTruoc),
+                    fTamUngChuaThuHoiNamTruoc = n.Sum(m => m.fTamUngChuaThuHoiNamTruoc),
+                    fTamUngDaThuHoiNamTruoc = n.Sum(m => m.fTamUngDaThuHoiNamTruoc),
+                    fTamUngNamNayDungVonNamTruoc = n.Sum(m => m.fTamUngNamNayDungVonNamTruoc),
+                    fTamUngNamTruocThuHoiNamNay = n.Sum(m => m.fTamUngNamTruocThuHoiNamNay),
+                    fThuHoiTamUngNamNayDungVonNamTruoc = n.Sum(m => m.fThuHoiTamUngNamNayDungVonNamTruoc),
+                    fTongTamUngNamNay = n.Sum(m => m.fTongTamUngNamNay),
+                    fTongThanhToanSuDungVonNamNay = n.Sum(m => m.fTongThanhToanSuDungVonNamNay),
+                    fTongThanhToanSuDungVonNamTruoc = n.Sum(m => m.fTongThanhToanSuDungVonNamTruoc),
+                    fTongThuHoiTamUngNamNay = n.Sum(m => m.fTongThuHoiTamUngNamNay)
+                }).ToList();
         }
 
         public List<BcquyetToanNienDoVonNamPhanTichChiTietViewModel> GetQuyetToanVonNam_PhanTich(Guid? iIDQuyetToan, string iIdMaDonVi, int iNamKeHoach, int iIdNguonVon)
@@ -105,7 +134,34 @@ namespace VIETTEL.Areas.QLNguonNganSach.Models
                 lstData = _vdtService.GetQuyetToanVonUngById(iIDQuyetToan);
                 if (lstData != null && lstData.Count != 0) return lstData;
             }
-            return _vdtService.GetQuyetToanVonUng(iIdMaDonVi, iNamKeHoach, iIdNguonVon);
+            var results = _vdtService.GetQuyetToanVonUng(iIdMaDonVi, iNamKeHoach, iIdNguonVon);
+            if (results == null) return new List<BcquyetToanNienDoVonUngChiTietViewModel>();
+            return results.GroupBy(n => new { n.iID_DuAnID, n.sMaDuAn, n.sDiaDiem, n.sTenDuAn })
+                .Select(n => new BcquyetToanNienDoVonUngChiTietViewModel() { 
+                    fGiaTriThuHoiTheoGiaiNganThucTe = n.Sum(m=>m.fGiaTriThuHoiTheoGiaiNganThucTe),
+                    fKeHoachVonDuocKeoDai = n.Sum(m=>m.fKeHoachVonDuocKeoDai),
+                    fKHVUChuaThuHoiChuyenNamSau = n.Sum(m=>m.fKHVUChuaThuHoiChuyenNamSau),
+                    fKHVUNamNay = n.Sum(m => m.fKHVUNamNay) ,
+                    fLuyKeThanhToanNamTruoc = n.Sum(m => m.fLuyKeThanhToanNamTruoc),
+                    fLuyKeUngNamTruoc = n.Sum(m => m.fLuyKeUngNamTruoc),
+                    fThanhToanKLHTNamTruocChuyenSang = n.Sum(m => m.fThanhToanKLHTNamTruocChuyenSang) ,
+                    fThanhToanKLHTTamUngNamNay = n.Sum(m => m.fThanhToanKLHTTamUngNamNay) ,
+                    fThanhToanUngNamNay = n.Sum(m => m.fThanhToanUngNamNay),
+                    fThanhToanUngNamTruocChuyenSang = n.Sum(m => m.fThanhToanUngNamTruocChuyenSang) ,
+                    fThuHoiTamUngNamNay = n.Sum(m => m.fThuHoiTamUngNamNay),
+                    fThuHoiTamUngNamNayVonNamTruoc = n.Sum(m => m.fThuHoiTamUngNamNayVonNamTruoc),
+                    fThuHoiTamUngNamTruoc = n.Sum(m => m.fThuHoiTamUngNamTruoc),
+                    fThuHoiTamUngNamTruocVonNamTruoc = n.Sum(m => m.fThuHoiTamUngNamTruocVonNamTruoc),
+                    fThuHoiVonNamNay = n.Sum(m => m.fThuHoiVonNamNay),
+                    fTongSoVonDaThanhToanThuHoi = n.Sum(m => m.fTongSoVonDaThanhToanThuHoi),
+                    fUngTruocChuaThuHoiNamTruoc = n.Sum(m => m.fUngTruocChuaThuHoiNamTruoc),
+                    fVonDaThanhToanNamNay = n.Sum(m => m.fVonDaThanhToanNamNay),
+                    fVonKeoDaiDaThanhToanNamNay = n.Sum(m => m.fVonKeoDaiDaThanhToanNamNay),
+                    iID_DuAnID = n.Key.iID_DuAnID,
+                    sDiaDiem = n.Key.sDiaDiem,
+                    sMaDuAn = n.Key.sMaDuAn ,
+                    sTenDuAn = n.Key.sTenDuAn
+                }).ToList();
         }
 
         public bool UpdateQuyetToanNienDoChiTiet(Guid iIdQuyetToan, List<VDT_QT_BCQuyetToanNienDo_ChiTiet_01> lstData)

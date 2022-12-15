@@ -11,7 +11,7 @@
 <div class="main">
     <div class="panel-list-item col-sm-12">
         <div class="card">
-            <div class="card-body" id="lstDataView">
+            <div class="card-body" id="lstDataViewThanhToan">
                 @Html.Partial("_list", Model)
             </div>
         </div>
@@ -51,7 +51,7 @@
         $(document).ready(function () {
             _paging.CurrentPage = @Model._paging.CurrentPage ;
             _paging.ItemsPerPage = @Model._paging.ItemsPerPage ;
-            tabThongTri();
+            //tabThongTri();
         });
     </script>
 }

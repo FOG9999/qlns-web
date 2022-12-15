@@ -21,7 +21,7 @@ dthm.iID_DuAn_ChiPhi,
 dthm.fTienPheDuyet,
 dthm.iID_HangMucID,
 dthm.fTienPheDuyetQDDT,
-dthm.fGiaTriDieuChinh
+dthm.fTienPheDuyet as fGiaTriDieuChinh
 
 from VDT_DA_DuToan_DM_HangMuc hm
 inner join VDT_DA_DuToan_HangMuc dthm ON dthm.iID_HangMucID = hm.Id

@@ -17,6 +17,10 @@
             ValidateInputFocusOut(event, this, 6);
         }, 0);
     });
+
+    $('#txtDonViQuanLy').on('change', e => {
+        searchOnChangeSelect();
+    })
 });
 
 function ChangePage(iCurrentPage = 1) {
@@ -48,6 +52,10 @@ function GetListData(sMaDonVi, sMaThongTri, dNgayThongTri, iNamThongTri, iCurren
             $("#sMaThongTriXuatDanhSach").val(sMaThongTri);
             $("#dNgayThongTriXuatDanhSach").val(dNgayThongTri);
             $("#iNamThongTriXuatDanhSach").val(iNamThongTri);
+
+            $('#txtDonViQuanLy').on('change', e => {
+                searchOnChangeSelect();
+            })
         }
     });
 }
@@ -59,6 +67,10 @@ function ResetChangePage(iCurrentPage = 1) {
     var iNamThongTri = "";
 
     GetListData(sMaDonVi, sMaThongTri, dNgayThongTri, iNamThongTri, iCurrentPage);
+}
+
+function searchOnChangeSelect() {
+    ChangePage();
 }
 
 function themMoi() {

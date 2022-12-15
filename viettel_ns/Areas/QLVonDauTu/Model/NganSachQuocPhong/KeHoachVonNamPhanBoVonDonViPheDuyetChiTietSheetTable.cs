@@ -15,6 +15,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
         private readonly IQLVonDauTuService _qLVonDauTuService = QLVonDauTuService.Default;
         private bool _isModified;
         private Guid? _idVonNamDx = Guid.Empty;
+        private string _idPhanBoVonID ;
 
         public KeHoachVonNamPhanBoVonDonViPheDuyetChiTietSheetTable() { }
 
@@ -24,6 +25,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
 
             _isModified = !string.IsNullOrEmpty(iIdParent) ? true : false;
             _idVonNamDx = !string.IsNullOrEmpty(idVonNamDx) ? Guid.Parse(idVonNamDx) : Guid.Empty;
+            _idPhanBoVonID = iDPhanBoVonID;
 
             ColumnsSearch.ToList()
                 .ForEach(c =>
@@ -143,6 +145,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
 
         protected override IEnumerable<SheetColumn> GetColumns()
         {
+            var isDieuChinh = false;
+            var iID_Parent = _qLVonDauTuService.GetKeHoachVonNamPhanBoVonDonViPheDuyetById(Guid.Parse(_idPhanBoVonID)).iID_ParentId;
+            if (iID_Parent != null) isDieuChinh = true; 
             var listColumn = new List<SheetColumn>()
             {
                 new SheetColumn(columnName: "sTenDuAn", header: "Tên dự án", columnWidth:248, align: "left", hasSearch: true, isReadonly: true),
@@ -151,6 +156,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 new SheetColumn(columnName: "sTenDonVi", header: "Đơn vị ", columnWidth:290, align: "left", hasSearch: true, isReadonly: true),
                 new SheetColumn(columnName: "fGiaTriDeNghi", header: "Giá trị đề nghị", columnWidth:198, align: "right", dataType: 1, hasSearch: false, isReadonly: true ),
                 new SheetColumn(columnName: "fGiaTriPhanBo", header: "Kế hoạch phân bổ năm", columnWidth:198, align: "right", dataType: 1, hasSearch: false, isReadonly: false ),
+                new SheetColumn(columnName: "fGiaTriPhanBoDC", header: "Kế hoạch phân bổ năm( điều chỉnh)", columnWidth:198, align: "right", dataType: 1, hasSearch: false, isReadonly: false,isHidden: !isDieuChinh),
                 new SheetColumn(columnName: "sGhiChu", header: "Ghi chú", columnWidth:200, align: "left", hasSearch: false,dataType:0, isReadonly: false),
                 new SheetColumn(columnName: "sTenDonViThucHienDuAn", header: "Đơn vị thực hiện dự án", columnWidth:8, align: "left", hasSearch: false, isReadonly: true,isHidden:true),
 

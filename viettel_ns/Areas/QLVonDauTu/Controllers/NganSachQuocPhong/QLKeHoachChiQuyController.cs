@@ -48,15 +48,15 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 lstDataDonVi.Add(new SelectListItem() { Text = Convert.ToString(dr["TenHT"]), Value = Convert.ToString(dr["iID_MaDonVi"]) });
             }
 
-            lstDataDonVi.Insert(0, new SelectListItem { Text = "", Value = "" });
+            lstDataDonVi.Insert(0, new SelectListItem { Text = "--Tất cả--", Value = "" });
             ViewBag.drpDonViQuanLy = lstDataDonVi;
 
             List<NS_NguonNganSach> lstNguonVon = _vdtService.LayNguonVon().ToList();
-            lstNguonVon.Insert(0, new NS_NguonNganSach { iID_MaNguonNganSach = 0, sTen = "" });
+            lstNguonVon.Insert(0, new NS_NguonNganSach { iID_MaNguonNganSach = 0, sTen = "--Tất cả--" });
             ViewBag.drpNguonNganSach = lstNguonVon.ToSelectList("iID_MaNguonNganSach", "sTen");
 
             List<SelectListItem> lstQuy = new List<SelectListItem> {
-                new SelectListItem{Text = "", Value = ""},
+                new SelectListItem{Text = "--Tất cả--", Value = ""},
                 new SelectListItem{Text = Constants.LoaiQuy.TypeName.QUY_1, Value=((int)Constants.LoaiQuy.Type.QUY_1).ToString()},
                 new SelectListItem{Text = Constants.LoaiQuy.TypeName.QUY_2, Value=((int)Constants.LoaiQuy.Type.QUY_2).ToString()},
                 new SelectListItem{Text = Constants.LoaiQuy.TypeName.QUY_3, Value=((int)Constants.LoaiQuy.Type.QUY_3).ToString()},
@@ -238,15 +238,15 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 lstDataDonVi.Add(new SelectListItem() { Text = Convert.ToString(dr["TenHT"]), Value = Convert.ToString(dr["iID_MaDonVi"]) });
             }
 
-            lstDataDonVi.Insert(0, new SelectListItem { Text = "", Value = "" });
+            lstDataDonVi.Insert(0, new SelectListItem { Text = "--Tất cả--", Value = "" });
             ViewBag.drpDonViQuanLy = lstDataDonVi;
 
             List<NS_NguonNganSach> lstNguonVon = _vdtService.LayNguonVon().ToList();
-            lstNguonVon.Insert(0, new NS_NguonNganSach { iID_MaNguonNganSach = 0, sTen = "" });
+            lstNguonVon.Insert(0, new NS_NguonNganSach { iID_MaNguonNganSach = 0, sTen = "--Tất cả--" });
             ViewBag.drpNguonNganSach = lstNguonVon.ToSelectList("iID_MaNguonNganSach", "sTen");
 
             List<SelectListItem> lstQuy = new List<SelectListItem> {
-                new SelectListItem{Text = "", Value = ""},
+                new SelectListItem{Text = "--Tất cả--", Value = ""},
                 new SelectListItem{Text = Constants.LoaiQuy.TypeName.QUY_1, Value=((int)Constants.LoaiQuy.Type.QUY_1).ToString()},
                 new SelectListItem{Text = Constants.LoaiQuy.TypeName.QUY_2, Value=((int)Constants.LoaiQuy.Type.QUY_2).ToString()},
                 new SelectListItem{Text = Constants.LoaiQuy.TypeName.QUY_3, Value=((int)Constants.LoaiQuy.Type.QUY_3).ToString()},

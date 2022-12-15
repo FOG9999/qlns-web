@@ -174,6 +174,19 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             bool bIsDieuChinh = false)
         {
             var iID_DuToanID = objDuToan.iID_DuToanID;
+            var sMessage = string.Format("Thêm mới bản ghi {0} thành công", objDuToan.sSoQuyetDinh);
+            if (objDuToan.iID_DuToanID != null || objDuToan.iID_DuToanID != Guid.Empty)
+            {
+                if (bIsDieuChinh)
+                {
+                    sMessage = sMessage.Replace("Thêm mới", "Điều chỉnh");
+                }
+                else
+                {
+                    sMessage = sMessage.Replace("Thêm mới", "Cập nhật");
+                }
+            }
+
             if (lstNguonVon != null && lstNguonVon.Where(o => !o.isDelete).GroupBy(x => x.iID_NguonVonID).Any(g => g.Count() > 1))
             {
                 return Json(new { status = false, sMessError = "Nguồn vốn đã tồn tại. Vui lòng chọn lại!" });
@@ -267,7 +280,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
 
             }
 
-            return Json(new { status = true, iID_DuToanID = iID_DuToanID });
+            return Json(new { status = true, iID_DuToanID = iID_DuToanID, sMessage = sMessage });
         }
 
         #endregion

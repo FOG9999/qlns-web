@@ -153,14 +153,18 @@ function LoadDataComboBoxDeNghiQT(idDuAn, iIdQuyetToanId) {
         url: "/QLVonDauTu/QLPheDuyetQuyetToan/GetDeNghiQtTheoDuAn",
         data: { idDuAn: idDuAn, iIdQuyetToanId: iIdQuyetToanId },
         success: function (resp) {
-            if (resp.status == true) {
+            if (resp.status == true && resp.isAdd == true) {
                 $("#txt_DeNghiQuyetToan").select2({
                     data: resp.data
-                });                         
+                });
                 $("#txt_DeNghiQuyetToan").trigger("change");
-                if (!resp.isAdd) { $("#txt_DeNghiQuyetToan").attr('disabled', true); }      
+                if (!resp.isAdd) { $("#txt_DeNghiQuyetToan").attr('disabled', true); }
             }
-
+            else
+            {
+                $("#txt_DeNghiQuyetToan").trigger("change");
+                if (!resp.isAdd) { $("#txt_DeNghiQuyetToan").attr('disabled', true); }
+            }
 
         }
     });
@@ -614,12 +618,12 @@ function DrawTableChiPhiHangMuc(sumGiaTriThamTra, sumGiaTriQuyetToan) {
         var arrChiPhiChild = arrChiPhi.filter(x => x.iID_ChiPhi_Parent == itemCp.iID_DuAn_ChiPhi);
         var arrHangMucByChiPhi = arrHangMuc.filter(x => x.iID_DuAn_ChiPhi == itemCp.iID_DuAn_ChiPhi);
         var disabled = "", isBold = "";
-        if ((arrChiPhiChild != null && arrChiPhiChild.length > 0) || (arrHangMucByChiPhi != null && arrHangMucByChiPhi.length > 0)) {
-            isBold = "font-weight: bold;";
+        if ((arrChiPhiChild != null && arrChiPhiChild.length > 0) || (arrHangMucByChiPhi != null && arrHangMucByChiPhi.length > 0)) {          
             disabled = "disabled";
         }
+        isBold = "font-weight: bold;";
         html += "<tr data-loai='1' style='" + isBold + "' data-id='" + itemCp.iID_DuAn_ChiPhi + "' data-parentid='" + itemCp.iID_ChiPhi_Parent + "'>";
-        html += "<td class='stt'></td>";
+        html += "<td class='stt'>" + itemCp.iThuTu + "</td>";
         html += "<td>Chi phí</td>";
         html += "<td>" + itemCp.sTenChiPhi + "</td>";
         html += "<td class='text-right'>" + itemCp.sTienPheDuyet + "</td>";
@@ -637,11 +641,10 @@ function DrawTableChiPhiHangMuc(sumGiaTriThamTra, sumGiaTriQuyetToan) {
                 isBold = "";
                 var arrHangMucChild = arrHangMucByChiPhi.filter(x => x.iID_ParentID == itemHm.iID_HangMucID);
                 if (arrHangMucChild != null && arrHangMucChild.length > 0) {
-                    isBold = "font-weight: bold;";
                     disabled = "disabled";
                 }
                 html += "<tr style='" + isBold + "' data-loai='2' data-id='" + itemHm.iID_HangMucID + "' data-parentid='" + itemHm.iID_ParentID + "' data-chiphi='" + itemHm.iID_DuAn_ChiPhi + "'>";
-                html += "<td class='stt'></td>";
+                html += "<td class='stt'>" + itemHm.smaOrder + "</td > ";
                 html += "<td style='font-style: italic'>Hạng mục</td>";
                 html += "<td style='font-style: italic'>" + itemHm.sTenHangMuc + "</td>";
                 html += "<td class='text-right'>" + itemHm.sTienPheDuyet + "</td>";

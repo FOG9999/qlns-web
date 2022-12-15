@@ -98,7 +98,8 @@ function XoaItem(id) {
         url: "/QLVonDauTu/QLThongTinHopDong/Xoa",
         data: { id: id },
         success: function (r) {
-            if (r == true) {
+            if (r.status == true) {
+                alert(r.sMessage)
                 ChangePage();
             }
             else {

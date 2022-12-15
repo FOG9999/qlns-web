@@ -2,13 +2,6 @@
 @using System.Globalization;
 @model List<BcquyetToanNienDoVonNamChiTietViewModel>
 
-<style>
-    table{
-        table-layout:fixed;
-        word-wrap:break-word;
-    }
-</style>
-
 <div class="col-md-12">
     <div class="col-md-6">
         <div class="row">1. STT.</div>
@@ -42,7 +35,7 @@
     <table class="table table-bordered table-parent">
         <thead>
             <tr>
-                <th style="width:30px">1</th>
+                <th style="width:40px">1</th>
                 <th style="width:300px">2</th>
                 <th style="width:150px">3</th>
                 <th style="width:150px">4</th>
@@ -77,19 +70,19 @@
                     <td class="fTongMucDauTu sotien" style="text-align:right">@item.fTongMucDauTu</td>
                     <td class="fLuyKeThanhToanNamTruoc sotien" style="text-align:right">@item.fLuyKeThanhToanNamTruoc</td>
                     <td class="fTamUngTheoCheDoChuaThuHoiNamTruoc sotien" style="text-align:right">@item.fTamUngTheoCheDoChuaThuHoiNamTruoc</td>
-                    <td><input type="text" class="fGiaTriTamUngDieuChinhGiam currently" style="text-align:right" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@item.fGiaTriTamUngDieuChinhGiam"></td>
+                    <td><input type="text" class="fGiaTriTamUngDieuChinhGiam currently form-control" style="text-align:right" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@item.fGiaTriTamUngDieuChinhGiam"></td>
                     <td class="fTamUngNamTruocThuHoiNamNay sotien" style="text-align:right">@item.fTamUngNamTruocThuHoiNamNay</td>
                     <td class="fKHVNamTruocChuyenNamNay sotien" style="text-align:right">@item.fKHVNamTruocChuyenNamNay</td>
                     <td class="fTongThanhToanVonKeoDaiNamNay sotien" style="text-align:right">@item.fTongThanhToanVonKeoDaiNamNay</td>
                     <td class="fTongThanhToanSuDungVonNamTruoc sotien">@item.fTongThanhToanSuDungVonNamTruoc</td>
                     <td class="fTamUngTheoCheDoChuaThuHoiKeoDaiNamNay sotien" style="text-align:right">@item.fTamUngTheoCheDoChuaThuHoiKeoDaiNamNay</td>
-                    <td><input type="text" class="fGiaTriNamTruocChuyenNamSau currently" style="text-align:right" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@item.fGiaTriNamTruocChuyenNamSau"></td>
+                    <td><input type="text" class="fGiaTriNamTruocChuyenNamSau currently form-control" style="text-align:right" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@item.fGiaTriNamTruocChuyenNamSau"></td>
                     <td class="fVonConLaiHuyBoKeoDaiNamNay sotien" style="text-align:right">@item.fVonConLaiHuyBoKeoDaiNamNay</td>
                     <td class="fKHVNamNay sotien" style="text-align:right">@item.fKHVNamNay</td>
                     <td class="fTongKeHoachThanhToanVonNamNay sotien" style="text-align:right">@item.fTongKeHoachThanhToanVonNamNay</td>
                     <td class="fTongThanhToanSuDungVonNamNay sotien" style="text-align:right">@item.fTongThanhToanSuDungVonNamNay</td>
                     <td class="fTamUngTheoCheDoChuaThuHoiNamNay sotien" style="text-align:right">@item.fTamUngTheoCheDoChuaThuHoiNamNay</td>
-                    <td><input type="text" class="fGiaTriNamNayChuyenNamSau currently" style="text-align:right" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@item.fGiaTriNamNayChuyenNamSau"></td>
+                    <td><input type="text" class="fGiaTriNamNayChuyenNamSau currently form-control" style="text-align:right" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@item.fGiaTriNamNayChuyenNamSau"></td>
                     <td class="fVonConLaiHuyBoNamNay sotien" style="text-align:right">@item.fVonConLaiHuyBoNamNay</td>
                     <td class="fTongVonThanhToanNamNay sotien" style="text-align:right">@item.fTongVonThanhToanNamNay</td>
                     <td class="fLuyKeTamUngChuaThuHoiChuyenSangNam sotien" style="text-align:right">@item.fLuyKeTamUngChuaThuHoiChuyenSangNam</td>

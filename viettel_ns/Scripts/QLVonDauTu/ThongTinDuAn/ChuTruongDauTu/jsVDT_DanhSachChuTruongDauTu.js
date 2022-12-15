@@ -89,9 +89,10 @@ function xoa(id) {
         data: { id: id },
         success: function (r) {
             if (r.status) {
+                alert(r.sMessage);
                 ChangePage();
             } else {
-                alert(r.messeger);
+                alert(r.sMessage);
             }
         }
     });

@@ -70,7 +70,7 @@ function LayThongTinThongTri(callback) {
 }
 
 function Huy() {
-    window.location.href = "/QLVonDauTu/QLThongTriThanhToan/Index";
+    window.history.back();
 }
 
 function layData() {

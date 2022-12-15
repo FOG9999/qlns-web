@@ -817,7 +817,7 @@ async function SaveThietKeThiCong() {
                     bIsSaveSuccess = true;
                     var objectId = data.iID_DuToanID;
                     DieuChinhUploadFile(objectId, 104);
-                    PopupModal("Thông báo", "Lưu dữ liệu thành công", ERROR);
+                    PopupModal("Thông báo", data.sMessage , ERROR);
                 }
             }
 

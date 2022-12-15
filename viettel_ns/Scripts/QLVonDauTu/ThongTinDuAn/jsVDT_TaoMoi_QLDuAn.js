@@ -60,7 +60,27 @@ $(document).ready(function ($) {
     }).blur(function (event) {
         ValidateInputFocusOut(event, this, 6);
     });
+
+    LoadListNguonVonByDuAn()
 });
+
+function LoadListNguonVonByDuAn() {
+    var id = $("#iID_DuAnID").val();
+
+    $.ajax({
+        type: "POST",
+        url: "/QLDuAn/GetListNguonVonByDuAn",
+        data: { id },
+        success: function (result) {
+            if (result.status) {
+                result.data.forEach(function (item) {
+                    ThemMoiNguonVonDauTu(item.iID_NguonVonID, item.fThanhTien, item.iID_DuAn_NguonVon);
+                } )  
+              
+            } 
+        }
+    });
+}
 
 
 /*NinhNV start*/
@@ -139,7 +159,9 @@ function LuuDuAn() {
             };
         } else {
             data = {
-                duAn: duAn
+                duAn: duAn,
+                // update nguon von dau tu
+                listChuTruongDauTuNguonVon: arrNguonVon
             };
         }
 
@@ -195,11 +217,12 @@ function CheckLoi() {
         messErr.push("Chưa chọn phân cấp phê duyệt!");
     }
 
-    if ($("#iID_DuAnID").val() === GUID_EMPTY) {
-        if (arrNguonVon.length == 0) {
-            messErr.push("Thông tin nguồn vốn đầu tư chưa có!");
-        }
+    // update nguon von dau tu
+    //if ($("#iID_DuAnID").val() === GUID_EMPTY) 
+    if (arrNguonVon.length == 0) {
+        messErr.push("Thông tin nguồn vốn đầu tư chưa có!");
     }
+    
 
     /*Check thông tin hạng mục - Kiểm tra nếu hạng mục có hạng mục con thì check hạn mức đầu tư cha = sum(hạn mức đầu tư con) */
     var tr_parent = $('#tblHangMucChinh').find('.parent');
@@ -298,12 +321,12 @@ function CreateHtmlSelectNguonVon(value) {
     return "<select class='form-control'>" + htmlOption + "</option>";
 }
 
-function ThemMoiNguonVonDauTu() {
+function ThemMoiNguonVonDauTu(id = undefined, fThanhTien = '', idDuAnNguonVon = '') {
     var dongMoi = "";
     dongMoi += "<tr style='cursor: pointer;' class='parent'>";
-    dongMoi += "<td class='r_STT'></td><input type='hidden' class='r_iID_DuAn_NguonVonID' value=''/>";
-    dongMoi += "<td><input type='hidden' class='r_iID_NguonVon' value=''/><div class='sTenNguonVon' hidden></div><div class='selectNguonVon'>" + CreateHtmlSelectNguonVon() + "</div></td>";
-    dongMoi += "<td class='r_GiaTriPheDuyet' align='right'><div class='fGiaTriPheDuyet' hidden></div><input type='text' class='form-control txtGiaTriPheDuyet' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);'/></td>";
+    dongMoi += "<td class='r_STT'></td><input type='hidden' class='r_iID_DuAn_NguonVonID' value='" + idDuAnNguonVon +"'/>";
+    dongMoi += "<td><input type='hidden' class='r_iID_NguonVon' value='" + id +"'/><div class='sTenNguonVon' hidden></div><div class='selectNguonVon'>" + CreateHtmlSelectNguonVon(id) + "</div></td>";
+    dongMoi += "<td class='r_GiaTriPheDuyet' align='right'><div class='fGiaTriPheDuyet' hidden></div><input type='text' class='form-control txtGiaTriPheDuyet' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' value='" + FormatNumber(fThanhTien) + "'/></td>";
     dongMoi += "<td align='center'>";
     dongMoi += "<button class='btn-save btn-icon' type = 'button' onclick = 'Luu(this, \"" + TBL_NGUON_VON_DAU_TU + "\")' > " +
         "<i class='fa fa-floppy-o fa-lg' aria-hidden='true'></i>" +

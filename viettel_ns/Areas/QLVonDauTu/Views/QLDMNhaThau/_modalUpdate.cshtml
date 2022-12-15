@@ -49,7 +49,7 @@
         <div class="form-group row">
             <div class="col-sm-6">
                 <label for="txtEmail">Email</label>
-                <input type="text" id="txtsEmail" class="form-control" value="@Model.sEmail" maxlength="100" autocomplete="off" />
+                <input type="text" id="txtsEmail" class="form-control mail" value="@Model.sEmail" maxlength="100" autocomplete="off" />
             </div>
             <div class="col-sm-6">
                 <label for="txtWebsite">Website</label>
@@ -91,3 +91,19 @@
     </div>
 </div>
 <script src="/Scripts/sheet/jsNumber.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#txtsEmail").keyup(function (event) {
+            CheckExitEmail(this);
+        });
+
+        $("#txtsFax").keyup(function (event) {
+            CheckExitkPhoneOrFax(this);
+        });
+
+        $("#txtsDienThoai").keyup(function (event) {
+            CheckExitkPhoneOrFax(this);
+        });
+    });
+</script>

@@ -41,7 +41,7 @@ function GetThongTriQuyetToan() {
                     sTable.push("<td style='text-align:center'>" + (item.TM == null ? "" : item.TM) + "</td>");
                     sTable.push("<td style='text-align:center'>" + (item.TTM == null ? "" : item.TTM) + "</td>");
                     sTable.push("<td style='text-align:center'>" + (item.NG == null ? "" : item.NG) + "</td>");
-                    sTable.push("<td>" + (item.STenDuAn == null ? "" : item.STenDuAn) + "</td>");
+                    sTable.push("<td>" + (item.STenLoaiCongTrinh == null ? "" : item.STenLoaiCongTrinh) + "</td>");
                     sTable.push("<td class='sotien' style='text-align:right'>" + (item.FSoTien == null ? 0 : item.FSoTien) + "</td>");
                     sTable.push("</tr>");
                 });

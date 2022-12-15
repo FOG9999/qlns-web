@@ -50,6 +50,8 @@ namespace Viettel.Models.QLVonDauTu
         public double? fGiaTriDeNghi { get;set; }
         public Guid? iID_DonViID { get;set; }
         public string sTenDonVi { get;set; }
+        public double? fGiaTriPhanBoDC { get; set; }
+
     }
 
     public class VDTKHVPhanBoVonDonViPheDuyetExport

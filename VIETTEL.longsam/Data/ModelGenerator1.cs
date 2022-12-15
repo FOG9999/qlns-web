@@ -11068,7 +11068,10 @@ namespace Viettel.Domain.DomainModel
 		public virtual string sM { get; set; }
 		public virtual string sTM { get; set; }
 		public virtual string sTTM { get; set; }
-		public virtual string sNG { get; set; }
+        public virtual string sLNS { get; set; }
+        public virtual string sL { get; set; }
+        public virtual string sK { get; set; }
+        public virtual string sNG { get; set; }
 		public virtual string sGhiChu { get; set; }
 		public virtual double? fGiaTriThanhToanTN { get; set; }
 		public virtual double? fGiaTriThanhToanNN { get; set; }

@@ -190,7 +190,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             return Json(null, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult XuatFile(Guid Id)
+        public ActionResult XuatFile(Guid Id, string type )
         {
             var obj = _iQLVonDauTuService.GetThongTriById(Id.ToString());
             var lstData = _iQLVonDauTuService.LayDanhSachThongTriXuatFile(Id);
@@ -204,7 +204,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             fr.SetValue("SumTotal", lstData.Sum(n => n.FSoTien));
             fr.SetValue("sTienBangChu", DataHelper.NumberToText(lstData.Sum(n => n.FSoTien), true));
             fr.Run(Result);
-            return Print(Result, "xlsx", "rpt_vdt_thongtriquyettoan.xlsx");
+            return Print(Result, type, "rpt_vdt_thongtriquyettoan.xlsx");
         }
 
         public JsonResult GetChungTuQuyetToanNienDo(Guid? iIdThongTri, string iIdMaDonVi, int iNamThucHien, int iIdNguonVon)

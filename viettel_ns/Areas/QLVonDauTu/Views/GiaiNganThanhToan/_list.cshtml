@@ -19,14 +19,14 @@
                     <button class="btn btn-primary pull-right" onclick="BtnInsertDataClick()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
                     <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="OpenModal()">Tạo thông tri</button>
                     <button class="btn btn-primary pull-right" style="margin-right:10px;width: auto !important;" onclick="XuatDanhSach()"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Xuất danh sách</button>
-                    
+
                     <input style="display:none" id="sSoDeNghiXuatDanhSach" value="">
                     <input style="display:none" id="dFromNgayDeNghiXuatDanhSach" value="">
                     <input style="display:none" id="dToNgayDeNghiXuatDanhSach" value="">
                     <input style="display:none" id="iNamKeHoachXuatDanhSach" value="">
                     <input style="display:none" id="sMaDonViXuatDanhSach" value="">
                 </div>
-                <div style="overflow-x: auto">
+                <div style="overflow-x: auto; margin-bottom: 10px">
                     <table class="table table-bordered">
                         <thead class="header-search">
                             <tr>
@@ -55,7 +55,8 @@
                                 <th width="10%"></th>
                                 <th width="5%"><input type="text" class="form-control clearable yearFormat" id="txtNamKeHoach" autocomplete="off" /></th>
                                 <th width="15%"></th>
-                                <th width="10%">@Html.DropDownList("drpDonViQuanLy", ViewBag.drpDonViQuanLy as List<SelectListItem>, "--Tất cả--", new { @class = "form-control clearable" })</th>
+                                <th width="10%"></th>
+                                <th width="15%">@Html.DropDownList("drpDonViQuanLy", ViewBag.drpDonViQuanLy as List<SelectListItem>, "--Tất cả--", new { @class = "form-control clearable" })</th>
                                 <th width="10%"></th>
                                 <th width="5%"></th>
                                 <th width="5%"></th>
@@ -118,6 +119,7 @@
                         </tbody>
                     </table>
                 </div>
+                @Html.BuildPagingButtons(Model._paging)
             </div>
             <div id="thongtri" class="tab-pane fade in">
             </div>
@@ -125,7 +127,6 @@
     </div>
 </div>
 
-@Html.BuildPagingButtons(Model._paging)
 
 <script type="text/javascript">
     $(document).ready(function () {

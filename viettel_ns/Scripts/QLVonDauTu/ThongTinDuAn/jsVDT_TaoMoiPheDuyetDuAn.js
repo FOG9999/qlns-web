@@ -939,8 +939,8 @@ function GetFormDataQuyetDinhDauTu() {
     var ngayQuyetDinh = $("#dNgayQuyetDinh").val();
     var SMoTa = $("#sMoTa").val();
 
-    var donViQuanLy = $("#iID_DonViQuanLyID").val();
-    var duAn = $("#iID_DuAnID").val();
+    var donViQuanLy = $("#iID_DonViQuanLyID").val() == GUID_EMPTY ? '' : $("#iID_DonViQuanLyID").val();
+    var duAn = $("#iID_DuAnID :selected").val().toLowerCase() == '--chọn--' ? '' : $("#iID_DuAnID").val();
     var maDuAn = $("#sMaDuAn").val();
     var chuDauTu = $("#iID_ChuDauTuID").val();
     var nhomDuAn = $("#iID_NhomDuAnID").val();
@@ -1010,7 +1010,7 @@ async function Luu() {
                 return false;
             }
             UploadFile(resp.ID, 103);
-            PopupModalSave("Thông báo", ["Lưu dữ liệu thành công"], ERROR);
+            PopupModalSave("Thông báo", resp.sMessage, ERROR);
         }
     })
 
