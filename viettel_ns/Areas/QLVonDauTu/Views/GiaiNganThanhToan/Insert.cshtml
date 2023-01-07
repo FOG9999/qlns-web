@@ -51,6 +51,10 @@
                                 <label for="drpDuAn" class="">Dự án <span class="require">*</span></label>
                                 <select id="drpDuAn" class="form-control clearable"></select>
                             </div>
+                            <div class="col-sm-6">
+                                <label for="drpDuAn" class="">Hạng mục dự án <span class="require">*</span></label>
+                                <select id="drpDuAnHangMuc" class="form-control clearable"></select>
+                            </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-4">
@@ -136,6 +140,12 @@
                             <div class="col-sm-6">
                                 <label for="drpNhaThau" class="">Nhà thầu</label>
                                 <select id="drpNhaThau" class="form-control clearable"></select>
+                            </div>
+                        </div>
+                        <div class="form-group row" id="divNhaThauChiPhi">
+                            <div class="col-sm-6">
+                                <label for="drpNhaThauChiPhi" class="">Nhà thầu</label>
+                                @Html.DropDownList("drpNhaThauChiPhi", ViewBag.drpNhaThauChiPhi as List<SelectListItem>, new { @class = "form-control clearable" })
                             </div>
                         </div>
                         <div class="form-group row">

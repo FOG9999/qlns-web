@@ -16,7 +16,7 @@
         </p>
     </div>
     @*@if (!Model.isTongHop)*@
-    @if (Model.KH5NamDeXuat.sTongHop == null && Model.KH5NamDeXuat.iID_TongHopParent == null)
+    @if (Model.KH5NamDeXuat.sTongHop == null && Model.KH5NamDeXuat.iID_TongHopParent == null && Model.isDetail == false)
     {
         <div class="col-sm-4">
             <div class="row">
@@ -41,20 +41,24 @@
     }
     else
     {
-        <div class="row">
-            @*<p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Xóa tìm kiếm</p>
-            <label class="control-label pull-right" style="padding-left:20px;">F9: </label>
-            <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Tìm kiếm</p>
-            <label class="control-label pull-right" style="padding-left:20px;">Ent: </label>*@
-            <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Xóa tìm kiếm</p>
-            <label class="control-label pull-right" style="padding-left:20px;">F9: </label>
-            <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Tìm kiếm</p>
-            <label class="control-label pull-right" style="padding-left:20px;">Ent: </label>
-            <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Lưu</p>
-            <label class="control-label pull-right" style="padding-left:20px;">F10: </label>
-            <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Xóa</p>
-            <label class="control-label pull-right" style="padding-left:20px;">Delete: </label>
-        </div>
+        if (!Model.isDetail)
+        {
+            <div class="row">
+                @*<p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Xóa tìm kiếm</p>
+                    <label class="control-label pull-right" style="padding-left:20px;">F9: </label>
+                    <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Tìm kiếm</p>
+                    <label class="control-label pull-right" style="padding-left:20px;">Ent: </label>*@
+                <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Xóa tìm kiếm</p>
+                <label class="control-label pull-right" style="padding-left:20px;">F9: </label>
+                <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Tìm kiếm</p>
+                <label class="control-label pull-right" style="padding-left:20px;">Ent: </label>
+                <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Lưu</p>
+                <label class="control-label pull-right" style="padding-left:20px;">F10: </label>
+                <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Xóa</p>
+                <label class="control-label pull-right" style="padding-left:20px;">Delete: </label>
+            </div>
+        }
+
     }
 
 </div>
@@ -66,18 +70,22 @@
                 <div class="text-center">
 
                     @*@if (!Model.isTongHop)
-                    {
-                        <button class="btn btn-default" onclick="goBack();" style="margin-right: 10px;"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
-                        <button class="btn btn-primary btn-save" id="btnSave"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
-                    }
-                    else
+        {
+            <button class="btn btn-default" onclick="goBack();" style="margin-right: 10px;"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+            <button class="btn btn-primary btn-save" id="btnSave"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+        }
+        else
 
-                    {
-                        <button class="btn btn-default" onclick="goBack();" style="margin-right: 10px;"><i class="fa fa-ban" aria-hidden="true"></i><span>Đóng</span></button>
-                    }*@
+        {
+            <button class="btn btn-default" onclick="goBack();" style="margin-right: 10px;"><i class="fa fa-ban" aria-hidden="true"></i><span>Đóng</span></button>
+        }*@
 
                     <button class="btn btn-default" onclick="goBack();" style="margin-right: 10px;"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
-                     <button class="btn btn-primary btn-save" id="btnSave"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                    @if (!Model.isDetail)
+                    {
+                        <button class="btn btn-primary btn-save" id="btnSave"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+
+                    }
                 </div>
             </div>
         </div>
@@ -108,7 +116,7 @@
 
         function loadFrame(option) {
             var url = '@Url.Action("SheetFrame")'
-                + "/?id=" + '@Model.KH5NamDeXuat.iID_KeHoach5Nam_DeXuatID&isTongHop=@Model.isTongHop';
+                + "/?id=" + '@Model.KH5NamDeXuat.iID_KeHoach5Nam_DeXuatID&isTongHop=@Model.isTongHop' + '&isDetail=@Model.isDetail';
             console.log(url);
             $("#sheet").attr("src", url);
         }

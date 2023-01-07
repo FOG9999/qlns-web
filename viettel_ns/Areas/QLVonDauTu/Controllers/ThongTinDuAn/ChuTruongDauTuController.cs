@@ -236,7 +236,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         [HttpPost]
         public JsonResult Save(VDT_DA_ChuTruongDauTuCreateModel model)
         {
-            var sMessage = string.Format("Thêm mới bản ghi {0} thành công", model.sSoQuyetDinh);
+            var sMessage = string.Format(Constants.THEM_BAN_GHI, model.sSoQuyetDinh);
             if(model.iID_ChuTruongDauTuID == null || model.iID_ChuTruongDauTuID == Guid.Empty)
             {
                 if (model.iID_ParentID != null) sMessage = sMessage.Replace("Thêm mới", "Điều chỉnh");
@@ -704,11 +704,11 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         [HttpPost]
         public JsonResult Xoa(string id)
         {
-            var sMessage = "Bản ghi đã được sử dụng trong bảng quyết định đầu tư. Bạn không thể thực hiện thao tác này.";
+            var sMessage = Constants.MESSAGE_DELETE_DUAN;
             var entity = _iQLVonDauTuService.GetThongTinChuTruongDauTuById(Guid.Parse(id));
             bool xoa = _iQLVonDauTuService.XoaChuTruongDauTu(Guid.Parse(id));
             if (xoa)
-                sMessage = string.Format("Xóa bản ghi {0} thành công", entity.sSoQuyetDinh);
+                sMessage = string.Format(Constants.XOA_BAN_GHI, entity.sSoQuyetDinh);
                 return Json(new { status = xoa, sMessage = sMessage }, JsonRequestBehavior.AllowGet);
             return Json(new { status = xoa, sMessage = sMessage }, JsonRequestBehavior.AllowGet);
         }

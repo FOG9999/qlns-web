@@ -15,7 +15,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
         private readonly IQLVonDauTuService _qLVonDauTuService = QLVonDauTuService.Default;
         private bool _isModified;
         private Guid? _idVonNamDx = Guid.Empty;
-        private string _idPhanBoVonID ;
+        private string _idPhanBoVonID;
 
         public KeHoachVonNamPhanBoVonDonViPheDuyetChiTietSheetTable() { }
 
@@ -147,37 +147,76 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
         {
             var isDieuChinh = false;
             var iID_Parent = _qLVonDauTuService.GetKeHoachVonNamPhanBoVonDonViPheDuyetById(Guid.Parse(_idPhanBoVonID)).iID_ParentId;
-            if (iID_Parent != null) isDieuChinh = true; 
-            var listColumn = new List<SheetColumn>()
+            var listColumn = new List<SheetColumn>();
+            if (iID_Parent != null)
             {
-                new SheetColumn(columnName: "sTenDuAn", header: "Tên dự án", columnWidth:248, align: "left", hasSearch: true, isReadonly: true),
-                new SheetColumn(columnName: "sLoaiDuAn", header: "Loại dự án", columnWidth:198, align: "left", hasSearch: true, isReadonly: true),
-                new SheetColumn(columnName: "sTenLoaiCongTrinh", header: "Loại công trình", columnWidth:198, align: "left", hasSearch: false, isReadonly: true),
-                new SheetColumn(columnName: "sTenDonVi", header: "Đơn vị ", columnWidth:290, align: "left", hasSearch: true, isReadonly: true),
-                new SheetColumn(columnName: "fGiaTriDeNghi", header: "Giá trị đề nghị", columnWidth:198, align: "right", dataType: 1, hasSearch: false, isReadonly: true ),
-                new SheetColumn(columnName: "fGiaTriPhanBo", header: "Kế hoạch phân bổ năm", columnWidth:198, align: "right", dataType: 1, hasSearch: false, isReadonly: false ),
-                new SheetColumn(columnName: "fGiaTriPhanBoDC", header: "Kế hoạch phân bổ năm( điều chỉnh)", columnWidth:198, align: "right", dataType: 1, hasSearch: false, isReadonly: false,isHidden: !isDieuChinh),
-                new SheetColumn(columnName: "sGhiChu", header: "Ghi chú", columnWidth:200, align: "left", hasSearch: false,dataType:0, isReadonly: false),
-                new SheetColumn(columnName: "sTenDonViThucHienDuAn", header: "Đơn vị thực hiện dự án", columnWidth:8, align: "left", hasSearch: false, isReadonly: true,isHidden:true),
+                isDieuChinh = true;
+                    listColumn = new List<SheetColumn>()
+                {
+                    new SheetColumn(columnName: "sTenDuAn", header: "Tên dự án", columnWidth:248, align: "left", hasSearch: true, isReadonly: true),
+                    new SheetColumn(columnName: "sLoaiDuAn", header: "Loại dự án", columnWidth:198, align: "left", hasSearch: true, isReadonly: true),
+                    new SheetColumn(columnName: "sTenLoaiCongTrinh", header: "Loại công trình", columnWidth:198, align: "left", hasSearch: false, isReadonly: true),
+                    new SheetColumn(columnName: "sTenDonVi", header: "Đơn vị ", columnWidth:290, align: "left", hasSearch: true, isReadonly: true),
+                    new SheetColumn(columnName: "fGiaTriDeNghi", header: "Giá trị đề nghị", columnWidth:198, align: "right", dataType: 1, hasSearch: false, isReadonly: true ),
+                    new SheetColumn(columnName: "fGiaTriPhanBo", header: "Kế hoạch phân bổ năm", columnWidth:198, align: "right", dataType: 1, hasSearch: false, isReadonly: false ),
+                    new SheetColumn(columnName: "fGiaTriPhanBoDC", header: "Kế hoạch phân bổ năm( điều chỉnh)", columnWidth:198, align: "right", dataType: 1, hasSearch: false, isReadonly: !isDieuChinh,isHidden: !isDieuChinh),
+                    new SheetColumn(columnName: "sGhiChu", header: "Ghi chú", columnWidth:200, align: "left", hasSearch: false,dataType:0, isReadonly: false),
+                    new SheetColumn(columnName: "sTenDonViThucHienDuAn", header: "Đơn vị thực hiện dự án", columnWidth:8, align: "left", hasSearch: false, isReadonly: true,isHidden:true),
 
 
-                new SheetColumn(columnName: "fGiaTriThuHoi", header: "Giá trị phân bổ thu hồi", isHidden: true, isReadonly: true ),
-                new SheetColumn(columnName: "iID_DonViTienTeID", header: "ID đơn vị tiền tệ", isHidden: true, isReadonly: true ),
-                new SheetColumn(columnName: "iID_TienTeID", header: "ID tiền tệ", isHidden: true, isReadonly: true ),
-                new SheetColumn(columnName: "fTiGiaDonVi", header: "ID tiền tệ", isHidden: true, isReadonly: true ),
-                new SheetColumn(columnName: "fTiGia", header: "Tỷ giá", isHidden: true, isReadonly: true ),
-                new SheetColumn(columnName: "iID_LoaiCongTrinh", header: "ID loại công trình", isHidden: true, isReadonly: true ),
-                new SheetColumn(columnName: "iID_Parent", header: "ID parent", isHidden: true, isReadonly: true ),
-                new SheetColumn(columnName: "bActive", header: "Active", isHidden: true, isReadonly: true ),
-                new SheetColumn(columnName: "ILoaiDuAn", header: "ID loại dự án", isHidden: true, isReadonly: true ),
-                new SheetColumn(columnName: "iID_DuAnID", header: "Id dự án", isHidden: true, isReadonly: true),
-                new SheetColumn(columnName: "iID_PhanBoVon_DonVi_PheDuyet_ID", header: "Phân bổ vốn đơn vị phê duyệt ID", isHidden: true, isReadonly: true),
-                new SheetColumn(columnName: "iID_LoaiCongTrinhID", header:"Id Loại công trình", isHidden: true, isReadonly: true),
-                new SheetColumn(columnName: "iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID", header: "Phân bổ vốn đơn vị phê duyệt chi tiết ID", isHidden: true, isReadonly: true),
-                new SheetColumn(columnName: "modelActive", header: "Model active", isHidden: true, isReadonly: true),
-                new SheetColumn(columnName: "iID_DonViQuanLyID", header: "ID đơn vị thực hiện dự án", isHidden: true, isReadonly: true),
-                new SheetColumn(columnName: "iID_DonViID", header: "ID đơn vị quản lý ", isHidden: true, isReadonly: true)
-            };
+                    new SheetColumn(columnName: "fGiaTriThuHoi", header: "Giá trị phân bổ thu hồi", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "iID_DonViTienTeID", header: "ID đơn vị tiền tệ", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "iID_TienTeID", header: "ID tiền tệ", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "fTiGiaDonVi", header: "ID tiền tệ", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "fTiGia", header: "Tỷ giá", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "iID_LoaiCongTrinh", header: "ID loại công trình", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "iID_Parent", header: "ID parent", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "bActive", header: "Active", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "ILoaiDuAn", header: "ID loại dự án", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "iID_DuAnID", header: "Id dự án", isHidden: true, isReadonly: true),
+                    new SheetColumn(columnName: "iID_PhanBoVon_DonVi_PheDuyet_ID", header: "Phân bổ vốn đơn vị phê duyệt ID", isHidden: true, isReadonly: true),
+                    new SheetColumn(columnName: "iID_LoaiCongTrinhID", header:"Id Loại công trình", isHidden: true, isReadonly: true),
+                    new SheetColumn(columnName: "iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID", header: "Phân bổ vốn đơn vị phê duyệt chi tiết ID", isHidden: true, isReadonly: true),
+                    new SheetColumn(columnName: "modelActive", header: "Model active", isHidden: true, isReadonly: true),
+                    new SheetColumn(columnName: "iID_DonViQuanLyID", header: "ID đơn vị thực hiện dự án", isHidden: true, isReadonly: true),
+                    new SheetColumn(columnName: "iID_DonViID", header: "ID đơn vị quản lý ", isHidden: true, isReadonly: true),
+                    new SheetColumn(columnName: "iID_DuAn_HangMucID", header: "ID dự án chi tiêt(hạng mục) ", isHidden: true, isReadonly: true)
+                };
+            }
+            else
+            {
+                    listColumn = new List<SheetColumn>()
+                {
+                    new SheetColumn(columnName: "sTenDuAn", header: "Tên dự án", columnWidth:248, align: "left", hasSearch: true, isReadonly: true),
+                    new SheetColumn(columnName: "sLoaiDuAn", header: "Loại dự án", columnWidth:198, align: "left", hasSearch: true, isReadonly: true),
+                    new SheetColumn(columnName: "sTenLoaiCongTrinh", header: "Loại công trình", columnWidth:198, align: "left", hasSearch: false, isReadonly: true),
+                    new SheetColumn(columnName: "sTenDonVi", header: "Đơn vị ", columnWidth:290, align: "left", hasSearch: true, isReadonly: true),
+                    new SheetColumn(columnName: "fGiaTriDeNghi", header: "Giá trị đề nghị", columnWidth:198, align: "right", dataType: 1, hasSearch: false, isReadonly: true ),
+                    new SheetColumn(columnName: "fGiaTriPhanBo", header: "Kế hoạch phân bổ năm", columnWidth:198, align: "right", dataType: 1, hasSearch: false, isReadonly: false ),
+                    new SheetColumn(columnName: "sGhiChu", header: "Ghi chú", columnWidth:200, align: "left", hasSearch: false,dataType:0, isReadonly: false),
+                    new SheetColumn(columnName: "sTenDonViThucHienDuAn", header: "Đơn vị thực hiện dự án", columnWidth:8, align: "left", hasSearch: false, isReadonly: true,isHidden:true),
+
+
+                    new SheetColumn(columnName: "fGiaTriThuHoi", header: "Giá trị phân bổ thu hồi", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "iID_DonViTienTeID", header: "ID đơn vị tiền tệ", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "iID_TienTeID", header: "ID tiền tệ", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "fTiGiaDonVi", header: "ID tiền tệ", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "fTiGia", header: "Tỷ giá", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "iID_LoaiCongTrinh", header: "ID loại công trình", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "iID_Parent", header: "ID parent", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "bActive", header: "Active", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "ILoaiDuAn", header: "ID loại dự án", isHidden: true, isReadonly: true ),
+                    new SheetColumn(columnName: "iID_DuAnID", header: "Id dự án", isHidden: true, isReadonly: true),
+                    new SheetColumn(columnName: "iID_PhanBoVon_DonVi_PheDuyet_ID", header: "Phân bổ vốn đơn vị phê duyệt ID", isHidden: true, isReadonly: true),
+                    new SheetColumn(columnName: "iID_LoaiCongTrinhID", header:"Id Loại công trình", isHidden: true, isReadonly: true),
+                    new SheetColumn(columnName: "iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID", header: "Phân bổ vốn đơn vị phê duyệt chi tiết ID", isHidden: true, isReadonly: true),
+                    new SheetColumn(columnName: "modelActive", header: "Model active", isHidden: true, isReadonly: true),
+                    new SheetColumn(columnName: "iID_DonViQuanLyID", header: "ID đơn vị thực hiện dự án", isHidden: true, isReadonly: true),
+                    new SheetColumn(columnName: "iID_DonViID", header: "ID đơn vị quản lý ", isHidden: true, isReadonly: true),
+                    new SheetColumn(columnName: "iID_DuAn_HangMucID", header: "ID dự án chi tiêt(hạng mục) ", isHidden: true, isReadonly: true)
+
+                };
+            }
 
             return listColumn;
         }

@@ -113,6 +113,7 @@ function Luu() {
             cache: false,
             success: function (data) {
                 if (data != null && data == true) {
+                    alert("Thêm mới bản ghi " + thongTri.sMaThongTri + " thành công.")
                     window.location.href = "/QLVonDauTu/QLThongTriQuyetToan/Index";
                 }
             },

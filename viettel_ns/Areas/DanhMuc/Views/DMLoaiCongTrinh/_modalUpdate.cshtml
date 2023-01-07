@@ -1,98 +1,97 @@
 ﻿@using Viettel.Domain.DomainModel
 @model VDT_DM_LoaiCongTrinh
-
+<style>
+    .rowLine {
+        display: flex;
+        flex-direction: row;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+</style>
 <div class="modal-body">
-    <div class="form-group row">
-        <div class="form-group">
-            <div class="form-group">
-                <div class="col-md-6">
-                    <input type="hidden" id="txt_ID_LoaiCongTrinh" value="@Model.iID_LoaiCongTrinh" />
-                    <label for="txt_MaCongTrinh">Mã công trình </label>
-                    @Helpers.Required()
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-md-6">
+                <input type="hidden" id="txt_ID_LoaiCongTrinh" value="@Model.iID_LoaiCongTrinh" />
+                <label for="txt_MaCongTrinh">Mã công trình </label>
+                @Helpers.Required()
 
-                    <input type="text" id="txt_MaCongTrinh" class="form-control" value="@Model.sMaLoaiCongTrinh" maxlength="50" autocomplete="off"/>
-                </div>
-                <div class="col-md-6">
-                    <label for="txt_TenCongTrinh">Tên công trình </label>
-                    @Helpers.Required()
-                    <input type="text" required id="txt_TenCongTrinh" class="form-control" value="@Model.sTenLoaiCongTrinh" maxlength="300" autocomplete="off"/>
-                </div>
+                <input type="text" id="txt_MaCongTrinh" class="form-control" value="@Model.sMaLoaiCongTrinh" maxlength="50" autocomplete="off" />
             </div>
-            <div class="form-group">
-                <div class="col-md-6">
-                    <label for="txt_TenVietTat">Tên viết tắt </label>
-                    @Helpers.Required()
-
-                    <input type="text" required id="txt_TenVietTat" class="form-control" value="@Model.sTenVietTat" maxlength="100" autocomplete="off" />
-                </div>
-                <div class="col-md-6">
-                    <label for="txt_ThuTu">Thứ tự </label>
-                    <input type="text" required id="txt_ThuTu" class="form-control" value="@Model.iThuTu" maxlength="4" autocomplete="off" />
-                </div>
+            <div class="col-md-6">
+                <label for="txt_TenCongTrinh">Tên công trình </label>
+                @Helpers.Required()
+                <input type="text" required id="txt_TenCongTrinh" class="form-control" value="@Model.sTenLoaiCongTrinh" maxlength="300" autocomplete="off" />
             </div>
-            <div class="form-group">
-                <div class="col-sm-6">
-                    <label for="txt_IdParent">Mã công trình cha</label>
-                    @Html.DropDownList("iID_Parent", new SelectList(ViewBag.ListDMLoaiCongTrinh, "iID_LoaiCongTrinh", "sMaLoaiCongTrinh"), "Tất cả", new { @class = "form-control", @id = "txt_IdParent" })
-                </div>
-
-                <div class="col-md-6">
-                    <label for="txt_LNS">LNS </label>
-                    <input type="text" required id="txt_LNS" class="form-control" value="@Model.LNS" maxlength="100" autocomplete="off"/>
-                </div>
-            </div>
-            <div class="form-group">
-
-                <div class="col-md-6">
-                    <label for="txt_L">L </label>
-                    <input type="text" required id="txt_L" class="form-control" value="@Model.L" maxlength="4" autocomplete="off"/>
-                </div>
-                <div class="col-md-6">
-                    <label for="txt_K">K </label>
-                    <input type="text" required id="txt_K" class="form-control" value="@Model.K" maxlength="100" autocomplete="off"/>
-                </div>
-            </div>
-            <div class="form-group">
-
-                <div class="col-md-6">
-                    <label for="txt_M">M </label>
-                    <input type="text" required id="txt_M" class="form-control" value="@Model.M" maxlength="4" autocomplete="off"/>
-                </div>
-                <div class="col-md-6">
-                    <label for="txt_TM">TM </label>
-                    <input type="text" required id="txt_TM" class="form-control" value="@Model.TM" maxlength="100" autocomplete="off"/>
-                </div>
-            </div>
-            <div class="form-group">
-
-                <div class="col-md-6">
-                    <label for="txt_TTM">TTM</label>
-                    <input type="text" required id="txt_TTM" class="form-control" value="@Model.TTM" maxlength="4" autocomplete="off"/>
-                </div>
-                <div class="col-md-6">
-                    <label for="txt_NG">NG </label>
-                    <input type="text" required id="txt_NG" class="form-control" value="@Model.NG" maxlength="100" autocomplete="off"/>
-                </div>
-            </div>
-            <div class="form-group">
-
-                <div class="col-md-6">
-                    <label for="txt_TNG1">TNG1 </label>
-                    <input type="text" required id="txt_TNG1" class="form-control" value="@Model.TNG1" maxlength="4" autocomplete="off"/>
-                </div>
-                <div class="col-md-6">
-                    <label for="txt_TNG2">TNG2 </label>
-                    <input type="text" required id="txt_TNG2" class="form-control" value="@Model.TNG2" maxlength="100" autocomplete="off"/>
-                </div>
-            </div>
-            <div class="form-group">               
-                <div class="col-sm-12">
-                    <label for="txt_NoiDung">Ghi chú</label>
-                    <textarea id="txt_NoiDung" class="form-control">@Html.Raw(Model.sMoTa)</textarea>
-                </div>
-            </div>            
-
         </div>
+        <div class="form-group row">
+            <div class="col-md-6">
+                <label for="txt_TenVietTat">Tên viết tắt </label>
+                @Helpers.Required()
+
+                <input type="text" required id="txt_TenVietTat" class="form-control" value="@Model.sTenVietTat" maxlength="100" autocomplete="off" />
+            </div>
+            <div class="col-md-6">
+                <label for="txt_ThuTu">Thứ tự </label>
+                <input type="text" required id="txt_ThuTu" class="form-control" value="@Model.iThuTu" maxlength="4" autocomplete="off" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label for="txt_IdParent">Mã công trình cha</label>
+                @Html.DropDownList("iID_Parent", new SelectList(ViewBag.ListDMLoaiCongTrinh, "iID_LoaiCongTrinh", "sMaLoaiCongTrinh"), "Tất cả", new { @class = "form-control", @id = "txt_IdParent" })
+            </div>
+
+            <div class="col-md-6">
+              
+                <label for="txt_NoiDung">Ghi chú</label>
+                <textarea id="txt_NoiDung" class="form-control">@Html.Raw(Model.sMoTa)</textarea>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="rowLine">
+                <div>
+                    <label for="txt_LNS">LNS </label>
+                    <input type="text" required id="txt_LNS" class="form-control" value="@Model.LNS" maxlength="100" autocomplete="off" />
+                </div>
+                <div class="ml-10">
+                    <label for="txt_L">L </label>
+                    <input type="text" required id="txt_L" class="form-control" value="@Model.L" maxlength="4" autocomplete="off" />
+                </div>
+                <div class="ml-10">
+                    <label for="txt_K">K </label>
+                    <input type="text" required id="txt_K" class="form-control" value="@Model.K" maxlength="100" autocomplete="off" />
+                </div>
+                <div class="ml-10">
+                    <label for="txt_M">M </label>
+                    <input type="text" required id="txt_M" class="form-control" value="@Model.M" maxlength="4" autocomplete="off" />
+
+                </div>
+                <div class="ml-10">
+                    <label for="txt_TM">TM </label>
+                    <input type="text" required id="txt_TM" class="form-control" value="@Model.TM" maxlength="100" autocomplete="off" />
+                </div>
+                <div class="ml-10">
+                    <label for="txt_TTM">TTM</label>
+                    <input type="text" required id="txt_TTM" class="form-control" value="@Model.TTM" maxlength="4" autocomplete="off" />
+                </div>
+                <div class="ml-10">
+                    <label for="txt_NG">NG </label>
+                    <input type="text" required id="txt_NG" class="form-control" value="@Model.NG" maxlength="100" autocomplete="off" />
+                </div>
+                <div class="ml-10">
+                    <label for="txt_TNG1">TNG1 </label>
+                    <input type="text" required id="txt_TNG1" class="form-control" value="@Model.TNG1" maxlength="4" autocomplete="off" />
+                </div>
+                <div class="ml-10">
+                    <label for="txt_TNG2">TNG2 </label>
+                    <input type="text" required id="txt_TNG2" class="form-control" value="@Model.TNG2" maxlength="100" autocomplete="off" />
+                </div>
+            </div>
+         
+        </div>   
+
     </div>
 </div>
 <div class="modal-footer">

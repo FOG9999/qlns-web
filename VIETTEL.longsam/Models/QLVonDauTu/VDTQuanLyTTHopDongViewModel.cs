@@ -16,6 +16,7 @@ namespace Viettel.Models.QLVonDauTu
 
     public class VDT_DA_TT_HopDong_ViewModel : VDT_DA_TT_HopDong
     {
+        public int IStt { get; set; }
         public string sTenDuAn { get; set; }
         public string sMaDuAn { get; set; }
         public string sTenDonViQL { get; set; }
@@ -40,5 +41,14 @@ namespace Viettel.Models.QLVonDauTu
         public string TenDonVi { get; set; }
         public string ChuDauTu { get; set; }
         public string sTenHopDong { get; set; }
+        public string sNgayHopDong
+        {
+            get
+            {
+                return dNgayHopDong.ToString("dd/MM/yyyy");
+            }
+        }
+        public string sMaLoaiHopDong { get; set; }
+        public string sMaNhaThau { get; set; }
     }
 }

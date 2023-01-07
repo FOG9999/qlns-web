@@ -63,6 +63,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             lstNguonVon.Insert(0, new NS_NguonNganSach { iID_MaNguonNganSach = 0, sTen = Constants.CHON });
             ViewBag.ListNguonVon = lstNguonVon.ToSelectList("iID_MaNguonNganSach", "sTen");
             ViewBag.dNgayThongTri = DateTime.Now.ToString("dd/MM/yyyy");
+            ViewBag.iNamLamViec = DateTime.Now.Year;
             ViewBag.iIdLoaiThongTri = _iQLVonDauTuService.GetLoaiThongTri().FirstOrDefault(n => n.iKieuLoaiThongTri == (int)Viettel.Extensions.Constants.VDT_KIEULOAI_THONGTRI.THONG_TRI_QUYET_TOAN).iID_LoaiThongTriID;
             return View(new List<VDTGetThongTriChiTietViewModel>());
         }

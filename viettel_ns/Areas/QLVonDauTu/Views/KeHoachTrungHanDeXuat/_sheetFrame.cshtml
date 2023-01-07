@@ -40,43 +40,45 @@
             var sTongHop = '@Model.KH5NamDeXuat.sTongHop';
             var iIDTongHopParent = '@Model.KH5NamDeXuat.iID_TongHopParent';
             var isTongHop = (iIDTongHopParent != '' || sTongHop != '') ? true : false;
-
+            var isDetail = '@Model.isDetail';
             var isCt = '@Model.KH5NamDeXuat.iLoai';
             if (e != null && e != undefined) {
-                if (e.key == "F1" && isCt != '2' && !isTongHop) {
-                    var h = Bang_keys.Row();
-                    var c = Bang_keys.Col() - Bang_nC_Fixed;
-                    if (h == null) {
-                        BangDuLieu_onKeypress_F1_NoRow(0, undefined);
-                    } else {
-                        BangDuLieu_onKeypress_F1_NoRow(h, c);
+                if (isDetail == 'False') {
+                    if (e.key == "F1" && isCt != '2' && !isTongHop) {
+                        var h = Bang_keys.Row();
+                        var c = Bang_keys.Col() - Bang_nC_Fixed;
+                        if (h == null) {
+                            BangDuLieu_onKeypress_F1_NoRow(0, undefined);
+                        } else {
+                            BangDuLieu_onKeypress_F1_NoRow(h, c);
+                        }
                     }
-                }
-                if (e.key == "F2" && isCt != '2' && !isTongHop) {
-                    var h = Bang_keys.Row();
-                    var c = Bang_keys.Col() - Bang_nC_Fixed;
-                    if (h == null) {
-                        BangDuLieu_onKeypress_F2_NoRow(0, undefined);
-                    } else {
-                        BangDuLieu_onKeypress_F2_NoRow(h, c);
+                    if (e.key == "F2" && isCt != '2' && !isTongHop) {
+                        var h = Bang_keys.Row();
+                        var c = Bang_keys.Col() - Bang_nC_Fixed;
+                        if (h == null) {
+                            BangDuLieu_onKeypress_F2_NoRow(0, undefined);
+                        } else {
+                            BangDuLieu_onKeypress_F2_NoRow(h, c);
+                        }
                     }
-                }
-                if (e.key == "F3" && isCt != '2' && !isTongHop) {
-                    var h = Bang_keys.Row();
-                    var c = Bang_keys.Col() - Bang_nC_Fixed;
-                    if (h == null) {
-                        BangDuLieu_onKeypress_F3_NoRow(0, undefined);
-                    } else {
-                        BangDuLieu_onKeypress_F3_NoRow(h, c);
+                    if (e.key == "F3" && isCt != '2' && !isTongHop) {
+                        var h = Bang_keys.Row();
+                        var c = Bang_keys.Col() - Bang_nC_Fixed;
+                        if (h == null) {
+                            BangDuLieu_onKeypress_F3_NoRow(0, undefined);
+                        } else {
+                            BangDuLieu_onKeypress_F3_NoRow(h, c);
+                        }
                     }
-                }
 
-                if (e.key == "F10" && !isTongHop) {
-                    KH5NamDX_ChiTiet_BangDuLieu_Save();
-                }
+                    if (e.key == "F10" && !isTongHop) {
+                        KH5NamDX_ChiTiet_BangDuLieu_Save();
+                    }
 
-                if (e.key == "F9") {
-                    BangDuLieu_onKeypress_F9();
+                    if (e.key == "F9") {
+                        BangDuLieu_onKeypress_F9();
+                    }
                 }
             }
         }
@@ -257,7 +259,7 @@
                         Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuTuDcIndex"]] = true;
                         Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuNamDcIndex"]] = true;
                         Bang_arrEdit[h][dataInputIndex["fGiaTriBoTriDcIndex"]] = false;
-                        Bang_arrEdit[h][dataInputIndex["sGhiChuIndex"]] = true;                                  
+                        Bang_arrEdit[h][dataInputIndex["sGhiChuIndex"]] = true;
 
 
                         Bang_arrThayDoi[h][dataInputIndex["sTenIndex"]] = (true && isActive);
@@ -316,7 +318,7 @@
                         }
                         //end cmt
                     }
-                } else {           
+                } else {
                 }
             }*@
             for (h = 0; h < Bang_nH; h++) {
@@ -380,6 +382,7 @@
                     sGhiChuIndexIndex: -1
                 };
                 for (c = 0; c < Bang_nC; c++) {
+
                     var sKey = Bang_arrMaCot[c];
 
                     if (sKey == "sTen") {
@@ -554,7 +557,7 @@
                         Bang_arrEdit[h][dataInputIndex["sTenNganSachIndex"]] = false;
                         Bang_arrEdit[h][dataInputIndex["fHanMucDauTuIndex"]] = false;
                         Bang_arrEdit[h][dataInputIndex["fLuyKeNSQPDaBoTriIndex"]] = false;
-                        Bang_arrEdit[h][dataInputIndex["fLuyKeNSQPDeNghiBoTriIndex"]] = false;                        
+                        Bang_arrEdit[h][dataInputIndex["fLuyKeNSQPDeNghiBoTriIndex"]] = false;
                         Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuNamIndex"]] = false;
                         Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuTuIndex"]] = false;
                         Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuBaIndex"]] = false;
@@ -590,11 +593,46 @@
                     Bang_arrEdit[h][dataInputIndex["fHanMucDauTuIndex"]] = false;
                     Bang_arrEdit[h][dataInputIndex["fLuyKeNSQPDaBoTriIndex"]] = false;
                     Bang_arrEdit[h][dataInputIndex["fLuyKeNSQPDeNghiBoTriIndex"]] = false;
-                    //Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuNhatIndex"]] = false;                    
-                    //Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuHaiIndex"]] = false;                    
-                    //Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuBaIndex"]] = false;                    
-                    //Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuTuIndex"]] = false;                    
-                    //Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuNamIndex"]] = false;                    
+                    //Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuNhatIndex"]] = false;
+                    //Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuHaiIndex"]] = false;
+                    //Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuBaIndex"]] = false;
+                    //Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuTuIndex"]] = false;
+                    //Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuNamIndex"]] = false;
+                }
+                if (isDetail == 'True') {
+                    Bang_arrEdit[h][dataInputIndex["sTenIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["sDonViThucHienDuAnIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["sDiaDiemIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["iGiaiDoanTuIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["iGiaiDoanDenIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["sTenLoaiCongTrinhIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["sTenNganSachIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fHanMucDauTuIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fLuyKeNSQPDaBoTriIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fLuyKeNSQPDeNghiBoTriIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuNhatIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuNhatDcIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuHaiIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuHaiDcIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuBaIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuBaDcIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuTuIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuTuDcIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuNamIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fGiaTriNamThuNamDcIndex"]] = false;
+                    //mo moi
+                    Bang_arrEdit[h][dataInputIndex["fHanmucNganhDXIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fVon5namNganhDXIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fVonsaunamNganhDXIndex"]] = false;
+
+                    Bang_arrEdit[h][dataInputIndex["fHanmucCucTCDXIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fVon5namCTCDXIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fVonnamthunhatCTCIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fVonsaunamCTCDexuatIndex"]] = false;
+                    //chuyen tiep
+                    Bang_arrEdit[h][dataInputIndex["fCucTCDeXuatIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fDuKienBoTriNamThu2Index"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["sGhiChuIndex"]] = false;
                 }
             }
         }

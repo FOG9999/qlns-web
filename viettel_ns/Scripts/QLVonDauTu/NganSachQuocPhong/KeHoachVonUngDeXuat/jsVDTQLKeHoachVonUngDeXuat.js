@@ -75,6 +75,7 @@ function DeleteItemKHVU(id, sSoQuyetDinh) {
             type: "POST",
             data: { id: id },
             success: function (result) {
+                alert("Xóa bản ghi " + sSoQuyetDinh + "thành công.");
                 ChangeChungTu();
             }
         })

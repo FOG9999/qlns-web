@@ -196,13 +196,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             VDT_KHV_KeHoachVonNam_DuocDuyet data = _qLVonDauTuService.GetKeHoachVonNamDuocDuyetById(id);
             KeHoachVonNamDuocDuyetChiTietGridViewModel vm = new KeHoachVonNamDuocDuyetChiTietGridViewModel
             {
-                KHVonNamDuocDuyet = data
+                KHVonNamDuocDuyet = data,
+                isDetail = isDetail
             };
 
             List<VDT_KHV_KeHoachVonNam_DeXuat> lstAggregate = new List<VDT_KHV_KeHoachVonNam_DeXuat>();
             if (data != null)
             {
-                lstAggregate = _qLVonDauTuService.GetKeHoachVonNamDeXuatTongHopByCondition(data.iNamKeHoach.Value, data.iID_DonViQuanLyID,data.iID_NguonVonID).ToList();
+                lstAggregate = _qLVonDauTuService.GetKeHoachVonNamDeXuatTongHopByCondition(data.iNamKeHoach.Value, data.iID_DonViQuanLyID, data.iID_NguonVonID).ToList();
             }
 
             ViewBag.LstVoucherAggregate = lstAggregate.ToSelectList("iID_KeHoachVonNamDeXuatID", "sSoQuyetDinh");
@@ -218,9 +219,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             var isCheck = TempData["isDetail"];
             TempData.Keep("isDetail");
             var isDetail = false;
-            if (isCheck != null )
+            if (isCheck != null)
             {
-                 isDetail = (bool)TempData["isDetail"];
+                isDetail = (bool)TempData["isDetail"];
             }
             var sheet = new KeHoachVonNamDuocDuyetChiTietSheetTable(id, idParent, PhienLamViec.NamLamViec, filters, idDx, isDetail);
 
@@ -534,7 +535,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                     List<VDTKeHoachVonNamDuocDuyetExport> lstDataExportCongTrinhMoMoi = CalculateDataReport(lstCongTrinhMoMoi);
                     List<VDTKeHoachVonNamDuocDuyetExport> lstCongTrinhChuyenTiep = _qLVonDauTuService.GetKeHoachVonNamDuocDuyetReport(lstId, lstLct, CHUYEN_TIEP, double.Parse(dataReport.sValueDonViTinh)).ToList();
                     List<VDTKeHoachVonNamDuocDuyetExport> lstDataExportCongTrinhChuyenTiep = CalculateDataReport(lstCongTrinhChuyenTiep);
-                    if(!(lstDataExportCongTrinhMoMoi.Count == 1 && lstDataExportCongTrinhChuyenTiep.Count == 1))
+                    if (!(lstDataExportCongTrinhMoMoi.Count == 1 && lstDataExportCongTrinhChuyenTiep.Count == 1))
                     {
                         lstGroup.Add(new VDTKeHoachVonNamDuocDuyetExport() { sTenDuAn = sNameUnit.ToUpper(), IsHangCha = true });
                         lstGroup.AddRange(lstDataExportCongTrinhMoMoi);
@@ -569,7 +570,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             ExcelFile xls = (ExcelFile)TempData["DataReportGocXls"];
 
             return Print(xls, pdf ? "pdf" : "xls", pdf ? "BaoCaoKeHoachVonNamDuocDuyet.pdf" : "BaoCaoKeHoachVonNamDuocDuyet.xlsx");
- 
+
             //if (pdf)
             //{
             //    MemoryStream stream = (MemoryStream)TempData["DataReportGoc"];

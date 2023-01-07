@@ -156,7 +156,8 @@ function DeleteItemDA(id) {
         url: "/QLDuAn/VDTDuAnDelete",
         data: { id: id },
         success: function (r) {
-            if (r) {
+            if (r.status) {
+                alert(r.sMessage);
                 SearchData();
             }
         }
@@ -198,5 +199,40 @@ function TinhLaiDongTong(idBang) {
 function FormatMoneyItem() {
     $(".main .clsMoney").each(function () {
         $(this).html(FormatNumber(UnFormatNumber($(this).html())));
+    });
+}
+
+function OnExportExcel() {
+    var lstId = [];
+    $(".iIdExport:checked").each(function (index, item) {
+        lstId.push($(item).val());
+    });
+    if (lstId == null || lstId.length == 0) {
+        alert("Chưa chọn bản ghi nào để xuất excel !");
+        return;
+    }
+    $.ajax({
+        type: "POST",
+        url: "/QLVonDauTu/QLDuAn/OnExport",
+        data: { ids: lstId },
+        success: function (data) {
+            if (data.status) {
+                window.open("/QLVonDauTu/QLDuAn/ExportReport");
+            }
+            else {
+                var Title = 'Lỗi in báo cáo';
+                var messErr = [];
+                messErr.push(data.listErrMess);
+                $.ajax({
+                    type: "POST",
+                    url: "/Modal/OpenModal",
+                    data: { Title: Title, Messages: messErr, Category: ERROR },
+                    success: function (data) {
+                        $("#divModalConfirm").html(data);
+                    }
+                });
+                return false;
+            }
+        }
     });
 }

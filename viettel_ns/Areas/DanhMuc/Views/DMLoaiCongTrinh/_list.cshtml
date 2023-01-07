@@ -1,23 +1,145 @@
-﻿<div class="tooltip-header-search">
+﻿<!--<div class="tooltip-header-search">
     <div>
         <label class="control-label">Danh sách loại công trình (@ViewBag.iTotalItem)</label>
         <button class="btn btn-primary pull-right" style="margin-left:10px;" onclick="OpenModal()" data-toggle="modal" data-target="#modalDanhMucLoaiCongTrinh"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
         <button class="btn btn-back pull-right" onclick="GetListData()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
 
     </div>
-</div>
+</div>-->
 @*<div class="tooltip-header-search">
-    <div class="col-sm-12" style="display: flex; padding-left: 0px;">
-        <input type="text" class="form-control clearable" placeholder="Mã loại công trình" id="txtMaLoai" autocomplete="off" />
-        <input type="text" class="form-control clearable" placeholder="Tên viết tắt" id="txtTenVietTat" autocomplete="off" />
+        <div class="col-sm-12" style="display: flex; padding-left: 0px;">
+            <input type="text" class="form-control clearable" placeholder="Mã loại công trình" id="txtMaLoai" autocomplete="off" />
+            <input type="text" class="form-control clearable" placeholder="Tên viết tắt" id="txtTenVietTat" autocomplete="off" />
 
-        <input type="text" class="form-control clearable" placeholder="Tên loại công trình" id="txtTenLoaiCongTrinh" autocomplete="off" />
-        <input type="text" class="form-control clearable" placeholder="Mô tả" id="txtMoTa" autocomplete="off" />
-        <input type="text" class="form-control clearable" placeholder="Thứ tự" id="txtThuTu" autocomplete="off" />
-        <button class="btn btn-info" onclick="GetListData_By_Name()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
+            <input type="text" class="form-control clearable" placeholder="Tên loại công trình" id="txtTenLoaiCongTrinh" autocomplete="off" />
+            <input type="text" class="form-control clearable" placeholder="Mô tả" id="txtMoTa" autocomplete="off" />
+            <input type="text" class="form-control clearable" placeholder="Thứ tự" id="txtThuTu" autocomplete="off" />
+            <button class="btn btn-info" onclick="GetListData_By_Name()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>
+        </div>
+    </div>*@
+
+<!--<div id="ViewTable">
+
+</div>-->
+
+
+@using VIETTEL.Areas.DanhMuc.Models
+@model DMLoaiCongTrinhViewModel
+
+@{
+    int pageIndex = (Model._paging.CurrentPage - 1) * Model._paging.ItemsPerPage;
+}
+<div class="tooltip-header-search">
+    <div class="col-sm-8" style="display:flex;padding-left:0px;">
+        <label class="control-label">Danh mục loại chi phí (@Model._paging.TotalItems)</label>
     </div>
-</div>*@
-
-<div id="ViewTable">
-
+    <button class="btn btn-primary pull-right" style="margin-left:10px;" onclick="OpenModal()" data-toggle="modal" data-target="#modalDanhMucLoaiCongTrinh"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-back pull-right" onclick="GetListData()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
 </div>
+<table class="table table-bordered" id="tblListDMLoaiCongTrinh">
+    <thead class="header-search">
+    <th width="5%"><input type="text" class="form-control gr_search" id="txtMaLoaiCongTrinh" /></th>
+    <th width="5%"><input type="text" class="form-control gr_search" id="txtTenVietTat" /></th>
+    <th width="15%"><input type="text" class="form-control gr_search" id="txtsTenLoaiCongTrinh" /></th>
+    <th width="5%"><input type="text" class="form-control gr_search" id="txtiThuTu" /></th>
+    <th width="5%"><input type="text" class="form-control gr_search" id="txtsMoTa" /></th>
+    <th width="15%"></th>
+    <th width="5%"></th>
+    <th width="5%"></th>
+    <th width="5%"></th>
+    <th width="5%"></th>
+    <th width="5%"></th>
+    <th width="5%"></th>
+    <th width="5%"></th>
+    <th width="5%"></th>
+    <th width="5%"></th>
+    <th width="5%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
+    </thead>
+    <thead>
+    <th width="5%">Mã loại công trình</th>
+    <th width="5%">Tên viết tắt</th>
+    <th width="15%">Tên loại công trình</th>
+    <th width="5%">Mô tả</th>
+    <th width="5%">Thứ tự</th>
+    <th width="15%">Tên loại công trình cha</th>
+    <th width="5%">LNS</th>
+    <th width="5%">L</th>
+    <th width="5%">K</th>
+    <th width="5%">M</th>
+    <th width="5%">TM</th>
+    <th width="5%">TTM</th>
+    <th width="5%">NG</th>
+    <th width="5%">TNG1</th>
+    <th width="5%">TNG2</th>
+    <th width="5%">Thao tác</th>
+
+    </thead>
+    <tbody>
+        @{
+            int index = 0;
+            foreach (var item in Model.Items)
+            {
+                index++;
+                <tr style="cursor: pointer; @(string.IsNullOrEmpty(item.iID_Parent.ToString()) ? "font-weight: bold;" : string.Empty) ">
+
+                    <td align="left">@item.sMaLoaiCongTrinh</td>
+
+                    <td align="left">@item.sTenVietTat</td>
+
+                    <td align="left">@item.sTenLoaiCongTrinh</td>
+
+                    <td align="center">@item.sMoTa</td>
+
+                    <td align="left">@item.iThuTu</td>
+                    <td align="left">@item.sTenLoaiCha</td>
+                    <td align="left">@item.LNS</td>
+                    <td align="left">@item.L</td>
+                    <td align="left">@item.K</td>
+                    <td align="left">@item.M</td>
+                    <td align="left">@item.TM</td>
+                    <td align="left">@item.TTM</td>
+                    <td align="left">@item.NG</td>
+                    <td align="left">@item.TNG1</td>
+                    <td align="left">@item.TNG2</td>
+
+                    <td align="center" style="vertical-align: middle !important" class="col-sm-12">
+                        <button type="button" class="btn-detail" onclick="ViewDetail('@item.iID_LoaiCongTrinh')" data-toggle="modal" data-target="#modalLoaiChiPhi"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-edit" onclick="GetItemData('@item.iID_LoaiCongTrinh')" data-toggle="modal" data-target="#modalLoaiChiPhi"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" onclick="DeleteItem('@item.iID_LoaiCongTrinh')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@Html.BuildPagingButtons(Model._paging)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.date')
+            .datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                language: 'vi',
+                todayHighlight: true,
+            });
+        $("tr").hover(function () {
+            $(this).css("background-color", "#e7f8fe");
+        }, function () {
+            $(this).css("background-color", "");
+        });
+
+        $("#tblListLoaiChiPhi .gr_search").each(function (index, value) {
+            $(this).keypress(function (e) {
+                if (e.which == 13) {//Enter key pressed
+                    ChangePage();
+                }
+            });
+        });
+        /*formatMoney();*/
+    });
+
+</script>

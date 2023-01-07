@@ -100,7 +100,8 @@ function Delete(id) {
         data: { id: id },
         success: function (r) {
 
-            if (r == true) {
+            if (r.status == true) {
+                alert(r.sMessage);
                 ChangePage();
             } else {
                 var Title = 'Lỗi xóa phê duyệt TKTC và tổng dự toán';

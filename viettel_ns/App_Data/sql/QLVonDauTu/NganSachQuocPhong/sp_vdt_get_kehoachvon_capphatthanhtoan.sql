@@ -1,3 +1,4 @@
+
 -- [dbo].[sp_vdt_get_kehoachvon_capphatthanhtoan]
 		
 --DECLARE	@DuAnId varchar(max) SET @DuAnId = null
@@ -89,9 +90,9 @@ CREATE TABLE #tmp(
 		UPDATE #tmp 
 		SET fTongGiaTri =
 		-- Kế hoạch vốn năm
-		case when sMaNguonCha = '101' then (SELECT top 1 fCapPhatTaiKhoBac from VDT_KHV_KeHoachVonNam_DuocDuyet khvn_dd where khvn_dd.iID_KeHoachVonNam_DuocDuyetID=Id)
+		case when sMaNguonCha = '101' then (SELECT top 1 fCapPhatTaiKhoBac from VDT_KHV_KeHoachVonNam_DuocDuyet_ChiTiet khvn_dd where khvn_dd.iID_KeHoachVonNam_DuocDuyetID=#tmp.Id)
 		-- Kế hoạch vốn ứng
-		else (SELECT top 1 fGiaTriUng from VDT_KHV_KeHoachVonUng khvu_dd where khvu_dd.Id=Id) end
+		else (SELECT top 1 fGiaTriUng from VDT_KHV_KeHoachVonUng_ChiTiet khvu_dd where khvu_dd.Id=#tmp.Id) end
 		-- Kế hoạch năm trước chuyển sang (111) và kế hoạch vốn ứng năm trước chuyển sang (131) chưa clear
 		WHERE Id in (SELECT Id FROM #tmp)
 	END
@@ -102,9 +103,9 @@ CREATE TABLE #tmp(
 		UPDATE #tmp 
 		SET fTongGiaTri =
 		-- Kế hoạch vốn năm
-		case when sMaNguonCha = '101' then (SELECT top 1 fCapPhatBangLenhChi from VDT_KHV_KeHoachVonNam_DuocDuyet khvn_dd where khvn_dd.iID_KeHoachVonNam_DuocDuyetID=Id)
+		case when sMaNguonCha = '102' then (SELECT top 1 fCapPhatBangLenhChi from VDT_KHV_KeHoachVonNam_DuocDuyet_ChiTiet khvn_dd where khvn_dd.iID_KeHoachVonNam_DuocDuyetID=#tmp.Id)
 		-- Kế hoạch vốn ứng
-		else (SELECT top 1 fGiaTriUng from VDT_KHV_KeHoachVonUng khvu_dd where khvu_dd.Id=Id) end		
+		else (SELECT top 1 fGiaTriUng from VDT_KHV_KeHoachVonUng_ChiTiet khvu_dd where khvu_dd.Id=#tmp.Id) end		
 		-- Kế hoạch năm trước chuyển sang (112) và kế hoạch vốn ứng năm trước chuyển sang (132) chưa clear
 		WHERE Id in (SELECT Id FROM #tmpChungTuVonNam) 
 	END

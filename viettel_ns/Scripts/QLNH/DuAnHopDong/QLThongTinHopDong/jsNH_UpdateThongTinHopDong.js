@@ -48,16 +48,6 @@ $(document).ready(function () {
         }, 0);
     });
 
-    $("#slbDonVi").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
-    $("#slbChuongTrinh").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
-    $("#slbLoai").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
-    $("#slbDuAn").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
-    $("#slbLoaiHopDong").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
-    $("#slbNhaThau").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
-    $("#slbMaNgoaiTeKhac").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
-    $("#slbTiGia").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
-    $("#slbGoiThau").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
-
     if ($("#slbLoai").val() == 0 || $("#slbLoai").val() == 2 || $("#slbLoai").val() == 4) {
         $("#divTenDuAn").hide();
     }
@@ -94,6 +84,17 @@ $(document).ready(function () {
             }
         }
     }
+
+    $("#slbKHTongTheBQP").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+    $("#slbChuongTrinh").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+    $("#slbBQuanLy").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+    $("#slbDonVi").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+    $("#slbDuAn").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+    $("#slbLoai").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+    $("#slbLoaiHopDong").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+    $("#slbNhaThau").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+    $("#slbMaNgoaiTeKhac").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+    $("#slbTiGia").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
 });
 
 function ChangeChuongTrinhSelect() {
@@ -105,37 +106,74 @@ function ChangeChuongTrinhSelect() {
         success: function (data) {
             if (data) {
                 $("#slbChuongTrinh").empty().html(data.htmlChuongTrinh);
-            }
-        }
-    });
-}
-function ChangeBQuanLySelect() {
-    var id = $("#slbChuongTrinh").val();
-    $.ajax({
-        type: "POST",
-        url: "/QLNH/QLThongTinHopDong/GetBQuanLyTheoChuongTrinh",
-        data: { id: id },
-        success: function (data) {
-            if (data) {
                 $("#slbBQuanLy").empty().html(data.htmlQuanLy);
-            }
-        }
-    });
-}
-function ChangeDonViSelect() {
-    var id = $("#slbBQuanLy").val();
-    $.ajax({
-        type: "POST",
-        url: "/QLNH/QLThongTinHopDong/GetDonViTheoBQuanLy",
-        data: { id: id },
-        success: function (data) {
-            if (data) {
                 $("#slbDonVi").empty().html(data.htmlDonVi);
+                $("#slbDuAn").empty().html(data.htmlDA);
+                $("#slbChuongTrinh").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbBQuanLy").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbDonVi").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbDuAn").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
             }
         }
     });
 }
 
+function ChangeBQuanLySelect() {
+    var id = $("#slbChuongTrinh").val();
+    var idBqp = $("#slbKHTongTheBQP").val();
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/QLThongTinHopDong/GetBQuanLyTheoChuongTrinh",
+        data: { id: id, idBqp: idBqp },
+        success: function (data) {
+            if (data) {
+                $("#slbBQuanLy").empty().html(data.htmlQuanLy);
+                $("#slbDonVi").empty().html(data.htmlDonVi);
+                $("#slbDuAn").empty().html(data.htmlDA);
+                $("#slbBQuanLy").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbDonVi").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbDuAn").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+            }
+        }
+    });
+}
+
+function ChangeDonViSelect() {
+    var id = $("#slbBQuanLy").val();
+    var idChuongTrinh = $("#slbChuongTrinh").val();
+    var idBqp = $("#slbKHTongTheBQP").val();
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/QLThongTinHopDong/GetDonViTheoBQuanLy",
+        data: { id: id, idBqp: idBqp, idChuongTrinh: idChuongTrinh },
+        success: function (data) {
+            if (data) {
+                $("#slbDonVi").empty().html(data.htmlDonVi);
+                $("#slbDuAn").empty().html(data.htmlDA);
+                $("#slbDonVi").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbDuAn").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+            }
+        }
+    });
+}
+
+function ChangeDuAnSelect() {
+    var id = $("#slbDonVi").val();
+    var idBQuanLy = $("#slbBQuanLy").val();
+    var idChuongTrinh = $("#slbChuongTrinh").val();
+    var idBqp = $("#slbKHTongTheBQP").val();
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/QLThongTinHopDong/GetDuAnTheoDonVi",
+        data: { id: id, idBqp: idBqp, idChuongTrinh: idChuongTrinh, idBQuanLy: idBQuanLy },
+        success: function (data) {
+            if (data) {
+                $("#slbDuAn").empty().html(data.htmlDA);
+                $("#slbDuAn").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+            }
+        }
+    });
+}
 
 function ChangeLoaiSelect() {
     var loaiVal = $("#slbLoai").val();
@@ -386,6 +424,7 @@ function GetDataHopDong() {
     var data = {};
     data.ID = $("#hidTTHopDongID").val();
     data.iID_MaPhongBan = $("#slbBQuanLy").val();
+    data.iID_BQuanLyID = $("#slbBQuanLy").val();
     data.iID_NH_KHChiTietBQP = $("#slbKHTongTheBQP").val();
     data.iID_HopDongGocID = ($("#hidTTHopDongGocID").val() == "" || $("#hidTTHopDongGocID").val() == GUID_EMPTY) ? null : $("#hidTTHopDongGocID").val();
     data.iLanDieuChinh = $("#hidLanDieuChinh").val() == '' ? 0 : parseInt($("#hidLanDieuChinh").val());
@@ -419,20 +458,20 @@ function ValidateData(data) {
     var Title = 'Lỗi nhập dữ liệu thông tin hợp đồng';
     var Messages = [];
 
-    if (data.iID_DonViID == null || data.iID_DonViID == GUID_EMPTY) {
-        Messages.push("Đơn vị chưa chọn !");
+    if (data.iID_KHCTBQP_ChuongTrinhID == null || data.iID_DonViID == GUID_EMPTY) {
+        Messages.push("Số quyết định tổng thể TTCP chưa chọn !");
+    }
+
+    if (data.iID_KHCTBQP_ChuongTrinhID == null || data.iID_KHCTBQP_ChuongTrinhID == GUID_EMPTY) {
+        Messages.push("Tên chương trình chưa chọn !");
     }
 
     if (data.iID_MaPhongBan == null || data.iID_DonViID == GUID_EMPTY) {
         Messages.push("B quản lý chưa chọn !");
     }
 
-    if (data.iID_KHCTBQP_ChuongTrinhID == null || data.iID_DonViID == GUID_EMPTY) {
-        Messages.push("Số quyết định tổng thể TTCP  chưa chọn !");
-    }
-    
-    if (data.iID_KHCTBQP_ChuongTrinhID == null || data.iID_KHCTBQP_ChuongTrinhID == GUID_EMPTY) {
-        Messages.push("Tên chương trình chưa chọn !");
+    if (data.iID_DonViID == null || data.iID_DonViID == GUID_EMPTY) {
+        Messages.push("Đơn vị chưa chọn !");
     }
 
     if (data.iPhanLoai == null || data.iPhanLoai == 0) {

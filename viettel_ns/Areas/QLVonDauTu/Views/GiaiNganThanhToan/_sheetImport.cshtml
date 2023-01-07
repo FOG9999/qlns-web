@@ -1,0 +1,112 @@
+﻿
+<div class="tooltip-header-search">
+    <div class="form-group">
+        <div class="header-create-update">
+            <span>
+                @Html.Raw("Import đề nghị thanh toán.")
+            </span>
+        </div>
+        <div class="form-group row">
+            <div class="row" style="margin-right: 0px; margin-left: 0px;">
+                <div class="col-sm-4">
+                    <label for="drpDonViQuanLy" class="">Đơn vị quản lý <span class="require">*</span></label>
+                    @Html.DropDownList("drpDonViQuanLy", ViewBag.drpDonViQuanLy as List<SelectListItem>, new { @class = "form-control clearable" })
+                </div>
+                <div class="col-sm-4">
+                    <label for="txtChuDauTu">Chủ đầu tư</label>
+                    @Html.DropDownList("iID_ChuDauTuID", new SelectList(ViewBag.ListChuDauTu, "Value", "Text"), new { @class = "form-control" })
+                </div>
+                <div class="col-sm-4">
+                    <label for="txtNamKeHoach" class="">Năm kế hoạch <span class="require">*</span></label>
+                    <input type='number' class="form-control clearable yearFormat" id="txtNamKeHoach" value="@DateTime.Now.Year" autocomplete="off" />
+                </div>
+            </div>
+
+            <div class="row" style="margin-right: 0px; margin-left: 0px;">
+                <div class="col-sm-4">
+                    <label for="drpCoQuanThanhToan" class="">Cơ quan thanh toán <span class="require">*</span></label>
+                    @Html.DropDownList("drpCoQuanThanhToan", ViewBag.drpCoQuanThanhToan as List<SelectListItem>, new { @class = "form-control clearable" })
+                </div>
+                <div class="col-sm-4">
+                    <label for="txtChuDauTu">Nguồn vốn <span class="require">*</span></label>
+                    @Html.DropDownList("iIdNguonVonId", new SelectList(ViewBag.ListNguonVon, "Value", "Text"), new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-5">
+                <label for="txt_DonViQuanLy">Chọn file excel</label>
+                @Helpers.Required()
+                <input type="file" id="FileUpload" name="FileUpload" accept=".xlsx, .xls" />
+                <p style="margin-top: 9px; font-size: 14px; font-style: italic">Vui lòng chọn tệp có định dạng xlsx, xls có dung lượng không quá 10MB</p>
+            </div>
+            <div class="col-sm-7">
+                <button class="btn btn-info pull-right" style="margin-top: 28px;width:115px !important;" onclick="refreshImport();"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+                <button class="btn btn-primary pull-right" style="margin-right:10px;margin-top: 28px;width:148px !important;" onclick="loadDataExcel();"><i class="fa fa-th" aria-hidden="true"></i>Kiểm tra</button>
+            </div>
+        </div>
+        <div class="col-sm-12" style="display:flex;padding-left:0px;">
+            <label class="control-label">Danh sách đê nghị thanh toán.</label>
+        </div>
+    </div>
+    <div style="width: 100%; height: 500px; overflow: scroll;">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th rowspan="2">Trạng thái</th>
+                    <th rowspan="2">Số đề nghị</th>
+                    <th rowspan="2">Ngày đề nghị</th>
+                    <th rowspan="2">Mã loại đề nghị</th>
+                    <th rowspan="2">Loại đề nghị</th>
+                    <th rowspan="2">Tên dự án</th>
+                    <th rowspan="2">Mã dự án</th>
+                    <th rowspan="2">Số hợp đồng/Chi phí</th>
+                    <th rowspan="2">Mã nguồn vốn</th>
+                    <th rowspan="2">Nguồn vốn</th>
+                    <th rowspan="2">Mã loại KHV</th>
+                    <th rowspan="2">Kế hoạch vốn</th>
+                    <th rowspan="2">Năm</th>
+                    <th rowspan="2">Nội dung</th>
+                    <th colspan="2">Căn cứ bảng xác định giá trị KLHT</th>
+                    <th colspan="2">Số đề nghị tạm ứng, thanh toán</th>
+                    <th colspan="2">Số thu hồi tạm ứng theo chế độ</th>
+                </tr>
+                <tr>
+                    <th>Căn cứ</th>
+                    <th>Lũy kế giá trị KLHT</th>
+                    <th>Vốn trong nước</th>
+                    <th>Vốn ngoài nước</th>
+                    <th>Vốn trong nước</th>
+                    <th>Vốn ngoài nước</th>
+                </tr>
+            </thead>
+            <tbody id="tblDeNghiThanhToan">
+
+            </tbody>
+        </table>
+    </div>
+    <div class="">
+        <div id="nhapform">
+            <div id="form2">
+                <div class="button-bar">
+                    <div class="text-center">
+                        <button class="btn btn-default" onclick="goBack();" style="margin-right: 10px;"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                        <button class="btn btn-primary btn-save" id="btnSave" onclick="OnSave();"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr id="hr-split" />
+    <div id="ajax-div">
+    </div>
+    @* Modal confirm *@
+    <div id="divModalConfirm">
+
+    </div>
+    @using (Html.BeginScripts())
+    {
+        
+    }
+
+    <script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>

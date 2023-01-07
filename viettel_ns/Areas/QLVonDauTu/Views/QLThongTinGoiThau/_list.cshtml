@@ -5,11 +5,14 @@
 
 <div class="tooltip-header-search">
     <div class="col-sm-6" style="display: flex; padding-left: 0px;"><label class="control-label">Danh sách quản lý thông tin gói thầu</label></div>
-    @*<button class="btn btn-primary" style="float: right" onclick="BtnInsertDataClick()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>*@
+
+    <button class="btn btn-success pull-right" style="margin-right: 10px; margin-top: 3px !important" onclick="OnExportExcel()"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Xuất excel</button>
+    <button class="btn btn-warning pull-right" style="margin-right: 10px; margin-top: 3px !important" onclick="OnImport()"><i class="fa fa-upload" aria-hidden="true"></i>Import</button>
 </div>
 <table class="table table-bordered">
     <thead class="header-search">
         <tr>
+            <th></th>
             <th></th>
             <th><input type="text" class="form-control clearable" id="txt_tenGoiThau" autocomplete="off" /></th>
             <th width="12%"></th>
@@ -33,6 +36,7 @@
     </thead>
     <thead>
         <tr>
+            <th></th>
             <th>STT</th>
             <th>Số quyết định</th>
             <th>Ngày quyết định</th>
@@ -53,6 +57,7 @@
             {
                 index++;
                 <tr style="cursor: pointer">
+                    <td><input type="checkbox" class="iIdExport" value="@item.iID_GoiThauID"></td>
                     <td align="center">@index</td>
                     <td align="left">
                         @item.sSoQuyetDinh
@@ -104,6 +109,10 @@
             $(this).css("background-color", "");
         });
     });
+
+    function OnImport() {
+        location.href = "/QLVonDauTu/QLThongTinGoiThau/Import";
+    }
 
 </script>
 <script src="~/Scripts/js/js_vdtWeb.js"></script>

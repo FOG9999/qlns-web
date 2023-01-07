@@ -19,6 +19,8 @@
                     <button class="btn btn-primary pull-right" onclick="BtnInsertDataClick()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
                     <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="OpenModal()">Tạo thông tri</button>
                     <button class="btn btn-primary pull-right" style="margin-right:10px;width: auto !important;" onclick="XuatDanhSach()"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Xuất danh sách</button>
+                    <button class="btn btn-success pull-right" style="margin-right:10px;width: auto !important;" onclick="OnExportExcel()"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Export phần ghi CQTC</button>
+                    <button class="btn btn-warning pull-right" style="margin-right: 10px; width: auto !important;" onclick="ImportDeNghiThanhToan();"><i class="fa fa-upload" aria-hidden="true"></i>Import đề nghị thanh toán</button>
 
                     <input style="display:none" id="sSoDeNghiXuatDanhSach" value="">
                     <input style="display:none" id="dFromNgayDeNghiXuatDanhSach" value="">
@@ -27,7 +29,7 @@
                     <input style="display:none" id="sMaDonViXuatDanhSach" value="">
                 </div>
                 <div style="overflow-x: auto; margin-bottom: 10px">
-                    <table class="table table-bordered">
+                    <table id="tblThanhToan" class="table table-bordered">
                         <thead class="header-search">
                             <tr>
                                 <th width="2%"></th>
@@ -91,7 +93,7 @@
                                 foreach (var item in Model.lstData)
                                 {
                                     <tr>
-                                        <td align="center"><input type="checkbox" onclick="" value="@item.iID_DeNghiThanhToanID" data-iidnguonvon="@item.iID_NguonVonID" data-inamkehoach="@item.iNamKeHoach" data-iloaithanhtoan="@item.iLoaiThanhToan" data-donviquanlyid="@item.iID_DonViQuanLyID" /></td>
+                                        <td align="center"><input type="checkbox" onclick="" value="@item.iID_DeNghiThanhToanID" data-iidnguonvon="@item.iID_NguonVonID" data-inamkehoach="@item.iNamKeHoach" data-iloaithanhtoan="@item.iLoaiThanhToan" data-donviquanlyid="@item.iID_DonViQuanLyID" data-ngaypheduyet="@item.dNgayPheDuyet" /></td>
                                         <td align="center">@index</td>
                                         <td align="left">@item.sSoDeNghi</td>
                                         <td align="center">@(item.dNgayDeNghi.HasValue ? item.dNgayDeNghi.Value.ToString("dd/MM/yyyy") : String.Empty )</td>
@@ -110,7 +112,7 @@
                                             <button type="submit" class="btn-file" onclick="XuatFile('@item.iID_DeNghiThanhToanID')"><i class="fa fa-trash-o fa-file" aria-hidden="true"></i></button>
                                             <button type="button" class="btn-edit" onclick="GetItemDataList('@item.iID_DeNghiThanhToanID')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
                                             <button type="button" class="btn-detail" onclick="ViewDetailList('@item.iID_DeNghiThanhToanID')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
-                                            <button type="button" class="btn-delete" onclick="DeleteItemList('@item.iID_DeNghiThanhToanID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                                            <button type="button" class="btn-delete" onclick="DeleteItemList('@item.iID_DeNghiThanhToanID', '@item.sSoDeNghi')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
                                         </td>
                                     </tr>
                                     index++;
@@ -160,6 +162,10 @@
         if (event.key === "Enter") {
             $("#btnTimKiem").click()
         }
+    }
+
+    function ImportDeNghiThanhToan() {
+        location.href = "/QLVonDauTu/GiaiNganThanhToan/ImportDenghiThanhToan";
     }
 
 </script>

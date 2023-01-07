@@ -251,6 +251,7 @@ function Luu() {
             cache: false,
             success: function (data) {
                 if (data != null && data.status == true) {
+                    alert(data.sMessage);
                     window.location.href = "/QLVonDauTu/QLThongTinGoiThau/Index";
                 }
             },

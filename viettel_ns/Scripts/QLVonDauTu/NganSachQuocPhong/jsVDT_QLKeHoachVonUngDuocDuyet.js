@@ -432,11 +432,11 @@ function BtnDieuChinh(id, flagDieuChinh) {
     window.location.href = "/QLVonDauTu/QLKeHoachVonUngDuocDuyet/CreateNew?id=" + id + "&isDieuChinh=" + isDieuChinh;
 }
 
-function DeleteItemKHVU(id) {
+function DeleteItemKHVU(id, sSoQuyetDinh) {
     var Title = 'Xác nhận xóa kế hoạch vốn ứng được duyệt';
     var Messages = [];
     Messages.push('Bạn có chắc chắn muốn xóa?');
-    var FunctionName = "DeleteKHVU('" + id + "')";
+    var FunctionName = "DeleteKHVU('" + id + "','" + sSoQuyetDinh +"')";
     $.ajax({
         type: "POST",
         url: "/Modal/OpenModal",
@@ -447,13 +447,15 @@ function DeleteItemKHVU(id) {
     });
 }
 
-function DeleteKHVU(id) {
+function DeleteKHVU(id, sSoQuyetDinh) {
+    var sMessage = "Xóa bản ghi " + sSoQuyetDinh + " thành công."
     $.ajax({
         type: "POST",
         url: "/QLKeHoachVonUngDuocDuyet/VDTKHVUDelete",
         data: { id: id },
         success: function (r) {
             if (r == "True") {
+                alert(sMessage);
                 SearchData();
             }
         }

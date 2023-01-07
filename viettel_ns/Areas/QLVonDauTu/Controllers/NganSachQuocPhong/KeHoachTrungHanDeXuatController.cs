@@ -855,7 +855,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 isTongHop = isTongHop,
             };
             //TempData["isTongHop"] = isTongHop;
-            //ViewBag.isTongHop = isTongHop;
+            ViewBag.isDetail = isDetail ? "True" : "False";
             return View(vm);
         }
 
@@ -1430,23 +1430,164 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             }
         }
 
+        private List<VDT_DA_ChuTruongDauTu_HangMuc> TaoMoiListChuTruongHangMucFrom_VDT_DA_DuAn_HangMucModel(List<VDT_DA_DuAn_HangMucModel> list, Guid iID_ChuTruongDauTuID)
+        {
+            List<VDT_DA_ChuTruongDauTu_HangMuc> output = new List<VDT_DA_ChuTruongDauTu_HangMuc>();
+            list.ForEach(i =>
+            {
+                VDT_DA_ChuTruongDauTu_HangMuc hm = new VDT_DA_ChuTruongDauTu_HangMuc();
+                hm.iID_HangMucID = i.iID_DuAn_HangMucID;
+                hm.iID_ChuTruongDauTuID = iID_ChuTruongDauTuID;
+                output.Add(hm);
+            });
+            return output;
+        }
+
+        private List<VDT_DA_ChuTruongDauTu_DM_HangMuc> TaoMoiListChuTruong_DMHangMuc_From_VDT_DA_DuAn_HangMucModel(List<VDT_DA_DuAn_HangMucModel> list)
+        {
+            List<VDT_DA_ChuTruongDauTu_DM_HangMuc> output = new List<VDT_DA_ChuTruongDauTu_DM_HangMuc>();
+            list.ForEach(i =>
+            {
+                VDT_DA_ChuTruongDauTu_DM_HangMuc hm = new VDT_DA_ChuTruongDauTu_DM_HangMuc();
+                hm.iID_DuAnID = i.iID_DuAnID;
+                hm.sMaHangMuc = "000-000";
+                hm.sTenHangMuc = i.sTenHangMuc;
+                hm.iID_LoaiCongTrinhID = i.iID_LoaiCongTrinhID;
+                output.Add(hm);
+            });
+            return output;
+        }
+
+        private List<VDT_DA_ChuTruongDauTu_HangMuc> TaoMoiListChuTruongHangMucFrom_VDT_DA_DuAn_HangMuc(List<VDT_DA_DuAn_HangMuc> list, Guid iID_ChuTruongDauTuID)
+        {
+            List<VDT_DA_ChuTruongDauTu_HangMuc> output = new List<VDT_DA_ChuTruongDauTu_HangMuc>();
+            List<VDT_DA_ChuTruongDauTu_DM_HangMuc> listDM = TaoMoiListChuTruong_DMHangMuc_From_VDT_DA_DuAn_HangMuc(list);
+
+            for (int i = 0; i < list.Count(); i++)
+            {
+                VDT_DA_ChuTruongDauTu_HangMuc hm = new VDT_DA_ChuTruongDauTu_HangMuc();
+                hm.iID_HangMucID = listDM[i].iID_ChuTruongDauTu_DM_HangMucID;
+                hm.iID_ChuTruongDauTuID = iID_ChuTruongDauTuID;
+                output.Add(hm);
+            }
+            /*
+            list.ForEach(i =>
+            {
+                VDT_DA_ChuTruongDauTu_HangMuc hm = new VDT_DA_ChuTruongDauTu_HangMuc();
+                hm.iID_HangMucID = i.iID_DuAn_HangMucID;
+                hm.iID_ChuTruongDauTuID = iID_ChuTruongDauTuID;
+                output.Add(hm);
+            });
+            */
+            return output;
+        }
+
+        private List<VDT_DA_ChuTruongDauTu_DM_HangMuc> TaoMoiListChuTruong_DMHangMuc_From_VDT_DA_DuAn_HangMuc(List<VDT_DA_DuAn_HangMuc> list)
+        {
+            List<VDT_DA_ChuTruongDauTu_DM_HangMuc> output = new List<VDT_DA_ChuTruongDauTu_DM_HangMuc>();
+            list.ForEach(i =>
+            {
+                VDT_DA_ChuTruongDauTu_DM_HangMuc hm = new VDT_DA_ChuTruongDauTu_DM_HangMuc();
+                hm.iID_DuAnID = i.iID_DuAnID;
+                hm.sMaHangMuc = "000-000";
+                hm.sTenHangMuc = i.sTenHangMuc;
+                hm.iID_LoaiCongTrinhID = i.iID_LoaiCongTrinhID;
+                output.Add(hm);
+            });
+            return output;
+        }
+
+        private List<VDT_DA_ChuTruongDauTu_NguonVon> TaoMoiListChuTruongNguonVonFrom_VDTDuAnListNguonVonTTDuAnModel(List<VDTDuAnListNguonVonTTDuAnModel> list, Guid iID_ChuTruongDauTuID)
+        {
+            List<VDT_DA_ChuTruongDauTu_NguonVon> output = new List<VDT_DA_ChuTruongDauTu_NguonVon>();
+            list.ForEach(i =>
+            {
+                VDT_DA_ChuTruongDauTu_NguonVon hm = new VDT_DA_ChuTruongDauTu_NguonVon();
+                hm.iID_NguonVonID = i.iID_NguonVonID;
+                hm.iID_ChuTruongDauTuID = iID_ChuTruongDauTuID;
+                hm.fTienPheDuyet = i.fThanhTien;
+                output.Add(hm);
+            });
+            return output;
+        }
+
+        private List<VDT_DA_ChuTruongDauTu_NguonVon> TaoMoiListChuTruongNguonVonFrom_VDT_DA_DuAn_NguonVon(List<VDT_DA_DuAn_NguonVon> list, Guid iID_ChuTruongDauTuID)
+        {
+            List<VDT_DA_ChuTruongDauTu_NguonVon> output = new List<VDT_DA_ChuTruongDauTu_NguonVon>();
+            list.ForEach(i =>
+            {
+                VDT_DA_ChuTruongDauTu_NguonVon hm = new VDT_DA_ChuTruongDauTu_NguonVon();
+                hm.iID_NguonVonID = i.iID_NguonVonID;
+                hm.iID_ChuTruongDauTuID = iID_ChuTruongDauTuID;
+                hm.fTienPheDuyet = i.fThanhTien;
+                output.Add(hm);
+            });
+            return output;
+        }
+
         private IEnumerable<KeHoach5NamDeXuatDataImportModel> excel_result(DataTable dt)
         {
             List<KeHoach5NamDeXuatDataImportModel> dataImport = new List<KeHoach5NamDeXuatDataImportModel>();
 
             var items = dt.AsEnumerable().Where(x => x.Field<string>(0) != "" || x.Field<string>(0) != null || x.Field<string>(0) != "null");
+            List<VDT_DA_DuAn> listDuAnPendingSave = new List<VDT_DA_DuAn>();
+            List<VDT_DA_ChuTruongDauTu> ctdtNewPendingSave = new List<VDT_DA_ChuTruongDauTu>();
+            List<VDT_DA_DuAn_HangMuc> listDuAnHangMucPendingSave = new List<VDT_DA_DuAn_HangMuc>();
+            List<VDT_DA_DuAn_NguonVon> listDuAnNguonVonPendingSave = new List<VDT_DA_DuAn_NguonVon>();
+            List<VDT_DA_ChuTruongDauTu_HangMuc> listCTDTHangMucPendingSave = new List<VDT_DA_ChuTruongDauTu_HangMuc>();
+            List<VDT_DA_ChuTruongDauTu_DM_HangMuc> listCTDT_DMHangMuc_PendingSave = new List<VDT_DA_ChuTruongDauTu_DM_HangMuc>();
+            List<VDT_DA_ChuTruongDauTu_NguonVon> listCTDTNguonVonPendingSave = new List<VDT_DA_ChuTruongDauTu_NguonVon>();
             for (var i = 10; i < items.Count(); i++)
             {
                 DataRow r = items.ToList()[i];
 
                 var sSTT = r.Field<string>(0);
+                var iLevel = "0";
+                string iID_KeHoach5Nam_DeXuat_ChiTietID = Guid.NewGuid().ToString();
+                string iID_ParentID = null;
+                var bIsParent = 0;
+
+                // STT - 1,2,3,... -> Nhóm dự án
+                // STT - 1.1; 1.2; 1.3; ... -> Dự án
+                // STT - 1.1.1; 1.1.2; ... -> Chi tiết dự án
+                if (!sSTT.Contains('.'))
+                {
+                    iLevel = "1";
+                }
+                else if(sSTT.Split('.').Length == 2)
+                {
+                    iLevel = "2";
+                    string parentSTT = sSTT.Split('.')[0];
+                    KeHoach5NamDeXuatDataImportModel parent = dataImport.Where(x => x.sSTT == parentSTT).FirstOrDefault();
+                    if (parent != null)
+                    {
+                        parent.bIsParent = 1;
+                        iID_ParentID = parent.iID_KeHoach5Nam_DeXuat_ChiTietID;
+                    }
+                }
+                else if(sSTT.Split('.').Length == 3)
+                {
+                    iLevel = "3";
+                    string parentSTT = sSTT.Split('.')[0] + '.' + sSTT.Split('.')[1];
+                    KeHoach5NamDeXuatDataImportModel parent = dataImport.Where(x => x.sSTT == parentSTT).FirstOrDefault();
+                    if (parent != null)
+                    {
+                        parent.bIsParent = 1;
+                        iID_ParentID = parent.iID_KeHoach5Nam_DeXuat_ChiTietID;
+                    }
+                }
+
+                var sSoQuyetDinhCTDT = r.Field<string>(17);
                 var sTen = r.Field<string>(1);
-                var sTenDonViQL = r.Field<string>(2);
+                string sMaDonVi_ThucHienDuAn = r.Field<string>(2);
                 var sDiaDiem = r.Field<string>(3);
                 var iGiaiDoanTu = r.Field<string>(4) != null ? r.Field<string>(4).Split(new string[] { "-" }, StringSplitOptions.None)[0] : "";
                 var iGiaiDoanDen = r.Field<string>(4) != null ? r.Field<string>(4).Split(new string[] { "-" }, StringSplitOptions.None)[1] : "";
-                var sTenLoaiCongTrinh = r.Field<string>(5);
-                var sTenNganSach = r.Field<string>(6);
+                string sMaLoaiCongTrinh = r.Field<string>(5);
+                string sMaNguonVon = r.Field<string>(6);
+                var arrSTT = sSTT.Split(new string[] { "." }, StringSplitOptions.None);
+                var iIndexCode = arrSTT[arrSTT.Length - 1];
+                var sMaDuAn = r.Field<string>(18);
                 var fHanMucDauTu = r.Field<string>(7);
                 var fTongSoNhuCauNSQP = r.Field<string>(8);
                 var fTongSo = r.Field<string>(9);
@@ -1458,52 +1599,213 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 var fGiaTriBoTri = r.Field<string>(15);
                 var sGhiChu = r.Field<string>(16);
                 var sMaOrder = sSTT;
-                var iIDReference = r.Field<string>(18);
-                var iID_ParentID = r.Field<string>(19);
-                var iID_KeHoach5Nam_DeXuat_ChiTietID = r.Field<string>(20);
-                var bIsParent = Boolean.Parse(r.Field<string>(21)) ? 1 : 0;
-                var iLevel = r.Field<string>(22);
+                var iIDReference = iID_ParentID;
+                string sMaChuDauTu = r.Field<string>(19);
 
-                var arrSTT = sSTT.Split(new string[] { "." }, StringSplitOptions.None);
-                var iIndexCode = arrSTT[arrSTT.Length - 1];
-                var sMaLoaiCongTrinh = r.Field<string>(25);
-                var iID_NguonVonID = r.Field<string>(26);
-                var iID_MaDonVi = r.Field<string>(27);
-                var e = new KeHoach5NamDeXuatDataImportModel
+                // kiểm tra số quyết định CTDT này đã tồn tại chưa
+                bool ctdtExisted = _iQLVonDauTuService.CheckEzistSoQuyetDinhChuTruongDauTu(sSoQuyetDinhCTDT);
+                if (ctdtExisted)
                 {
-                    sSTT = sSTT,
-                    sTen = sTen,
-                    sTenDonViQL = sTenDonViQL,
-                    sDiaDiem = sDiaDiem,
-                    iGiaiDoanTu = iGiaiDoanTu,
-                    iGiaiDoanDen = iGiaiDoanDen,
-                    sTenLoaiCongTrinh = sTenLoaiCongTrinh,
-                    sTenNganSach = sTenNganSach,
-                    fHanMucDauTu = fHanMucDauTu,
-                    fTongSoNhuCauNSQP = fTongSoNhuCauNSQP,
-                    fTongSo = fTongSo,
-                    fGiaTriNamThuNhat = fGiaTriNamThuNhat,
-                    fGiaTriNamThuHai = fGiaTriNamThuHai,
-                    fGiaTriNamThuBa = fGiaTriNamThuBa,
-                    fGiaTriNamThuTu = fGiaTriNamThuTu,
-                    fGiaTriNamThuNam = fGiaTriNamThuNam,
-                    fGiaTriBoTri = fGiaTriBoTri,
-                    sGhiChu = sGhiChu,
-                    sMaOrder = sMaOrder,
-                    iIDReference = iIDReference,
-                    iID_ParentID = iID_ParentID,
-                    iID_KeHoach5Nam_DeXuat_ChiTietID = iID_KeHoach5Nam_DeXuat_ChiTietID,
-                    bIsParent = bIsParent,
-                    iLevel = iLevel,
-                    iIndexCode = iIndexCode,
-                    sMaLoaiCongTrinh = sMaLoaiCongTrinh,
-                    iID_NguonVonID = iID_NguonVonID,
-                    iID_MaDonVi = iID_MaDonVi,
-                    isMap = 1,
-                };
+                    VDT_DA_ChuTruongDauTu ctdtSaved = _iQLVonDauTuService.GetChuTruongDauTUBySoQuyetDinh(sSoQuyetDinhCTDT);                    
+                    // kiểm tra xem mã dự án trong dòng hiện tại có map với mã dự án đang được lưu cho CTDT này hay k
+                    string maDuanSaved = _iQLVonDauTuService.GetDuAnById(ctdtSaved.iID_DuAnID).sMaDuAn;
+                    if (sMaDuAn == maDuanSaved)
+                    {                        
+                        VDT_DM_DonViThucHienDuAn dv_ThucHienDuAn = _danhMucService.GetDonViThucHienDuAn(sMaDonVi_ThucHienDuAn);  
+                        VDT_DM_LoaiCongTrinh lct = _iQLVonDauTuService.GetDMLoaiCongTrinhByMa(sMaLoaiCongTrinh);
+                        NS_NguonNganSach nv = sMaNguonVon != null ? _iQLVonDauTuService.GetNganSachByMa(sMaNguonVon) : null;
+                        DM_ChuDauTu cdt = _danhMucService.GetChuDauTuByMa(sMaChuDauTu);
+                        var e = new KeHoach5NamDeXuatDataImportModel
+                        {
+                            sSTT = sSTT,
+                            sTen = sTen,
+                            sTenDonViQL = dv_ThucHienDuAn != null ? dv_ThucHienDuAn.sTenDonVi : "", // đơn vị thực hiện dự án, đơn vị quản lý là đơn vị đã được chọn trước đó, gán với bản ghi của KHTHDX
+                            sDiaDiem = sDiaDiem,
+                            iGiaiDoanTu = iGiaiDoanTu,
+                            iGiaiDoanDen = iGiaiDoanDen,
+                            sTenLoaiCongTrinh = sMaLoaiCongTrinh != null ? lct.sTenLoaiCongTrinh : "",
+                            iID_LoaiCongTrinhID = sMaLoaiCongTrinh != null ? lct.iID_LoaiCongTrinh.ToString() : null,
+                            sTenNganSach = sMaNguonVon != null ? nv.sTen : null,
+                            fHanMucDauTu = fHanMucDauTu,
+                            fTongSoNhuCauNSQP = fTongSoNhuCauNSQP,
+                            fTongSo = fTongSo,
+                            fGiaTriNamThuNhat = fGiaTriNamThuNhat,
+                            fGiaTriNamThuHai = fGiaTriNamThuHai,
+                            fGiaTriNamThuBa = fGiaTriNamThuBa,
+                            fGiaTriNamThuTu = fGiaTriNamThuTu,
+                            fGiaTriNamThuNam = fGiaTriNamThuNam,
+                            fGiaTriBoTri = fGiaTriBoTri,
+                            sGhiChu = sGhiChu,
+                            sMaOrder = sMaOrder,
+                            iIDReference = iIDReference,
+                            iID_ParentID = iID_ParentID,
+                            iID_KeHoach5Nam_DeXuat_ChiTietID = iID_KeHoach5Nam_DeXuat_ChiTietID,
+                            bIsParent = bIsParent,
+                            iLevel = iLevel,
+                            iIndexCode = iIndexCode,
+                            sMaLoaiCongTrinh = sMaLoaiCongTrinh,
+                            iID_NguonVonID = sMaNguonVon != null ? nv.iID_MaNguonNganSach.ToString() : null,
+                            iID_MaDonVi = dv_ThucHienDuAn != null ? dv_ThucHienDuAn.iID_MaDonVi.ToString() : null, // đơn vị thực hiện dự án
+                            isMap = 1,
+                            sTenChuDauTu = iLevel != "1" ? cdt.sTenCDT : "",
+                            sMaChuDauTu = iLevel != "1" ? cdt.sId_CDT : "",
+                            sMaDuAn = iLevel != "1" ? sMaDuAn : "",
+                            sSoQuyetDinhCTDT = iLevel != "1" ? sSoQuyetDinhCTDT: ""
+                        };
+                        dataImport.Add(e);
+                    }
+                    else
+                    {
+                        // tạm thời chưa xử lý
+                        continue;
+                    }
+                }
+                else
+                {
+                    // tạm thời bỏ qua dòng mà khai báo CTDT k tồn tại
+                    if (iLevel != "1")
+                    {
+                        if (iLevel == "2")
+                        {
+                            // tạo mới Dụ án, nêu chưa có trong DB
+                            if (listDuAnPendingSave.Where(x => x.sMaDuAn == sMaDuAn).Count() == 0)
+                            {
+                                bool isDuAnExist = _iQLVonDauTuService.GetDuAnBysMaDuAn(sMaDuAn).Count() > 0;
+                                if (!isDuAnExist)
+                                {
+                                    VDT_DA_DuAn newDuAn = new VDT_DA_DuAn();
+                                    Guid iđuAnTemp = Guid.NewGuid();
+                                    newDuAn.iID_DuAnID = iđuAnTemp;
+                                    newDuAn.sMaDuAn = sMaDuAn;
+                                    newDuAn.iID_DonViQuanLyID = null; // tý lưu sau vì tạm thời chưa có
+                                    VDT_DM_DonViThucHienDuAn dv_ThucHienDuAn1 = _danhMucService.GetDonViThucHienDuAn(sMaDonVi_ThucHienDuAn);
+                                    newDuAn.iID_DonViThucHienDuAnID = dv_ThucHienDuAn1.iID_DonVi;
+                                    newDuAn.sTenDuAn = sTen;
+                                    DM_ChuDauTu cdt2 = _danhMucService.GetChuDauTuByMa(sMaChuDauTu);
+                                    newDuAn.iID_ChuDauTuID = cdt2.ID;
+                                    newDuAn.iID_CapPheDuyetID = null;
+                                    newDuAn.iID_LoaiCongTrinhID = null;
+                                    newDuAn.sDiaDiem = sDiaDiem;
+                                    newDuAn.sSuCanThietDauTu = null;
+                                    newDuAn.sMucTieu = "";
+                                    newDuAn.sQuyMo = null;
+                                    newDuAn.sKhoiCong = iGiaiDoanTu;
+                                    newDuAn.sKetThuc = iGiaiDoanDen;
+                                    newDuAn.iID_NhomDuAnID = null;
+                                    newDuAn.iID_HinhThucQuanLyID = null;
+                                    newDuAn.fHanMucDauTu = fHanMucDauTu != "" ? Double.Parse(fHanMucDauTu) : 0;
+                                    newDuAn.bIsDuPhong = false;
+                                    listDuAnPendingSave.Add(newDuAn);
+                                }
+                            }
+                            // tạo mới CTDT
+                            // kiểm tra dự án đã có trong DB chưa, có thì lấy ID k thì tý lấy trong listDuAnPending (vì chắc j đã lưu :) )
+                            VDT_DA_DuAn duanExist = _iQLVonDauTuService.GetDuAnBysMaDuAn(sMaDuAn).FirstOrDefault();
+                            VDT_DA_ChuTruongDauTu ctdtNew = new VDT_DA_ChuTruongDauTu();
+                            if (duanExist != null)
+                            {
+                                ctdtNew.iID_DuAnID = duanExist.iID_DuAnID;
+                            }
+                            else ctdtNew.iID_DuAnID = listDuAnPendingSave.LastOrDefault().iID_DuAnID;
+                            ctdtNew.sSoQuyetDinh = sSoQuyetDinhCTDT;
+                            ctdtNew.dNgayQuyetDinh = DateTime.Now;
+                            ctdtNew.iID_DonViQuanLyID = null; // tý lưu
+                            DM_ChuDauTu cdt1 = _danhMucService.GetChuDauTuByMa(sMaChuDauTu);
+                            ctdtNew.iID_ChuDauTuID = cdt1.ID;
+                            ctdtNew.iID_NhomDuAnID = null;
+                            ctdtNew.sKhoiCong = iGiaiDoanTu;
+                            ctdtNew.sHoanThanh = iGiaiDoanDen;
+                            ctdtNew.iID_CapPheDuyetID = null;
+                            ctdtNew.fTMDTDuKienPheDuyet = fHanMucDauTu != "" ? Double.Parse(fHanMucDauTu) : 0;
+                            ctdtNew.iID_ChuTruongDauTuID = Guid.NewGuid();
+                            ctdtNewPendingSave.Add(ctdtNew);
+                        }
+                        else
+                        {
+                            // nếu dự án đã được lưu trước đó -> lấy danh sách chi tiết dự án lên để tạo ra các chi tiết CTDT 
+                            VDT_DA_DuAn duanExist = _iQLVonDauTuService.GetDuAnBysMaDuAn(sMaDuAn).FirstOrDefault();
+                            List<VDTDuAnListNguonVonTTDuAnModel> duAnNguonVon = new List<VDTDuAnListNguonVonTTDuAnModel>();
+                            List<VDT_DA_DuAn_HangMucModel> duAnHangMuc = new List<VDT_DA_DuAn_HangMucModel>();
+                            Guid idCTDT = ctdtNewPendingSave.LastOrDefault().iID_ChuTruongDauTuID;
+                            if (duanExist != null)
+                            {
+                                duAnNguonVon = _iQLVonDauTuService.GetListDuAnNguonVonTTDuAn(duanExist.iID_DuAnID).ToList();
+                                duAnHangMuc = _iQLVonDauTuService.GetListDuAnHangMucTTDuAn(duanExist.iID_DuAnID).ToList();                                
+                                listCTDTHangMucPendingSave = TaoMoiListChuTruongHangMucFrom_VDT_DA_DuAn_HangMucModel(duAnHangMuc, idCTDT);
+                                listCTDT_DMHangMuc_PendingSave = TaoMoiListChuTruong_DMHangMuc_From_VDT_DA_DuAn_HangMucModel(duAnHangMuc);
+                                listCTDTNguonVonPendingSave = TaoMoiListChuTruongNguonVonFrom_VDTDuAnListNguonVonTTDuAnModel(duAnNguonVon, idCTDT);
+                            }                            
+                            // nếu dự án chưa được lưu DB -> tạo mới -> tạo chi tiết CTDT từ các chi tiết dự án tạo mới
+                            else
+                            {
+                                VDT_DA_DuAn_HangMuc hmNew = new VDT_DA_DuAn_HangMuc();
+                                hmNew.iID_DuAnID = listDuAnPendingSave.LastOrDefault().iID_DuAnID;
+                                hmNew.iID_DuAn_HangMucID = Guid.NewGuid();
+                                hmNew.sMaHangMuc = "000-000";
+                                VDT_DM_LoaiCongTrinh lct1 = _iQLVonDauTuService.GetDMLoaiCongTrinhByMa(sMaLoaiCongTrinh);
+                                hmNew.sTenHangMuc = sTen + " - " + lct1.sTenLoaiCongTrinh;
+                                hmNew.fTienHangMuc = fHanMucDauTu != "" ? Double.Parse(fHanMucDauTu) : 0;
+                                hmNew.fHanMucDauTu = fHanMucDauTu != "" ? Double.Parse(fHanMucDauTu) : 0;
+                                hmNew.iID_NguonVonID = Int16.Parse(sMaNguonVon);
+                                hmNew.iID_LoaiCongTrinhID = lct1.iID_LoaiCongTrinh;
+                                listDuAnHangMucPendingSave.Add(hmNew);
 
-                dataImport.Add(e);
+                                listCTDTHangMucPendingSave = TaoMoiListChuTruongHangMucFrom_VDT_DA_DuAn_HangMuc(listDuAnHangMucPendingSave, idCTDT);
+                                listCTDT_DMHangMuc_PendingSave = TaoMoiListChuTruong_DMHangMuc_From_VDT_DA_DuAn_HangMuc(listDuAnHangMucPendingSave);
+                            }
+                        }
+                    }
+                    VDT_DM_DonViThucHienDuAn dv_ThucHienDuAn = _danhMucService.GetDonViThucHienDuAn(sMaDonVi_ThucHienDuAn);
+                    VDT_DM_LoaiCongTrinh lct = _iQLVonDauTuService.GetDMLoaiCongTrinhByMa(sMaLoaiCongTrinh);
+                    NS_NguonNganSach nv = sMaNguonVon != null ? _iQLVonDauTuService.GetNganSachByMa(sMaNguonVon) : null;
+                    DM_ChuDauTu cdt = _danhMucService.GetChuDauTuByMa(sMaChuDauTu);
+                    var e = new KeHoach5NamDeXuatDataImportModel
+                    {
+                        sSTT = sSTT,
+                        sTen = sTen,
+                        sTenDonViQL = dv_ThucHienDuAn != null ? dv_ThucHienDuAn.sTenDonVi : "", // đơn vị thực hiện dự án, đơn vị quản lý là đơn vị đã được chọn trước đó, gán với bản ghi của KHTHDX
+                        sDiaDiem = sDiaDiem,
+                        iGiaiDoanTu = iGiaiDoanTu,
+                        iGiaiDoanDen = iGiaiDoanDen,
+                        sTenLoaiCongTrinh = sMaLoaiCongTrinh != null ? lct.sTenLoaiCongTrinh : "",
+                        iID_LoaiCongTrinhID = sMaLoaiCongTrinh != null ? lct.iID_LoaiCongTrinh.ToString() : null,
+                        sTenNganSach = sMaNguonVon != null ? nv.sTen : null,
+                        fHanMucDauTu = fHanMucDauTu,
+                        fTongSoNhuCauNSQP = fTongSoNhuCauNSQP,
+                        fTongSo = fTongSo,
+                        fGiaTriNamThuNhat = fGiaTriNamThuNhat,
+                        fGiaTriNamThuHai = fGiaTriNamThuHai,
+                        fGiaTriNamThuBa = fGiaTriNamThuBa,
+                        fGiaTriNamThuTu = fGiaTriNamThuTu,
+                        fGiaTriNamThuNam = fGiaTriNamThuNam,
+                        fGiaTriBoTri = fGiaTriBoTri,
+                        sGhiChu = sGhiChu,
+                        sMaOrder = sMaOrder,
+                        iIDReference = iIDReference,
+                        iID_ParentID = iID_ParentID,
+                        iID_KeHoach5Nam_DeXuat_ChiTietID = iID_KeHoach5Nam_DeXuat_ChiTietID,
+                        bIsParent = bIsParent,
+                        iLevel = iLevel,
+                        iIndexCode = iIndexCode,
+                        sMaLoaiCongTrinh = sMaLoaiCongTrinh,
+                        iID_NguonVonID = sMaNguonVon != null ? nv.iID_MaNguonNganSach.ToString() : null,
+                        iID_MaDonVi = dv_ThucHienDuAn != null ? dv_ThucHienDuAn.iID_MaDonVi.ToString() : null, // đơn vị thực hiện dự án
+                        isMap = 1,
+                        sTenChuDauTu = iLevel != "1" ? cdt.sTenCDT : "",
+                        sMaChuDauTu = iLevel != "1" ? cdt.sId_CDT : "",
+                        sMaDuAn = iLevel != "1" ? sMaDuAn : "",
+                        sSoQuyetDinhCTDT = iLevel != "1" ? sSoQuyetDinhCTDT : ""
+                    };
+                    dataImport.Add(e);
+                }
             }
+            TempData["listDuAnPendingSave"] = listDuAnPendingSave;
+            TempData["ctdtNewPendingSave"] = ctdtNewPendingSave;
+            TempData["listDuAnHangMucPendingSave"] = listDuAnHangMucPendingSave;
+            TempData["listDuAnNguonVonPendingSave"] = listDuAnNguonVonPendingSave;
+            TempData["listCTDTHangMucPendingSave"] = listCTDTHangMucPendingSave;
+            TempData["listCTDT_DMHangMuc_PendingSave"] = listCTDT_DMHangMuc_PendingSave;
+            TempData["listCTDTNguonVonPendingSave"] = listCTDTNguonVonPendingSave;
             return dataImport.AsEnumerable();
         }
 
@@ -1621,6 +1923,61 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             return table;
         }
 
+        private void SaveAllListPendingSave(Guid iID_DonViQuanLyID)
+        {
+            try
+            { // lấy các list đang pending save để lưu
+                List<VDT_DA_DuAn> listDuAnPendingSave = (List<VDT_DA_DuAn>)TempData["listDuAnPendingSave"];
+                List<VDT_DA_ChuTruongDauTu> ctdtNewPendingSave = (List<VDT_DA_ChuTruongDauTu>)TempData["ctdtNewPendingSave"];
+                List<VDT_DA_DuAn_HangMuc> listDuAnHangMucPendingSave = (List<VDT_DA_DuAn_HangMuc>)TempData["listDuAnHangMucPendingSave"];
+                List<VDT_DA_DuAn_NguonVon> listDuAnNguonVonPendingSave = (List<VDT_DA_DuAn_NguonVon>)TempData["listDuAnNguonVonPendingSave"];
+                List<VDT_DA_ChuTruongDauTu_HangMuc> listCTDTHangMucPendingSave = (List<VDT_DA_ChuTruongDauTu_HangMuc>)TempData["listCTDTHangMucPendingSave"];
+                List<VDT_DA_ChuTruongDauTu_DM_HangMuc> listCTDT_DMHangMuc_PendingSave = (List<VDT_DA_ChuTruongDauTu_DM_HangMuc>)TempData["listCTDT_DMHangMuc_PendingSave"];
+                List<VDT_DA_ChuTruongDauTu_NguonVon> listCTDTNguonVonPendingSave = (List<VDT_DA_ChuTruongDauTu_NguonVon>)TempData["listCTDTNguonVonPendingSave"];
+
+                using (var conn = ConnectionFactory.Default.GetConnection())
+                {
+                    conn.Open();
+                    var trans = conn.BeginTransaction();
+                    listDuAnPendingSave.ForEach(i =>
+                    {
+                        i.iID_DonViQuanLyID = iID_DonViQuanLyID;
+                        conn.Insert<VDT_DA_DuAn>(i, trans);
+                    });
+                    ctdtNewPendingSave.ForEach(i =>
+                    {
+                        i.iID_DonViQuanLyID = iID_DonViQuanLyID;
+                        conn.Insert<VDT_DA_ChuTruongDauTu>(i, trans);
+                    });
+                    listDuAnNguonVonPendingSave.ForEach(i =>
+                    {
+                        conn.Insert<VDT_DA_DuAn_NguonVon>(i, trans);
+                    });
+                    listDuAnHangMucPendingSave.ForEach(i =>
+                    {
+                        conn.Insert<VDT_DA_DuAn_HangMuc>(i, trans);
+                    });
+                    listCTDT_DMHangMuc_PendingSave.ForEach(i =>
+                    {
+                        conn.Insert<VDT_DA_ChuTruongDauTu_DM_HangMuc>(i, trans);
+                    });
+                    listCTDTNguonVonPendingSave.ForEach(i =>
+                    {
+                        conn.Insert<VDT_DA_ChuTruongDauTu_NguonVon>(i, trans);
+                    });
+                    listCTDTHangMucPendingSave.ForEach(i =>
+                    {
+                        conn.Insert<VDT_DA_ChuTruongDauTu_HangMuc>(i, trans);
+                    });
+                    trans.Commit();
+                }
+            }
+            catch(Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+        }
+
         [HttpPost]
         public ActionResult SaveImport(SheetEditViewModel vm)
         {
@@ -1656,6 +2013,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                         trans.Commit();
                     }
 
+                    SaveAllListPendingSave(data.iID_DonViQuanLyID);
 
                     // lưu giá trị các dòng chi tiết của kế hoạch 5 năm
                     var rows = vm.Rows.ToList();
@@ -1689,7 +2047,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                                         //donvi = _iNganSachService.GetDonViById(PhienLamViec.iNamLamViec, sMaDonVi);
                                         if (!String.IsNullOrEmpty(sMaDonVi))
                                         {
-                                            donvi = _iNganSachService.GetDonViThucHienDuAnByID(sMaDonVi);
+                                            donvi = _danhMucService.GetDonViThucHienDuAn(sMaDonVi);
                                         }
                                         else
                                         {
@@ -1701,7 +2059,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                                         sMaLoaiCongTrinh = r.Columns["sMaLoaiCongTrinh"];
                                         if (!String.IsNullOrEmpty(sMaLoaiCongTrinh))
                                         {
-                                            congtrinh = _iQLVonDauTuService.GetDMLoaiCongTrinhById(Guid.Parse(sMaLoaiCongTrinh));
+                                            congtrinh = _iQLVonDauTuService.GetDMLoaiCongTrinhByMa(sMaLoaiCongTrinh);
                                         }
                                         else
                                         {
@@ -1740,6 +2098,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                                     {
                                         entityChiTiet.iID_DonViQuanLyID = ((VDT_KHV_KeHoach5Nam_DeXuat)TempData["VDT_KHV_KeHoach5Nam_DeXuat"]).iID_DonViQuanLyID;
                                         entityChiTiet.iID_MaDonVi = donvi?.iID_MaDonVi;
+                                        entityChiTiet.iID_DonViID = donvi?.iID_DonVi;
                                     }
                                     if (r.Columns.ContainsKey("sMaLoaiCongTrinh"))
                                     {
@@ -1767,8 +2126,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                                         VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet KH5NDXChiTiettCha = _iQLVonDauTuService.GetKH5NamDeXuatChiTietById(entityChiTiet.iID_ParentID);
                                         entityChiTiet.iIDReference = KH5NDXChiTiettCha.iIDReference;
                                     }
-                                    entityChiTiet.iID_DonViID = data.iID_DonViQuanLyID;
-                                    entityChiTiet.iID_MaDonVi = data.iID_MaDonViQuanLy;
+
                                     conn.Insert(entityChiTiet, trans);
                                     mapParentId.Add(iID_KeHoach5Nam_DeXuat_ChiTietID, entityChiTiet.iID_KeHoach5Nam_DeXuat_ChiTietID.ToString());
 
@@ -2047,7 +2405,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
         public FileResult DownloadImportExample()
         {
             byte[] fileBytes = System.IO.File.ReadAllBytes(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/KeHoachTrungHan/importExp.xlsx"));
-            string fileName = "FileImportExp.xls";
+            string fileName = "FileImportExp.xlsx";
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
         }
 

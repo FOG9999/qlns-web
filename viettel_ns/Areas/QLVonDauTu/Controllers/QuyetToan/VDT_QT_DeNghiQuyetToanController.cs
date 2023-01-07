@@ -159,7 +159,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             if(iIdDeNghiQuyetToanId != null && iIdDeNghiQuyetToanId != "")
             {
                 int loaiQuyetToan = _vdtService.GetLoaiQuyetToan_byDeNghiQtId(Guid.Parse(iIdDeNghiQuyetToanId));
-                result.Add(new { id = loaiQuyetToan, text = (loaiQuyetToan == 1 ? "Theo hạng muc" : "Theo gói thầu") });
+                result.Add(new { id = loaiQuyetToan, text = (loaiQuyetToan == 1 ? "Theo hạng mục" : "Theo gói thầu") });
             }
 
             else
@@ -303,7 +303,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                 }
 
             }
-                var sumGiaTriQuyetToanAB = listChiPhi.Sum(x => x.fGiaTriQuyetToanAB).HasValue ? listChiPhi.Sum(x => x.fGiaTriQuyetToanAB).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
+            var sumGiaTriQuyetToanAB = listChiPhi.Sum(x => x.fGiaTriQuyetToanAB).HasValue ? listChiPhi.Sum(x => x.fGiaTriQuyetToanAB).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
             var sumKetQuaKiemToan = listChiPhi.Sum(x => x.fGiaTriKiemToan).HasValue ? listChiPhi.Sum(x => x.fGiaTriKiemToan).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
             var sumCDTDeNghiQuyetToan = listChiPhi.Sum(x => x.fGiaTriDeNghiQuyetToan).HasValue ? listChiPhi.Sum(x => x.fGiaTriDeNghiQuyetToan).Value.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")) : "";
 
@@ -655,14 +655,16 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             double sumMLNSKeHoach = chiPhi.Sum(n => n.KeHoach) / (Double)(dataNhap.fDonViTinh);
             double sumMLNSDaThanhToan = chiPhi.Sum(n => n.DaThanhToan) / (Double)(dataNhap.fDonViTinh);
 
-            double taiSanDaiHan = (denghiItem.fTaiSanDaiHanDonViKhacQuanLy.HasValue ? denghiItem.fTaiSanDaiHanDonViKhacQuanLy.Value : 0) +
-                        (denghiItem.fTaiSanDaiHanThuocCDTQuanLy.HasValue ? denghiItem.fTaiSanDaiHanThuocCDTQuanLy.Value : 0);
-            double taiSanNganHan = (denghiItem.fTaiSanNganHanDonViKhacQuanLy.HasValue ? denghiItem.fTaiSanNganHanDonViKhacQuanLy.Value : 0) +
-                (denghiItem.fTaiSanNganHanThuocCDTQuanLy.HasValue ? denghiItem.fTaiSanNganHanThuocCDTQuanLy.Value : 0);
+            double taiSanDaiHan = (denghiItem.fTaiSanDaiHanDonViKhacQuanLy.HasValue ? denghiItem.fTaiSanDaiHanDonViKhacQuanLy.Value / (Double)(dataNhap.fDonViTinh) : 0) +
+                        (denghiItem.fTaiSanDaiHanThuocCDTQuanLy.HasValue ? denghiItem.fTaiSanDaiHanThuocCDTQuanLy.Value / (Double)(dataNhap.fDonViTinh) : 0);
+            double taiSanNganHan = (denghiItem.fTaiSanNganHanDonViKhacQuanLy.HasValue ? denghiItem.fTaiSanNganHanDonViKhacQuanLy.Value / (Double)(dataNhap.fDonViTinh) : 0) +
+                (denghiItem.fTaiSanNganHanThuocCDTQuanLy.HasValue ? denghiItem.fTaiSanNganHanThuocCDTQuanLy.Value / (Double)(dataNhap.fDonViTinh) : 0);
 
             result.Select(n => { n.DieuChinhCuoi = n.DieuChinhCuoi / (Double)(dataNhap.fDonViTinh); n.KeHoach = n.KeHoach / (Double)(dataNhap.fDonViTinh); n.DaThanhToan = n.DaThanhToan / (Double)(dataNhap.fDonViTinh); return n; }).ToList();
             chiPhi.Select(n => { n.DieuChinhCuoi = n.DieuChinhCuoi / (Double)(dataNhap.fDonViTinh); n.KeHoach = n.KeHoach / (Double)(dataNhap.fDonViTinh); n.DaThanhToan = n.DaThanhToan / (Double)(dataNhap.fDonViTinh); return n; }).ToList();
-
+            TongMucDauTu = TongMucDauTu / (Double)(dataNhap.fDonViTinh);
+            denghiItem.fChiPhiThietHai = denghiItem.fChiPhiThietHai.HasValue ? denghiItem.fChiPhiThietHai.Value / (Double)(dataNhap.fDonViTinh) : 0;
+            denghiItem.fChiPhiKhongTaoNenTaiSan = denghiItem.fChiPhiKhongTaoNenTaiSan.HasValue ? denghiItem.fChiPhiKhongTaoNenTaiSan.Value / (Double)(dataNhap.fDonViTinh) : 0;
             XlsFile Result = new XlsFile(true);
             Result.Open(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/rptVDT_TongHopQuyetToanDuAnHoanThanh.xlsx"));
             FlexCelReport fr = new FlexCelReport();
@@ -694,7 +696,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             fr.SetValue("sumDaThanhToan", sumDaThanhToan);
             fr.SetValue("sumMLNSDieuChinhCuoi", sumMLNSDieuChinhCuoi);
             fr.SetValue("sumMLNSKeHoach", sumMLNSKeHoach);
-            fr.SetValue("TongMucDauTu", String.Concat(TongMucDauTu.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN"))," Đồng"));
+            fr.SetValue("TongMucDauTu", TongMucDauTu.ToString("##,#", CultureInfo.GetCultureInfo("vi-VN")));
             fr.SetValue("sumMLNSDaThanhToan", sumMLNSDaThanhToan);
             fr.UseChuKy(Username)
                  .UseChuKyForController(sControlName)
@@ -1136,8 +1138,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             var listNguonVon = new List<VDTDuToanNguonVonModel>();
             if (loai == 1)           //lay chi phi khac
             {
-                var fChiPhiThietHai = items.ToList()[5].Field<string>(5);
-                var fChiPhiKhongTaoNenTaiSan = items.ToList()[6].Field<string>(5);
+                var fChiPhiThietHai = items.ToList()[6].Field<string>(3);
+                var fChiPhiKhongTaoNenTaiSan = items.ToList()[7].Field<string>(3);
                 var e = new VDT_QT_DeNghiQuyetToanViewModel
                 {
                     fChiPhiThietHai = Convert.ToDouble(fChiPhiThietHai),

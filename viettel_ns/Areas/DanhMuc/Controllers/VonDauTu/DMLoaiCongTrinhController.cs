@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Viettel.Domain.DomainModel;
+using Viettel.Models.QLVonDauTu;
 using Viettel.Services;
 using VIETTEL.Areas.DanhMuc.Models;
 using VIETTEL.Controllers;
@@ -16,9 +17,12 @@ namespace VIETTEL.Areas.DanhMuc.Controllers
         // GET: DanhMuc/DMLoaiCongTrinh
         public ActionResult Index()
         {
-            var data = _aService.GetListLoaicongTrinhInPartial();
-            ViewBag.iTotalItem = data.Count();
-            return View();
+
+            DMLoaiCongTrinhViewModel vm = new DMLoaiCongTrinhViewModel();
+            vm._paging.CurrentPage = 1;
+            vm.Items = _aService.GetListLoaiCongTrinhByName(ref vm._paging);
+            return View(vm);
+
         }
 
         [HttpPost]
@@ -28,16 +32,18 @@ namespace VIETTEL.Areas.DanhMuc.Controllers
             ViewBag.iTotalItem = data.Count();
             return PartialView("_list");
         }
-        [HttpPost]
-        public JsonResult GetListLoaiCongTrinhInPartial(string sTenLoaiCongTrinh)
+        //[HttpPost]
+        //public JsonResult GetListLoaiCongTrinhInPartial(string sTenLoaiCongTrinh)
+        //{
+        //    var lstData = _aService.GetListLoaicongTrinhInPartial(sTenLoaiCongTrinh).ToList();
+        //    return Json(new { data = lstData }, JsonRequestBehavior.AllowGet);
+        //}
+        public ActionResult GetListLoaiCongTrinhByName(PagingInfo _paging, string sTenLoaiCongTrinh, string sTenVietTat, string sMaLoaiCongTrinh, int? iThuTu, string sMoTa)
         {
-            var lstData = _aService.GetListLoaicongTrinhInPartial(sTenLoaiCongTrinh).ToList();
-            return Json(new { data = lstData }, JsonRequestBehavior.AllowGet);
-        }
-        public JsonResult GetListLoaiCongTrinhByName(string sTenLoaiCongTrinh, string sTenVietTat, string sMaLoaiCongTrinh, int? iThuTu, string sMoTa)
-        {
-            var lstData = _aService.GetListLoaiCongTrinhByName(sTenLoaiCongTrinh, sTenVietTat, sMaLoaiCongTrinh, iThuTu, sMoTa).ToList();
-            return Json(new { data = lstData }, JsonRequestBehavior.AllowGet);
+            DMLoaiCongTrinhViewModel vm = new DMLoaiCongTrinhViewModel();
+            vm._paging = _paging;
+            vm.Items = _aService.GetListLoaiCongTrinhByName(ref vm._paging, sTenLoaiCongTrinh, sTenVietTat, sMaLoaiCongTrinh, iThuTu, sMoTa).ToList();
+            return PartialView("_list", vm);
         }
 
         [HttpPost]
@@ -155,7 +161,7 @@ namespace VIETTEL.Areas.DanhMuc.Controllers
                 return Json(new { bIsComplete = false, sMessError = "Xóa dữ liệu thất bại !" }, JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new { bIsComplete = true }, JsonRequestBehavior.AllowGet);
+            return Json(new { bIsComplete = true, sTenLoaiCongTrinh = model.sTenLoaiCongTrinh }, JsonRequestBehavior.AllowGet);
         }
     }
 }

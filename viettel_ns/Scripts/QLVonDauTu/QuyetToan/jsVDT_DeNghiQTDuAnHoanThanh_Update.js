@@ -278,7 +278,7 @@ function DrawTableChiPhiHangMuc(sumGiaTriQuyetToanAB, sumKetQuaKiemToan, sumCDTD
                     disabled = "disabled";
                 }
                 html += "<tr style='" + isBold+"' data-loai='2' data-id='" + itemHm.iID_HangMucID + "' data-parentid='" + itemHm.iID_ParentID + "' data-chiphi='" + itemHm.iID_DuAn_ChiPhi + "'>";
-                html += "<td class='stt'></td>";
+                html += "<td class='stt'>" + itemCp.iSTT + "-" + itemHm.smaOrder + "</td>";
                 html += "<td style='font-style: italic'>Hạng mục</td>";
                 html += "<td style='font-style: italic'>" + itemHm.sTenHangMuc + "</td>";
                 html += "<td class='text-right'>" + itemHm.sTienPheDuyet + "</td>";
@@ -592,7 +592,7 @@ function changeGiaTri(input) {
         sumGiaTriQuyetToanAB += x.fGiaTriQuyetToanAB;
         sumKetQuaKiemToan += x.fGiaTriKiemToan;
     });
-    document.getElementById("txtGiaTriQuyetToan").value = sumGiaTriDeNghiQuyetToan;
+    document.getElementById("txtGiaTriQuyetToan").value = FormatNumber(sumGiaTriDeNghiQuyetToan);
     $('*[data-id="' + "-1" + '"]').find('.txtTongGiaTriQuyetToanAB').html(FormatNumber(sumGiaTriQuyetToanAB));
     $('*[data-id="' + "-1" + '"]').find('.txtTongKetQuaKiemToan').html(FormatNumber(sumKetQuaKiemToan));
     $('*[data-id="' + "-1" + '"]').find('.txtTongCDTDeNghiQuyetToan').html(FormatNumber(sumGiaTriDeNghiQuyetToan));

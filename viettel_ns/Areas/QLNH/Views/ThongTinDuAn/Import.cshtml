@@ -14,26 +14,26 @@
     </div>
     <div class="form-group row mx-0">
         <div class="col-sm-12 divContainer">
-            <div style="width: 4440px; height: 450px;">
+            <div style="width: 4700px; height: 450px;">
                 <table class="table table-bordered tr-hover" id="tblThongTinDuAnListImport">
                     <thead>
                         <tr>
                             <th width="100">Trạng thái</th>
                             <th width="80">STT</th>
-                            <th width="260">Bộ quốc phòng</th>
+                            <th width="260">Số quyết định tổng thể TTCP</th>
+                            <th width="260">Chương trình</th>
                             <th width="260">B quản lý</th>
                             <th width="260">Đơn vị</th>
-                            <th width="260">Chương trình</th>
                             <th width="260">Mã dự án</th>
                             <th width="260">Tên dự án</th>
                             <th width="260">Số chủ trương đầu tư</th>
                             <th width="260">Ngày chủ trương đầu tư</th>
                             <th width="260">Số quyết định đầu tư</th>
                             <th width="250">Ngày quyết định đầu tư</th>
-                            <th width="250">Số dự toán</th>
-                            <th width="250">Ngày dự toán</th>
-                            <th width="260">Phân cấp phê duyệt</th>
+                            @*<th width="250">Số dự toán</th>
+                            <th width="250">Ngày dự toán</th>*@                            
                             <th width="260">Chủ đầu tư</th>
+                            <th width="260">Phân cấp phê duyệt</th>
                             <th width="260">Thời gian thực hiện từ</th>
                             <th width="250">Thời gian thực hiện đến</th>
                             <th width="280">Lỗi</th>
@@ -69,23 +69,19 @@
         align-items: center;
         position: relative;
     }
-
-        #modalThongTinDuAn #lblUpload i {
-            position: absolute;
-            right: 5px;
-        }
-
+    #modalThongTinDuAn #lblUpload i {
+        position: absolute;
+        right: 5px;
+    }
     #modalThongTinDuAn .mx-0 {
         margin-right: 0;
         margin-left: 0;
     }
-
     #modalThongTinDuAn .divContainer {
         overflow: auto;
         position: relative;
         padding: 0;
     }
-
     #modalThongTinDuAn ::-webkit-scrollbar {
         height: 5px !important;
     }

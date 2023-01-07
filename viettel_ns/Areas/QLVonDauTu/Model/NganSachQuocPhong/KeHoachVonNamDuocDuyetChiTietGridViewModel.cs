@@ -13,5 +13,6 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
         public int Filter { get; set; }
         public Dictionary<int, string> FilterOptions { get; set; }
         public VDT_KHV_KeHoachVonNam_DuocDuyet KHVonNamDuocDuyet { get; set; }
+        public bool isDetail { get; set; }
     }
 }

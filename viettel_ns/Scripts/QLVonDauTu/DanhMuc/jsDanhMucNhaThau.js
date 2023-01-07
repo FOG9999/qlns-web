@@ -29,7 +29,7 @@ $(document).ready(function () {
         CheckExitEmail(this);
     });
 
-      $("#txtEmail").keypress(function (event) {
+    $("#txtEmail").keypress(function (event) {
         CheckExitEmail(this);
     });
 
@@ -90,7 +90,7 @@ function GetListData(sMaNhaThau, sTenNhaThau, sDiaChi, sDaiDien, sChucVu, sDienT
         data: { _paging: _paging, sMaNhaThau: sMaNhaThau, sTenNhaThau: sTenNhaThau, sDiaChi: sDiaChi, sDaiDien: sDaiDien, sChucVu: sChucVu, sDienThoai: sDienThoai, sFax: sFax, sEmail: sEmail, sWebsite: sWebsite, sSoTaiKhoan: sSoTaiKhoan, sNganHang: sNganHang, sMaSoThue: sMaSoThue, sNguoiLienHe: sNguoiLienHe, sDienThoaiLienHe: sDienThoaiLienHe, sMaNganHang: sMaNganHang },
         success: function (data) {
             $("#lstDataView").html(data);
-            
+
             $("#txtMaNhaThau").val(sMaNhaThau);
             $("#txtTenNhaThau").val(sTenNhaThau);
             $("#txtDiaChi").val(sDiaChi);
@@ -155,11 +155,12 @@ function OpenModalDetail(id) {
     });
 }
 
-function DeleteItem(id) {
+function DeleteItem(id, sTenNhaThau) {
     var Title = 'Xác nhận xóa nhà thầu';
     var Messages = [];
     Messages.push('Bạn có chắc chắn muốn xóa?');
-    var FunctionName = "Delete('" + id + "')";
+    var FunctionName = "Delete('" + id + "','" + sTenNhaThau + "')";
+
     $.ajax({
         type: "POST",
         url: "/Modal/OpenModal",
@@ -170,13 +171,14 @@ function DeleteItem(id) {
     });
 }
 
-function Delete(id) {
+function Delete(id, sTenNhaThau) {
     $.ajax({
         type: "POST",
         url: "/QLVonDauTu/QLDMNhaThau/NhaThauDelete",
         data: { id: id },
         success: function (r) {
             if (r == "True") {
+                alert("Xoa bản ghi " + sTenNhaThau + " thành công.");
                 ChangePage();
             }
         }
@@ -208,10 +210,19 @@ function Save() {
     $.ajax({
         type: "POST",
         url: "/QLVonDauTu/QLDMNhaThau/NhaThauSave",
-        data: { data: data},
+        data: { data: data },
         success: function (r) {
             if (r.bIsComplete) {
+
+                if (data.iID_NhaThauID == undefined || data.iID_NhaThauID == null || data.iID_NhaThauID == GUID_EMPTY || data.iID_NhaThauID == "") {
+                    alert("Thêm mới bản ghi " + data.sTenNhaThau + " thành công.")
+
+                } else {
+                    alert("Cập nhật bản ghi " + data.sTenNhaThau + " thành công.")
+
+                }
                 window.location.href = "/QLVonDauTu/QLDMNhaThau";
+
             } else {
                 var Title = 'Lỗi lưu nhà thầu';
                 var messErr = [];

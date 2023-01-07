@@ -29,7 +29,7 @@
             @if (item.bActive == true)
             {
                 <button class="btn-edit"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true" onclick="GetItemKHVU('@item.iID_KeHoachUngID')"></i></button>
-                <button class="btn-delete"><i class="fa fa-trash-o fa-lg" aria-hidden="true" onclick="DeleteItemKHVU('@item.iID_KeHoachUngID')"></i></button>
+                <button class="btn-delete"><i class="fa fa-trash-o fa-lg" aria-hidden="true" onclick="DeleteItemKHVU('@item.iID_KeHoachUngID', '@item.sSoQuyetDinh')"></i></button>
                 <button type="button" class="btn-detail" onclick="BtnDieuChinh('@item.iID_KeHoachUngID', 'true')"><i class="fa fa-copy fa-lg" aria-hidden="true"></i></button>
             }
 

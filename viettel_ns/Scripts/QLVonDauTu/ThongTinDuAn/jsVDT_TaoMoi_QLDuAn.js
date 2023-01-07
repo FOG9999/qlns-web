@@ -61,14 +61,14 @@ $(document).ready(function ($) {
         ValidateInputFocusOut(event, this, 6);
     });
 
-    LoadListNguonVonByDuAn()
 });
 
 function LoadListNguonVonByDuAn() {
     var id = $("#iID_DuAnID").val();
+    if (id == GUID_EMPTY) return;
 
     $.ajax({
-        type: "POST",
+        type: "GET",
         url: "/QLDuAn/GetListNguonVonByDuAn",
         data: { id },
         success: function (result) {
@@ -189,7 +189,8 @@ function LuuDuAn() {
                         url: "/QLDuAn/TTQLDuAnSave",
                         data: { data: data },
                         success: function (r) {
-                            if (r == "True") {
+                            if (r.status == true) {
+                                alert(r.sMessage);
                                 window.location.href = "/QLVonDauTu/QLDuAn/Index";
                             }
                         }
@@ -306,6 +307,9 @@ function LoadDataComboBoxNguonNganSach() {
 
             if (data.data != null)
                 arr_NguonNganSach = data.data;
+        },
+        complete: function () {
+            LoadListNguonVonByDuAn();
         }
     });
 }

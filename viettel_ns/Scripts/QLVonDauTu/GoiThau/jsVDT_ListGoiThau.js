@@ -52,7 +52,8 @@ function Delete(id) {
         url: "/QLVonDauTu/QLThongTinGoiThau/Delete",
         data: { id: id },
         success: function (r) {
-            if (r == "True") {
+            if (r.bIsComplete == true) {
+                alert(r.sMessage);
                 SearchData();
             }
             else {
@@ -82,3 +83,37 @@ function xemChiTiet(id) {
     window.location.href = "/QLVonDauTu/QLThongTinGoiThau/Detail/" + id;
 }
 
+function OnExportExcel() {
+    var lstId = [];
+    $(".iIdExport:checked").each(function (index, item) {
+        lstId.push($(item).val());
+    });
+    if (lstId == null || lstId.length == 0) {
+        alert("Chưa chọn bản ghi nào để xuất excel !");
+        return;
+    }
+    $.ajax({
+        type: "POST",
+        url: "/QLVonDauTu/QLThongTinGoiThau/OnExport",
+        data: { ids: lstId },
+        success: function (data) {
+            if (data.status) {
+                window.open("/QLVonDauTu/QLThongTinGoiThau/ExportReport");
+            }
+            else {
+                var Title = 'Lỗi in báo cáo';
+                var messErr = [];
+                messErr.push(data.listErrMess);
+                $.ajax({
+                    type: "POST",
+                    url: "/Modal/OpenModal",
+                    data: { Title: Title, Messages: messErr, Category: ERROR },
+                    success: function (data) {
+                        $("#divModalConfirm").html(data);
+                    }
+                });
+                return false;
+            }
+        }
+    });
+}

@@ -176,6 +176,9 @@
                             <label for="dKetThucDuKien">Số tài khoản nhà thầu</label>
                             <input type="text" id="sStkNhaThau" class="form-control" value="" name="sStkNhaThau" maxlength="500" autocomplete="off" disabled />
                         </div>
+                        <div hidden>
+                            @Html.DropDownList("iID_NhaThauID_Temp", (SelectList)(ViewBag.ListNhaThau), new { @class = "form-control", @id = "iID_NhaThauID_Temp" })
+                        </div>
 
                     </div>
                     @*<div class="form-group row">
@@ -210,7 +213,7 @@
                                                     <th class="min-width-150">Giá trị</th>
                                                     <th class="min-width-150">Giá trị trúng thầu</th>
                                                     <th class="min-width-150">Giá trị hợp đồng</th>
-                                                    <th class="min-width-150">Giá trị còn lại</th>
+                                                    @*<th class="min-width-150">Giá trị còn lại</th>*@
                                                     <th class="min-width-150">Thao tác</th>
                                                     @*<th width="20%">Giá trị phê duyệt</th>*@
                                                 </tr>
@@ -236,7 +239,7 @@
                                                     <th width="10%">Chi phí</th>
                                                     <th width="15%">Giá trị được duyệt</th>
                                                     <th width="15%">Giá trị chi phí</th>
-                                                    <th width="15%">Giá trị còn lại</th>
+                                                    @*<th width="15%">Giá trị còn lại</th>*@
                                                     <th width="15%"></th>
                                                     @*<th width="20%">Giá trị phê duyệt</th>*@
                                                 </tr>
@@ -265,7 +268,7 @@
                                                     <th width="15%">Tên hạng mục</th>
                                                     <th width="15%">Giá trị được duyệt</th>
                                                     <th width="15%">Giá trị hạng mục</th>
-                                                    <th width="15%">Giá trị còn lại</th>
+                                                    @*<th width="15%">Giá trị còn lại</th>*@
                                                     @*<th width="20%">Giá trị phê duyệt</th>*@
                                                 </tr>
                                             </thead>

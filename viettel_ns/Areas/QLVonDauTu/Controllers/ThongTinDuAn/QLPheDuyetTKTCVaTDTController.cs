@@ -82,8 +82,15 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         [HttpPost]
         public JsonResult Xoa(string id)
         {
+            VDT_DA_DuToan_ViewModel entity = _qLVonDauTuService.GetPheDuyetTKTCvaTDTByID(Guid.Parse(id));
+            var sMessage = Constants.XOA_BAN_GHI;
+            if (entity != null)
+            {
+                sMessage = string.Format(sMessage, entity.sSoQuyetDinh);
+            }
+              
             bool xoa = _qLVonDauTuService.XoaQLPheDuyetTKTCvaTDT(Guid.Parse(id));
-            return Json(xoa, JsonRequestBehavior.AllowGet);
+            return Json(new {status = xoa, sMessage = sMessage}, JsonRequestBehavior.AllowGet);
         }
         #endregion
 
@@ -175,7 +182,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         {
             var iID_DuToanID = objDuToan.iID_DuToanID;
             var sMessage = string.Format("Thêm mới bản ghi {0} thành công", objDuToan.sSoQuyetDinh);
-            if (objDuToan.iID_DuToanID != null || objDuToan.iID_DuToanID != Guid.Empty)
+            if (objDuToan.iID_DuToanID != null && objDuToan.iID_DuToanID != Guid.Empty)
             {
                 if (bIsDieuChinh)
                 {
@@ -648,6 +655,15 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         {
             bool isExisted = _qLVonDauTuService.CheckExistSoQuyetDinhShare("sSoQuyetDinh", "VDT_DA_DuToan", checkVal);
             return Json(new { isExisted }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetTongGiaTriPheDuyetCungDuAn(Guid? iIdDuToanId, Guid? iID_DuAnID)
+        {   
+            if(iID_DuAnID == null || iIdDuToanId == null) return Json(new { status = false }, JsonRequestBehavior.AllowGet);
+            var listDuToanActiveByIdDuAn = _qLVonDauTuService.GetListDuToanActiveByIdDuAn(iIdDuToanId, iID_DuAnID);
+            if (listDuToanActiveByIdDuAn == null || listDuToanActiveByIdDuAn.Count() < 0) return Json(new { status = false }, JsonRequestBehavior.AllowGet);
+            var result = listDuToanActiveByIdDuAn.Sum(x => x.fTongDuToanPheDuyet);
+            return Json(new { status = true, data = result }, JsonRequestBehavior.AllowGet);
         }
     }
 }

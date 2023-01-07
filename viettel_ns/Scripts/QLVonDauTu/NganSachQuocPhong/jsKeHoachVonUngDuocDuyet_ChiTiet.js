@@ -29,6 +29,8 @@ function GetDataChiTietTable() {
         var obj = {};
         // var bIsDelete = $(this).hasClass("error-row");//
         obj.id = $(item).find("#idChiTiet").val();
+        obj.iID_LoaiCongTrinhID = $(item).find("#iID_LoaiCongTrinhID").val();
+        obj.iID_DuAn_HangMucID = $(item).find("#iID_DuAn_HangMucID").val();
         obj.iID_DuAnID = $(item).find(".txt_sTenDuAn").data("iid_duan");
         obj.sMaDuAn = $(item).find(".txt_sMaDuAn").text();
         obj.sTenDuAn = $(item).find(".txt_sTenDuAn").text();

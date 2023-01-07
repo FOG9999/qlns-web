@@ -80,11 +80,12 @@ function OpenModalDetail(id) {
     });
 }
 
-function DeleteItem(id) {
+function DeleteItem(id, sTenChiPhi) {
     var Title = 'Xác nhận xóa loại chi phí';
     var Messages = [];
     Messages.push('Bạn có chắc chắn muốn xóa?');
-    var FunctionName = "Delete('" + id + "')";
+    var FunctionName = "Delete('" + id + "','" + sTenChiPhi + "')";
+
     $.ajax({
         type: "POST",
         url: "/Modal/OpenModal",
@@ -95,13 +96,14 @@ function DeleteItem(id) {
     });
 }
 
-function Delete(id) {
+function Delete(id, sTenChiPhi) {
     $.ajax({
         type: "POST",
         url: "/QLVonDauTu/QLDMLoaiChiPhi/LoaiChiPhiDelete",
         data: { id: id },
         success: function (r) {
             if (r == "True") {
+                alert("Xoa bản ghi " + sTenChiPhi + " thành công.");
                 ChangePage();
             }
         }
@@ -127,9 +129,16 @@ function Save() {
         data: { data: data},
         success: function (r) {
             if (r.bIsComplete) {
+                if (data.iID_ChiPhi == undefined || data.iID_ChiPhi == null || data.iID_ChiPhi == GUID_EMPTY || data.iID_ChiPhi == "") {
+                    alert("Thêm mới bản ghi " + data.sTenChiPhi + " thành công.")
+
+                } else {
+                    alert("Cập nhật bản ghi " + data.sTenChiPhi + " thành công.")
+
+                }
                 window.location.href = "/QLVonDauTu/QLDMLoaiChiPhi";
             } else {
-                var Title = 'Lỗi lưu loại chi phí';
+                var Title = 'Lỗi lưu loại chi phí !';
                 var messErr = [];
                 messErr.push(r.sMessError);
                 $.ajax({

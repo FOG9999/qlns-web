@@ -44,17 +44,21 @@
 
             <div class="form-group row">
                 <div class="col-sm-6">
-                    <label for="iIdDuToanId" class="">Dự toán <span class="require">*</span></label>
-                    <select class="form-control" style="width:100%" id="iIdDuToanId"></select>
+                    <label for="txt_LoaiQuyetToan" class="">Loại quyết toán <span class="require">*</span></label>
+                    <select class="form-control" style="width:100%" id="txt_LoaiQuyetToan" name="loaiQuyetToan"></select>
                 </div>
                 <div class="col-sm-6">
-                    <label for="txt_ChuDauTu" class="">Chủ đầu tư</label>
-                    <input type="text" id="txt_ChuDauTu" class="form-control" autocomplete="off" disabled />
+                    <label for="iIdDuToanId" class="">Dự toán <span class="require">*</span></label>
+                    <select class="form-control" style="width:100%" id="iIdDuToanId"></select>
                 </div>
             </div>
 
             
             <div class="form-group row">
+                <div class="col-sm-6">
+                    <label for="txt_ChuDauTu" class="">Chủ đầu tư</label>
+                    <input type="text" id="txt_ChuDauTu" class="form-control" autocomplete="off" disabled />
+                </div>
                 <div class="col-sm-6">
                     <label for="txtThoiGianKhoiCong" class="">Thời gian khởi công</label>
                     <div class='input-group date'>
@@ -64,6 +68,8 @@
                         </span>
                     </div>
                 </div>
+            </div>
+            <div class="form-group row">
                 <div class="col-sm-6">
                     <label for="txtThoiGianHoanThanh" class="">Thời gian hoàn thành</label>
                     <div class='input-group date'>
@@ -73,12 +79,12 @@
                         </span>
                     </div>
                 </div>
-            </div>
-            <div class="form-group row">
                 <div class="col-sm-6">
                     <label for="txtGiaTriQuyetToan" class="">Giá trị quyết toán</label>
                     <input type="text" required id="txtGiaTriQuyetToan" class="form-control" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" />
                 </div>
+            </div>
+            <div class="form-group row">
                 <div class="col-sm-6">
                     <label for="txtGhiChu" class="">Ghi chú</label>
                     <input type="text" required id="txtGhiChu" class="form-control" />

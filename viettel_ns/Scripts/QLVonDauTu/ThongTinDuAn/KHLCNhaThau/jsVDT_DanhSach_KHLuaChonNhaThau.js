@@ -90,6 +90,7 @@ function Delete(id) {
         data: { id: id },
         success: function (r) {
             if (r.bIsComplete == true) {
+                alert(r.sMessage);
                 window.location.href = "/QLVonDauTu/KHLuaChonNhaThau";
             }
             else {

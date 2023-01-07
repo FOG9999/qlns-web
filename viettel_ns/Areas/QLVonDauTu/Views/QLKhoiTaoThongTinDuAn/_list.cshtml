@@ -13,9 +13,12 @@
     <button class="btn btn-info pull-right" style="margin-right:10px;" onclick="ResetChangePage()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
     @*<button class="btn btn-info pull-right" style="margin-right:10px; color:black !important" onclick="OpenModal(null, 'false', 'true');" data-toggle="modal" data-target="#modalKhoiTaoTTDA"><i class="fa fa-save" aria-hidden="true"></i>Tổng hợp</button>*@
     @*<button class="btn btn-default pull-right" style="margin-right:10px; color:black !important" onclick="ImportKhoiTaoTTDA();"><i class="fa fa-upload" aria-hidden="true"></i>Import</button>*@
+    <button class="btn btn-success pull-right" style="margin-right: 10px;" onclick="OnExportExcel()"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Xuất excel</button>
+    <button class="btn btn-warning pull-right" style="margin-right: 10px;" onclick="OnImport()"><i class="fa fa-upload" aria-hidden="true"></i>Import</button>
 </div>
 <table class="table table-bordered" id="tblListKhoiTaoTTDA">
     <thead class="header-search">
+    <th></th>
     <th width="10%"></th>
     <th width="10%"><input type="text" class="form-control gr_search" id="txtNamKhoiTao" maxlength="4" autocomplete="off" /></th>
     <th width="35%"><input type="text" class="form-control gr_search" id="txtDonViQL" autocomplete="off" /></th>
@@ -27,6 +30,7 @@
     <th width="25%"><button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
     </thead>
     <thead>
+    <th></th>
     <th width="10%">STT</th>
     <th width="10%">Năm khởi tạo</th>
     <th width="35%">Đơn vị quản lý</th>
@@ -40,7 +44,7 @@
             {
                 index++;
                 <tr style="cursor: pointer">
-
+                    <td><input type="checkbox" class="iIdExport" value="@item.iID_KhoiTaoID"></td>
                     <td align="center" onclick="ChiTietKhoiTaoTTDA('@item.iID_KhoiTaoID', '@item.iID_MaDonVi')">@(pageIndex + index)</td>
 
                     <td align="center" onclick="ChiTietKhoiTaoTTDA('@item.iID_KhoiTaoID', '@item.iID_MaDonVi')">@item.iNamKhoiTao</td>
@@ -97,4 +101,47 @@
             }
         });
     });
+
+    function OnImport() {
+        location.href = "/QLVonDauTu/QLKhoiTaoThongTinDuAn/Import";
+    }
+
+
+    function OnExportExcel() {
+        var lstId = [];
+        $(".iIdExport:checked").each(function (index, item) {
+            lstId.push($(item).val());
+        });
+        if (lstId == null || lstId.length == 0) {
+            alert("Chưa chọn bản ghi nào để xuất excel !");
+            return;
+        }
+
+        lstId.forEach(function (item) {
+            $.ajax({
+                type: "POST",
+                url: "/QLVonDauTu/QLKhoiTaoThongTinDuAn/OnExport",
+                data: { id: item },
+                success: function (data) {
+                    if (data.status) {
+                        window.open("/QLVonDauTu/QLKhoiTaoThongTinDuAn/ExportReport");
+                    }
+                    else {
+                        var Title = 'Lỗi in báo cáo';
+                        var messErr = [];
+                        messErr.push(data.listErrMess);
+                        $.ajax({
+                            type: "POST",
+                            url: "/Modal/OpenModal",
+                            data: { Title: Title, Messages: messErr, Category: ERROR },
+                            success: function (data) {
+                                $("#divModalConfirm").html(data);
+                            }
+                        });
+                        return false;
+                    }
+                }
+            });
+        })
+    }
 </script>

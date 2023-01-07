@@ -37,6 +37,7 @@
             <tr>
                 <th style="width:40px">1</th>
                 <th style="width:300px">2</th>
+                <th style="width:300px">Loại công trình</th>
                 <th style="width:150px">3</th>
                 <th style="width:150px">4</th>
                 <th style="width:150px">5</th>
@@ -64,9 +65,10 @@
             @foreach (var item in Model)
             {
                 { i = i + 1; }
-                <tr data-iIdDuAn="@item.iID_DuAnID">
+                <tr data-iIdDuAn="@item.iID_DuAnID" data-iIdLoaiCongTrinh="@item.iID_LoaiCongTrinh">
                     <td>@i</td>
                     <td>@item.sTenDuAn </td>
+                    <td>@item.STenLoaiCongTrinh </td>
                     <td class="fTongMucDauTu sotien" style="text-align:right">@item.fTongMucDauTu</td>
                     <td class="fLuyKeThanhToanNamTruoc sotien" style="text-align:right">@item.fLuyKeThanhToanNamTruoc</td>
                     <td class="fTamUngTheoCheDoChuaThuHoiNamTruoc sotien" style="text-align:right">@item.fTamUngTheoCheDoChuaThuHoiNamTruoc</td>

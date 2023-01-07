@@ -27,7 +27,7 @@ SELECT duan.iID_DuAnID as IdRow,
 				WHEN dv.iID_MaDonVi is null THEN ''
 				ELSE CONCAT(dv.iID_MaDonVi, ' - ', dv.sTen)
 			END
-		) as sDonVi,
+		) as sTenDonVi,
 		(
 			CASE
 				WHEN dmcdt.sId_CDT is null THEN ''

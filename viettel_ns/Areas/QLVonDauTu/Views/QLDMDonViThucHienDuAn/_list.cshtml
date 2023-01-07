@@ -48,7 +48,7 @@
                     <td align="center" style="vertical-align: middle !important" class="col-sm-12">
                         <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.iID_DonVi')" data-toggle="modal" data-target="#modalDonViTHDA"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
                         <button type="button" class="btn-edit" onclick="OpenModal('@item.iID_DonVi')" data-toggle="modal" data-target="#modalDonViTHDA"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
-                        <button type="button" class="btn-delete" onclick="DeleteItem('@item.iID_DonVi')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" onclick="DeleteItem('@item.iID_DonVi', '@item.sTenDonVi')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
                     </td>
                 </tr>
             }

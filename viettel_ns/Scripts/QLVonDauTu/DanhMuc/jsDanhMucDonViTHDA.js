@@ -77,11 +77,12 @@ function OpenModalDetail(id) {
     });
 }
 
-function DeleteItem(id) {
+function DeleteItem(id, sTenDonVi) {
     var Title = 'Xác nhận xóa đơn vị thực hiện dự án';
     var Messages = [];
     Messages.push('Bạn có chắc chắn muốn xóa?');
-    var FunctionName = "Delete('" + id + "')";
+    var FunctionName = "Delete('" + id + "','" + sTenDonVi + "')";
+
     $.ajax({
         type: "POST",
         url: "/Modal/OpenModal",
@@ -92,13 +93,14 @@ function DeleteItem(id) {
     });
 }
 
-function Delete(id) {
+function Delete(id, sTenDonVi) {
     $.ajax({
         type: "POST",
         url: "/QLVonDauTu/QLDMDonViThucHienDuAn/DonViThucHienDuAnDelete",
         data: { id: id },
         success: function (r) {
             if (r == "True") {
+                alert("Xoa bản ghi " + sTenDonVi + " thành công.");
                 ChangePage();
             }
         }
@@ -123,6 +125,13 @@ function Save() {
         data: { data: data},
         success: function (r) {
             if (r.bIsComplete) {
+                if (data.iID_DonVi == undefined || data.iID_DonVi == null || data.iID_DonVi == GUID_EMPTY || data.iID_DonVi == "") {
+                    alert("Thêm mới bản ghi " + data.sTenDonVi + " thành công.")
+
+                } else {
+                    alert("Cập nhật bản ghi " + data.sTenDonVi + " thành công.")
+
+                }
                 window.location.href = "/QLVonDauTu/QLDMDonViThucHienDuAn";
             } else {
                 var Title = 'Lỗi lưu nhà thầu';

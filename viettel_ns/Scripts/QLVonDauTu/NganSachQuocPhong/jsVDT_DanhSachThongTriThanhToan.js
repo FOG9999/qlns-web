@@ -85,7 +85,7 @@ function sua(id) {
     window.location.href = "/QLVonDauTu/QLThongTriThanhToan/Sua/" + id;
 }
 
-function xoa(id) {
+function xoa(id,sMaThongTri) {
     if (!confirm("Bạn có chắc chắn muốn xóa?")) return;
     $.ajax({
         type: "POST",
@@ -93,6 +93,7 @@ function xoa(id) {
         data: { id: id },
         success: function (r) {
             if (r == true) {
+                alert("Xóa bản ghi " + sMaThongTri + "thành công.");
                 ChangePage();
             }
         }

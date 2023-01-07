@@ -53,7 +53,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.TheoDoiChiTieuCapPhatDuAn
             fr.SetValue("iNamKeHoach", iNamLamViec);
             fr.AddTable("Items", lstData);
             fr.Run(Result);
-            return Print(Result, "xls", "rpt_BC_TheoDoiChiTieuCapPhatDuAn.xls");
+            return Print(Result, "xls", "rpt_BC_TheoDoiChiTieuCapPhatDuAn.xlsx");
         }
         #endregion
     }

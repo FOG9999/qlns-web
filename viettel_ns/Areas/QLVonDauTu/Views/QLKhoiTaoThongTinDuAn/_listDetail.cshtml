@@ -27,6 +27,7 @@
         <tr>
             <th rowspan="2" style="width:45px">STT</th>
             <th rowspan="2" style="width: 160px">Dự án</th>
+            <th rowspan="2" style="width: 160px">Loại công trình</th>
             <th rowspan="2" style="width: 160px">Nguồn vốn</th>
             <th rowspan="2" style="width:160px">Cơ quan thanh toán</th>
             <th colspan="4">Thuộc kế hoạch vốn năm</th>
@@ -66,7 +67,7 @@
                 {
                     selectedCQTC = "selected";
                 }
-                <tr style="cursor: pointer" data-id="@item.iID_KhoiTao_ChiTietID"  data-nguonvonid="@item.iID_NguonVonID" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')">
+                <tr style="cursor: pointer" data-id="@item.iID_KhoiTao_ChiTietID" data-nguonvonid="@item.iID_NguonVonID" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')">
                     <input type="hidden" class="iID" value="@item.iID_KhoiTao_ChiTietID" />
                     <td align="center">@(index)</td>
 
@@ -75,7 +76,11 @@
                     </td>
 
                     <td align="center">
-                        <select class="form-control cbxNguonVon"></select>
+                        @Html.DropDownList("iID_LoaiCongTrinh_" + item.STT, new SelectList(ViewBag.LoaiCongTrinh, "Value", "Text", item.iID_LoaiCongTrinh), new { @class = "form-control loaicongtrinh", @id = "iID_LoaiCongTrinh_" + item.STT })
+                    </td>
+
+                    <td align="center">
+                        @Html.DropDownList("iID_NguonVonID_" + item.STT, new SelectList(ViewBag.ListNguonVon, "Value", "Text", item.iID_NguonVonID), new { @class = "form-control cbxNguonVon", @id = "iID_NguonVonID_" + item.STT })
                     </td>
 
                     <td align="center">
@@ -86,23 +91,23 @@
                         </select>
                     </td>
 
-                    <td align="center"><input class="cs-input-ctktda vn-botrihetnamtruoc sotien" type="text" value="@item.fKHVN_VonBoTriHetNamTruoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')"/></td>
+                    <td align="center"><input class="cs-input-ctktda vn-botrihetnamtruoc sotien" type="text" value="@item.fKHVN_VonBoTriHetNamTruoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')" /></td>
 
-                    <td align="center"><input class="cs-input-ctktda fGiaTriLuyKeDaTTTN_VN vn-luykevondatt sotien" type="text" value="@item.fKHVN_LKVonDaThanhToanTuKhoiCongDenHetNamTruoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')" readonly/></td>
+                    <td align="center"><input class="cs-input-ctktda fGiaTriLuyKeDaTTTN_VN vn-luykevondatt sotien" type="text" value="@item.fKHVN_LKVonDaThanhToanTuKhoiCongDenHetNamTruoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')" readonly /></td>
 
-                    <td align="center"><input class="cs-input-ctktda fGiaTriTrongDoVTU_VN vn-trongdovontamung sotien" type="text" value="@item.fKHVN_TrongDoVonTamUngTheoCheDoChuaThuHoi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')" readonly/></td>
+                    <td align="center"><input class="cs-input-ctktda fGiaTriTrongDoVTU_VN vn-trongdovontamung sotien" type="text" value="@item.fKHVN_TrongDoVonTamUngTheoCheDoChuaThuHoi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')" readonly /></td>
 
-                    <td align="center"><input class="cs-input-ctktda vn-kehoachvonkeodai sotien" type="text" value="@item.fKHVN_KeHoachVonKeoDaiSangNam" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')"/></td>
+                    <td align="center"><input class="cs-input-ctktda vn-kehoachvonkeodai sotien" type="text" value="@item.fKHVN_KeHoachVonKeoDaiSangNam" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')" /></td>
 
-                    <td align="center"><input class="cs-input-ctktda ut-botrihetnamtruoc sotien" type="text" value="@item.fKHUT_VonBoTriHetNamTruoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')"/></td>
+                    <td align="center"><input class="cs-input-ctktda ut-botrihetnamtruoc sotien" type="text" value="@item.fKHUT_VonBoTriHetNamTruoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')" /></td>
 
-                    <td align="center"><input class="cs-input-ctktda fGiaTriLuyKeDaTTTN_VU ut-luykevondatt sotien" type="text" value="@item.fKHUT_LKVonDaThanhToanTuKhoiCongDenHetNamTruoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')" readonly/></td>
+                    <td align="center"><input class="cs-input-ctktda fGiaTriLuyKeDaTTTN_VU ut-luykevondatt sotien" type="text" value="@item.fKHUT_LKVonDaThanhToanTuKhoiCongDenHetNamTruoc" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')" readonly /></td>
 
-                    <td align="center"><input class="cs-input-ctktda fGiaTriTrongDoVTU_VU ut-trongdovontamung sotien" type="text" value="@item.fKHUT_TrongDoVonTamUngTheoCheDoChuaThuHoi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')" readonly/></td>
+                    <td align="center"><input class="cs-input-ctktda fGiaTriTrongDoVTU_VU ut-trongdovontamung sotien" type="text" value="@item.fKHUT_TrongDoVonTamUngTheoCheDoChuaThuHoi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')" readonly /></td>
 
-                    <td align="center"><input class="cs-input-ctktda ut-kehoachungtruoc sotien" type="text" value="@item.fKHUT_KeHoachUngTruocKeoDaiSangNam" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')"/></td>
+                    <td align="center"><input class="cs-input-ctktda ut-kehoachungtruoc sotien" type="text" value="@item.fKHUT_KeHoachUngTruocKeoDaiSangNam" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')" /></td>
 
-                    <td align="center"><input class="cs-input-ctktda ut-ungtruocchuathuhoi sotien" type="text" value="@item.fKHUT_KeHoachUngTruocChuaThuHoi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')"/></td>
+                    <td align="center"><input class="cs-input-ctktda ut-ungtruocchuathuhoi sotien" type="text" value="@item.fKHUT_KeHoachUngTruocChuaThuHoi" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" ondblclick="AddChiTietThanhToan('@item.iID_KhoiTao_ChiTietID', '@item.iID_DuAnID')" /></td>
 
                     <td align="center" style="vertical-align: middle !important" class="col-sm-12">
                         <button type="button" class="btn-delete" onclick="RemoveRowChiTiet(@item.STT, '@Model.iID_KhoiTaoID', '@Model.sMaDonVi')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>

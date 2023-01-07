@@ -397,7 +397,7 @@ function SaveData() {
         data: { data: data },
         success: function (r) {
             if (r.status) {
-                alert("Tạo mới thành công.");
+                alert("Thêm mới bản ghi " + data.sSoBaoCao +" thành công.");
                 window.location.href = "/QLVonDauTu/VDT_QT_DeNghiQuyetToan/Index";
             } else {
                 alert("Lỗi khi lưu.");

@@ -13,6 +13,7 @@
 
 <div>
     <input type="hidden" id="modelActive" value="@ViewBag.modelActive" />
+    <input type="hidden" id="iId_parent" value="@ViewBag.idParent" />
     <input type="hidden" id="iIdKeHoachDeXuatId" value="@Model.KHVonNamPhanBoVon_DonVi_PheDuyet.iID_VonNamDeXuatID" />
 </div>
 @Html.Partial("_SheetSearch_KHVPhanBoVonDVPheDuyet", Model.Sheet)
@@ -60,14 +61,81 @@
                 //        Bang_arrEdit[h][c] = active;
                 //    }
                 //}
-                for (c = 0; c < Bang_nC; c++) {
-                    if (4 < c && c < 9) {
-                        Bang_arrEdit[h][c] = true;
-                    } else {
-                        Bang_arrEdit[h][c] = false;
+                //for (c = 0; c < Bang_nC; c++) {
+                //    if (4 < c && c < 9) {
+                //        Bang_arrEdit[h][c] = true;
+                //    } else {
+                //        Bang_arrEdit[h][c] = false;
 
+                //    }
+                //}
+                var iID_parent = $("#iId_parent").val();
+                var GUID_EMPTY = '00000000-0000-0000-0000-000000000000';
+                var dataInputIndex = {
+                    sTenDuAnIndex: -1,
+                    sLoaiDuAnIndex: -1,
+                    sTenLoaiCongTrinhIndex: -1,
+                    sTenDonViIndex: -1,
+                    fGiaTriDeNghiIndex: -1,
+                    fGiaTriPhanBoIndex: -1,
+                    fGiaTriPhanBoDCIndex: -1,
+                    sGhiChuIndex: -1,
+                    iID_ParentIndex: -1,
+                }
+                for (c = 0; c < Bang_nC; c++) {
+                    var sKey = Bang_arrMaCot[c];
+
+                    if (sKey == "sTenDuAn") {
+                        dataInputIndex.sTenDuAnIndex = c;
+                    }
+                    else if (sKey == "sLoaiDuAn") {
+                        dataInputIndex.sLoaiDuAnIndex = c;
+                    }
+                    else if (sKey == "sTenLoaiCongTrinh") {
+                        dataInputIndex.sTenLoaiCongTrinhIndex = c;
+                    }
+                    else if (sKey == "sTenDonVi") {
+                        dataInputIndex.sTenDonViIndex = c;
+                    }
+                    else if (sKey == "fGiaTriDeNghi") {
+                        dataInputIndex.fGiaTriDeNghiIndex = c;
+                    }
+                    else if (sKey == "fGiaTriPhanBo") {
+                        dataInputIndex.fGiaTriPhanBoIndex = c;
+                    }
+                    else if (sKey == "fGiaTriPhanBoDC") {
+                        dataInputIndex.fGiaTriPhanBoDCIndex = c;
+                    }
+                    else if (sKey == "sGhiChu") {
+                        dataInputIndex.sGhiChuIndex = c;
+                    }
+                    else if (sKey == "iID_Parent") {
+                        dataInputIndex.iID_ParentIndex = c;
                     }
                 }
+                if (iID_parent != undefined && iID_parent != null && iID_parent != '' && iID_parent != GUID_EMPTY) {
+                    Bang_arrEdit[h][dataInputIndex["sTenDuAnIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["sLoaiDuAnIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["sTenLoaiCongTrinhIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["sTenDonViIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fGiaTriDeNghiIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fGiaTriPhanBoIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fGiaTriPhanBoDCIndex"]] = true;
+                    Bang_arrEdit[h][dataInputIndex["sGhiChuIndex"]] = true;
+                    Bang_arrEdit[h][dataInputIndex["iID_Parent"]] = false;
+
+                } else {
+                    Bang_arrEdit[h][dataInputIndex["sTenDuAnIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["sLoaiDuAnIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["sTenLoaiCongTrinhIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["sTenDonViIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fGiaTriDeNghiIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["fGiaTriPhanBoIndex"]] = true;
+                    Bang_arrEdit[h][dataInputIndex["fGiaTriPhanBoDCIndex"]] = false;
+                    Bang_arrEdit[h][dataInputIndex["sGhiChuIndex"]] = true;
+                    Bang_arrEdit[h][dataInputIndex["iID_Parent"]] = false;
+                }
+
             }
         }
     </script>

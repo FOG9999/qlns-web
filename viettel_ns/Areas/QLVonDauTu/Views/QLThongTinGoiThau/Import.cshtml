@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewBag.Title = "Import thông tin gói thầu";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+    <script src="~/Scripts/QLVonDauTu/ThongTinDuAn/jsVDT_DA_GoiThauImport.js"></script>
+}
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="tooltip-header-search">
+                    <div class="form-group">
+                        <div class="header-create-update">
+                            <span>
+                                @Html.Raw("Import thông tin gói thầu.")
+                            </span>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-5">
+                                <label for="txt_DonViQuanLy">Chọn file excel</label>
+                                @Helpers.Required()
+                                <input type="file" id="FileUpload" name="FileUpload" accept=".xlsx, .xls" />
+                                <p style="margin-top: 9px; font-size: 14px; font-style: italic">Vui lòng chọn tệp có định dạng xlsx, xls có dung lượng không quá 10MB</p>
+                            </div>
+                            <div class="col-sm-7">
+                                <button class="btn btn-info pull-right" style="margin-top: 28px;width:115px !important;" onclick="refreshImport();"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+                                <button class="btn btn-primary pull-right" style="margin-right:10px;margin-top: 28px;width:148px !important;" onclick="loadDataExcel();"><i class="fa fa-th" aria-hidden="true"></i>Kiểm tra</button>
+                            </div>
+                        </div>
+                        <div class="col-sm-12" style="display:flex;padding-left:0px;">
+                            <label class="control-label">Danh sách thông tin gói thầu.</label>
+                        </div>
+                    </div>
+                    <div style="width: 100%; height: 500px; overflow: scroll;">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Trạng thái</th>
+                                    <th>STT</th>
+                                    <th>Mã dự án</th>
+                                    <th>Số quyết định</th>
+                                    <th>Ngày quyết định</th>
+                                    <th>Tên gói thầu</th>
+                                    <th>Giá gói thầu</th>
+                                    <th>Thời gian thực hiện (Ngày)</th>
+                                    <th>Mã nhà thầu</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblImport">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="">
+                        <div id="nhapform">
+                            <div id="form2">
+                                <div class="button-bar">
+                                    <div class="text-center">
+                                        <button class="btn btn-default" onclick="goBack();" style="margin-right: 10px;"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                                        <button class="btn btn-primary btn-save" id="btnSave" onclick="OnSave();"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr id="hr-split" />
+                    <div id="ajax-div">
+                    </div>
+                    @* Modal confirm *@
+                    <div id="divModalConfirm">
+
+                    </div>
+                    @using (Html.BeginScripts())
+                    {
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

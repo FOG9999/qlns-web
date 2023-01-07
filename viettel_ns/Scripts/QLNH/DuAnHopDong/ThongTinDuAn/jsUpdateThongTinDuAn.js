@@ -5,97 +5,6 @@ var tbListChiphi = "tbListChiphi"
 var lstNgoaiUSD = [];
 var arr_DataTenChiPhi = [];
 
-$(document).ready(function () {
-    var isShowing = false;
-    $('.date').datepicker({
-        todayBtn: "linked",
-        keyboardNavigation: false,
-        forceParse: false,
-        autoclose: true,
-        language: 'vi',
-        todayHighlight: true,
-        format: "dd/mm/yyyy"
-    }).on('hide', () => {
-        isShowing = false;
-    }).on('show', () => {
-        isShowing = true;
-    });
-
-    $(".txtDate").keydown(function (event) {
-        ValidateInputKeydown(event, this, 3);
-    }).blur(function (event) {
-        setTimeout(() => {
-            if (!isShowing) ValidateInputFocusOut(event, this, 3);
-        }, 0);
-    });
-
-    LoadDataTenChiPhi();
-    if ($("#slbMaNgoaiTeKhac").val() != GUID_EMPTY) {
-        $("#iDTenNgoaiTeKhac").html($("#slbMaNgoaiTeKhac option:selected").html());
-    }
-    if ($("#slbTiGia").val() != GUID_EMPTY) {
-        var maGoc = $("#slbTiGia option:selected").data("mg");
-        if (maTienTe.indexOf(maGoc.toUpperCase()) >= 0) {
-            switch (maGoc.toUpperCase()) {
-                case "USD":
-                    $("input[name=HopDongVND]").prop("readonly", true);
-                    $("input[name=HopDongEUR]").prop("readonly", true);
-                    break;
-                case "VND":
-                    $("input[name=HopDongUSD]").prop("readonly", true);
-                    $("input[name=HopDongEUR]").prop("readonly", true);
-                    break;
-                case "EUR":
-                    $("input[name=HopDongUSD]").prop("readonly", true);
-                    $("input[name=HopDongVND]").prop("readonly", true);
-                    break;
-                default:
-                    break;
-            }
-            $("input[name=HopDongNgoaiTeKhac]").prop("readonly", true);
-        } else {
-            if ($("#slbMaNgoaiTeKhac").val() != GUID_EMPTY) {
-                $("input[name=HopDongUSD]").prop("readonly", true);
-                $("input[name=HopDongVND]").prop("readonly", true);
-                $("input[name=HopDongEUR]").prop("readonly", true);
-            }
-        }
-    }
-
-    $("#slbKHTongTheBQP").select2({
-        dropdownAutoWidth: true,
-        matcher: FilterInComboBox
-    });
-    $("#slbBQuanLy").select2({
-        dropdownAutoWidth: true,
-        matcher: FilterInComboBox
-    });
-    $("#slbDonVi").select2({
-        dropdownAutoWidth: true,
-        matcher: FilterInComboBox
-    });
-    $("#slbChuongTrinh").select2({
-        dropdownAutoWidth: true,
-        matcher: FilterInComboBox
-    });
-    $("#slbChuDauTu").select2({
-        dropdownAutoWidth: true,
-        matcher: FilterInComboBox
-    });
-    $("#slbPhanCapPheDuyet").select2({
-        dropdownAutoWidth: true,
-        matcher: FilterInComboBox
-    });
-    $("#slbTiGia").select2({
-        dropdownAutoWidth: true,
-        matcher: FilterInComboBox
-    });
-    $("#slbMaNgoaiTeKhac").select2({
-        dropdownAutoWidth: true,
-        matcher: FilterInComboBox
-    });
-});
-
 function LoadDataTenChiPhi() {
     $.ajax({
         async: false,
@@ -109,7 +18,6 @@ function LoadDataTenChiPhi() {
     });
 }
 
-//KhaiPD
 function ChangeChuongTrinhSelect() {
     var id = $("#slbKHTongTheBQP").val();
     $.ajax({
@@ -119,6 +27,11 @@ function ChangeChuongTrinhSelect() {
         success: function (data) {
             if (data) {
                 $("#slbChuongTrinh").empty().html(data.htmlChuongTrinh);
+                $("#slbBQuanLy").empty().html(data.htmlQuanLy);
+                $("#slbDonVi").empty().html(data.htmlDonVi);
+                $("#slbChuongTrinh").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbBQuanLy").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbDonVi").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
             }
         }
     });
@@ -132,6 +45,9 @@ function ChangeBQuanLySelect() {
         success: function (data) {
             if (data) {
                 $("#slbBQuanLy").empty().html(data.htmlQuanLy);
+                $("#slbDonVi").empty().html(data.htmlDonVi);
+                $("#slbBQuanLy").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbDonVi").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
             }
         }
     });
@@ -145,6 +61,7 @@ function ChangeDonViSelect() {
         success: function (data) {
             if (data) {
                 $("#slbDonVi").empty().html(data.htmlDonVi);
+                $("#slbDonVi").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
             }
         }
     });
@@ -152,53 +69,57 @@ function ChangeDonViSelect() {
 
 function ChangeBQPSelectImport(element) {
     var value = $(element).val();
-    let idelement = $(element).attr('id');
-    let index = idelement.replace('slbKHTongTheBQP', '');
-    let idElementDonVi = 'slbDonVi' + index;
+    let index = $(element).data('index');
     $.ajax({
         type: "POST",
-        url: "/QLNH/ThongTinDuAn/GetChuongTrinhTheoKHBQP",
+        url: "/QLNH/ThongTinDuAn/GetChuongTrinhTheoQDTongThe",
         data: { id: value },
         success: function (data) {
             if (data) {
-                $("#" + idElementDonVi).empty().html(data.htmlDV);
+                $("#slbChuongTrinh" + index).empty().html(data.htmlChuongTrinh);
+                $("#slbBQuanLy" + index).empty().html(data.htmlQuanLy);
+                $("#slbDonVi" + index).empty().html(data.htmlDonVi);
+                $("#slbChuongTrinh" + index).select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbBQuanLy" + index).select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbDonVi" + index).select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
             }
         }
     });
 }
 
-function ChangeDVSelectImport(element) {
+function ChangeChuongTrinhSelectImport(element) {
     var value = $(element).val();
-    let idelement = $(element).attr('id');
-    let index = idelement.replace('slbDonVi', '');
-    let idElementCT = 'slbChuongTrinh' + index;
-
+    let index = $(element).data('index');
     $.ajax({
         type: "POST",
-        url: "/QLNH/ThongTinDuAn/GetChuongTrinhTheoDV",
+        url: "/QLNH/ThongTinDuAn/GetBQuanLyTheoChuongTrinh",
         data: { id: value },
         success: function (data) {
             if (data) {
-                $("#" + idElementCT).empty().html(data.htmlCT);
+                $("#slbBQuanLy" + index).empty().html(data.htmlQuanLy);
+                $("#slbDonVi" + index).empty().html(data.htmlDonVi);
+                $("#slbBQuanLy" + index).select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbDonVi" + index).select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
             }
         }
     });
 }
 
-//function ChangeDVSelect() {
-//    var idBQP = $("#slbKHTongTheBQP").val();
-//    var id = $("#slbDonVi").val();
-//    $.ajax({
-//        type: "POST",
-//        url: "/QLNH/ThongTinDuAn/GetChuongTrinhTheoDV",
-//        data: { id: id, idBQP: idBQP},
-//        success: function (data) {
-//            if (data) {
-//                $("#slbChuongTrinh").empty().html(data.htmlCT);
-//            }
-//        }
-//    });
-//}
+function ChangeBQuanLySelectImport(element) {
+    var value = $(element).val();
+    let index = $(element).data('index');
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/ThongTinDuAn/GetDonViTheoBQuanLy",
+        data: { id: value },
+        success: function (data) {
+            if (data) {
+                $("#slbDonVi" + index).empty().html(data.htmlDonVi);
+                $("#slbDonVi" + index).select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+            }
+        }
+    });
+}
 
 function CreateHtmlSelectTenChiPhi(value) {
     var htmlOption = "<option value='" + GUID_EMPTY + "' selected>--Chọn chi phí--</option>";
@@ -274,21 +195,23 @@ function ThemMoi() {
     if (numberOfRow >= arr_DataTenChiPhi.length) {
         return;
     }
+    var idTiGia = $("#slbTiGia").val();
+    var maGocTiGia = $("#slbTiGia option:selected").data("mg");
     var dongMois = "";
     dongMois += "<tr style='cursor: pointer;' class='parent'>";
     dongMois += "<td class='text-center r_STT'><input type='hidden' name='ID' /></td>";
     dongMois += "<td class='text-center'>" + CreateHtmlSelectTenChiPhi() + "</td>";
-    dongMois += "<td class='text-center'><input name='HopDongUSD' type='text' class='form-control' onkeydown='ValidateInputKeydown(event, this, 2);' onblur='ChangeGiaTien(event, this, 2, 2);' /></td>";
-    dongMois += "<td class='text-center'><input name='HopDongVND' type='text' class='form-control' onkeydown='ValidateInputKeydown(event, this, 1);' onblur='ChangeGiaTien(event, this, 2, 0);' /></td>";
-    dongMois += "<td class='text-center'><input name='HopDongEUR' type='text' class='form-control' onkeydown='ValidateInputKeydown(event, this, 2);' onblur='ChangeGiaTien(event, this, 2, 2);' /></td>";
-    dongMois += "<td class='text-center'><input name='HopDongNgoaiTeKhac' type='text' class='form-control' onkeydown='ValidateInputKeydown(event, this, 2);' onblur='ChangeGiaTien(event, this, 2, 2);' /></td>";
+    dongMois += "<td class='text-center'><input name='HopDongUSD' type='text' class='form-control' onkeydown='ValidateInputKeydown(event, this, 2);' onblur='ChangeGiaTien(event, this, 2, 2);' " + (idTiGia != GUID_EMPTY && maGocTiGia.toUpperCase() != "USD" ? "readonly" : "") + "/></td>";
+    dongMois += "<td class='text-center'><input name='HopDongVND' type='text' class='form-control' onkeydown='ValidateInputKeydown(event, this, 1);' onblur='ChangeGiaTien(event, this, 2, 0);' " + (idTiGia != GUID_EMPTY && maGocTiGia.toUpperCase() != "VND" ? "readonly" : "") + "/></td>";
+    dongMois += "<td class='text-center'><input name='HopDongEUR' type='text' class='form-control' onkeydown='ValidateInputKeydown(event, this, 2);' onblur='ChangeGiaTien(event, this, 2, 2);' " + (idTiGia != GUID_EMPTY && maGocTiGia.toUpperCase() != "EUR" ? "readonly" : "") + "/></td>";
+    dongMois += "<td class='text-center'><input name='HopDongNgoaiTeKhac' type='text' class='form-control' onkeydown='ValidateInputKeydown(event, this, 2);' onblur='ChangeGiaTien(event, this, 2, 2);' " + (idTiGia != GUID_EMPTY && maTienTe.indexOf(maGocTiGia.toUpperCase()) >= 0 ? "readonly" : "") + "/></td>";
     dongMois += "<td align='center'><button class='btn-delete btn-icon' type='button' onclick='XoaDong(this);'><i class='fa fa-trash' aria-hidden='true'></i></button></td>";
     dongMois += "</tr>";
     $("#tbListChiphi tbody").append(dongMois);
     CapNhatCotSttTS();
 }
 
-function LoadDataViewChitiet(ID, state) {
+function LoadDataViewChitiet(ID) {
     $.ajax({
         type: "POST",
         url: "/QLNH/ThongTinDuAn/GetListChiPhiThongTinDuAn",
@@ -302,10 +225,10 @@ function LoadDataViewChitiet(ID, state) {
                     dongMoi += "<td class='text-center r_STT'>" + (i + 1) + "</td>";
                     dongMoi += "<td hidden><input type='hidden' name='ID' value='" + data[i].ID + "'></td>";
                     dongMoi += "<td class='text-center'>" + CreateHtmlSelectTenChiPhi(data[i].iID_ChiPhiID) + "</td>";
-                    dongMoi += "<td class='text-center'><input type='text' name='HopDongUSD' class='form-control' onkeydown='ValidateInputKeydown(event, this, 2);' onblur='ChangeGiaTien(event, this, 2, 2);' value='" + FormatNumber(data[i].fGiaTriUSD.toString().replace(",", "."), 2) + "' /></td>";
-                    dongMoi += "<td class='text-center'><input type='text' name='HopDongVND' class='form-control' onkeydown='ValidateInputKeydown(event, this, 1);' onblur='ChangeGiaTien(event, this, 2, 0);' value='" + FormatNumber(data[i].fGiaTriVND.toString().replace(",", "."), 0) + "' /></td>";
-                    dongMoi += "<td class='text-center'><input type='text' name='HopDongEUR' class='form-control' onkeydown='ValidateInputKeydown(event, this, 2);' onblur='ChangeGiaTien(event, this, 2, 2);' value='" + FormatNumber(data[i].fGiaTriEUR.toString().replace(",", "."), 2) + "' /></td>";
-                    dongMoi += "<td class='text-center'><input type='text' name='HopDongNgoaiTeKhac' class='form-control' onkeydown='ValidateInputKeydown(event, this, 2);' onblur='ChangeGiaTien(event, this, 2, 2);' value='" + FormatNumber(data[i].fGiaTriNgoaiTeKhac.toString().replace(",", "."), 2) + "' /></td>";
+                    dongMoi += "<td class='text-center'><input type='text' name='HopDongUSD' class='form-control' onkeydown='ValidateInputKeydown(event, this, 2);' onblur='ChangeGiaTien(event, this, 2, 2);' value='" + (data[i].fGiaTriUSD != null ? FormatNumber(data[i].fGiaTriUSD.toString().replace(",", "."), 2) : "") + "' /></td>";
+                    dongMoi += "<td class='text-center'><input type='text' name='HopDongVND' class='form-control' onkeydown='ValidateInputKeydown(event, this, 1);' onblur='ChangeGiaTien(event, this, 2, 0);' value='" + (data[i].fGiaTriVND != null ? FormatNumber(data[i].fGiaTriVND.toString().replace(",", "."), 0) : "") + "' /></td>";
+                    dongMoi += "<td class='text-center'><input type='text' name='HopDongEUR' class='form-control' onkeydown='ValidateInputKeydown(event, this, 2);' onblur='ChangeGiaTien(event, this, 2, 2);' value='" + (data[i].fGiaTriEUR != null ? FormatNumber(data[i].fGiaTriEUR.toString().replace(",", "."), 2) : "") + "' /></td>";
+                    dongMoi += "<td class='text-center'><input type='text' name='HopDongNgoaiTeKhac' class='form-control' onkeydown='ValidateInputKeydown(event, this, 2);' onblur='ChangeGiaTien(event, this, 2, 2);' value='" + (data[i].fGiaTriNgoaiTeKhac != null ? FormatNumber(data[i].fGiaTriNgoaiTeKhac.toString().replace(",", "."), 2) : "") + "' /></td>";
                     dongMoi += "<td class='text-center'><button class='btn-delete btn-icon' type='button' onclick='XoaDong(this)'><i class='fa fa-trash' aria-hidden='true'></i></button></td>";
                     dongMoi += "</tr>";
                     $("#tbListChiphi tbody").append(dongMoi);
@@ -333,7 +256,7 @@ function XoaDong(nutXoa) {
     var dongXoa = nutXoa.parentElement.parentElement;
     dongXoa.parentNode.removeChild(dongXoa);
     CapNhatCotSttTS();
-    ChangeGiaTien(nutXoa);
+    CalculateSum();
 }
 
 function ChangeGiaTien(event, element, type, num) {
@@ -343,7 +266,7 @@ function ChangeGiaTien(event, element, type, num) {
     if ($(element).prop("readonly")) return;//*neu o element chi doc thi return
     var idTiGia = $("#slbTiGia").val();
     var idNgoaiTeKhac = $("#slbMaNgoaiTeKhac").val();
-    var maNgoaiTeKhac = $("#slbMaNgoaiTeKhac option:selected").html();//* chon ma ntk option:selected
+    var maNgoaiTeKhac = $("#slbMaNgoaiTeKhac option:selected").data("tqd");//* chon ma ntk option:selected
     if (idTiGia == "" || idTiGia == GUID_EMPTY) {//* id rong hoac khong gt
         return;
     } else {
@@ -375,7 +298,7 @@ function ChangeGiaTien(event, element, type, num) {
     $("#btnHuyModal").prop("disabled", true);
 
     var giaTriTienData = {};//* khai bao var convert kieu du lieu giaTriTienData = {}object
-    giaTriTienData.sGiaTriUSD = UnFormatNumber($(dongHienTai).find("input[name=HopDongUSD]").val()); //gtusd khi nhan tu html chuyen tu dinh dang ve khong dinh dang  de thuc hien tinh toan voi ti gia
+    giaTriTienData.sGiaTriUSD = UnFormatNumber($(dongHienTai).find("input[name=HopDongUSD]").val());
     giaTriTienData.sGiaTriVND = UnFormatNumber($(dongHienTai).find("input[name=HopDongVND]").val());
     giaTriTienData.sGiaTriEUR = UnFormatNumber($(dongHienTai).find("input[name=HopDongEUR]").val());
     giaTriTienData.sGiaTriNgoaiTeKhac = UnFormatNumber($(dongHienTai).find("input[name=HopDongNgoaiTeKhac]").val());
@@ -412,41 +335,7 @@ function ChangeGiaTien(event, element, type, num) {
             }
         }
     });
-    let resultUSD = .00;
-    let resultVND = 0;
-    let resultEUR = .00;
-    let resultNTK = .00;
-
-    var lstNgoaiUSD = GetTableChiTiet();
-    if (arrHasValue(lstNgoaiUSD)) {
-        lstNgoaiUSD.forEach(x => {
-
-            resultUSD += parseFloat(UnFormatNumber(x.sGiaTriUSD == "" ? 0 : x.sGiaTriUSD));
-
-            resultVND += parseFloat(UnFormatNumber(x.sGiaTriVND == "" ? 0 : x.sGiaTriVND));
-
-            resultEUR += parseFloat(UnFormatNumber(x.sGiaTriEUR == "" ? 0 : x.sGiaTriEUR));
-
-            resultNTK += parseFloat(UnFormatNumber(x.sGiaTriNgoaiTeKhac == "" ? 0 : x.sGiaTriNgoaiTeKhac));
-        });
-    }
-    $("input[name=tmdt_USD]").val(FormatNumber(resultUSD, 2));
-    $("input[name=tmdt_VND]").val(FormatNumber(resultVND, 0));
-    $("input[name=tmdt_EUR]").val(FormatNumber(resultEUR, 2));
-    $("input[name=tmdt_NTK]").val(FormatNumber(resultNTK, 2));
-}
-
-function GetTableChiTiet() {
-    var lstNgoaiUSD = [];
-    $.each($("#tbListChiphi tbody tr"), function (_index, item) {
-        var obj = {};
-        obj.sGiaTriUSD = $(item).find("input[name=HopDongUSD]").val();
-        obj.sGiaTriVND = $(item).find("input[name=HopDongVND]").val();
-        obj.sGiaTriEUR = $(item).find("input[name=HopDongEUR]").val();
-        obj.sGiaTriNgoaiTeKhac = $(item).find("input[name=HopDongNgoaiTeKhac]").val();
-        lstNgoaiUSD.push(obj);
-    });
-    return lstNgoaiUSD;
+    CalculateSum();
 }
 
 function ChangeTiGiaSelect() {
@@ -529,27 +418,47 @@ function ChangeNgoaiTeKhacSelect() {
     $("input[name=HopDongNgoaiTeKhac]").prop("readonly", true);
     $("#btnLuuModal").prop("disabled", true);
     $("#btnHuyModal").prop("disabled", true);
-    var giaTriTienData = {};
+    //var giaTriTienData = {};
     //giaTriTienData.sGiaTriUSD = UnFormatNumber($("input[name=HopDongUSD]").val());
     //giaTriTienData.sGiaTriVND = UnFormatNumber($("input[name=HopDongVND]").val());
     //giaTriTienData.sGiaTriEUR = UnFormatNumber($("input[name=HopDongEUR]").val());
     //giaTriTienData.sGiaTriNgoaiTeKhac = UnFormatNumber($("input[name=HopDongNgoaiTeKhac]").val());
+
+    var tienChiPhiList = GetTableChiTiet();
+
     $.ajax({
         type: "POST",
         url: "/QLNH/ThongTinDuAn/ChangeTiGiaNgoaiTeKhac",
-        data: { idTiGia: idTiGia, idNgoaiTeKhac: idNgoaiTeKhac, maNgoaiTeKhac: maNgoaiTeKhac, giaTriTienData: giaTriTienData },
+        //data: { idTiGia: idTiGia, idNgoaiTeKhac: idNgoaiTeKhac, maNgoaiTeKhac: maNgoaiTeKhac, giaTriTienData: giaTriTienData, tienChiPhiList: tienChiPhiList },
+        data: { idTiGia: idTiGia, idNgoaiTeKhac: idNgoaiTeKhac, maNgoaiTeKhac: maNgoaiTeKhac, tienChiPhiList: tienChiPhiList },
         success: function (data) {
             $("input[name=HopDongNgoaiTeKhac]").prop("readonly", false);
             $("#btnLuuModal").prop("disabled", false);
             $("#btnHuyModal").prop("disabled", false);
             if (data && data.bIsComplete) {
-                if (data.isChangeInputNgoaiTe) $("input[name=HopDongNgoaiTeKhac]").val(data.sGiaTriNTKhac);
+                if (data.isChangeInputNgoaiTe) {
+                    //$("input[name=HopDongNgoaiTeKhac]").val(data.sGiaTriNTKhac);
+                    $.each($("#tbListChiphi tbody tr"), function (index, item) {
+                        $(item).find("input[name=HopDongNgoaiTeKhac]").val(data.tienChiPhiList.filter(x => x.index == index)[0].sGiaTriNgoaiTeKhac);
+                    });
+                }
                 $("input[name=HopDongNgoaiTeKhac]").prop("readonly", data.isReadonlyTxtMaNTKhac);
                 if (data.isChangeInputCommon) {
-                    $("input[name=HopDongUSD]").val(data.sGiaTriUSD).prop("readonly", true);
-                    $("input[name=HopDongVND]").val(data.sGiaTriVND).prop("readonly", true);
-                    $("input[name=HopDongEUR]").val(data.sGiaTriEUR).prop("readonly", true);
+                    //$("input[name=HopDongUSD]").val(data.sGiaTriUSD).prop("readonly", true);
+                    //$("input[name=HopDongVND]").val(data.sGiaTriVND).prop("readonly", true);
+                    //$("input[name=HopDongEUR]").val(data.sGiaTriEUR).prop("readonly", true);
+
+                    $("input[name=HopDongUSD]").prop("readonly", true);
+                    $("input[name=HopDongVND]").prop("readonly", true);
+                    $("input[name=HopDongEUR]").prop("readonly", true);
+
+                    $.each($("#tbListChiphi tbody tr"), function (index, item) {
+                        $(item).find("input[name=HopDongUSD]").val(data.tienChiPhiList.filter(x => x.index == index)[0].sGiaTriUSD);
+                        $(item).find("input[name=HopDongVND]").val(data.tienChiPhiList.filter(x => x.index == index)[0].sGiaTriVND);
+                        $(item).find("input[name=HopDongEUR]").val(data.tienChiPhiList.filter(x => x.index == index)[0].sGiaTriEUR);
+                    });
                 }
+                CalculateSum();
                 $("#tienTeQuyDoiID").empty().html(data.htmlTienTe);
             } else {
                 var Title = 'Lỗi tính giá trị ngoại tệ khác thông tin dự án';
@@ -566,4 +475,39 @@ function ChangeNgoaiTeKhacSelect() {
             }
         }
     });
+}
+
+function CalculateSum() {
+    let resultUSD = .00;
+    let resultVND = 0;
+    let resultEUR = .00;
+    let resultNTK = .00;
+
+    var tienChiPhiList = GetTableChiTiet();
+    if (arrHasValue(tienChiPhiList)) {
+        tienChiPhiList.forEach(x => {
+            resultUSD += parseFloat(x.sGiaTriUSD == "" ? 0 : x.sGiaTriUSD);
+            resultVND += parseFloat(x.sGiaTriVND == "" ? 0 : x.sGiaTriVND);
+            resultEUR += parseFloat(x.sGiaTriEUR == "" ? 0 : x.sGiaTriEUR);
+            resultNTK += parseFloat(x.sGiaTriNgoaiTeKhac == "" ? 0 : x.sGiaTriNgoaiTeKhac);
+        });
+    }
+    $("input[name=tmdt_USD]").val(FormatNumber(resultUSD, 2));
+    $("input[name=tmdt_VND]").val(FormatNumber(resultVND, 0));
+    $("input[name=tmdt_EUR]").val(FormatNumber(resultEUR, 2));
+    $("input[name=tmdt_NTK]").val(FormatNumber(resultNTK, 2));
+}
+
+function GetTableChiTiet() {
+    var tienChiPhiList = [];
+    $.each($("#tbListChiphi tbody tr"), function (index, item) {
+        var obj = {};
+        obj.index = index;
+        obj.sGiaTriUSD = UnFormatNumber($(item).find("input[name=HopDongUSD]").val());
+        obj.sGiaTriVND = UnFormatNumber($(item).find("input[name=HopDongVND]").val());
+        obj.sGiaTriEUR = UnFormatNumber($(item).find("input[name=HopDongEUR]").val());
+        obj.sGiaTriNgoaiTeKhac = UnFormatNumber($(item).find("input[name=HopDongNgoaiTeKhac]").val());
+        tienChiPhiList.push(obj);
+    });
+    return tienChiPhiList;
 }

@@ -358,14 +358,11 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     new SheetColumn(columnName: "iGiaiDoanTu", header: "Thời gian từ", columnWidth:100, align: "center", hasSearch: true, isReadonly: false, dataType: 3),
                     new SheetColumn(columnName: "iGiaiDoanDen", header: "Thời gian đến", columnWidth:100, align: "center", hasSearch: true, isReadonly: false, dataType: 3),
                     new SheetColumn(columnName: "sTenLoaiCongTrinh", header: "Loại công trình", columnWidth:200, align: "left", hasSearch: false, dataType: 3, isReadonly: false),
-
                     new SheetColumn(columnName: "sTenNganSach", header: "Nguồn vốn", headerGroup: "HẠN MỨC ĐẦU TƯ ĐỀ NGHỊ", headerGroupIndex: 2, columnWidth:120, dataType: 3, isReadonly: false),
-                    new SheetColumn(columnName: "fHanMucDauTu", header: "Hạn mức đầu tư", headerGroup: "HẠN MỨC ĐẦU TƯ ĐỀ NGHỊ", headerGroupIndex: 2, columnWidth:120, dataType: 1, isReadonly: false),
-                    
+                    new SheetColumn(columnName: "fHanMucDauTu", header: "Hạn mức đầu tư", headerGroup: "HẠN MỨC ĐẦU TƯ ĐỀ NGHỊ", headerGroupIndex: 2, columnWidth:120, dataType: 1, isReadonly: false),                  
                     new SheetColumn(columnName: "fLuyKeNSQPDaBoTri", header: cNameLuyKeVon, columnWidth:120, dataType: 1, isReadonly: false, isHidden: isHiddenCt),
                     new SheetColumn(columnName: "fLuyKeNSQPDeNghiBoTri", header: cNameVonBoTriNam, columnWidth:120, dataType: 1, isReadonly: false, isHidden: isHiddenCt),
                     new SheetColumn(columnName: "fTongSoNhuCauNSQP", header: "Tổng số nhu cầu NSQP", columnWidth:170, align: "left", hasSearch: false, dataType: 1, isReadonly: true, isHidden: !isHiddenCt),
-
                     new SheetColumn(columnName: "fTongSo", header: "Tổng số", headerGroup: headerGroup, headerGroupIndex: indexGroupHeader, columnWidth:120, dataType: 1, isReadonly: true),
                     new SheetColumn(columnName: "fGiaTriNamThuNhat", header: cNameNam1, headerGroup: headerGroup, headerGroupIndex: 11, columnWidth:120, dataType: 1, isReadonly: false),
                     new SheetColumn(columnName: "fGiaTriNamThuNhatDc", header: cNameNam1AfterModified, headerGroup: headerGroup, headerGroupIndex: 11, columnWidth:120, dataType: 1, isReadonly: false, isHidden: isHiddenDc),
@@ -377,30 +374,22 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     new SheetColumn(columnName: "fGiaTriNamThuTuDc", header: cNameNam4AfterModified, headerGroup: headerGroup, headerGroupIndex: 11, columnWidth:120, dataType: 1, isReadonly: false, isHidden: isHiddenDc),
                     new SheetColumn(columnName: "fGiaTriNamThuNam", header: cNameNam5, headerGroup: headerGroup, headerGroupIndex: 11, columnWidth:120, dataType: 1, isReadonly: false),
                     new SheetColumn(columnName: "fGiaTriNamThuNamDc", header: cNameNam5AfterModified, headerGroup: headerGroup, headerGroupIndex: 11, columnWidth:120, dataType: 1, isReadonly: false, isHidden: isHiddenDc),
-
                     new SheetColumn(columnName: "fGiaTriBoTri", header: cNameVonBoTri, columnWidth:170, align: "left", hasSearch: false, dataType: 1, isReadonly: true, isHidden: !isHiddenCt),
                     new SheetColumn(columnName: "fGiaTriBoTriDc", header: cNameVonBoTriModified, columnWidth:170, align: "left", hasSearch: false, dataType: 1, isReadonly: true, isHidden: isHiddenDc),
-
                     //Add Col mo moi
                     new SheetColumn(columnName: "fHanmucNganhDX", header: cHanMucDauTuCongTrinhMoMoi, headerGroup: cNganhDeNghi, headerGroupIndex: 4, columnWidth:120, dataType: 1, isReadonly: false,isHidden:!isHiddenCt),
                     new SheetColumn(columnName: "fTongVonBoTriNganh", header: cTongVonBoTri, headerGroup: cNganhDeNghi, headerGroupIndex: 4, columnWidth:120, dataType: 1, isReadonly: true,isHidden:!isHiddenCt),
                     new SheetColumn(columnName: "fVon5namNganhDX", header: cVonBoTriNam, headerGroup: cNganhDeNghi, headerGroupIndex: 4, columnWidth:120, dataType: 1, isReadonly: false,isHidden:!isHiddenCt),
-                    new SheetColumn(columnName: "fVonsaunamNganhDX", header: cVonBoTriSauNam, headerGroup: cNganhDeNghi, headerGroupIndex: 4, columnWidth:120, dataType: 1, isReadonly: false,isHidden:!isHiddenCt),
-                    
+                    new SheetColumn(columnName: "fVonsaunamNganhDX", header: cVonBoTriSauNam, headerGroup: cNganhDeNghi, headerGroupIndex: 4, columnWidth:120, dataType: 1, isReadonly: false,isHidden:!isHiddenCt),                   
                     new SheetColumn(columnName: "fHanmucCucTCDX", header: "Hạn mức đầu tư NSQP công trình mở mới", headerGroup: cCucTaiChinhDeXuat, headerGroupIndex: 5, columnWidth:120, dataType: 1, isReadonly: false,isHidden:!isHiddenCt),
                     new SheetColumn(columnName: "fTongVonBoTriCuc", header: cTongVonBoTri, headerGroup: cCucTaiChinhDeXuat, headerGroupIndex: 5, columnWidth:120, dataType: 1, isReadonly: true,isHidden:!isHiddenCt),
                     new SheetColumn(columnName: "fVon5namCTCDX", header: cVonBoTriNam, headerGroup: cCucTaiChinhDeXuat, headerGroupIndex: 5, columnWidth:120, dataType: 1, isReadonly: false,isHidden:!isHiddenCt),
                     new SheetColumn(columnName: "fVonnamthunhatCTC", header: cRiengNamN, headerGroup: cCucTaiChinhDeXuat, headerGroupIndex: 5, columnWidth:120, dataType: 1, isReadonly: false,isHidden:!isHiddenCt),
                     new SheetColumn(columnName: "fVonsaunamCTCDexuat", header: cVonBoTriSauNam, headerGroup: cCucTaiChinhDeXuat, headerGroupIndex: 5, columnWidth:120, dataType: 1, isReadonly: false,isHidden:!isHiddenCt),
-
                     //Add Col mo moi
                     new SheetColumn(columnName: "fCucTCDeXuat", header: fCucTCDeXuat, columnWidth:120, dataType: 1, isReadonly: false,isHidden:isHiddenCt),
                     new SheetColumn(columnName: "fDuKienBoTriNamThu2", header: cDuKienBoTriNamThu2, columnWidth:120, dataType: 1, isReadonly: false,isHidden:isHiddenCt),
-
-
-
-                    new SheetColumn(columnName: "sGhiChu", header: "Ghi chú", columnWidth:250, align: "left", hasSearch: false, dataType: 0, isReadonly: false),
-                    
+                    new SheetColumn(columnName: "sGhiChu", header: "Ghi chú", columnWidth:250, align: "left", hasSearch: false, dataType: 0, isReadonly: false),                  
                     // cot khac
                     new SheetColumn(columnName: "sDuAnCha", header: "Group - Dự án - Chi tiết cha", columnWidth:200, align: "left", hasSearch: false, dataType: 3, isReadonly: false, isHidden: true),
                     new SheetColumn(columnName: "iID_KeHoach5Nam_DeXuat_ChiTietID", isHidden: true),

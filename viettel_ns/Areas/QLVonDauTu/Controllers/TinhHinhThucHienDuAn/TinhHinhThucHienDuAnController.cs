@@ -3,6 +3,7 @@ using FlexCel.Report;
 using FlexCel.XlsAdapter;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,10 @@ using System.Web.Mvc;
 using Viettel.Domain.DomainModel;
 using Viettel.Models.QLVonDauTu;
 using Viettel.Services;
+using VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong;
+using VIETTEL.Areas.z.Models;
 using VIETTEL.Controllers;
+using VIETTEL.Helpers;
 
 namespace VIETTEL.Areas.QLVonDauTu.Controllers.TinhHinhThucHienDuAn
 {

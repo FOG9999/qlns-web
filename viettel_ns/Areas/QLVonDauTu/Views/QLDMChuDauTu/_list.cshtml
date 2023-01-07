@@ -56,7 +56,7 @@
                     <td align="center" style="vertical-align: middle !important" class="col-sm-12">
                         <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.ID')" data-toggle="modal" data-target="#modalChuDauTu"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
                         <button type="button" class="btn-edit" onclick="OpenModal('@item.ID')" data-toggle="modal" data-target="#modalChuDauTu"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
-                        <button type="button" class="btn-delete" onclick="DeleteItem('@item.ID')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" onclick="DeleteItem('@item.ID', '@item.sTenCDT')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
                     </td>
                 </tr>
             }

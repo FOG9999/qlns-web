@@ -90,9 +90,17 @@ SELECT
 	tree.sTen,
 	tree.iIDReference,
 	tree.sDiaDiem,
-	tree.iGiaiDoanTu,
-	tree.iGiaiDoanDen,
-	tree.iID_ParentID,
+	-- Không hiển thị cho nhóm dự án
+	case 
+		when tree.iLevel = 1 then ''
+		else cast(tree.iGiaiDoanTu  as nvarchar(max))
+	end iGiaiDoanTu,
+	-- Không hiển thị cho nhóm dự án
+	case 
+		when tree.iLevel = 1 then ''
+		else cast(tree.iGiaiDoanDen  as nvarchar(max))
+	end iGiaiDoanDen,
+	khvndx.iID_ParentID as iID_ParentID,
 	tree.sMaOrder,
 	tree.sSTT,
 	tree.iLevel,
@@ -136,8 +144,13 @@ SELECT
 	) as sTenNganSach,
 	(
 		CASE
-			WHEN dv.iID_Ma is null THEN ''
-			ELSE CONCAT(dv.iID_MaDonVi, ' - ', dv.sTen)
+			-- nhóm dự án k lưu đơn vị nào cả -> ''
+			--WHEN dv.iID_Ma is null and dvth.iID_MaDonVi is not null THEN CONCAT(dvth.iID_MaDonVi, ' - ', dvth.sTenDonVi)
+			--when dv.iID_Ma is null and dvth.iID_MaDonVi is null Then ''
+			--ELSE CONCAT(dv.iID_MaDonVi, ' - ', dv.sTen)
+
+			When tree.iLevel = 1 then ''
+			else CONCAT(dvth.iID_MaDonVi, ' - ', dvth.sTenDonVi)
 		END
 	) as sDonVi,
 	tbl_count_child.numChild,
@@ -162,10 +175,12 @@ LEFT JOIN (
 	GROUP BY iID_ParentID
 ) tbl_count_child on tree.iID_KeHoach5Nam_DeXuat_ChiTietID = tbl_count_child.iID_ParentID
 LEFT JOIN NS_DonVi dv on tree.iID_DonViID = dv.iID_Ma
+LEFT JOIN VDT_DM_DonViThucHienDuAn dvth on dvth.iID_DonVi = tree.iID_DonViID
 LEFT JOIN VDT_DM_LoaiCongTrinh lct on tree.iID_LoaiCongTrinhID = lct.iID_LoaiCongTrinh
 LEFT JOIN NS_NguonNganSach nns on tree.iID_NguonVonID = nns.iID_MaNguonNganSach
 LEFT JOIN VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet parent on tree.iID_ParentID = parent.iID_KeHoach5Nam_DeXuat_ChiTietID
 LEFT JOIN VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet khthdxctpr on tree.iID_ParentModified = khthdxctpr.iID_KeHoach5Nam_DeXuat_ChiTietID
+LEFT JOIN VDT_KHV_KeHoach5Nam_DeXuat khvndx on khvndx.iID_KeHoach5Nam_DeXuatID =tree.iID_KeHoach5Nam_DeXuatID
 where 1 = 1
 	and tree.iID_KeHoach5Nam_DeXuatID = @iId
 	and (@sTen is null or tree.sTen like @sTen)

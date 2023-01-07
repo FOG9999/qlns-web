@@ -1,0 +1,116 @@
+﻿
+@{
+    ViewBag.Title = "Import khởi tạo thông tin dự án.";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+    <script src="~/Scripts/QLVonDauTu/KhoiTao/jsVDT_KhoiTaoThongTinDuAnImport.js"></script>
+}
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="tooltip-header-search">
+                    <div class="form-group">
+                        <div class="header-create-update">
+                            <span>
+                                @Html.Raw("Import khởi tạo thông tin dự án.")
+                            </span>
+                        </div>
+                        <div class="form-group row">
+                            <div class="row" style="margin-right: 0px; margin-left: 0px;">
+                                <div class="col-sm-1">
+                                    <label for="drpDonViQuanLy" class="">Năm khởi tạo <span class="require">*</span></label>
+                                    <input type="number" class="form-control clearable" id="iNamKhoiTao" />
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="drpDonViQuanLy" class="">Đơn vị quản lý <span class="require">*</span></label>
+                                    @Html.DropDownList("drpDonViQuanLy", ViewBag.drpDonViQuanLy as List<SelectListItem>, new { @class = "form-control clearable" })
+                                </div>
+                                <div class="col-sm-2">
+                                    <label for="drpDonViQuanLy" class="">Ngày khởi tạo <span class="require">*</span></label>
+                                    <div class='input-group date'>
+                                        <input type="text" id="dNgayKhoiTao" autocomplete="off" class="form-control gr_search dateFormat startDate" placeholder="dd/MM/yyyy" />
+                                        <span class="btn-default input-group-addon">
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-5">
+                                <label for="txt_DonViQuanLy">Chọn file excel</label>
+                                @Helpers.Required()
+                                <input type="file" id="FileUpload" name="FileUpload" accept=".xlsx, .xls" />
+                                <p style="margin-top: 9px; font-size: 14px; font-style: italic">Vui lòng chọn tệp có định dạng xlsx, xls có dung lượng không quá 10MB</p>
+                            </div>
+                            <div class="col-sm-7">
+                                <button class="btn btn-info pull-right" style="margin-top: 28px;width:115px !important;" onclick="refreshImport();"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+                                <button class="btn btn-primary pull-right" style="margin-right:10px;margin-top: 28px;width:148px !important;" onclick="loadDataExcel();"><i class="fa fa-th" aria-hidden="true"></i>Kiểm tra</button>
+                            </div>
+                        </div>
+                        <div class="col-sm-12" style="display:flex;padding-left:0px;">
+                            <label class="control-label">Danh sách khởi tạo thông tin dự án.</label>
+                        </div>
+                    </div>
+                    <div style="width: 100%; height: 500px; overflow: scroll;">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2">Trạng thái</th>
+                                    <th rowspan="2">Mã dự án</th>
+                                    <th rowspan="2">Tên dự án</th>
+                                    <th rowspan="2">Mã loại công trình</th>
+                                    <th colspan="5">Kế hoạch vốn năm</th>
+                                    <th colspan="5">Kế hoạch ứng trước</th>
+                                </tr>
+                                <tr>
+                                    <th>Vốn bố trí hết năm trước</th>
+                                    <th>Lũy kế vốn đã thanh toán từ khởi công đến hết năm trước</th>
+                                    <th>Trong đó vốn tạm ứng theo chế độ chưa thu hồi</th>
+                                    <th>Lũy kế vốn tạm ứng theo chế độ chưa thu hồi  nộp điều chỉnh giảm đến hết năm trước </th>
+                                    <th>Kế hoạch vốn kéo dài sang năm</th>
+                                    <th>Vốn bố trí  hết năm trước</th>
+                                    <th>Lũy kế vốn đã thanh toán từ khởi công đến hết năm trước</th>
+                                    <th>Trong đó vốn tạm ứng theo chế độ chưa thu hồi</th>
+                                    <th>Kế hoạch ứng trước kéo dài sang năm</th>
+                                    <th>Kế hoạch ứng trc chưa thu hồi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblImport">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="">
+                        <div id="nhapform">
+                            <div id="form2">
+                                <div class="button-bar">
+                                    <div class="text-center">
+                                        <button class="btn btn-default" onclick="goBack();" style="margin-right: 10px;"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
+                                        <button class="btn btn-primary btn-save" id="btnSave" onclick="OnSave();"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr id="hr-split" />
+                    <div id="ajax-div">
+                    </div>
+                    @* Modal confirm *@
+                    <div id="divModalConfirm">
+
+                    </div>
+                    @using (Html.BeginScripts())
+                    {
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

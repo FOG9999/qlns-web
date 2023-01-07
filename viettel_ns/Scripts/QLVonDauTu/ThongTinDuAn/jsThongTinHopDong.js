@@ -92,13 +92,14 @@ function Xoa(id) {
     });
 }
 
-function XoaItem(id) {
+async function XoaItem(id) {
     $.ajax({
         type: "POST",
         url: "/QLVonDauTu/QLThongTinHopDong/Xoa",
         data: { id: id },
         success: function (r) {
-            if (r.status == true) {
+            if (r.status == true) {          
+                $("#divModalConfirm").hide();                
                 alert(r.sMessage)
                 ChangePage();
             }
@@ -114,6 +115,41 @@ function XoaItem(id) {
                         $("#divModalConfirm").html(data);
                     }
                 });
+            }
+        }
+    });
+}
+
+function OnExportExcel() {
+    var lstId = [];
+    $(".iIdExport:checked").each(function (index, item) {
+        lstId.push($(item).val());
+    });
+    if (lstId == null || lstId.length == 0) {
+        alert("Chưa chọn bản ghi nào để xuất excel !");
+        return;
+    }
+    $.ajax({
+        type: "POST",
+        url: "/QLVonDauTu/QLThongTinHopDong/OnExport",
+        data: { ids: lstId },
+        success: function (data) {
+            if (data.status) {
+                window.open("/QLVonDauTu/QLThongTinHopDong/ExportReport");
+            }
+            else {
+                var Title = 'Lỗi in báo cáo';
+                var messErr = [];
+                messErr.push(data.listErrMess);
+                $.ajax({
+                    type: "POST",
+                    url: "/Modal/OpenModal",
+                    data: { Title: Title, Messages: messErr, Category: ERROR },
+                    success: function (data) {
+                        $("#divModalConfirm").html(data);
+                    }
+                });
+                return false;
             }
         }
     });

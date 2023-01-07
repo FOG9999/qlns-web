@@ -597,9 +597,10 @@ function GetTongMucDauTuTKTC() {
         var dongHienTai = $(item).closest("tr");
         if (!$(dongHienTai).hasClass(deleteRowClass)) {
             var sItem = $(item).val().replaceAll(".", "");
-            if (sItem == "") return false;
-            fSum += parseFloat(sItem);
-            $("#fTongMucDauTuTKTC").val(FormatNumber(fSum));
+            if (!sItem == "") {
+                fSum += parseFloat(sItem);
+                $("#fTongMucDauTuTKTC").val(FormatNumber(fSum));
+            }
         }
     })
     GetConLai();
@@ -777,10 +778,7 @@ function HideModalChiTietChiPhi() {
 
 async function SaveThietKeThiCong() {
     var lstNguonVon = GetNguonVonByTable();
-    arrHangMucSave = lstHangMuc.filter(y => y.fTienPheDuyet != 0);
-    for (var i = 0; i < arrHangMucSave.length; i++) {
-           arrHangMucSave[i].fTienPheDuyet = lstHangMuc[i].fTienPheDuyet;
-    }
+    arrHangMucSave = lstHangMuc.filter(y => y.fTienPheDuyet); // tra ve array co fTienPheDuyet != falsy( undifined, null, '', 0, NaN )
 
     if (!ValidateDuToan(lstNguonVon)) return;
 
@@ -897,7 +895,8 @@ function ValidateDuToan(lstNguonVon) {
     if (sTongMucPDDA != undefined && sTongMucPDDA != null && sTongMucPDDA != '') {
         fTongMucPDDA = parseFloat(sTongMucPDDA.toString().replaceAll(".", ""));
     }
-    if (fTongDuToanPheDuyet > fTongMucPDDA) {
+    var tongMucDuToanDaPheDuyet = getTongMucDuToanDaPheDuyet(iIdDuToanId, iID_DuAnID);
+    if (tongMucDuToanDaPheDuyet + fTongDuToanPheDuyet > fTongMucPDDA) {
         sMessError.push("Tổng tiền nguồn vốn không được lớn hơn tổng tiền nguồn vốn đã được phê duyệt.");
     }
 
@@ -1213,4 +1212,29 @@ function checkExistSoQuyetDinh() {
         data: { checkVal: checkVal },
         dataType: "json"
     })
+}
+
+function getTongMucDuToanDaPheDuyet(iIdDuToanId,iID_DuAnID) {
+    var result = 0;
+    if (!iID_DuAnID) result;
+    
+    $.ajax({
+        url: "/QLVonDauTu/QLPheDuyetTKTCVaTDT/GetTongGiaTriPheDuyetCungDuAn",
+        type: "GET",
+        data: { iIdDuToanId, iID_DuAnID },
+        dataType: "json",
+        success: function (data) {
+            if (data.status == false) {
+                return result;
+            } else {
+                if (data.data != null)
+                    return result = data.data;
+                else
+                    return result;
+            }
+        },
+        async: false
+    })  
+
+    return result;
 }

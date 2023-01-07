@@ -103,7 +103,7 @@
                                                 <th width="3%">NG</th>*@
                                                 <th width="8%" class="text-right">Tổng mức đầu tư</th>
                                                 <th width="7%" class="text-right">Giá trị đề nghị</th>
-                                                @if (isDieuChinh)
+                                                @if (Model.dataKHVU.iID_ParentID != null)
                                                 {
                                                     <th width="5%" class="text-right">Cấp phát tại kho bạc</th>
                                                     <th width="5%" class="text-right">Cấp phát tại kho bạc (sau điều chỉnh)</th>
@@ -114,7 +114,7 @@
 
                                                 }
 
-                                                @if (isDieuChinh)
+                                                @if (Model.dataKHVU.iID_ParentID != null)
                                                 {
                                                     <th width="5%" class="text-right">Cấp phát bằng lệnh chi</th>
                                                     <th width="5%" class="text-right">Cấp phát bằng lệnh chi (sau điều chỉnh)</th>
@@ -132,6 +132,8 @@
                                             {
                                                 <tr onclick="RowClick('@item.iID_DuAnID')">
                                                     <input type="hidden" id="idChiTiet" value="@item.id" />
+                                                    <input type="hidden" id="iID_LoaiCongTrinhID" value="@item.iID_LoaiCongTrinhID" />
+                                                    <input type="hidden" id="iID_DuAn_HangMucID" value="@item.iID_DuAn_HangMucID" />
                                                     <input type="hidden" id="sTrangThaiDuAnDangKy" value="@item.sTrangThaiDuAnDangKy" />
                                                     <td class="text-center txt_sMaDuAn">@item.sMaDuAn</td>
                                                     <td class="txt_sTenDuAn" data-iid_duan="@item.iID_DuAnID">@item.sTenDuAn</td>
@@ -144,7 +146,7 @@
                                                     <td class="text-center" style="padding:0px;padding-top:0px"> <input type="text" class="form-control clearable txt_sNG" autocomplete="off" value="@item.sNG"></td>*@
                                                     <td class="text-right txt_sTongMucDauTu">@item.sTongMucDauTu</td>
                                                     <td class="text-right txt_sGiaTriDeNghi">@item.sGiaTriDeNghi</td>
-                                                    @if (isDieuChinh)
+                                                    @if (Model.dataKHVU.iID_ParentID != null)
                                                     {
                                                         if (isDieuChinhParent)
                                                         {
@@ -159,10 +161,10 @@
                                                     }
                                                     else
                                                     {
-                                                        <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCapKhoBac" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fCapPhatTaiKhoBacDC.HasValue ? item.fCapPhatTaiKhoBacDC : null))"></td>
+                                                        <td align="left" style="padding:0px;padding-top:0px"> <input style="text-align: right" type="text" class="form-control clearable txt_fGiaTriCapKhoBac" onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" autocomplete="off" value="@Html.Raw(string.Format("{0:0,0}", item.fCapPhatTaiKhoBacDC.HasValue ? item.fCapPhatTaiKhoBacDC : item.fCapPhatTaiKhoBac))"></td>
 
                                                     }
-                                                    @if (isDieuChinh)
+                                                    @if (Model.dataKHVU.iID_ParentID != null)
                                                     {
                                                         if (isDieuChinhParent)
                                                         {

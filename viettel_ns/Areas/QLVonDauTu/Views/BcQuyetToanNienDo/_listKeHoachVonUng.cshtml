@@ -6,6 +6,7 @@
         <tr>
             <th rowspan="2" style="width:50px">STT</th>
             <th rowspan="2" style="width:300px">Nội dung</th>
+            <th rowspan="2" style="width:300px">Loại công trình</th>
             <th rowspan="2" style="width:150px">Địa điểm mở tài khoản</th>
             <th rowspan="2" style="width:150px">Mã dự án đầu tư</th>
             <th colspan="2">Tổng số vốn ứng trước chưa thu hồi từ các năm trước chuyển sang</th>
@@ -29,6 +30,7 @@
         <tr>
             <th>A</th>
             <th>B</th>
+            <th></th>
             <th>C</th>
             <th>D</th>
             <th>1</th>
@@ -50,9 +52,10 @@
         @foreach (var item in Model)
         {
             { i = i + 1; }
-            <tr data-iIdDuAn="@item.iID_DuAnID">
+            <tr data-iIdDuAn="@item.iID_DuAnID" data-iIdLoaiCongTrinh="@item.iID_LoaiCongTrinh">
                 <td>@i</td>
                 <td>@item.sTenDuAn</td>
+                <td>@item.STenLoaiCongTrinh</td>
                 <td>@item.sDiaDiem</td>
                 <td>@item.sMaDuAn</td>
                 <td class="fUngTruocChuaThuHoiNamTruoc sotien" style="text-align:right">@item.fUngTruocChuaThuHoiNamTruoc</td>
@@ -60,7 +63,7 @@
                 <td class="fKeHoachVonDuocKeoDai sotien" style="text-align:right">@item.fKeHoachVonDuocKeoDaiView</td>
                 <td class="fVonKeoDaiDaThanhToanNamNay sotien" style="text-align:right">@item.fVonKeoDaiDaThanhToanNamNayView</td>
                 <td class="fThuHoiVonNamNay sotien" style="text-align:right">@item.fThuHoiVonNamNay</td>
-                <td><input type="text" class="fGiaTriThuHoiTheoGiaiNganThucTe currently form-control"  style="text-align:right" value="@item.fGiaTriThuHoiTheoGiaiNganThucTe.ToString()"></td>
+                <td><input type="text" class="fGiaTriThuHoiTheoGiaiNganThucTe currently form-control" style="text-align:right" value="@item.fGiaTriThuHoiTheoGiaiNganThucTe.ToString()"></td>
                 <td class="fKHVUNamNay sotien" style="text-align:right">@item.fKHVUNamNay</td>
                 <td class="fVonDaThanhToanNamNay sotien" style="text-align:right">@item.fVonDaThanhToanNamNayView</td>
                 <td class="fKHVUChuaThuHoiChuyenNamSau sotien" style="text-align:right">@item.fKHVUChuaThuHoiChuyenNamSauView</td>

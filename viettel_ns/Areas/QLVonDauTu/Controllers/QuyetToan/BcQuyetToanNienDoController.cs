@@ -23,6 +23,7 @@ using VIETTEL.Helpers;
 using VIETTEL.Models;
 using static VTS.QLNS.CTC.App.Service.UserFunction.FormatNumber;
 using VTS.QLNS.CTC.App.Service.UserFunction;
+using System.Xml.Linq;
 
 namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
 {
@@ -35,6 +36,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
         private string pathString = System.Configuration.ConfigurationManager.AppSettings["FtpPath"];
         private string ftpUsername = System.Configuration.ConfigurationManager.AppSettings["FtpUsername"];
         private string ftpPassword = System.Configuration.ConfigurationManager.AppSettings["FtpPassword"];
+        private const string DU_AN_MO_MOI = "Dự án mở mới";
+        private const string DU_AN_CHUYEN_TIEP = "Dự án chuyển tiếp";
         private const string sControlName = "BcQuyetToanNienDo";
 
         // GET: QLVonDauTu/BcQuyetToanNienDo
@@ -253,15 +256,17 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
                     ErrMess = "Lỗi in báo cáo";
                 }
                 VDT_QT_BCQuyetToanNienDo data = _vdtService.GetDataBCQuyetToanNienDo(dataPrintReport.ILoaiThanhToan, dataPrintReport.iID_DonViQuanLyID, dataPrintReport.IIdNguonVonId, dataPrintReport.INamKeHoach);
-                List<VDTQtBcquyetToanNienDoExportModel> dataReportParent = new List<VDTQtBcquyetToanNienDoExportModel>();
-                if (data != null)
-                    dataReportParent = _vdtService.GetQuyetToanNienDoVonUngByParentId(data.iID_BCQuyetToanNienDoID);
+                
                 if (dataPrintReport.ILoaiThanhToan == 1)
                 {
-                    List<VDTQtBcquyetToanNienDoExportModel> dataReportChild = _vdtService.GetDataBCQuyetToanNienDoDetail(dataPrintReport.iID_DonViQuanLyID, dataPrintReport.IIdNguonVonId, dataPrintReport.INamKeHoach);
-                    dataReportParent.AddRange(dataReportChild);
-                    List<VDTQtBcquyetToanNienDoExportModel> dataReport = dataReportParent;
-                    ExcelFile xls = CreateReport(dataReport, dataPrintReport, (isPdf ? ExportType.PDF : ExportType.EXCEL));
+                    List<BcquyetToanNienDoVonUngChiTietViewModel> dataReportParent = new List<BcquyetToanNienDoVonUngChiTietViewModel>();
+                    if (data != null) dataReportParent = _vdtService.GetQuyetToanVonUngById(data.iID_BCQuyetToanNienDoID);
+                    if(dataReportParent == null || dataReportParent.Count == 0)
+                    {
+                        var objDonVi = _vdtService.GetDonViQuanLyById(dataPrintReport.iID_DonViQuanLyID);
+                        dataReportParent = _vdtService.GetQuyetToanVonUng(objDonVi.iID_MaDonVi, dataPrintReport.IIdNguonVonId, dataPrintReport.INamKeHoach);
+                    }
+                    ExcelFile xls = CreateReport(dataReportParent, dataPrintReport, (isPdf ? ExportType.PDF : ExportType.EXCEL));
                     TempData["DataReportXls"] = xls;
                     FlexCelPdfExport pdf = new FlexCelPdfExport(xls, true);
                     var bufferPdf = new MemoryStream();
@@ -296,11 +301,30 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             return Json(new { status = true, isPdf = isPdf }, JsonRequestBehavior.AllowGet);
         }
 
-        public ExcelFile CreateReport(List<VDTQtBcquyetToanNienDoExportModel> dataReport, VdtQtBcQuyetToanNienDoPrintDataExportModel paramReport, ExportType exportType)
+        public ExcelFile CreateReport(List<BcquyetToanNienDoVonUngChiTietViewModel> dataReport, VdtQtBcQuyetToanNienDoPrintDataExportModel paramReport, ExportType exportType)
         {
             XlsFile Result = new XlsFile(true);
             FlexCelReport fr = new FlexCelReport();
-            fr.AddTable("Items", dataReport);
+            if(exportType == ExportType.EXCEL)
+            {
+                fr.AddTable("Items", dataReport);
+            }
+            else
+            {
+                List<BcquyetToanNienDoVonUngChiTietViewModel> dataClone = new List<BcquyetToanNienDoVonUngChiTietViewModel>();
+                var lstLoaiCongTrinh = _vdtService.GetAllDmLoaiCongTrinh();
+                if(lstLoaiCongTrinh != null && dataReport != null)
+                {
+                    Dictionary<Guid, List<BcquyetToanNienDoVonUngChiTietViewModel>> dicData = dataReport.GroupBy(n => (n.iID_LoaiCongTrinh ?? Guid.Empty)).ToDictionary(n => n.Key, n => n.ToList());
+                    foreach (var item in lstLoaiCongTrinh.Where(n => !n.iID_Parent.HasValue).OrderBy(n => n.sMaLoaiCongTrinh))
+                    {
+                        bool bHaveData = false;
+                        dataClone.AddRange(RecursiveBCVonUngLoaiCongTrinh(item, lstLoaiCongTrinh.ToList(), dicData, ref bHaveData));
+                    }
+                }
+                fr.AddTable("Items", dataClone);
+            }
+            
             Result.Open(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/rpt_vdt_quyettoanniendo_vonung.xlsx"));
             fr.SetValue("dNgayHienTai", DateTime.Now.ToShortDateString());
             fr.SetValue("Title1", string.Format(paramReport.txt_TieuDe1, paramReport.INamKeHoach.ToString()));
@@ -323,11 +347,47 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
         {
             XlsFile Result = new XlsFile(true);
             FlexCelReport fr = new FlexCelReport();
-            fr.AddTable("Items", lstDataTongHop);
+            var lstLoaiCongTrinh = _vdtService.GetAllDmLoaiCongTrinh();
+            if(exportType == ExportType.EXCEL)
+            {
+                fr.AddTable("Items", lstDataTongHop);
+            }
+            else
+            {
+                List<BcquyetToanNienDoVonNamChiTietViewModel> dataClone = new List<BcquyetToanNienDoVonNamChiTietViewModel>();
+                if(lstLoaiCongTrinh != null && lstDataTongHop != null)
+                {
+                    Dictionary<Guid, List<BcquyetToanNienDoVonNamChiTietViewModel>> dicData = lstDataTongHop.GroupBy(n => (n.iID_LoaiCongTrinh ?? Guid.Empty)).ToDictionary(n => n.Key, n => n.ToList());
+                    foreach (var item in lstLoaiCongTrinh.Where(n => !n.iID_Parent.HasValue).OrderBy(n => n.sMaLoaiCongTrinh))
+                    {
+                        bool bHaveData = false;
+                        dataClone.AddRange(RecursiveBCKeHoachVonNamLoaiCongTrinh(item, lstLoaiCongTrinh.ToList(), dicData, ref bHaveData));
+                    }
+                }
+                fr.AddTable("Items", dataClone);
+            }
+            
             if (paramReport.IIdNguonVonId == 1)
             {
                 Result.Open(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/QuyetToan/rpt_vdt_quyettoanniendo_vonnam_nsqp.xlsx"));
-                fr.AddTable("ItemsPhanTich", lstDataPhanTich);
+                if (exportType == ExportType.EXCEL)
+                {
+                    fr.AddTable("ItemsPhanTich", lstDataPhanTich);
+                }
+                else
+                {
+                    List<BcquyetToanNienDoVonNamPhanTichChiTietViewModel> dataClone = new List<BcquyetToanNienDoVonNamPhanTichChiTietViewModel>();
+                    if (lstLoaiCongTrinh != null && lstDataPhanTich != null)
+                    {
+                        Dictionary<Guid, List<BcquyetToanNienDoVonNamPhanTichChiTietViewModel>> dicData = lstDataPhanTich.GroupBy(n => (n.iID_LoaiCongTrinh ?? Guid.Empty)).ToDictionary(n => n.Key, n => n.ToList());
+                        foreach (var item in lstLoaiCongTrinh.Where(n => !n.iID_Parent.HasValue).OrderBy(n => n.sMaLoaiCongTrinh))
+                        {
+                            bool bHaveData = false;
+                            dataClone.AddRange(RecursiveBCPhanTichLoaiCongTrinh(item, lstLoaiCongTrinh.ToList(), dicData, ref bHaveData));
+                        }
+                    }
+                    fr.AddTable("ItemsPhanTich", dataClone);
+                }   
             }
             else
             {
@@ -716,5 +776,183 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
             }
             return Json(new { bIsComplete = true }, JsonRequestBehavior.AllowGet);
         }
+
+        #region Helper
+        private List<BcquyetToanNienDoVonNamChiTietViewModel> RecursiveBCKeHoachVonNamLoaiCongTrinh(
+            VDT_DM_LoaiCongTrinh current, List<VDT_DM_LoaiCongTrinh> lstLoaiCongTrinh,
+            Dictionary<Guid, List<BcquyetToanNienDoVonNamChiTietViewModel>> dicData, ref bool bHaveData)
+        {
+            List<BcquyetToanNienDoVonNamChiTietViewModel> results = new List<BcquyetToanNienDoVonNamChiTietViewModel>();
+            bool bIsAddParent = false;
+            var currentData = new BcquyetToanNienDoVonNamChiTietViewModel()
+            {
+                iStt = current.sMaLoaiCongTrinh,
+                sTenDuAn = current.sTenLoaiCongTrinh,
+                IsHangCha = true
+
+            };
+            if (dicData.ContainsKey(current.iID_LoaiCongTrinh))
+            {
+                results.Add(currentData);
+                var lstChuyenTiep = dicData[current.iID_LoaiCongTrinh].Where(n => n.BIsChuyenTiep);
+                var lstMoMoi = dicData[current.iID_LoaiCongTrinh].Where(n => !n.BIsChuyenTiep);
+                if (lstMoMoi != null && lstMoMoi.Count() != 0)
+                {
+                    results.Add(new BcquyetToanNienDoVonNamChiTietViewModel()
+                    {
+                        sTenDuAn = DU_AN_MO_MOI,
+                        iStt = "I",
+                        IsHangCha = true
+                    });
+                    results.AddRange(lstMoMoi);
+                }
+                if (lstChuyenTiep != null && lstChuyenTiep.Count() != 0)
+                {
+                    results.Add(new BcquyetToanNienDoVonNamChiTietViewModel()
+                    {
+                        sTenDuAn = DU_AN_CHUYEN_TIEP,
+                        iStt = "II",
+                        IsHangCha = true
+                    });
+                    results.AddRange(lstChuyenTiep);
+                }
+                bHaveData = true;
+                bIsAddParent = true;
+            }
+            foreach (var item in lstLoaiCongTrinh.Where(n => n.iID_Parent.HasValue && n.iID_Parent == current.iID_LoaiCongTrinh).OrderBy(n => n.sMaLoaiCongTrinh))
+            {
+                bool bChildData = false;
+                var lstChild = RecursiveBCKeHoachVonNamLoaiCongTrinh(item, lstLoaiCongTrinh, dicData, ref bChildData);
+                if (bChildData)
+                {
+                    if (!bIsAddParent)
+                    {
+                        results.Add(currentData);
+                        bIsAddParent = true;
+                    }
+                    results.AddRange(lstChild);
+                    bHaveData = true;
+                }
+            }
+            return results;
+        }
+
+        private List<BcquyetToanNienDoVonNamPhanTichChiTietViewModel> RecursiveBCPhanTichLoaiCongTrinh(
+            VDT_DM_LoaiCongTrinh current, List<VDT_DM_LoaiCongTrinh> lstLoaiCongTrinh,
+            Dictionary<Guid, List<BcquyetToanNienDoVonNamPhanTichChiTietViewModel>> dicData, ref bool bHaveData)
+        {
+            List<BcquyetToanNienDoVonNamPhanTichChiTietViewModel> results = new List<BcquyetToanNienDoVonNamPhanTichChiTietViewModel>();
+            bool bIsAddParent = false;
+            var currentData = new BcquyetToanNienDoVonNamPhanTichChiTietViewModel()
+            {
+                SSoThuTu = current.sMaLoaiCongTrinh,
+                STenDuAn = current.sTenLoaiCongTrinh,
+                IsHangCha = true
+
+            };
+            if (dicData.ContainsKey(current.iID_LoaiCongTrinh))
+            {
+                results.Add(currentData);
+                var lstChuyenTiep = dicData[current.iID_LoaiCongTrinh].Where(n => n.BIsChuyenTiep);
+                var lstMoMoi = dicData[current.iID_LoaiCongTrinh].Where(n => !n.BIsChuyenTiep);
+                if (lstMoMoi != null && lstMoMoi.Count() != 0)
+                {
+                    results.Add(new BcquyetToanNienDoVonNamPhanTichChiTietViewModel()
+                    {
+                        STenDuAn = DU_AN_MO_MOI,
+                        SSoThuTu = "I",
+                        IsHangCha = true
+                    });
+                    results.AddRange(lstMoMoi);
+                }
+                if (lstChuyenTiep != null && lstChuyenTiep.Count() != 0)
+                {
+                    results.Add(new BcquyetToanNienDoVonNamPhanTichChiTietViewModel()
+                    {
+                        STenDuAn = DU_AN_CHUYEN_TIEP,
+                        SSoThuTu = "II",
+                        IsHangCha = true
+                    });
+                    results.AddRange(lstChuyenTiep);
+                }
+                bHaveData = true;
+                bIsAddParent = true;
+            }
+            foreach (var item in lstLoaiCongTrinh.Where(n => n.iID_Parent.HasValue && n.iID_Parent == current.iID_LoaiCongTrinh).OrderBy(n => n.sMaLoaiCongTrinh))
+            {
+                bool bChildData = false;
+                var lstChild = RecursiveBCPhanTichLoaiCongTrinh(item, lstLoaiCongTrinh, dicData, ref bChildData);
+                if (bChildData)
+                {
+                    if (!bIsAddParent)
+                    {
+                        results.Add(currentData);
+                        bIsAddParent = true;
+                    }
+                    results.AddRange(lstChild);
+                    bHaveData = true;
+                }
+            }
+            return results;
+        }
+
+        private List<BcquyetToanNienDoVonUngChiTietViewModel> RecursiveBCVonUngLoaiCongTrinh(VDT_DM_LoaiCongTrinh current, List<VDT_DM_LoaiCongTrinh> lstLoaiCongTrinh,
+            Dictionary<Guid, List<BcquyetToanNienDoVonUngChiTietViewModel>> dicData, ref bool bHaveData)
+        {
+            List<BcquyetToanNienDoVonUngChiTietViewModel> results = new List<BcquyetToanNienDoVonUngChiTietViewModel>();
+            bool bIsAddParent = false;
+            var currentData = new BcquyetToanNienDoVonUngChiTietViewModel()
+            {
+                iStt = current.sMaLoaiCongTrinh,
+                sTenDuAn = current.sTenLoaiCongTrinh,
+                IsHangCha = true
+
+            };
+            if (dicData.ContainsKey(current.iID_LoaiCongTrinh))
+            {
+                results.Add(currentData);
+                var lstChuyenTiep = dicData[current.iID_LoaiCongTrinh].Where(n => n.BIsChuyenTiep);
+                var lstMoMoi = dicData[current.iID_LoaiCongTrinh].Where(n => !n.BIsChuyenTiep);
+                if (lstMoMoi != null && lstMoMoi.Count() != 0)
+                {
+                    results.Add(new BcquyetToanNienDoVonUngChiTietViewModel()
+                    {
+                        sTenDuAn = DU_AN_MO_MOI,
+                        iStt = "I",
+                        IsHangCha = true
+                    });
+                    results.AddRange(lstMoMoi);
+                }
+                if (lstChuyenTiep != null && lstChuyenTiep.Count() != 0)
+                {
+                    results.Add(new BcquyetToanNienDoVonUngChiTietViewModel()
+                    {
+                        sTenDuAn = DU_AN_CHUYEN_TIEP,
+                        iStt = "II",
+                        IsHangCha = true
+                    });
+                    results.AddRange(lstChuyenTiep);
+                }
+                bHaveData = true;
+                bIsAddParent = true;
+            }
+            foreach (var item in lstLoaiCongTrinh.Where(n => n.iID_Parent.HasValue && n.iID_Parent == current.iID_LoaiCongTrinh).OrderBy(n => n.sMaLoaiCongTrinh))
+            {
+                bool bChildData = false;
+                var lstChild = RecursiveBCVonUngLoaiCongTrinh(item, lstLoaiCongTrinh, dicData, ref bChildData);
+                if (bChildData)
+                {
+                    if (!bIsAddParent)
+                    {
+                        results.Add(currentData);
+                        bIsAddParent = true;
+                    }
+                    results.AddRange(lstChild);
+                    bHaveData = true;
+                }
+            }
+            return results;
+        }
+        #endregion
     }
 }

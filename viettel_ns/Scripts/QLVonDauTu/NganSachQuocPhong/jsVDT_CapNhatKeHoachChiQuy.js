@@ -155,9 +155,10 @@ function LuuKeHoachChiQuy() {
         },
         success: function (r) {
             if (r.bIsComplete) {
+                alert("Cập nhật bản ghi " + data.sSoDeNghi + " thành công.");
                 window.location.href = "/QLVonDauTu/QLKeHoachChiQuy/Index";
             } else {
-                alert("Cập nhật kế hoạch chi quý thất bại !");
+                alert("Cập nhật bản ghi " + data.sSoDeNghi + " thất bại !");
             }
         }
     });
@@ -172,7 +173,7 @@ function GetListChiTiet() {
         var sGhiChu = $(this).find(".r_sGhiChu").text();
         var sLoaiThanhToan = $(this).find(".r_sLoaiThanhToan").text();
 
-        if ($(this).find(".r_sGiaTriDeNghi").val()??'' != "" && fGiaTriDeNghi > 0) {
+        if (($(this).find(".r_sGiaTriDeNghi").val()??'' != "") && (fGiaTriDeNghi > 0)) {
             lstData.push({
                 iID_DuAnId: iID_DuAnId,
                 iID_LoaiCongTrinhId: iID_LoaiCongTrinhId,

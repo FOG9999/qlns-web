@@ -27,13 +27,23 @@ function EventChangeValue() {
         var data = e.params.data;
         if (data != null) {
             LoadDataComboBoxDuAn(data);
+            LoadDataComboBoxLoaiQuyetToan(null);
         }
     });
 
     $("#txt_DuAn").on('select2:select', function (e) {
         var data = e.params.data;
+        var loaiqt = $("#txt_LoaiQuyetToan").val();
         if (data != null) {
-            LoadDataComboboxDuToan(data.id)
+            LoadDataComboboxDuToan(loaiqt, data.id)
+        }
+    });
+
+    $("#txt_LoaiQuyetToan").on('select2:select', function (e) {
+        var data = e.params.data;
+        var idDuan = $('#txt_DuAn').val();
+        if (data != null) {
+            LoadDataComboboxDuToan(data.id, idDuan)
         }
     });
 
@@ -41,9 +51,13 @@ function EventChangeValue() {
         var data = e.params.data;
         if (data != null) {
             GetDuLieuDuAn(data.id);
-            GetListChiPhiHangMuc(data.id);
+            if ($('#txt_LoaiQuyetToan').val() == 1)
+                GetListChiPhiHangMuc(data.id);
+            if ($('#txt_LoaiQuyetToan').val() == 2)
+                GetListGoiThau(data.id);
         }
     });
+
 }
 
 function SetDataComboBoxDonViQuanLy() {
@@ -76,11 +90,26 @@ function LoadDataComboBoxDuAn(idDonVi) {
     });
 }
 
-function LoadDataComboboxDuToan(iIdDuToanId) {
+function LoadDataComboBoxLoaiQuyetToan(iIdDeNghiQuyetToanId) {
+    $.ajax({
+        type: "POST",
+        url: "/QLVonDauTu/VDT_QT_DeNghiQuyetToan/GetLoaiQuyetToan",
+        data: { iIdDeNghiQuyetToanId: iIdDeNghiQuyetToanId },
+        success: function (resp) {
+            if (resp.status == true) {
+                $("#txt_LoaiQuyetToan").select2({
+                    data: resp.data
+                });
+            }
+        }
+    });
+}
+
+function LoadDataComboboxDuToan(idLoai, iIdDuAnId) {
     $.ajax({
         type: "POST",
         url: "/QLVonDauTu/VDT_QT_DeNghiQuyetToan/GetListDuToanByDuAn",
-        data: { iIdDuAnId: iIdDuToanId },
+        data: { iIdLoaiQuyetToan: idLoai, iIdDuAnId: iIdDuAnId },
         success: function (resp) {
             $("#iIdDuToanId").empty();
             if (resp.datas != null && resp.datas.length != 0) {
@@ -88,7 +117,10 @@ function LoadDataComboboxDuToan(iIdDuToanId) {
                     data: resp.datas
                 });
                 GetDuLieuDuAn(resp.datas[0].id);
-                GetListChiPhiHangMuc(resp.datas[0].id);
+                if ($('#txt_LoaiQuyetToan').val() == 1)
+                    GetListChiPhiHangMuc(resp.datas[0].id);
+                if ($('#txt_LoaiQuyetToan').val() == 2)
+                    GetListGoiThau(resp.datas[0].id);
             }
         }
     });

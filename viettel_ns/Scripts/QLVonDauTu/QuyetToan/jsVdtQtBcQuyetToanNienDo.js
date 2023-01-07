@@ -717,14 +717,14 @@ function GetItemDataList(id) {
     location.href = "/QLVonDauTu/BcQuyetToanNienDo/Update/" + id;
 }
 
-function DeleteItemList(iId) {
+function DeleteItemList(iId, sSoDeNghi) {
     if (confirm("Bạn có chắc chắn muốn xóa quyết toán này ?")) {
         $.ajax({
             url: "/QLVonDauTu/BcQuyetToanNienDo/DeleteBCQuyetToanNienDo",
             type: "GET",
             data: { iId: iId },
             success: function (data) {
-                alert("Xóa thành công !");
+                alert("Xóa bản ghi " + sSoDeNghi + "thành công.");
                 ChangePage();
             }
         });
@@ -865,7 +865,7 @@ function Insert() {
     var data = {};
     var lstData = [];
     if (!ValidateForm()) return;
-
+    var iID_BCQuyetToanNienDoID = $("#iIDBcQuyetToan").val();
     data.iID_BCQuyetToanNienDoID = $("#iIDBcQuyetToan").val();
     data.sSoDeNghi = $("#txtSoPheDuyet").val();
     data.iCoQuanThanhToan = $("#drpCoQuanThanhToan").val();
@@ -886,7 +886,13 @@ function Insert() {
             if (r.iIdBcQuyetToanNienDoId != null && r.iIdBcQuyetToanNienDoId != GUID_EMPTY) {
                 fnSaveDataKeHoachVonNam(r.iIdBcQuyetToanNienDoId);
                 fnSaveDataKeHoachVonUng(r.iIdBcQuyetToanNienDoId);
-                alert("Thêm mới thành công !")
+                if (iID_BCQuyetToanNienDoID == undefined || iID_BCQuyetToanNienDoID == null || iID_BCQuyetToanNienDoID == "" || iID_BCQuyetToanNienDoID == GUID_EMPTY) {
+                    alert("Tạo mới bản ghi " + data.sSoDeNghi + " thành công");
+
+                } else {
+                    alert("Cập nhật bản ghi " + data.sSoDeNghi + " thành công");
+
+                }
                 location.href = "/QLVonDauTu/BcQuyetToanNienDo";
             } else {
                 alert("Có lỗi xảy ra trong quá trình thêm mới !");
@@ -1196,6 +1202,7 @@ function fnSaveDataKeHoachVonNam(iIdBcQuyetToanId) {
     $.each($("#ViewTable tbody tr"), function (index, item) {
         var obj = {};
         obj.iID_DuAnID = $(item).data("iidduan");
+        obj.iID_LoaiCongTrinh = $(item).data("iidloaicongtrinh");
         if (iLoaiBaoCao == 1) {
             obj.fGiaTriNamTruocChuyenNamSau = UnFormatNumber($(item).find(".fGiaTriNamTruocChuyenNamSau").val());                           // 14
             obj.fGiaTriNamNayChuyenNamSau = UnFormatNumber($(item).find(".fGiaTriNamNayChuyenNamSau").val());                               // 20
@@ -1239,6 +1246,7 @@ function fnSaveDataKeHoachVonUng(iIdBcQuyetToanId) {
     $.each($("#ViewTablePhanTich tbody tr"), function (index, item) {
         var obj = {};
         obj.iID_DuAnID = $(item).data("iidduan");
+        obj.iID_LoaiCongTrinh = $(item).data("iidloaicongtrinh");
         obj.fDuToanCNSChuaGiaiNganTaiKB = UnFormatNumber($(item).find(".FDuToanCnsChuaGiaiNganTaiKb").text());      // 1
         obj.fDuToanCNSChuaGiaiNganTaiDV = UnFormatNumber($(item).find(".FDuToanCnsChuaGiaiNganTaiDv").text());      // 2
         obj.fDuToanCNSChuaGiaiNganTaiCuc = UnFormatNumber($(item).find(".FDuToanCnsChuaGiaiNganTaiCuc").text());    // 3

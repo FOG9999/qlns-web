@@ -207,6 +207,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     new SheetColumn(columnName: "iID_DonViThucHienDuAn", isHidden: true),
                     new SheetColumn(columnName: "iID_NguonVonID", isHidden: true),
                     new SheetColumn(columnName: "iID_LoaiCongTrinh", isHidden: true),
+                    new SheetColumn(columnName: "iID_DuAn_HangMucID", isHidden: true),
                     new SheetColumn(columnName: "Level", isHidden: true),
                     new SheetColumn(columnName: "sMauSac", isHidden: true),
                     new SheetColumn(columnName: "sFontColor", isHidden: true),

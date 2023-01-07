@@ -1,0 +1,6 @@
+ALTER TABLE VDT_KHV_PhanBoVon_DonVi_ChiTiet_PheDuyet
+ADD iID_DuAn_HangMucID uniqueidentifier
+
+
+ALTER TABLE VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet
+ADD iID_DuAn_HangMucID uniqueidentifier

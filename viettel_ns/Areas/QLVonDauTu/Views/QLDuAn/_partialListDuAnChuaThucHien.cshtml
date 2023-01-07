@@ -1,4 +1,6 @@
 ﻿@using Viettel.Models.QLVonDauTu
+@using System.Globalization;
+@using DomainModel
 @model VDTDuAnPagingModel
 <!--<div class="tooltip-header-search">
     <label class="control-label">Danh sách dự án chưa thực hiện (@Model._paging.TotalItems)</label>-->
@@ -6,10 +8,11 @@
 <!--</div>-->
 <table class="table table-bordered table-striped" id="tblListDuAn">
     <thead class="header-search">
+    <th></th>
     <th width="5%"></th>
     <th width="35%"><input type="text" class="form-control clearable gr_search" id="txtTenDuAn" /></th>
     <th width="10%">@Html.DropDownList("iID_CapPheDuyetID", (SelectList)(ViewBag.ListPhanCapPheDuyet), "--Tất cả--", new { @class = "form-control", @id = "iID_CapPheDuyetID" })</th>
-    <th width="15%">
+    <th width="13%">
         <div style="display: flex">
             <div class='input-group'>
                 <input type="number" class="form-control clearable gr_search startYear" id="tThoiGianThucHienTuNam" />
@@ -22,9 +25,10 @@
     </th>
     <th width="10%">@Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), "--Tất cả--", new { @class = "form-control", @id = "iID_DonViQuanLyID" })</th>
     @*<th width="10%">
-        <input type="hidden" id="hid_iID_LoaiCongTrinhID">
-        <input type="text" id="iID_LoaiCongTrinhID" name="iID_LoaiCongTrinhID" class="form-control gr_search" value="" />
-    </th>*@
+            <input type="hidden" id="hid_iID_LoaiCongTrinhID">
+            <input type="text" id="iID_LoaiCongTrinhID" name="iID_LoaiCongTrinhID" class="form-control gr_search" value="" />
+        </th>*@
+    <th width="5%"></th>
     <th width="5%"></th>
     <th width="10%">
         @*<button class="btn btn-info" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button>*@
@@ -32,13 +36,14 @@
     </th>
     </thead>
     <thead>
+    <th></th>
     <th width="5%">STT</th>
     <th width="35%">Tên dự án</th>
     <th width="10%">Phân cấp phê duyệt</th>
-    <th width="15%">Thời gian TH</th>
+    <th width="13%">Thời gian TH</th>
     <th width="12%">Đơn vị thực hiện dự án</th>
-    @*<th width="10%">Loại công trình</th>*@
-    <th width="8%">Tài liệu</th>
+    <th width="11%">Hạn mức đầu tư</th>
+    <th width="5%">Tài liệu</th>
     <th width="10%">Thao tác</th>
     </thead>
     <tbody>
@@ -47,6 +52,7 @@
             foreach (var item in Model.lstData)
             {
                 <tr>
+                    <td align="center"><input type="checkbox" class="iIdExport" value="@item.iID_DuAnID"></td>
                     <td align="center">@index</td>
 
                     <td align="left">@item.sMaDuAn - @item.sTenDuAn</td>
@@ -59,9 +65,9 @@
 
                     <td align="left">@item.sTenDonVi</td>
 
-                    @*<td align="left">
-                        @item.sTenLoaiCongTrinh
-                    </td>*@
+                    <td align="left">
+                        @(item.fHanMucDauTu.HasValue ? CommonFunction.DinhDangSo(item.fHanMucDauTu.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty)
+                    </td>
                     <td align="left">
                         (0)
                     </td>

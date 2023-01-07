@@ -47,7 +47,7 @@
                         <div class="col-sm-3">
                             <label for="slbKHTongTheBQP">Số quyết định tổng thể TTCP</label>
                             @Helpers.Required()
-                            <select id="slbKHTongTheBQP" name="slbKHTongTheBQP" class="form-control" onchange="ChangeChuongTrinhSelect()">
+                            <select id="slbKHTongTheBQP" name="slbKHTongTheBQP" class="form-control" onchange="ChangeChuongTrinhSelect();">
                                 @if (ViewBag.ListBQP != null)
                                 {
                                     foreach (var bqp in (List<NH_KHChiTietBQP_NhiemVuChiModel>)ViewBag.ListBQP)
@@ -60,7 +60,7 @@
                         <div class="col-sm-3">
                             <label for="slbChuongTrinh">Tên chương trình</label>
                             @Helpers.Required()
-                            <select id="slbChuongTrinh" name="slbChuongTrinh" class="form-control" onchange="ChangeBQuanLySelect()">
+                            <select id="slbChuongTrinh" name="slbChuongTrinh" class="form-control" onchange="ChangeBQuanLySelect();">
                                 @if (ViewBag.ListChuongTrinh != null)
                                 {
                                     foreach (var chuongtrinh in (List<NH_KHChiTietBQP_NhiemVuChi>)ViewBag.ListChuongTrinh)
@@ -73,12 +73,12 @@
                         <div class="col-sm-3">
                             <label for="slbBQuanLy">B Quản Lý</label>
                             @Helpers.Required()
-                            <select id="slbBQuanLy" name="slbBQuanLy" class="form-control" onchange="ChangeDonViSelect()">
+                            <select id="slbBQuanLy" name="slbBQuanLy" class="form-control" onchange="ChangeDonViSelect();">
                                 @if (ViewBag.ListPhongBan != null)
                                 {
                                     foreach (var phongban in (List<NS_PhongBan>)ViewBag.ListPhongBan)
                                     {
-                                        <option value="@phongban.iID_MaPhongBan" @(Model.iID_MaPhongBan == phongban.iID_MaPhongBan ? "selected" : string.Empty)>@Html.Raw(Html.Encode(phongban.sTen))</option>
+                                        <option value="@phongban.iID_MaPhongBan" @(Model.iID_BQuanLyID == phongban.iID_MaPhongBan ? "selected" : string.Empty)>@Html.Raw(Html.Encode(phongban.sTen))</option>
                                     }
                                 }
                             </select>
@@ -86,7 +86,7 @@
                         <div class="col-sm-3">
                             <label for="slbDonVi">Đơn vị</label>
                             @Helpers.Required()
-                            <select id="slbDonVi" name="slbDonVi" class="form-control">
+                            <select id="slbDonVi" name="slbDonVi" class="form-control" onchange="ChangeDuAnSelect();">
                                 @if (ViewBag.ListDonVi != null)
                                 {
                                     foreach (var donvi in (List<NS_DonVi>)ViewBag.ListDonVi)
@@ -119,7 +119,7 @@
                                 {
                                     foreach (var duan in (List<NH_DA_DuAn>)ViewBag.ListDuAn)
                                     {
-                                        <option value="@duan.ID" @(Model.iID_DuAnID == duan.ID ? "selected" : string.Empty) data-bql="@duan.iID_BQuanLyID">@Html.Raw(Html.Encode(duan.sTenDuAn))</option>
+                                        <option value="@duan.ID" @(Model.iID_DuAnID == duan.ID ? "selected" : string.Empty)>@Html.Raw(Html.Encode(duan.sTenDuAn))</option>
                                     }
                                 }
                             </select>

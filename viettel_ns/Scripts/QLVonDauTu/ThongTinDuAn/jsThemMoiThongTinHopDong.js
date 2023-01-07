@@ -20,7 +20,24 @@ $(document).ready(function () {
     $("#NoiDungHopDong").keyup(function (event) {
         ValidateMaxLength(this, 300);
     });
+
+    // load du lieu voi truong hop sua
+    if ($("#iIDHopDongId").val())
+    {
+        $("#iID_LoaiHopDongID").val($("#iID_LoaiHopDongID").val());
+        $("#iID_NhaThauID").val($("#iIDNhaThauId").val());
+        $("#iID_NhaThauID").trigger("change");
+        if ($("#iIDGoiThauId").val() == "" || $("#iIDGoiThauId").val() == GUID_EMPTY)
+            $("#cboLoaiHopDong").val(HOP_DONG_GIAO_VIEC);
+        else
+            $("#cboLoaiHopDong").val(HOP_DONG_KINH_TE);
+        GetListNhaThau();
+        LoadGoiThauDb();
+        SetArrChiPhi();
+        SetArrHangMuc();
+    }
     ChangeNhaThau();
+    $("#iID_NhaThauID_Temp").select2('destroy');
 });
 
 $("#iID_DonViQuanLyID").change(function () {
@@ -57,13 +74,15 @@ function EventCheckboxChiPhi(idGoiThauNhaThauValue) {
 
         tiengoithau = $(this).data('tiengoithau');
         if (this.checked) {
-            $('#btn_chitiet_chiphi_' + iID_ChiPhi_select).removeAttr('disabled');
-            arrPhuLucChiPhi.push({ IdGoiThauNhaThau: idGoiThauNhaThauValue, IIDChiPhiID: iID_ChiPhi_select, FTienGoiThau: tiengoithau })
+            if (!arrPhuLucChiPhi.some(el => el.IIDChiPhiID == iID_ChiPhi_select && el.IdGoiThauNhaThau == idGoiThauNhaThauValue)) {
+                $('#btn_chitiet_chiphi_' + iID_ChiPhi_select).removeAttr('disabled');
+                arrPhuLucChiPhi.push({ IdGoiThauNhaThau: idGoiThauNhaThauValue, IIDChiPhiID: iID_ChiPhi_select, FTienGoiThau: tiengoithau })
+            } 
         } else {
             $('#btn_chitiet_chiphi_' + iID_ChiPhi_select).attr("disabled", true);
             var newArray = arrPhuLucChiPhi.filter(function (el) {
                 //return (el.chiphiid != iID_ChiPhi_select)
-                return (el.IdGoiThauNhaThau == idGoiThauNhaThauValue && el.IIDChiPhiID != iID_ChiPhi_select)
+                return ((el.IdGoiThauNhaThau == idGoiThauNhaThauValue && el.IIDChiPhiID != iID_ChiPhi_select) || el.IdGoiThauNhaThau != idGoiThauNhaThauValue)
             });
             arrPhuLucChiPhi = newArray;
         }
@@ -87,6 +106,8 @@ function ShowChiPhi(id, idGoiThauNhaThau) {
                 if (data != null) {
                     var htmlChiPhi = "";
                     data.forEach(function (x) {
+                        var isChecked = checkExistChiPhi(x, arrPhuLucChiPhiDb, idGoiThauNhaThau)
+
                         var newArray = arrPhuLucChiPhi.filter(function (el) {
                             //return (el.chiphiid != iID_ChiPhi_select)
                             return (el.IdGoiThauNhaThau == idGoiThauNhaThau && el.IIDChiPhiID == x.IIDChiPhiID)
@@ -96,16 +117,16 @@ function ShowChiPhi(id, idGoiThauNhaThau) {
                         var fTienGoiThau = !x.FTienGoiThau ? '' : FormatNumber(x.FTienGoiThau);
 
                         htmlChiPhi += "<tr id='" + x.IIDChiPhiID + "'>";
-                        if (newArray.length > 0) {
-                            htmlChiPhi += "<td align='center'> <input type='checkbox' checked data-tiengoithau ='" + x.FGiaTriDuocDuyet + "' data-goithauid='" + id + "' data-chiphiid='" + x.IIDChiPhiID + "' class='cb_ChiPhi'></td>";
+                        if (newArray.length > 0 || isChecked) {
+                            htmlChiPhi += "<td align='center'> <input type='checkbox' checked data-tiengoithau ='" + x.FGiaTriDuocDuyet + "' data-goithauid='" + id + "' data-chiphiid='" + x.IIDChiPhiID + "' class='cb_ChiPhi' data-idgoithaunhathau='" + idGoiThauNhaThau + "'></td>";
                         } else {
-                            htmlChiPhi += "<td align='center'> <input type='checkbox' data-tiengoithau ='" + x.FGiaTriDuocDuyet + "' data-goithauid='" + id + "' data-chiphiid='" + x.IIDChiPhiID + "' class='cb_ChiPhi'></td>";
+                            htmlChiPhi += "<td align='center'> <input type='checkbox' data-tiengoithau ='" + x.FGiaTriDuocDuyet + "' data-goithauid='" + id + "' data-chiphiid='" + x.IIDChiPhiID + "' class='cb_ChiPhi' data-idgoithaunhathau='" + idGoiThauNhaThau + "'></td>";
                         }
 
                         htmlChiPhi += "<td>" + x.STenChiPhi + "</td>";
                         htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right' >" + FormatNumber(x.FGiaTriDuocDuyet) + "</td>";
                         htmlChiPhi += "<td>" + `<input style="text-align: right;" ${disable} class="r_fGiaTrungThau sotien form-control" type="text" value='${fTienGoiThau}' onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" onblur="SumGiaTriGoiThau('${x.IIDChiPhiID}')"/>` + "</td>";//giá trị trúng thầu
-                        htmlChiPhi += "<td class='fGiaTriConLai sotien' align='right'>" + FormatNumber(x.FGiaTriConLai) + "</td>";
+                        //htmlChiPhi += "<td class='fGiaTriConLai sotien' align='right'>" + FormatNumber(x.FGiaTriConLai) + "</td>";
                         if (newArray.length > 0) {
                             htmlChiPhi += "<td align='center'> <button id='btn_chitiet_chiphi_" + x.IIDChiPhiID + "' style='width: 120px !important' onclick = ShowHangMuc('" + x.IIDChiPhiID + "') class='btn btn-primary btnShowHangMuc'><span>Chi tiết hạng mục</span></button>" +
                                 "</td > ";
@@ -125,6 +146,13 @@ function ShowChiPhi(id, idGoiThauNhaThau) {
         },
         error: function (data) {
 
+        },
+        complete: function () {
+            $('.cb_ChiPhi').each(function () {
+                //if ($(this).data('checked') == '1') {
+                //    $(this).trigger("click");
+                //}
+            });
         }
     })
 }
@@ -141,15 +169,18 @@ function EventCheckboxHangMuc() {
         var MaOrder = $(this).closest("tr").find(".MaOrder").html();
         idfake = $(this).data('idfake');
         if (this.checked) {
-            arrPhuLucHangMuc.push({ IdGoiThauNhaThau: idGoiThauNhaThau, IIDChiPhiID: chiPhiId, IIDHangMucID: hangMucId, FTienGoiThau: tienHangMuc, idFake: idfake, HangMucParentId: hangmucparent, MaOrder : MaOrder  })
-            if (!hangmucparent) {
-                checkHangMucParentThenCheckChildren(idGoiThauNhaThau, hangMucId, true);
-            } else {
-                checkAllHangMucChildrenThenCheckParent(idGoiThauNhaThau, hangMucId, hangmucparent, true);
+            if (!arrPhuLucHangMuc.some((el) => el.IIDHangMucID == hangMucId && el.IdGoiThauNhaThau == idGoiThauNhaThau && el.IIDChiPhiID == chiPhiId)) {
+                arrPhuLucHangMuc.push({ IdGoiThauNhaThau: idGoiThauNhaThau, IIDChiPhiID: chiPhiId, IIDHangMucID: hangMucId, FTienGoiThau: tienHangMuc, idFake: idfake, HangMucParentId: hangmucparent, MaOrder: MaOrder })
+                if (!hangmucparent) {
+                    checkHangMucParentThenCheckChildren(idGoiThauNhaThau, hangMucId, true);
+                } else {
+                    checkAllHangMucChildrenThenCheckParent(idGoiThauNhaThau, hangMucId, hangmucparent, true);
+                }
             }
         } else {
             var newArray = arrPhuLucHangMuc.filter(function (el) {
                 return (el.IdGoiThauNhaThau == idGoiThauNhaThau && el.IIDChiPhiID == chiPhiId && el.IIDHangMucID != hangMucId && el.idFake != idfake)
+                //return (el.IdGoiThauNhaThau == idGoiThauNhaThau && el.IIDHangMucID != hangMucId && el.idFake != idfake)
             });
             arrPhuLucHangMuc = newArray;
             if (!hangmucparent) {
@@ -158,18 +189,20 @@ function EventCheckboxHangMuc() {
                 checkAllHangMucChildrenThenCheckParent(idGoiThauNhaThau, hangMucId, hangmucparent, false);
             }
         }
-        SumGiaTriTrungThauChiPhi(chiPhiId);
+        SumGiaTriTrungThauChiPhi(chiPhiId, idGoiThauNhaThau);
         SumGiaTriGoiThau(chiPhiId);
     });
     //SumGiaTriTrungThauChiPhi();
 }
 
 // recalculate gia tri trung thau chi phi
-function SumGiaTriTrungThauChiPhi(chiphiId) {
+function SumGiaTriTrungThauChiPhi(chiphiId, idGoiThauNhaThau) {
     var rowChiPhi = $("#tblDanhSachPhuLucChiPhi tbody").find('tr#' + chiphiId);
     var indexOfChiphi = arrPhuLucChiPhi.map(cp => cp.IIDChiPhiID).indexOf(chiphiId);
-    if (indexOfChiphi >= 0) {
-        arrPhuLucChiPhi[indexOfChiphi].FTienGoiThau = arrPhuLucHangMuc.filter(hm => hm.IIDChiPhiID === chiphiId && hm.MaOrder.indexOf("-") == -1).map(cp => cp.FTienGoiThau)
+    var phuLucChiPhi = arrPhuLucChiPhi.find(cp => cp.IIDChiPhiID == chiphiId && cp.IdGoiThauNhaThau == idGoiThauNhaThau);
+
+    if (phuLucChiPhi) {
+        arrPhuLucChiPhi[indexOfChiphi].FTienGoiThau = arrPhuLucHangMuc.filter(hm => hm.IIDChiPhiID === chiphiId && hm.IdGoiThauNhaThau == idGoiThauNhaThau && hm.MaOrder.indexOf("-") == -1)?.map(cp => cp.FTienGoiThau)
             .reduce((pre, curr) => pre + curr, 0);
         rowChiPhi.find('.r_fGiaTrungThau').val(FormatNumber(arrPhuLucChiPhi[indexOfChiphi].FTienGoiThau));
     }
@@ -180,18 +213,20 @@ function SumGiaTriGoiThau(idChiPhi) {
 
     var rowChiPhi = $("#tblDanhSachPhuLucChiPhi tbody").find('tr#' + idChiPhi);
     var inputChiPhi = rowChiPhi.children(":first").children(":first");
+    var idGoiThauNhaThau = inputChiPhi.data('idgoithaunhathau');
     var idGoiThau = inputChiPhi.data("goithauid");
     var isChecked = inputChiPhi.is(':checked');
     var tienGoiThau = rowChiPhi.find('.r_fGiaTrungThau').val() == "" ? 0 : parseFloat(UnFormatNumber(rowChiPhi.find('.r_fGiaTrungThau').val()));
-    var phuLucChiPhiTemp = listPhuLucChiPhi.find(x => x.IIDChiPhiID == idChiPhi);
-    var phuLucChiPhi = arrPhuLucChiPhi.find(x => x.IIDChiPhiID == idChiPhi);
+    var phuLucChiPhiTemp = listPhuLucChiPhi.find(x => x.IIDChiPhiID == idChiPhi && x.IdGoiThauNhaThau == idGoiThauNhaThau);
+    var phuLucChiPhi = arrPhuLucChiPhi.find(x => x.IIDChiPhiID == idChiPhi && x.IdGoiThauNhaThau == idGoiThauNhaThau);
     var giaTriPheDuyet = rowChiPhi.find('.r_fGiaGoiThau').html() == "" ? 0 : parseFloat(UnFormatNumber(rowChiPhi.find('.r_fGiaGoiThau').html()));
+  
 
     if (isChecked) {
         var rowChiPhi = $("#tblDanhSachPhuLucChiPhi tbody").find('tr#' + idChiPhi);
         var tienGoiThau = rowChiPhi.find('.r_fGiaTrungThau').val() == "" ? 0 : parseFloat(UnFormatNumber(rowChiPhi.find('.r_fGiaTrungThau').val()));
         if (!phuLucChiPhiTemp)
-            listPhuLucChiPhi.push({ IIDChiPhiID: idChiPhi, FTienGoiThau: tienGoiThau, IIDGoiThau: idGoiThau });
+            listPhuLucChiPhi.push({ IIDChiPhiID: idChiPhi, FTienGoiThau: tienGoiThau, IIDGoiThau: idGoiThau, IdGoiThauNhaThau: idGoiThauNhaThau });
         else {
             phuLucChiPhiTemp.FTienGoiThau = tienGoiThau;
             phuLucChiPhi.FTienGoiThau = tienGoiThau;
@@ -199,18 +234,19 @@ function SumGiaTriGoiThau(idChiPhi) {
             
     } else {
         var newArray = listPhuLucChiPhi.filter(function (el) {
-            return (el.IIDGoiThau == idGoiThau && el.IIDChiPhiID != idChiPhi)
+            return ((el.IdGoiThauNhaThau == idGoiThauNhaThau && el.IIDChiPhiID != idChiPhi) || el.IdGoiThauNhaThau != idGoiThauNhaThau);
         });
         listPhuLucChiPhi = newArray;
     }
 
     //var goiThauId = listPhuLucChiPhi[0].IIDGoiThau;
-    var rowGoiThau = $("#tblDanhSachGoiThau tbody").find('tr#' + idGoiThau);
+    var rowGoiThau = $(`#tblDanhSachGoiThau tbody tr input[data-idcreate='${idGoiThauNhaThau}']`).parent().parent();
 
-    var indexOfGoiThau = arrGoiThau.map(cp => cp.IIDGoiThauID).indexOf(idGoiThau);
+
+    var indexOfGoiThau = arrGoiThau.map(cp => cp.Id).indexOf(idGoiThauNhaThau);
 
     if (indexOfGoiThau >= 0) {
-        arrGoiThau[indexOfGoiThau].fGiaTriGoiThau = listPhuLucChiPhi.filter(hm => hm.IIDGoiThau === idGoiThau).map(cp => cp.FTienGoiThau)
+        arrGoiThau[indexOfGoiThau].fGiaTriGoiThau = listPhuLucChiPhi.filter(hm => hm.IdGoiThauNhaThau === idGoiThauNhaThau).map(cp => cp.FTienGoiThau)
             .reduce((pre, curr) => pre + curr, 0);
         rowGoiThau.find('.r_fGiaTriGoiThau').html(FormatNumber(arrGoiThau[indexOfGoiThau].fGiaTriGoiThau));
     }
@@ -290,12 +326,28 @@ function checkAllHangMucChildrenThenCheckParent(idGoiThauNhaThau, hangmucChildId
 }
 
 function ShowHangMuc(id) {
+    var data = {};
+    var url = '';
+
+    var hopDongId = $('#txtHopDongId').val();
+    var isGoc = $('#txtIsGoc').val().toLowerCase() === 'true';
     var goiThauId = $('#txtCurrentGoiThauSelected').val();
     var idGoiThauNhaThau = $('#txtIdGoiThauNhaThau').val();
+
+    
+    if (hopDongId && !isGoc) { // truong hop dieu chinh
+        data = { hopdongId: hopDongId, isGoc: isGoc, listGoiThau: arrGoiThau };
+        url = "/QLVonDauTu/QLThongTinHopDong/LayThongTinHangMucByHopDongId";
+    } else {
+        data = { iID_DuAnID: $("#iID_DuAnID").val(), hopDongId: '', chiphiId: id, goiThauId };
+        url = "/QLVonDauTu/QLThongTinHopDong/LayThongTinHangMucPhuLuc";
+    }
+
+    
     $.ajax({
-        url: "/QLVonDauTu/QLThongTinHopDong/LayThongTinHangMucPhuLuc",
+        url,
         type: "POST",
-        data: { iID_DuAnID: $("#iID_DuAnID").val(), hopDongId: '', chiphiId: id, goiThauId },
+        data,
         dataType: "json",
         cache: false,
         success: function (data) {
@@ -303,21 +355,37 @@ function ShowHangMuc(id) {
                 if (data != null) {
                     var htmlChiPhi = "";
                     data.forEach(function (x) {
+                        var isChecked = checkExistHangMuc(x, arrPhuLucHangMucDb, idGoiThauNhaThau);
+
                         var newArray = arrPhuLucHangMuc.filter(function (el) {
                             return (el.IdGoiThauNhaThau == idGoiThauNhaThau && el.IIDChiPhiID == id && el.IIDHangMucID == x.IIDHangMucID && el.idFake == x.IdFake)
                         });
-                        htmlChiPhi += "<tr>";
-                        if (newArray.length > 0) {
-                            htmlChiPhi += "<td align='center'> <input type='checkbox' checked data-idfake= '" + x.IdFake + "' data-tienhangmuc= '" + x.FGiaTriDuocDuyet + "' data-chiphiid='" + id + "' data-hangmucid='" + x.IIDHangMucID + "' data-hangmucparent='" + x.HangMucParentId + "' class='cb_HangMuc'></td>";
+
+                        if (hopDongId && !isGoc) { // truong hop dieu chinh
+                            if (newArray.length > 0) {
+                                htmlChiPhi += "<tr>";
+                                htmlChiPhi += "<td align='center'> <input type='checkbox' data-checked='1' data-idfake= '" + x.IdFake + "' data-tienhangmuc= '" + x.FGiaTriDuocDuyet + "' data-chiphiid='" + id + "' data-hangmucid='" + x.IIDHangMucID + "' data-hangmucparent='" + x.HangMucParentId + "' class='cb_HangMuc'></td>";
+                                htmlChiPhi += "<td class='MaOrder'>" + x.MaOrDer + "</td>";
+                                htmlChiPhi += "<td>" + x.STenHangMuc + "</td>";
+                                htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriDuocDuyet) + "</td>";
+                                htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriDuocDuyet) + "</td>";//giá trị trúng thầu
+                                //htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriConLai) + "</td>";
+                                htmlChiPhi += "</tr>";
+                            }
                         } else {
-                            htmlChiPhi += "<td align='center'> <input type='checkbox' data-idfake= '" + x.IdFake + "' data-tienhangmuc= '" + x.FGiaTriDuocDuyet + "' data-chiphiid='" + id + "' data-hangmucid='" + x.IIDHangMucID + "' data-hangmucparent='" + x.HangMucParentId + "' class='cb_HangMuc'></td>";
+                            htmlChiPhi += "<tr>";
+                            if (newArray.length > 0 || isChecked) {
+                                htmlChiPhi += "<td align='center'> <input type='checkbox' data-checked='1' data-idfake= '" + x.IdFake + "' data-tienhangmuc= '" + x.FGiaTriDuocDuyet + "' data-chiphiid='" + id + "' data-hangmucid='" + x.IIDHangMucID + "' data-hangmucparent='" + x.HangMucParentId + "' class='cb_HangMuc'></td>";
+                            } else {
+                                htmlChiPhi += "<td align='center'> <input type='checkbox' data-idfake= '" + x.IdFake + "' data-tienhangmuc= '" + x.FGiaTriDuocDuyet + "' data-chiphiid='" + id + "' data-hangmucid='" + x.IIDHangMucID + "' data-hangmucparent='" + x.HangMucParentId + "' class='cb_HangMuc'></td>";
+                            }
+                            htmlChiPhi += "<td class='MaOrder'>" + x.MaOrDer + "</td>";
+                            htmlChiPhi += "<td>" + x.STenHangMuc + "</td>";
+                            htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriDuocDuyet) + "</td>";
+                            htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriDuocDuyet) + "</td>";//giá trị trúng thầu
+                            //htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriConLai) + "</td>";
+                            htmlChiPhi += "</tr>";
                         }
-                        htmlChiPhi += "<td class='MaOrder'>" + x.MaOrDer + "</td>";
-                        htmlChiPhi += "<td>" + x.STenHangMuc + "</td>";
-                        htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriDuocDuyet) + "</td>";
-                        htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriDuocDuyet) + "</td>";//giá trị trúng thầu
-                        htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriConLai) + "</td>";
-                        htmlChiPhi += "</tr>";
                     });
 
                     $("#tblDanhSachPhuLucHangMuc tbody").html(htmlChiPhi);
@@ -329,6 +397,14 @@ function ShowHangMuc(id) {
         },
         error: function (data) {
 
+        },
+        complete: function () {
+            // hanlde event checked cho checkbox
+            $('.cb_HangMuc').each(function () {
+                if ($(this).data('checked') == '1') {
+                    $(this).trigger("click");
+                }
+            });
         }
     })
 }
@@ -348,15 +424,17 @@ function EventCheckboxGoiThau() {
         var idcreate = $(this).data('idcreate');
         var idButton = iID_GoiThau_select + '_' + sttGoiThau;
         if (this.checked) {
-            arrGoiThau.push({ Id: idcreate, stt: sttGoiThau, IIDGoiThauID: iID_GoiThau_select, IIdNhaThauId: nhaThauId, fGiaTriGoiThau: giatrigoithau, FGiaTriTrungThau: giatritrungthau })
-            $('#btn_chitiet_' + idButton).removeAttr('disabled');
-            $('#btn_ShowChiPhi_' + idButton).removeAttr('disabled');
-            $('#btn_XoaRowGoiThau_' + idButton).removeAttr('disabled');
-            $('#txt_giatritrungthau_' + idButton).removeAttr('disabled');
-            $('#txt_giatrihopdong_' + idButton).removeAttr('disabled');
+            if (!arrGoiThau.some(el => el.Id === idcreate)) {
+                arrGoiThau.push({ Id: idcreate, stt: sttGoiThau, IIDGoiThauID: iID_GoiThau_select, IIdNhaThauId: nhaThauId, fGiaTriGoiThau: giatrigoithau, FGiaTriTrungThau: giatritrungthau })
+                $('#btn_chitiet_' + idButton).removeAttr('disabled');
+                $('#btn_ShowChiPhi_' + idButton).removeAttr('disabled');
+                $('#btn_XoaRowGoiThau_' + idButton).removeAttr('disabled');
+                $('#txt_giatritrungthau_' + idButton).removeAttr('disabled');
+                $('#txt_giatrihopdong_' + idButton).removeAttr('disabled');
+            }  
         } else {
             var newArray = arrGoiThau.filter(function (el) {
-                return (el.IIDGoiThauID != iID_GoiThau_select)
+                return (el.Id != idcreate)
             });
             arrGoiThau = newArray;
             $('#btn_chitiet_' + idButton).attr("disabled", true);
@@ -367,7 +445,7 @@ function EventCheckboxGoiThau() {
         }
         SumGiaTriHopDong();
 
-        HanleEnableGiaTriHopDong(arrGoiThau);
+        HanleEnableGiaTriHopDong();
     });
 }
 
@@ -411,12 +489,15 @@ function AddRowGoiThau(obj) {
 
     var currentRow = $(obj).closest("tr");
     var rowIndex = $(obj).closest("tr").index();
-    var dropDownValue = $('#iID_NhaThauID').html();
+    var dropDownValue = $('#iID_NhaThauID_Temp').html();
     var tengoithau = currentRow.find("td:eq(1)").text();
     var tientrungthau = UnFormatNumber(currentRow.find("td:eq(3)").text());
-    var giatrigoithau = UnFormatNumber(currentRow.find("td:eq(4)").text());
-    var giatritrungthau = UnFormatNumber(currentRow.find("td:eq(5)").text());
-    var giatrihopdong = UnFormatNumber(currentRow.find("td:eq(6)").text());
+    /*var giatrigoithau = UnFormatNumber(currentRow.find("td:eq(4)").text());*/
+    //var giatritrungthau = UnFormatNumber(currentRow.find("td:eq(5)").text());
+    //var giatrihopdong = UnFormatNumber(currentRow.find("td:eq(6)").text());    
+    var giatrigoithau = '';
+    var giatritrungthau = '';
+    var giatrihopdong = '';
     var newId = CreateIdGoiThau();
     var idDropDown = 'dropdown_' + sttGoiThau + "_" + newId;
     var idButton = goithauSelectedId + '_' + sttGoiThau;
@@ -428,9 +509,9 @@ function AddRowGoiThau(obj) {
     htmlGoiThau += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(tientrungthau) + "</td>";
     htmlGoiThau += "<td class='r_fGiaGoiThau sotien r_fGiaTriGoiThau' align='right'>" + FormatNumber(giatrigoithau) + "</td>";
     //htmlGoiThau += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(giatritrungthau) + "</td>";
-    htmlGoiThau += "<td align='center'> <input id='txt_giatritrungthau_" + idButton + "' type='text' disabled class='r_fGiaGoiThau form-control sotien' value='" + FormatNumber(giatritrungthau) + "'onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>";
-    htmlGoiThau += "<td align='center'> <input id='txt_giatrihopdong_" + idButton + "' type='text' disabled class='r_fGiaTriHopDong form-control sotien' value='" + FormatNumber(giatrihopdong) + "'onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>"
-    htmlGoiThau += "<td align='center' class='r_giaTriConLai'>" + "</td>";
+    htmlGoiThau += "<td align='center'> <input id='txt_giatritrungthau_" + idButton + "' type='text' disabled class='r_fGiaGoiThau form-control sotien text-right' value='" + FormatNumber(giatritrungthau) + "'onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' onblur='updateGiaTriTrungThauGoiThau(this)' /></td>";
+    htmlGoiThau += "<td align='center'> <input id='txt_giatrihopdong_" + idButton + "' type='text' disabled class='r_fGiaTriHopDong form-control sotien text-right' value='" + FormatNumber(giatrihopdong) + "'onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' onblur='updateGiaTriHopDongGoiThau(this)' /></td>"
+    //htmlGoiThau += "<td align='center' class='r_giaTriConLai'>" + "</td>";
     //var idButton = goithauSelectedId + '_' + sttGoiThau;
     htmlGoiThau += "<td> <button id='btn_chitiet_" + idButton + "' disabled onclick = ShowChiPhi('" + goithauSelectedId + "'" + ",'" + newId + "') title='Chi phí chi tiết' class='btn btn-detail btn-icon btnShowGoiThau'><i class='fa fa-eye fa-lg'></i></button>" +
         "<button id='btn_ShowChiPhi_" + idButton + "' data-goithauid = '" + goithauSelectedId + "' data-goithaunhathauid = '" + newId + "' onclick='AddRowGoiThau(this)' disabled class='btn btn-edit btn-icon btnShowGoiThau'><i class='fa fa-plus fa-lg'></i></button>" +
@@ -439,6 +520,7 @@ function AddRowGoiThau(obj) {
     htmlGoiThau += "</tr>";
     $("#tblDanhSachGoiThau tbody > tr").eq(rowIndex).after(htmlGoiThau);
     EventGridGoiThau();
+    $(".dropdown_nhathau").select2({ width: '100%', matcher: FilterInComboBox });
 }
 function XoaRowGoiThau(item, idButton) {
     $(item).closest("tr").addClass("error-row");
@@ -454,8 +536,8 @@ function updateGiaTriConLaiGoiThau(goiThau, goiThauIndex) {
 
 function updateGiaTriTrungThauGoiThau(goiThau) {
     var giaTriTrungThau = $(goiThau).val().replaceAll('.','');
-    var goiThauId = $(goiThau).closest('tr').find('.cb_DuToan').data('goithauid');
-    var goiThauIndex = arrGoiThau.map(it => it.IIDGoiThauID).indexOf(goiThauId);
+    var goiThauNhaThauId = $(goiThau).closest('tr').find('.cb_DuToan').data('idcreate');
+    var goiThauIndex = arrGoiThau.map(it => it.Id).indexOf(goiThauNhaThauId);
     if (goiThauIndex >= 0) {
         arrGoiThau[goiThauIndex].FGiaTriTrungThau = parseInt(giaTriTrungThau);
         updateGiaTriConLaiGoiThau(goiThau, goiThauIndex);
@@ -464,8 +546,8 @@ function updateGiaTriTrungThauGoiThau(goiThau) {
 
 function updateGiaTriHopDongGoiThau(goiThau) {
     var fGiaTriHD = $(goiThau).val().replaceAll('.', '');
-    var goiThauId = $(goiThau).closest('tr').find('.cb_DuToan').data('goithauid');
-    var goiThauIndex = arrGoiThau.map(it => it.IIDGoiThauID).indexOf(goiThauId);
+    var goiThauNhaThauId = $(goiThau).closest('tr').find('.cb_DuToan').data('idcreate');
+    var goiThauIndex = arrGoiThau.map(it => it.Id).indexOf(goiThauNhaThauId);
     if (goiThauIndex >= 0) {
         arrGoiThau[goiThauIndex].fGiaTriHD = parseInt(fGiaTriHD);
     }
@@ -514,9 +596,9 @@ $("#iID_DuAnID").change(function () {
                             htmlGoiThau += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FTienTrungThau) + "</td>";
                             htmlGoiThau += "<td class='r_fGiaGoiThau sotien r_fGiaTriGoiThau' align='right'>" + FormatNumber(x.fGiaTriGoiThau) + "</td>";
                             //htmlGoiThau += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriTrungThau) + "</td>";
-                            htmlGoiThau += "<td align='center'> <input id='txt_giatritrungthau_" + idButton + "' type='text' disabled class='r_fGiaGoiThau form-control sotien' onblur='updateGiaTriTrungThauGoiThau(this)' value='" + FormatNumber(x.FGiaTriTrungThau) + "'onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>";
-                            htmlGoiThau += "<td align='center'> <input id='txt_giatrihopdong_" + idButton + "' type='text' disabled class='r_fGiaTriHopDong form-control sotien' onblur='updateGiaTriHopDongGoiThau(this)' value='" + FormatNumber(x.fGiaTriHD) + "'onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>"
-                            htmlGoiThau += "<td align='center' class='r_giaTriConLai'>" + "</td>";
+                            htmlGoiThau += "<td align='center'> <input id='txt_giatritrungthau_" + idButton + "' type='text' disabled class='r_fGiaGoiThau form-control sotien text-right' onblur='updateGiaTriTrungThauGoiThau(this)' value='" + FormatNumber(x.FGiaTriTrungThau) + "'onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>";
+                            htmlGoiThau += "<td align='center'> <input id='txt_giatrihopdong_" + idButton + "' type='text' disabled class='r_fGiaTriHopDong form-control sotien text-right' onblur='updateGiaTriHopDongGoiThau(this)' value='" + FormatNumber(x.fGiaTriHD) + "'onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>"
+                            //htmlGoiThau += "<td align='center' class='r_giaTriConLai'>" + "</td>";
                             //var idButton = x.IIDGoiThauID + '_' + sttGoiThau;
                             htmlGoiThau += "<td> <button id='btn_chitiet_" + idButton + "' disabled onclick = ShowChiPhi('" + x.IIDGoiThauID + "'" + ",'" + x.Id + "') title='Chi phí chi tiết' class='btn btn-detail btn-icon btnShowGoiThau'><i class='fa fa-eye fa-lg'></i></button>" +
                                 "<button id='btn_ShowChiPhi_" + idButton + "' data-goithauid='" + x.IIDGoiThauID + "' data-goithaunhathauid='" + x.Id + "' onclick='AddRowGoiThau(this)' disabled class='btn btn-edit btn-icon btnShowGoiThau'><i class='fa fa-plus fa-lg'></i></button>" +
@@ -727,6 +809,8 @@ function CheckTrungSoHopDong(sSoHopDong) {
 
 function Save() {
     var hopDong = {};
+    hopDong.iID_HopDongID = $("#iIDHopDongId").val();
+
     //Thông tin dự án
     hopDong.iID_DuAnID = $("#iID_DuAnID").val();
 
@@ -811,7 +895,7 @@ function ChangeNhaThau() {
     });
 }
 
-function HanleEnableGiaTriHopDong(arrGoiThau)
+function HanleEnableGiaTriHopDong()
 {
     var isEnable = $("#tblDanhSachGoiThau tbody").find(".cb_DuToan:checkbox:checked").length > 0;
     if (isEnable) {
@@ -820,4 +904,263 @@ function HanleEnableGiaTriHopDong(arrGoiThau)
         $("#fGiaTriHopDong").prop('disabled', false);
     }
 
+}
+
+
+function ShowChiPhiDb(id, idGoiThauNhaThau) {
+    $('#txtCurrentGoiThauSelected').val(id);
+    $('#txtIdGoiThauNhaThau').val(idGoiThauNhaThau);
+    var hopDongId = $('#txtHopDongId').val();
+    $.ajax({
+        url: "/QLVonDauTu/QLThongTinHopDong/LayThongTinChiPhiPhuLucByHopDongId",
+        type: "POST",
+        data: { hopdongId: hopDongId },
+        dataType: "json",
+        cache: false,
+        success: function (data) {
+            if (data != null && data != "") {
+                if (data != null) {
+                    var htmlChiPhi = "";
+                    data.forEach(function (x) {
+                        var newArray = arrPhuLucChiPhiDb.filter(function (el) {
+                            //return (el.chiphiid != iID_ChiPhi_select)
+                            return (el.IdGoiThauNhaThau == idGoiThauNhaThau && el.IIDChiPhiID == x.IIDChiPhiID)
+                        });
+                        if (newArray.length > 0 && x.IdGoiThauNhaThau == idGoiThauNhaThau) {
+                            var disable = x.IsHasHangMuc ? 'disabled' : '';
+                            var fTienGoiThau = !x.FTienGoiThau ? '' : FormatNumber(x.FTienGoiThau);
+
+                            htmlChiPhi += "<tr id='" + x.IIDChiPhiID + "'>";
+                            if (newArray.length > 0) {
+                                htmlChiPhi += "<td align='center'> <input type='checkbox' checked data-tiengoithau ='" + x.FGiaTriDuocDuyet + "' data-goithauid='" + x.Id + "' data-chiphiid='" + x.IIDChiPhiID + "' class='cb_ChiPhi' data-idgoithaunhathau='" + idGoiThauNhaThau + "'></td>";
+                            } else {
+                                htmlChiPhi += "<td align='center'> <input type='checkbox' data-tiengoithau ='" + x.FGiaTriDuocDuyet + "' data-goithauid='" + x.Id + "' data-chiphiid='" + x.IIDChiPhiID + "' class='cb_ChiPhi' data-idgoithaunhathau='" + idGoiThauNhaThau + "'></td>";
+                            }
+
+                            htmlChiPhi += "<td>" + x.STenChiPhi + "</td>";
+                            htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right' >" + FormatNumber(x.FGiaTriDuocDuyet) + "</td>";
+
+                            htmlChiPhi += "<td>" + `<input style="text-align: right;" ${disable} class="r_fGiaTrungThau sotien form-control" type="text" value='${fTienGoiThau}' onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" onblur="SumGiaTriGoiThau('${x.IIDChiPhiID}')"/>` + "</td>";
+                            htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriDuocDuyet - x.FTienGoiThau) + "</td>";
+                            if (newArray.length > 0) {
+                                htmlChiPhi += "<td align='center'> <button id='btn_chitiet_chiphi_" + x.IIDChiPhiID + "' style='width: 120px !important' onclick = ShowHangMucDb('" + x.IIDChiPhiID + "') class='btn btn-primary btnShowHangMuc'><span>Chi tiết hạng mục</span></button>" +
+                                    "</td > ";
+                            } else {
+                                htmlChiPhi += "<td align='center'> <button id='btn_chitiet_chiphi_" + x.IIDChiPhiID + "' style='width: 120px !important' disabled onclick = ShowHangMucDb('" + x.IIDChiPhiID + "') class='btn btn-primary btnShowHangMuc'><span>Chi tiết hạng mục</span></button>" +
+                                    "</td > ";
+                            }
+                            htmlChiPhi += "</tr>";
+                        }
+                    });
+                    $("#tblDanhSachPhuLucChiPhi tbody").html(htmlChiPhi);
+                    EventCheckboxChiPhi(idGoiThauNhaThau);
+                    
+                }
+            } else {
+                $("#tblDanhSachPhuLucChiPhi tbody").html('');
+                alert("Không có thông tin chi phí cho gói thầu này");
+            }
+            $("#tblDanhSachPhuLucHangMuc tbody").html('');
+        },
+        error: function (data) {
+
+        }
+    })
+}
+
+
+var arrNhaThau = [];
+function GetListNhaThau() {
+    var hopDongId = $('#txtHopDongId').val();
+    $.ajax({
+        url: "/QLVonDauTu/QLThongTinHopDong/GetListNhaThau",
+        type: "POST",
+        data: {},
+        dataType: "json",
+        cache: false,
+        success: function (data) {
+            if (data != null && data != "") {
+                if (data != null) {
+                    data.forEach(function (x) {
+                        arrNhaThau.push({ iID_NhaThauID: x.iID_NhaThauID, STenNhaThau: x.sTenNhaThau })
+                    });
+                }
+            } else {
+
+            }
+        },
+        async: false,
+        error: function (data) {
+
+        }
+    })
+}
+
+
+function LoadGoiThauDb() {
+    var hopDongId = $('#txtHopDongId').val();
+    $.ajax({
+        url: "/QLVonDauTu/QLThongTinHopDong/LayThongTinChiTietGoiThauDb",
+        type: "POST",
+        data: { hopDongId: hopDongId },
+        dataType: "json",
+        cache: false,
+        success: function (data) {
+            if (data != null && data != "") {
+                //var dropDownValue = $('#iID_NhaThauID').html();
+                if (data.goithau != null) {
+                    var htmlGoiThau = "";
+                    data.goithau.forEach(function (x) {
+                        var dropDownValue = CreateDropDownNhaThau(x.IIdNhaThauId);
+                        var idButton = x.IIDGoiThauID + '_' + sttGoiThau;
+                        arrGoiThau.push({ Id: x.Id, stt: sttGoiThau, IIDGoiThauID: x.IIDGoiThauID, IIdNhaThauId: x.IIdNhaThauId, fGiaTriGoiThau: x.fGiaTriGoiThau, fGiaTriHD: x.fGiaTriHD, FGiaTriTrungThau: x.FGiaTriTrungThau })
+                        var idDropDown = 'dropdown_' + sttGoiThau + "_" + x.IIDGoiThauID;
+
+                        htmlGoiThau += `<tr id=${x.IIDGoiThauID}>`;
+                        htmlGoiThau += "<td align='center'> <input type='checkbox' checked data-idcreate= '" + x.Id + "' data-giatrigoithau = '" + x.fGiaTriGoiThau + "' data-giatritrungthau = '" + x.FGiaTriTrungThau + "' data-nhathauid = '" + idDropDown + "' data-sttgoithau = '" + sttGoiThau + "' data-goithauid='" + x.IIDGoiThauID + "' class='cb_DuToan'></td>";
+                        htmlGoiThau += "<td>" + x.STenGoiThau + "</td>";
+
+                        //htmlGoiThau += "<tr>";
+                        //htmlGoiThau += "<td align='center'> <input type='checkbox' checked data-giatrigoithau = '" + x.fGiaTriGoiThau + "' data-giatritrungthau = '" + x.FGiaTriTrungThau + "' data-giatrihopdong = '" + x.fGiaTriHD + "' data-nhathauid = '" + idDropDown + "' data-sttgoithau = '" + sttGoiThau + "' data-goithauid='" + x.IIDGoiThauID + "' class='cb_DuToan'></td>";
+                        //htmlGoiThau += "<td>" + x.STenGoiThau + "</td>";
+
+                        htmlGoiThau += "<td> <select id='" + idDropDown + "' data-sttgoithau = '" + sttGoiThau + "' onchange='UpdateItemNhaThau($(this))' data-goithauid='" + x.IIDGoiThauID + "' class='form-control dropdown_nhathau'> " + dropDownValue + " </select></td>";
+                        htmlGoiThau += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FTienTrungThau) + "</td>";
+                        htmlGoiThau += "<td class='r_fGiaGoiThau sotien r_fGiaTriGoiThau' align='right'>" + FormatNumber(x.fGiaTriGoiThau) + "</td>";
+                        //htmlGoiThau += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriTrungThau) + "</td>";
+                        htmlGoiThau += "<td align='center'> <input id='txt_giatritrungthau_" + idButton + "' type='text' class='r_fGiaGoiThau form-control sotien text-right' onblur='updateGiaTriTrungThauGoiThau(this)' value='" + FormatNumber(x.FGiaTriTrungThau) + "'onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>";
+                        htmlGoiThau += "<td align='center'> <input id='txt_giatrihopdong_" + idButton + "' type='text' class='r_fGiaTriHopDong form-control sotien text-right' onblur='updateGiaTriHopDongGoiThau(this)' value='" + FormatNumber(x.fGiaTriHD) + "'onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' autocomplete='off' /></td>"
+                        //htmlGoiThau += "<td class='r_giaTriConLai' align='right'>" + FormatNumber(x.fGiaTriGoiThau - x.FGiaTriTrungThau) + "</td>";
+                        //var idButton = x.IIDGoiThauID + '_' + sttGoiThau;
+                        htmlGoiThau += "<td> <button id='btn_chitiet_" + idButton + "' onclick = ShowChiPhi('" + x.IIDGoiThauID + "'" + ",'" + x.Id + "') title='Chi phí chi tiết' class='btn btn-detail btn-icon btnShowGoiThau'><i class='fa fa-eye fa-lg'></i></button>" +
+                            "<button id='btn_ShowChiPhi_" + idButton + "' data-goithauid='" + x.IIDGoiThauID + "' data-goithaunhathauid='" + x.Id + "' onclick='AddRowGoiThau(this)' class='btn btn-edit btn-icon btnShowGoiThau'><i class='fa fa-plus fa-lg'></i></button>" +
+                            "<button id='btn_XoaRowGoiThau_" + idButton + "' data-goithauid='" + x.IIDGoiThauID + "' data-goithaunhathauid='" + x.Id + "' onclick=\"XoaRowGoiThau(this," + `\'${idButton}\'` + ")\" class='btn btn-delete btn-icon btnShowGoiThau'><i class='fa fa-trash-o fa-lg'></i></button>"
+                        "</td > ";
+                        htmlGoiThau += "</tr>";
+                        sttGoiThau++;
+                    });
+                    $("#tblDanhSachGoiThau tbody").html(htmlGoiThau);
+                    EventGridGoiThau();
+                    EventCheckboxGoiThau();
+                    HanleEnableGiaTriHopDong();
+                    $(".dropdown_nhathau").select2({ width: '100%', matcher: FilterInComboBox });
+                } else {
+                    $("#tblDanhSachGoiThau tbody").html('');
+                    arrGoiThau = [];
+                    arrPhuLucHangMuc = [];
+                    arrPhuLucChiPhi = [];
+                }
+            } else {
+                $("#tblDanhSachGoiThau tbody").html('');
+                arrGoiThau = [];
+                arrPhuLucHangMuc = [];
+                arrPhuLucChiPhi = [];
+            }
+            if (arrGoiThau.length > 0) SumGiaTriHopDong();
+        },
+        error: function (data) {
+
+        },
+        async: false
+    })
+}
+
+
+var arrPhuLucChiPhiDb = [];
+function SetArrChiPhi() {
+    var hopDongId = $('#txtHopDongId').val();
+    $.ajax({
+        url: "/QLVonDauTu/QLThongTinHopDong/LayThongTinChiPhiPhuLucByHopDongId",
+        type: "POST",
+        data: { hopdongId: hopDongId },
+        dataType: "json",
+        cache: false,
+        success: function (data) {
+            if (data != null && data != "") {
+                if (data != null) {
+                    //var htmlChiPhi = "";
+                    data.forEach(function (x) {
+                        arrPhuLucChiPhiDb.push({ IdGoiThauNhaThau: x.IdGoiThauNhaThau, IIDChiPhiID: x.IIDChiPhiID, FTienGoiThau: x.FTienGoiThau })
+                        arrPhuLucChiPhi.push({ IdGoiThauNhaThau: x.IdGoiThauNhaThau, IIDChiPhiID: x.IIDChiPhiID, FTienGoiThau: x.FTienGoiThau })
+                        listPhuLucChiPhi.push({ IdGoiThauNhaThau: x.IdGoiThauNhaThau, IIDChiPhiID: x.IIDChiPhiID, FTienGoiThau: x.FTienGoiThau });
+                    });
+                    //$("#tblDanhSachPhuLucChiPhi tbody").html(htmlChiPhi);
+                    //EventCheckboxChiPhi(idGoiThauNhaThau);
+                }
+            } else {
+                // $("#tblDanhSachPhuLucChiPhi tbody").html('');
+            }
+            // $("#tblDanhSachPhuLucHangMuc tbody").html('');
+        },
+        async: false,
+        error: function (data) {
+
+        }
+    })
+}
+
+var arrPhuLucHangMucDb = [];
+function SetArrHangMuc() {
+    var hopDongId = $('#txtHopDongId').val();
+    var isGoc = $('#txtIsGoc').val();
+    $.ajax({
+        url: "/QLVonDauTu/QLThongTinHopDong/LayThongTinHangMucByHopDongId",
+        type: "POST",
+        data: { hopdongId: hopDongId, isGoc: isGoc, listGoiThau: arrGoiThau },
+        dataType: "json",
+        cache: false,
+        success: function (data) {
+            if (data != null && data != "") {
+                if (data != null) {
+                    data.forEach(function (x) {
+                        arrPhuLucHangMuc.push({ IdGoiThauNhaThau: x.IdGoiThauNhaThau, IIDChiPhiID: x.IIDChiPhiID, IIDHangMucID: x.IIDHangMucID, FTienGoiThau: x.FTienGoiThau, idFake: x.IdFake, MaOrder: x.MaOrDer, HangMucParentId: x.HangMucParentId })
+                        arrPhuLucHangMucDb.push({ IdGoiThauNhaThau: x.IdGoiThauNhaThau, IIDChiPhiID: x.IIDChiPhiID, IIDHangMucID: x.IIDHangMucID, FTienGoiThau: x.FTienGoiThau, idFake: x.IdFake, MaOrder: x.MaOrDer, HangMucParentId: x.HangMucParentId })
+                    });
+                }
+            } else {
+            }
+        },
+        async: false,
+        error: function (data) {
+
+        }
+    })
+}
+
+function CreateDropDownNhaThau(nhathauId) {
+    var html = '';
+    arrNhaThau.forEach(function (x) {
+        if (x.iID_NhaThauID == nhathauId) {
+            html += '<option selected value = "' + x.iID_NhaThauID + ' ">' + x.STenNhaThau + '</option>';
+        } else {
+            html += '<option value = "' + x.iID_NhaThauID + '">' + x.STenNhaThau + '</option>';
+        }
+    });
+    return html;
+}
+
+function checkExistChiPhi(chiPhi, array, idGoiThauNhaThau) {
+    for (var i = 0; i < array.length; i++) {
+        if (array[i].IIDChiPhiID == chiPhi.IIDChiPhiID && array[i].IdGoiThauNhaThau == idGoiThauNhaThau) {
+            var chiPhiDb = arrPhuLucChiPhiDb.find((el) => el.IIDChiPhiID == chiPhi.IIDChiPhiID);
+            chiPhi.FTienGoiThau = chiPhiDb.FTienGoiThau
+            return true;
+        }
+    }
+    return false;
+}
+
+function checkExistHangMuc(hangMuc, array, idGoiThauNhaThau) {
+    for (var i = 0; i < array.length; i++) {
+        if (hangMuc.IIDHangMucID == array[i].IIDHangMucID && idGoiThauNhaThau == array[i].IdGoiThauNhaThau) {
+            //var hangMucSave = arrPhuLucHangMuc.find((el) => el.IIDHangMucID == hangMuc.IIDHangMucID);
+            //if (hangMucSave) {
+            //    hangMucSave.MaOrder = hangMuc.MaOrDer;
+            //    hangMucSave.HangMucParentId = hangMuc.HangMucParentId;
+            //}
+            return true;
+        }  
+    }
+
+    return false;
 }

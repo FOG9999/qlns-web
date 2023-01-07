@@ -1,10 +1,15 @@
-﻿--DECLARE @iIdMaDonViQuanLy nvarchar(50) ='220'
---DECLARE @iNamKeHoach int =2022
+﻿--DECLARE @iIdDonViQuanLy uniqueidentifier ='06d320f3-cf8d-4c98-af0b-2ea2243c37b0'
+--DECLARE @iNamKeHoach int =2026
 
  SELECT da.iID_DuAnID, da.sMaDuAn, da.sTenDuAn INTO #tmp
 FROM VDT_DA_DuAn da
 --WHERE (da.iID_MaDonVi = @iIdMaDonViQuanLy ) AND (da.iID_DuAnID IN (SELECT ctdt.iID_DuAnID FROM VDT_KHV_KeHoach5Nam_ChiTiet ctdt))
-WHERE ( da.iID_DonViQuanLyID = @iIdDonViQuanLy) AND (da.iID_DuAnID IN (SELECT ctdt.iID_DuAnID FROM VDT_KHV_KeHoach5Nam_ChiTiet ctdt))
+WHERE ( da.iID_DonViQuanLyID = @iIdDonViQuanLy)
+		AND (da.iID_DuAnID IN (
+				SELECT ctdt.iID_DuAnID 
+					FROM VDT_KHV_KeHoach5Nam_ChiTiet ctdt
+					INNER JOIN VDT_KHV_KeHoach5Nam khth on khth.iID_KeHoach5NamID = ctdt.iID_KeHoach5NamID
+					WHERE khth.iGiaiDoanTu <=	@iNamKeHoach AND khth.iGiaiDoanDen >= @iNamKeHoach) )
 
 SELECT DISTINCT tmp.iID_DuAnID INTO #tmpDuAnChuyenTiep
 	FROM #tmp as tmp
@@ -20,3 +25,4 @@ where tmp.iID_DuAnID not in (select iID_DuAnID from VDT_QT_QuyetToan)
 
 DROP TABLE #tmp
 DROP TABLE #tmpDuAnChuyenTiep
+

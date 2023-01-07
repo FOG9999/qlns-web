@@ -78,5 +78,7 @@ namespace Viettel.Models.QLVonDauTu
         public string sGhiChu { get; set; }
         public bool isDelete { get; set; }
         public Guid? iID_KeHoachUngID { get; set; }
+        public Guid? iID_DuAn_HangMucID { get; set; }
+        public Guid? iID_LoaiCongTrinhID { get; set; }
     }
 }

@@ -118,6 +118,7 @@ function ShowChiPhiDb(id, idGoiThauNhaThau) {
                 if (data != null) {
                     var htmlChiPhi = "";
                     data.forEach(function (x) {
+                        var fTienGoiThau = !x.FTienGoiThau ? '' : FormatNumber(x.FTienGoiThau);
                         var newArray = arrPhuLucChiPhi.filter(function (el) {
                             //return (el.chiphiid != iID_ChiPhi_select)
                             return (el.IdGoiThauNhaThau == idGoiThauNhaThau && el.IIDChiPhiID == x.IIDChiPhiID)
@@ -133,7 +134,7 @@ function ShowChiPhiDb(id, idGoiThauNhaThau) {
 
                             htmlChiPhi += "<td>" + x.STenChiPhi + "</td>";
                             htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriDuocDuyet) + "</td>";
-                            htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriConLai) + "</td>";
+                            htmlChiPhi += "<td class='sotien' align='right'>" + fTienGoiThau + "</td>";
                             if (newArray.length > 0) {
                                 htmlChiPhi += "<td align='center'> <button id='btn_chitiet_chiphi_" + x.IIDChiPhiID + "' style='width: 120px !important' onclick = ShowHangMucDb('" + x.IIDChiPhiID + "') class='btn btn-primary btnShowHangMuc'><span>Chi tiết hạng mục</span></button>" +
                                     "</td > ";
@@ -193,7 +194,7 @@ function SetArrHangMuc() {
     $.ajax({
         url: "/QLVonDauTu/QLThongTinHopDong/LayThongTinHangMucByHopDongId",
         type: "POST",
-        data: { hopdongId: hopDongId, isGoc: isGoc },
+        data: { hopdongId: hopDongId, isGoc: isGoc, listGoiThau: arrGoiThau },
         dataType: "json",
         cache: false,
         success: function (data) {
@@ -220,7 +221,7 @@ function ShowHangMucDb(id) {
     $.ajax({
         url: "/QLVonDauTu/QLThongTinHopDong/LayThongTinHangMucByHopDongId",
         type: "POST",
-        data: { hopdongId: hopDongId, isGoc: isGoc },
+        data: { hopdongId: hopDongId, isGoc: isGoc, listGoiThau: arrGoiThau },
         dataType: "json",
         cache: false,
         success: function (data) {
@@ -241,6 +242,7 @@ function ShowHangMucDb(id) {
                             htmlChiPhi += "<td>" + x.MaOrDer + "</td>";
                             htmlChiPhi += "<td>" + x.STenHangMuc + "</td>";
                             htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriDuocDuyet) + "</td>";
+                            htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FTienGoiThau) + "</td>";
                             /*htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriConLai) + "</td>";*/
                             htmlChiPhi += "</tr>";
                         }
@@ -364,7 +366,8 @@ function GetListNhaThau() {
         },
         error: function (data) {
 
-        }
+        },
+        async: false
     })
 }
 
@@ -434,7 +437,7 @@ function LoadGoiThauDb() {
                         htmlGoiThau += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FTienTrungThau) + "</td>";
                         htmlGoiThau += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.fGiaTriGoiThau) + "</td>";
                         htmlGoiThau += "<td class='fGiaTriGoiThau r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriTrungThau) + "</td>";
-                        htmlGoiThau += "<td>" + "</td>";
+                        htmlGoiThau += "<td align='right'>" + FormatNumber(x.fGiaTriHD) +"</td>";
                         var idButton = x.IIDGoiThauID + '_' + sttGoiThau;
                         htmlGoiThau += "<td align='center'> <button id='btn_chitiet_" + idButton + "' onclick = ShowChiPhiDb('" + x.IIDGoiThauID + "'" + ",'" + x.Id + "')  title='Chi phí chi tiết' class='btn btn-detail btn-icon btnShowGoiThau'><i class='fa fa-eye fa-lg'></i></button>";
                           
@@ -455,11 +458,12 @@ function LoadGoiThauDb() {
                 arrPhuLucHangMuc = [];
                 arrPhuLucChiPhi = [];
             }
-            SumGiaTriHopDong();
+            //SumGiaTriHopDong();
         },
         error: function (data) {
 
-        }
+        },
+        async: false
     })
 }
 

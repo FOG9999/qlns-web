@@ -79,7 +79,7 @@ function Loc() {
     //var iNamThongTri = $("#sNamThongTri").val();
 
     if (iIDMaDonVi == "" || iIDMaDonVi == GUID_EMPTY) {
-        alert("Thông tin đơn vị chưa có hoặc chưa chính xác");
+        alert("Thông tin đơn vị chưa nhập");
         return;
     }
 
@@ -364,6 +364,7 @@ function Luu() {
                             success: function (data) {
                                 console.log(data);
                                 if (data != null && data == true) {
+                                    alert("Tạo mới bản ghi " + thongTri.sMaThongTri + " thành công");
                                     window.location.href = "/QLVonDauTu/QLThongTriThanhToan/Index";
                                 }
                             },
@@ -397,28 +398,31 @@ function GetValueDataInGrid(lstData) {
 function CheckLoi(doiTuong) {
     var messErr = [];
     if (doiTuong.iID_DonViID == "" || doiTuong.iID_DonViID == GUID_EMPTY)
-        messErr.push("Đơn vị quản lý chưa có hoặc chưa chính xác.");
+        messErr.push("Đơn vị quản lý chưa nhập.");
 
     if (doiTuong.sMaNguonVon == "" || doiTuong.sMaNguonVon == 0)
-        messErr.push("Nguồn vốn chưa có hoặc chưa chính xác.");
+        messErr.push("Nguồn vốn chưa nhập.");
 
-    if (doiTuong.sMaThongTri == "")
-        messErr.push("Mã thông tri chưa có hoặc chưa chính xác.");
+    //if (doiTuong.sMaThongTri == "")
+    //    messErr.push("Mã thông tri chưa nhập.");
 
     if (doiTuong.dNgayThongTri == "")
-        messErr.push("Ngày tạo thông tri chưa có hoặc chưa chính xác.");
+        messErr.push("Ngày tạo thông tri chưa nhập.");
 
     if (doiTuong.iNamThongTri == "")
-        messErr.push("Năm thực hiện chưa có hoặc chưa chính xác.");
+        messErr.push("Năm làm việc chưa nhập.");
 
     if (doiTuong.sNguoiLap == "")
-        messErr.push("Người lập thông tri chưa có hoặc chưa chính xác.");
+        messErr.push("Người lập thông tri chưa nhập.");
 
     if (doiTuong.sThuTruongDonVi == "")
-        messErr.push("Thủ trưởng đơn vị chưa có hoặc chưa chính xác.");
+        messErr.push("Thủ trưởng đơn vị chưa nhập.");
 
     if (KiemTraTrungMaThongTri(doiTuong.sMaThongTri) == true)
         messErr.push("Mã thông tri đã tồn tại, vui lòng nhập mã khác.");
+    if (doiTuong.iLoaiThongTri == '0') {
+        messErr.push("Loại cấp phát chưa nhập.");
+    }
 
     //TODO save thanh toan chi tiet
     /*

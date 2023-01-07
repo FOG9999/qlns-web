@@ -51,6 +51,7 @@ namespace Viettel.Models.QLVonDauTu
         public Guid? iID_DonViID { get;set; }
         public string sTenDonVi { get;set; }
         public double? fGiaTriPhanBoDC { get; set; }
+        public Guid? iID_DuAn_HangMucID { get; set; }
 
     }
 

@@ -9,8 +9,18 @@ namespace Viettel.Models.QLVonDauTu
 {
     public class ThongTinGoiThauViewModel : VDT_DA_GoiThau
     {
+        public int IStt { get; set; }
         public string sTenDuAn { get; set; }
         public string sTenNhaThau { get; set; }
+        public string sMaDuAn { get; set; }
+        public string sMaNhaThau { get; set; }
+        public string sNgayQuyetDinh
+        {
+            get
+            {
+                return dNgayQuyetDinh.HasValue ? dNgayQuyetDinh.Value.ToString("dd/MM/yyyy") : string.Empty;
+            }
+        }
 
         public float? giatriDieuChinh { get; set; }
         public int? soLanDieuChinh { get; set; }
@@ -44,6 +54,10 @@ namespace Viettel.Models.QLVonDauTu
         public string sTenNhomDuAn { get; set; }
         public string sTenNhomQuanLy { get; set; }
         public string sTenHinhThucQuanLy { get; set; }
+        public string sTenHangMuc { get; set; }
+        public string sMaLoaiCongTrinh { get; set; }
+        public int iID_NguonVonID { get; set; }
+        public int IStt { get; set; }
     }
 
     public class GoiThauChiPhiViewModel : VDT_DA_GoiThau_ChiPhi

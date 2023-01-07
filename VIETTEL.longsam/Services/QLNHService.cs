@@ -46,11 +46,8 @@ namespace Viettel.Services
         #endregion
 
         #region QLNH - Thông tin hợp đồng
-        IEnumerable<NH_DA_HopDongModel> GetAllNHThongTinHopDong(ref PagingInfo _paging, DateTime? dNgayHopDong,
-            Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHopDong, string sSoHopDong);
-
-        IEnumerable<NH_DA_HopDongModel> GetAllNHThongTinHopDongById(Guid Id, DateTime? dNgayHopDong,
-Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHopDong, string sSoHopDong);
+        IEnumerable<NH_DA_HopDongModel> GetAllNHThongTinHopDong(ref PagingInfo _paging, DateTime? dNgayHopDong, Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHopDong, string sSoHopDong);
+        IEnumerable<NH_DA_HopDongModel> GetAllNHThongTinHopDongById(Guid Id, DateTime? dNgayHopDong, Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHopDong, string sSoHopDong);
         NH_DA_HopDongModel GetThongTinHopDongById(Guid iId);
         bool SaveThongTinHopDong(NH_DA_HopDong data, bool isDieuChinh, string userName);
         bool DeleteThongTinHopDong(Guid iId);
@@ -59,6 +56,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
         IEnumerable<NH_KHChiTietBQP_NhiemVuChi> GetNHKeHoachChiTietBQPNhiemVuChi(Guid? id = null);
         IEnumerable<NH_KHChiTietBQP> GetNHKeHoachChiTietBQP(Guid? id = null);
         IEnumerable<NH_DA_DuAn> GetNHDADuAnList(Guid? id = null);
+        IEnumerable<NH_DA_DuAn> GetNHDADuAnListByConditions(Guid? khBQPId = null, Guid? nvcId = null, Guid? bQLId = null, Guid? donViId = null);
         IEnumerable<NH_DM_NhaThau> GetNHDMNhaThauList(Guid? id = null, int? iLoai = null);
         IEnumerable<NH_DM_TiGia> GetNHDMTiGiaList(Guid? id = null);
         IEnumerable<NH_DM_TiGia_ChiTiet> GetNHDMTiGiaChiTietList(Guid? iDTiGia, bool isMaNgoaiTeKhac = true);
@@ -207,13 +205,13 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
         IEnumerable<NS_DonVi> GetListDvByPhongBan(Guid id, int iNamLamViec);
         IEnumerable<NS_PhongBan> GetListPhongBanByNhiemVuChi(Guid id);
         IEnumerable<NS_PhongBan> GetLookupQuanLy();
-        IEnumerable<NS_DonVi> GetLookupThongTinDonVi();
+        IEnumerable<NS_DonVi> GetLookupThongTinDonVi(int namLamViec);
         IEnumerable<DM_ChuDauTu> GetLookupChuDauTu();
         IEnumerable<NH_DA_DuAn> GetThongTinDuAnDuAnList(Guid? id = null);
         List<NH_DA_DuAn> GetMaDuAn(string iID_MaDonVi, string sMaChuDauTu);
         IEnumerable<DM_ChuDauTu> GetLookupChuDauTuu();
         IEnumerable<NH_DM_ChiPhi> GetLookupChiPhi();
-        IEnumerable<NH_KHChiTietBQP_NhiemVuChiModel> GetNHKeHoachChiTietBQPNhiemVuChiListDuAn(Guid? id = null);
+        IEnumerable<NH_KHChiTietBQP_NhiemVuChiModel> GetNHKeHoachChiTietBQPNhiemVuChiListDuAn();
         IEnumerable<NS_DonVi> GetListDonViToBQP(Guid? id = null);
         IEnumerable<NHDAThongTinDuAnModel> GetListBQPToNHC(Guid? id = null);
         IEnumerable<NH_KHChiTietBQP_NhiemVuChi> GetListCTbyDV(Guid? id = null, Guid? idBQP = null);
@@ -233,17 +231,6 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
         #region QLNH - Tổng hợp dự án
         IEnumerable<NHDAThongTinDuAnModel> getListTongHopDuAnModels(ref PagingInfo _paging, Guid? iID_BQuanLyID = null, Guid? iID_DonViID = null);
         List<NHDAThongTinDuAnModel> getListTongHopDuAn_BaoCaoModels(Guid? iID_BQuanLyID = null, Guid? iID_DonViID = null);
-
-
-        //NHDAThongTinDuAnModel GetThongTinDuAnById(Guid iId);
-
-        //bool DeleteThongTinDuAn(Guid iId);
-        //IEnumerable<NH_DM_PhanCapPheDuyet> GetLookupThongTinDuAn();
-        //IEnumerable<NS_PhongBan> GetLookupQuanLy();
-        //IEnumerable<NS_DonVi> GetLookupThongTinDonVi();
-        //IEnumerable<DM_ChuDauTu> GetLookupChuDauTu();
-        //IEnumerable<NH_DM_ChiPhi> GetLookupChiPhi();
-        //bool SaveThongTinDuAn(NH_DA_DuAn data, string userName, string state);
         #endregion
 
         #region QLNH - Báo cáo tài sản
@@ -739,8 +726,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
         #endregion
 
         #region QLNH - Thông tin hợp đồng
-        public IEnumerable<NH_DA_HopDongModel> GetAllNHThongTinHopDong(ref PagingInfo _paging, DateTime? dNgayHopDong,
-            Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHopDong, string sSoHopDong)
+        public IEnumerable<NH_DA_HopDongModel> GetAllNHThongTinHopDong(ref PagingInfo _paging, DateTime? dNgayHopDong, Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHopDong, string sSoHopDong)
         {
             using (var conn = _connectionFactory.GetConnection())
             {
@@ -763,8 +749,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
             }
         }
 
-        public IEnumerable<NH_DA_HopDongModel> GetAllNHThongTinHopDongById(Guid Id, DateTime? dNgayHopDong,
-    Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHopDong, string sSoHopDong)
+        public IEnumerable<NH_DA_HopDongModel> GetAllNHThongTinHopDongById(Guid Id, DateTime? dNgayHopDong, Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHopDong, string sSoHopDong)
         {
             using (var conn = _connectionFactory.GetConnection())
             {
@@ -785,15 +770,30 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
 
         public NH_DA_HopDongModel GetThongTinHopDongById(Guid iId)
         {
-            StringBuilder query = new StringBuilder();
-            query.Append("SELECT * FROM NH_DA_HopDong WHERE ID = @iId");
-            using (var conn = _connectionFactory.GetConnection())
+            //StringBuilder query = new StringBuilder();
+            //query.Append("SELECT * FROM NH_DA_HopDong WHERE ID = @iId");
+            //using (var conn = _connectionFactory.GetConnection())
+            //{
+            //    var item = conn.QueryFirstOrDefault<NH_DA_HopDongModel>(query.ToString(), param: new { iId = iId },
+            //        commandType: CommandType.Text);
+            //    return item;
+            //}
+            string sql = FileHelpers.GetSqlQuery("get_thongtin_hopdong_byid.sql");
+            try
             {
-                var item = conn.QueryFirstOrDefault<NH_DA_HopDongModel>(query.ToString(), param: new { iId = iId },
-                    commandType: CommandType.Text);
-                return item;
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    NH_DA_HopDongModel item = conn.QueryFirstOrDefault<NH_DA_HopDongModel>(sql, new { id = iId }, commandType: CommandType.Text);
+                    return item;
+                }
             }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return null;
         }
+
         public IEnumerable<NH_DA_GoiThau> GetGoiThauTheoCT(Guid? ID = null)
         {
             StringBuilder query = new StringBuilder();
@@ -813,6 +813,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 return items;
             }
         }
+
         public bool SaveThongTinHopDong(NH_DA_HopDong data, bool isDieuChinh, string userName)
         {
             SqlTransaction trans = null;
@@ -958,7 +959,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
             {
                 query.AppendLine("AND ID = @ID ");
             }
-            query.AppendLine("AND NOT EXISTS (SELECT 1 FROM NH_KHChiTietBQP_NhiemVuChi nv WHERE nvc.ID = nv.iID_ParentID) ");
+            //query.AppendLine("AND NOT EXISTS (SELECT 1 FROM NH_KHChiTietBQP_NhiemVuChi nv WHERE nvc.ID = nv.iID_ParentID) ");
 
             query.Append("ORDER BY sMaThuTu");
             using (var conn = _connectionFactory.GetConnection())
@@ -969,6 +970,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 return items;
             }
         }
+
         public IEnumerable<NH_KHChiTietBQP_NhiemVuChi> GetNHKeHoachChiTietBQPNhiemVuChi(Guid? id)
         {
             StringBuilder query = new StringBuilder();
@@ -980,7 +982,8 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                     commandType: CommandType.Text);
                 return items;
             }
-        } 
+        }
+
         public IEnumerable<NH_KHChiTietBQP> GetNHKeHoachChiTietBQP(Guid? id)
         {
             StringBuilder query = new StringBuilder();
@@ -994,19 +997,56 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
             }
         }
 
+        public IEnumerable<NH_DA_DuAn> GetNHDADuAnListByConditions(Guid? khBQPId = null, Guid? nvcId = null, Guid? bQLId = null, Guid? donViId = null)
+        {
+            StringBuilder query = new StringBuilder();
+            List<string> whereClauses= new List<string>();
+            DynamicParameters lstParam = new DynamicParameters();
+            query.AppendLine("SELECT da.* FROM NH_DA_DuAn da");
+            if (khBQPId != null && khBQPId.Value != Guid.Empty)
+            {
+                query.AppendLine("INNER JOIN NH_KHChiTietBQP_NhiemVuChi nvc ON da.iID_KHCTBQP_ChuongTrinhID = nvc.ID");
+                query.AppendLine("INNER JOIN NH_KHChiTietBQP bqp ON nvc.iID_KHChiTietID = bqp.ID");
+                whereClauses.Add("bqp.ID=@khBQPId");
+                lstParam.Add("khBQPId", khBQPId);
+            }
+            if (nvcId != null && nvcId.Value != Guid.Empty)
+            {
+                whereClauses.Add("da.iID_KHCTBQP_ChuongTrinhID=@nvcId");
+                lstParam.Add("nvcId", nvcId);
+            }
+            if (bQLId != null && bQLId.Value != Guid.Empty)
+            {
+                whereClauses.Add("da.iID_BQuanLyID=@bQLId");
+                lstParam.Add("bQLId", bQLId);
+            }
+            if (donViId != null && donViId.Value != Guid.Empty)
+            {
+                whereClauses.Add("da.iID_DonViID=@donViId");
+                lstParam.Add("donViId", donViId);
+            }
+            query.AppendLine("WHERE da.bIsActive=1 " + (whereClauses.Count > 0 ? " AND " + whereClauses.Join(" AND ") : ""));
+            query.AppendLine("ORDER BY da.sTenDuAn");
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                IEnumerable<NH_DA_DuAn> items = conn.Query<NH_DA_DuAn>(query.ToString(), lstParam, commandType: CommandType.Text);
+                return items;
+            }
+        }
+
         public IEnumerable<NH_DA_DuAn> GetNHDADuAnList(Guid? id = null)
         {
             StringBuilder query = new StringBuilder();
-            query.AppendLine("SELECT * FROM NH_DA_DuAn ");
+            query.AppendLine("SELECT * FROM NH_DA_DuAn WHERE 1=1 ");
             if (id != null)
             {
-                query.AppendLine("WHERE ID = @ID ");
+                query.Append("AND ID=@ID ");
             }
-
+            query.Append("AND bIsActive=1 ");
             query.AppendLine("ORDER BY sTenDuAn");
             using (var conn = _connectionFactory.GetConnection())
             {
-                var items = conn.Query<NH_DA_DuAn>(query.ToString(),
+                IEnumerable<NH_DA_DuAn> items = conn.Query<NH_DA_DuAn>(query.ToString(),
                     param: (id != null ? new { ID = id } : null),
                     commandType: CommandType.Text);
                 return items;
@@ -1088,11 +1128,12 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
             using (var conn = _connectionFactory.GetConnection())
             {
                 var items = conn.Query<NH_DM_TiGia_ChiTiet>(query.ToString(),
-                    param: iDTiGia != null ? new { iDTiGia = iDTiGia } : null,
+                    param: iDTiGia != null ? new { iDTiGia } : null,
                     commandType: CommandType.Text);
                 return items;
             }
         }
+
         public IEnumerable<NH_DA_HopDong> GetListHopDong()
         {
             var sql = "SELECT * FROM NH_DA_HopDong ORDER BY ID;";
@@ -1102,6 +1143,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 return items;
             }
         }
+
         public IEnumerable<NH_KHChiTietBQP_NhiemVuChi> GetNHNhiemVuChiTietTheoDonViId(string maDonVi, Guid? donViID)
         {
             StringBuilder query = new StringBuilder();
@@ -1110,11 +1152,11 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
             {
                 query.AppendLine("INNER JOIN NS_DonVi dv ON dv.iID_MaDonVi = nvc.iID_MaDonVi AND dv.iID_Ma = nvc.iID_DonViID ");
                 query.AppendLine("WHERE dv.iID_Ma = @donViID AND dv.iID_MaDonVi = @maDonVi ");
-                query.AppendLine("AND NOT EXISTS (SELECT 1 FROM NH_KHChiTietBQP_NhiemVuChi nv WHERE nvc.ID = nv.iID_ParentID) ");
+                //query.AppendLine("AND NOT EXISTS (SELECT 1 FROM NH_KHChiTietBQP_NhiemVuChi nv WHERE nvc.ID = nv.iID_ParentID) ");
             }
             else
             {
-                query.AppendLine("WHERE NOT EXISTS (SELECT 1 FROM NH_KHChiTietBQP_NhiemVuChi nv WHERE nvc.ID = nv.iID_ParentID) ");
+                //query.AppendLine("WHERE NOT EXISTS (SELECT 1 FROM NH_KHChiTietBQP_NhiemVuChi nv WHERE nvc.ID = nv.iID_ParentID) ");
             }
             query.AppendLine("ORDER BY nvc.sMaThuTu");
             using (var conn = _connectionFactory.GetConnection())
@@ -1122,7 +1164,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 var items = conn.Query<NH_KHChiTietBQP_NhiemVuChi>(
                     query.ToString(),
                     param: (!string.IsNullOrEmpty(maDonVi) && donViID != null && donViID != Guid.Empty)
-                        ? new { donViID = donViID, maDonVi = maDonVi }
+                        ? new { donViID, maDonVi }
                         : null,
                     commandType: CommandType.Text);
                 return items;
@@ -1144,7 +1186,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 var items = conn.Query<NH_DA_DuAn>(
                     query.ToString(),
                     param: (chuongTrinhID != null && chuongTrinhID != Guid.Empty)
-                        ? new { chuongTrinhID = chuongTrinhID }
+                        ? new { chuongTrinhID }
                         : null,
                     commandType: CommandType.Text);
                 return items;
@@ -2979,11 +3021,11 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
             {
                 query.AppendLine("INNER JOIN NS_DonVi dv ON dv.iID_MaDonVi = nvc.iID_MaDonVi AND dv.iID_Ma = nvc.iID_DonViID ");
                 query.AppendLine("WHERE dv.iID_Ma = @donViID ");
-                query.AppendLine("AND NOT EXISTS (SELECT 1 FROM NH_KHChiTietBQP_NhiemVuChi nv WHERE nvc.ID = nv.iID_ParentID) ");
+                //query.AppendLine("AND NOT EXISTS (SELECT 1 FROM NH_KHChiTietBQP_NhiemVuChi nv WHERE nvc.ID = nv.iID_ParentID) ");
             }
             else
             {
-                query.AppendLine("WHERE NOT EXISTS (SELECT 1 FROM NH_KHChiTietBQP_NhiemVuChi nv WHERE nvc.ID = nv.iID_ParentID) ");
+                //query.AppendLine("WHERE NOT EXISTS (SELECT 1 FROM NH_KHChiTietBQP_NhiemVuChi nv WHERE nvc.ID = nv.iID_ParentID) ");
             }
             query.AppendLine("ORDER BY nvc.sMaThuTu");
             using (var conn = _connectionFactory.GetConnection())
@@ -3130,7 +3172,6 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
             return null;
         }
 
-
         public IEnumerable<ThongTinThanhToanModel> GetAllThongTinThanhToanPaging(ref PagingInfo _paging,
             Guid? iID_DonVi, string sSoDeNghi, DateTime? dNgayDeNghi, int? iLoaiNoiDungChi, int? iLoaiDeNghi,
             Guid? iID_ChuDauTuID, Guid? iID_KHCTBQP_NhiemVuChiID, int? iQuyKeHoach, int? iNamKeHoach, int? iNamNganSach,
@@ -3251,6 +3292,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 return items;
             }
         }
+
         public bool DeleteDeNghiThanhToan(Guid id)
         {
             using (var conn = _connectionFactory.GetConnection())
@@ -3279,6 +3321,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 return items;
             }
         }
+
         public IEnumerable<ThanhToanBaoCaoModel> ExportBaoCaoChiThanhToan(string listIDThanhToan, int thang, int quy, int nam)
         {
             try
@@ -3465,7 +3508,6 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
 
             return null;
         }
-
         #endregion
 
         #region QLNH - Thông tin dự án
@@ -3517,22 +3559,23 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
 
             return null;
         }
+
         public IEnumerable<NH_KHChiTietBQP_NhiemVuChi> GetListCTbyDV(Guid? id = null, Guid? idBQP = null)
         {
             StringBuilder query = new StringBuilder();
-            query.AppendLine("SELECT DISTINCT a.ID,a.sTenNhiemVuChi,a.iID_DonViID,a.iID_KHChiTietID FROM NH_KHChiTietBQP_NhiemVuChi a ");
+            query.AppendLine("SELECT a.ID,a.sTenNhiemVuChi,a.iID_DonViID,a.iID_KHChiTietID FROM NH_KHChiTietBQP_NhiemVuChi a WHERE 1=1 ");
             DynamicParameters lstPrams = new DynamicParameters();
-            if (id.HasValue)
+            if (id != null && id.HasValue)
             {
-                query.AppendLine("WHERE a.ID = @ID ");
+                query.Append("AND a.ID=@ID ");
                 lstPrams.Add("ID", id.Value);
-                if (idBQP.HasValue)
-                {
-                    query.Append(" AND a.iID_KHChiTietID = @IDBQP ");
-                    lstPrams.Add("IDBQP", idBQP.Value);
-                }
             }
-
+            if (idBQP != null && idBQP.HasValue)
+            {
+                query.Append("AND a.iID_KHChiTietID=@IDBQP ");
+                lstPrams.Add("IDBQP", idBQP.Value);
+            }
+            //query.Append("AND NOT EXISTS (SELECT 1 FROM NH_KHChiTietBQP_NhiemVuChi nv WHERE a.ID = nv.iID_ParentID)");
             using (var conn = _connectionFactory.GetConnection())
             {
                 var items = conn.Query<NH_KHChiTietBQP_NhiemVuChi>(query.ToString(),
@@ -3541,17 +3584,18 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 return items;
             }
         }
+
         public IEnumerable<NH_KHChiTietBQP_NhiemVuChi> GetListCTbyQDTongThe(Guid idBQP)
         {
             StringBuilder query = new StringBuilder();
-            query.AppendLine("SELECT DISTINCT a.ID,a.sTenNhiemVuChi,a.iID_DonViID,a.iID_KHChiTietID FROM NH_KHChiTietBQP_NhiemVuChi a ");
+            query.AppendLine("SELECT DISTINCT a.ID,a.sTenNhiemVuChi,a.iID_DonViID,a.iID_KHChiTietID FROM NH_KHChiTietBQP_NhiemVuChi a WHERE 1=1 ");
             DynamicParameters lstPrams = new DynamicParameters();
             if (idBQP != Guid.Empty)
             {
-                query.Append("WHERE a.iID_KHChiTietID = @IDBQP");
+                query.Append("AND a.iID_KHChiTietID = @IDBQP ");
                 lstPrams.Add("IDBQP", idBQP);
             }
-
+            //query.Append("AND NOT EXISTS (SELECT 1 FROM NH_KHChiTietBQP_NhiemVuChi nv WHERE a.ID = nv.iID_ParentID)");
             using (var conn = _connectionFactory.GetConnection())
             {
                 var items = conn.Query<NH_KHChiTietBQP_NhiemVuChi>(query.ToString(),
@@ -3581,6 +3625,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
             }
 
         }
+
         public IEnumerable<NH_DA_DuAn> GetThongTinDuAnDuAnList(Guid? id = null)
         {
             StringBuilder query = new StringBuilder();
@@ -3625,13 +3670,16 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
             }
         }
 
-        public IEnumerable<NS_DonVi> GetLookupThongTinDonVi()
+        public IEnumerable<NS_DonVi> GetLookupThongTinDonVi(int namLamViec)
         {
             StringBuilder query = new StringBuilder();
-            query.Append(" select dv.iID_Ma ,dv.iID_MaDonVi,concat(iID_MaDonVi, ' - ', sTen) as sTen from NS_DonVi dv");
+            query.AppendLine("SELECT dv.iID_Ma,dv.iID_MaDonVi,CONCAT(dv.iID_MaDonVi, ' - ', dv.sTen) AS sTen FROM NS_DonVi dv");
+            query.AppendLine("WHERE dv.iNamLamViec_DonVi = @namLamViec AND dv.iTrangThai = 1");
+            query.AppendLine("ORDER BY dv.iID_MaDonVi");
             using (var conn = _connectionFactory.GetConnection())
             {
                 var items = conn.Query<NS_DonVi>(query.ToString(),
+                    param: new { namLamViec },
                     commandType: CommandType.Text);
                 return items;
             }
@@ -3639,30 +3687,25 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
 
         public NHDAThongTinDuAnModel GetThongTinDuAnById(Guid id)
         {
-            var sql = "proc_getall_ChiTietTTDA";
             using (var conn = _connectionFactory.GetConnection())
             {
-                var a = new NHDAThongTinDuAnModel();
-
-                a = conn.QueryFirstOrDefault<NHDAThongTinDuAnModel>(sql, param: new { id }, commandType: CommandType.StoredProcedure);
-                var sqltb = @"select cp.sTenChiPhi, da.fGiaTriUSD,da.fGiaTriVND,da.fGiaTriEUR,da.fGiaTriNgoaiTeKhac from NH_DA_DuAn_ChiPhi da left join NH_DM_ChiPhi cp on da.iID_ChiPhiID=cp.ID where iID_DuAnID=@id";
-                a.TableChiPhis = conn.Query<TableChiPhi>(sqltb, param: new { id }, commandType: CommandType.Text).ToList();
-                return a;
+                NHDAThongTinDuAnModel nhDAThongTinDuAnModel = new NHDAThongTinDuAnModel();
+                nhDAThongTinDuAnModel = conn.QueryFirstOrDefault<NHDAThongTinDuAnModel>("proc_get_all_nh_da_ttduan_detail", param: new { id }, commandType: CommandType.StoredProcedure);
+                string sqltb = @"SELECT cp.sTenChiPhi,da.fGiaTriUSD,da.fGiaTriVND,da.fGiaTriEUR,da.fGiaTriNgoaiTeKhac FROM NH_DA_DuAn_ChiPhi da LEFT JOIN NH_DM_ChiPhi cp ON da.iID_ChiPhiID=cp.ID WHERE iID_DuAnID=@id";
+                nhDAThongTinDuAnModel.TableChiPhis = conn.Query<TableChiPhi>(sqltb, param: new { id }, commandType: CommandType.Text).ToList();
+                return nhDAThongTinDuAnModel;
             }
         }
 
-        public IEnumerable<NH_KHChiTietBQP_NhiemVuChiModel> GetNHKeHoachChiTietBQPNhiemVuChiListDuAn(Guid? id = null)
+        public IEnumerable<NH_KHChiTietBQP_NhiemVuChiModel> GetNHKeHoachChiTietBQPNhiemVuChiListDuAn()
         {
             StringBuilder query = new StringBuilder();
-            query.Append("select distinct BQP.* from ( select a.ID, a.dNgayTao, concat(N'KHTT', iGiaiDoanTu, ' - ', iGiaiDoanDen, N' -  Số KH:', sSoKeHoach) as sSoKeHoachBQP from NH_KHChiTietBQP a" +
-                " inner join NH_KHChiTietBQP_NhiemVuChi b on a.ID = b.iID_KHChiTietID where a.iLoai = 1 and a.bIsActive = 1 " +
-                "UNION ALL " +
-                "select a.ID,a.dNgayTao, concat(N'KHTT', iNamKeHoach, ' -  NSố KH:', sSoKeHoach) as sSoKeHoachBQP from NH_KHChiTietBQP a inner join NH_KHChiTietBQP_NhiemVuChi b on a.ID = b.iID_KHChiTietID where a.iLoai = 2 and a.bIsActive = 1) as BQP  order by BQP.dNgayTao desc");
+            query.AppendLine("SELECT DISTINCT a.ID,a.dNgayTao,CONCAT(N'KHTT ', iGiaiDoanTu, ' - ', iGiaiDoanDen, N' -  Số KH:', sSoKeHoach) AS sSoKeHoachBQP FROM NH_KHChiTietBQP a");
+            query.AppendLine("INNER JOIN NH_KHChiTietBQP_NhiemVuChi b ON a.ID = b.iID_KHChiTietID WHERE a.bIsActive = 1");
+            query.AppendLine("ORDER BY a.dNgayTao DESC");
             using (var conn = _connectionFactory.GetConnection())
             {
-                var items = conn.Query<NH_KHChiTietBQP_NhiemVuChiModel>(query.ToString(),
-                    param: (id != null ? new { ID = id } : null),
-                    commandType: CommandType.Text);
+                var items = conn.Query<NH_KHChiTietBQP_NhiemVuChiModel>(query.ToString(), commandType: CommandType.Text);
                 return items;
             }
         }
@@ -3692,6 +3735,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 return items;
             }
         }
+
         public List<NH_DA_DuAn_ChiPhiModel> getListChiPhiTTDuAn(Guid? ID, string state)
         {
             try
@@ -3705,13 +3749,13 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                     conn.Open();
                     var query = conn.Query<NH_DA_DuAn_ChiPhiModel>(
                         @"SELECT DACP.*, CP.sTenChiPhi FROM NH_DA_DuAn_ChiPhi AS DACP
-                          LEFT JOIN NH_DM_ChiPhi AS CP ON DACP.iID_ChiPhiID = CP.ID WHERE DACP.iID_DuAnID=@ID", new { ID = ID }).ToList();
+                          LEFT JOIN NH_DM_ChiPhi AS CP ON DACP.iID_ChiPhiID = CP.ID WHERE DACP.iID_DuAnID=@ID", new { ID }).ToList();
                     return query;
                 }
             }
             catch (Exception ex)
             {
-                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+                AppLog.LogError(this.GetType().Name, MethodBase.GetCurrentMethod().Name, ex.Message);
             }
             return null;
         }
@@ -3719,11 +3763,12 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
         public bool DeleteThongTinDuAn(Guid iId)
         {
             StringBuilder query = new StringBuilder();
-            query.Append("UPDATE NH_DA_DuAn SET bIsActive = 1 WHERE ID = (SELECT iID_ParentAdjustID FROM NH_DA_DuAn WHERE ID = @iId);");
-            query.Append("DELETE NH_DA_DuAn WHERE ID = @iId");
+            query.AppendLine("UPDATE NH_DA_DuAn SET bIsActive = 1 WHERE ID = (SELECT iID_ParentAdjustID FROM NH_DA_DuAn WHERE ID = @iId);");
+            query.AppendLine("DELETE NH_DA_DuAn WHERE ID = @iId;");
+            query.AppendLine("DELETE NH_DA_DuAn_ChiPhi WHERE iID_DuAnID = @iId;");
             using (var conn = _connectionFactory.GetConnection())
             {
-                var r = conn.Execute(query.ToString(), param: new { iId = iId }, commandType: CommandType.Text);
+                var r = conn.Execute(query.ToString(), param: new { iId }, commandType: CommandType.Text);
                 return r >= 0;
             }
         }
@@ -3738,6 +3783,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 return items;
             }
         }
+
         public IEnumerable<NH_DM_ChiPhi> GetLookupChiPhi()
         {
             try
@@ -3764,7 +3810,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                 {
                     conn.Open();
                     var trans = conn.BeginTransaction();
-
+                    NH_DA_DuAn_ChiPhi newCp;
                     if (state == "CREATE")
                     {
                         var entity = new NH_DA_DuAn();
@@ -3780,11 +3826,10 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                         entity.iLanDieuChinh = 0;
                         conn.Insert(entity, trans);
 
-                        var listDaCpIds = conn.Query<Guid>(@"select da.ID from NH_DA_DuAn da join NH_DA_DuAn_ChiPhi cp on da.ID = cp.iID_DuAnID", null, trans).ToList();
+                        var listDaCpIds = conn.Query<Guid>(@"SELECT da.ID FROM NH_DA_DuAn da JOIN NH_DA_DuAn_ChiPhi cp ON da.ID = cp.iID_DuAnID", null, trans).ToList();
                         foreach (var item in dataTableChiPhi)
                         {
-                            var newCp = new NH_DA_DuAn_ChiPhi();
-                            
+                            newCp = new NH_DA_DuAn_ChiPhi();
                             newCp.iID_DuAnID = entity.ID;
                             newCp.iID_ChiPhiID = item.iID_ChiPhiID;
                             newCp.fGiaTriEUR = double.TryParse(item.HopDongEUR, NumberStyles.Float, new CultureInfo("en-US"), out double feur) ? feur : (double?)null;
@@ -3793,87 +3838,89 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                             newCp.fGiaTriVND = double.TryParse(item.HopDongVND, NumberStyles.Float, new CultureInfo("en-US"), out double fvnd) ? fvnd : (double?)null;
                             conn.Insert(newCp, trans);
                         }
-                        foreach (var id in listDaCpIds)
-                        {
-                            var newCp = new NH_DA_DuAn_ChiPhi();
-                            newCp.ID = id;
-                            conn.Delete(newCp, trans);
-                        }
                     }
                     else if (state == "UPDATE")
                     {
-                        var query = @"SELECT * FROM NH_DA_DuAn WHERE ID = @Id";
-                        var da = conn.QueryFirstOrDefault<NH_DA_DuAn>(query, new { Id = data.ID }, trans, commandType: CommandType.Text);
-                        da.iID_BQuanLyID = data.iID_BQuanLyID;
-                        da.iID_MaDonVi = data.iID_MaDonVi;
-                        da.iID_DonViID = data.iID_DonViID;
-                        da.iID_KHCTBQP_ChuongTrinhID = data.iID_KHCTBQP_ChuongTrinhID;
-                        da.sMaDuAn = data.sMaDuAn;
-                        da.sTenDuAn = data.sTenDuAn;
-                        da.sSoChuTruongDauTu = data.sSoChuTruongDauTu;
-                        da.dNgayChuTruongDauTu = data.dNgayChuTruongDauTu;
-                        da.sSoQuyetDinhDauTu = data.sSoQuyetDinhDauTu;
-                        da.dNgayQuyetDinhDauTu = data.dNgayQuyetDinhDauTu;
-                        da.sSoDuToan = data.sSoDuToan;
-                        da.dNgayDuToan = data.dNgayDuToan;
-                        da.iID_ChuDauTuID = data.iID_ChuDauTuID;
-                        da.sMaChuDauTu = data.sMaChuDauTu;
-                        da.iID_CapPheDuyetID = data.iID_CapPheDuyetID;
-                        da.sKhoiCong = data.sKhoiCong;
-                        da.sKetThuc = data.sKetThuc;
-                        da.iID_TiGiaID = data.iID_TiGiaID;
-                        da.sMaNgoaiTeKhac = data.sMaNgoaiTeKhac;
-                        da.fGiaTriEUR = double.TryParse(data.sGiaTriEUR, NumberStyles.Float, new CultureInfo("en-US"), out double feurParent) ? feurParent : (double?)null;
-                        da.fGiaTriVND = double.TryParse(data.sGiaTriVND, NumberStyles.Float, new CultureInfo("en-US"), out double fvndParent) ? fvndParent : (double?)null;
-                        da.fGiaTriUSD = double.TryParse(data.sGiaTriUSD, NumberStyles.Float, new CultureInfo("en-US"), out double feusdParent) ? feusdParent : (double?)null;
-                        da.fGiaTriNgoaiTeKhac = double.TryParse(data.sGiaTriNgoaiTeKhac, NumberStyles.Float, new CultureInfo("en-US"), out double fgtkParent) ? fgtkParent : (double?)null;
-                        da.dNgaySua = data.dNgaySua;
-                        da.sNguoiSua = data.sNguoiSua;
-                        da.dNgayXoa = data.dNgayXoa;
-                        da.sNguoiXoa = data.sNguoiXoa;
-                        conn.Update<NH_DA_DuAn>(da, trans);
+                        string query = @"SELECT * FROM NH_DA_DuAn WHERE ID = @Id";
+                        NH_DA_DuAn da = conn.QueryFirstOrDefault<NH_DA_DuAn>(query, new { Id = data.ID }, trans, commandType: CommandType.Text);
+                        if (da != null)
+                        {
+                            da.iID_BQuanLyID = data.iID_BQuanLyID;
+                            da.iID_MaDonVi = data.iID_MaDonVi;
+                            da.iID_DonViID = data.iID_DonViID;
+                            da.iID_KHCTBQP_ChuongTrinhID = data.iID_KHCTBQP_ChuongTrinhID;
+                            da.sMaDuAn = data.sMaDuAn;
+                            da.sTenDuAn = data.sTenDuAn;
+                            da.sSoChuTruongDauTu = data.sSoChuTruongDauTu;
+                            da.dNgayChuTruongDauTu = data.dNgayChuTruongDauTu;
+                            da.sSoQuyetDinhDauTu = data.sSoQuyetDinhDauTu;
+                            da.dNgayQuyetDinhDauTu = data.dNgayQuyetDinhDauTu;
+                            da.sSoDuToan = data.sSoDuToan;
+                            da.dNgayDuToan = data.dNgayDuToan;
+                            da.iID_ChuDauTuID = data.iID_ChuDauTuID;
+                            da.sMaChuDauTu = data.sMaChuDauTu;
+                            da.iID_CapPheDuyetID = data.iID_CapPheDuyetID;
+                            da.sKhoiCong = data.sKhoiCong;
+                            da.sKetThuc = data.sKetThuc;
+                            da.iID_TiGiaID = data.iID_TiGiaID;
+                            da.iID_TiGia_ChiTietID = data.iID_TiGia_ChiTietID;
+                            da.sMaNgoaiTeKhac = data.sMaNgoaiTeKhac;
+                            da.fGiaTriEUR = double.TryParse(data.sGiaTriEUR, NumberStyles.Float, new CultureInfo("en-US"), out double feurParent) ? feurParent : (double?)null;
+                            da.fGiaTriVND = double.TryParse(data.sGiaTriVND, NumberStyles.Float, new CultureInfo("en-US"), out double fvndParent) ? fvndParent : (double?)null;
+                            da.fGiaTriUSD = double.TryParse(data.sGiaTriUSD, NumberStyles.Float, new CultureInfo("en-US"), out double feusdParent) ? feusdParent : (double?)null;
+                            da.fGiaTriNgoaiTeKhac = double.TryParse(data.sGiaTriNgoaiTeKhac, NumberStyles.Float, new CultureInfo("en-US"), out double fgtkParent) ? fgtkParent : (double?)null;
+                            da.dNgaySua = data.dNgaySua;
+                            da.sNguoiSua = data.sNguoiSua;
+                            da.dNgayXoa = data.dNgayXoa;
+                            da.sNguoiXoa = data.sNguoiXoa;
+                            conn.Update<NH_DA_DuAn>(da, trans);
 
-                        var listDaCpIds = conn.Query<Guid>(@"SELECT ID FROM NH_DA_DuAn_ChiPhi", null, trans).ToList();
-                        foreach (var item in dataTableChiPhi)
-                        {
-                            if (item.ID != Guid.Empty)
+                            List<Guid> listDaCpIds = conn.Query<Guid>(@"SELECT ID FROM NH_DA_DuAn_ChiPhi WHERE iID_DuAnID=@duAnID", new { duAnID = da.ID }, trans).ToList();
+                            foreach (var item in dataTableChiPhi)
                             {
-                                var newCp = new NH_DA_DuAn_ChiPhi();
-                                newCp.iID_DuAnID = da.ID;
-                                newCp.ID = item.ID;
-                                newCp.iID_ChiPhiID = item.iID_ChiPhiID;
-                                newCp.fGiaTriEUR = double.TryParse(item.HopDongEUR, NumberStyles.Float, new CultureInfo("en-US"), out double feur) ? feur : (double?)null;
-                                newCp.fGiaTriNgoaiTeKhac = double.TryParse(item.HopDongNgoaiTeKhac, NumberStyles.Float, new CultureInfo("en-US"), out double fntk) ? fntk : (double?)null;
-                                newCp.fGiaTriUSD = double.TryParse(item.HopDongUSD, NumberStyles.Float, new CultureInfo("en-US"), out double fusd) ? fusd : (double?)null;
-                                newCp.fGiaTriVND = double.TryParse(item.HopDongVND, NumberStyles.Float, new CultureInfo("en-US"), out double fvnd) ? fvnd : (double?)null;
-                                conn.Update(newCp, trans);
-                                listDaCpIds.Remove(item.ID);
+                                if (item.ID != Guid.Empty)
+                                {
+                                    newCp = new NH_DA_DuAn_ChiPhi();
+                                    newCp.iID_DuAnID = da.ID;
+                                    newCp.ID = item.ID;
+                                    newCp.iID_ChiPhiID = item.iID_ChiPhiID;
+                                    newCp.fGiaTriEUR = double.TryParse(item.HopDongEUR, NumberStyles.Float, new CultureInfo("en-US"), out double feur) ? feur : (double?)null;
+                                    newCp.fGiaTriNgoaiTeKhac = double.TryParse(item.HopDongNgoaiTeKhac, NumberStyles.Float, new CultureInfo("en-US"), out double fntk) ? fntk : (double?)null;
+                                    newCp.fGiaTriUSD = double.TryParse(item.HopDongUSD, NumberStyles.Float, new CultureInfo("en-US"), out double fusd) ? fusd : (double?)null;
+                                    newCp.fGiaTriVND = double.TryParse(item.HopDongVND, NumberStyles.Float, new CultureInfo("en-US"), out double fvnd) ? fvnd : (double?)null;
+                                    conn.Update(newCp, trans);
+                                    listDaCpIds.Remove(item.ID);
+                                }
+                                else
+                                {
+                                    newCp = new NH_DA_DuAn_ChiPhi();
+                                    newCp.iID_DuAnID = da.ID;
+                                    newCp.iID_ChiPhiID = item.iID_ChiPhiID;
+                                    newCp.fGiaTriEUR = double.TryParse(item.HopDongEUR, NumberStyles.Float, new CultureInfo("en-US"), out double feur) ? feur : (double?)null;
+                                    newCp.fGiaTriNgoaiTeKhac = double.TryParse(item.HopDongNgoaiTeKhac, NumberStyles.Float, new CultureInfo("en-US"), out double fntk) ? fntk : (double?)null;
+                                    newCp.fGiaTriUSD = double.TryParse(item.HopDongUSD, NumberStyles.Float, new CultureInfo("en-US"), out double fusd) ? fusd : (double?)null;
+                                    newCp.fGiaTriVND = double.TryParse(item.HopDongVND, NumberStyles.Float, new CultureInfo("en-US"), out double fvnd) ? fvnd : (double?)null;
+                                    conn.Insert(newCp, trans);
+                                }
                             }
-                            else
+
+                            string deleteSql = "DELETE NH_DA_DuAn_ChiPhi WHERE ID = @id;";
+                            foreach (Guid id in listDaCpIds)
                             {
-                                var newCp = new NH_DA_DuAn_ChiPhi();
-                                newCp.iID_DuAnID = da.ID;
-                                newCp.iID_ChiPhiID = item.iID_ChiPhiID;
-                                newCp.fGiaTriEUR = double.TryParse(item.HopDongEUR, NumberStyles.Float, new CultureInfo("en-US"), out double feur) ? feur : (double?)null;
-                                newCp.fGiaTriNgoaiTeKhac = double.TryParse(item.HopDongNgoaiTeKhac, NumberStyles.Float, new CultureInfo("en-US"), out double fntk) ? fntk : (double?)null;
-                                newCp.fGiaTriUSD = double.TryParse(item.HopDongUSD, NumberStyles.Float, new CultureInfo("en-US"), out double fusd) ? fusd : (double?)null;
-                                newCp.fGiaTriVND = double.TryParse(item.HopDongVND, NumberStyles.Float, new CultureInfo("en-US"), out double fvnd) ? fvnd : (double?)null;
-                                conn.Insert(newCp, trans);
+                                conn.Execute(deleteSql, new { id }, trans, commandType: CommandType.Text);
                             }
-                        }
-                        foreach (var id in listDaCpIds)
-                        {
-                            var newCp = new NH_DA_DuAn_ChiPhi();
-                            newCp.ID = id;
                         }
                     }
                     else
                     {
-                        var queryNH_DA_DuAn = @"SELECT * FROM NH_DA_DuAn WHERE ID = @oldID";
-                        var daOld = conn.QueryFirstOrDefault<NH_DA_DuAn>(queryNH_DA_DuAn, new { oldId = oldId }, trans);
-                        daOld.bIsActive = false;
-                        conn.Update(daOld, trans);
-                        var entity = new NH_DA_DuAn();
+                        string queryNH_DA_DuAn = @"SELECT * FROM NH_DA_DuAn WHERE ID = @oldID";
+                        NH_DA_DuAn daOld = conn.QueryFirstOrDefault<NH_DA_DuAn>(queryNH_DA_DuAn, new { oldId }, trans);
+                        if (daOld != null)
+                        {
+                            daOld.bIsActive = false;
+                            conn.Update(daOld, trans);
+                        }
+                        NH_DA_DuAn entity = new NH_DA_DuAn();
                         entity.MapFrom(data);
                         entity.fGiaTriEUR = double.TryParse(data.sGiaTriEUR, NumberStyles.Float, new CultureInfo("en-US"), out double feurParent) ? feurParent : (double?)null;
                         entity.fGiaTriVND = double.TryParse(data.sGiaTriVND, NumberStyles.Float, new CultureInfo("en-US"), out double fvndParent) ? fvndParent : (double?)null;
@@ -3891,37 +3938,14 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
                         var listDaCpIds = conn.Query<Guid>(@"SELECT ID FROM NH_DA_DuAn_ChiPhi", null, trans).ToList();
                         foreach (var item in dataTableChiPhi)
                         {
-                            if (item.ID != Guid.Empty)
-                            {
-                                var newCp = new NH_DA_DuAn_ChiPhi();
-                                newCp.iID_DuAnID = entity.ID;
-                                newCp.ID = item.ID;
-                                newCp.iID_ChiPhiID = item.iID_ChiPhiID;
-                                newCp.fGiaTriEUR = double.TryParse(item.HopDongEUR, NumberStyles.Float, new CultureInfo("en-US"), out double feur) ? feur : (double?)null;
-                                newCp.fGiaTriNgoaiTeKhac = double.TryParse(item.HopDongNgoaiTeKhac, NumberStyles.Float, new CultureInfo("en-US"), out double fntk) ? fntk : (double?)null;
-                                newCp.fGiaTriUSD = double.TryParse(item.HopDongUSD, NumberStyles.Float, new CultureInfo("en-US"), out double fusd) ? fusd : (double?)null;
-                                newCp.fGiaTriVND = double.TryParse(item.HopDongVND, NumberStyles.Float, new CultureInfo("en-US"), out double fvnd) ? fvnd : (double?)null;
-                                conn.Update(newCp, trans);
-
-                                listDaCpIds.Remove(item.ID);
-                            }
-                            else
-                            {
-                                var newCp = new NH_DA_DuAn_ChiPhi();
-                                newCp.iID_DuAnID = entity.ID;
-                                newCp.iID_ChiPhiID = item.iID_ChiPhiID;
-                                newCp.fGiaTriEUR = double.TryParse(item.HopDongEUR, NumberStyles.Float, new CultureInfo("en-US"), out double feur) ? feur : (double?)null;
-                                newCp.fGiaTriNgoaiTeKhac = double.TryParse(item.HopDongNgoaiTeKhac, NumberStyles.Float, new CultureInfo("en-US"), out double fntk) ? fntk : (double?)null;
-                                newCp.fGiaTriUSD = double.TryParse(item.HopDongUSD, NumberStyles.Float, new CultureInfo("en-US"), out double fusd) ? fusd : (double?)null;
-                                newCp.fGiaTriVND = double.TryParse(item.HopDongVND, NumberStyles.Float, new CultureInfo("en-US"), out double fvnd) ? fvnd : (double?)null;
-                                conn.Insert(newCp, trans);
-                            }
-                        }
-                        foreach (var id in listDaCpIds)
-                        {
-                            var newCp = new NH_DA_DuAn_ChiPhi();
-                            newCp.ID = id;
-                            //conn.Delete(newCp, trans);
+                            newCp = new NH_DA_DuAn_ChiPhi();
+                            newCp.iID_DuAnID = entity.ID;
+                            newCp.iID_ChiPhiID = item.iID_ChiPhiID;
+                            newCp.fGiaTriEUR = double.TryParse(item.HopDongEUR, NumberStyles.Float, new CultureInfo("en-US"), out double feur) ? feur : (double?)null;
+                            newCp.fGiaTriNgoaiTeKhac = double.TryParse(item.HopDongNgoaiTeKhac, NumberStyles.Float, new CultureInfo("en-US"), out double fntk) ? fntk : (double?)null;
+                            newCp.fGiaTriUSD = double.TryParse(item.HopDongUSD, NumberStyles.Float, new CultureInfo("en-US"), out double fusd) ? fusd : (double?)null;
+                            newCp.fGiaTriVND = double.TryParse(item.HopDongVND, NumberStyles.Float, new CultureInfo("en-US"), out double fvnd) ? fvnd : (double?)null;
+                            conn.Insert(newCp, trans);
                         }
                     }
                     trans.Commit();
@@ -3939,7 +3963,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
         public IEnumerable<DM_ChuDauTu> GetLookupChuDauTu()
         {
             StringBuilder query = new StringBuilder();
-            query.Append("select distinct cdt.ID,cdt.sId_CDT,concat(cdt.sId_CDT, ' - ', cdt.sTenCDT) as sTenCDT from DM_ChuDauTu cdt left join NH_DA_DuAn da on cdt.ID = da.iID_ChuDauTuID");
+            query.Append("SELECT DISTINCT cdt.ID,cdt.sId_CDT,CONCAT(cdt.sId_CDT, ' - ', cdt.sTenCDT) AS sTenCDT FROM DM_ChuDauTu cdt LEFT JOIN NH_DA_DuAn da ON cdt.ID=da.iID_ChuDauTuID");
             using (var conn = _connectionFactory.GetConnection())
             {
                 var items = conn.Query<DM_ChuDauTu>(query.ToString(), commandType: CommandType.Text);
@@ -3950,7 +3974,7 @@ Guid? iDonVi, Guid? iChuongTrinh, Guid? iDuAn, Guid? iLoaiHopDong, string sTenHo
         public IEnumerable<DM_ChuDauTu> GetLookupChuDauTuu()
         {
             StringBuilder query = new StringBuilder();
-            query.Append("SELECT * FROM DM_ChuDauTu ");
+            query.Append("SELECT * FROM DM_ChuDauTu");
             using (var conn = _connectionFactory.GetConnection())
             {
                 var items = conn.Query<DM_ChuDauTu>(query.ToString(), commandType: CommandType.Text);

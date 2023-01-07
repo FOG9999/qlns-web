@@ -231,6 +231,7 @@ function GetDataDuAn() {
     data.sKetThuc = $("<div/>").text($.trim($("#txtThoiGianThucHienDen").val())).html();
     data.iID_TiGiaID = $("#slbTiGia").val() == GUID_EMPTY ? null : $("#slbTiGia").val();
     data.iID_TiGia_ChiTietID = $("#slbMaNgoaiTeKhac").val() == GUID_EMPTY ? null : $("#slbMaNgoaiTeKhac").val();
+    data.sMaNgoaiTeKhac = $("#slbMaNgoaiTeKhac").val() == GUID_EMPTY ? null : $("#slbMaNgoaiTeKhac option:selected").html();
     data.sGiaTriUSD = UnFormatNumber($("<div/>").text($.trim($("#txtHopDongUSD").val())).html());
     data.sGiaTriVND = UnFormatNumber($("<div/>").text($.trim($("#txtHopDongVND").val())).html());
     data.sGiaTriEUR = UnFormatNumber($("<div/>").text($.trim($("#txtHopDongEUR").val())).html());
@@ -251,7 +252,7 @@ function ValidateData(data) {
         Messages.push("Mã dự án vượt quá 100 kí tự !");
     }
     if (data.iID_BQP == null || data.iID_BQP == GUID_EMPTY) {
-        Messages.push("Số quyết định tổng thể BQP chưa chọn !");
+        Messages.push("Số quyết định tổng thể TTCP chưa chọn !");
     }
     if (data.iID_KHCTBQP_ChuongTrinhID == null || data.iID_KHCTBQP_ChuongTrinhID == GUID_EMPTY) {
         Messages.push("Tên chương chình chưa chọn !");
@@ -680,6 +681,22 @@ function ValidateDataImport() {
             data.sKetThuc = $("<div/>").text($.trim($("#txtThoiGianThucHienDen" + index).val())).html();
         }
 
+        if ($(this).find("#slbKHTongTheBQP" + index).val() == "" || $(this).find("#slbKHTongTheBQP" + index).val() == GUID_EMPTY) {
+            check = false;
+            messages.push("Số quyết định tổng thể TTCP chưa chọn !");
+            document.getElementById("slbKHTongTheBQP" + index).scrollIntoView();
+            return;
+        }
+
+        if ($(this).find("#slbChuongTrinh" + index).val() == "" || $(this).find("#slbChuongTrinh" + index).val() == GUID_EMPTY) {
+            check = false;
+            messages.push("Tên chương trình chưa chọn !");
+            document.getElementById("slbChuongTrinh" + index).scrollIntoView();
+            return;
+        } else {
+            data.iID_KHCTBQP_ChuongTrinhID = $(this).find("#slbChuongTrinh" + index).val();
+        }
+
         if ($(this).find("#slbBQuanLy" + index).val() == "" || $(this).find("#slbBQuanLy" + index).val() == GUID_EMPTY) {
             check = false;
             messages.push("Tên B Quản lý chưa chọn !");
@@ -697,17 +714,7 @@ function ValidateDataImport() {
         } else {
             data.iID_DonViID = $(this).find("#slbDonVi" + index).val();
         }
-
-        if ($(this).find("#slbChuongTrinh" + index).val() == "" || $(this).find("#slbChuongTrinh" + index).val() == GUID_EMPTY) {
-            check = false;
-            messages.push("Tên chương trình chưa chọn !");
-            document.getElementById("slbChuongTrinh" + index).scrollIntoView();
-            return;
-        } else {
-            data.iID_KHCTBQP_ChuongTrinhID = $(this).find("#slbChuongTrinh" + index).val();
-        }
         data.iLanDieuChinh = 0;
-
         dataArray.push(data);
     });
 

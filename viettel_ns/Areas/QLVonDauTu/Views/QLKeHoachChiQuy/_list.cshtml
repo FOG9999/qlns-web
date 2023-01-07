@@ -76,7 +76,7 @@
                             <button type="submit" class="btn-file" onclick="XuatFile('@item.Id')"><i class="fa fa-trash-o fa-file" aria-hidden="true"></i></button>
                             <button type="submit" class="btn-detail" onclick="SendFile('@item.Id', '@item.iID_DonViQuanLyID', '@item.iNamKeHoach', '@item.iQuy')"><i class="fa fa-download fa-lg" aria-hidden="true"></i></button>
                             <button type="button" class="btn-edit" onclick="GetItemDataList('@item.Id')"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
-                            <button type="button" class="btn-delete" onclick="DeleteItemList('@item.Id')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                            <button type="button" class="btn-delete" onclick="DeleteItemList('@item.Id', '@item.sSoDeNghi')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
                             <button type="button" class="btn-detail" onclick="ViewDetailList('@item.Id')"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
                         </td>
                     </tr>

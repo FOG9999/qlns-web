@@ -15,9 +15,9 @@
 </div>
 <hr class="bg-gray" />
 <div>
-    <span>
-        Kế hoạch giai đoạn - Năm:
-        @if (Model.iLoai.HasValue)
+    <!--<span>
+        Kế hoạch giai đoạn - Năm:-->
+        @*@if (Model.iLoai.HasValue)
         {
             if (Model.iLoai.Value == 1)
             {
@@ -27,12 +27,12 @@
             {
                 <span style="color: red">@Model.iNamKeHoach</span>
             }
-        }
-    </span><br/>
-    <span>Kế hoạch tổng thể Thủ tướng Chính phủ phê duyệt: <span style="color: red">@Html.Raw(Html.Encode(Model.sSoKeHoachTTCP)) @(Model.dNgayKeHoachTTCP.HasValue ? "- " + Model.dNgayKeHoachTTCP.Value.ToString("dd/MM/yyyy") : "")</span></span><br/>
+        }*@
+    <!--</span><br/>-->
+    @*<span>Kế hoạch tổng thể Thủ tướng Chính phủ phê duyệt: <span style="color: red">@Html.Raw(Html.Encode(Model.sSoKeHoachTTCP)) @(Model.dNgayKeHoachTTCP.HasValue ? "- " + Model.dNgayKeHoachTTCP.Value.ToString("dd/MM/yyyy") : "")</span></span><br/>*@
     <span>Kế hoạch chi tiết Bộ Quốc phòng phê duyệt: <span style="color: red">@Html.Raw(Html.Encode(Model.sSoKeHoachBQP)) @(Model.dNgayKeHoachBQP.HasValue ? "- " + Model.dNgayKeHoachBQP.Value.ToString("dd/MM/yyyy") : "")</span></span>
 </div>
-<table class="table table-bordered mt-4" id="tblDetailKHChiTietBQPList">
+<table class="table table-bordered mt-4 tr-hover" id="tblDetailKHChiTietBQPList">
     @if (!Model.IsEdit)
     {
         // Search bar
@@ -127,7 +127,7 @@
             {*@
                 foreach (NH_KHChiTietBQP_NVCModel item in Model.Items)
                 {
-                    <tr>
+                    <tr style="@(item.bIsHasChild || item.iID_ParentID == null ? "font-weight:bold;" : "")">
                         <td name="ID_NhiemVuChi" class="hidden">@item.ID</td>
                         <td class="text-center" name="sMaThuTu">@Html.Raw(Html.Encode(item.sMaThuTu))</td>
                         <td class="text-left">@Html.Raw(Html.Encode(item.sTenNhiemVuChi))</td>
@@ -159,13 +159,13 @@
 <script src="~/Scripts/QLNH/KeHoachChiTietBQP/jsNH_KeHoachChiTietBQP.js"></script>
 <script src="~/Scripts/jsNumber.js"></script>
 
-<script>
+@*<script>
     $(document).ready(function () {
         let isEdit = @Model.IsEdit.ToString().ToLower() == 'true';
-        @*if (!isEdit) {
+        if (!isEdit) {
             $("#iID_BQuanLyID, #iID_DonViID").on('change', function () {
                 OpenModalDetail('@Model.ID', 'DETAIL', true)
             });
-        }*@
+        }
     });
-</script>
+</script>*@

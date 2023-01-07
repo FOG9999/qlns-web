@@ -32,7 +32,8 @@
 		ctct.bIsParent,
 		ctct.sTrangThai,
 		ctct.iID_TongHop,
-		ctct.iID_MaDonVi
+		ctct.iID_MaDonVi,
+		ctct.iID_DonViID
 		
 		 
 	FROM VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet ctct

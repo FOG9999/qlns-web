@@ -2204,7 +2204,8 @@ namespace Viettel.Domain.DomainModel
 		public virtual double? fThuHoiUngTruoc { get; set; }
 		public virtual double? fKHUngNamNay { get; set; }
 		public virtual double? fThanhToan_KHUngNamNay { get; set; }
-	}
+		public virtual Guid? iID_LoaiCongTrinh { get; set; }
+    }
 
     /// <summary>
     /// A class which represents the QLDA_CapPhat_DuyetChungTuChiTiet table.
@@ -2683,7 +2684,8 @@ namespace Viettel.Domain.DomainModel
 		public virtual string K { get; set; }
 		public virtual int? iLoaiUng { get; set; }
 		public virtual bool? bKeHoach { get; set; }
-	}
+		public virtual Guid? iID_LoaiCongTrinh { get; set; }
+    }
 
     /// <summary>
     /// A class which represents the TCDN_ChiTieu table.
@@ -3895,6 +3897,7 @@ namespace Viettel.Domain.DomainModel
 		public virtual int? iLoaiDuAn { get; set; }
 		public virtual Guid? iID_LoaiCongTrinh { get; set; }
 		public virtual Guid? iID_DonViID { get; set; }
+		public virtual Guid? iID_DuAn_HangMucID { get; set; }
 	}
 
     /// <summary>
@@ -4190,6 +4193,7 @@ namespace Viettel.Domain.DomainModel
         public double fLuyKeTUChuaThuHoiKhacTN { get; set; }
         public double fLuyKeTUChuaThuHoiKhacNN { get; set; }
 		public string sThongTinCanCu { get; set; }
+		public virtual Guid ID_DuAn_HangMuc { get; set; }
     }
 
     /// <summary>
@@ -4915,6 +4919,8 @@ namespace Viettel.Domain.DomainModel
 		public virtual Guid? iID_DonViQuanLyID { get; set; }
 		public virtual string iID_MaDonViQuanLy { get; set; }
         public virtual double? fGiaTriDeNghiDC { get; set; }
+        public virtual Guid? iID_LoaiCongTrinhID { get; set; }
+        public virtual Guid? iID_DuAn_HangMucID { get; set; }
 
     }
 
@@ -5552,6 +5558,9 @@ namespace Viettel.Domain.DomainModel
 		public virtual string sGhiChu { get; set; }
         public virtual double? fCapPhatTaiKhoBacDC { get; set; }
         public virtual double? fCapPhatBangLenhChiDC { get; set; }
+        public virtual Guid? iID_LoaiCongTrinhID { get; set; }
+        public virtual Guid? iID_DuAn_HangMucID { get; set; }
+
 
 
     }
@@ -9297,7 +9306,9 @@ namespace Viettel.Domain.DomainModel
 		public virtual double? fDnQuyetToanNamNay { get; set; }
 		public virtual double? fTuChuaThuHoiTaiDonVi { get; set; }
 		public virtual double? fDuToanThuHoi { get; set; }
-	}
+		public virtual Guid? iID_LoaiCongTrinh { get; set; }
+
+    }
 
     /// <summary>
     /// A class which represents the vw_aspnet_Profiles view.
@@ -9682,6 +9693,8 @@ namespace Viettel.Domain.DomainModel
 		public virtual bool? bActive { get; set; }
 		public virtual int? ILoaiDuAn { get; set; }
         public virtual double? fGiaTriDeNghi { get; set; }
+        public virtual Guid? iID_DuAn_HangMucID { get; set; }
+
 
     }
 
@@ -10308,6 +10321,7 @@ namespace Viettel.Domain.DomainModel
 		public virtual double? fCapPhatBangLenhChiDC { get; set; }
 		public virtual double? fGiaTriThuHoiNamTruocKhoBacDC { get; set; }
 		public virtual double fGiaTriThuHoiNamTruocLenhChiDC { get; set; }
+		public virtual Guid? iID_DuAn_HangMucID { get; set; }
 
     }
 
@@ -15725,7 +15739,8 @@ namespace Viettel.Domain.DomainModel
 		public virtual string sKhoiCong { get; set; }
 		public virtual string sKetThuc { get; set; }
 		public virtual Guid? iID_TiGiaID { get; set; }
-		public virtual string sMaNgoaiTeKhac { get; set; }
+        public virtual Guid? iID_TiGia_ChiTietID { get; set; }
+        public virtual string sMaNgoaiTeKhac { get; set; }
 		public virtual double? fGiaTriUSD { get; set; }
 		public virtual double? fGiaTriNgoaiTeKhac { get; set; }
 		public virtual double? fGiaTriVND { get; set; }
@@ -16332,7 +16347,8 @@ namespace Viettel.Domain.DomainModel
 		public virtual double? fKHUT_KeHoachUngTruocChuaThuHoi { get; set; }
 		public virtual int? iCoQuanThanhToan { get; set; }
 		public virtual int? iID_NguonVonID { get; set; }
-	}
+		public virtual Guid? iID_LoaiCongTrinh { get; set; }
+    }
 
     /// <summary>
     /// A class which represents the SKT_EXCLUDE table.

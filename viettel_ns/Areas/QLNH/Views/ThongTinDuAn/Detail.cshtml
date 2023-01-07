@@ -19,8 +19,14 @@
         <hr class='color-background-red' />
         <div class="form-group row">
             <div class="col-sm-3">
-                <label for="slbKHTongTheBQP">Sổ kế hoạch chi tiết BQP</label>
+                <label for="slbKHTongTheBQP">Sổ kế hoạch chi tiết TTCP</label>
                 <div>@Html.Raw(Html.Encode(Model.BQP))</div>
+            </div>
+            <div class="col-sm-3">
+                <div id="divTenDuAn">
+                    <label for="slbChuongTrinh">Tên chương trình</label>
+                    <div>@Html.Raw(Html.Encode(Model.sTenNhiemVuChi))</div>
+                </div>
             </div>
             <div class="col-sm-3">
                 <label for="slbBQuanLy">B Quản Lý</label>
@@ -29,12 +35,6 @@
             <div class="col-sm-3">
                 <label for="slbDonVi">Đơn vị</label>
                 <div>@Html.Raw(Html.Encode(Model.sDonVi))</div>
-            </div>
-            <div class="col-sm-3">
-                <div id="divTenDuAn">
-                    <label for="slbChuongTrinh">Tên chương trình</label>
-                    <div>@Html.Raw(Html.Encode(Model.sTenNhiemVuChi))</div>
-                </div>
             </div>
         </div>
 

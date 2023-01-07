@@ -40,7 +40,8 @@ function ValidateBeforeSave() {
             bActive: "",
             ILoaiDuAn: "",
             sGhiChu: "",
-            fGiaTriPhanBoDC: ""
+            fGiaTriPhanBoDC: 0,
+            iID_DuAn_HangMucID: ""
         };
         // gán giá trị mới cho kế hoạch vđt được duyệt chi tiết
         object.iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID"]];
@@ -63,6 +64,8 @@ function ValidateBeforeSave() {
         object.iID_DonViQuanLyID = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_DonViQuanLyID"]];
         object.fGiaTriDeNghi = Bang_arrGiaTri[i][Bang_arrCSMaCot["fGiaTriDeNghi"]];
         object.fGiaTriPhanBoDC = Bang_arrGiaTri[i][Bang_arrCSMaCot["fGiaTriPhanBoDC"]];
+        object.iID_Parent = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_Parent"]];
+        object.iID_DuAn_HangMucID = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_DuAn_HangMucID"]];
 
         listItem.push(object);
     }

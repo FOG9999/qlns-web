@@ -304,7 +304,7 @@ namespace Viettel.Services
         /// </summary>
         /// <returns></returns>
         IEnumerable<VDTDMLoaiCongTrinhViewModel> GetListLoaicongTrinhInPartial(string sTenLoaiCongTrinh = "");
-        IEnumerable<VDTDMLoaiCongTrinhViewModel> GetListLoaiCongTrinhByName(string sTenLoaiCongTrinh, string sTenVietTat, string sMaLoaiCongTrinh, int? iThuTu, string sMoTa);
+        IEnumerable<VDTDMLoaiCongTrinhViewModel> GetListLoaiCongTrinhByName(ref PagingInfo _paging, string sTenLoaiCongTrinh = "", string sTenVietTat = "", string sMaLoaiCongTrinh = "", int? iThuTu = null, string sMoTa = "");
 
         /// <summary>
         /// Get VDT_DM_LoaiCongTrinh By id
@@ -387,6 +387,8 @@ namespace Viettel.Services
         bool DeleteChuDauTu(Guid iID_ChuDauTu, string sUserName);
         bool SaveChuDauTu(DM_ChuDauTu data, int iNamLamViec, string sUserName);
         IEnumerable<VDT_DM_ChuDauTu_ViewModel> GetListChuDauTuCha(Guid? iID_ChuDauTu, int iNamLamViec);
+
+        DM_ChuDauTu GetChuDauTuByMa(string sMaChuDauTu);
         #endregion
 
         #region Danh mục Ngoại hối - Loại đơn vị tiền tệ
@@ -1423,23 +1425,22 @@ namespace Viettel.Services
                 return items;
             }
         }
-        public IEnumerable<VDTDMLoaiCongTrinhViewModel> GetListLoaiCongTrinhByName(string sTenLoaiCongTrinh, string sTenVietTat, string sMaLoaiCongTrinh, int? iThuTu, string sMoTa)
+        public IEnumerable<VDTDMLoaiCongTrinhViewModel> GetListLoaiCongTrinhByName(ref PagingInfo _paging, string sTenLoaiCongTrinh, string sTenVietTat, string sMaLoaiCongTrinh, int? iThuTu, string sMoTa)
         {
-            var sql = FileHelpers.GetSqlQuery("vdt_get_all_loaicongtrinh_by_name.sql");
-
-
             using (var conn = _connectionFactory.GetConnection())
             {
-                var items = conn.Query<VDTDMLoaiCongTrinhViewModel>(sql,
-                        param: new
-                        {
-                            sTenLoaiCongTrinh,
-                            sTenVietTat,
-                            sMaLoaiCongTrinh,
-                            iThuTu,
-                            sMoTa
-                        },
-                        commandType: CommandType.Text);
+                DynamicParameters lstParam = new DynamicParameters();
+                lstParam.Add("sTenLoaiCongTrinh", sTenLoaiCongTrinh);
+                lstParam.Add("sTenVietTat", sTenVietTat);
+                lstParam.Add("sMaLoaiCongTrinh", sMaLoaiCongTrinh);
+                lstParam.Add("iThuTu", iThuTu);
+                lstParam.Add("sMoTa", sMoTa);
+                lstParam.Add("CurrentPage", _paging.CurrentPage);
+                lstParam.Add("ItemsPerPage", _paging.ItemsPerPage);
+                lstParam.Add("iToTalItem", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                var items = conn.Query<VDTDMLoaiCongTrinhViewModel>("proc_vdt_get_all_dmLoaiCongTrinh_paging", lstParam, commandType: CommandType.StoredProcedure);
+                _paging.TotalItems = lstParam.Get<int>("iToTalItem");
                 return items;
             }
         }
@@ -2177,6 +2178,21 @@ namespace Viettel.Services
                 return items;
             }
         }
+
+        public DM_ChuDauTu GetChuDauTuByMa(string sMaChuDauTu)
+        {
+            string sql = "select * from Dm_ChuDauTu where sId_CDT = @sMaChuDauTu";
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var items = conn.Query<DM_ChuDauTu>(sql, param: new
+                {
+                    sMaChuDauTu
+                });
+
+                return items.FirstOrDefault();
+            }
+        }
+
         #endregion
 
         #region Danh mục Ngoại hối - Loại đơn vị tiền tệ

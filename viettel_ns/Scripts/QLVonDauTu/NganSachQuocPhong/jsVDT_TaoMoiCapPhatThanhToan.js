@@ -149,6 +149,7 @@ $(document).ready(function () {
         GetDataDropdownNguonVon();
         GetDataKeHoachVon();
         GetDataChiPhi();
+        getDataDropDownHangMucDuAn()
     });
 
     $("#txtNgayDeNghi").change(function (e) {
@@ -202,11 +203,18 @@ $(document).ready(function () {
         if (isChecked) {
             $(".divThongTinHopDong").show();
             $(".divDanhSachChiPhi").hide();
+            $('#divNhaThauChiPhi').hide();
         } else {
             $(".divThongTinHopDong").hide();
             $(".divDanhSachChiPhi").show();
+            $('#divNhaThauChiPhi').show();
         }
         LoadLuyKeThanhToan();
+    })
+
+    $('#drpNhaThauChiPhi').change(function() {
+        let idNhaThau = $(this).val();
+        getTTinNhaThauById(idNhaThau);
     })
 
 });
@@ -530,6 +538,7 @@ function GetThongTinDeNghi() {
     data.iID_NguonVonID = $("#drpNguonNganSach option:selected").val();
     data.sSoBangKLHT = $("#txtSoCanCu").val().trim();
     data.dNgayBangKLHT = $("#txtNgayCanCu").val();
+    data.ID_DuAn_HangMuc = $('#drpDuAnHangMuc').val();
 
     data.fLuyKeGiaTriNghiemThuKLHT = parseInt($("#txtLuyKeGiaTriKLNghiemThu").val() == "" ? 0 : UnFormatNumber($("#txtLuyKeGiaTriKLNghiemThu").val()));
 
@@ -578,18 +587,25 @@ function GetThongTinDeNghi() {
 
 function SaveDeNghiThanhToan() {
     var data = GetThongTinDeNghi();
+
     data.listKeHoachVon = arrKeHoachVon;
 
     $.ajax({
         type: "POST",
         url: "/GiaiNganThanhToan/InsertDeNghiThanhToan",
+        async: false, 
         data: {
             data: data
         },
         success: function (r) {
             if (r.bIsComplete) {
                 statusSave = 2;
-                alert("Tạo mới thành công phiếu đề nghị thanh toán.");
+                if (data.iID_DeNghiThanhToanID == undefined || data.iID_DeNghiThanhToanID == null || data.iID_DeNghiThanhToanID == GUID_EMPTY) {
+                    alert("Thêm mới bản ghi '" + data.sSoDeNghi + " ' thành công.");
+                } else {
+                    alert("Cập nhật bản ghi '" + data.sSoDeNghi + " ' thành công.");
+
+                }
                 iIdDeNghiThanhToanId = r.iIdDeNghiThanhToanId;
                 $(".div_ThongTinThanhToan").show();
                 GetListLoaiThanhToan();
@@ -610,6 +626,7 @@ function SavePheDuyetThanhToanChiTiet() {
     $.ajax({
         type: "POST",
         url: "/GiaiNganThanhToan/InsertPheDuyetThanhToanChiTiet",
+        async: false, 
         data: {
             data: dataChiTiet,
             iIdDeNghiThanhToanId: iIdDeNghiThanhToanId,
@@ -1296,6 +1313,44 @@ function onChangeMLNS(obj) {
         data: { sLNS, sL, sM, sTM, sNG, sK, sTTM },
         success: function (r) {
             $(currRow).find('.r_NoiDung').html(r.sMoTa)
+        }
+    })
+}
+
+function getDataDropDownHangMucDuAn() {
+    let iID_DuAnID = $('#drpDuAn').val();
+    $.ajax({
+        type: "POST",
+        url: "/QLVonDauTu/GiaiNganThanhToan/GetDropDownHangMucDuAn",
+        data: { iID_DuAnID },
+        success: function (r) {
+            let { listHangMuc } = r;
+            let arrSelect = [];
+            arrSelect.push({
+                id: '',
+                text: ''
+            });
+            arrSelect.push(...listHangMuc.map(h => ({
+                id: h.iID_DuAn_HangMucID,
+                text: h.sTenHangMuc
+            })));
+            $('#drpDuAnHangMuc').select2({
+                data: arrSelect
+            });
+        }
+    })
+}
+
+function getTTinNhaThauById(idNhaThau) {
+    $.ajax({
+        type: 'GET',
+        url: '/QLVonDauTu/GiaiNganThanhToan/GetTTinDmNhaThauById',
+        data: { idNhaThau },
+        success: res => {
+            let { tenNhaThau, stkNhaThau, maNganHang } = res;
+            $('#sTenDonViTHuHuog').val(tenNhaThau);
+            $('#sSTKDonViThuHuong').val(stkNhaThau);
+            $('#sMâNgnHangDonViThuHuong').val(maNganHang);
         }
     })
 }

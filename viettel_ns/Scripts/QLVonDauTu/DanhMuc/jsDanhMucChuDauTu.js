@@ -77,11 +77,12 @@ function OpenModalDetail(id) {
     });
 }
 
-function DeleteItem(id) {
+function DeleteItem(id, sTenCDT) {
     var Title = 'Xác nhận xóa chủ đầu tư';
     var Messages = [];
     Messages.push('Bạn có chắc chắn muốn xóa?');
-    var FunctionName = "Delete('" + id + "')";
+    var FunctionName = "Delete('" + id + "','" + sTenCDT + "')";
+
     $.ajax({
         type: "POST",
         url: "/Modal/OpenModal",
@@ -92,13 +93,14 @@ function DeleteItem(id) {
     });
 }
 
-function Delete(id) {
+function Delete(id, sTenCDT) {
     $.ajax({
         type: "POST",
         url: "/QLVonDauTu/QLDMChuDauTu/ChuDauTuDelete",
         data: { id: id },
         success: function (r) {
             if (r == "True") {
+                alert("Xoa bản ghi " + sTenCDT + " thành công.");
                 ChangePage();
             }
         }
@@ -132,6 +134,14 @@ function Save() {
         data: { data: data},
         success: function (r) {
             if (r.bIsComplete) {
+
+                if (data.ID == undefined || data.ID == null || data.ID == GUID_EMPTY || data.ID == "") {
+                    alert("Thêm mới bản ghi " + data.sTenCDT + " thành công.")
+
+                } else {
+                    alert("Cập nhật bản ghi " + data.sTenCDT + " thành công.")
+
+                }
                 window.location.href = "/QLVonDauTu/QLDMChuDauTu";
             } else {
                 var Title = 'Lỗi lưu chủ đầu tư';

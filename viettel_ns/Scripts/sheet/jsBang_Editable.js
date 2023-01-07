@@ -527,7 +527,7 @@
                     return (input);
                 }
             },
-            multipleselect: {
+            multiselect: {
                 element: function (settings, original) {
                     var input = $('<input id="txtONhapDuLieu_Autocomplete" onfocus="txtONhapDuLieu_OnFocus(this);"/>');
                     input.attr('autocomplete', 'off');
@@ -661,6 +661,7 @@ function txtONhapDuLieu_OnFocus(txt) {
             case 5:
                 $(txt).autocomplete({
                     minLength: 0,
+                    delay: 100,
                     source: function (request, response) {
                         // delegate back to autocomplete, but extract the last term
                         Bang_txtONhapDuLieu_Autocomplete_onSource(txt, request, response);
@@ -676,9 +677,9 @@ function txtONhapDuLieu_OnFocus(txt) {
                         // add the selected item
                         terms.push(ui.item.label);
                         // add placeholder to get the comma-and-space at the end
-                        terms.push("");
+                        //terms.push("");
                         this.value = terms.join(", ");
-                        this.value = this.value.substring(0, this.value.length - 2);
+                        //this.value = this.value.substring(0, this.value.length - 2);
                         $(txt).val(this.value);
                         Bang_txtONhapDuLieu_Autocomplete_onSelect(txt, event, ui);
                         return false;
@@ -701,11 +702,7 @@ function txtONhapDuLieu_OnFocus(txt) {
                 $(txt).val(KyTuVuaNhap);
             }
 
-            if (Bang_arrType[c_DuLieu] == 5) {
-
-            } else {
-                setSelectionRange(txt, 1, 1);
-            }
+            setSelectionRange(txt, 1, 1);
 
             if (Bang_arrType[c_DuLieu] == 3 || Bang_arrType[c_DuLieu] == 5) {
                 //Truong hop doi tuong la Autocomplete se hien thi list

@@ -10,7 +10,7 @@
 }
 
 <div class="main">
-    <input type="hidden" id="iID_KHVN_DeXuatID" value="@Model.KHVonNamDuocDuyet.iID_KeHoachVonNamDeXuatID"/>
+    <input type="hidden" id="iID_KHVN_DeXuatID" value="@Model.KHVonNamDuocDuyet.iID_KeHoachVonNamDeXuatID" />
     <div class="panel-list-item col-sm-12">
         <div class="card">
             <div class="card-body">
@@ -26,14 +26,17 @@
                         <label class="control-label" style="padding-left: 20px; color: #e17009;">Đề xuất tổng hợp @Helpers.Required()</label> &nbsp;&nbsp;
                         @Html.DropDownList("iID_KeHoachVonNamDeXuatID", (SelectList)(ViewBag.LstVoucherAggregate), new { @class = "form-control width-200 mt-10", @id = "iID_KeHoachVonNamDeXuatIDTH" })
                     </div>
-                    <div class="col-sm-4">
-                        <p class="pull-right" style="margin-top: 10px; font-size:14px; padding-right: 20px;" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Xóa tìm kiếm</p>
-                        <label class="control-label pull-right" style="padding-left:20px;">F9: </label>
-                        <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Tìm kiếm</p>
-                        <label class="control-label pull-right" style="padding-left:20px;">Ent: </label>
-                        <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Lưu</p>
-                        <label class="control-label pull-right">F10: </label>
-                    </div>
+                    @if (!Model.isDetail)
+                    {
+                        <div class="col-sm-4">
+                            <p class="pull-right" style="margin-top: 10px; font-size:14px; padding-right: 20px;" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Xóa tìm kiếm</p>
+                            <label class="control-label pull-right" style="padding-left:20px;">F9: </label>
+                            <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Tìm kiếm</p>
+                            <label class="control-label pull-right" style="padding-left:20px;">Ent: </label>
+                            <p class="pull-right" style="margin-top: 10px; font-size:14px" id="fSoTienNhanTuBTC">&nbsp;&nbsp;Lưu</p>
+                            <label class="control-label pull-right">F10: </label>
+                        </div>
+                    }
                 </div>
                 @Html.Partial("_sheet", Model)
             </div>
@@ -42,5 +45,7 @@
 </div>
 
 <script>
-        
+    $(document).ready(function () {
+        $('#iID_KeHoachVonNamDeXuatIDTH').select2({ width: "16.5%", dropdownAutoWidth: true, matcher: FilterInComboBox });       
+    });
 </script>

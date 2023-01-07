@@ -94,6 +94,7 @@ namespace Viettel.Services
         bool UpdateDMLoaiCongTrinh(VDT_DM_LoaiCongTrinh data, string sUserLogin, bool bPublic = true);
 
         IEnumerable<dynamic> GetAllDMLoaiCongTrinh();
+        IEnumerable<VDT_DM_LoaiCongTrinh> GetAllDmLoaiCongTrinh();
         #endregion
 
         #region thong tin du an
@@ -269,6 +270,13 @@ namespace Viettel.Services
         IEnumerable<VDT_DA_DuToan_HangMuc_ViewModel> GetListHangMucTheoQDDT(Guid duToanId);
         IEnumerable<VDT_DA_DuToan_HangMuc_ViewModel> GetListHangMucTheoCTDT(Guid duToanId);
         IEnumerable<VDT_DA_DuAn> GetDuAnByIdDuToan(Guid? iIdDuToanId);
+        bool AddRangerDuAn(IEnumerable<VDT_DA_DuAn> lstDuAn);
+        bool AddRangerDuAnHangMuc(IEnumerable<VDT_DA_DuAn_HangMuc> lstDuAnHangMuc);
+        bool AddRangerDuAnNguonVon(IEnumerable<VDT_DA_DuAn_NguonVon> lstDuAnNguonVon);
+        bool AddRangerVdtDaGoiThau(IEnumerable<VDT_DA_GoiThau> lstGoiThau);
+        bool AddRangerVdtDaTtHopDong(IEnumerable<VDT_DA_TT_HopDong> lstGoiThau);
+        bool AddRangerVdtKtKhoiTaoDuLieuChiTiet(IEnumerable<VDT_KT_KhoiTao_DuLieu_ChiTiet> lstData);
+        bool InsertVdtKtKhoiTaoDuLieu(VDT_KT_KhoiTao_DuLieu obj);
         IEnumerable<VDTQuyetDinhDauTuChiPhiModel> GetListChiPhiQDDTByIdDuToan(Guid duToanId);
         #endregion
 
@@ -281,7 +289,7 @@ namespace Viettel.Services
         IEnumerable<VDT_DA_QDDauTu_NguonVon> FindNguonVonByParentId(Guid iIdQdDauTuId);
         void DeleteDataTablesOld(Guid iId);
         bool DeleteGoiThau(Guid iId, string sUserLogin);
-
+        VDT_DA_GoiThau GetThongTinGoiThauById(Guid id);
         DuAnViewModel GetThongTinDuAnByGoiThauId(Guid iId);
         IEnumerable<VDT_DA_DuAn> ListDuAnTheoDonViQuanLy(Guid iID_DonViQuanLyID);
         IEnumerable<VDT_DM_ChiPhi> ListChiPhiByDuAn(Guid iID_DuAnID, DateTime dNgayLap);
@@ -318,7 +326,10 @@ namespace Viettel.Services
         /// <returns></returns>
 
         ThongTinGoiThauViewModel GetThongTinGoiThau(Guid iId);
+        List<ThongTinGoiThauViewModel> GetThongTinGoiThauByListGoiThauId(List<Guid> LstId);
         IEnumerable<VDT_DA_DuAn_HangMuc> LayHangMucDauTu();
+        List<VDT_DA_DuAn_HangMuc> GetDuAnHangMucByListDuAnId(List<Guid> lstId);
+        List<VDT_DA_DuAn_NguonVon> GetDuAnNguonVonByListDuAnId(List<Guid> lstId);
         #endregion
 
         #region Phe duyet chu truong dau tu
@@ -344,13 +355,14 @@ namespace Viettel.Services
         /// <param name="sSoQuyetDinh"></param>
         /// <returns></returns>
         bool KiemTraTrungSoQuyetDinhChuTruongDauTu(string sSoQuyetDinh, string iID_ChuTruongDauTuID = "");
-
+        bool CheckEzistSoQuyetDinhChuTruongDauTu(string sSoQuyetDinh);
         /// <summary>
         /// lay thong tin chi tiet chu truong dau tu
         /// </summary>
         /// <param name="iIDChuTruongDauTuId"></param>
         /// <returns></returns>
         VDTChuTruongDauTuViewModel LayThongTinChiTietChuTruongDauTu(Guid iIDChuTruongDauTuId);
+        VDT_DA_ChuTruongDauTu GetChuTruongDauTUBySoQuyetDinh(string sSoQuyetDinh);
         VDT_DA_ChuTruongDauTu GetThongTinChuTruongDauTuById(Guid iIDChuTruongDauTuId);
 
         /// <summary>
@@ -813,6 +825,7 @@ namespace Viettel.Services
         bool KiemTraTrung(string sTable, string sColumn, string sMaThongTri);
 
         VDT_TT_DeNghiThanhToan GetDeNghiThanhToanByID(Guid iId);
+        IEnumerable<GiaiNganThanhToanViewModel> LoadDataExportDenghiThanhToanByIds(List<Guid> lstId);
         IEnumerable<GiaiNganThanhToanChiTietViewModel> GetDeNghiThanhToanChiTietByDeNghiThanhToanID(Guid iId);
         IEnumerable<GiaiNganThanhToanViewModel> GetAllGiaiNganThanhToanPaging(ref PagingInfo _paging, string sSoDeNghi = "", int? iNamKeHoach = null, DateTime? dNgayLapFrom = null, DateTime? dNgayLapTo = null, Guid? sDonViQuanLy = null);
         IEnumerable<GiaiNganThanhToanViewModel> LoadVDTTTDeNghiThanhToanIndex(ref PagingInfo _paging, int workYear, string maNguoiDung, int? iNamKeHoach = null, DateTime? dNgayDeNghiFrom = null, DateTime? dNgayDeNghiTo = null, string iidDuAn = "", string iLoaiThanhToan = "", string sMaDonVi = "", string sSoDeNghi = "", bool isXuatDanhSach = false);
@@ -930,7 +943,10 @@ namespace Viettel.Services
         /// <returns></returns>
         IEnumerable<VDT_DA_GoiThau> getListGoiThauKHLCNhaThau(Guid iId_GoiThauID);
 
+        IEnumerable<VDT_DA_TT_HopDong> GetAllHopDong();
+
         VDT_DA_TT_HopDong_ViewModel LayChiTietThongTinHopDong(Guid iID_HopDongID);
+        List<VDT_DA_TT_HopDong_ViewModel> GetDataExportHopDongByListId(List<Guid> lstId);
 
         IEnumerable<VDT_DA_TT_HopDong> GetHopDongByThanhToanDuAnId(Guid guid);
 
@@ -1178,16 +1194,24 @@ namespace Viettel.Services
         bool LockOrUnLockKeHoach5NamDeXuat(Guid id, bool isLockOrUnLock);
         IEnumerable<VdtKhvKeHoachTrungHanDeXuatChiTietModel> GetAllKH5NamDeXuatDieuChinhChiTiet(Guid idKhthDx);
         IEnumerable<VdtKhvKeHoachTrungHanDeXuatChiTietModel> GetAllKH5NamDeXuatChiTiet(Guid idKhthDx);
+        /// <summary>
+        /// Thêm dự án mới khi import KHTHDX
+        /// </summary>
+        /// <param name="newDuAn"></param>
+        /// <returns></returns>
+        bool InsertNewDuAnImportKHTHDXCT(VDT_DA_DuAn newDuAn);
         IEnumerable<DuAnKeHoach5Nam> GetIDDuAnKHTHDeXuatChiTietByIDDeXuat(Guid iID_KeHoach5Nam_DeXuatID);
         bool SaveKeHoach5NamDeXuat(ref VDT_KHV_KeHoach5Nam_DeXuat data, string sUserLogin, int iNamLamViec, bool isModified, bool isAggregate, List<VdtKhvKeHoachTrungHanDeXuatChiTietModel> details);
         IEnumerable<KeHoach5NamDeXuatModel> GetAllKeHoach5NamDeXuat(ref PagingInfo _paging, int iNamLamViec, string sSoQuyetDinh, DateTime? dNgayQuyetDinhFrom, DateTime? dNgayQuyetDinhTo, Guid? iID_DonViQuanLyID, string sMoTaChiTiet, int? iGiaiDoanTu, int? iGiaiDoanDen, int? iLoai, int? isTongHop);
         bool deleteKeHoach5NamDeXuat(Guid Id);
         VDT_KHV_KeHoach5Nam_DeXuat GetKeHoach5NamDeXuatById(Guid? Id);
+        List<DuAnViewModel> GetAllDuAnByListId(List<Guid> lstId);
         IEnumerable<VDT_KHV_KeHoach5Nam_DeXuat> GetKeHoach5NamDeXuatByCondition();
         IEnumerable<DuAnKeHoach5Nam> GetAllDuAnChuyenTiep(string iIdMaDonVi);
         KeHoach5NamDeXuatModel GetKeHoach5NamDeXuatByIdForDetail(Guid Id);
         bool CheckExistSoKeHoach(string sSoQuyetDinh, int iNamLamViec, Guid? iId);
         DataTable GetListKH5NamDeXuatChiTietById(string Id, int iNamLamViec, Dictionary<string, string> _filters);
+        NS_DonVi GetNSDonViByMaDonVi(string maDv);
         DataTable GetListKH5NamDeXuatChuyenTiepChiTietById(string Id, Dictionary<string, string> _filters);
         IEnumerable<VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet> GetAllKH5NamDeXuatChiTiet(int iNamLamViec);
         string GetMaxSTTDuAn(string Id);
@@ -1195,6 +1219,7 @@ namespace Viettel.Services
         VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet GetKH5NamDeXuatChaBySTTDuAn(string iID_KeHoach5NamID, string sttDuAnCha);
         int GetMaxIndexCode(string Id, Guid IdParent);
         VDT_DM_LoaiCongTrinh GetDMLoaiCongTrinhByMa(string sMaLoaiCongTrinh);
+        VDT_DM_LoaiCongTrinh GetDMLoaiCongTrinhByMLNS(string LNS, string L, string K, string M, string TM, string TTM, string NG);
         bool UpdateIsParent(string iID_KeHoach5NamID);
         bool SaveKeHoach5NamDeXuatChiTiet(IEnumerable<VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet> data);
         bool UpdateGiaTriKeHoach(string iID_KeHoach5NamID);
@@ -1420,6 +1445,7 @@ namespace Viettel.Services
         /// <param name="id"></param>
         /// <returns></returns>
         bool CheckExitsSoQuyetDinhKHLCNT(string sSoQuyetDinh, Guid? id);
+        VDT_QDDT_KHLCNhaThau GetKHLuaChonNhaThauById( Guid id);
         #endregion
 
         #region Cap phat thanh toan
@@ -1429,6 +1455,8 @@ namespace Viettel.Services
         /// <param name="iID_ChuDauTuID"></param>
         /// <returns></returns>
         List<VDT_DA_DuAn> LayDanhSachDuAnTheoChuDauTu(string sId_CDT, string sId_DonViQuanLy);
+
+        VDT_TT_DeNghiThanhToan GetDeNghiThanhToanByThongTri(string iID_ThongTriID);
 
         /// <summary>
         /// lay danh sach nguon von theo du an
@@ -1504,7 +1532,7 @@ namespace Viettel.Services
         /// <param name="iID_DeNghiThanhToanID"></param>
         /// <param name="sUserLogin"></param>
         /// <returns></returns>
-        bool UpdatePheDuyetThanhToanChiTiet(List<PheDuyetThanhToanChiTiet> lstData, Guid iID_DeNghiThanhToanID, string sUserLogin, int iNamLamViec, double fThueGiaTriGiaTangDuocDuyet, double fChuyenTienBaoHanhDuocDuyet, DateTime dNgayPheDuyet);
+        bool UpdatePheDuyetThanhToanChiTiet(List<PheDuyetThanhToanChiTiet> lstData, Guid iID_DeNghiThanhToanID, string sUserLogin, int iNamLamViec, double? fThueGiaTriGiaTangDuocDuyet, double? fChuyenTienBaoHanhDuocDuyet, DateTime dNgayPheDuyet);
 
         /// <summary>
         /// Xóa phê duyệt thanh toán của đề nghị thanh toán này để có thể sửa hoặc tạo phê duyệt mới
@@ -1520,6 +1548,9 @@ namespace Viettel.Services
         /// <param name="userLogin"></param>
         /// <returns></returns>
         bool LuuThanhToan(GiaiNganThanhToanViewModel data, string userLogin);
+
+        void SaveListDeNghiThanhToan(List<VDT_TT_DeNghiThanhToan> lstData);
+        void SaveListDeNghiThanhToanKhv(List<VDT_TT_DeNghiThanhToan_KHV> lstData);
 
         bool LuuPheDuyetThanhToanChiTiet(Guid iIdDeNghiThanhToanId, List<PheDuyetThanhToanChiTiet> data, string userLogin, int iNamLamViec, DateTime dNgayPheDuyet, double? fThueGiaTriGiaTangDuocDuyet, double? fChuyenTienBaoHanhDuocDuyet);
 
@@ -1539,6 +1570,7 @@ namespace Viettel.Services
         List<PheDuyetThanhToanChiTiet> GetListPheDuyetChiTietDetail(Guid iID_DeNghiThanhToanID);
         List<VdtTtDeNghiThanhToanChiPhiQuery> GetChiPhiInDenghiThanhToanScreen(DateTime dNgayDeNghi, Guid iIdDuAnId);
         List<VDT_DM_NhaThau> GetNhaThauByHopDong(Guid iIdHopDongId);
+        VDT_DM_NhaThau GetTTinNhaThauByID(Guid id);
         CapPhatThanhToanReportQuery GetThongTinPhanGhiCoQuanTaiChinh(Guid id, int iNamLamViec);
 
         DeNghiThanhToanValueQuery LoadGiaTriPheDuyetThanhToanByParentId(Guid id);
@@ -1743,7 +1775,7 @@ namespace Viettel.Services
         /// </summary>
         /// <param name="iIdDuAnId"></param>
         /// <returns></returns>
-        List<VDTDuToanNguonVonModel> GetListDuToanNguonVonByDuAn(string iIdDuAnId);
+        List<VDTDuToanNguonVonModel> GetListDuToanNguonVonByDuAn(string iIdDuAnId, string iIdDuToanId);
         /// <summary>
         /// get list du toan nguon von by du toan
         /// </summary>
@@ -1788,6 +1820,8 @@ namespace Viettel.Services
         /// <returns></returns>
         bool CheckExistSoQuyetDinhShare(string propertyName, string tableName, string checkVal);
         int FindCurrentPeriod(int namLamViec);
+
+        IEnumerable<VDT_DA_DuToan> GetListDuToanActiveByIdDuAn(Guid? iIdDuToanId, Guid? iID_DuAnID);
     }
 
 
@@ -2016,6 +2050,16 @@ namespace Viettel.Services
             {
                 var items = conn.Query<dynamic>(sql);
 
+                return items;
+            }
+        }
+
+        public IEnumerable<VDT_DM_LoaiCongTrinh> GetAllDmLoaiCongTrinh()
+        {
+            var sql = "SELECT * FROM VDT_DM_LoaiCongTrinh WHERE bActive = 1";
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var items = conn.Query<VDT_DM_LoaiCongTrinh>(sql);
                 return items;
             }
         }
@@ -2369,7 +2413,21 @@ namespace Viettel.Services
                 items.listHangMuc = GetListHangMucChuaDieuChinhByGoiThau(iId);
                 return items;
             }
+        }
 
+        public List<ThongTinGoiThauViewModel> GetThongTinGoiThauByListGoiThauId(List<Guid> LstId)
+        {
+            if (LstId == null || LstId.Count == 0) return new List<ThongTinGoiThauViewModel>();
+            var sql = FileHelpers.GetSqlQuery("get_by_list_id_thongtingoithau.sql");
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var items = conn.Query<ThongTinGoiThauViewModel>(sql, param: new
+                {
+                    iId = string.Join(",", LstId)
+                },
+                commandType: CommandType.Text);
+                return items.ToList();
+            }
         }
 
         public DuAnViewModel GetThongTinDuAnByGoiThauId(Guid iId)
@@ -2541,6 +2599,20 @@ namespace Viettel.Services
             return true;
         }
 
+  
+       public VDT_DA_GoiThau GetThongTinGoiThauById(Guid id)
+        {
+            using(var conn = _connectionFactory.GetConnection())
+            {
+                conn.Open();
+                var goiThau = conn.Get<VDT_DA_GoiThau>(id);
+                if (goiThau == null) return goiThau;
+
+                return goiThau;
+
+            }
+        }
+
         public IEnumerable<VDT_DM_NhaThau> GetAllNhaThau()
         {
             var sql = "SELECT * FROM VDT_DM_NhaThau;";
@@ -2616,6 +2688,32 @@ namespace Viettel.Services
             {
                 var items = conn.Query<VDT_DA_DuAn_HangMuc>(sql);
                 return items;
+            }
+        }
+
+        public List<VDT_DA_DuAn_HangMuc> GetDuAnHangMucByListDuAnId(List<Guid> lstId)
+        {
+            var sql = "SELECT * FROM VDT_DA_DuAn_HangMuc WHERE iID_DuAnID in (SELECT * FROM f_split(@iId));";
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var items = conn.Query<VDT_DA_DuAn_HangMuc>(sql, param: new
+                {
+                    iId = string.Join(",", lstId)
+                }, commandType: CommandType.Text);
+                return items.ToList();
+            }
+        }
+
+        public List<VDT_DA_DuAn_NguonVon> GetDuAnNguonVonByListDuAnId(List<Guid> lstId)
+        {
+            var sql = "SELECT * FROM VDT_DA_DuAn_NguonVon WHERE iID_DuAn in (SELECT * FROM f_split(@iId));";
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var items = conn.Query<VDT_DA_DuAn_NguonVon>(sql, param: new
+                {
+                    iId = string.Join(",", lstId)
+                }, commandType: CommandType.Text);
+                return items.ToList();
             }
         }
 
@@ -2822,6 +2920,125 @@ namespace Viettel.Services
                 AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
             }
             return null;
+        }
+
+        public bool AddRangerDuAn(IEnumerable<VDT_DA_DuAn> lstDuAn)
+        {
+            try
+            {
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    conn.Insert<VDT_DA_DuAn>(lstDuAn);
+                }
+                return true;
+            }
+            catch(Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return false;
+        }
+
+        public bool AddRangerDuAnHangMuc(IEnumerable<VDT_DA_DuAn_HangMuc> lstDuAnHangMuc)
+        {
+            try
+            {
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    conn.Insert<VDT_DA_DuAn_HangMuc>(lstDuAnHangMuc);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return false;
+        }
+
+        public bool AddRangerDuAnNguonVon(IEnumerable<VDT_DA_DuAn_NguonVon> lstDuAnNguonVon)
+        {
+            try
+            {
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    conn.Insert<VDT_DA_DuAn_NguonVon>(lstDuAnNguonVon);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return false;
+        }
+
+        public bool AddRangerVdtDaGoiThau(IEnumerable<VDT_DA_GoiThau> lstGoiThau)
+        {
+            try
+            {
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    conn.Insert<VDT_DA_GoiThau>(lstGoiThau);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return false;
+        }
+
+        public bool AddRangerVdtDaTtHopDong(IEnumerable<VDT_DA_TT_HopDong> lstGoiThau)
+        {
+            try
+            {
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    conn.Insert<VDT_DA_TT_HopDong>(lstGoiThau);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return false;
+        }
+
+        public bool AddRangerVdtKtKhoiTaoDuLieuChiTiet(IEnumerable<VDT_KT_KhoiTao_DuLieu_ChiTiet> lstData)
+        {
+            try
+            {
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    conn.Insert<VDT_KT_KhoiTao_DuLieu_ChiTiet>(lstData);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return false;
+        }
+
+        public bool InsertVdtKtKhoiTaoDuLieu(VDT_KT_KhoiTao_DuLieu obj)
+        {
+            try
+            {
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    conn.Insert<VDT_KT_KhoiTao_DuLieu>(obj);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return false;
         }
 
         public bool XoaQLPheDuyetTKTCvaTDT(Guid iID_DuToanID)
@@ -3504,6 +3721,25 @@ namespace Viettel.Services
             return null;
         }
 
+        public IEnumerable<VDT_DA_DuToan> GetListDuToanActiveByIdDuAn(Guid? iIdDuToanId, Guid? iID_DuAnID)
+        {
+            var sql = "SELECT * FROM VDT_DA_DuToan WHERE iID_DuAnID = @iID_DuAnID AND bActive = 1 ";
+            if (iIdDuToanId != null ) sql += "AND iID_DuToanID != @iIdDuToanId";
+            using (var conn = _connectionFactory.GetConnection())
+            {
+
+                var item = conn.Query<VDT_DA_DuToan>(sql,
+                    param: new
+                    {
+                        iID_DuAnID,
+                        iIdDuToanId
+                    },
+                    commandType: CommandType.Text);
+
+                return item;
+            }
+        }
+
 
         #endregion
 
@@ -3575,7 +3811,7 @@ namespace Viettel.Services
 
             using (var conn = _connectionFactory.GetConnection())
             {
-                var items = conn.Query<VDT_DA_ChuTruongDauTu>("SELECT * FROM VDT_DA_ChuTruongDauTu WHERE (iID_ChuTruongDauTuID IS NULL OR @iID_ChuTruongDauTuID != iID_ChuTruongDauTuID) AND sSoQuyetDinh = @sSoQuyetDinh", param:
+                var items = conn.Query<VDT_DA_ChuTruongDauTu>("SELECT * FROM VDT_DA_ChuTruongDauTu WHERE (iID_ChuTruongDauTuID IS NULL OR @iID_ChuTruongDauTuID != iID_ChuTruongDauTuID) AND sSoQuyetDinh = '@sSoQuyetDinh'", param:
                   new
                   {
                       sSoQuyetDinh,
@@ -3588,6 +3824,44 @@ namespace Viettel.Services
                 }
             }
             return false;
+        }
+
+        public bool CheckEzistSoQuyetDinhChuTruongDauTu(string sSoQuyetDinh)
+        {
+            if (string.IsNullOrEmpty(sSoQuyetDinh))
+            {
+                return false;
+            }
+
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var items = conn.Query<VDT_DA_ChuTruongDauTu>("SELECT * FROM VDT_DA_ChuTruongDauTu WHERE sSoQuyetDinh = '@sSoQuyetDinh'", param:
+                  new
+                  {
+                      sSoQuyetDinh
+                  }, commandType: System.Data.CommandType.Text);
+
+                if (items == null || !items.Any())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public VDT_DA_ChuTruongDauTu GetChuTruongDauTUBySoQuyetDinh(string sSoQuyetDinh)
+        {
+            var sql = "select * from VDT_DA_ChuTruongDauTu where sSoQuyetDinh = @sSoQuyetDinh";
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var item = conn.QueryFirstOrDefault<VDT_DA_ChuTruongDauTu>(sql,
+                   param: new
+                   {
+                       sSoQuyetDinh
+                   },
+                   commandType: System.Data.CommandType.Text);
+                return item;
+            }
         }
 
         /// <summary>
@@ -4825,7 +5099,7 @@ namespace Viettel.Services
 
         public VDT_QT_BCQuyetToanNienDo GetDataBCQuyetToanNienDo(int iLoaiThanhToan, Guid iID_DonViQuanLyID, int iID_NguonVonID, int iNamKeHoach)
         {
-            var sql = "SELECT * FROM VDT_QT_BCQuyetToanNienDo WHERE iLoaiThanhToan = @iLoaiThanhToan and iID_DonViQuanLyID = @iID_DonViQuanLyID and iID_NguonVonID = @iID_NguonVonID and iNamKeHoach = @iNamKeHoach";
+            var sql = "SELECT * FROM VDT_QT_BCQuyetToanNienDo WHERE iID_DonViQuanLyID = @iID_DonViQuanLyID and iID_NguonVonID = @iID_NguonVonID and iNamKeHoach = @iNamKeHoach";
             using (var conn = _connectionFactory.GetConnection())
             {
                 var item = conn.Query<VDT_QT_BCQuyetToanNienDo>(
@@ -6148,6 +6422,42 @@ namespace Viettel.Services
             return false;
         }
 
+        public void SaveListDeNghiThanhToan(List<VDT_TT_DeNghiThanhToan> lstData)
+        {
+            try
+            {
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    conn.Open();
+                    var trans = conn.BeginTransaction();
+                    conn.Insert<VDT_TT_DeNghiThanhToan>(lstData, trans);
+                    trans.Commit();
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+        }
+
+        public void SaveListDeNghiThanhToanKhv(List<VDT_TT_DeNghiThanhToan_KHV> lstData)
+        {
+            try
+            {
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    conn.Open();
+                    var trans = conn.BeginTransaction();
+                    conn.Insert<VDT_TT_DeNghiThanhToan_KHV>(lstData, trans);
+                    trans.Commit();
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+        }
+
         /// <summary>
         /// luu phe duyet thanh toan chi tiet
         /// </summary>
@@ -6373,6 +6683,23 @@ namespace Viettel.Services
                 AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
             }
             return null;
+        }
+
+        public IEnumerable<GiaiNganThanhToanViewModel> LoadDataExportDenghiThanhToanByIds(List<Guid> lstId)
+        {
+            var tblId = ConvertDataToTableTypeDefined("t_tbl_Ids", "iId", lstId);
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var items = conn.Query<GiaiNganThanhToanViewModel>("sp_vdt_tt_export_denghithanhtoan_by_id",
+                    param: new
+                    {
+                        iId = tblId.AsTableValuedParameter("t_tbl_Ids")
+                    },
+                    commandType: System.Data.CommandType.StoredProcedure);
+                if (items == null)
+                    return new List<GiaiNganThanhToanViewModel>();
+                return items.ToList();
+            }
         }
 
         public IEnumerable<GiaiNganThanhToanViewModel> LoadVDTTTDeNghiThanhToanIndex(ref PagingInfo _paging, int workYear, string maNguoiDung, int? iNamKeHoach, DateTime? dNgayDeNghiFrom, DateTime? dNgayDeNghiTo, string iidDuAn = "", string iLoaiThanhToan = "", string sMaDonVi = "", string sSoDeNghi = "", bool isXuatDanhSach = false)
@@ -7179,7 +7506,7 @@ namespace Viettel.Services
         public IEnumerable<VDT_DM_LoaiHopDong> GetDMPhanLoaiHopDong()
         {
             StringBuilder query = new StringBuilder();
-            query.Append("SELECT iID_LoaiHopDongID, sTenLoaiHopDong FROM VDT_DM_LoaiHopDong ORDER BY iThuTu");
+            query.Append("SELECT * FROM VDT_DM_LoaiHopDong ORDER BY iThuTu");
             using (var conn = _connectionFactory.GetConnection())
             {
                 var items = conn.Query<VDT_DM_LoaiHopDong>(query.ToString(),
@@ -7243,7 +7570,8 @@ namespace Viettel.Services
 
         public VDT_DA_TT_HopDong GetThongTinHopdongById(Guid iID_HopDongID)
         {
-            using(var conn = _connectionFactory.GetConnection()){
+            using (var conn = _connectionFactory.GetConnection())
+            {
                 var entity = conn.Get<VDT_DA_TT_HopDong>(iID_HopDongID);
                 if (entity == null) return new VDT_DA_TT_HopDong();
                 return entity;
@@ -7274,6 +7602,36 @@ namespace Viettel.Services
                 var item = conn.QueryFirstOrDefault<VDT_DA_TT_HopDong_ViewModel>(query.ToString(),
                    commandType: CommandType.Text);
                 return item;
+            }
+        }
+
+        public List<VDT_DA_TT_HopDong_ViewModel> GetDataExportHopDongByListId(List<Guid> lstId)
+        {
+            string sQuery = @"SELECT tbl.*, da.sMaDuAn, nt.sMaNhaThau, lhd.sMaLoaiHopDong
+                                FROM VDT_DA_TT_HopDong as tbl
+                                INNER JOIN VDT_DA_DuAn as da on tbl.iID_DuAnID = da.iID_DuAnID
+                                LEFT JOIN VDT_DM_NhaThau as nt on tbl.iID_NhaThauThucHienID = nt.iID_NhaThauID
+                                LEFT JOIN VDT_DM_LoaiHopDong as lhd on tbl.iID_LoaiHopDongID = lhd.iID_LoaiHopDongID
+                                WHERE tbl.iID_HopDongID in (SELECT * FROM f_split(@lstId))";
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var item = conn.Query<VDT_DA_TT_HopDong_ViewModel>(sQuery,
+                    param: new
+                    {
+                        lstId = string.Join(",", lstId),
+                    },
+                   commandType: CommandType.Text);
+                return item.ToList();
+            }
+        }
+
+        public IEnumerable<VDT_DA_TT_HopDong> GetAllHopDong()
+        {
+            var sql = @"SELECT * FROM VDT_DA_TT_HopDong WHERE bActive = 1";
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var entity = conn.Query<VDT_DA_TT_HopDong>(sql, commandType: CommandType.Text);
+                return entity;
             }
         }
 
@@ -7391,7 +7749,7 @@ namespace Viettel.Services
 					inner join VDT_DA_DuToan_DM_HangMuc tb2 ON tb1.iID_HangMucID = tb2.Id  
 					and tb2.iID_ParentID is not null ) as parentId 
 						ON parentId.iID_ParentID = gthm.iID_HangMucID
-					where gthm.iID_GoiThauID = '6d54003a-45cb-4c97-908d-714515e0e613'
+					--where gthm.iID_GoiThauID = '6d54003a-45cb-4c97-908d-714515e0e613'
 					--order by MaOrDer 
 					union all
 					select distinct gthm.iID_HangMucID as IIDHangMucID,
@@ -8997,7 +9355,7 @@ namespace Viettel.Services
                     }
 
                     // get list nguon von
-                    List<VDTDuToanNguonVonModel> lstNguonVonByDuAn = GetListDuToanNguonVonByDuAn(result.iID_DuAnID.ToString());
+                    List<VDTDuToanNguonVonModel> lstNguonVonByDuAn = GetListDuToanNguonVonByDuAn(result.iID_DuAnID.ToString(), result.iID_DuToanID.ToString());
                     if (lstNguonVonByDuAn != null && lstNguonVonByDuAn.Any())
                     {
                         List<VDT_QT_DeNghiQuyetToan_Nguonvon> lstQuyetToanNguonVon = conn.Query<VDT_QT_DeNghiQuyetToan_Nguonvon>(string.Format("SELECT * FROM VDT_QT_DeNghiQuyetToan_Nguonvon WHERE iID_DeNghiQuyetToanID = '{0}'", result.iID_DeNghiQuyetToanID), null, commandType: CommandType.Text).ToList();
@@ -12248,7 +12606,11 @@ namespace Viettel.Services
         public IEnumerable<VDT_KT_KhoiTao_DuLieu_ChiTiet_ViewModel> GetKhoiTaoTTDAChiTietByIdKhoiTao(Guid iID_KhoiTaoID)
         {
             StringBuilder query = new StringBuilder();
-            query.AppendFormat("SELECT ROW_NUMBER() OVER (ORDER BY sMaDuAn) AS STT, ktct.* FROM VDT_KT_KhoiTao_DuLieu_ChiTiet ktct WHERE ktct.iID_KhoiTaoDuLieuID = '{0}' ", iID_KhoiTaoID);
+            query.AppendFormat(@"SELECT ROW_NUMBER() OVER (ORDER BY ktct.sMaDuAn) AS STT, ktct.*, da.sTenDuAn, lct.sMaLoaiCongTrinh 
+                                FROM VDT_KT_KhoiTao_DuLieu_ChiTiet ktct 
+                                INNER JOIN VDT_DA_DuAn as da on ktct.iID_DuAnID = da.iID_DuAnID
+                                LEFT JOIN VDT_DM_LoaiCongTrinh as lct on ktct.iID_LoaiCongTrinh = lct.iID_LoaiCongTrinh
+                                WHERE ktct.iID_KhoiTaoDuLieuID = '{0}'", iID_KhoiTaoID);
             using (var conn = _connectionFactory.GetConnection())
             {
                 var item = conn.Query<VDT_KT_KhoiTao_DuLieu_ChiTiet_ViewModel>(new CommandDefinition(
@@ -12775,6 +13137,21 @@ namespace Viettel.Services
             }
         }
 
+        public List<DuAnViewModel> GetAllDuAnByListId(List<Guid> lstId)
+        {
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var itemQuery = conn.Query<DuAnViewModel>("SELECT * FROM VDT_DA_DuAn WHERE iID_DuAnID in (SELECT * FROM f_split(@iId))",
+                    param: new
+                    {
+                        iId = string.Join(",", lstId)
+                    },
+                    commandType: CommandType.Text);
+
+                return itemQuery.ToList();
+            }
+        }
+
         public VDT_KHV_KeHoach5Nam_DeXuat GetKeHoach5NamDeXuatById(Guid? Id)
         {
             VDT_KHV_KeHoach5Nam_DeXuat entity = new VDT_KHV_KeHoach5Nam_DeXuat();
@@ -12832,6 +13209,21 @@ namespace Viettel.Services
             }
         }
 
+        public NS_DonVi GetNSDonViByMaDonVi(string maDv)
+        {
+            var sql = @"select * from ns_donvi where iID_MaDonVi = @maDv and iTrangThai = 1";
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var item = conn.QueryFirstOrDefault<NS_DonVi>(sql,
+                    param: new
+                    {
+                        maDv
+                    },
+                    commandType: CommandType.Text);
+                return item;
+            }
+        }
+
         public DataTable GetListKH5NamDeXuatChiTietById(string Id, int iNamLamViec, Dictionary<string, string> _filters)
         {
             var sql = FileHelpers.GetSqlQuery("vdt_get_list_kh5namdexuat_chitiet_by_id.sql");
@@ -12881,6 +13273,25 @@ namespace Viettel.Services
                     },
                     commandType: CommandType.Text);
                 return items;
+            }
+        }
+
+        public bool InsertNewDuAnImportKHTHDXCT(VDT_DA_DuAn newDuAn)
+        {
+            try
+            {
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    conn.Open();
+                    var trans = conn.BeginTransaction();
+                    conn.Insert(newDuAn, trans);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+                return false;
             }
         }
 
@@ -12967,6 +13378,34 @@ namespace Viettel.Services
                 var items = conn.QueryFirstOrDefault<VDT_DM_LoaiCongTrinh>(sql, param: new
                 {
                     sMaLoaiCongTrinh
+                },
+                commandType: CommandType.Text);
+
+                return items;
+            }
+        }
+
+        public VDT_DM_LoaiCongTrinh GetDMLoaiCongTrinhByMLNS(string LNS, string L, string K, string M, string TM, string TTM, string NG)
+        {
+            var sql = "SELECT * FROM VDT_DM_LoaiCongTrinh where " +
+                "LNS = @LNS" +
+                " and L = @L" +
+                " and K = @K" +
+                " and M = @M" +
+                " and TM = @TM" +
+                " and TTM = @TTM" +
+                " and NG = @NG";
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var items = conn.QueryFirstOrDefault<VDT_DM_LoaiCongTrinh>(sql, param: new
+                {
+                    LNS,
+                    L,
+                    K,
+                    M,
+                    TM,
+                    TTM,
+                    NG
                 },
                 commandType: CommandType.Text);
 
@@ -13818,15 +14257,35 @@ namespace Viettel.Services
                 {
                     List<KeHoachVonNamChiTietViewModel> lstInsert = new List<KeHoachVonNamChiTietViewModel>();
                     List<KeHoachVonNamChiTietViewModel> lstUpdate = new List<KeHoachVonNamChiTietViewModel>();
-                    lstInsert = aListModel.Where(x => x.iID_KeHoachVonNamDeXuatChiTietID == null || x.iID_KeHoachVonNamDeXuatChiTietID == Guid.Empty).Select(s =>
+                    if(aListModel != null)
                     {
-                        s.fThanhToan = s.fThanhToanDC;
-                        s.fUocThucHien = s.fUocThucHienDC;
-                        s.fThuHoiVonUngTruoc = s.fThuHoiVonUngTruocDC;
-                        return s;
-                    }).ToList();
+                        var entityDeXuat = conn.Get<VDT_KHV_KeHoachVonNam_DeXuat>(aListModel.FirstOrDefault().iID_KeHoachVonNamDeXuatID);
+                        if (entityDeXuat.iID_ParentId != null)
+                        {
+                            lstInsert = aListModel.Where(x => x.iID_KeHoachVonNamDeXuatChiTietID == null || x.iID_KeHoachVonNamDeXuatChiTietID == Guid.Empty).Select(s =>
+                            {
+                                s.fThanhToan = s.fThanhToanDC;
+                                s.fUocThucHien = s.fUocThucHienDC;
+                                s.fThuHoiVonUngTruoc = s.fThuHoiVonUngTruocDC;
+                                return s;
+                            }).ToList();
+                        }
+                        else
+                        {
+                            lstInsert = aListModel.Where(x => x.iID_KeHoachVonNamDeXuatChiTietID == null || x.iID_KeHoachVonNamDeXuatChiTietID == Guid.Empty).Select(s =>
+                            {
+                                s.fThanhToan = s.fThanhToan;
+                                s.fUocThucHien = s.fUocThucHien;
+                                s.fThuHoiVonUngTruoc = s.fThuHoiVonUngTruoc;
+                                return s;
+                            }).ToList();
+                        }
+                    }
+                    
                     lstUpdate = aListModel.Where(x => x.iID_KeHoachVonNamDeXuatChiTietID != null && x.iID_KeHoachVonNamDeXuatChiTietID != Guid.Empty).ToList();
+
                     conn.Insert<VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet>(lstInsert);
+
                     foreach (var item in lstUpdate)
                     {
                         var entity = conn.Get<VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet>(item.iID_KeHoachVonNamDeXuatChiTietID);
@@ -13837,6 +14296,7 @@ namespace Viettel.Services
                         entity.fVonKeoDaiCacNamTruoc = item.fVonKeoDaiCacNamTruoc;
                         entity.iLoaiDuAn = item.iLoaiDuAn;
                         entity.iID_DonViID = item.iID_DonViID;
+                        entity.iID_DuAn_HangMucID = item.iID_DuAn_HangMucID;
                         if (entity.iID_ParentId != null)
                         {
                             entity.fUocThucHien = item.fUocThucHienDC;
@@ -14215,7 +14675,7 @@ namespace Viettel.Services
                 var listDuAnIds = string.Join(",", listkhChiTiet.Select(i => i.iID_DuAnID).ToList().Select(n => n));
                 List<VDT_KHV_PhanBoVon_DonVi_ChiTiet_PheDuyet> listDataCopy = new List<VDT_KHV_PhanBoVon_DonVi_ChiTiet_PheDuyet>();
                 listDataCopy.AddRange(listkhChiTiet);
-                var dicKhChiTiet = listkhChiTiet.ToDictionary(x => x.iID_DuAnID, x => x);
+                var dicKhChiTiet = listkhChiTiet.GroupBy(data => data.iID_DuAnID).Select(s => s.First()).ToList().ToDictionary(x => x.iID_DuAnID, x => x);
                 List<VDT_KHV_PhanBoVon_DonVi_ChiTiet_PheDuyet> lstUpdate = listkhChiTiet.Where(x => (x.Id != null && x.Id != Guid.Empty)).ToList();
                 List<VDT_KHV_PhanBoVon_DonVi_ChiTiet_PheDuyet> lstAdd = listkhChiTiet.Where(x => (x.Id == null || x.Id == Guid.Empty)).ToList();
                 var sql = "select DISTINCT iID_DuAnID from VDT_KHV_KeHoachVonNam_DeXuat dx\r\ninner join VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet ct on dx.iID_KeHoachVonNamDeXuatID = ct.iID_KeHoachVonNamDeXuatID\r\nwhere ct.iID_DuAnID in (Select * from f_split(@listDuAnIds)) and ct.iID_KeHoachVonNamDeXuatID = @iID_KeHoachVonNamDeXuatID";
@@ -14612,7 +15072,7 @@ namespace Viettel.Services
                 conn.Open();
                 var trans = conn.BeginTransaction();
                 //Lưu bảng tổng hợp
-                List<TongHopNguonNSDauTuQuery> lstDataInsert = new List<TongHopNguonNSDauTuQuery>();
+                List<TongHopNguonNSDauTuQuery2> lstDataInsert = new List<TongHopNguonNSDauTuQuery2>();
                 var entityVonNamDX = conn.Get<VDT_KHV_KeHoachVonNam_DuocDuyet>(iID_KeHoachVonNamDuocDuyetID, trans);
                 if (entityVonNamDX.iID_ParentId != null && entityVonNamDX.iID_ParentId != Guid.Empty)
                 {
@@ -14620,7 +15080,7 @@ namespace Viettel.Services
                 }
                 else
                 {
-                    InsertTongHopNguonDauTu_Tang(LOAI_CHUNG_TU.KE_HOACH_VON_NAM, (int)TypeExecute.Adjust, entityVonNamDX.iID_KeHoachVonNam_DuocDuyetID, Guid.NewGuid());
+                    InsertTongHopNguonDauTu_Tang(LOAI_CHUNG_TU.KE_HOACH_VON_NAM, (int)TypeExecute.Update, entityVonNamDX.iID_KeHoachVonNam_DuocDuyetID, Guid.NewGuid());
                 }
 
                 foreach (var item in
@@ -14628,7 +15088,7 @@ namespace Viettel.Services
                 {
                     if ((item.fGiaTriThuHoiNamTruocKhoBac ?? 0) != 0)
                     {
-                        TongHopNguonNSDauTuQuery data1 = GetMucLucNganSachByPhanBoVon(item, dicMucLucNganSach);
+                        TongHopNguonNSDauTuQuery2 data1 = GetMucLucNganSachByPhanBoVon(item, dicMucLucNganSach);
                         data1.iID_ChungTu = entityVonNamDX.iID_KeHoachVonNam_DuocDuyetID;
                         data1.fGiaTri = (item.fGiaTriThuHoiNamTruocKhoBac ?? 0);
                         data1.bIsLog = false;
@@ -14637,11 +15097,12 @@ namespace Viettel.Services
                         data1.sMaDich = LOAI_CHUNG_TU.KHVU_KHOBAC;
                         data1.sMaNguonCha = LOAI_CHUNG_TU.KHVN_KHOBAC;
                         data1.bKeHoach = true;
+                        data1.IIDLoaiCongTrinh = item.iID_LoaiCongTrinh;
                         lstDataInsert.Add(data1);
                     }
                     if ((item.fGiaTriThuHoiNamTruocLenhChi ?? 0) != 0)
                     {
-                        TongHopNguonNSDauTuQuery data2 = GetMucLucNganSachByPhanBoVon(item, dicMucLucNganSach);
+                        TongHopNguonNSDauTuQuery2 data2 = GetMucLucNganSachByPhanBoVon(item, dicMucLucNganSach);
                         data2.iID_ChungTu = entityVonNamDX.iID_KeHoachVonNam_DuocDuyetID;
                         data2.fGiaTri = (item.fGiaTriThuHoiNamTruocLenhChi ?? 0);
                         data2.bIsLog = false;
@@ -14650,6 +15111,7 @@ namespace Viettel.Services
                         data2.sMaDich = LOAI_CHUNG_TU.KHVU_LENHCHI;
                         data2.sMaNguonCha = LOAI_CHUNG_TU.KHVN_LENHCHI;
                         data2.bKeHoach = true;
+                        data2.IIDLoaiCongTrinh = item.iID_LoaiCongTrinh;
                         lstDataInsert.Add(data2);
                     }
                 }
@@ -14958,21 +15420,21 @@ namespace Viettel.Services
                             conn.Update(entityUpdate, trans);
                         }
 
-                        DynamicParameters lstParam = new DynamicParameters();
-                        var iID_KePhanBoVonDonViF = data.Id.ToString();
-                        var iID_KePhanBoVonDonViL = entityModified.Id.ToString();
+                        //DynamicParameters lstParam = new DynamicParameters();
+                        //var iID_KePhanBoVonDonViF = data.Id.ToString();
+                        //var iID_KePhanBoVonDonViL = entityModified.Id.ToString();
 
-                        var sql = FileHelpers.GetSqlQuery("proc_vdt_create_phan_bo_von_duoc_phe_duyet_chi_tiet.sql");
+                        //var sql = FileHelpers.GetSqlQuery("proc_vdt_create_phan_bo_von_duoc_phe_duyet_chi_tiet.sql");
 
-                        conn.Execute(
-                                sql,
-                                param: new
-                                {
-                                    iID_KePhanBoVonDonViL,
-                                    iID_KePhanBoVonDonViF
-                                },
-                                transaction: trans,
-                                commandType: CommandType.Text);
+                        //conn.Execute(
+                        //        sql,
+                        //        param: new
+                        //        {
+                        //            iID_KePhanBoVonDonViL,
+                        //            iID_KePhanBoVonDonViF
+                        //        },
+                        //        transaction: trans,
+                        //        commandType: CommandType.Text);
                     }
                     else
                     {
@@ -16156,6 +16618,17 @@ namespace Viettel.Services
             }
         }
 
+        public VDT_QDDT_KHLCNhaThau GetKHLuaChonNhaThauById(Guid id)
+        {
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var entity = conn.Get<VDT_QDDT_KHLCNhaThau>(id);
+                if (entity == null) return new VDT_QDDT_KHLCNhaThau();
+
+                return entity;
+            }
+        }
+
         #endregion
 
         #region Cap phat thanh toan
@@ -16180,6 +16653,30 @@ namespace Viettel.Services
                        },
                        commandType: System.Data.CommandType.Text);
                     return items.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return null;
+        }
+
+        public VDT_TT_DeNghiThanhToan GetDeNghiThanhToanByThongTri(string iID_ThongTriID)
+        {
+            try
+            {
+                var sql = "SELECT * FROM VDT_TT_DeNghiThanhToan WHERE iID_ThongTriThanhToanID = @iID_ThongTriID";
+
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    var items = conn.Query<VDT_TT_DeNghiThanhToan>(sql,
+                       param: new
+                       {
+                           iID_ThongTriID
+                       },
+                       commandType: System.Data.CommandType.Text);
+                    return items.FirstOrDefault();
                 }
             }
             catch (Exception ex)
@@ -16469,7 +16966,7 @@ namespace Viettel.Services
         /// <param name="iID_DeNghiThanhToanID"></param>
         /// <param name="sUserLogin"></param>
         /// <returns></returns>
-        public bool UpdatePheDuyetThanhToanChiTiet(List<PheDuyetThanhToanChiTiet> lstData, Guid iID_DeNghiThanhToanID, string sUserLogin, int iNamLamViec, double fThueGiaTriGiaTangDuocDuyet, double fChuyenTienBaoHanhDuocDuyet, DateTime dNgayPheDuyet)
+        public bool UpdatePheDuyetThanhToanChiTiet(List<PheDuyetThanhToanChiTiet> lstData, Guid iID_DeNghiThanhToanID, string sUserLogin, int iNamLamViec, double? fThueGiaTriGiaTangDuocDuyet, double? fChuyenTienBaoHanhDuocDuyet, DateTime dNgayPheDuyet)
         {
             try
             {
@@ -16627,9 +17124,12 @@ namespace Viettel.Services
 
         private void XuLySoLieuBangTongHop(List<PheDuyetThanhToanChiTiet> data, VDT_TT_DeNghiThanhToan objDeNghiThanhToan)
         {
-            List<TongHopNguonNSDauTuQuery> lstDataInsert = new List<TongHopNguonNSDauTuQuery>();
-            List<TongHopNguonNSDauTuQuery> lstChungTuNguon = new List<TongHopNguonNSDauTuQuery>();
-            List<TongHopNguonNSDauTuQuery> lstChungTuAppend = new List<TongHopNguonNSDauTuQuery>();
+            List<TongHopNguonNSDauTuQuery2> lstDataInsert = new List<TongHopNguonNSDauTuQuery2>();
+            List<TongHopNguonNSDauTuQuery2> lstChungTuNguon = new List<TongHopNguonNSDauTuQuery2>();
+            List<TongHopNguonNSDauTuQuery2> lstChungTuAppend = new List<TongHopNguonNSDauTuQuery2>();
+            Guid? iIdLoaiCongTrinh = null;
+            var objDuAnHangMuc = GetVDTDuAnHangMucById(objDeNghiThanhToan.ID_DuAn_HangMuc);
+            if (objDuAnHangMuc != null) iIdLoaiCongTrinh = objDuAnHangMuc.iID_LoaiCongTrinhID;
 
             if (data != null && data.Count > 0)
             {
@@ -16637,8 +17137,8 @@ namespace Viettel.Services
                 data.Where(n => !n.isDelete && (n.fGiaTriNgoaiNuoc != 0 || n.fGiaTriTrongNuoc != 0)
                 && n.iID_KeHoachVonID != null))
                 {
-                    TongHopNguonNSDauTuQuery objTongHop = new TongHopNguonNSDauTuQuery();
-                    var lstAppend = ConvertDataTongHop(item, objDeNghiThanhToan, ref objTongHop);
+                    TongHopNguonNSDauTuQuery2 objTongHop = new TongHopNguonNSDauTuQuery2();
+                    var lstAppend = ConvertDataTongHop(item, objDeNghiThanhToan, iIdLoaiCongTrinh, ref objTongHop);
                     lstDataInsert.Add(objTongHop);
                     if (lstAppend != null && lstAppend.Count != 0)
                         lstChungTuAppend.AddRange(lstAppend);
@@ -16648,20 +17148,22 @@ namespace Viettel.Services
                         || item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.THU_HOI_UNG_TRUOC_NAM_NAY
                         || item.iLoaiDeNghi == (int)PaymentTypeEnum.Type.THU_HOI_UNG_TRUOC_NAM_TRUOC)
                     {
-                        lstChungTuNguon.Add(new TongHopNguonNSDauTuQuery()
+                        lstChungTuNguon.Add(new TongHopNguonNSDauTuQuery2()
                         {
                             iID_ChungTu = item.iID_KeHoachVonID.Value,
                             sMaDich = objTongHop.sMaNguon,
-                            sMaNguon = LOAI_CHUNG_TU.CHU_DAU_TU
+                            sMaNguon = LOAI_CHUNG_TU.CHU_DAU_TU,
+                            IIDLoaiCongTrinh = iIdLoaiCongTrinh
                         });
                     }
                     else
                     {
-                        lstChungTuNguon.Add(new TongHopNguonNSDauTuQuery()
+                        lstChungTuNguon.Add(new TongHopNguonNSDauTuQuery2()
                         {
                             iID_ChungTu = item.iID_KeHoachVonID.Value,
                             sMaNguon = GetMaNguonChaByKeHoachVon(item),
                             sMaDich = LOAI_CHUNG_TU.CHU_DAU_TU,
+                            IIDLoaiCongTrinh = iIdLoaiCongTrinh
                         });
                     }
                 }
@@ -16673,9 +17175,9 @@ namespace Viettel.Services
             }
         }
 
-        public List<TongHopNguonNSDauTuQuery> ConvertDataTongHop(PheDuyetThanhToanChiTiet item, VDT_TT_DeNghiThanhToan objDeNghiThanhToan, ref TongHopNguonNSDauTuQuery data)
+        public List<TongHopNguonNSDauTuQuery2> ConvertDataTongHop(PheDuyetThanhToanChiTiet item, VDT_TT_DeNghiThanhToan objDeNghiThanhToan, Guid? iIdLoaiCongTrinh, ref TongHopNguonNSDauTuQuery2 data)
         {
-            List<TongHopNguonNSDauTuQuery> results = new List<TongHopNguonNSDauTuQuery>();
+            List<TongHopNguonNSDauTuQuery2> results = new List<TongHopNguonNSDauTuQuery2>();
             data.iID_ChungTu = objDeNghiThanhToan.iID_DeNghiThanhToanID;
             data.fGiaTri = item.fGiaTriTrongNuoc + item.fGiaTriNgoaiNuoc;
             data.bIsLog = false;
@@ -16759,8 +17261,8 @@ namespace Viettel.Services
 
             if (objDeNghiThanhToan.bHoanTraUngTruoc.HasValue && objDeNghiThanhToan.bHoanTraUngTruoc.Value)
             {
-                TongHopNguonNSDauTuQuery childThuHoiUng = new TongHopNguonNSDauTuQuery();
-                TongHopNguonNSDauTuQuery childThuHoiKhoBac = new TongHopNguonNSDauTuQuery();
+                TongHopNguonNSDauTuQuery2 childThuHoiUng = new TongHopNguonNSDauTuQuery2();
+                TongHopNguonNSDauTuQuery2 childThuHoiKhoBac = new TongHopNguonNSDauTuQuery2();
                 childThuHoiUng.iID_ChungTu = objDeNghiThanhToan.iID_DeNghiThanhToanID;
                 childThuHoiUng.fGiaTri = item.fGiaTriTrongNuoc + item.fGiaTriNgoaiNuoc;
                 childThuHoiUng.bIsLog = false;
@@ -16770,6 +17272,7 @@ namespace Viettel.Services
                 childThuHoiUng.IIDTieuMucID = item.iID_TieuMucID;
                 childThuHoiUng.IIDTietMucID = item.iID_TietMucID;
                 childThuHoiUng.IIDNganhID = item.iID_NganhID;
+                childThuHoiUng.IIDLoaiCongTrinh = iIdLoaiCongTrinh;
 
                 childThuHoiKhoBac.iID_ChungTu = objDeNghiThanhToan.iID_DeNghiThanhToanID;
                 childThuHoiKhoBac.fGiaTri = item.fGiaTriTrongNuoc + item.fGiaTriNgoaiNuoc;
@@ -16780,6 +17283,7 @@ namespace Viettel.Services
                 childThuHoiKhoBac.IIDTieuMucID = item.iID_TieuMucID;
                 childThuHoiKhoBac.IIDTietMucID = item.iID_TietMucID;
                 childThuHoiKhoBac.IIDNganhID = item.iID_NganhID;
+                childThuHoiKhoBac.IIDLoaiCongTrinh = iIdLoaiCongTrinh;
                 if (objDeNghiThanhToan.iCoQuanThanhToan == (int)CoQuanThanhToan.Type.KHO_BAC)
                 {
                     childThuHoiUng.sMaNguon = LOAI_CHUNG_TU.TT_UNG_KHOBAC;
@@ -16846,11 +17350,11 @@ namespace Viettel.Services
             return string.Empty;
         }
 
-        public void InsertTongHopNguonDauTu_ThanhToan_Giam(string sLoai, int iTypeExecute, Guid iIdQuyetDinh, List<TongHopNguonNSDauTuQuery> lstChungTu, List<TongHopNguonNSDauTuQuery> lstNguon, List<TongHopNguonNSDauTuQuery> lstChungTuAppend = null)
+        public void InsertTongHopNguonDauTu_ThanhToan_Giam(string sLoai, int iTypeExecute, Guid iIdQuyetDinh, List<TongHopNguonNSDauTuQuery2> lstChungTu, List<TongHopNguonNSDauTuQuery2> lstNguon, List<TongHopNguonNSDauTuQuery2> lstChungTuAppend = null)
         {
             if (lstChungTu == null || lstChungTu.Count == 0) return;
-            List<TongHopNguonNSDauTuQuery> lstChungTuUpdate = new List<TongHopNguonNSDauTuQuery>();
-            List<TongHopNguonNSDauTuQuery> lstNguonVon = GetNguonVonTongHopNguonDauTuByCondition(lstNguon);
+            List<TongHopNguonNSDauTuQuery2> lstChungTuUpdate = new List<TongHopNguonNSDauTuQuery2>();
+            List<TongHopNguonNSDauTuQuery2> lstNguonVon = GetNguonVonTongHopNguonDauTuByCondition(lstNguon);
             Dictionary<Guid, double> dicNguonVon = new Dictionary<Guid, double>();
 
             foreach (var objChungTu in lstChungTu)
@@ -16867,7 +17371,7 @@ namespace Viettel.Services
                     {
                         if (objChungTu.sMaDich == LOAI_CHUNG_TU.CHU_DAU_TU)
                         {
-                            lstChungTuUpdate.Add(new TongHopNguonNSDauTuQuery()
+                            lstChungTuUpdate.Add(new TongHopNguonNSDauTuQuery2()
                             {
                                 fGiaTri = objChungTu.fGiaTri,
                                 iID_ChungTu = objChungTu.iID_ChungTu,
@@ -16882,14 +17386,15 @@ namespace Viettel.Services
                                 IIDMucID = objChungTu.IIDMucID,
                                 IIDTieuMucID = objChungTu.IIDTieuMucID,
                                 IIDTietMucID = objChungTu.IIDTietMucID,
-                                IIDNganhID = objChungTu.IIDNganhID
+                                IIDNganhID = objChungTu.IIDNganhID,
+                                IIDLoaiCongTrinh = objChungTu.IIDLoaiCongTrinh
                             });
                             break;
                         }
 
                         if (fThanhToan >= dicNguonVon[objNguonVon.Id])
                         {
-                            lstChungTuUpdate.Add(new TongHopNguonNSDauTuQuery()
+                            lstChungTuUpdate.Add(new TongHopNguonNSDauTuQuery2()
                             {
                                 fGiaTri = dicNguonVon[objNguonVon.Id],
                                 iID_ChungTu = objChungTu.iID_ChungTu,
@@ -16903,7 +17408,8 @@ namespace Viettel.Services
                                 IIDMucID = objChungTu.IIDMucID,
                                 IIDTieuMucID = objChungTu.IIDTieuMucID,
                                 IIDTietMucID = objChungTu.IIDTietMucID,
-                                IIDNganhID = objChungTu.IIDNganhID
+                                IIDNganhID = objChungTu.IIDNganhID,
+                                IIDLoaiCongTrinh = objChungTu.IIDLoaiCongTrinh
                             });
                             fThanhToan = fThanhToan - dicNguonVon[objNguonVon.Id];
                             objNguonVon.iStatus = (int)NguonVonStatus.DaSuDung;
@@ -16911,7 +17417,7 @@ namespace Viettel.Services
                         }
                         else
                         {
-                            lstChungTuUpdate.Add(new TongHopNguonNSDauTuQuery()
+                            lstChungTuUpdate.Add(new TongHopNguonNSDauTuQuery2()
                             {
                                 fGiaTri = fThanhToan,
                                 iID_ChungTu = objChungTu.iID_ChungTu,
@@ -16925,7 +17431,8 @@ namespace Viettel.Services
                                 IIDMucID = objChungTu.IIDMucID,
                                 IIDTieuMucID = objChungTu.IIDTieuMucID,
                                 IIDTietMucID = objChungTu.IIDTietMucID,
-                                IIDNganhID = objChungTu.IIDNganhID
+                                IIDNganhID = objChungTu.IIDNganhID,
+                                IIDLoaiCongTrinh = objChungTu.IIDLoaiCongTrinh
                             });
                             dicNguonVon[objNguonVon.Id] = dicNguonVon[objNguonVon.Id] - fThanhToan;
                             break;
@@ -16951,16 +17458,16 @@ namespace Viettel.Services
         /// </summary>
         /// <param name="iNamKeHoach"></param>
         /// <returns></returns>
-        public List<TongHopNguonNSDauTuQuery> GetNguonVonTongHopNguonDauTuByCondition(List<TongHopNguonNSDauTuQuery> lstCondition)
+        public List<TongHopNguonNSDauTuQuery2> GetNguonVonTongHopNguonDauTuByCondition(List<TongHopNguonNSDauTuQuery2> lstCondition)
         {
             try
             {
                 using (var conn = _connectionFactory.GetConnection())
                 {
-                    var conditions = ConvertDataToTableDefined("t_tbl_tonghopdautu", lstCondition);
+                    var conditions = ConvertDataToTableDefined("t_tbl_tonghopdautu_2", lstCondition);
 
-                    var data = conn.Query<TongHopNguonNSDauTuQuery>("sp_get_nguonvon_tonghopnguondautu_by_condition", new { data = conditions.AsTableValuedParameter("t_tbl_tonghopdautu") }, commandType: CommandType.StoredProcedure);
-                    if (data == null) return new List<TongHopNguonNSDauTuQuery>();
+                    var data = conn.Query<TongHopNguonNSDauTuQuery2>("sp_get_nguonvon_tonghopnguondautu_by_condition", new { data = conditions.AsTableValuedParameter("t_tbl_tonghopdautu_2") }, commandType: CommandType.StoredProcedure);
+                    if (data == null) return new List<TongHopNguonNSDauTuQuery2>();
                     return data.ToList();
                 }
             }
@@ -17030,13 +17537,13 @@ namespace Viettel.Services
         /// <param name="iIDChungTu"></param>
         /// <param name="sLoai"></param>
         /// <param name="lstData"></param>
-        public void InsertTongHopNguonDauTu(Guid iIDChungTu, string sLoai, List<TongHopNguonNSDauTuQuery> lstData)
+        public void InsertTongHopNguonDauTu(Guid iIDChungTu, string sLoai, List<TongHopNguonNSDauTuQuery2> lstData)
         {
             try
             {
                 using (var conn = _connectionFactory.GetConnection())
                 {
-                    var data = ConvertDataToTableDefined("t_tbl_tonghopdautu", lstData);
+                    var data = ConvertDataToTableDefined("t_tbl_tonghopdautu_2", lstData);
 
                     using (var cmd1 = new SqlCommand("sp_insert_tonghopnguondautu", conn))
                     {
@@ -17045,7 +17552,7 @@ namespace Viettel.Services
                         cmd1.CommandType = CommandType.StoredProcedure;
                         SqlParameter tvpParam = cmd1.Parameters.AddWithValue("@data", data);
                         tvpParam.SqlDbType = SqlDbType.Structured;
-                        tvpParam.TypeName = "dbo.t_tbl_tonghopdautu";
+                        tvpParam.TypeName = "dbo.t_tbl_tonghopdautu_2";
 
                         conn.Open();
                         cmd1.ExecuteNonQuery();
@@ -17148,6 +17655,33 @@ namespace Viettel.Services
                     lstParam.Add("@iIdHopDongId", iIdHopDongId);
                     var items = conn.Query<VDT_DM_NhaThau>("sp_vdt_get_nhathau_by_hopdong", lstParam, commandType: CommandType.StoredProcedure);
                     return items.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Lấy thông tin nhà thầu trong danh mục nhà thầu by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public VDT_DM_NhaThau GetTTinNhaThauByID(Guid id)
+        {
+            try
+            {
+                using (var conn = _connectionFactory.GetConnection())
+                {
+                    string sql = $"select * from VDT_DM_NhaThau where iID_NhaThauID = '{id}'";
+                    var items = conn.Query<VDT_DM_NhaThau>(sql, commandType: CommandType.Text);
+                    if (items != null)
+                    {
+                        return items.FirstOrDefault();
+                    }
+                    else return null;
                 }
             }
             catch (Exception ex)
@@ -18016,6 +18550,7 @@ namespace Viettel.Services
                                 if (item.isDelete == false)
                                 {
                                     var data = new VDT_KHV_KeHoachVonUng_DX_ChiTiet();
+                                    data.MapFrom(item);
                                     data.Id = Guid.NewGuid();
                                     data.iID_DuAnID = item.iID_DuAnID;
                                     if (item.fGiaTriDeNghi == null && item.fGiaTriDeNghiDC.HasValue)
@@ -18056,6 +18591,7 @@ namespace Viettel.Services
                                     if (item.isDelete == false)
                                     {
                                         var data = new VDT_KHV_KeHoachVonUng_DX_ChiTiet();
+                                        data.MapFrom(item);
                                         data.Id = Guid.NewGuid();
                                         data.iID_DuAnID = item.iID_DuAnID;
                                         data.fGiaTriDeNghi = item.fGiaTriDeNghi;
@@ -18221,8 +18757,8 @@ namespace Viettel.Services
             try
             {
                 var sql = "select DISTINCT da.iID_DuAnID,da.sMaDuAn, da.sTenDuAn,da.iID_DonViQuanLyID, da.iID_ChuDauTuID,da.fTongMucDauTu,da.sTrangThaiDuAn as sTrangThaiDuAnDangKy from  VDT_DA_DuAn da " +
-                    " inner join VDT_DA_ChuTruongDauTu ctdt on ctdt.iID_DuAnID = da.iID_DuAnID" +
-                    " where ctdt.iID_MaDonViQuanLy = @iID_MaDonViQuanLy";
+                        " INNER JOIN VDT_KHV_KeHoach5Nam_ChiTiet khth on khth.iID_DuAnID = da.iID_DuAnID" +
+                        " where da.iID_MaDonVi = @iID_MaDonViQuanLy";
                 using (var conn = _connectionFactory.GetConnection())
                 {
                     var items = conn.Query<VdtKhcKeHoachVonUngDeXuatChiTietModel>(sql,
@@ -18431,9 +18967,12 @@ namespace Viettel.Services
         {
             try
             {
-                var sql = "SELECT khvuct.*, da.sMaDuAn as sMaDuAn, da.sTenDuAn as sTenDuAn, da.fTongMucDauTu as fTongMucDauTu\r\n\t\t" +
+                var sql = "SELECT khvuct.*, da.sMaDuAn as sMaDuAn," +
+                    " CASE WHEN dahm.sTenHangMuc IS NULL THEN da.sTenDuAn ELSE dahm.sTenHangMuc END as sTenDuAn, " +
+                    "da.fTongMucDauTu as fTongMucDauTu\r\n\t\t" +
                     "FROM VDT_KHV_KeHoachVonUng_DX_ChiTiet khvuct\r\n\t\t" +
                     "INNER JOIN VDT_DA_DuAn da on da.iID_DuAnID = khvuct.iID_DuAnID\r\n\t\t" +
+                    "LEFT JOIN VDT_DA_DuAn_HangMuc dahm on dahm.iID_DuAnID =da.iID_DuAnID and dahm.iID_DuAn_HangMucID = khvuct.iID_DuAn_HangMucID\r\n" +
                     "WHERE khvuct.iID_KeHoachUngID in (select * from dbo.f_split(@sTonghop))";
                 using (var conn = _connectionFactory.GetConnection())
                 {
@@ -18519,6 +19058,7 @@ namespace Viettel.Services
                                 if (item.isDelete == false)
                                 {
                                     var entity = new VDT_KHV_KeHoachVonUng_ChiTiet();
+                                    entity.MapFrom(item);
                                     entity.Id = Guid.NewGuid();
                                     entity.iID_DuAnID = item.iID_DuAnID;
                                     entity.iID_MucID = item.iID_NganhID;
@@ -18563,6 +19103,7 @@ namespace Viettel.Services
                                         if (item.isDelete == false)
                                         {
                                             var entity = new VDT_KHV_KeHoachVonUng_ChiTiet();
+                                            entity.MapFrom(item);
                                             entity.Id = Guid.NewGuid();
                                             entity.iID_DuAnID = item.iID_DuAnID;
                                             entity.iID_MucID = item.iID_NganhID;
@@ -18626,6 +19167,7 @@ namespace Viettel.Services
                                         if (item.isDelete == false)
                                         {
                                             var entity = new VDT_KHV_KeHoachVonUng_ChiTiet();
+                                            entity.MapFrom(item);
                                             entity.Id = Guid.NewGuid();
                                             entity.iID_DuAnID = item.iID_DuAnID;
                                             entity.iID_MucID = item.iID_NganhID;
@@ -18690,6 +19232,7 @@ namespace Viettel.Services
                                     if (item.isDelete == false)
                                     {
                                         var entity = new VDT_KHV_KeHoachVonUng_ChiTiet();
+                                        entity.MapFrom(item);
                                         entity.Id = Guid.NewGuid();
                                         entity.iID_DuAnID = item.iID_DuAnID;
                                         entity.iID_MucID = item.iID_NganhID;
@@ -18788,9 +19331,9 @@ namespace Viettel.Services
             }
         }
 
-        private TongHopNguonNSDauTuQuery GetMucLucNganSachByPhanBoVon(VDT_KHV_KeHoachVonNam_DuocDuyet_ChiTiet item, Dictionary<string, Guid> _dicMucLucNganSach)
+        private TongHopNguonNSDauTuQuery2 GetMucLucNganSachByPhanBoVon(VDT_KHV_KeHoachVonNam_DuocDuyet_ChiTiet item, Dictionary<string, Guid> _dicMucLucNganSach)
         {
-            TongHopNguonNSDauTuQuery data = new TongHopNguonNSDauTuQuery();
+            TongHopNguonNSDauTuQuery2 data = new TongHopNguonNSDauTuQuery2();
             string sKey = item.LNS + "-" + item.L + "-" + item.K + "-" + item.M + "-" + item.TM + "-" + item.TTM + "-" + item.NG;
             if (_dicMucLucNganSach.ContainsKey(sKey))
             {
@@ -18814,11 +19357,11 @@ namespace Viettel.Services
             return data;
         }
 
-        private void InsertTongHopNguonDauTu_KHVN_Giam(int iNamKeHoach, string sLoai, int iTypeExecute, Guid iIdQuyetDinh, List<TongHopNguonNSDauTuQuery> lstChungTu)
+        private void InsertTongHopNguonDauTu_KHVN_Giam(int iNamKeHoach, string sLoai, int iTypeExecute, Guid iIdQuyetDinh, List<TongHopNguonNSDauTuQuery2> lstChungTu)
         {
             if (lstChungTu == null || lstChungTu.Count == 0) return;
-            List<TongHopNguonNSDauTuQuery> lstChungTuUpdate = new List<TongHopNguonNSDauTuQuery>();
-            List<TongHopNguonNSDauTuQuery> lstNguonVon = GetNguonVonTongHopNguonDauTuKHVN(iNamKeHoach);
+            List<TongHopNguonNSDauTuQuery2> lstChungTuUpdate = new List<TongHopNguonNSDauTuQuery2>();
+            List<TongHopNguonNSDauTuQuery2> lstNguonVon = GetNguonVonTongHopNguonDauTuKHVN(iNamKeHoach);
             Dictionary<Guid, double> dicNguonVon = new Dictionary<Guid, double>();
 
             foreach (var objChungTu in lstChungTu)
@@ -18834,7 +19377,7 @@ namespace Viettel.Services
                     {
                         if (fThanhToan >= dicNguonVon[objNguonVon.Id])
                         {
-                            lstChungTuUpdate.Add(new TongHopNguonNSDauTuQuery()
+                            lstChungTuUpdate.Add(new TongHopNguonNSDauTuQuery2()
                             {
                                 fGiaTri = dicNguonVon[objNguonVon.Id],
                                 iID_ChungTu = objChungTu.iID_ChungTu,
@@ -18847,7 +19390,8 @@ namespace Viettel.Services
                                 IIDMucID = objChungTu.IIDMucID,
                                 IIDTieuMucID = objChungTu.IIDTieuMucID,
                                 IIDTietMucID = objChungTu.IIDTietMucID,
-                                IIDNganhID = objChungTu.IIDNganhID
+                                IIDNganhID = objChungTu.IIDNganhID,
+                                IIDLoaiCongTrinh = objChungTu.IIDLoaiCongTrinh
                             });
                             fThanhToan = fThanhToan - dicNguonVon[objNguonVon.Id];
                             objNguonVon.iStatus = (int)NguonVonStatus.DaSuDung;
@@ -18855,7 +19399,7 @@ namespace Viettel.Services
                         }
                         else
                         {
-                            lstChungTuUpdate.Add(new TongHopNguonNSDauTuQuery()
+                            lstChungTuUpdate.Add(new TongHopNguonNSDauTuQuery2()
                             {
                                 fGiaTri = fThanhToan,
                                 iID_ChungTu = objChungTu.iID_ChungTu,
@@ -18868,7 +19412,8 @@ namespace Viettel.Services
                                 IIDMucID = objChungTu.IIDMucID,
                                 IIDTieuMucID = objChungTu.IIDTieuMucID,
                                 IIDTietMucID = objChungTu.IIDTietMucID,
-                                IIDNganhID = objChungTu.IIDNganhID
+                                IIDNganhID = objChungTu.IIDNganhID,
+                                IIDLoaiCongTrinh = objChungTu.IIDLoaiCongTrinh
                             });
                             dicNguonVon[objNguonVon.Id] = dicNguonVon[objNguonVon.Id] - fThanhToan;
                             break;
@@ -18884,14 +19429,14 @@ namespace Viettel.Services
             }
         }
 
-        private List<TongHopNguonNSDauTuQuery> GetNguonVonTongHopNguonDauTuKHVN(int iNamKeHoach)
+        private List<TongHopNguonNSDauTuQuery2> GetNguonVonTongHopNguonDauTuKHVN(int iNamKeHoach)
         {
 
             using (var conn = _connectionFactory.GetConnection())
             {
                 DynamicParameters lstParam = new DynamicParameters();
                 lstParam.Add("@iNamKeHoach", @iNamKeHoach);
-                var items = conn.Query<TongHopNguonNSDauTuQuery>("sp_get_nguonvon_tonghopnguondautu_khvn", lstParam, commandType: CommandType.StoredProcedure);
+                var items = conn.Query<TongHopNguonNSDauTuQuery2>("sp_get_nguonvon_tonghopnguondautu_khvn", lstParam, commandType: CommandType.StoredProcedure);
                 return items.ToList();
             }
         }
@@ -18903,7 +19448,7 @@ namespace Viettel.Services
         /// </summary>
         /// <param name="iIdDuAnId"></param>
         /// <returns></returns>
-        public List<VDTDuToanNguonVonModel> GetListDuToanNguonVonByDuAn(string iIdDuAnId)
+        public List<VDTDuToanNguonVonModel> GetListDuToanNguonVonByDuAn(string iIdDuAnId, string iIDDuToanId)
         {
             try
             {
@@ -18914,7 +19459,8 @@ namespace Viettel.Services
                     var items = conn.Query<VDTDuToanNguonVonModel>(sql,
                     param: new
                     {
-                        iIdDuAnId
+                        iIdDuAnId,
+                        iIDDuToanId
                     },
                     commandType: CommandType.Text);
                     return items.ToList();

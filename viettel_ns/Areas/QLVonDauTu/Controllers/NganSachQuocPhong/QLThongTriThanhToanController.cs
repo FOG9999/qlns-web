@@ -19,6 +19,7 @@ using VIETTEL.Helpers;
 using VIETTEL.Flexcel;
 using static VTS.QLNS.CTC.App.Service.UserFunction.FormatNumber;
 using VTS.QLNS.CTC.App.Service.UserFunction;
+using static VIETTEL.Common.Constants;
 
 namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 {
@@ -142,6 +143,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 
             List<SelectListItem> lstLoaiThongTri = new List<SelectListItem>()
             {
+                new SelectListItem{Text=Constants.LoaiThongTriThanhToan.TypeName.CAP_THANH_TOAN,Value=((int)Constants.LoaiThongTriThanhToan.Type.CAP_THANH_TOAN).ToString()},
+                new SelectListItem{Text=Constants.LoaiThongTriThanhToan.TypeName.CAP_TAM_UNG,Value=((int)Constants.LoaiThongTriThanhToan.Type.CAP_TAM_UNG).ToString()},
                 new SelectListItem{Text=Constants.LoaiThongTriThanhToan.TypeName.CAP_KINH_PHI,Value=((int)Constants.LoaiThongTriThanhToan.Type.CAP_KINH_PHI).ToString()},
                 new SelectListItem{Text=Constants.LoaiThongTriThanhToan.TypeName.CAP_HOP_THUC,Value=((int)Constants.LoaiThongTriThanhToan.Type.CAP_HOP_THUC).ToString()}
             };
@@ -552,11 +555,87 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             List<VdtThongTriChiTietQuery> lstTamUng = new List<VdtThongTriChiTietQuery>();
             List<VdtThongTriChiTietQuery> lstKinhPhi = new List<VdtThongTriChiTietQuery>();
             List<VdtThongTriChiTietQuery> lstHopThuc = new List<VdtThongTriChiTietQuery>();
-            var data = _iQLVonDauTuService.GetVdtThongTriChiTietById(id);
-            if (data != null)
+            var data = new List<VdtThongTriChiTietQuery>();
+            VDTThongTriModel thongtri = _iQLVonDauTuService.LayChiTietThongTri(id.ToString());
+            if (iLoaiThongTri == (int)Constants.LoaiThongTriEnum.Type.CAP_THANH_TOAN || iLoaiThongTri == (int)Constants.LoaiThongTriEnum.Type.CAP_TAM_UNG)
             {
+                VDT_TT_DeNghiThanhToan dntt = _iQLVonDauTuService.GetDeNghiThanhToanByThongTri(id.ToString());
+                var listTmp = new List<Guid>();
+                listTmp.Add(dntt.iID_DeNghiThanhToanID);
+                data = _iQLVonDauTuService.GetVdtThongTriChiTietByListIdDeNghiThanhToan(listTmp).ToList();
+
                 data = data.Select(n => { n.id = Guid.NewGuid(); return n; }).ToList();
-                ConvertDataViewModel(iLoaiThongTri, data.ToList(), ref lstThanhToan, ref lstThuHoi, ref lstTamUng, ref lstKinhPhi, ref lstHopThuc);
+                foreach (var item in data)
+                {
+                    if (item.iLoaiThanhToan == 1)
+                    {
+                        if (item.SM == null)
+                        {
+                            item.SM = "";
+                        }
+
+                        if (item.STm == null)
+                        {
+                            item.STm = "";
+                        }
+
+                        if (item.STtm == null)
+                        {
+                            item.STtm = "";
+                        }
+
+                        if (item.SNg == null)
+                        {
+                            item.SNg = "";
+                        }
+
+                        if (item.iLoaiDeNghi == (int)Constants.LoaiThanhToan.TypePheDuyet.THANH_TOAN)
+                        {
+                            lstThanhToan.Add(item);
+                        }
+                        else if (item.iLoaiDeNghi == (int)Constants.LoaiThanhToan.TypePheDuyet.THU_HOI_NAM_NAY)
+                        {
+                            lstThuHoi.Add(item);
+                        }
+                        else if (item.iLoaiDeNghi == (int)Constants.LoaiThanhToan.TypePheDuyet.THU_HOI_NAM_TRUOC)
+                        {
+                            lstThuHoi.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        if (item.SM == null)
+                        {
+                            item.SM = "";
+                        }
+
+                        if (item.STm == null)
+                        {
+                            item.STm = "";
+                        }
+
+                        if (item.STtm == null)
+                        {
+                            item.STtm = "";
+                        }
+
+                        if (item.SNg == null)
+                        {
+                            item.SNg = "";
+                        }
+
+                        lstTamUng.Add(item);
+                    }
+                }
+            }
+            else
+            {
+                data = _iQLVonDauTuService.GetVdtThongTriChiTietById(id).ToList();
+                if (data != null)
+                {
+                    data = data.Select(n => { n.id = Guid.NewGuid(); return n; }).ToList();
+                    ConvertDataViewModel(iLoaiThongTri, data.ToList(), ref lstThanhToan, ref lstThuHoi, ref lstTamUng, ref lstKinhPhi, ref lstHopThuc);
+                }
             }
             return Json(new
             {
@@ -597,6 +676,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             XlsFile Result = new XlsFile(true);
             FlexCelReport fr = new FlexCelReport();
 
+            FormatNumber formatNumber = new FormatNumber(CheckDonViTinhIsNghinDong(1), ExportType.EXCEL);
+            fr.SetUserFunction("FormatNumber", formatNumber);
             fr.SetValue("iNamKeHoach", objThongTri.iNamThongTri);
             fr.SetValue("Cap1", sDonViQuanLy);
             fr.SetValue("Cap2", string.Empty);

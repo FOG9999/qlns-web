@@ -30,6 +30,9 @@ namespace VIETTEL.Common
         public const string CHON_DON_VI_NS = "--Chọn đơn vị NS--";
 
         public const string CHON_DON_VI_BHXH = "--Chọn đơn vị BHXH--";
+        public const string THEM_BAN_GHI = "Thêm mới bản ghi {0} thành công";
+        public const string XOA_BAN_GHI = "Xóa bản ghi {0} thành công";
+        public const string MESSAGE_DELETE_DUAN = "Bản ghi được sử dụng trong bảng Chủ trương đầu tư. Bạn không thể thực hiện thao tác này.";
 
         public enum LOAI_HOP_DONG
         {
@@ -135,6 +138,14 @@ namespace VIETTEL.Common
                 THANH_TOAN = 1,
                 TAM_UNG = 2,
                 THU_HOI = 3
+            }
+
+            public enum TypePheDuyet
+            {
+                THANH_TOAN = 1,
+                TAM_UNG = 2,
+                THU_HOI_NAM_TRUOC = 4,
+                THU_HOI_NAM_NAY = 5
             }
 
             public struct TypeName

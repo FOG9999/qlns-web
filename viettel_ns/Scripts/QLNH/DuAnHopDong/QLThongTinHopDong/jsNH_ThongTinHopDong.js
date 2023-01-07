@@ -154,12 +154,9 @@ function ChangeSelectDonVi(element) {
                     $("#slbChuongTrinh" + index).select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
                     $("#slbDuAn" + index).empty().html(data.htmlDA);
                     $("#slbDuAn" + index).select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
-                    $("#slbGoiThau" + index).empty().html(data.htmlGT);
-                    $("#slbGoiThau" + index).select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
                 } else {
                     $("#iChuongTrinh").empty().html(data.htmlCT);
                     $("#iDuAn").empty().html(data.htmlDA);
-                    $("#iGoiThau").empty().html(data.htmlGT);
                     $("#iChuongTrinh").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
                     $("#iDuAn").select2({ dropdownAutoWidth: true, matcher: FilterInComboBox });
                 }
@@ -194,6 +191,89 @@ function ChangeSelectChuongTrinh(element) {
         }
     });
 }
+
+function ChangeBQPSelectImport(element) {
+    var value = $(element).val();
+    var index = $(element).data('index');
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/QLThongTinHopDong/GetChuongTrinhTheoQDTongThe",
+        data: { id: value },
+        success: function (data) {
+            if (data) {
+                $("#slbChuongTrinh" + index).empty().html(data.htmlChuongTrinh);
+                $("#slbBQuanLy" + index).empty().html(data.htmlQuanLy);
+                $("#slbDonVi" + index).empty().html(data.htmlDonVi);
+                $("#slbDuAn").empty().html(data.htmlDA);
+                $("#slbChuongTrinh").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbBQuanLy").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbDonVi").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbDuAn").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+            }
+        }
+    });
+}
+
+function ChangeChuongTrinhSelectImport(element) {
+    var value = $(element).val();
+    var index = $(element).data('index');
+    var idBqp = $("#slbKHTongTheBQP" + index).val();
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/QLThongTinHopDong/GetBQuanLyTheoChuongTrinh",
+        data: { id: value, idBqp: idBqp },
+        success: function (data) {
+            if (data) {
+                $("#slbBQuanLy" + index).empty().html(data.htmlQuanLy);
+                $("#slbDonVi" + index).empty().html(data.htmlDonVi);
+                $("#slbDuAn").empty().html(data.htmlDA);
+                $("#slbBQuanLy").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbDonVi").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbDuAn").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+            }
+        }
+    });
+}
+
+function ChangeBQuanLySelectImport(element) {
+    var value = $(element).val();
+    var index = $(element).data('index');
+    var idChuongTrinh = $("#slbChuongTrinh" + index).val();
+    var idBqp = $("#slbKHTongTheBQP" + index).val();
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/QLThongTinHopDong/GetDonViTheoBQuanLy",
+        data: { id: value, idBqp: idBqp, idChuongTrinh: idChuongTrinh },
+        success: function (data) {
+            if (data) {
+                $("#slbDonVi" + index).empty().html(data.htmlDonVi);
+                $("#slbDuAn").empty().html(data.htmlDA);
+                $("#slbDonVi").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $("#slbDuAn").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+            }
+        }
+    });
+}
+
+function ChangeDonViImport(element) {
+    var id = $(element).val();
+    var index = $(element).data('index');
+    var idBQuanLy = $("#slbBQuanLy" + index).val();
+    var idChuongTrinh = $("#slbChuongTrinh" + index).val();
+    var idBqp = $("#slbKHTongTheBQP" + index).val();
+    $.ajax({
+        type: "POST",
+        url: "/QLNH/QLThongTinHopDong/GetDuAnTheoDonVi",
+        data: { id: id, idBqp: idBqp, idChuongTrinh: idChuongTrinh, idBQuanLy: idBQuanLy },
+        success: function (data) {
+            if (data) {
+                $("#slbDuAn" + index).empty().html(data.htmlDA);
+                $("#slbDuAn" + index).select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
+            }
+        }
+    });
+}
+
 function ChangeSelectLoai(element) {
     var index = $(element).data("index");
     var loaiVal = $(element).val();
@@ -249,8 +329,10 @@ function LoadDataExcel() {
         success: function (r) {
             if (r.bIsComplete) {
                 $("#tblHopDongListImport tbody").empty().html(r.data);
-                $(".selectDonVi").select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $(".selectBQP").select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
                 $(".selectChuongTrinh").select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $(".selectBQuanLy").select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
+                $(".selectDonVi").select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
                 $(".selectLoai").select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
                 $(".selectDuAn").select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
                 $(".selectLoaiHopDong").select2({ width: '100%', dropdownAutoWidth: true, matcher: FilterInComboBox });
@@ -524,14 +606,13 @@ function ValidateDataImport() {
             }
             data.iThoiGianThucHien = $("<div/>").text($.trim($("#txtThoiGianThucHien" + index).val())).html();
         }
-        if ($(this).find("#slbDonVi" + index).val() == "" || $(this).find("#slbDonVi" + index).val() == GUID_EMPTY) {
+        if ($(this).find("#slbKHTongTheBQP" + index).val() == "" || $(this).find("#slbKHTongTheBQP" + index).val() == GUID_EMPTY) {
             check = false;
-            messages.push("Đơn vị quản lý chưa chọn !");
-            document.getElementById("slbDonVi" + index).scrollIntoView();
+            messages.push("Số quyết định tổng thể TTCP chưa chọn !");
+            document.getElementById("slbKHTongTheBQP" + index).scrollIntoView();
             return;
         } else {
-            data.iID_DonViID = $(this).find("#slbDonVi" + index).val();
-            data.iID_MaDonVi = $("<div/>").text($(this).find("#slbDonVi" + index).find("option:selected").data("madonvi")).html();
+            data.iID_NH_KHChiTietBQP = $(this).find("#slbKHTongTheBQP" + index).val();
         }
         if ($(this).find("#slbChuongTrinh" + index).val() == "" || $(this).find("#slbChuongTrinh" + index).val() == GUID_EMPTY) {
             check = false;
@@ -540,6 +621,23 @@ function ValidateDataImport() {
             return;
         } else {
             data.iID_KHCTBQP_ChuongTrinhID = $(this).find("#slbChuongTrinh" + index).val();
+        }
+        if ($(this).find("#slbBQuanLy" + index).val() == "" || $(this).find("#slbBQuanLy" + index).val() == GUID_EMPTY) {
+            check = false;
+            messages.push("B quản lý chưa chọn !");
+            document.getElementById("slbBQuanLy" + index).scrollIntoView();
+            return;
+        } else {
+            data.iID_BQuanLyID = $(this).find("#slbBQuanLy" + index).val();
+        }
+        if ($(this).find("#slbDonVi" + index).val() == "" || $(this).find("#slbDonVi" + index).val() == GUID_EMPTY) {
+            check = false;
+            messages.push("Đơn vị quản lý chưa chọn !");
+            document.getElementById("slbDonVi" + index).scrollIntoView();
+            return;
+        } else {
+            data.iID_DonViID = $(this).find("#slbDonVi" + index).val();
+            data.iID_MaDonVi = $("<div/>").text($(this).find("#slbDonVi" + index).find("option:selected").data("madonvi")).html();
         }
         if ($(this).find("#slbLoai" + index).val() == "" || $(this).find("#slbLoai" + index).val() == 0) {
             check = false;
@@ -557,11 +655,11 @@ function ValidateDataImport() {
                 return;
             } else {
                 data.iID_DuAnID = $(this).find("#slbDuAn" + index).val();
-                data.iID_BQuanLyID = $(this).find("#slbDuAn" + index).find("option:selected").data("bql");
+                //data.iID_BQuanLyID = $(this).find("#slbDuAn" + index).find("option:selected").data("bql");
             }
         } else {
             data.iID_DuAnID = null;
-            data.iID_BQuanLyID = null;
+            //data.iID_BQuanLyID = null;
         }
         data.iLanDieuChinh = 0;
 

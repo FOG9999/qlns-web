@@ -72,6 +72,8 @@
                     <li><a data-toggle="tab" href="#duAnchuaThucHien" onclick="TabSearchData(3)">Danh sách dự án kết thúc</a></li>
                     <button class="btn btn-primary pull-right" onclick="BtnCreateDataClick()" style="margin-top: 3px !important"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
                     <button class="btn btn-info pull-right" style="margin-right:10px; margin-top: 3px !important" onclick="ResetSearchData()"><i class="fa fa-refresh" aria-hidden="true"></i>Làm mới</button>
+                    <button class="btn btn-warning pull-right" style="margin-right: 10px; margin-top: 3px !important" onclick="OnImport()"><i class="fa fa-upload" aria-hidden="true"></i>Import</button>
+                    <button class="btn btn-success pull-right" style="margin-right: 10px; margin-top: 3px !important" onclick="OnExportExcel()"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Xuất excel</button>
                 </ul>
             </div>
 
@@ -127,6 +129,9 @@
             //})
         });
 
+        function OnImport() {
+            location.href = "/QLVonDauTu/QLDuAn/Import";
+        }
     </script>
 
     <script type="text/javascript" src="~/Scripts/js/js_vdtWeb.js"></script>

@@ -468,7 +468,7 @@ function Bang_Ready() {
                     strType = "autocomplete";
                     break;
                 case 5:
-                    strType = "multipleselect";
+                    strType = "multiselect";
                     break;
             }
 
@@ -804,16 +804,16 @@ function Bang_LayDuLieuHienThiCuaO(h, c) {
             }
             break;
 
-        case 5:
-            var giaTriHienThi = "";
-            if (typeof (Bang_GiaTriO_BeforEdit) !== 'undefined' && Bang_GiaTriO_BeforEdit != "") {
-                giaTriHienThi = Bang_GiaTriO_BeforEdit + (Bang_arrGiaTri[h][c] != "" ? (", " + Bang_arrGiaTri[h][c]) : "");
-            }
-            Bang_arrHienThi[h][c] = giaTriHienThi != "" ? giaTriHienThi : Bang_arrGiaTri[h][c];
-            Bang_arrGiaTri[h][c] = Bang_arrHienThi[h][c];
-            GTHienThi = '<span title="' + Bang_arrHienThi[h][c] + '">' + Bang_arrHienThi[h][c] + '</span>';
-            Bang_GiaTriO_BeforEdit = "";
-            break;
+        //case 5:
+        //    var giaTriHienThi = "";
+        //    if (typeof (Bang_GiaTriO_BeforEdit) !== 'undefined' && Bang_GiaTriO_BeforEdit != "") {
+        //        giaTriHienThi = Bang_GiaTriO_BeforEdit + (Bang_arrGiaTri[h][c] != "" ? (", " + Bang_arrGiaTri[h][c]) : "");
+        //    }
+        //    Bang_arrHienThi[h][c] = giaTriHienThi != "" ? giaTriHienThi : Bang_arrGiaTri[h][c];
+        //    Bang_arrGiaTri[h][c] = Bang_arrHienThi[h][c];
+        //    GTHienThi = '<span title="' + Bang_arrHienThi[h][c] + '">' + Bang_arrHienThi[h][c] + '</span>';
+        //    Bang_GiaTriO_BeforEdit = "";
+        //    break;
 
         default:
             Bang_arrHienThi[h][c] = Bang_DinhDangHienThiO(h, c);

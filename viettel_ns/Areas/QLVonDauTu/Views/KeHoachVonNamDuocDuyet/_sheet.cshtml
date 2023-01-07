@@ -9,7 +9,10 @@
             <div class="button-bar">
                 <div class="text-center">
                     <button class="btn btn-default" onclick="goBack();" style="margin-right: 10px;"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>
-                    <button class="btn btn-primary btn-save" id="btnSave"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                    @if (!Model.isDetail)
+                    {
+                        <button class="btn btn-primary btn-save" id="btnSave"><i class="fa fa-download" aria-hidden="true"></i><span>Lưu</span></button>
+                    }
                 </div>
             </div>
         </div>
@@ -24,7 +27,7 @@
 </div>
 @using (Html.BeginScripts())
 {
-<script type="text/javascript">
+    <script type="text/javascript">
     var GUID_EMPTY = '00000000-0000-0000-0000-000000000000';
     $(document).ready(function () {
         var iID_KHVN_DeXuat = $("#iID_KHVN_DeXuatID").val();
@@ -73,5 +76,5 @@
             console.log(url);
             $("#sheet").attr("src", url);
         });
-</script>
+    </script>
 }

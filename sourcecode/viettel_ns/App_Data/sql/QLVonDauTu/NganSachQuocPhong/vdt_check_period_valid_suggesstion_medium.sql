@@ -1,1 +1,0 @@
-SELECT COUNT(khthdx.iID_KeHoach5Nam_DeXuatID) from VDT_KHV_KeHoach5Nam_DeXuat khthdx where khthdx.iGiaiDoanTu <= @iGiaiDoanTu and khthdx.iGiaiDoanDen >= @iGiaiDoanTu and khthdx.iNamLamViec = @iNamLamViec and khthdx.iID_DonViQuanLyID = @iID_DonViQuanLyID;

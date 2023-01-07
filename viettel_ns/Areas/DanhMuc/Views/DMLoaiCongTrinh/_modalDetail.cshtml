@@ -1,96 +1,103 @@
 ﻿@using VIETTEL.Areas.DanhMuc.Models
 @model DMLoaiCongTrinhViewDetailModel
 
+<style>
+    .rowLine {
+        display: flex;
+        flex-direction: row;
+        padding-left: 15px;
+        padding-right: 15px;
+        justify-content: space-between;
+    }
+</style>
+
 <div class="modal-body">
-    <div class="form-group row">
-        <div class="form-group">
-            <div class="col-sm-6">
-                <label for="txtMaCongTrinhModal">Mã công trình</label>
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-md-6">
+                <input type="hidden" id="txt_ID_LoaiCongTrinh" value="@Model.iID_LoaiCongTrinh" />
+                <label for="txt_MaCongTrinh">Mã công trình </label>
+                @Helpers.Required()
+
                 <p>@Html.Raw(Model.sMaLoaiCongTrinh)</p>
             </div>
-            <div class="col-sm-6">
-                <label for="txtTenCongTrinhModal">Tên loại dự toán</label>
+            <div class="col-md-6">
+                <label for="txt_TenCongTrinh">Tên công trình </label>
+                @Helpers.Required()
                 <p>@Html.Raw(Model.sTenLoaiCongTrinh)</p>
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-sm-6">
-                <label for="txtTenVietTatModal">Tên viết tắt</label>
-                <p>@Html.Raw(Model.sTenVietTat)</p>
+        <div class="form-group row">
+            <div class="col-md-6">
+                <label for="txt_TenVietTat">Tên viết tắt </label>
+                @Helpers.Required()
+
+            <p>@Html.Raw(Model.sTenVietTat)</p>
             </div>
-            <div class="col-sm-6">
-                <label for="txtThuTuModal">Thứ tự</label>
+            <div class="col-md-6">
+                <label for="txt_ThuTu">Thứ tự </label>
                 <p>@Html.Raw(Model.iThuTu)</p>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-sm-6">
-                <label for="txtMaCongTrinhChaModal">Mã công trình cha</label>
+                <label for="txt_IdParent">Mã công trình cha</label>
                 <p>@Html.Raw(Model.sMaLoaiCongTrinhCha)</p>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-6">
-                <label for="txtGhiChuModal">LNS</label>
-                <p>@Html.Raw(Model.LNS)</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-6">
-                <label for="txtMaCongTrinhChaModal">L</label>
-                <p>@Html.Raw(Model.L)</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-6">
-                <label for="txtGhiChuModal">K</label>
-                <p>@Html.Raw(Model.K)</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-6">
-                <label for="txtMaCongTrinhChaModal">M</label>
-                <p>@Html.Raw(Model.M)</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-6">
-                <label for="txtGhiChuModal">TM</label>
-                <p>@Html.Raw(Model.TM)</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-6">
-                <label for="txtMaCongTrinhChaModal">TTM</label>
-                <p>@Html.Raw(Model.TM)</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-6">
-                <label for="txtGhiChuModal">NG</label>
-                <p>@Html.Raw(Model.NG)</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-6">
-                <label for="txtMaCongTrinhChaModal">TNG1</label>
-                <p>@Html.Raw(Model.TNG1)</p>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-6">
-                <label for="txtGhiChuModal">TNG2</label>
-                <p>@Html.Raw(Model.TNG2)</p>
-            </div>
-        </div>       
-        <div class="form-group">
-            <div class="col-sm-12">
-                <label for="txtGhiChuModal">Ghi chú</label>
+
+            <div class="col-md-6">
+
+                <label for="txt_NoiDung">Ghi chú</label>
                 <p>@Html.Raw(Model.sMoTa)</p>
             </div>
         </div>
+
+        <div class="form-group row">
+            <div class="rowLine">
+                <div>
+                    <label for="txt_LNS">LNS </label>
+                    <p>@Html.Raw(Model.LNS)</p>
+                </div>
+                <div class="ml-10">
+                    <label for="txt_L">L </label>
+                    <p>@Html.Raw(Model.L)</p>
+                </div>
+                <div class="ml-10">
+                    <label for="txt_K">K </label>
+                    <p>@Html.Raw(Model.K)</p>
+                </div>
+                <div class="ml-10">
+                    <label for="txt_M">M </label>
+                    <p>@Html.Raw(Model.M)</p>
+
+                </div>
+                <div class="ml-10">
+                    <label for="txt_TM">TM </label>
+                    <p>@Html.Raw(Model.TM)</p>
+                </div>
+                <div class="ml-10">
+                    <label for="txt_TTM">TTM</label>
+                    <p>@Html.Raw(Model.TTM)</p>
+                </div>
+                <div class="ml-10">
+                    <label for="txt_NG">NG </label>
+                    <p>@Html.Raw(Model.NG)</p>
+                </div>
+                <div class="ml-10">
+                    <label for="txt_TNG1">TNG1 </label>
+                    <p>@Html.Raw(Model.TNG1)</p>
+                </div>
+                <div class="ml-10">
+                    <label for="txt_TNG2">TNG2 </label>
+                    <p>@Html.Raw(Model.TNG2)</p>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 </div>
+
 <div class="modal-footer">
     <div class="text-center">
         <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i><span>Hủy</span></button>

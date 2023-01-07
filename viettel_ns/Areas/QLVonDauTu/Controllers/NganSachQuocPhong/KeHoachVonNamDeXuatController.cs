@@ -3,6 +3,7 @@ using FlexCel.Core;
 using FlexCel.Render;
 using FlexCel.Report;
 using FlexCel.XlsAdapter;
+using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -421,11 +422,21 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                     {
                         return Json(new { bIsComplete = false, sMessError = "Không thể điều chỉnh,chưa có dự án nào được duyệt !" }, JsonRequestBehavior.AllowGet);
                     }
-
-                    if (_qLVonDauTuService.CheckExistSoKeHoachVonNamDeXuat(data.sSoQuyetDinh, data.iNamKeHoach, data.iID_KeHoachVonNamDeXuatID))
+                    if (isDieuChinh)
                     {
-                        return Json(new { bIsComplete = false, sMessError = "Số kế hoạch đã tồn tại !" }, JsonRequestBehavior.AllowGet);
+                        if (_qLVonDauTuService.CheckExistSoKeHoachVonNamDeXuat(data.sSoQuyetDinh, data.iNamKeHoach, null))
+                        {
+                            return Json(new { bIsComplete = false, sMessError = "Số kế hoạch đã tồn tại !" }, JsonRequestBehavior.AllowGet);
+                        }
                     }
+                    else
+                    {
+                        if (_qLVonDauTuService.CheckExistSoKeHoachVonNamDeXuat(data.sSoQuyetDinh, data.iNamKeHoach, data.iID_KeHoachVonNamDeXuatID))
+                        {
+                            return Json(new { bIsComplete = false, sMessError = "Số kế hoạch đã tồn tại !" }, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+
 
                     if (!_qLVonDauTuService.SaveKeHoachVonNamDeXuat(ref iID, data, details, Username, isDieuChinh, isTongHop, bIsDetail))
                     {
@@ -940,7 +951,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 
         public FlexCelReport HandleBaoCaoGocNS(IEnumerable<string> lstId, KHVNDXPrintDataExportModel data, List<string> arrIdNguonVon, List<string> arrDonVi)
         {
-            List<VdtKhvVonNamDeXuatDieuChinhOrtherBudgetModel> results = _qLVonDauTuService.GetPhanBoVonDieuChinhNguonVon(0, String.Join(",", lstId), data.iID_LoaiCongTrinh, string.Join(",", arrIdNguonVon), (data.fDonViTinh ?? 1)).ToList();
+            List<VdtKhvVonNamDeXuatDieuChinhOrtherBudgetModel> results = _qLVonDauTuService.GetPhanBoVonDieuChinhNguonVon(0, String.Join(",", lstId), data.iID_LoaiCongTrinh,data.iIDNguonVon.ToString(), (data.fDonViTinh ?? 1)).ToList();
             results.Select(item => { item.TongSoVonNamDieuChinh = (item.ThuHoiVonDaUngTruocDieuChinh ?? 0) + (item.TraNoXDCB ?? 0); return item; }).ToList();
 
             List<VdtKhvVonNamDeXuatDieuChinhOrtherBudgetModel> lstParent = results.Where(x => x.IsHangCha).ToList();
@@ -951,6 +962,21 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 List<VdtKhvVonNamDeXuatDieuChinhOrtherBudgetModel> item = lstChildrent.Where(y => y.IdNhomDuAn == x.IdNhomDuAn).ToList();
                 item.Select(y => { y.STT = string.Format("{0}.{1}", x.STT, item.IndexOf(y) + 1); return y; }).ToList();
                 return x;
+            }).ToList();
+            results.Where(x => !x.IsHangCha && x.TongSoVonDauTuTrongNuoc == null).Select(s => { s.TongSoVonDauTuTrongNuoc = 0; return s; }).ToList();
+            results.Where(x => x.IsHangCha ).Select(item =>
+            {
+                item.TongSoVonDauTu = results.Where(n => !n.IsHangCha).Sum(n => n.TongSoVonDauTu);
+                item.TongSoVonDauTuTrongNuoc = results.Where(n => !n.IsHangCha).Sum(n => n.TongSoVonDauTuTrongNuoc);
+                item.KeHoachVonDauTuGiaiDoan = results.Where(n => !n.IsHangCha).Sum(n => n.KeHoachVonDauTuGiaiDoan);
+                item.VonThanhToanLuyKe = results.Where(n => !n.IsHangCha).Sum(n => n.VonThanhToanLuyKe);
+                item.TongSoKeHoachVonNam = results.Where(n => !n.IsHangCha).Sum(n => n.TongSoKeHoachVonNam);
+                item.ThuHoiVonDaUngTruoc = results.Where(n => !n.IsHangCha).Sum(n => n.ThuHoiVonDaUngTruoc);
+                item.VonThucHienTuDauNamDenNay = results.Where(n => !n.IsHangCha).Sum(n => n.VonThucHienTuDauNamDenNay);
+                item.TongSoVonNamDieuChinh = results.Where(n => !n.IsHangCha).Sum(n => n.TongSoVonNamDieuChinh);
+                item.ThuHoiVonDaUngTruocDieuChinh = results.Where(n => !n.IsHangCha).Sum(n => n.ThuHoiVonDaUngTruocDieuChinh);
+                item.TraNoXDCB = results.Where(n => !n.IsHangCha).Sum(n => n.TraNoXDCB);
+                return item;
             }).ToList();
 
             FlexCelReport fr = new FlexCelReport();
@@ -994,16 +1020,36 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                 var lstIdDuAn = childrent.Select(x => x.IdDuAn).Distinct().ToList();
                 foreach (var idDuAn in lstIdDuAn)
                 {
-                    var it = childrent.FirstOrDefault(x => x.IdDuAn == idDuAn);
-                    if (it != null)
+                    var lstDuAnChiTiet = childrent.Where(x => x.IdDuAn == idDuAn).DistinctBy(dis => dis.STenDuAn).ToList();
+                    if (lstDuAnChiTiet != null && lstDuAnChiTiet.Count() > 1)
                     {
-                        it.TongMucDauTu = childrent.Where(x => x.IdDuAn == idDuAn).Sum(x => x.TongMucDauTu.GetValueOrDefault());
-                        it.TongMucDauTuNSQP = childrent.Where(x => x.IdDuAn == idDuAn).Sum(x => x.TongMucDauTuNSQP.GetValueOrDefault());
-                        it.VonBoTriDenHetNamTruoc = childrent.Where(x => x.IdDuAn == idDuAn).Sum(x => x.VonBoTriDenHetNamTruoc.GetValueOrDefault());
-                        it.KeHoachVonDauTuNam = childrent.Where(x => x.IdDuAn == idDuAn).Sum(x => x.KeHoachVonDauTuNam.GetValueOrDefault());
-                        it.VonGiaiNganNam = childrent.Where(x => x.IdDuAn == idDuAn).Sum(x => x.VonGiaiNganNam.GetValueOrDefault());
-                        it.DieuChinhVonNam = childrent.Where(x => x.IdDuAn == idDuAn).Sum(x => x.DieuChinhVonNam.GetValueOrDefault());
-                        childrentResult.Add(it);
+                        // var dicDuAnChiTiet = lstDuAnChiTiet.ToDictionary(key => key.STenDuAn, value => value.STenDuAn);
+                        foreach (var item in lstDuAnChiTiet)
+                        {
+                            item.TongMucDauTu = childrent.Where(x => x.IdDuAn == idDuAn && x.STenDuAn == item.STenDuAn).Sum(x => x.TongMucDauTu.GetValueOrDefault());
+                            item.TongMucDauTuNSQP = childrent.Where(x => x.IdDuAn == idDuAn && x.STenDuAn == item.STenDuAn).Sum(x => x.TongMucDauTuNSQP.GetValueOrDefault());
+                            item.VonBoTriDenHetNamTruoc = childrent.Where(x => x.IdDuAn == idDuAn && x.STenDuAn == item.STenDuAn).Sum(x => x.VonBoTriDenHetNamTruoc.GetValueOrDefault());
+                            item.KeHoachVonDauTuNam = childrent.Where(x => x.IdDuAn == idDuAn && x.STenDuAn == item.STenDuAn).Sum(x => x.KeHoachVonDauTuNam.GetValueOrDefault());
+                            item.VonGiaiNganNam = childrent.Where(x => x.IdDuAn == idDuAn && x.STenDuAn == item.STenDuAn).Sum(x => x.VonGiaiNganNam.GetValueOrDefault());
+                            item.DieuChinhVonNam = childrent.Where(x => x.IdDuAn == idDuAn && x.STenDuAn == item.STenDuAn).Sum(x => x.DieuChinhVonNam.GetValueOrDefault());
+                            item.sSTT = childrent.Where(x => x.IdDuAn == idDuAn && x.STenDuAn == item.STenDuAn).Select(x => x.sSTT).FirstOrDefault();
+                            childrentResult.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        var it = childrent.FirstOrDefault(x => x.IdDuAn == idDuAn);
+                        if (it != null)
+                        {
+                            it.TongMucDauTu = childrent.Where(x => x.IdDuAn == idDuAn).Sum(x => x.TongMucDauTu.GetValueOrDefault());
+                            it.TongMucDauTuNSQP = childrent.Where(x => x.IdDuAn == idDuAn).Sum(x => x.TongMucDauTuNSQP.GetValueOrDefault());
+                            it.VonBoTriDenHetNamTruoc = childrent.Where(x => x.IdDuAn == idDuAn).Sum(x => x.VonBoTriDenHetNamTruoc.GetValueOrDefault());
+                            it.KeHoachVonDauTuNam = childrent.Where(x => x.IdDuAn == idDuAn).Sum(x => x.KeHoachVonDauTuNam.GetValueOrDefault());
+                            it.VonGiaiNganNam = childrent.Where(x => x.IdDuAn == idDuAn).Sum(x => x.VonGiaiNganNam.GetValueOrDefault());
+                            it.DieuChinhVonNam = childrent.Where(x => x.IdDuAn == idDuAn).Sum(x => x.DieuChinhVonNam.GetValueOrDefault());
+                            it.sSTT = childrent.Where(x => x.IdDuAn == idDuAn && x.STenDuAn == it.STenDuAn).Select(x => x.sSTT).FirstOrDefault();
+                            childrentResult.Add(it);
+                        }
                     }
                 }
                 data.RemoveAll(x => !x.IsHangCha);
@@ -1057,7 +1103,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                     || (x.VonBoTriDenHetNamTruoc != 0 && x.VonBoTriDenHetNamTruoc.HasValue)
                     || (x.KeHoachVonDauTuNam != 0 && x.KeHoachVonDauTuNam.HasValue)
                     || (x.VonGiaiNganNam != 0 && x.VonGiaiNganNam.HasValue)
-                    || (x.DieuChinhVonNam != 0 && x.DieuChinhVonNam.HasValue)) || (x.IIdLoaiCongTrinh == null && x.IIdLoaiCongTrinhParent == null)).ToList();
+                    || (x.DieuChinhVonNam != 0 && x.DieuChinhVonNam.HasValue)) || (x.IIdLoaiCongTrinh == null && x.IIdLoaiCongTrinhParent == null)).OrderBy(Odb => Odb.sSTT).ToList();
 
                 foreach (var child in result)
                 {
@@ -1070,11 +1116,16 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 
                 List<PhanBoVonDonViDieuChinhNSQPReport> lstItem = data.Where(n => n.LoaiParent.Equals(0) && !n.Loai.Equals(1)).ToList();
                 lstItem.Select(n => { n.STT = CommonFunction.ConvertLaMa((lstItem.IndexOf(n) + 1)).ToString(); return n; }).ToList();
-                List<PhanBoVonDonViDieuChinhNSQPReport> lstItemLevel = data.Where(x => !x.Loai.Equals(1) && x.LoaiParent.Equals(2)).ToList();
-                lstItemLevel.Select(x => { x.STT = (lstItemLevel.IndexOf(x) + 1).ToString(); return x; }).ToList();
+                var lisParentTierS = result.Where(w => w.Loai ==3).Select(s => s.IIdLoaiCongTrinh).ToList();
+                foreach(var idLoaiCongTrinh in lisParentTierS)
+                {
+                    List<PhanBoVonDonViDieuChinhNSQPReport> lstItemLevel = data.Where(x => !x.Loai.Equals(1) && x.LoaiParent.Equals(2) && x.IIdLoaiCongTrinh == idLoaiCongTrinh).ToList();
+                    lstItemLevel.Select(x => { x.STT = (lstItemLevel.IndexOf(x) + 1).ToString(); return x; }).ToList();
+                }
+                
                 result.Where(w => w.Loai == 3).Select(x =>
                 {
-                    x.VonBoTri5Nam = result.Where(i => i.Loai == 4).Sum(s => s.VonBoTri5Nam);
+                    x.VonBoTri5Nam = result.Where(i => i.Loai == 4 && x.IIdLoaiCongTrinh == i.IIdLoaiCongTrinh).Sum(s => s.VonBoTri5Nam);
                     return x;
                 }).ToList();
                 result.Where(x => x.Loai == 1).Select(x =>
@@ -1088,6 +1139,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                     x.VonBoTri5Nam = result.Where(w => w.Loai == 3).Sum(s => s.VonBoTri5Nam);
                     return x;
                 }).ToList();
+                
                 return result;
             }
             catch (Exception ex)

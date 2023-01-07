@@ -193,6 +193,12 @@
                 return false;
             }
         });
+        $("#txtNamKeHoachModal").change(function () {
+            var iID_DonViID = $("#iID_DonViQuanLyIDModal").val();
+            var iNamKeHoach = $("#txtNamKeHoachModal").val();
+            var iID_NguonVonID = $("#iID_NguonVonIDModal").val();
+            LoadDuAn(iID_DonViID, iNamKeHoach, iID_NguonVonID);
+        });
 
 
         LoadDuAn(iID_DonViID, iNamKeHoach, iID_NguonVonID);

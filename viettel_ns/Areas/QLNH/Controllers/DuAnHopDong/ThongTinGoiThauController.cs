@@ -104,7 +104,14 @@ namespace VIETTEL.Areas.QLNH.Controllers.DuAnHopDong
                 htmlResult.AppendLine("<td class='text-right'>" + HttpUtility.HtmlEncode(item.fGiaTriEUR.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriEUR.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty) + "</td>");
                 htmlResult.AppendLine("<td class='text-right'>" + HttpUtility.HtmlEncode(item.fGiaTriNgoaiTeKhac.HasValue ? CommonFunction.DinhDangSo(item.fGiaTriNgoaiTeKhac.Value.ToString(CultureInfo.InvariantCulture), 2) : string.Empty) + "</td>");
                 htmlResult.AppendLine("<td class='text-center'>" + HttpUtility.HtmlEncode(item.sSoLanDieuChinh) + "</td>");
-                htmlResult.AppendLine("<td class='text-left'>" + HttpUtility.HtmlEncode(item.sDieuChinhTu) + "</td>");
+                if (item.iLanDieuChinh != null && item.iLanDieuChinh.Value == 0)
+                {
+                    htmlResult.AppendLine("<td class='text-left'>" + HttpUtility.HtmlEncode(item.sDieuChinhTu) + "</td>");
+                }
+                else
+                {
+                    htmlResult.AppendLine("<td class='text-left text-underline text-primary' role=\"button\" onclick=\"OpenPackageInfoDetail('" + item.iID_ParentAdjustID + "')\">" + HttpUtility.HtmlEncode(item.sDieuChinhTu) + "</td>");
+                }
                 if (item.bIsActive)
                 {
                     htmlResult.AppendLine("<td class='text-center' style='padding:0;'>"

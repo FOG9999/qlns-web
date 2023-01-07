@@ -134,6 +134,7 @@ namespace Viettel.Models.QLVonDauTu
 
     public class PhanBoVonDonViDieuChinhNSQPReport : KHVNDXPrintDataExportModel
     {
+        public string sSTT { get; set; }
         public string STT { get; set; }
         public string STenDuAn { get; set; }
         public Guid? IIdLoaiCongTrinh { get; set; }

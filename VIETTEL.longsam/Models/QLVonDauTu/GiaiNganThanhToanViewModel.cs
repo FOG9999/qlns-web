@@ -22,6 +22,9 @@ namespace Viettel.Models.QLVonDauTu
         public string sChuDauTu { get; set; }
         public string sCoQuanThanhToan { get; set; }
         public string sLoaiThanhToan { get; set; }
+        public string SLoaiKeHoachVon { get; set; }
+        public string sKeHoachVon { get; set; }
+        public string sMaDuAn { get; set; }
         public string sGiaTriThanhToanTN
         {
             get
@@ -170,6 +173,8 @@ namespace Viettel.Models.QLVonDauTu
         public string sTenDonVi { get; set; }
         public string CoQuanThanhToan { get; set; }
         public string sTenHopDong { get; set; }
+        public Guid ID_DuAn_HangMuc { get; set; }
+        public string sTenHangMuc { get; set; }
         public int iLoaiThanhToan { get; set; }
         public int iSTT { get; set; }
         public string sThueGiaTriGiaTangDuocDuyet
@@ -356,6 +361,29 @@ namespace Viettel.Models.QLVonDauTu
         public Guid? IIDTieuMucID { get; set; }
         public Guid? IIDTietMucID { get; set; }
         public Guid? IIDNganhID { get; set; }
+        [NotMapped]
+        public bool? bKeHoach { get; set; }
+    }
+
+    public class TongHopNguonNSDauTuQuery2
+    {
+        public Guid Id { get; set; }
+        public Guid iID_ChungTu { get; set; }
+        public Guid iID_DuAnID { get; set; }
+        public string sMaNguon { get; set; }
+        public string sMaNguonCha { get; set; }
+        public string sMaDich { get; set; }
+        public double? fGiaTri { get; set; }
+        public int? ILoaiUng { get; set; }
+        public int iStatus { get; set; }
+        public bool bIsLog { get; set; }
+        public Guid? iId_MaNguonCha { get; set; }
+        public int? iThuHoiTUCheDo { get; set; }
+        public Guid? IIDMucID { get; set; }
+        public Guid? IIDTieuMucID { get; set; }
+        public Guid? IIDTietMucID { get; set; }
+        public Guid? IIDNganhID { get; set; }
+        public Guid? IIDLoaiCongTrinh { get; set; }
         [NotMapped]
         public bool? bKeHoach { get; set; }
     }

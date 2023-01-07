@@ -1,20 +1,32 @@
 ﻿using DapperExtensions;
+using FlexCel.Core;
+using FlexCel.Render;
+using FlexCel.Report;
+using FlexCel.XlsAdapter;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Http.Results;
 using System.Web.Mvc;
 using Viettel.Domain.DomainModel;
+using Viettel.Extensions;
 using Viettel.Models.QLVonDauTu;
 using Viettel.Services;
 using VIETTEL.Areas.QLNguonNganSach.Models;
+using VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong;
+using VIETTEL.Areas.z.Models;
 using VIETTEL.Common;
 using VIETTEL.Controllers;
+using VIETTEL.Helpers;
+using Constants = VIETTEL.Common.Constants;
 
 namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
 {
-    public class QLDuAnController : AppController
+    public class QLDuAnController : FlexcelReportController
     {
         private readonly IQLNguonNganSachService _qLNguonNSService = QLNguonNganSachService.Default;
         private readonly IDanhMucService _dmService = DanhMucService.Default;
@@ -94,14 +106,24 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             return View(data);
         }
 
-        public bool TTQLDuAnSave(VDTQuanLyDuAnModel data)
+        public ActionResult Import()
         {
+            List<NS_DonVi> lstDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToList();
+            ViewBag.drpDonViQuanLy = lstDonViQuanLy.ToSelectList("iID_Ma", "sMoTa");
+            return View();
+        }
+
+        public JsonResult TTQLDuAnSave(VDTQuanLyDuAnModel data)
+        {
+            var sMessage = string.Empty;
+            
             try
             {
                 using (var conn = ConnectionFactory.Default.GetConnection())
                 {
                     conn.Open();
                     var trans = conn.BeginTransaction();
+                    sMessage = string.Format(Constants.THEM_BAN_GHI, data.duAn.sTenDuAn);
 
                     if (data.duAn.iID_DuAnID == Guid.Empty)
                     {
@@ -114,12 +136,12 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                         iMaDuAnIndex++;
                         var objDonViQuanLy = conn.Get<NS_DonVi>(entityDuAn.iID_DonViQuanLyID, trans);
                         if (objDonViQuanLy == null)
-                            return false;
+                            return Json(new { status = false, sMessage = string.Empty }, JsonRequestBehavior.AllowGet);
                         string sMaDonViQuanLy = objDonViQuanLy.iID_MaDonVi;
 
                         var objChuDauTu = conn.Get<DM_ChuDauTu>(entityDuAn.iID_ChuDauTuID, trans);
                         if (objChuDauTu == null)
-                            return false;
+                            return Json(new { status = false, sMessage = string.Empty }, JsonRequestBehavior.AllowGet);
                         string sMaChuDauTu = objChuDauTu.sId_CDT;
 
                         entityDuAn.iID_MaDonVi = sMaDonViQuanLy;
@@ -196,16 +218,16 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                     {
                         #region Sua du an
                         var entity = conn.Get<VDT_DA_DuAn>(data.duAn.iID_DuAnID, trans);
-
+                        sMessage = sMessage.Replace("Thêm mới", "Cập nhật");
                         // tao sMaDuAn
                         var objDonViQuanLy = conn.Get<NS_DonVi>(entity.iID_DonViQuanLyID, trans);
                         if (objDonViQuanLy == null)
-                            return false;
+                            return Json(new { status = false, sMessage = string.Empty }, JsonRequestBehavior.AllowGet);
                         string sMaDonViQuanLy = objDonViQuanLy.iID_MaDonVi;
 
                         var objChuDauTu = conn.Get<NS_DonVi>(entity.iID_ChuDauTuID, trans);
                         if (objChuDauTu == null)
-                            return false;
+                            return Json(new { status = false, sMessage = string.Empty }, JsonRequestBehavior.AllowGet);
                         string sMaChuDauTu = objChuDauTu.iID_MaDonVi;
 
                         entity.sMaDuAn = string.Format("{0}-{1}-{2}", sMaDonViQuanLy, sMaChuDauTu, (entity.iMaDuAnIndex ?? 0).ToString("0000"));
@@ -251,11 +273,12 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                 }
             } catch(Exception ex)
             {
-                
-            }
-            
+                return Json(new { status = false, sMessage = string.Empty }, JsonRequestBehavior.AllowGet);
 
-            return true;
+            }
+
+
+            return Json(new { status = true, sMessage = sMessage }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult xemChiTietDuAn(Guid? id)
@@ -367,15 +390,15 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             bool isExistCTDT = _iQLVonDauTuService.CheckExistDuAnInCTDT(id);
             if (isExistQDDT && isExistCTDT)
             {
-                errMes = "Bản ghi được sử dụng trong bảng Chủ trương đầu tư. Bạn không thể thực hiện thao tác này.";
+                errMes = Constants.MESSAGE_DELETE_DUAN;
             }
             else if (isExistQDDT)
             {
-                errMes = "Bản ghi được sử dụng trong bảng Quyết định đầu tư. Bạn không thể thực hiện thao tác này.";
+                errMes = Constants.MESSAGE_DELETE_DUAN;
             }
             else if (isExistCTDT)
             {
-                errMes = "Bản ghi được sử dụng trong bảng Chủ trương đầu tư. Bạn không thể thực hiện thao tác này.";
+                errMes = Constants.MESSAGE_DELETE_DUAN;
             }
 
             if (errMes != "")
@@ -386,10 +409,16 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         }
 
         [HttpPost]
-        public bool VDTDuAnDelete(Guid id)
+        public JsonResult VDTDuAnDelete(Guid id)
         {
-            if(!_iQLVonDauTuService.deleteVDTDuAn(id)) return false;
-            return true;
+            var entity = _iQLVonDauTuService.GetDuAnById(id);
+            var sMessage = Constants.XOA_BAN_GHI;
+            if (entity != null)
+            {
+                sMessage = string.Format(sMessage, entity.sTenDuAn);
+            }
+            bool status = _iQLVonDauTuService.deleteVDTDuAn(id);
+            return Json(new {status = status, sMessage= sMessage}, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -443,6 +472,390 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             IEnumerable<VDTDuAnListNguonVonTTDuAnModel> listNguonVonDuAn = _iQLVonDauTuService.GetListDuAnNguonVonTTDuAn(id).OrderBy(x=>x.sTenNguonVon);
             if(!listNguonVonDuAn.Any()) listNguonVonDuAn = new List<VDTDuAnListNguonVonTTDuAnModel>();
             return Json(new { status = true, data = listNguonVonDuAn }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult OnExport(List<Guid> ids)
+        {
+            try
+            {
+                List<DuAnViewModel> lstGoiThau = GetDataExport(ids);
+                if (lstGoiThau != null)
+                {
+                    int i = 1;
+                    foreach (var item in lstGoiThau)
+                    {
+                        item.IStt = i;
+                        i++;
+                    }
+                }
+                var lstNguonVon = _iQLVonDauTuService.GetListAllNguonNganSach();
+                var lstLoaiCongTrinh = _iQLVonDauTuService.GetAllDmLoaiCongTrinh();
+                XlsFile Result = new XlsFile(true);
+                FlexCelReport fr = new FlexCelReport();
+                fr.AddTable("Items", lstGoiThau);
+                fr.AddTable("ItemsLoaiCongTrinh", lstLoaiCongTrinh);
+                fr.AddTable("ItemsNguonVon", lstNguonVon);
+                Result.Open(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/tmp_Vdt_Da_ThongTinDuAn.xlsx"));
+                fr.Run(Result);
+                TempData["DataExportDuAnXls"] = Result;
+                FlexCelPdfExport pdf = new FlexCelPdfExport(Result, true);
+                var bufferPdf = new MemoryStream();
+                pdf.Export(bufferPdf);
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return Json(new { status = true }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult ExportReport()
+        {
+            ExcelFile xls = (ExcelFile)TempData["DataExportDuAnXls"];
+            return Print(xls, "xls", string.Format("tmp_Vdt_Da_ThongTinDuAn_{0}.xlsx", DateTime.Now.ToString("ddMMyyyy_HHmm")));
+        }
+
+        private List<DuAnViewModel> GetDataExport(List<Guid> lstId)
+        {
+            Dictionary<Guid, VDT_DM_LoaiCongTrinh> dicLoaiCongTrinh = _iQLVonDauTuService.GetAllDmLoaiCongTrinh().ToDictionary(n => n.iID_LoaiCongTrinh, n => n);
+            List<DuAnViewModel> lstDuAn = _iQLVonDauTuService.GetAllDuAnByListId(lstId);
+            List<DuAnViewModel> results = new List<DuAnViewModel>();
+            List<VDT_DA_DuAn_NguonVon> lstNguonVon = _iQLVonDauTuService.GetDuAnNguonVonByListDuAnId(lstId);
+            List<VDT_DA_DuAn_HangMuc> lstHangMuc = _iQLVonDauTuService.GetDuAnHangMucByListDuAnId(lstId);
+            Dictionary<Guid, List<VDT_DA_DuAn_NguonVon>> dicNguonVon = new Dictionary<Guid, List<VDT_DA_DuAn_NguonVon>>();
+            Dictionary<Guid, List<VDT_DA_DuAn_HangMuc>> dicHangMuc = new Dictionary<Guid, List<VDT_DA_DuAn_HangMuc>>();
+            if (lstNguonVon != null)
+            {
+                dicNguonVon = lstNguonVon.GroupBy(n => n.iID_DuAn).ToDictionary(n => n.Key, n => n.ToList());
+            }
+            if (lstHangMuc != null)
+            {
+                dicHangMuc = lstHangMuc.GroupBy(n => n.iID_DuAnID.Value).ToDictionary(n => n.Key, n => n.ToList());
+            }
+            int iStt = 1;
+            foreach (var item in lstDuAn)
+            {
+                DuAnViewModel data = new DuAnViewModel()
+                {
+                    sTenDuAn = item.sTenDuAn,
+                    sMaDuAn = item.sMaDuAn,
+                    sKhoiCong = item.sKhoiCong,
+                    sKetThuc = item.sKetThuc,
+                    sDiaDiem = item.sDiaDiem,
+                    sMucTieu = item.sMucTieu,
+                    fHanMucDauTu = item.fHanMucDauTu
+                };
+                var hangmucs = new List<VDT_DA_DuAn_HangMuc>();
+                var nguonvons = new List<VDT_DA_DuAn_NguonVon>();
+                if (dicHangMuc.ContainsKey(item.iID_DuAnID)) hangmucs = dicHangMuc[item.iID_DuAnID];
+                if (dicNguonVon.ContainsKey(item.iID_DuAnID)) nguonvons = dicNguonVon[item.iID_DuAnID];
+                if (hangmucs.Count() >= nguonvons.Count())
+                {
+                    results.AddRange(GetDataByHangMuc(dicLoaiCongTrinh, data, hangmucs, nguonvons));
+                }
+                else
+                {
+                    results.AddRange(GetDataByNguonVon(dicLoaiCongTrinh, data, hangmucs, nguonvons));
+                }
+                iStt++;
+            }
+
+            return results;
+        }
+
+        private List<DuAnViewModel> GetDataByHangMuc(Dictionary<Guid, VDT_DM_LoaiCongTrinh> _dicLoaiCongTrinh, DuAnViewModel data, List<VDT_DA_DuAn_HangMuc> lstHangMuc, List<VDT_DA_DuAn_NguonVon> lstnguonVon)
+        {
+            List<DuAnViewModel> results = new List<DuAnViewModel>();
+            VDT_DA_DuAn_NguonVon objNguonVon = new VDT_DA_DuAn_NguonVon();
+            int countNguonVon = lstnguonVon.Count();
+            int indexNguonVon = 0;
+            foreach (var item in lstHangMuc)
+            {
+                if (indexNguonVon < countNguonVon)
+                {
+                    objNguonVon = lstnguonVon[indexNguonVon];
+                    indexNguonVon++;
+                }
+                var current = data.Clone();
+                current.sTenHangMuc = item.sTenHangMuc;
+                if (item.iID_LoaiCongTrinhID.HasValue && _dicLoaiCongTrinh.ContainsKey(item.iID_LoaiCongTrinhID.Value))
+                {
+                    current.sMaLoaiCongTrinh = _dicLoaiCongTrinh[item.iID_LoaiCongTrinhID.Value].sMaLoaiCongTrinh;
+                }
+                current.iID_NguonVonID = (objNguonVon.iID_NguonVonID ?? 0);
+                results.Add(current);
+            }
+            return results;
+        }
+
+        private List<DuAnViewModel> GetDataByNguonVon(Dictionary<Guid, VDT_DM_LoaiCongTrinh> _dicLoaiCongTrinh, DuAnViewModel data, List<VDT_DA_DuAn_HangMuc> lstHangMuc, List<VDT_DA_DuAn_NguonVon> lstnguonVon)
+        {
+            List<DuAnViewModel> results = new List<DuAnViewModel>();
+            VDT_DA_DuAn_HangMuc objHangMuc = new VDT_DA_DuAn_HangMuc();
+            int countHangMuc = lstHangMuc.Count();
+            int indexHangMuc = 0;
+            foreach (var item in lstnguonVon)
+            {
+                if (indexHangMuc < countHangMuc)
+                {
+                    objHangMuc = lstHangMuc[indexHangMuc];
+                    indexHangMuc++;
+                }
+                var current = data.Clone();
+                current.sTenHangMuc = objHangMuc.sTenHangMuc;
+                if (objHangMuc.iID_LoaiCongTrinhID.HasValue && _dicLoaiCongTrinh.ContainsKey(objHangMuc.iID_LoaiCongTrinhID.Value))
+                {
+                    current.sMaLoaiCongTrinh = _dicLoaiCongTrinh[objHangMuc.iID_LoaiCongTrinhID.Value].sMaLoaiCongTrinh;
+                }
+                current.iID_NguonVonID = (item.iID_NguonVonID ?? 0);
+                results.Add(current);
+            }
+            return results;
+        }
+
+        [HttpPost]
+        public JsonResult LoadDataExcel(HttpPostedFileBase file)
+        {
+            try
+            {
+                List<string> lstError = new List<string>();
+                if (file == null) return Json(new { bIsComplete = false, sMessError = "Chưa chọn file import !" }, JsonRequestBehavior.AllowGet);
+                var file_data = getBytes(file);
+                var dt = ExcelHelpers.LoadExcelDataTable(file_data);
+                IEnumerable<VdtDaDuAnImportModel> dataImport = excel_result(dt, ref lstError);
+                return Json(new { bIsComplete = true, data = dataImport, ListError = lstError }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+
+            return Json(new { bIsComplete = false, sMessError = "Có lỗi xảy ra trong file import !" }, JsonRequestBehavior.AllowGet);
+        }
+
+        private byte[] getBytes(HttpPostedFileBase file)
+        {
+            using (BinaryReader b = new BinaryReader(file.InputStream))
+            {
+                byte[] xls = b.ReadBytes(file.ContentLength);
+                return xls;
+            }
+        }
+
+        private IEnumerable<VdtDaDuAnImportModel> excel_result(System.Data.DataTable dt, ref List<string> lstError)
+        {
+            Dictionary<string, string> dicMaDuAn = new Dictionary<string, string>();
+            Dictionary<string, Guid> dicLoaiCongTrinh = new Dictionary<string, Guid>();
+            Dictionary<string, int> dicNguonVon = new Dictionary<string, int>();
+            
+
+            var lstAllDuAn = _iQLVonDauTuService.GetVDTDADuAn();
+            if (lstAllDuAn != null)
+            {
+                foreach (var item in lstAllDuAn)
+                {
+                    if (!dicMaDuAn.ContainsKey(item.sMaDuAn)) dicMaDuAn.Add(item.sMaDuAn, item.sMaDuAn);
+                }
+            }
+            var lstAllLoaiCongTrinh = _iQLVonDauTuService.GetAllDmLoaiCongTrinh();
+            if (lstAllLoaiCongTrinh != null)
+            {
+                foreach (var item in lstAllLoaiCongTrinh)
+                {
+                    if (!dicLoaiCongTrinh.ContainsKey(item.sMaLoaiCongTrinh)) dicLoaiCongTrinh.Add(item.sMaLoaiCongTrinh, item.iID_LoaiCongTrinh);
+                }
+            }
+            var lstNguonVon = _iQLVonDauTuService.GetListAllNguonNganSach();
+            if (lstNguonVon != null)
+            {
+                foreach (var item in lstNguonVon)
+                {
+                    if (!dicNguonVon.ContainsKey(item.iID_MaNguonNganSach.ToString())) dicNguonVon.Add(item.iID_MaNguonNganSach.ToString(), item.iID_MaNguonNganSach);
+                }
+            }
+
+            List<VdtDaDuAnImportModel> dataImport = new List<VdtDaDuAnImportModel>();
+
+            var items = dt.AsEnumerable().Where(x => x.Field<string>(0) != "" || x.Field<string>(0) != null || x.Field<string>(0) != "null");
+            int index = 1;
+            for (var i = 1; i < items.Count(); i++)
+            {
+                DataRow r = items.ToList()[i];
+
+                var IStt = r.Field<string>(0);
+                var sTenDuAn = r.Field<string>(1);
+                var sMaDuAn = r.Field<string>(2);
+                var sKhoiCong = r.Field<string>(3);
+                var sKetThuc = r.Field<string>(4);
+                var sTenHangMuc = r.Field<string>(5);
+                var sMaLoaiCongTrinh = r.Field<string>(6);
+                var iID_NguonVonID = r.Field<string>(7);
+                var sDiaDiem = r.Field<string>(8);
+                var sMucTieu = r.Field<string>(9);
+                var fHanMucDauTu = r.Field<string>(10);
+
+                var e = new VdtDaDuAnImportModel
+                {
+                    IStt = string.IsNullOrEmpty(IStt) ? string.Empty : IStt,
+                    sTenDuAn = string.IsNullOrEmpty(sTenDuAn) ? string.Empty : sTenDuAn,
+                    sMaDuAn = string.IsNullOrEmpty(sMaDuAn) ? string.Empty : sMaDuAn,
+                    sKhoiCong = string.IsNullOrEmpty(sKhoiCong) ? string.Empty : sKhoiCong,
+                    sKetThuc = string.IsNullOrEmpty(sKetThuc) ? string.Empty : sKetThuc,
+                    sTenHangMuc = string.IsNullOrEmpty(sTenHangMuc) ? string.Empty : sTenHangMuc,
+                    sMaLoaiCongTrinh = string.IsNullOrEmpty(sMaLoaiCongTrinh) ? string.Empty : sMaLoaiCongTrinh,
+                    iID_NguonVonID = string.IsNullOrEmpty(iID_NguonVonID) ? string.Empty : iID_NguonVonID,
+                    sDiaDiem = string.IsNullOrEmpty(sDiaDiem) ? string.Empty : sDiaDiem,
+                    sMucTieu = string.IsNullOrEmpty(sMucTieu) ? string.Empty : sMucTieu,
+                    fHanMucDauTu = string.IsNullOrEmpty(fHanMucDauTu) ? string.Empty : fHanMucDauTu,
+                };
+                e.bIsError = ValidateChungTuChiTietImport(index, e, dicLoaiCongTrinh, dicNguonVon, ref dicMaDuAn, ref lstError);
+                dataImport.Add(e);
+                index++;
+            }
+            return dataImport.AsEnumerable();
+        }
+
+        public bool ValidateChungTuChiTietImport(int index, VdtDaDuAnImportModel item, Dictionary<string, Guid> dicLoaiCongTrinh, Dictionary<string, int> dicNguonVon, ref Dictionary<string, string> dicMaDuAn, ref List<string> lstError)
+        {
+            double dDoublePare = 0;
+            bool bIsError = false;
+
+            if (string.IsNullOrEmpty(item.sTenDuAn))
+            {
+                lstError.Add(string.Format("Dòng {0} - Chưa nhập dữ liệu {1} !", index, "tên dự án"));
+                bIsError = true;
+            }
+
+            if (string.IsNullOrEmpty(item.sMaDuAn))
+            {
+                lstError.Add(string.Format("Dòng {0} - Chưa nhập dữ liệu {1} !", index, "mã dự án"));
+                bIsError = true;
+            }
+            else if (dicMaDuAn.ContainsKey(item.sMaDuAn))
+            {
+                lstError.Add(string.Format("Dòng {0} - Đã tồn tại dự án [{1}] !", index, item.sMaDuAn));
+                bIsError = true;
+            }
+
+            if(!string.IsNullOrEmpty(item.sMaLoaiCongTrinh) && !dicLoaiCongTrinh.ContainsKey(item.sMaLoaiCongTrinh))
+            {
+                lstError.Add(string.Format("Dòng {0} - Mã loại công trình [{1}] không tồn tại !", index, item.sMaLoaiCongTrinh));
+                bIsError = true;
+            }
+
+            if(!string.IsNullOrEmpty(item.iID_NguonVonID) && !dicNguonVon.ContainsKey(item.iID_NguonVonID))
+            {
+                lstError.Add(string.Format("Dòng {0} - Mã nguồn vốn [{1}] không tồn tại !", index, item.sMaLoaiCongTrinh));
+                bIsError = true;
+            }
+
+            if(!string.IsNullOrEmpty(item.fHanMucDauTu) && !double.TryParse(item.fHanMucDauTu, out dDoublePare))
+            {
+                lstError.Add(string.Format("Dòng {0} - Hạn mức đầu tư không phải kiểu dữ liệu số !", index));
+                bIsError = true;
+            }
+
+            if(string.IsNullOrEmpty(item.sMaLoaiCongTrinh) != string.IsNullOrEmpty(item.sTenHangMuc))
+            {
+                if (string.IsNullOrEmpty(item.sMaLoaiCongTrinh))
+                {
+                    lstError.Add(string.Format("Dòng {0} - Chưa nhập dữ liệu {1} !", index, "mã loại công trình"));
+                    bIsError = true;
+                }
+                if (string.IsNullOrEmpty(item.sTenHangMuc))
+                {
+                    lstError.Add(string.Format("Dòng {0} - Chưa nhập dữ liệu {1} !", index, "hạng mục"));
+                    bIsError = true;
+                }
+            }
+            return bIsError;
+        }
+
+        public JsonResult OnSaveDataImport(Guid iIDDonViQuanLy, List<VdtDaDuAnImportModel> lstData)
+        {
+            try
+            {
+                Dictionary<string, VDT_DA_DuAn> dicDuAn = new Dictionary<string, VDT_DA_DuAn>();
+                Dictionary<string, VDT_DA_DuAn_HangMuc> dicHangMuc = new Dictionary<string, VDT_DA_DuAn_HangMuc>();
+                Dictionary<string, VDT_DA_DuAn_NguonVon> dicNguonVon = new Dictionary<string, VDT_DA_DuAn_NguonVon>();
+                Dictionary<string, Guid> dicLoaiCongTrinh = new Dictionary<string, Guid>();
+                var lstAllLoaiCongTrinh = _iQLVonDauTuService.GetAllDmLoaiCongTrinh();
+                if (lstAllLoaiCongTrinh != null)
+                {
+                    foreach (var item in lstAllLoaiCongTrinh)
+                    {
+                        if (!dicLoaiCongTrinh.ContainsKey(item.sMaLoaiCongTrinh)) dicLoaiCongTrinh.Add(item.sMaLoaiCongTrinh, item.iID_LoaiCongTrinh);
+                    }
+                }
+                var objDonVi = _iQLVonDauTuService.GetDonViQuanLyById(iIDDonViQuanLy);
+
+                foreach (var item in lstData)
+                {
+                    if (!dicDuAn.ContainsKey(item.sMaDuAn))
+                    {
+                        dicDuAn.Add(item.sMaDuAn, new VDT_DA_DuAn()
+                        {
+                            iID_DuAnID = Guid.NewGuid(),
+                            sTenDuAn = item.sTenDuAn,
+                            sMaDuAn = item.sMaDuAn,
+                            sKhoiCong = item.sKhoiCong,
+                            sKetThuc = item.sKetThuc,
+                            dDateCreate = DateTime.Now,
+                            iID_DonViQuanLyID = objDonVi.iID_Ma,
+                            iID_MaDonVi = objDonVi.iID_MaDonVi,
+                            iID_DonViThucHienDuAnID = objDonVi.iID_Ma,
+                            iID_MaDonViThucHienDuAnID = objDonVi.iID_MaDonVi,
+                            sUserCreate = Username
+                        });
+                    }
+
+                    if (!string.IsNullOrEmpty(item.sTenHangMuc))
+                    {
+                        string sKeyHangMuc = string.Format("{0}\n{1}\n{2}", item.sMaDuAn, item.sTenHangMuc, item.sMaLoaiCongTrinh);
+                        if (!dicHangMuc.ContainsKey(sKeyHangMuc))
+                        {
+                            dicHangMuc.Add(sKeyHangMuc, new VDT_DA_DuAn_HangMuc()
+                            {
+                                iID_DuAn_HangMucID = Guid.NewGuid(),
+                                sTenHangMuc = item.sTenHangMuc,
+                                iID_LoaiCongTrinhID = dicLoaiCongTrinh[item.sMaLoaiCongTrinh],
+                                iID_DuAnID = dicDuAn[item.sMaDuAn].iID_DuAnID
+                            });
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(item.iID_NguonVonID))
+                    {
+                        if (!dicNguonVon.ContainsKey(item.iID_NguonVonID))
+                        {
+                            dicNguonVon.Add(item.iID_NguonVonID, new VDT_DA_DuAn_NguonVon()
+                            {
+                                Id = Guid.NewGuid(),
+                                iID_NguonVonID = int.Parse(item.iID_NguonVonID),
+                                iID_DuAn = dicDuAn[item.sMaDuAn].iID_DuAnID
+                            });
+                        }
+                    }
+                }
+
+                if(dicDuAn.Count != 0)
+                {
+                    if (!_iQLVonDauTuService.AddRangerDuAn(dicDuAn.Values)) {
+                        return Json(new { bIsSuccess = false }, JsonRequestBehavior.AllowGet);
+                    }
+                    _iQLVonDauTuService.AddRangerDuAnHangMuc(dicHangMuc.Values);
+                    _iQLVonDauTuService.AddRangerDuAnNguonVon(dicNguonVon.Values);
+                }
+
+                return Json(new { bIsSuccess = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return Json(new { bIsSuccess = false }, JsonRequestBehavior.AllowGet);
         }
     }
 }

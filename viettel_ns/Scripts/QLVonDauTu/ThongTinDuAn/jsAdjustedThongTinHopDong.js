@@ -5,6 +5,7 @@ var HOP_DONG_KINH_TE = 1;
 $(document).ready(function () {
     $("#iID_LoaiHopDongID").val($("#iID_LoaiHopDongID").val());
     $("#iID_NhaThauID").val($("#iIDNhaThauId").val());
+    $("#iID_NhaThauID").trigger("change");
     if ($("#iIDGoiThauId").val() == "" || $("#iIDGoiThauId").val() == GUID_EMPTY)
         $("#cboLoaiHopDong").val(HOP_DONG_GIAO_VIEC);
     else
@@ -98,13 +99,15 @@ function EventCheckboxChiPhi(idGoiThauNhaThauValue) {
         //idGoiThauNhaThau = $(this).data('idgoithaunhathau');
         tiengoithau = $(this).data('tiengoithau');
         if (this.checked) {
-            $('#btn_chitiet_chiphi_' + iID_ChiPhi_select).removeAttr('disabled');
-            arrPhuLucChiPhi.push({ IdGoiThauNhaThau: idGoiThauNhaThauValue, IIDChiPhiID: iID_ChiPhi_select, FTienGoiThau: tiengoithau })
+            if (!arrPhuLucChiPhi.some(el => el.IIDChiPhiID == iID_ChiPhi_select && el.IdGoiThauNhaThau == idGoiThauNhaThauValue)) {
+                $('#btn_chitiet_chiphi_' + iID_ChiPhi_select).removeAttr('disabled');
+                arrPhuLucChiPhi.push({ IdGoiThauNhaThau: idGoiThauNhaThauValue, IIDChiPhiID: iID_ChiPhi_select, FTienGoiThau: tiengoithau })
+            }
         } else {
             $('#btn_chitiet_chiphi_' + iID_ChiPhi_select).attr("disabled", true);
             var newArray = arrPhuLucChiPhi.filter(function (el) {
                 //return (el.chiphiid != iID_ChiPhi_select)
-                return (el.IdGoiThauNhaThau == idGoiThauNhaThauValue && el.IIDChiPhiID != iID_ChiPhi_select)
+                return ((el.IdGoiThauNhaThau == idGoiThauNhaThauValue && el.IIDChiPhiID != iID_ChiPhi_select) || el.IdGoiThauNhaThau != idGoiThauNhaThauValue)
             });
             arrPhuLucChiPhi = newArray;
         }
@@ -184,10 +187,10 @@ function ShowChiPhiDb(id, idGoiThauNhaThau) {
                             //return (el.chiphiid != iID_ChiPhi_select)
                             return (el.IdGoiThauNhaThau == idGoiThauNhaThau && el.IIDChiPhiID == x.IIDChiPhiID)
                         });
-                        if (newArray.length > 0 && x.IdGoiThauNhaThau == idGoiThauNhaThau) {
+                        if (x.IdGoiThauNhaThau == idGoiThauNhaThau) {
                             htmlChiPhi += "<tr>";
                             if (newArray.length > 0) {
-                                htmlChiPhi += "<td align='center'> <input type='checkbox' checked data-tiengoithau ='" + x.FTienGoiThau + "' data-goithauid='" + id + "' data-chiphiid='" + x.IIDChiPhiID + "' class='cb_ChiPhi'></td>";
+                                htmlChiPhi += "<td align='center'> <input type='checkbox' checked data-tiengoithau ='" + newArray[0].FTienGoiThau + "' data-goithauid='" + id + "' data-chiphiid='" + x.IIDChiPhiID + "' class='cb_ChiPhi'></td>";
                             }
                             else {
                                 htmlChiPhi += "<td align='center'> <input type='checkbox' data-tiengoithau ='" + x.FTienGoiThau + "' data-goithauid='" + id + "' data-chiphiid='" + x.IIDChiPhiID + "' class='cb_ChiPhi'></td>";
@@ -195,7 +198,19 @@ function ShowChiPhiDb(id, idGoiThauNhaThau) {
 
                             htmlChiPhi += "<td>" + x.STenChiPhi + "</td>";
                             htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriDuocDuyet) + "</td>";
-                            htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriConLai) + "</td>";
+
+                            var disable = isHasHangMuc(x) ? 'disabled' : '';
+
+                            var fTienGoiThau = '';
+                            if (newArray.length > 0) {
+                                fTienGoiThau = newArray[0].FTienGoiThau ? FormatNumber(newArray[0].FTienGoiThau) : '';
+                            } else {
+                                fTienGoiThau = !x.FTienGoiThau ? '' : FormatNumber(x.FTienGoiThau);
+                            }
+                            htmlChiPhi += "<td class='sotien r_fGiaTriTruocDieuChinh' align='right'>" + FormatNumber(x.FTienGoiThau) + "</td>";
+                            htmlChiPhi += "<td>" + `<input style="text-align: right;" ${disable} class="r_fGiaTrungThau sotien form-control" type="text" value='${fTienGoiThau}' onkeyup="ValidateNumberKeyUp(this);" onkeypress="return ValidateNumberKeyPress(this, event);" onblur="UpdateValueArrChiPhi(this)" data-idchiphi="${x.IIDChiPhiID}" data-idgoithaunhathau="${idGoiThauNhaThau}"/>` + "</td>";
+                            /*htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FTienGoiThau) + "</td>";*/
+                            //htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriConLai) + "</td>";
                             if (newArray.length > 0) {
                                 htmlChiPhi += "<td align='center'> <button id='btn_chitiet_chiphi_" + x.IIDChiPhiID + "' onclick = ShowHangMucDb('" + x.IIDChiPhiID + "')  class='btn btn-detail btn-icon btnShowHangMuc' title='Chi tiết hạng mục'><i class='fa fa-eye fa-lg'></i></button>" +
                                     "</td > ";
@@ -246,14 +261,14 @@ function SetArrHangMuc() {
     $.ajax({
         url: "/QLVonDauTu/QLThongTinHopDong/LayThongTinHangMucByHopDongId",
         type: "POST",
-        data: { hopdongId: hopDongId, isGoc: isGoc },
+        data: { hopdongId: hopDongId, isGoc: isGoc, listGoiThau: arrGoiThau },
         dataType: "json",
         cache: false,
         success: function (data) {
             if (data != null && data != "") {
                 if (data != null) {
                     data.forEach(function (x) {
-                        arrPhuLucHangMuc.push({ HangMucParentId: x.HangMucParentId, MaOrDer: x.MaOrDer, STenHangMuc: x.STenHangMuc, IdGoiThauNhaThau: x.IdGoiThauNhaThau, IIDChiPhiID: x.IIDChiPhiID, IIDHangMucID: x.IIDHangMucID, FTienGoiThau: x.FTienGoiThau, idFake: x.IdFake })
+                        arrPhuLucHangMuc.push({ HangMucParentId: x.HangMucParentId, MaOrDer: x.MaOrDer, STenHangMuc: x.STenHangMuc, IdGoiThauNhaThau: x.IdGoiThauNhaThau, IIDChiPhiID: x.IIDChiPhiID, IIDHangMucID: x.IIDHangMucID, FTienGoiThau: x.FTienGoiThau, idFake: x.IdFake, FGiaTriDuocDuyet: x.FGiaTriDuocDuyet })
                     });
                 }
             } else {
@@ -261,7 +276,8 @@ function SetArrHangMuc() {
         },
         error: function (data) {
 
-        }
+        },
+        async: false
     })
 }
 
@@ -281,7 +297,7 @@ function UpdateArrHangMuc(obj) {
 }
 
 function UpdateValueArrHangMuc(obj) {
-    var value = $(obj).val();
+    var value = +UnFormatNumber($(obj).val());
     var idHangMucFake = $(obj).data('idfakehangmuc');
     var idGoiThauNhaThau = $(obj).data('idgoithaunhathau');
     var idChiPhi = $(obj).data('idchiphi');
@@ -291,8 +307,64 @@ function UpdateValueArrHangMuc(obj) {
 
     arrPhuLucHangMuc = $.map(arrPhuLucHangMuc, function (el) { return (el.IdGoiThauNhaThau == idGoiThauNhaThau && el.IIDChiPhiID == idChiPhi && el.idFake == idHangMucFake) ? null : el });
     newArray.forEach(function (x) {
-        arrPhuLucHangMuc.push({ HangMucParentId: x.HangMucParentId, MaOrDer: x.MaOrDer, STenHangMuc: x.TenHangMuc, IdGoiThauNhaThau: x.IdGoiThauNhaThau, IIDChiPhiID: x.IIDChiPhiID, IIDHangMucID: x.IIDHangMucID, FTienGoiThau: value, idFake: x.idFake })
+        arrPhuLucHangMuc.push({ HangMucParentId: x.HangMucParentId, MaOrDer: x.MaOrDer, STenHangMuc: x.STenHangMuc, IdGoiThauNhaThau: x.IdGoiThauNhaThau, IIDChiPhiID: x.IIDChiPhiID, IIDHangMucID: x.IIDHangMucID, FTienGoiThau: value, idFake: x.idFake })
     });
+
+    // update gia tri cho array phu luc-chi phi va array thong tin goi thau 
+    SumGiaTriTrungThauChiPhi(idChiPhi, idGoiThauNhaThau);
+    SumGiaTriGoiThau(idGoiThauNhaThau);
+
+    // disable nhap gia tri chi phi khi them moi 1 hang muc
+
+}
+
+
+function UpdateValueArrChiPhi(obj) {
+    var value = +UnFormatNumber($(obj).val());
+    var idGoiThauNhaThau = $(obj).data('idgoithaunhathau');
+    var idChiPhi = $(obj).data('idchiphi');
+    var newArray = arrPhuLucChiPhi.filter(function (el) {
+        return (el.IdGoiThauNhaThau == idGoiThauNhaThau && el.IIDChiPhiID == idChiPhi )
+    });
+
+    arrPhuLucChiPhi = $.map(arrPhuLucChiPhi, function (el) { return (el.IdGoiThauNhaThau == idGoiThauNhaThau && el.IIDChiPhiID == idChiPhi ) ? null : el });
+    newArray.forEach(function (x) {
+        arrPhuLucChiPhi.push({ IdGoiThauNhaThau: x.IdGoiThauNhaThau, IIDChiPhiID: x.IIDChiPhiID, FTienGoiThau: value })
+    });
+
+    SumGiaTriGoiThau(idGoiThauNhaThau);
+}
+
+
+// recalculate gia tri trung thau chi phi
+function SumGiaTriTrungThauChiPhi(chiphiId, idGoiThauNhaThau) {
+    var rowChiPhi = $("#tblDanhSachPhuLucChiPhi tbody tr input[data-chiphiid='" + chiphiId + "'").parent().parent();
+    var indexOfChiphi = arrPhuLucChiPhi.map(cp => cp.IIDChiPhiID).indexOf(chiphiId);
+    var phuLucChiPhi = arrPhuLucChiPhi.find(cp => cp.IIDChiPhiID == chiphiId && cp.IdGoiThauNhaThau == idGoiThauNhaThau);
+
+    if (phuLucChiPhi) {
+        arrPhuLucChiPhi[indexOfChiphi].FTienGoiThau = arrPhuLucHangMuc.filter(hm => hm.IIDChiPhiID === chiphiId && hm.IdGoiThauNhaThau == idGoiThauNhaThau && hm.MaOrDer.indexOf("_") == -1)?.map(cp => cp.FTienGoiThau)
+            .reduce((pre, curr) => pre + curr, 0);
+        rowChiPhi.find('.r_fGiaTrungThau').val(FormatNumber(arrPhuLucChiPhi[indexOfChiphi].FTienGoiThau));
+
+        // disabled ko cho nhap neu them moi 1 hang muc
+        rowChiPhi.find('.r_fGiaTrungThau').prop('disabled', true);
+    }
+}
+
+function SumGiaTriGoiThau(idGoiThauNhaThau) {
+
+    //var goiThauId = listPhuLucChiPhi[0].IIDGoiThau;
+    var rowGoiThau = $(`#tblDanhSachGoiThau tbody tr input[data-idcreate='${idGoiThauNhaThau}']`).parent().parent();
+
+
+    var indexOfGoiThau = arrGoiThau.map(cp => cp.Id).indexOf(idGoiThauNhaThau);
+
+    if (indexOfGoiThau >= 0) {
+        arrGoiThau[indexOfGoiThau].fGiaTriGoiThau = arrPhuLucChiPhi.filter(hm => hm.IdGoiThauNhaThau === idGoiThauNhaThau).map(cp => cp.FTienGoiThau)
+            .reduce((pre, curr) => pre + curr, 0);
+        rowGoiThau.find('.r_fGiaTriGoiThau').html(FormatNumber(arrGoiThau[indexOfGoiThau].fGiaTriGoiThau));
+    }
 }
 
 function AddRowHangMuc() {
@@ -307,8 +379,8 @@ function AddRowHangMuc() {
         valueNext = GenerateOrder(stt);
         $('#txtCurrentMaOrderHangMuc').val(valueNext);
     } else {
-        valueNext = 1;
-        $('#txtCurrentMaOrderHangMuc').val(1);
+        valueNext = '1';
+        $('#txtCurrentMaOrderHangMuc').val('1');
     }
     var idFake = CreateGuid();
     var rowHtml = "";
@@ -316,10 +388,12 @@ function AddRowHangMuc() {
     rowHtml += "<td>" + valueNext + "</td>";
     rowHtml += "<td><input type='text' data-idgoithaunhathau = '" + goithauSelected + "' data-idchiphi = '" + chiPhiSelected + "' data-idfakehangmuc = '" + idFake + "' onchange ='UpdateArrHangMuc(this)' class='form-control txtHangMucName' maxlength='100' autocomplete='off'/></td>";
     rowHtml += "<td class='r_fGiaGoiThau sotien' align='right'>" + "</td>";
-    rowHtml += "<td class='r_fGiaGoiThau sotien' align='right'> <input type='text' class='form-control col-sm-2 sotien' data-idgoithaunhathau = '" + goithauSelected + "' data-idchiphi = '" + chiPhiSelected + "' data-idfakehangmuc = '" + idFake + "' " +
+    rowHtml += "<td>" + "</td>";
+    rowHtml += "<td class='r_fGiaGoiThau sotien' align='right'> <input type='text' class='form-control col-sm-2 sotien text-right' data-idgoithaunhathau = '" + goithauSelected + "' data-idchiphi = '" + chiPhiSelected + "' data-idfakehangmuc = '" + idFake + "' " +
         " onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' onchange ='UpdateValueArrHangMuc(this)' autocomplete='off'/>" + "</td>";
     var idRow = CreateGuid();
-    rowHtml += "<td align='center'> <button style='width: 120px !important' data-idrowparent = '' data-idrow='" + idRow + "' class='btn btn-primary btnAddRowChid'><span> + Thêm dòng con</span></button>" +
+    var idHangMuc = CreateGuid();
+    rowHtml += "<td align='center'> <button style='width: 120px !important'  data-hangmucid='" + idHangMuc + "' data-idrowparent = '' data-idrow='" + idRow + "' class='btn btn-primary btnAddRowChid'><span> + Thêm dòng con</span></button>" +
         "</td > ";
     rowHtml += "</tr>";
     var countRow = $('#tblDanhSachPhuLucHangMuc tbody tr').length;
@@ -328,7 +402,7 @@ function AddRowHangMuc() {
     } else {
         $("#tblDanhSachPhuLucHangMuc tbody").html(rowHtml);
     }
-    arrPhuLucHangMuc.push({ HangMucParentId: '', MaOrDer: valueNext, STenHangMuc: '', IdGoiThauNhaThau: goithauSelected, IIDChiPhiID: chiPhiSelected, IIDHangMucID: CreateGuid(), FTienGoiThau: 0, idFake: idFake })
+    arrPhuLucHangMuc.push({ HangMucParentId: '', MaOrDer: valueNext + '', STenHangMuc: '', IdGoiThauNhaThau: goithauSelected, IIDChiPhiID: chiPhiSelected, IIDHangMucID: idHangMuc, FTienGoiThau: 0, idFake: idFake })
 }
 
 function AddRowChild(id) {
@@ -401,16 +475,19 @@ $("#tblDanhSachPhuLucHangMuc").on('click', '.btnAddRowChid', function (x) {
 
     rowHtml += "<td><input type='text' data-idgoithaunhathau = '" + goithauSelected + "' data-idchiphi = '" + chiPhiSelected + "' data-idfakehangmuc = '" + idFake + "' onchange ='UpdateArrHangMuc(this)' class='form-control txtHangMucName' maxlength='100' autocomplete='off'/></td>";
     rowHtml += "<td class='r_fGiaGoiThau sotien' align='right'>" + "</td>";
-    rowHtml += "<td class='r_fGiaGoiThau sotien' align='right'> <input type='text' class='form-control col-sm-2 sotien' data-idgoithaunhathau = '" + goithauSelected + "' data-idchiphi = '" + chiPhiSelected + "' data-idfakehangmuc = '" + idFake + "' " +
+    rowHtml += "<td>" + "</td>";
+
+    rowHtml += "<td class='r_fGiaGoiThau sotien' align='right'> <input type='text' class='form-control col-sm-2 sotien text-right' data-idgoithaunhathau = '" + goithauSelected + "' data-idchiphi = '" + chiPhiSelected + "' data-idfakehangmuc = '" + idFake + "' " +
         " onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' onchange ='UpdateValueArrHangMuc(this)' autocomplete='off'/>" + "</td>";
 
     var newIdRow = CreateGuid();
-    rowHtml += "<td align='center'> <button style='width: 120px !important' data-idrowparent = '" + idRow + "' data-idrow='" + newIdRow + "' class='btn btn-primary btnAddRowChid'><span> + Thêm dòng con</span></button>" +
+    var idHangMuc = CreateGuid();
+    rowHtml += "<td align='center'> <button style='width: 120px !important'  data-hangmucid='" + idHangMuc +"' data-idrowparent = '" + idRow + "' data-idrow='" + newIdRow + "' class='btn btn-primary btnAddRowChid'><span> + Thêm dòng con</span></button>" +
         "</td > ";
     rowHtml += "</tr>";
     $("#tblDanhSachPhuLucHangMuc tbody > tr").eq(rowIndex + numberChild).after(rowHtml);
 
-    arrPhuLucHangMuc.push({ HangMucParentId: hangmucId, MaOrDer: nextValue, STenHangMuc: '', IdGoiThauNhaThau: goithauSelected, IIDChiPhiID: chiPhiSelected, IIDHangMucID: CreateGuid(), FTienGoiThau: 0, idFake: idFake });
+    arrPhuLucHangMuc.push({ HangMucParentId: hangmucId, MaOrDer: nextValue, STenHangMuc: '', IdGoiThauNhaThau: goithauSelected, IIDChiPhiID: chiPhiSelected, IIDHangMucID: idHangMuc, FTienGoiThau: 0, idFake: idFake });
 });
 
 function ShowHangMucDb(id) {
@@ -428,6 +505,7 @@ function ShowHangMucDb(id) {
         //var newArray = arrPhuLucHangMuc.filter(function (el) {
         //    return (el.IdGoiThauNhaThau == idGoiThauNhaThau && el.IIDChiPhiID == id && el.IIDHangMucID == x.IIDHangMucID && el.idFake == x.IdFake)
         //});
+        var fTienGoiThau = !x.FTienGoiThau ? '' : FormatNumber(x.FTienGoiThau);
         htmlChiPhi += "<tr>";
 
         htmlChiPhi += "<td>" + x.MaOrDer + "</td>";
@@ -435,8 +513,9 @@ function ShowHangMucDb(id) {
         htmlChiPhi += "<td><input type='text' data-idgoithaunhathau = '" + x.IdGoiThauNhaThau + "' data-idchiphi = '" + x.IIDChiPhiID + "' data-idfakehangmuc = '" + x.idFake + "' onchange ='UpdateArrHangMuc(this)' class='form-control' value = '" + x.STenHangMuc + "' maxlength='100' autocomplete='off'/></td>";
 
         htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriDuocDuyet) + "</td>";
-        htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'> <input type='text' class='form-control col-sm-2 sotien' data-idgoithaunhathau = '" + x.IdGoiThauNhaThau + "' data-idchiphi = '" + x.IIDChiPhiID + "' data-idfakehangmuc = '" + x.IdFake + "' " +
-            " onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' onchange ='UpdateValueArrHangMuc(this)' autocomplete='off'/>" + "</td>";
+        htmlChiPhi += "<td class='fGiaTriTruocDieuChinh sotien' align='right'>" + fTienGoiThau + "</td>";
+        htmlChiPhi += "<td class='r_fGiaGoiThau sotien' align='right'> <input type='text' class='form-control col-sm-2 sotien text-right' data-idgoithaunhathau = '" + x.IdGoiThauNhaThau + "' data-idchiphi = '" + x.IIDChiPhiID + "' data-idfakehangmuc = '" + x.idFake + "' " +
+            " onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' onchange ='UpdateValueArrHangMuc(this)' autocomplete='off' value = '" + fTienGoiThau +"' />" + "</td>";
         var idRow = CreateGuid();
         htmlChiPhi += "<td align='center'> <button style='width: 120px !important' data-hangmucid='" + x.IIDHangMucID + "' data-idrowparent = '' data-idrow='" + idRow + "' onclick = AddRowChild('" + x.IIDChiPhiID + "') class='btn btn-primary btnAddRowChid'><span> + Thêm dòng con</span></button>" +
             "</td > ";
@@ -561,7 +640,8 @@ function SetArrChiPhi() {
         },
         error: function (data) {
 
-        }
+        },
+        async: false
     })
 }
 
@@ -587,7 +667,8 @@ function GetListNhaThau() {
         },
         error: function (data) {
 
-        }
+        },
+        async: false
     })
 }
 
@@ -622,15 +703,15 @@ function LoadGoiThauDb() {
                         arrGoiThau.push({ Id: x.Id, stt: sttGoiThau, IIDGoiThauID: x.IIDGoiThauID, IIdNhaThauId: x.IIdNhaThauId, fGiaTriGoiThau: x.fGiaTriGoiThau, fGiaTriHD: x.fGiaTriHD, FGiaTriTrungThau: x.FGiaTriTrungThau })
                         var idDropDown = 'dropdown_' + sttGoiThau + "_" + x.IIDGoiThauID;
                         htmlGoiThau += "<tr>";
-                        htmlGoiThau += "<td align='center'> <input type='checkbox' checked data-giatrigoithau = '" + x.fGiaTriGoiThau + "' data-giatritrungthau = '" + x.FGiaTriTrungThau + "' data-giatrihopdong = '" + x.fGiaTriHD + "' data-nhathauid = '" + idDropDown + "' data-sttgoithau = '" + sttGoiThau + "' data-goithauid='" + x.IIDGoiThauID + "' class='cb_DuToan'></td>";
+                        htmlGoiThau += "<td align='center'> <input type='checkbox' checked data-idcreate='" + x.Id +"' data-giatrigoithau = '" + x.fGiaTriGoiThau + "' data-giatritrungthau = '" + x.FGiaTriTrungThau + "' data-giatrihopdong = '" + x.fGiaTriHD + "' data-nhathauid = '" + idDropDown + "' data-sttgoithau = '" + sttGoiThau + "' data-goithauid='" + x.IIDGoiThauID + "' class='cb_DuToan'></td>";
                         htmlGoiThau += "<td>" + x.STenGoiThau + "</td>";
                         htmlGoiThau += "<td> <select id='" + idDropDown + "' data-sttgoithau = '" + sttGoiThau + "' onchange='UpdateItemNhaThau($(this))' data-goithauid='" + x.IIDGoiThauID + "' class='form-control dropdown_nhathau'> " + dropDownValue + " </select></td>";
 
                         htmlGoiThau += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FTienTrungThau) + "</td>";
-                        htmlGoiThau += "<td class='r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.fGiaTriGoiThau) + "</td>";
+                        htmlGoiThau += "<td class='r_fGiaGoiThau sotien r_fGiaTriGoiThau' align='right'>" + FormatNumber(x.fGiaTriGoiThau) + "</td>";
                         htmlGoiThau += "<td class='fGiaTriGoiThau r_fGiaGoiThau sotien' align='right'>" + FormatNumber(x.FGiaTriTrungThau) + "</td>";
                         htmlGoiThau += "<td class='fGiaTriHD r_fGiaTriHD sotien' align='right'>" + FormatNumber(x.fGiaTriHD) + "</td>";
-                        htmlGoiThau += "<td>" + "</td>";
+                        /*htmlGoiThau += "<td>" + "</td>";*/
                         htmlGoiThau += "<td align='center'> <button id='btn_chitiet_" + x.IIDGoiThauID + "' onclick = ShowChiPhiDb('" + x.IIDGoiThauID + "'" + ",'" + x.Id + "')  title='Chi phí chi tiết' class='btn btn-detail btn-icon btnShowGoiThau'><i class='fa fa-eye fa-lg'></i></button>" +
                             "</td > ";
                         //htmlGoiThau += "<td> <button id='btn_ShowChiPhi_" + x.IIDGoiThauID + "' class='btn btn-primary btnShowGoiThau'><span>+</span></button>"
@@ -659,7 +740,8 @@ function LoadGoiThauDb() {
         },
         error: function (data) {
 
-        }
+        },
+        async: false
     })
 }
 
@@ -755,6 +837,7 @@ function Save() {
    // hopDong.iID_HopDongID = null;
     //Thông tin hợp đồng
     hopDong.sSoHopDong = $("#sSoHopDong").val();
+    hopDong.sTenHopDong = $("#sTenHopDong").val();
     hopDong.dNgayHopDong = $("#dNgayHopDong").val();
     hopDong.iThoiGianThucHien = parseInt(UnFormatNumber($("#iThoiGianThucHien").val()));
     hopDong.dKhoiCongDuKien = $("#dKhoiCongDuKien").val();
@@ -763,12 +846,14 @@ function Save() {
     hopDong.sHinhThucHopDong = $("#sHinhThucHopDong").val();
     hopDong.fTienHopDong = parseFloat(UnFormatNumber($("#fGiaTriHopDong").val()));
     hopDong.NoiDungHopDong = $("#idNoiDungHopDong").val();
+
+    //Thông tin gói thầu
+    hopDong.iID_GoiThauID = $("#iID_GoiThauID").val();
+    hopDong.iID_NhaThauThucHienID = $("#iID_NhaThauID").val();
     hopDong.sSoTaiKhoan = $("#sStkNhaThau").val();
     hopDong.sNganHang = $("#sNganHang").val();
     hopDong.dThoiGianBaoLanhHopDongTu = $("#dBaoLanhHDTu").val();
     hopDong.dThoiGianBaoLanhHopDongDen = $("#dBaoLanhHDDen").val();
-    //Thông tin gói thầu
-    hopDong.iID_NhaThauThucHienID = $("#iID_NhaThauID").val();
 
     if (CheckLoi(hopDong)) {
         $.ajax({
@@ -845,4 +930,8 @@ function HanleEnableGiaTriHopDong() {
     } else {
         $("#fGiaTriHopDong").prop('disabled', false);
     }
+}
+
+function isHasHangMuc(chiphi) {
+    return arrPhuLucHangMuc.some((item) => item.IIDChiPhiID === chiphi.IIDChiPhiID);
 }

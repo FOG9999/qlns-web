@@ -8,9 +8,14 @@ namespace Viettel.Models.QLVonDauTu
 {
     public class BcquyetToanNienDoVonNamPhanTichChiTietViewModel
     {
+        public bool IsHangCha { get; set; }
+        public bool BIsChuyenTiep { get; set; }
         public string SSoThuTu { get; set; }
         public Guid IIDDuAnID { get; set; }
         public string STenDuAn { get; set; }
+        public Guid? iID_LoaiCongTrinh { get; set; }
+        public string SMaLoaiCongTrinh { get; set; }
+        public string STenLoaiCongTrinh { get; set; }
         // col 1
         public double FDuToanCnsChuaGiaiNganTaiKbNamTruoc { get; set; }
         // col 2

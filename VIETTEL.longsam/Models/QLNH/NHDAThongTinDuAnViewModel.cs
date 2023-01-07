@@ -93,8 +93,8 @@ namespace Viettel.Models.QLNH
         public string BQP { get; set; }
 
         public List<TableChiPhi> TableChiPhis { get; set; }
-        public Guid? iID_TiGia_ChiTietID { get; set; }
     }
+
     public class TableChiPhi
     {
         public string fGiaTriUSD { get; set; }
@@ -102,6 +102,15 @@ namespace Viettel.Models.QLNH
         public string fGiaTriNgoaiTeKhac { get; set; }
         public string fGiaTriEUR { get; set; }
         public string sTenChiPhi { get; set; }
+    }
+
+    public class NHDAThongTinDuAnGiaTriTienTeModel
+    {
+        public int index { get; set; }
+        public string sGiaTriUSD { get; set; }
+        public string sGiaTriVND { get; set; }
+        public string sGiaTriEUR { get; set; }
+        public string sGiaTriNgoaiTeKhac { get; set; }
     }
 
     public class NHDAThongTinDuAnImportModel

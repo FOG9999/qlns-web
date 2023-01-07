@@ -89,13 +89,15 @@ namespace VIETTEL.Areas.QLNguonNganSach.Models
         public List<BcquyetToanNienDoVonNamChiTietViewModel> SetipBcQuyetToanNienDoVonNam(List<BcquyetToanNienDoVonNamChiTietViewModel> lstData)
         {
             if (lstData == null) return new List<BcquyetToanNienDoVonNamChiTietViewModel>();
-            return lstData.GroupBy(n => new { n.iID_DuAnID, n.sMaDuAn, n.sDiaDiem, n.sTenDuAn, n.fTongMucDauTu })
+            return lstData.GroupBy(n => new { n.iID_DuAnID, n.sMaDuAn, n.sDiaDiem, n.sTenDuAn, n.fTongMucDauTu, n.iID_LoaiCongTrinh, n.STenLoaiCongTrinh })
                 .Select(n => new BcquyetToanNienDoVonNamChiTietViewModel()
                 {
                     iID_DuAnID = n.Key.iID_DuAnID,
                     sMaDuAn = n.Key.sMaDuAn,
                     sDiaDiem = n.Key.sDiaDiem,
                     sTenDuAn = n.Key.sTenDuAn,
+                    iID_LoaiCongTrinh = n.Key.iID_LoaiCongTrinh,
+                    STenLoaiCongTrinh = n.Key.STenLoaiCongTrinh,
                     fTongMucDauTu = n.Key.fTongMucDauTu,
                     fGiaTriNamNayChuyenNamSau = n.Sum(m=> m.fGiaTriNamNayChuyenNamSau),
                     fGiaTriNamTruocChuyenNamSau = n.Sum(m => m.fGiaTriNamTruocChuyenNamSau),
@@ -136,7 +138,7 @@ namespace VIETTEL.Areas.QLNguonNganSach.Models
             }
             var results = _vdtService.GetQuyetToanVonUng(iIdMaDonVi, iNamKeHoach, iIdNguonVon);
             if (results == null) return new List<BcquyetToanNienDoVonUngChiTietViewModel>();
-            return results.GroupBy(n => new { n.iID_DuAnID, n.sMaDuAn, n.sDiaDiem, n.sTenDuAn })
+            return results.GroupBy(n => new { n.iID_DuAnID, n.sMaDuAn, n.sDiaDiem, n.sTenDuAn, n.iID_LoaiCongTrinh, n.STenLoaiCongTrinh })
                 .Select(n => new BcquyetToanNienDoVonUngChiTietViewModel() { 
                     fGiaTriThuHoiTheoGiaiNganThucTe = n.Sum(m=>m.fGiaTriThuHoiTheoGiaiNganThucTe),
                     fKeHoachVonDuocKeoDai = n.Sum(m=>m.fKeHoachVonDuocKeoDai),
@@ -160,7 +162,9 @@ namespace VIETTEL.Areas.QLNguonNganSach.Models
                     iID_DuAnID = n.Key.iID_DuAnID,
                     sDiaDiem = n.Key.sDiaDiem,
                     sMaDuAn = n.Key.sMaDuAn ,
-                    sTenDuAn = n.Key.sTenDuAn
+                    sTenDuAn = n.Key.sTenDuAn,
+                    iID_LoaiCongTrinh = n.Key.iID_LoaiCongTrinh,
+                    STenLoaiCongTrinh = n.Key.STenLoaiCongTrinh
                 }).ToList();
         }
 

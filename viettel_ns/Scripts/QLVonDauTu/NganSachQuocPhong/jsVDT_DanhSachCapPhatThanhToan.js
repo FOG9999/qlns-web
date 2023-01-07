@@ -96,7 +96,7 @@ function ChangePage(iCurrentPage = 1) {
     
 }
 
-function DeleteItemList(id) {
+function DeleteItemList(id,sSoDeNghi) {
     if (!confirm("Chấp nhận xóa bản ghi ?")) return;
     $.ajax({
         type: "POST",
@@ -104,6 +104,7 @@ function DeleteItemList(id) {
         data: { id: id },
         success: function (r) {
             if (r == "True") {
+                alert("Xóa bản ghi " + sSoDeNghi + " thành công.");
                 ChangePage();
             }
         }
@@ -137,7 +138,7 @@ $(".btn-print").click(function () {
 });
 
 function OpenModal() {
-    var Title = 'Lỗi thêm mới kế hoạch vốn năm đề xuất';
+    var Title = 'Lỗi thêm mới thông tri thanh toán';
     var Messages = [];
 
     var iNguonVon = -1;
@@ -177,13 +178,17 @@ function OpenModal() {
                     Messages.push("Chọn cùng đơn vị");
                 }
             }
+            let dNgayPheDuyet = $(item).data('ngaypheduyet');
+            if (!dNgayPheDuyet) {
+                Messages.push("Chứng từ chưa được tạo phê duyệt không thể tạo thông tri");
+            }
             LstGuidChecked[index] = $(item).val();
         });
     }
 
     if (LstGuidChecked.length == 0) {
         Messages.push("Hãy chọn ít nhất một cấp phát thanh toán");
-    }
+    }    
 
     if (Messages != null && Messages != undefined && Messages.length > 0) {
         $.ajax({
@@ -571,4 +576,40 @@ function GetListDataThongTri(sMaDonVi, sMaThongTri, dNgayThongTri, iNamThongTri,
 
 function checkIfTabThongTriActive() {
     return $("#thongtri").attr('class').split(/\s+/).indexOf('active') >= 0;
+}
+
+function OnExportExcel() {
+    var lstId = [];
+    $("#tblThanhToan input[type=checkbox]:checked").each(function () {
+        lstId.push($(this).val());
+    });
+    if (lstId.length == 0) {
+        alert("Chưa chọn chứng từ thanh toán !");
+        return;
+    }
+    $.ajax({
+        type: "POST",
+        url: "/QLVonDauTu/GiaiNganThanhToan/ExportExcelPhanGhiCQTC",
+        data: { lstId: lstId },
+        success: function (data) {
+            if (data.status) {
+                window.open("/QLVonDauTu/GiaiNganThanhToan/ExportReport?pdf=" + data.isPdf);
+            }
+            else {
+                var Title = 'Lỗi in báo cáo';
+                var messErr = [];
+                messErr.push(data.listErrMess);
+                $.ajax({
+                    type: "POST",
+                    url: "/Modal/OpenModal",
+                    data: { Title: Title, Messages: messErr, Category: ERROR },
+                    success: function (data) {
+                        $("#divModalConfirm").html(data);
+                    }
+                });
+                return false;
+            }
+        }
+    });
+    return true;
 }

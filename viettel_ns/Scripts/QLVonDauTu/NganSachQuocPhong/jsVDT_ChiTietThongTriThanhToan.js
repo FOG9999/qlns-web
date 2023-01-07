@@ -11,6 +11,10 @@ $(document).ready(function () {
     //LayThongTinThongTri(DinhDangSo);
     layData();
     layChiTiet();
+
+    // hide năm ngân sách nếu loại cấp phát là thanh toán hoặc tạm ứng
+    if (['1', '2'].indexOf($('#piLoaiThongTri').val()) >= 0)
+        $('.divNamNganSach').hide();
 });
 
 function DinhDangSo() {
@@ -124,7 +128,7 @@ function layChiTiet() {
                 if (data.lstThuHoi.length > 0) {
                     lstThuHoi = data.lstThuHoi;
                     var htmlThuHoi = "";
-                    data.htmlThuHoi.forEach(function (x) {
+                    data.lstThuHoi.forEach(function (x) {
                         htmlThuHoi += "<tr>";
                         htmlThuHoi += " <td align=\"center\">" + x.SM + "</td>";
                         htmlThuHoi += " <td align=\"center\">" + x.STm + "</td>";

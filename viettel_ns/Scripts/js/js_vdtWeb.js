@@ -131,7 +131,7 @@ function ValidateStartDateEndDate() {
 function ValidateMaxLength(textbox, maxlength) {
     textbox.setCustomValidity('');
     textbox.setAttribute("maxlength", maxlength);
-    if (textbox.value.length >= maxlength) {
+    if (textbox.value.length > maxlength) {
         //textbox.setCustomValidity(`Độ dài ký tự tối đa là ${maxlength}`);
         textbox.setCustomValidity(`Vui lòng nhập đúng phạm vi ký tự cho phép`);
         textbox.reportValidity();

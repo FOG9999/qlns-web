@@ -110,7 +110,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 {
                     List<VDTKHVPhanBoVonDuocDuyetChiTietViewModel> lstDetail = ConvertDataTable<VDTKHVPhanBoVonDuocDuyetChiTietViewModel>(dtVoucherDetails).OrderBy(x => x.Loai).ToList();
 
-                    List<VDTKHVPhanBoVonDuocDuyetChiTietViewModel> results = lstDetail.GroupBy(x => new { x.iID_DuAnID, x.iID_LoaiCongTrinhID }).Select(grp => grp.LastOrDefault()).ToList();
+                    List<VDTKHVPhanBoVonDuocDuyetChiTietViewModel> results = lstDetail.GroupBy(x => new { x.iID_DuAnID, x.iID_LoaiCongTrinhID,x.iID_DuAn_HangMucID }).Select(grp => grp.LastOrDefault()).ToList();
 
                     dtChiTiet = ToDataTable(results.OrderBy(x => x.Loai).ToList());
                 }
@@ -181,7 +181,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                 new SheetColumn(columnName: "iID_KeHoachVonNam_DuocDuyetID", header:"Id Chứng từ", isHidden: true, isReadonly: true),
                 new SheetColumn(columnName: "iID_KeHoachVonNam_DuocDuyet_ChiTietID", header: "Id Chứng từ chi tiết", isHidden: true, isReadonly: true),
                 new SheetColumn(columnName: "iID_Parent", header: "IdParent", isHidden: true, isReadonly: true),
-                new SheetColumn(columnName: "modelActive", header: "Model active", isHidden: true, isReadonly: true)
+                new SheetColumn(columnName: "modelActive", header: "Model active", isHidden: true, isReadonly: true),
+                new SheetColumn(columnName: "iID_DuAn_HangMucID", header: "Id dự án hạng mục", isHidden: true, isReadonly: true)
             };
 
             listColumn = listColumn.OrderByDescending(item => !item.IsHidden).ToList();

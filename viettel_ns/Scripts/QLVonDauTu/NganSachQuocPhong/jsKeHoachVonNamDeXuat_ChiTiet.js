@@ -180,7 +180,8 @@ function ValidateBeforeSave() {
             iID_DonViID: "",
             fUocThucHienDC: 0,
             fThuHoiVonUngTruocDC: 0,
-            fThanhToanDC: 0
+            fThanhToanDC: 0,
+            iID_DuAn_HangMucID: ""
 
         };
 
@@ -201,6 +202,8 @@ function ValidateBeforeSave() {
         object.iID_LoaiCongTrinh = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_LoaiCongTrinh"]];
         object.iID_DonViID = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_DonViQuanLyID"]];
         object.iLoaiDuAn = Bang_arrGiaTri[i][Bang_arrCSMaCot["sLoaiDuAn"]] == "Mở mới" ? 1 : 2;
+        object.iID_DuAn_HangMucID = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_DuAn_HangMucID"]];
+
         if (!Bang_arrHangDaXoa[i]) {
             listItemAfter.push(object);
         }

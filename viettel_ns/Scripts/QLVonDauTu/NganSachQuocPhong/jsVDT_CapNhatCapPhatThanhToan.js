@@ -105,6 +105,7 @@ $(document).ready(function () {
         GetDataDropdownHopDong();
         GetDataDropdownNguonVon();
         GetListDropdownPheDuyet();
+        getDataDropDownHangMucDuAn();
     });
 
     $("#txtdntuVonTrongNuoc").on('keyup', () => {
@@ -147,7 +148,7 @@ $(document).ready(function () {
     // }, 200);
     //}, 200);
     $("#drpLoaiThanhToan").val(iLoaiThanhToanOld);
-    if (iCoQuanThanhToanOld == 1) {
+    if (iLoaiThanhToanOld == 1) {
         $("#drpCoQuanThanhToan").val(iCoQuanThanhToanOld)
         // display các số đề nghị tạm ứng
         $(".only-thanhtoan").each((index, ele) => {
@@ -599,6 +600,22 @@ function SavePheDuyetThanhToanChiTiet() {
     var dNgayPheDuyet = $('#txtNgayPheDuyet').val();
     var fThueGiaTriGiaTangDuocDuyet = UnFormatNumber($('#txtthtuThueGTGTDuocDuyet').val());
     var fChuyenTienBaoHanhDuocDuyet = UnFormatNumber($('#txtthtuTienBaoHanhDuocDuyet').val());
+
+    let messagesValidate = [];
+
+    if (!fThueGiaTriGiaTangDuocDuyet) {
+        messagesValidate.push("Giá trị thuế giá trị gia tăng được duyệt đang được để trống.");
+    }
+    if (!fChuyenTienBaoHanhDuocDuyet) {
+        messagesValidate.push("Giá trị tiền chuyển bảo hành được duyệt đang được để trống.");
+    }
+    if (messagesValidate.length > 0) {
+        let messageError = messagesValidate.join("\n");
+        let askConfirm = confirm(messageError);
+        if (!askConfirm) {
+            return;
+        }
+    }
 
     $.ajax({
         type: "POST",
@@ -1281,6 +1298,7 @@ function GetThongTinDeNghi() {
     data.iID_NguonVonID = $("#drpNguonNganSach option:selected").val();
     data.sSoBangKLHT = $("#txtSoCanCu").val();
     data.dNgayBangKLHT = $("#txtNgayCanCu").val();
+    data.ID_DuAn_HangMuc = $('#ID_DuAn_HangMuc').val();
 
     data.fLuyKeGiaTriNghiemThuKLHT = parseInt($("#txtLuyKeGiaTriKLNghiemThu").val() == "" ? 0 : UnFormatNumber($("#txtLuyKeGiaTriKLNghiemThu").val()));
 
@@ -1357,6 +1375,7 @@ function deleteThongTinPheDuyet() {
         success: function (r) {
             if (r.bIsComplete) {
                 isDeNghiThanhToanPheduyet = false;
+                clearDataPheDuyetThanhToanOld();
                 $('#thongTinPheDuyet').hide();
                 toggleDisableFieldsDeNghiThanhToan(false);
                 $('#deletePheDuyetBtn').hide();
@@ -1400,4 +1419,37 @@ function onChangeMLNS(obj) {
             $(currRow).find('.r_NoiDung').html(r.sMoTa)
         }
     })
+}
+
+function getDataDropDownHangMucDuAn() {
+    let iID_DuAnID = $('#drpDuAn').val();
+    let ID_DuAn_HangMuc_selected = $('#ID_DuAn_HangMuc').val();
+    $.ajax({
+        type: "POST",
+        url: "/QLVonDauTu/GiaiNganThanhToan/GetDropDownHangMucDuAn",
+        data: { iID_DuAnID },
+        success: function (r) {
+            let { listHangMuc } = r;
+            let arrSelect = [];
+            arrSelect.push({
+                id: '',
+                text: ''
+            });
+            arrSelect.push(...listHangMuc.map(h => ({
+                id: h.iID_DuAn_HangMucID,
+                text: h.sTenHangMuc,
+                selected: h.iID_DuAn_HangMucID == ID_DuAn_HangMuc_selected
+            })));
+            $('#drpDuAnHangMuc').select2({
+                data: arrSelect
+            });
+        }
+    })
+}
+
+function clearDataPheDuyetThanhToanOld() {
+    $('#tblDanhSachThanhToanChiTiet tbody').html('');
+    $('#txtNgayPheDuyet').val('');
+    $('#txtthtuThueGTGTDuocDuyet').val('');
+    $('#txtthtuTienBaoHanhDuocDuyet').val('');
 }

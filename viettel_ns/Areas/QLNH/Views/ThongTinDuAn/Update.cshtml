@@ -71,7 +71,7 @@
                 {
                     foreach (var phongban in (List<NS_PhongBan>)ViewBag.ListPhongBan)
                     {
-                        <option value="@phongban.iID_MaPhongBan" @(Model.ThongTinDuAnDetail.iID_BQuanLyID == phongban.iID_MaPhongBan ? "selected" : string.Empty)>@Html.Raw(Html.Encode(phongban.sTen))</option>
+                        <option value="@phongban.iID_MaPhongBan" @(Model.ThongTinDuAnDetail.iID_BQuanLyID == phongban.iID_MaPhongBan ? "selected" : string.Empty)>@Html.Raw(Html.Encode(string.Concat(phongban.sTen, " - ", phongban.sMoTa)))</option>
                     }
                 }
             </select>
@@ -204,9 +204,7 @@
                 {
                     foreach (var tigiachitiet in (List<NH_DM_TiGia_ChiTiet>)ViewBag.ListTiGiaChiTiet)
                     {
-                        <option value="@tigiachitiet.ID" @(Model.ThongTinDuAnDetail.iID_TiGia_ChiTietID.HasValue && Model.ThongTinDuAnDetail.iID_TiGia_ChiTietID.Value == tigiachitiet.ID ? "selected" : string.Empty)>
-                            @Html.Raw(Html.Encode(tigiachitiet.sMaTienTeQuyDoi))
-                        </option>
+                        <option value="@tigiachitiet.ID" data-tqd="@Html.Raw(Html.Encode(tigiachitiet.sMaTienTeQuyDoi))" @(Model.ThongTinDuAnDetail.iID_TiGia_ChiTietID.HasValue && Model.ThongTinDuAnDetail.iID_TiGia_ChiTietID.Value == tigiachitiet.ID ? "selected" : string.Empty)>@Html.Raw(Html.Encode(tigiachitiet.sMaTienTeQuyDoi))</option>
                     }
                 }
             </select>
@@ -224,8 +222,6 @@
         <div class="col-sm-3">&nbsp;</div>
     </div>
     <div class="form-group row">
-
-
         <div class="col-sm-3">
             <label for="txtHopDongUSD">Tổng mức đầu tư (USD)</label>
             <div>
@@ -298,7 +294,63 @@
 </div>
 <script>
     $(document).ready(function () {
+        var isShowing = false;
+        $('.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true,
+            language: 'vi',
+            todayHighlight: true,
+            format: "dd/mm/yyyy"
+        }).on('hide', () => {
+            isShowing = false;
+        }).on('show', () => {
+            isShowing = true;
+        });
+
+        $(".txtDate").keydown(function (event) {
+            ValidateInputKeydown(event, this, 3);
+        }).blur(function (event) {
+            setTimeout(() => {
+                if (!isShowing) ValidateInputFocusOut(event, this, 3);
+            }, 0);
+        });
+
+        LoadDataTenChiPhi();
         LoadDataTableChiPhi();
+
+        if ($("#slbMaNgoaiTeKhac").val() != GUID_EMPTY) {
+            $("#iDTenNgoaiTeKhac").html($("#slbMaNgoaiTeKhac option:selected").data("tqd"));
+        }
+        if ($("#slbTiGia").val() != GUID_EMPTY) {
+            var maGoc = $("#slbTiGia option:selected").data("mg");
+            if (maTienTe.indexOf(maGoc.toUpperCase()) >= 0) {
+                switch (maGoc.toUpperCase()) {
+                    case "USD":
+                        $("input[name=HopDongVND]").prop("readonly", true);
+                        $("input[name=HopDongEUR]").prop("readonly", true);
+                        break;
+                    case "VND":
+                        $("input[name=HopDongUSD]").prop("readonly", true);
+                        $("input[name=HopDongEUR]").prop("readonly", true);
+                        break;
+                    case "EUR":
+                        $("input[name=HopDongUSD]").prop("readonly", true);
+                        $("input[name=HopDongVND]").prop("readonly", true);
+                        break;
+                    default:
+                        break;
+                }
+                $("input[name=HopDongNgoaiTeKhac]").prop("readonly", true);
+            } else {
+                if ($("#slbMaNgoaiTeKhac").val() != GUID_EMPTY) {
+                    $("input[name=HopDongUSD]").prop("readonly", true);
+                    $("input[name=HopDongVND]").prop("readonly", true);
+                    $("input[name=HopDongEUR]").prop("readonly", true);
+                }
+            }
+        }
         $("#slbKHTongTheBQP").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
         $("#slbBQuanLy").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });
         $("#slbDonVi").select2({ width: "100%", dropdownAutoWidth: true, matcher: FilterInComboBox });

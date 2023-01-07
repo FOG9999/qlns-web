@@ -232,6 +232,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                         lstAllData.RemoveAll(x => x.iID_DuAnID == item.iID_DuAnID);
                     }
                     listdataChitiet.AddRange(lstAllData);
+                    listdataChitiet = listdataChitiet.DistinctBy(x => x.iID_DuAnID).ToList();
 
                     return Json(new { status = true, lstDetail = listdataChitiet }, JsonRequestBehavior.AllowGet);
                 }

@@ -330,6 +330,11 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                             var entityGoiThau = new VDT_DA_GoiThau();
                             entityGoiThau.MapFrom(data.lstGoiThau.ToList()[i]);
 
+                            if (data.isDieuChinh)
+                            {
+                                entityGoiThau.iID_GoiThauID = new Guid();
+                            }
+
                             if (entityGoiThau.iID_ParentID != null && entityGoiThau.iID_ParentID != Guid.Empty)
                             {
                                 entityGoiThau.bIsGoc = false;
@@ -428,8 +433,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         [HttpPost]
         public JsonResult DeleteItem(Guid id)
         {
+            var entity = _iQLVonDauTuService.GetKHLuaChonNhaThauById(id);
+            var sMessage = Constants.XOA_BAN_GHI;
+            if (entity != null)
+            {
+                sMessage = string.Format(sMessage, entity.sSoQuyetDinh);
+            }
             bool status = _iQLVonDauTuService.DeleteKHLuaChonNhaThau(id);
-            return Json(new { bIsComplete = status }, JsonRequestBehavior.AllowGet);
+            return Json(new { bIsComplete = status, sMessage = sMessage }, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetListGoiThauGoc(Guid lcntParentId)

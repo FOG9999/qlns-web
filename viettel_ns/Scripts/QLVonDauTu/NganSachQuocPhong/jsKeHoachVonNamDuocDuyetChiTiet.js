@@ -45,7 +45,8 @@ function ValidateBeforeSave() {
             fCapPhatTaiKhoBac: 0,
             fCapPhatBangLenhChi: 0,
             fGiaTriThuHoiNamTruocKhoBac: 0,
-            fGiaTriThuHoiNamTruocLenhChi: 0
+            fGiaTriThuHoiNamTruocLenhChi: 0,
+            iID_DuAn_HangMucID:""
         };
 
         object.iID_DuAnID = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_DuAnID"]];
@@ -75,6 +76,7 @@ function ValidateBeforeSave() {
         object.fCapPhatBangLenhChiDC = Bang_arrGiaTri[i][Bang_arrCSMaCot["fCapPhatBangLenhChiSauDC"]];
         object.fGiaTriThuHoiNamTruocKhoBacDC = Bang_arrGiaTri[i][Bang_arrCSMaCot["fGiaTriThuHoiNamTruocKhoBacSauDC"]];
         object.fGiaTriThuHoiNamTruocLenhChiDC = Bang_arrGiaTri[i][Bang_arrCSMaCot["fGiaTriThuHoiNamTruocLenhChiSauDC"]];
+        object.iID_DuAn_HangMucID = Bang_arrGiaTri[i][Bang_arrCSMaCot["iID_DuAn_HangMucID"]];
 
         listItem.push(object);
     }

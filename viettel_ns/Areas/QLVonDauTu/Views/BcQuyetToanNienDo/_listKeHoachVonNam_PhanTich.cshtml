@@ -38,49 +38,10 @@
 
 <table class="table table-bordered table-parent" style="margin-bottom: 0px">
     <thead>
-        @*<tr>
-            <th rowspan="3">STT</th>
-            <th rowspan="3">Tên dự án, công trình</th>
-            <th colspan="9">Dự toán được giao</th>
-            <th colspan="3">Số được cấp</th>
-            <th colspan="3">Số đề nghị quyết toán</th>
-            <th colspan="8">Kế hoạch vốn đầu tư chưa quyết toán đề nghị chuyển năm sau</th>
-            <th rowspan="3">Dự toán thu hồi do hết nhiệm vụ </th>
-        </tr>
-        <tr>
-            <th colspan="5">Năm trước chuyển sang (nếu có)</th>
-            <th colspan="3">Dự toán được giao</th>
-            <th rowspan="2">Tổng cộng</th>
-            <th rowspan="2">Năm trước chuyển sang (nếu có)</th>
-            <th rowspan="2">Năm nay</th>
-            <th rowspan="2">Cộng</th>
-            <th rowspan="2">Năm trước chuyển sang (nếu có)</th>
-            <th rowspan="2">Năm nay</th>
-            <th rowspan="2">Cộng</th>
-            <th rowspan="2">Tổng số</th>
-            <th colspan="3">Tạm ứng theo chế độ chưa thu hồi</th>
-            <th colspan="4">Dự toán còn dư chưa giải ngân</th>
-        </tr>
-        <tr>
-            <th>Dự toán còn dư tại Kho bạc</th>
-            <th>Tồn khoản tại đơn vị</th>
-            <th>Dự toán còn dư tại Cục Tài chính</th>
-            <th>Đã tạm ứng theo chế độ chưa thu hồi</th>
-            <th>Cộng</th>
-            <th>Giao dự toán tại kho bạc</th>
-            <th>Cấp bằng ủy nhiệm chi</th>
-            <th>Cộng</th>
-            <th>Cộng</th>
-            <th>Cục Tài chính cấp tạm ứng chưa thu hồi</th>
-            <th>Số tạm ứng chưa thu hồi do đơn vị cấp theo ủy quyền</th>
-            <th>Cộng</th>
-            <th>Tại Cục Tài chính</th>
-            <th>Tồn khoản tại đơn vị</th>
-            <th>Tại Kho bạc</th>
-        </tr>*@
         <tr>
             <th style="width:40px">A</th>
             <th style="width:300px">B</th>
+            <th style="width:300px">Loại công trình</th>
             <th style="width:150px">1</th>
             <th style="width:150px">2</th>
             <th style="width:150px">3</th>
@@ -112,9 +73,10 @@
         @foreach (var item in Model)
         {
             { i = i + 1; }
-            <tr data-iIdDuAn="@item.IIDDuAnID">
+            <tr data-iIdDuAn="@item.IIDDuAnID" data-iIdLoaiCongTrinh="@item.iID_LoaiCongTrinh">
                 <td>@i</td>
                 <td>@item.STenDuAn</td>
+                <td>@item.STenLoaiCongTrinh</td>
                 <td class="FDuToanCnsChuaGiaiNganTaiKbNamTruoc sotien" style="text-align:right">@item.FDuToanCnsChuaGiaiNganTaiKbNamTruoc</td>
                 <td class="FDuToanCnsChuaGiaiNganTaiDvNamTruoc sotien" style="text-align:right">@item.FDuToanCnsChuaGiaiNganTaiDvNamTruoc</td>
                 <td class="FDuToanCnsChuaGiaiNganTaiCucNamTruoc sotien" style="text-align:right">@item.FDuToanCnsChuaGiaiNganTaiCucNamTruoc</td>

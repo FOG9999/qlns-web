@@ -13,11 +13,12 @@ begin
 		case
 			when dahm.iID_LoaiCongTrinhID  is not null then dahm.iID_LoaiCongTrinhID else da.iID_LoaiCongTrinhID
 		end iID_LoaiCongTrinhID,
-		da.sTenDuAn
-		into #tmpData
+		CASE
+			WHEN dahm.sTenHangMuc IS NULL THEN da.sTenDuAn ELSE dahm.sTenHangMuc END as sTenDuAn		
+			into #tmpData
 	from VDT_KHV_KeHoachVonNam_DuocDuyet_ChiTiet ctct 
 	inner join VDT_DA_DuAn da on da.iID_DuAnID = ctct.iID_DuAnID
-	left join VDT_DA_DuAn_HangMuc dahm on da.iID_DuAnID = dahm.iID_DuAnID
+	left join VDT_DA_DuAn_HangMuc dahm on da.iID_DuAnID = dahm.iID_DuAnID and dahm.iID_LoaiCongTrinhID = ctct.iID_LoaiCongTrinh
 	INNER JOIN #tmpLoaiDuAn tmp on tmp.iID_DuAnID = ctct.iID_DuAnID
 	where ctct.iID_KeHoachVonNam_DuocDuyetID in (select * from dbo.f_split(@lstId))
 	and (((da.iID_LoaiCongTrinhID is not null) or (dahm.iID_LoaiCongTrinhID is not null)) and ctct.iID_KeHoachVonNam_DuocDuyetID in (select * from dbo.f_split(@lstId)))
@@ -122,11 +123,12 @@ begin
 		case
 			when dahm.iID_LoaiCongTrinhID  is not null then dahm.iID_LoaiCongTrinhID else da.iID_LoaiCongTrinhID
 		end iID_LoaiCongTrinhID,
-		da.sTenDuAn
+		CASE
+		WHEN dahm.sTenHangMuc IS NULL THEN da.sTenDuAn ELSE dahm.sTenHangMuc END as sTenDuAn
 		into #tmpDataCt
 	from VDT_KHV_KeHoachVonNam_DuocDuyet_ChiTiet ctct 
 	inner join VDT_DA_DuAn da on da.iID_DuAnID = ctct.iID_DuAnID
-	left join VDT_DA_DuAn_HangMuc dahm on da.iID_DuAnID = dahm.iID_DuAnID
+	left join VDT_DA_DuAn_HangMuc dahm on da.iID_DuAnID = dahm.iID_DuAnID and dahm.iID_LoaiCongTrinhID = ctct.iID_LoaiCongTrinh 
 	INNER JOIN #tmpLoaiDuAn tmp on tmp.iID_DuAnID = ctct.iID_DuAnID
 
 	where ctct.iID_KeHoachVonNam_DuocDuyetID in (select * from dbo.f_split(@lstId))

@@ -153,9 +153,11 @@ function LuuKeHoachChiQuy() {
         },
         success: function (r) {
             if (r.bIsComplete) {
+                alert("Thêm mới bản ghi " + data.sSoDeNghi + " thành công.");
                 window.location.href = "/QLVonDauTu/QLKeHoachChiQuy/Index";
             } else {
-                alert("Tạo kế hoạch chi quý thất bại !");
+                alert("Thêm mới bản ghi " + data.sSoDeNghi + " thất bại !");
+
             }
         }
     });

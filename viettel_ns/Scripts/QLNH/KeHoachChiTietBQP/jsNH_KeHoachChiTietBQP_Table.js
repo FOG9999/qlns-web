@@ -152,6 +152,7 @@ function BangDuLieu_ThemHangMoi(h, hGiaTri, isSameLevel) {
     }
     Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["sMaThuTu"], sSTT);
     Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["sTenNhiemVuChi"], '');
+    Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["sTenPhongBan"], '');
     Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["fGiaTriBQP_USD"], '');
     Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["fGiaTriBQP_VND"], '');
     Bang_GanGiaTriThatChoO(rowPositionMaxStt, Bang_arrCSMaCot["fGiaTriTTCP_USD"], '');

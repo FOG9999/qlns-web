@@ -69,12 +69,27 @@ namespace VIETTEL.Areas.QLNH.Models.DuAnHopDong.KeHoachChiTietBQP
         private void fillData(Guid? iID_TiGiaID)
         {
             //updateSumRows(iID_TiGiaID);
+            updateMoneyFormat();
             updateColumnIDsKHCTBQP("ID");
             updateColumns();
             updateColumnsParent();
             updateCellsEditable();
             updateCellsValue();
             updateChanges();
+        }
+
+        private void updateMoneyFormat()
+        {
+            float money;
+            for (int i = 0; i <= dtChiTiet.Rows.Count - 1; i++)
+            {
+                money = Convert.ToString(dtChiTiet.Rows[i]["fGiaTriTTCP_USD"]) != "" ? float.Parse(dtChiTiet.Rows[i]["fGiaTriTTCP_USD"].ToString()) : 0F;
+                dtChiTiet.Rows[i]["fGiaTriTTCP_USD"] = money.ToString("0.00", new CultureInfo("en-US"));
+                money = Convert.ToString(dtChiTiet.Rows[i]["fGiaTriBQP_USD"]) != "" ? float.Parse(dtChiTiet.Rows[i]["fGiaTriBQP_USD"].ToString()) : 0F;
+                dtChiTiet.Rows[i]["fGiaTriBQP_USD"] = money.ToString("0.00", new CultureInfo("en-US"));
+                money = Convert.ToString(dtChiTiet.Rows[i]["fGiaTriBQP_VND"]) != "" ? float.Parse(dtChiTiet.Rows[i]["fGiaTriBQP_VND"].ToString()) : 0F;
+                dtChiTiet.Rows[i]["fGiaTriBQP_VND"] = money.ToString("0", new CultureInfo("en-US"));
+            }
         }
 
         protected override void updateColumnsParent()

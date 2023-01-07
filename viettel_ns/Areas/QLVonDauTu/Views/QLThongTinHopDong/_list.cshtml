@@ -2,10 +2,13 @@
 @model VDTQuanLyTTHopDongViewModel
 <div class="tooltip-header-search">
     <div class="col-sm-6" style="display: flex; padding-left: 0px;"><label class="control-label">Danh sách quản lý thông tin hợp đồng</label></div>
-    <button class="btn btn-primary" style="float: right" onclick="ThemMoi()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-primary pull-right" style="margin-right: 10px; margin-top: 3px !important" onclick="ThemMoi()"><i class="fa fa-plus" aria-hidden="true"></i>Thêm mới</button>
+    <button class="btn btn-success pull-right" style="margin-right: 10px; margin-top: 3px !important" onclick="OnExportExcel()"><i class="fa fa-file-excel-o" aria-hidden="true"></i>Xuất excel</button>
+    <button class="btn btn-warning pull-right" style="margin-right: 10px; margin-top: 3px !important" onclick="OnImport()"><i class="fa fa-upload" aria-hidden="true"></i>Import</button>
 </div>
 <table class="table table-bordered" id="tblListVDTQuanLyTTHopDong" style=" table-layout: fixed; overflow: scroll; display: inherit;">
     <thead class="header-search">
+    <th></th>
     <th width="45px"></th>
     <th width="150px"><input type="text" class="form-control" id="txtSoHopDong" autocomplete="off" /></th>
     <th width="150px"><input type="text" class="form-control" id="txtTenHopDong" autocomplete="off" /></th>
@@ -48,6 +51,7 @@
     <th width="100px"><button class="btn btn-info" id="btn_timKiem" onclick="ChangePage()"><i class="fa fa-search" aria-hidden="true"></i>Tìm kiếm</button></th>
     </thead>
     <thead>
+    <th></th>
     <th style="min-width: 45px;">STT</th>
     <th style="min-width: 150px">Số hợp đồng</th>
     <th style="min-width: 150px">Tên hợp đồng</th>
@@ -69,6 +73,7 @@
             {
                 index++;
                 <tr style="cursor: pointer">
+                    <td align="center"><input type="checkbox" class="iIdExport" value="@item.iID_HopDongID"></td>
                     <td align="center">@index</td>
                     <td align="left">@item.sSoHopDong</td>
                     <td align="left">@item.sTenHopDong</td>
@@ -124,5 +129,8 @@
         });
     });
 
+    function OnImport() {
+        location.href = "/QLVonDauTu/QLThongTinHopDong/Import";
+    }
 </script>
 <script src="~/Scripts/js/js_vdtWeb.js"></script>

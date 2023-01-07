@@ -43,7 +43,7 @@ function ChangePage(iCurrentPage = 1) {
     GetListData(sSoDeNghi, iNamKeHoach, dNgayDeNghiFrom, dNgayDeNghiTo, iIDMaDonViQuanLy, iIDNguonVon, iQuy, iCurrentPage);
 }
 
-function DeleteItemList(id) {
+function DeleteItemList(id, sSoDeNghi) {
     if (!confirm("Chấp nhận xóa bản ghi ?")) return;
     $.ajax({
         type: "POST",
@@ -51,6 +51,7 @@ function DeleteItemList(id) {
         data: { id: id },
         success: function (r) {
             if (r == "True") {
+                alert("Xóa bản ghi " + sSoDeNghi + " thành công.");
                 ChangePage();
             }
         }

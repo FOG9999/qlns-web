@@ -300,6 +300,7 @@
     <Compile Include="Areas\QLVonDauTu\Controllers\ThucHienDauTu\BaoCaoDuToanNSQPNamController.cs" />
     <Compile Include="Areas\QLVonDauTu\Controllers\TinhHinhThucHienDuAn\TinhHinhThucHienDuAnController.cs" />
     <Compile Include="Areas\QLVonDauTu\Controllers\TongHopCapPhat\TongHopCapPhatController.cs" />
+    <Compile Include="Areas\QLVonDauTu\Model\NganSachQuocPhong\DeNghiThanhToanImportModel.cs" />
     <Compile Include="Areas\QLVonDauTu\Model\NganSachQuocPhong\KeHoach5NamChiTietDuocDuyetTempForSave.cs" />
     <Compile Include="Areas\QLVonDauTu\Model\NganSachQuocPhong\KeHoachVonNamDeXuatChiTietGridViewModel.cs" />
     <Compile Include="Areas\QLVonDauTu\Model\NganSachQuocPhong\DuAnKH5NDuocDuyetGridViewModel.cs" />
@@ -325,7 +326,11 @@
     <Compile Include="Areas\QLVonDauTu\Model\NganSachQuocPhong\QLKeHoachVonUngDuocDuyetModel.cs" />
     <Compile Include="Areas\QLVonDauTu\Model\NganSachQuocPhong\KeHoachVonNamDuocDuyetChiTietGridViewModel.cs" />
     <Compile Include="Areas\QLVonDauTu\Model\NganSachQuocPhong\KeHoachVonNamDuocDuyetChiTietSheetTable.cs" />
+    <Compile Include="Areas\QLVonDauTu\Model\NganSachQuocPhong\VdtDaDuAnImportModel.cs" />
+    <Compile Include="Areas\QLVonDauTu\Model\NganSachQuocPhong\VdtDaGoiThauImportModel.cs" />
+    <Compile Include="Areas\QLVonDauTu\Model\NganSachQuocPhong\VdtDaTtHopDongImportModel.cs" />
     <Compile Include="Areas\QLVonDauTu\Model\NganSachQuocPhong\VDTKHVPhanBoVonPagingModel.cs" />
+    <Compile Include="Areas\QLVonDauTu\Model\NganSachQuocPhong\VdtKtKhoiTaoDuLieuChiTietImportModel.cs" />
     <Compile Include="Areas\QLVonDauTu\Model\QuyetToan\ReportTongHopQuyetToanDuAnHoanThanhModel.cs" />
     <Compile Include="Areas\QLVonDauTu\Model\QuyetToan\QuyetToanNienDoTroLyModel.cs" />
     <Compile Include="Areas\QLVonDauTu\Model\QuyetToan\DeNghiQuyetToanPrintDataExportModel.cs" />
@@ -508,6 +513,7 @@
     <Content Include="App_Data\sql\NguonNganSach\nns_get_dotnhanbosung_by_dmnguon.sql" />
     <Content Include="App_Data\sql\NguonNganSach\nns_get_all_dotnhanbosung.sql" />
     <Content Include="App_Data\sql\QLNgoaiHoi\checktrungmadenghithanhtoan.sql" />
+    <Content Include="App_Data\sql\QLNgoaiHoi\get_thongtin_hopdong_byid.sql" />
     <Content Include="App_Data\sql\QLNgoaiHoi\thanhtoanluyke.sql" />
     <Content Include="App_Data\sql\QLNgoaiHoi\checktrungmathongtricapphat.sql" />
     <Content Include="App_Data\sql\QLNgoaiHoi\get_chucvu-nguoidung_phongban.sql" />
@@ -703,6 +709,9 @@
     <Content Include="App_Data\sql\QLVonDauTu\ThongTinDuAn\vdt_get_qddutu_by_idduan.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\ThongTinDuAn\vdt_laychitietchutruongpheduyet.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\ThongTinDuAn\vdt_laychitietquyetdinhdautu.sql" />
+    <Content Include="App_Data\sql\QLVonDauTu\ThongTinGoiThau\get_by_list_id_thongtingoithau.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="App_Data\sql\QLVonDauTu\ThongTinGoiThau\get_goithau_hangmuc_chuadieuchinh.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\ThongTinGoiThau\get_goithau_nguonvon_chuadieuchinh.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\ThongTinGoiThau\get_list_goithau_chiphi_chuadieuchinh.sql" />
@@ -1902,12 +1911,33 @@
     </Content>
     <Content Include="Areas\QLVonDauTu\ReportExcelForm\KeHoachTrungHan\rpt_KeHoachtrungHanDeXuat_Export_New.xlsx" />
     <Content Include="Areas\QLVonDauTu\ReportExcelForm\KeHoachTrungHan\rpt_KeHoachTrungHanDeXuat_ChuyenTiep_new.xlsx" />
-	<Content Include="Areas\QLVonDauTu\ReportExcelForm\ThucHienThanhToan\rpt_vdt_thuchienthanhtoan_danhsach.xlsx">
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\ThucHienThanhToan\rpt_vdt_thuchienthanhtoan_danhsach.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\QLVonDauTu\ReportExcelForm\ThongTri\rpt_vdt_thongtri_danhsach.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\QLVonDauTu\Views\GiaiNganThanhToan\ImportDeNghiThanhToan.cshtml" />
+    <Content Include="Areas\QLVonDauTu\Views\GiaiNganThanhToan\_sheetImport.cshtml" />
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\Import-Goithau-DuAn.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\Import-HopDong-DuAn.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\ThucHienThanhToan\tmp_Vdt_Da_ThongTinDuAn.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\tmp_Vdt_Da_ThongTinDuAn.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\QLVonDauTu\Views\QLDuAn\Import.cshtml" />
+    <Content Include="Areas\QLVonDauTu\Views\QLThongTinGoiThau\Import.cshtml" />
+    <Content Include="Areas\QLVonDauTu\Views\QLThongTinHopDong\Import.cshtml" />
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\rptVDT_TongHopKhoiTao.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\QLVonDauTu\Views\QLKhoiTaoThongTinDuAn\Import.cshtml" />
     <None Include="Areas\QuyetToan\Controllers\ReportController.cs1" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\Index.cshtml" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\_list.cshtml" />
@@ -4793,21 +4823,27 @@
     <Content Include="Report_Views\QuyetToan\rptTongHopLienThamQuanSoQuyetToan_03.aspx" />
     <Content Include="Report_Views\QuyetToan\rptTongHopQuanSoBinhQuan_51.aspx" />
     <Content Include="Report_Views\QuyetToan\rptTongHopQuanSoTangGiamTheoDonVi_48.aspx" />
+    <Content Include="ScriptDatabase\StoreChange\alterstore_28122022_sp_insert_tonghopnguonnsdautu_tang.sql" />
     <Content Include="ScriptDatabase\StoreChange\proc_get_all_kehoachvonnamdexuat_paging2.sql" />
     <Content Include="ScriptDatabase\StoreChange\proc_get_all_kehoachvonnamduocduyet_paging.sql" />
     <Content Include="ScriptDatabase\StoreChange\proc_get_all_thietkethicong_tongdutoan_paging_test.sql" />
     <Content Include="ScriptDatabase\StoreChange\proc_get_all_thongtri_quyettoan_paging.sql" />
     <Content Include="ScriptDatabase\StoreChange\proc_get_all_vdt_kehoachvonungdx_paging.sql" />
     <Content Include="ScriptDatabase\StoreChange\proc_get_all_vdt_kehoachvonung_paging.sql" />
+    <Content Include="ScriptDatabase\StoreChange\proc_vdt_get_all_dmLoaiCongTrinh_paging.sql" />
     <Content Include="ScriptDatabase\StoreChange\proc_vdt_khv_getdatakhvuduocduyet_chitiet.sql" />
     <Content Include="ScriptDatabase\StoreChange\sp_ke_hoach_trung_han_de_xuat_chuyen_tiep_report.sql" />
     <Content Include="ScriptDatabase\StoreChange\sp_vdt_get_ke_hoach_von_nam_Excel.sql" />
+    <Content Include="ScriptDatabase\StoreChange\sp_vdt_get_phan_bo_von_don_vi_dieu_chinh_report_21-12-2022.sql" />
+    <Content Include="ScriptDatabase\StoreChange\sp_vdt_get_phan_bo_von_don_vi_phe_duyet_report-21-12-2022.sql" />
     <Content Include="ScriptDatabase\StoreChange\sp_vdt_khlcnt_get_goithau_detail_by_chungtu_2.sql" />
     <Content Include="ScriptDatabase\StoreChange\sp_vdt_khv_ke_hoach_5_nam_de_xuat_export_new.sql" />
     <Content Include="ScriptDatabase\StoreChange\sp_vdt_rpt_tinh_hinh_thuc_hien_du_an.sql" />
     <Content Include="ScriptDatabase\StoreChange\them_sua_cot_trong_bang_KeHoachVonUng_DeXuat_DuocDuyet.sql" />
     <Content Include="ScriptDatabase\StoreChange\VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet.sql" />
     <Content Include="ScriptDatabase\StoreChange\VDT_KHV_PhanBoVon_DonVi_ChiTiet_PheDuyet.sql" />
+    <Content Include="ScriptDatabase\Table\AlterTable_20_12_2022.sql" />
+    <Content Include="ScriptDatabase\Table\ALter_Table_19_12_2022.sql" />
     <Content Include="ScriptDatabase\Table\VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet_29-11.sql" />
     <Content Include="ScriptDatabase\Table\VDT_KHV_KeHoachVonNam_DuocDuyet.sql" />
     <Content Include="Scripts\DanhMuc\jsImPortDMDonViBHXH.js" />
@@ -4936,6 +4972,7 @@
     <Content Include="Scripts\QLVonDauTu\KhoiTao\jsChiTietKhoiTaoTTDA.js" />
     <Content Include="Scripts\QLVonDauTu\KhoiTao\jsKhoiTaoTTDA.js" />
     <Content Include="Scripts\QLVonDauTu\KhoiTao\jsVDT_ChiTiet_KhoiTaoThongTinDuAnChuyenTiep.js" />
+    <Content Include="Scripts\QLVonDauTu\KhoiTao\jsVDT_KhoiTaoThongTinDuAnImport.js" />
     <Content Include="Scripts\QLVonDauTu\KhoiTao\jsVDT_Sua_KhoiTaoThongTinDuAnChuyenTiep.js" />
     <Content Include="Scripts\QLVonDauTu\KhoiTao\jsVDT_TaoMoi_KhoiTaoThongTinDuAnChuyenTiep.js" />
     <Content Include="Scripts\QLVonDauTu\KhoiTao\jsVDT_DanhSach_KhoiTaoThongTinDuAnChuyenTiep.js" />
@@ -4958,6 +4995,7 @@
     <Content Include="Scripts\QLVonDauTu\NganSachQuocPhong\jsKeHoachVonNamDeXuat.js" />
     <Content Include="Scripts\QLVonDauTu\NganSachQuocPhong\jsKeHoach5NamDeXuat.js" />
     <Content Include="Scripts\QLVonDauTu\NganSachQuocPhong\jsKeHoach5NamDeXuat_ChiTiet.js" />
+    <Content Include="Scripts\QLVonDauTu\NganSachQuocPhong\jsVDT_ImportDeNghiThanhToan.js" />
     <Content Include="Scripts\QLVonDauTu\NganSachQuocPhong\jsVDT_XuatFileThongTriThanhToan.js" />
     <Content Include="Scripts\QLVonDauTu\NganSachQuocPhong\KeHoachVonUngDeXuat\jsVDTQLKeHoachVonUngDeXuat.js" />
     <Content Include="Scripts\QLVonDauTu\NganSachQuocPhong\jsVDT_CapNhatCapPhatThanhToan.js" />
@@ -4987,6 +5025,9 @@
     <Content Include="Scripts\QLVonDauTu\QuyetToan\jsVDT_DeNghiQTDuAnHoanThanh_TaoMoi.js" />
     <Content Include="Scripts\QLVonDauTu\QuyetToan\js_VDT_QT_DeNghiQuyetToan_Import.js" />
     <Content Include="Scripts\QLVonDauTu\QuyetToan\js_VDT_QT_DeNghiQuyetToan.js" />
+    <Content Include="Scripts\QLVonDauTu\ThongTinDuAn\jsVDT_DA_DuAnImport.js" />
+    <Content Include="Scripts\QLVonDauTu\ThongTinDuAn\jsVDT_DA_GoiThauImport.js" />
+    <Content Include="Scripts\QLVonDauTu\ThongTinDuAn\jsVDT_DA_TT_HopDongImport.js" />
     <Content Include="Scripts\QLVonDauTu\ThongTinDuAn\KHLCNhaThau\jsVDT_Update_KHLuaChonNhaThau.js" />
     <Content Include="Scripts\QLVonDauTu\ThongTinDuAn\TKTCVaTDT\jsSuaDieuChinhQLPheDuyetTTKCVaTDT.js" />
     <Content Include="Scripts\QLVonDauTu\ThongTinDuAn\TKTCVaTDT\jsDieuChinhQLPheDuyetTTKCVaTDT.js" />

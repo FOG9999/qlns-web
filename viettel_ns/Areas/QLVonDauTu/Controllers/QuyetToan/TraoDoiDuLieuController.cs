@@ -277,6 +277,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.QuyetToan
         {
 
             VDT_NS_TraoDoiDuLieuViewModel vdtTraoDoiDuLieuViewModel = new VDT_NS_TraoDoiDuLieuViewModel();
+            vdtTraoDoiDuLieuViewModel.iNamLamViec = DateTime.Now.Year; 
             GetALLDrpTraoDoiDuLieu();
             if (id != null)
             {

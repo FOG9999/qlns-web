@@ -28,6 +28,7 @@ function SaveData() {
         item.iID_KhoiTao_ChiTietID = $(this).find(".iID").val();
         item.iID_KhoiTaoDuLieuID = $("#iID_KhoiTaoID").val();
         item.iID_DuAnID = $(this).find(".duan").val();
+        item.iID_LoaiCongTrinh = $(this).find(".loaicongtrinh").val();
         item.iID_NguonVonID = $(this).find(".cbxNguonVon").val();
         item.iCoQuanThanhToan = $(this).find(".coquantt").val();
         item.fKHVN_VonBoTriHetNamTruoc = UnFormatNumber($(this).find(".vn-botrihetnamtruoc").val());
@@ -280,7 +281,6 @@ function ValidateDataHopDong(data) {
 function ReloadNguonVon() {
     $(".duan").on("change", function () {
         var tagTr = this.closest("tr");
-        $(tagTr).find(".cbxNguonVon").empty();
         var iIDDuAnId = $(this).val();
         if (iIDDuAnId == undefined || iIDDuAnId == null || iIDDuAnId == "") return;
         $.ajax({
@@ -288,6 +288,7 @@ function ReloadNguonVon() {
             url: "/QLVonDauTu/QLKhoiTaoThongTinDuAn/GetQdDauTuNguonVonByDuAn",
             data: { iIdDuAn: iIDDuAnId },
             success: function (data) {
+                $(tagTr).find(".cbxNguonVon").empty();
                 $(tagTr).find(".cbxNguonVon").append(data.strCombobox);
                 var nguonVonId = $(tagTr).data('nguonvonid');
                 if (nguonVonId != undefined && nguonVonId != null)

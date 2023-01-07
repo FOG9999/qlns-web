@@ -245,6 +245,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
 
             vm.Sheet.AvaiableKeys = new Dictionary<string, string>();
             ViewBag.modelActive = isActive;
+            ViewBag.idParent = idParent;
             Guid idDxConvert = Guid.Empty;
             Guid.TryParse(idDx, out idDxConvert);
             if (vm.KHVonNamPhanBoVon_DonVi_PheDuyet == null)
@@ -296,7 +297,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             if (aListModel != null && aListModel.Any())
             {
                 var listVonNamPheDuyetChiTietIds = aListModel.Select(model => model.iID_PhanBoVon_DonVi_PheDuyet_ChiTiet_ID).ToList();
-                if (aListModel.Where(x => x.fGiaTriPhanBoDC != null && x.fGiaTriPhanBoDC > 0).ToList().Any())
+                if (aListModel.Where(x => x.iID_Parent != null ).ToList().Any())
                 {
                     _lstPhanBoVonDVChiTiet = aListModel.Select(model => new
                     VDT_KHV_PhanBoVon_DonVi_ChiTiet_PheDuyet
@@ -317,6 +318,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                         ILoaiDuAn = model.iLoaiDuAn,
                         sGhiChu = model.sGhiChu,
                         fGiaTriDeNghi = model.fGiaTriDeNghi,
+                        iID_DuAn_HangMucID = model.iID_DuAn_HangMucID
                     }).ToList();
 
                 }
@@ -341,6 +343,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                         ILoaiDuAn = model.iLoaiDuAn,
                         sGhiChu = model.sGhiChu,
                         fGiaTriDeNghi = model.fGiaTriDeNghi,
+                        iID_DuAn_HangMucID = model.iID_DuAn_HangMucID
                     }).ToList();
                 }
                 //if (!_qLVonDauTuService.checkExistDonViVonNamPheDuyetChiTiet(listVonNamPheDuyetChiTietIds))
@@ -767,6 +770,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             double KeHoachVonDauTuNam = results.Where(x => !x.IsHangCha).Sum(x => x.KeHoachVonDauTuNam);
             double VonGiaiNganNam = results.Where(x => !x.IsHangCha).Sum(x => x.VonGiaiNganNam);
             double DieuChinhVonNam = results.Where(x => !x.IsHangCha).Sum(x => x.DieuChinhVonNam);
+            double VonBoTri5Nam = results.Where(x => !x.IsHangCha).Sum(x => x.VonBoTri5Nam);
             FlexCelReport fr = new FlexCelReport();
             fr.AddTable<PhanBoVonDonViPheDuyetReportQuery>("Items", results);
             fr.SetValue("TongMucDauTuSum", TongMucDauTu);
@@ -775,6 +779,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             fr.SetValue("KeHoachVonDauTuNamSum", KeHoachVonDauTuNam);
             fr.SetValue("VonGiaiNganNamSum", VonGiaiNganNam);
             fr.SetValue("DieuChinhVonNamSum", DieuChinhVonNam);
+            fr.SetValue("VonBoTri5NamSum", VonBoTri5Nam);
             return fr;
         }
 
@@ -936,6 +941,12 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
                         child.VonBoTri5Nam = (Double)vonBoTri5Nam / Int32.Parse(dataReport.sValueDonViTinh);
                     }
                 }
+
+                result.Where(w => w.Loai == 3).Select( s =>
+                {
+                    s.VonBoTri5Nam = result.Where(x => x.Loai == 4 && s.IIdLoaiCongTrinh == x.IIdLoaiCongTrinh).Sum(i => i.VonBoTri5Nam);
+                    return s;
+                }).ToList();
 
                 List<PhanBoVonDonViPheDuyetReportQuery> lstItem = data.Where(n => n.LoaiParent.Equals(0) && !n.Loai.Equals(1)).ToList();
                 lstItem.Select(n => { n.STT = CommonFunction.ConvertLaMa((lstItem.IndexOf(n) + 1)).ToString(); return n; }).ToList();

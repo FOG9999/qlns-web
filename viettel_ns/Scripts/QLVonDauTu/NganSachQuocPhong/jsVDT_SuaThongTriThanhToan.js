@@ -116,6 +116,7 @@ function Luu() {
                     async: false,
                     success: function (data) {
                         console.log(data);
+                        alert("Cập nhật bản ghi " + psMaThongTri + " thành công");
                         window.location.href = "/QLVonDauTu/QLThongTriThanhToan/ChiTiet/" + iIDThongTriID;
                     },
                     error: function (data) {
@@ -337,7 +338,7 @@ function layChiTiet() {
                 if (data.lstThuHoi.length > 0) {
                     lstThuHoi = data.lstThuHoi;
                     var htmlThuHoi = "";
-                    data.htmlThuHoi.forEach(function (x) {
+                    data.lstThuHoi.forEach(function (x) {
                         htmlThuHoi += "<tr>";
                         htmlThuHoi += "<input class='id_input' value=" + x.IIdDeNghiThanhToanId + "/>";
                         htmlThuHoi += " <td align=\"center\">" + x.SM + "</td>";

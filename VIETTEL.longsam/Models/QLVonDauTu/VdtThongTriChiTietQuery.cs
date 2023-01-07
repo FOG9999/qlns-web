@@ -33,5 +33,6 @@ namespace Viettel.Models.QLVonDauTu
         public string SDonViThuHuong { get; set; }
         public string STenLoaiCongTrinh { get; set; }
         public int iLoaiThanhToan { get; set; }
+        public int iLoaiDeNghi { get; set; } // 1: thanh toán, 4: thu hồi năm trước, 5: thu hồi năm nay, 2: tạm ứng
     }
 }

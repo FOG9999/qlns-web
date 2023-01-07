@@ -121,6 +121,8 @@ function BangDuLieu_onCellAfterEdit(h, c) {
     Bang_GanGiaTriThatChoO(h, Bang_arrCSMaCot["fGiaTriBoTriDc"], fGiaTriSau5NamDc, 1);
     Bang_GanGiaTriThatChoO(h, Bang_arrCSMaCot["fTongVonBoTriNganh"], fTongVonBoTriNganh, 1);
     Bang_GanGiaTriThatChoO(h, Bang_arrCSMaCot["fTongVonBoTriCuc"], fTongVonBoTriCuc, 1);
+   // Bang_GanGiaTriThatChoO(h, Bang_arrCSMaCot["fVonsaunamNganhDX"], fGiaTriSauNganh, 1);
+   // Bang_GanGiaTriThatChoO(h, Bang_arrCSMaCot["fVonsaunamCTCDexuat"], fGiaTriSauCuc, 1);
 
     var modelType = $("#ModelLoai").val();
     if (modelType != '2') {
@@ -559,14 +561,14 @@ function BangDuLieu_ThemHangMoi(h, hGiaTri) {
     var c;
     for (c = 0; c < Bang_nC; c++) {
         if (itemParent != '' && itemParent != GUID_EMPTY) {
-            if (c > 0 && c <= 23 && c != 9 && c != 10 && c != 11 && c != 13 && c != 15 && c != 17 && c != 19 && c != 21 && c != 22 && c != 2) {
+            if (c > 0 && c <= 26 && c != 9 && c != 10 && c != 11 && c != 13 && c != 15 && c != 17 && c != 19 && c != 21 && c != 22 && c != 2  && c != 18) {
                 Bang_arrEdit[csH][c] = true;
             } else {
                 Bang_arrEdit[csH][c] = false;
             }
         }
         else {
-            if (c > 0 && c <= 23 && c != 9 && c != 10 && c != 16 && c != 2) {
+            if (c > 0 && c <= 26 && c != 9 && c != 10 && c != 16 && c != 2 && c != 22 && c != 18) {
                 Bang_arrEdit[csH][c] = true;
             } else {
                 Bang_arrEdit[csH][c] = false;
@@ -632,6 +634,18 @@ function BangDuLieu_ThemHangChiTietDuAn(h, hGiaTri) {
         Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["fGiaTriNamThuNamDc"], "0");
         Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["fGiaTriBoTri"], "0");
         Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["fGiaTriBoTriDc"], "0");
+
+        Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["fHanmucNganhDX"], "0");
+        Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["fTongVonBoTriNganh"], "0");
+        Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["fVon5namNganhDX"], "0");
+        Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["fVonsaunamNganhDX"], "0");
+        Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["fHanmucCucTCDX"], "0");
+        Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["fTongVonBoTriCuc"], "0");
+        Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["fVon5namCTCDX"], "0");
+        Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["fVonnamthunhatCTC"], "0");
+        Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["fVonsaunamCTCDexuat"], "0");
+        Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["fCucTCDeXuat"], "0");
+        Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["fDuKienBoTriNamThu2"], "0");
     }
 
     //TH là row cha thì cho copy như bình thường
@@ -648,10 +662,10 @@ function BangDuLieu_ThemHangChiTietDuAn(h, hGiaTri) {
 
     // cập nhật lại giá trị cho dòng cha
     if (LevelGiaTri == "1" || LevelGiaTri == "2") {
-        Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["iGiaiDoanTu"], "");
-        Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["iGiaiDoanDen"], "");
-        Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["sDiaDiem"], "");
-        Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["sTenLoaiCongTrinh"], "");
+       // Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["iGiaiDoanTu"], "");
+        //Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["iGiaiDoanDen"], "");
+       // Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["sDiaDiem"], "");
+       Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["sTenLoaiCongTrinh"], "");
         //Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["sTenNganSach"], "");                         
         //Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["fHanMucDauTu"], "0");
         //Bang_GanGiaTriThatChoO(hGiaTri, Bang_arrCSMaCot["fTongSo"], "0");
@@ -704,14 +718,14 @@ function BangDuLieu_ThemHangChiTietDuAn(h, hGiaTri) {
 
     for (c = 0; c < Bang_nC; c++) {
         if (itemParent != '' && itemParent != GUID_EMPTY) {
-            if (c > 0 && c <= 23 && c != 9 && c != 10 && c != 11 && c != 13 && c != 15 && c != 17 && c != 19 && c != 21 && c != 22 && c != 2) {
+            if (c > 0 && c <= 36 && c != 9 && c != 10 && c != 11 && c != 13 && c != 15 && c != 17 && c != 19 && c != 21 && c != 22 && c != 2 && c != 26 && c != 30 && c != 22 && c != 18) {
                 Bang_arrEdit[csH][c] = true;
             } else {
                 Bang_arrEdit[csH][c] = false;
             }
         }
         else {
-            if (c > 0 && c <= 23 && c != 9 && c != 10 && c != 16 && c != 2) {
+            if (c > 0 && c <= 36 && c != 9 && c != 10 && c != 16 && c != 2 && c != 26 && c != 30 && c != 22 && c != 18) {
                 Bang_arrEdit[csH][c] = true;
             } else {
                 Bang_arrEdit[csH][c] = false;
@@ -767,25 +781,48 @@ function ValidateData() {
 
         var fHanMucDauTu = Bang_arrGiaTri[j][Bang_arrCSMaCot["fHanMucDauTu"]];
 
-        var fVon5namNganhDX = Bang_arrGiaTri[h][Bang_arrCSMaCot["fVon5namNganhDX"]];
-        var fVonsaunamNganhDX = Bang_arrGiaTri[h][Bang_arrCSMaCot["fVonsaunamNganhDX"]];
-        var fHanmucNganhDX = Bang_arrGiaTri[h][Bang_arrCSMaCot["fHanmucNganhDX"]];
-        var fVon5namCTCDX = Bang_arrGiaTri[h][Bang_arrCSMaCot["fVon5namCTCDX"]];
-        var fVonsaunamCTCDexuat = Bang_arrGiaTri[h][Bang_arrCSMaCot["fVonsaunamCTCDexuat"]];
-        var fHanmucCucTCDX = Bang_arrGiaTri[h][Bang_arrCSMaCot["fHanmucCucTCDX"]];
+        var fVon5namNganhDX = Bang_arrGiaTri[j][Bang_arrCSMaCot["fVon5namNganhDX"]];
+        var fVonsaunamNganhDX = Bang_arrGiaTri[j][Bang_arrCSMaCot["fVonsaunamNganhDX"]];
+        var fHanmucNganhDX = Bang_arrGiaTri[j][Bang_arrCSMaCot["fHanmucNganhDX"]];
+
+
+        var fVon5namCTCDX = Bang_arrGiaTri[j][Bang_arrCSMaCot["fVon5namCTCDX"]];
+        var fVonsaunamCTCDexuat = Bang_arrGiaTri[j][Bang_arrCSMaCot["fVonsaunamCTCDexuat"]];
+        var fHanmucCucTCDX = Bang_arrGiaTri[j][Bang_arrCSMaCot["fHanmucCucTCDX"]];
+
         var fTongVonBoTriNganh = fVon5namNganhDX + fVonsaunamNganhDX;
         var fTongVonBoTriCuc = fVon5namCTCDX + fVonsaunamCTCDexuat;
         var fGiaTriSauNganh = fHanmucNganhDX - fTongVonBoTriNganh;
         var fGiaTriSauCuc = fHanmucCucTCDX - fTongVonBoTriCuc;
+
+        var isModifier = Bang_arrGiaTri[j][Bang_arrCSMaCot["iID_ParentID"]] == '' ? false : true;
 
         var fTongSo = fGiaTriNamThuNhat + fGiaTriNamThuHai + fGiaTriNamThuBa + fGiaTriNamThuTu + fGiaTriNamThuNam;
         var fTongSoDc = fGiaTriNamThuNhatDc + fGiaTriNamThuHaiDc + fGiaTriNamThuBaDc + fGiaTriNamThuTuDc + fGiaTriNamThuNamDc;
         var fGiaTriSau5Nam = fHanMucDauTu - fTongSo;
         var fGiaTriSau5NamDC = fHanMucDauTu - fTongSoDc;
 
-        if (fGiaTriSau5Nam < 0 || fGiaTriSau5NamDC < 0 || fGiaTriSauNganh < 0 || fGiaTriSauCuc < 0 ) {
-            sMessError.push('Tổng vốn bố trí không được vượt quá hạn mức đầu tư.');
+        //if (fGiaTriSau5Nam < 0 || fGiaTriSau5NamDC < 0 || fGiaTriSauNganh < 0 || fGiaTriSauCuc < 0 ) {
+        //    sMessError.push('Tổng vốn bố trí không được vượt quá hạn mức đầu tư.');
+        //}
+        if (isModifier) {
+            if (fGiaTriSau5NamDC < 0) {
+                sMessError.push('Tổng vốn bố trí không được vượt quá hạn mức đầu tư.');
+            }
+        } else {
+            if (fGiaTriSau5Nam < 0) {
+                sMessError.push('Tổng vốn bố trí không được vượt quá hạn mức đầu tư.');
+            }
+            if (fGiaTriSauNganh < 0) {
+                sMessError.push('Tổng vốn bố trí ngành không được vượt quá hạn mức đầu tư.');
+
+            }
+            if (fGiaTriSauCuc < 0) {
+                sMessError.push('Tổng vốn bố trí cục không được vượt quá hạn mức đầu tư.');
+
+            }
         }
+
 
         if (itemDelete != true) {
             var itemParent = Bang_LayGiaTri(j, "iID_ParentModified");
@@ -843,7 +880,7 @@ function ValidateData() {
                 objectCt.iID_DuAnID = Bang_arrGiaTri[j][Bang_arrCSMaCot["iID_DuAnID"]];
                 objectCt.iID_MaDonVi = Bang_arrGiaTri[j][Bang_arrCSMaCot["iID_MaDonVi"]];
                 listItemChiTiet.push(objectCt);
-            }            
+            }
         }
     }
 
@@ -949,16 +986,16 @@ function setFontWeight() {
 
 // ẩn các giá trị k muốn show trên dòng của một nhóm dự án
 function hideGroupDuAnProps(row) {
-    Bang_arrGiaTri[row][Bang_arrCSMaCot['iGiaiDoanTu']] = "";
-    Bang_arrGiaTri[row][Bang_arrCSMaCot['iGiaiDoanDen']] = "";
+    //Bang_arrGiaTri[row][Bang_arrCSMaCot['iGiaiDoanTu']] = "";
+   // Bang_arrGiaTri[row][Bang_arrCSMaCot['iGiaiDoanDen']] = "";
     //Bang_arrGiaTri[row][Bang_arrCSMaCot['sDonViThucHienDuAn']] = "";
-    Bang_arrGiaTri[row][Bang_arrCSMaCot['sDiaDiem']] = "";
+   // Bang_arrGiaTri[row][Bang_arrCSMaCot['sDiaDiem']] = "";
 }
 
 function hideGroupDuAnProps2(row) {
-    Bang_arrGiaTri[row][Bang_arrCSMaCot['iGiaiDoanTu']] = "";
-    Bang_arrGiaTri[row][Bang_arrCSMaCot['iGiaiDoanDen']] = "";
-    Bang_arrGiaTri[row][Bang_arrCSMaCot['sDiaDiem']] = "";
+    //Bang_arrGiaTri[row][Bang_arrCSMaCot['iGiaiDoanTu']] = "";
+    //Bang_arrGiaTri[row][Bang_arrCSMaCot['iGiaiDoanDen']] = "";
+    //Bang_arrGiaTri[row][Bang_arrCSMaCot['sDiaDiem']] = "";
 }
 
 // in đậm dòng là nhóm dự án, vì nếu không có dự án thuộc nó thì nó sẽ k được in đậm

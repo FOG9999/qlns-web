@@ -10,6 +10,10 @@ var iID_ThongTriID = GUID_EMPTY
 $(document).ready(function () {
     iID_ThongTriID = $("#iID_ThongTriID").val();
     layChiTiet();
+
+    // hide năm ngân sách nếu loại cấp phát là thanh toán hoặc tạm ứng
+    if (['1', '2'].indexOf($('#loaiThongTri').val()) >= 0)
+        $('.divNamNganSach').hide();
 });
 
 
@@ -60,7 +64,7 @@ function layChiTiet() {
                 if (data.lstThuHoi.length > 0) {
                     lstThuHoi = data.lstThuHoi;
                     var htmlThuHoi = "";
-                    data.htmlThuHoi.forEach(function (x) {
+                    data.lstThuHoi.forEach(function (x) {
                         htmlThuHoi += "<tr>";
                         htmlThuHoi += "<input class='id_input' value=" + x.IIdDeNghiThanhToanId + "/>";
                         htmlThuHoi += " <td align=\"center\">" + x.SM + "</td>";

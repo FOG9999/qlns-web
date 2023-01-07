@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Viettel.Domain.DomainModel;
+using Viettel.Extensions;
 
 namespace Viettel.Models.QLVonDauTu
 {
@@ -25,5 +27,7 @@ namespace Viettel.Models.QLVonDauTu
         public string TM { get; set; }
         public string TTM { get; set; }
         public string NG { get; set; }
+        public string TNG1 { get; set; }
+        public string TNG2 { get; set; }
     }
 }

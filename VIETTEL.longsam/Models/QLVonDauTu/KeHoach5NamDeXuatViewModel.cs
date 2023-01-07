@@ -57,6 +57,7 @@ namespace Viettel.Models.QLVonDauTu
         public string sSTT { get; set; }
         public string sTen { get; set; }
         public string sTenDonViQL { get; set; }
+        public string sMaDonVi { get; set; }
         public string sDiaDiem { get; set; }
         public string iGiaiDoanTu { get; set; }
         public string iGiaiDoanDen { get; set; }
@@ -89,6 +90,10 @@ namespace Viettel.Models.QLVonDauTu
         public string sMaOrder { get; set; }
         public string iIndexCode { get; set; }
         public string sMaLoaiCongTrinh { get; set; }
+        public string sTenChuDauTu { get; set; }
+        public string sMaDuAn { get; set; }
+        public string sSoQuyetDinhCTDT { get; set; }
+        public string sMaChuDauTu { get; set; }
     }
 
     public class DonViTinhModel

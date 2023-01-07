@@ -243,3 +243,26 @@ table th {
     display: table;
     table-layout: fixed;
 }
+
+.dot {
+    height: 25px;
+    width: 25px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+    .dot i {
+        padding-top: 4px;
+        padding-left: 1px;
+    }
+
+.dot-success {
+    background-color: green;
+    color: white;
+}
+
+.dot-error {
+    background-color: red;
+    color: white;
+}

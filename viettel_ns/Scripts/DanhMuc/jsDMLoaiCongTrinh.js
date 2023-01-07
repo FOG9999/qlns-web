@@ -3,7 +3,7 @@ var CONFIRM = 0;
 var ERROR = 1;
 
 $(document).ready(function () {
-    GetListData();
+    //GetListData();
 });
 
 function CancelSaveData() {
@@ -74,7 +74,15 @@ function SaveData() {
         data: { data: data },
         success: function (r) {
             if (r.bIsComplete) {
+                if (data.iID_LoaiCongTrinh == undefined || data.iID_LoaiCongTrinh == null || data.iID_LoaiCongTrinh == GUID_EMPTY || data.iID_LoaiCongTrinh == "") {
+                    alert("Thêm mới bản ghi " + data.sTenLoaiCongTrinh + " thành công.")
+
+                } else {
+                    alert("Cập nhật bản ghi " + data.sTenLoaiCongTrinh + " thành công.")
+
+                }
                 window.location.href = "/DanhMuc/DMLoaiCongTrinh/Index";
+                ChangePage();
             } else {
                 var Title = 'Lỗi lưu danh mục loại công trình';
                 var messErr = [];
@@ -107,7 +115,7 @@ function DeleteItem(id) {
     });
 }
 
-function Delete(id) {
+function Delete(id, sTenLoaiCongTrinh) {
     $.ajax({
         type: "POST",
         url: "/DanhMuc/DMLoaiCongTrinh/DeleteItem",
@@ -126,7 +134,8 @@ function Delete(id) {
                     }
                 });
             }
-            GetListData();
+            alert("Xoa bản ghi " + r.sTenLoaiCongTrinh + " thành công.");
+            ChangePage();
         }
     });
 }
@@ -208,10 +217,19 @@ function GetListData() {
 
                 { sTitle: "Mã loại công trình", sField: "sMaLoaiCongTrinh", iWidth: "10%", sTextAlign: "left" },
                 { sTitle: "Tên viết tắt", sField: "sTenVietTat", iWidth: "10%", sTextAlign: "left" },
-                { sTitle: "Tên loại công trình", sField: "sMaLoaiCongTrinh-sTenLoaiCongTrinh", iWidth: "24%", sTextAlign: "left", bHaveIcon: 1 },
-                { sTitle: "Mô tả", sField: "sMoTa", iWidth: "20%", sTextAlign: "left"},
+                { sTitle: "Tên loại công trình", sField: "sMaLoaiCongTrinh-sTenLoaiCongTrinh", iWidth: "15%", sTextAlign: "left", bHaveIcon: 1 },
+                { sTitle: "Mô tả", sField: "sMoTa", iWidth: "10%", sTextAlign: "left"},
                 { sTitle: "Thứ tự", sField: "iThuTu", iWidth: "5%", sTextAlign: "center" },
-                { sTitle: "Tên loại công trình cha", sField: "sTenLoaiCha", iWidth: "15%", sTextAlign: "left" },
+                { sTitle: "Tên loại công trình cha", sField: "sTenLoaiCha", iWidth: "10%", sTextAlign: "left" },
+                { sTitle: "LNS", sField: "LNS", iWidth: "5%", sTextAlign: "left" },
+                { sTitle: "L", sField: "L", iWidth: "5%", sTextAlign: "left" },
+                { sTitle: "K", sField: "K", iWidth: "5%", sTextAlign: "left" },
+                { sTitle: "TM", sField: "TM", iWidth: "5%", sTextAlign: "left" },
+                { sTitle: "TTM", sField: "TTM", iWidth: "5%", sTextAlign: "left" },
+                { sTitle: "NG", sField: "NG", iWidth: "5%", sTextAlign: "left" },
+                { sTitle: "TNG1", sField: "TNG1", iWidth: "5%", sTextAlign: "left" },
+                { sTitle: "TNG2", sField: "TNG2", iWidth: "5%", sTextAlign: "left" },
+
             ];
             var button = { bUpdate: 1, bDelete: 1, bInfo: 1 };
             var sortedData = r.data.sort((a, b) => {
@@ -247,10 +265,18 @@ function GetListData_By_Name() {
                     { sField: "iID_Parent", bParentKey: true },
                     { sTitle: "Mã loại công trình", sField: "sMaLoaiCongTrinh", iWidth: "10%", sTextAlign: "left" },
                     { sTitle: "Tên viết tắt", sField: "sTenVietTat", iWidth: "10%", sTextAlign: "left" },
-                    { sTitle: "Tên loại công trình", sField: "sMaLoaiCongTrinh-sTenLoaiCongTrinh", iWidth: "24%", sTextAlign: "left", bHaveIcon: 1 },
-                    { sTitle: "Mô tả", sField: "sMoTa", iWidth: "20%", sTextAlign: "left" },
+                    { sTitle: "Tên loại công trình", sField: "sMaLoaiCongTrinh-sTenLoaiCongTrinh", iWidth: "15%", sTextAlign: "left", bHaveIcon: 1 },
+                    { sTitle: "Mô tả", sField: "sMoTa", iWidth: "10%", sTextAlign: "left" },
                     { sTitle: "Thứ tự", sField: "iThuTu", iWidth: "5%", sTextAlign: "center" },
-                    { sTitle: "Tên loại công trình cha", sField: "sTenLoaiCha", iWidth: "15%", sTextAlign: "left" }
+                    { sTitle: "Tên loại công trình cha", sField: "sTenLoaiCha", iWidth: "10%", sTextAlign: "left" },
+                    { sTitle: "LNS", sField: "LNS", iWidth: "5%", sTextAlign: "left" },
+                    { sTitle: "L", sField: "L", iWidth: "5%", sTextAlign: "left" },
+                    { sTitle: "K", sField: "K", iWidth: "5%", sTextAlign: "left" },
+                    { sTitle: "TM", sField: "TM", iWidth: "5%", sTextAlign: "left" },
+                    { sTitle: "TTM", sField: "TTM", iWidth: "5%", sTextAlign: "left" },
+                    { sTitle: "NG", sField: "NG", iWidth: "5%", sTextAlign: "left" },
+                    { sTitle: "TNG1", sField: "TNG1", iWidth: "5%", sTextAlign: "left" },
+                    { sTitle: "TNG2", sField: "TNG2", iWidth: "5%", sTextAlign: "left" },
                 ];
                 var button = { bUpdate: 1, bDelete: 1, bInfo: 1 };
                 var sHtml = GenerateTreeTable(r.data, columns, button, true, true, isShowSearchDMLoaiCongTrinh)
@@ -273,3 +299,35 @@ function filter() {
         }
     });
     }
+
+
+function ChangePage(iCurrentPage = 1) {
+    var sTenLoaiCongTrinh = $("#txtsTenLoaiCongTrinh").val();
+    var sTenVietTat = $("#txtTenVietTat").val();
+    var sMaLoaiCongTrinh = $("#txtMaLoaiCongTrinh").val();
+    var iThuTu = $("#txtiThuTu").val();
+    var sMoTa = $("#txtsMoTa").val();
+
+    GetListData(sTenLoaiCongTrinh, sTenVietTat, sMaLoaiCongTrinh, iThuTu, sMoTa, iCurrentPage);
+}
+
+function GetListData(sTenLoaiCongTrinh, sTenVietTat, sMaLoaiCongTrinh, iThuTu, sMoTa, iCurrentPage) {
+    _paging.CurrentPage = iCurrentPage;
+    $.ajax({
+        type: "POST",
+        dataType: "html",
+        url: "/DanhMuc/DMLoaiCongTrinh/GetListLoaiCongTrinhByName",
+        data: {
+            _paging: _paging, sTenLoaiCongTrinh: sTenLoaiCongTrinh, sTenVietTat: sTenVietTat, sMaLoaiCongTrinh: sMaLoaiCongTrinh,
+            iThuTu: iThuTu, sMoTa: sMoTa       },
+        success: function (data) {
+            $("#lstDataView").html(data);
+
+            $("#txtMaLoaiCongTrinh").val(sMaLoaiCongTrinh);
+            $("#txtTenVietTat").val(sTenVietTat);
+            $("#txtsTenLoaiCongTrinh").val(sTenLoaiCongTrinh);
+            $("#txtiThuTu").val(iThuTu);
+            $("#txtsMoTa").val(sMoTa);
+        }
+    });
+}

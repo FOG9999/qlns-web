@@ -40,7 +40,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
 
         public string sDonVi
         {
-            get => getTenNSDonVi(iID_DonViID);
+            get => getTenDonVi(iID_DonViID);
         }
 
         private string getTenDonVi(Guid? iID_DonViQuanLyID)

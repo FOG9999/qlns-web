@@ -52,7 +52,7 @@
                     <td align="center" style="vertical-align: middle !important" class="col-sm-12">
                         <button type="button" class="btn-detail" onclick="OpenModalDetail('@item.iID_ChiPhi')" data-toggle="modal" data-target="#modalLoaiChiPhi"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></button>
                         <button type="button" class="btn-edit" onclick="OpenModal('@item.iID_ChiPhi')" data-toggle="modal" data-target="#modalLoaiChiPhi"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
-                        <button type="button" class="btn-delete" onclick="DeleteItem('@item.iID_ChiPhi')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
+                        <button type="button" class="btn-delete" onclick="DeleteItem('@item.iID_ChiPhi','@item.sTenChiPhi')"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></button>
                     </td>
                 </tr>
             }

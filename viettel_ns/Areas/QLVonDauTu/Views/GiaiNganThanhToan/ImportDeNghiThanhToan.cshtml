@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Import đề nghị thanh toán.";
+    Layout = "~/Views/Shared/_LayoutWebNew.cshtml";
+}
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/css/DanhMuc/style.css">
+    <script src="~/Scripts/QLVonDauTu/NganSachQuocPhong/jsVDT_ImportDeNghiThanhToan.js"></script>
+}
+
+<div class="main">
+    <div class="panel-list-item col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                @Html.Partial("_sheetImport")
+            </div>
+        </div>
+    </div>
+</div>

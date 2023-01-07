@@ -516,9 +516,9 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                     conn.Open();
                     var trans = conn.BeginTransaction();
                     var qdDauTu = conn.Get<VDT_DA_QDDauTu>(id, trans);
+                    if(qdDauTu != null) sSoQuyetDinh = qdDauTu.sSoQuyetDinh;
                     if (qdDauTu != null && qdDauTu.iID_ParentID != null)
                     {
-                        sSoQuyetDinh = qdDauTu.sSoQuyetDinh;
                         var qdDauTuParent = conn.Get<VDT_DA_QDDauTu>(qdDauTu.iID_ParentID, trans);
                         if (qdDauTuParent != null && qdDauTuParent.iID_DuAnID != null && qdDauTuParent.iID_DuAnID != Guid.Empty)
                         {

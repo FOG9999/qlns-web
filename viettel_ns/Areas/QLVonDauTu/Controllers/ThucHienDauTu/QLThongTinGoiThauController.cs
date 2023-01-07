@@ -1,6 +1,13 @@
 ﻿using DapperExtensions;
+using FlexCel.Core;
+using FlexCel.Render;
+using FlexCel.Report;
+using FlexCel.XlsAdapter;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -8,12 +15,16 @@ using System.Web.Mvc;
 using Viettel.Domain.DomainModel;
 using Viettel.Models.QLVonDauTu;
 using Viettel.Services;
+using VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong;
+using VIETTEL.Areas.z.Models;
 using VIETTEL.Common;
 using VIETTEL.Controllers;
+using VIETTEL.Helpers;
+using static VTS.QLNS.CTC.App.Service.UserFunction.FormatNumber;
 
 namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThucHienDauTu
 {
-    public class QLThongTinGoiThauController : AppController
+    public class QLThongTinGoiThauController : FlexcelReportController
     {
         private readonly IQLVonDauTuService _vonDauTuService = QLVonDauTuService.Default;
         INganSachService _iNganSachService = NganSachService.Default;
@@ -50,6 +61,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThucHienDauTu
             return View(objDotnhan);
         }
         
+        public ActionResult Import()
+        {
+            return View();
+        }
 
         public ActionResult Add()
         {
@@ -70,9 +85,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThucHienDauTu
         [HttpPost]
         public JsonResult Save(ThongTinGoiThauViewModel model)
         {
+
+            var sMessage = string.Format(Constants.THEM_BAN_GHI, model.sSoQuyetDinh);
             using (var conn = ConnectionFactory.Default.GetConnection())
             {
-                var sMessage = string.Format("Thêm mới bản ghi {0} thành công", model.sSoQuyetDinh);
                 if (model.iID_GoiThauID != null || model.iID_GoiThauID != Guid.Empty)
                 {
                     sMessage = sMessage.Replace("Thêm mới", "Cập nhật");
@@ -110,16 +126,25 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThucHienDauTu
                 }
                 catch (Exception ex)
                 {
+                    return Json(new { status = false, sMessage = sMessage }, JsonRequestBehavior.AllowGet);
 
                 }
-                
+
             }
-            return Json(new { status = true }, JsonRequestBehavior.AllowGet);
+            return Json(new { status = true,sMessage = sMessage }, JsonRequestBehavior.AllowGet);
         }
 
-        public bool Delete(Guid id)
+        public JsonResult Delete(Guid id)
         {
-            return _vonDauTuService.DeleteGoiThau(id, Username);
+            var entity = _vonDauTuService.GetThongTinGoiThauById(id);
+            var sMessage = Constants.XOA_BAN_GHI;
+            if (entity != null)
+            {
+                sMessage = string.Format(sMessage, entity.sSoQuyetDinh);
+            }
+            bool status = _vonDauTuService.DeleteGoiThau(id, Username);
+            return Json(new { bIsComplete = status, sMessage = sMessage }, JsonRequestBehavior.AllowGet);
+             
         }
         public ActionResult DieuChinh(Guid id)
         {
@@ -293,6 +318,246 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThucHienDauTu
             var listGoiThauHangMuc = _vonDauTuService.GetListHangMucChuaDieuChinhByGoiThau(id);
             var listHopDong = _vonDauTuService.GetThongTinHopDong(id);
             return Json(new { status = true, nguonvon = listGoiThauNguonVon,chiphi = listGoiThauChiPhi, hangmuc = listGoiThauHangMuc, hopdong = listHopDong });
+        }
+
+        [HttpPost]
+        public JsonResult OnExport(List<Guid> ids)
+        {
+            try
+            {
+                List<ThongTinGoiThauViewModel> lstGoiThau = _vonDauTuService.GetThongTinGoiThauByListGoiThauId(ids);
+                if (lstGoiThau != null)
+                {
+                    int i = 1;
+                    foreach (var item in lstGoiThau)
+                    {
+                        item.IStt = i;
+                        i++;
+                    }
+                }
+                var lstNhaThau = _vonDauTuService.GetAllNhaThau();
+                XlsFile Result = new XlsFile(true);
+                FlexCelReport fr = new FlexCelReport();
+                fr.AddTable("Items", lstGoiThau);
+                fr.AddTable("ItemsNhaThau", lstNhaThau);
+                Result.Open(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/Import-Goithau-DuAn.xlsx"));
+                fr.Run(Result);
+                TempData["DataExportGoiThauXls"] = Result;
+                FlexCelPdfExport pdf = new FlexCelPdfExport(Result, true);
+                var bufferPdf = new MemoryStream();
+                pdf.Export(bufferPdf);
+            }
+            catch(Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+            return Json(new { status = true}, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult ExportReport()
+        {
+            ExcelFile xls = (ExcelFile)TempData["DataExportGoiThauXls"];
+            return Print(xls, "xls", string.Format("Import-Goithau-DuAn_{0}.xlsx", DateTime.Now.ToString("ddMMyyyy_HHmm")));
+        }
+
+        [HttpPost]
+        public JsonResult LoadDataExcel(HttpPostedFileBase file)
+        {
+            try
+            {
+                List<string> lstError = new List<string>();
+                if (file == null) return Json(new { bIsComplete = false, sMessError = "Chưa chọn file import !" }, JsonRequestBehavior.AllowGet);
+                var file_data = getBytes(file);
+                var dt = ExcelHelpers.LoadExcelDataTable(file_data);
+                IEnumerable<VdtDaGoiThauImportModel> dataImport = excel_result(dt, ref lstError);
+                return Json(new { bIsComplete = true, data = dataImport, ListError = lstError }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                AppLog.LogError(this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+
+            return Json(new { bIsComplete = false, sMessError = "Có lỗi xảy ra trong file import !" }, JsonRequestBehavior.AllowGet);
+        }
+
+        private byte[] getBytes(HttpPostedFileBase file)
+        {
+            using (BinaryReader b = new BinaryReader(file.InputStream))
+            {
+                byte[] xls = b.ReadBytes(file.ContentLength);
+                return xls;
+            }
+        }
+
+        private IEnumerable<VdtDaGoiThauImportModel> excel_result(System.Data.DataTable dt, ref List<string> lstError)
+        {
+            Dictionary<string, Guid> dicMaDuAn = new Dictionary<string, Guid>();
+            Dictionary<string, Guid> dicNhaThau = new Dictionary<string, Guid>();
+
+            var lstAllDuAn = _vonDauTuService.GetVDTDADuAn();
+            if (lstAllDuAn != null)
+            {
+                foreach (var item in lstAllDuAn)
+                {
+                    if (!dicMaDuAn.ContainsKey(item.sMaDuAn)) dicMaDuAn.Add(item.sMaDuAn, item.iID_DuAnID);
+                }
+            }
+            var lstAllNhaThau = _vonDauTuService.GetAllNhaThau();
+            if (lstAllNhaThau != null)
+            {
+                foreach (var item in lstAllNhaThau)
+                {
+                    if (!dicNhaThau.ContainsKey(item.sMaNhaThau)) dicNhaThau.Add(item.sMaNhaThau, item.iID_NhaThauID);
+                }
+            }
+
+            List<VdtDaGoiThauImportModel> dataImport = new List<VdtDaGoiThauImportModel>();
+
+            var items = dt.AsEnumerable().Where(x => x.Field<string>(0) != "" || x.Field<string>(0) != null || x.Field<string>(0) != "null");
+            int index = 1;
+            for (var i = 2; i < items.Count(); i++)
+            {
+                DataRow r = items.ToList()[i];
+
+                var IStt = r.Field<string>(0);
+                var sMaDuAn = r.Field<string>(1);
+                var sSoQuyetDinh = r.Field<string>(2);
+                var sNgayQuyetDinh = r.Field<string>(3);
+                var sTenGoiThau = r.Field<string>(4);
+                var fTienTrungThau = r.Field<string>(5);
+                var iThoiGianThucHien = r.Field<string>(6);
+                var sMaNhaThau = r.Field<string>(7);
+
+                var e = new VdtDaGoiThauImportModel
+                {
+                    IStt = string.IsNullOrEmpty(IStt) ? string.Empty : IStt,
+                    sMaDuAn = string.IsNullOrEmpty(sMaDuAn) ? string.Empty : sMaDuAn,
+                    sSoQuyetDinh = string.IsNullOrEmpty(sSoQuyetDinh) ? string.Empty : sSoQuyetDinh,
+                    sNgayQuyetDinh = string.IsNullOrEmpty(sNgayQuyetDinh) ? string.Empty : sNgayQuyetDinh,
+                    sTenGoiThau = string.IsNullOrEmpty(sTenGoiThau) ? string.Empty : sTenGoiThau,
+                    fTienTrungThau = string.IsNullOrEmpty(fTienTrungThau) ? string.Empty : fTienTrungThau,
+                    iThoiGianThucHien = string.IsNullOrEmpty(iThoiGianThucHien) ? string.Empty : iThoiGianThucHien,
+                    sMaNhaThau = string.IsNullOrEmpty(sMaNhaThau) ? string.Empty : sMaNhaThau,
+                };
+                e.bIsError = ValidateChungTuChiTietImport(index, e, dicMaDuAn, dicNhaThau, ref lstError);
+                dataImport.Add(e);
+                index++;
+            }
+            return dataImport.AsEnumerable();
+        }
+
+        public bool ValidateChungTuChiTietImport(int index, VdtDaGoiThauImportModel item, Dictionary<string, Guid> dicMaDuAn, Dictionary<string, Guid> dicNhaThau, ref List<string> lstError)
+        {
+            double dDoublePare = 0;
+            int iIntPare = 0;
+            DateTime dDatePare = DateTime.Now;
+            bool bIsError = false;
+
+            if (string.IsNullOrEmpty(item.sMaDuAn))
+            {
+                lstError.Add(string.Format("Dòng {0} - Chưa nhập dữ liệu {1} !", index, "mã dự án"));
+                bIsError = true;
+            }
+            else if (!dicMaDuAn.ContainsKey(item.sMaDuAn))
+            {
+                lstError.Add(string.Format("Dòng {0} - Không tìm thấy dự án [{1}] !", index, item.sMaDuAn));
+                bIsError = true;
+            }
+
+            if(!string.IsNullOrEmpty(item.sNgayQuyetDinh) && !DateTime.TryParseExact(item.sNgayQuyetDinh, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dDatePare))
+            {
+                lstError.Add(string.Format("Dòng {0} - Ngày quyết định không đúng định dạng !", index));
+                bIsError = true;
+            }
+
+            if (string.IsNullOrEmpty(item.sTenGoiThau))
+            {
+                lstError.Add(string.Format("Dòng {0} - Chưa nhập dữ liệu {1} !", index, "tên gói thầu"));
+                bIsError = true;
+            }
+
+            if (string.IsNullOrEmpty(item.fTienTrungThau))
+            {
+                lstError.Add(string.Format("Dòng {0} - Chưa nhập dữ liệu {1} !", index, "giá gói thầu"));
+                bIsError = true;
+            }else if(!double.TryParse(item.fTienTrungThau,out dDoublePare))
+            {
+                lstError.Add(string.Format("Dòng {0} - Giá gói thầu không đúng định dạng !", index));
+                bIsError = true;
+            }
+
+            if (string.IsNullOrEmpty(item.iThoiGianThucHien))
+            {
+                lstError.Add(string.Format("Dòng {0} - Chưa nhập dữ liệu {1} !", index, "thời gian thực hiện"));
+                bIsError = true;
+            }
+            else if(!int.TryParse(item.iThoiGianThucHien, out iIntPare))
+            {
+                lstError.Add(string.Format("Dòng {0} - Thời gian thực hiện không đúng định dạng !", index));
+                bIsError = true;
+            }
+
+            if(!string.IsNullOrEmpty(item.sMaNhaThau) && !dicNhaThau.ContainsKey(item.sMaNhaThau))
+            {
+                lstError.Add(string.Format("Dòng {0} - Không tìm thấy nhà thầu [{1}] !", index, item.sMaNhaThau));
+            }
+
+            return bIsError;
+        }
+
+        public JsonResult OnSaveDataImport(List<VdtDaGoiThauImportModel> lstData)
+        {
+            try
+            {
+                Dictionary<string, Guid> dicMaDuAn = new Dictionary<string, Guid>();
+                Dictionary<string, Guid> dicNhaThau = new Dictionary<string, Guid>();
+                var lstAllDuAn = _vonDauTuService.GetVDTDADuAn();
+                if (lstAllDuAn != null)
+                {
+                    foreach (var item in lstAllDuAn)
+                    {
+                        if (!dicMaDuAn.ContainsKey(item.sMaDuAn)) dicMaDuAn.Add(item.sMaDuAn, item.iID_DuAnID);
+                    }
+                }
+                var lstAllNhaThau = _vonDauTuService.GetAllNhaThau();
+                if (lstAllNhaThau != null)
+                {
+                    foreach (var item in lstAllNhaThau)
+                    {
+                        if (!dicNhaThau.ContainsKey(item.sMaNhaThau)) dicNhaThau.Add(item.sMaNhaThau, item.iID_NhaThauID);
+                    }
+                }
+
+                List<VDT_DA_GoiThau> lstGoiThau = new List<VDT_DA_GoiThau>();
+                foreach (var item in lstData)
+                {
+                    Guid iId = Guid.NewGuid();
+                    VDT_DA_GoiThau obj = new VDT_DA_GoiThau();
+                    obj.iID_DuAnID = dicMaDuAn[item.sMaDuAn];
+                    obj.sSoQuyetDinh = item.sSoQuyetDinh;
+                    if (!string.IsNullOrEmpty(item.sNgayQuyetDinh))
+                        obj.dNgayQuyetDinh = DateTime.ParseExact(item.sNgayQuyetDinh, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    obj.sTenGoiThau = item.sTenGoiThau;
+                    obj.fTienTrungThau = double.Parse(item.fTienTrungThau);
+                    obj.iThoiGianThucHien = int.Parse(item.iThoiGianThucHien);
+                    if (!string.IsNullOrEmpty(item.sMaNhaThau))
+                        obj.iID_NhaThauID = dicNhaThau[item.sMaNhaThau];
+                    obj.iID_GoiThauID = iId;
+                    obj.iID_GoiThauGocID = iId;
+                    obj.bActive = true;
+                    obj.dDateCreate = DateTime.Now;
+                    obj.sUserCreate = Username;
+                    lstGoiThau.Add(obj);
+                }
+                _vonDauTuService.AddRangerVdtDaGoiThau(lstGoiThau);
+                return Json(new { bIsSuccess = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return Json(new { bIsSuccess = false }, JsonRequestBehavior.AllowGet);
         }
     }
 }

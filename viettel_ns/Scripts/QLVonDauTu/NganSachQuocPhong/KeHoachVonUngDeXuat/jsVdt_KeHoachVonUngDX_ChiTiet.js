@@ -49,8 +49,9 @@ $(document).ready(function () {
 function HiddenLabelTongHop() {
     //$(".divbutton").hide();
     //$(".btnsaveChiTiet").hide();
-    $(".ctxt_sfGiaTriDeNghi").attr('disabled', true);
-    $(".ctxt_sGhiChu").attr('disabled', true);
+    // Sửa lại tổng hợp cũng được chỉnh sửa
+    $(".ctxt_sfGiaTriDeNghi").attr('disabled', false);
+    $(".ctxt_sGhiChu").attr('disabled', false);
 }
 
 function GetDataChiTietTable() {
@@ -62,6 +63,8 @@ function GetDataChiTietTable() {
         obj.iID_DuAnID = $(item).find(".c_iID_DuAnID").val();
         obj.iID_KeHoachUngID = $(item).find(".c_iID_KeHoachUngID").val();
         obj.Id = $(item).find(".c_iID_KeHoachUngChiTiet").val();
+        obj.iID_LoaiCongTrinhID = $(item).find(".c_iID_LoaiCongTrinhID").val();
+        obj.iID_DuAn_HangMucID = $(item).find(".c_iID_DuAn_HangMucID").val();
         obj.sMaDuAn = $(item).find(".c_sMaDuAn").text();
         obj.sTenDuAn = $(item).find(".c_sTenDuAn").text();
         obj.fTongMucDauTu = $(item).find(".c_fTongMucDauTu").text() != 0 ? UnFormatNumber($(item).find(".c_fTongMucDauTu").text()) : 0;

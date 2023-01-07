@@ -19,6 +19,8 @@ namespace Viettel.Models.QLVonDauTu
     public class VDT_KT_KhoiTao_DuLieu_ChiTiet_ViewModel : VDT_KT_KhoiTao_DuLieu_ChiTiet
     {
         public int STT { get; set; }
+        public string sTenDuAn { get; set; }
+        public string sMaLoaiCongTrinh { get; set; }
         public List<VDT_KT_KhoiTao_DuLieu_ChiTiet_ThanhToan> LstThanhToan { get; set; }
     }
 }
