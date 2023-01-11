@@ -82,7 +82,64 @@ function LoadListNguonVonByDuAn() {
     });
 }
 
+function LoadListHangMucByDuAn() {
+    var id = $("#iID_DuAnID").val();
+    if (id == GUID_EMPTY) return;
 
+    $.ajax({
+        url: "/QLVonDauTu/ChuTruongDauTu/LayDanhSachHangMucTheoDuAnId",
+        type: "POST",
+        data: { iID: id },
+        dataType: "json",
+        cache: false,
+        success: function (data) {
+            $("#tblHangMucChinh tbody tr").remove();
+            arr_HangMuc = [];
+
+            if (data != null) {
+                for (var i = 0; i < data.length; i++) {
+                    var dongMoi = "";
+                    console.log(data[i]);
+                    dongMoi += "<tr style='cursor: pointer;' class='parent'>";
+                    dongMoi += "<td class='r_STT width-50'>" + data[i].smaOrder + "</td><input type='hidden' class='r_iID_DuAn_HangMucID' value='" + data[i].iID_DuAn_HangMucID + "'data-idDuAn_HangMuc='" + data[i].iID_DuAn_HangMucID + "'/> <input type='hidden' class='r_HangMucID' value='" + data[i].iID_DuAn_HangMucID + "'/> <input type='hidden' class='r_HangMucParentID' value='" + data[i].iID_ParentID + "'/> <input type = 'hidden' class='r_iID_ChuTruongDauTu_HangMucID' value = '" + data[i].iID_ChuTruongDauTu_HangMucID + "'/>" +
+                        "<input type = 'hidden' class='r_iID_ChuTruongDauTuID' value = '" + data[i].iID_ChuTruongDauTuID + "' />";
+                    dongMoi += "<td class='r_sTenHangMuc'><div class='sTenHangMuc' hidden></div><input type='text' class='form-control txtTenHangMuc' value='" + (!data[i].sTenHangMuc ? "" : data[i].sTenHangMuc) + "'/>"
+                    dongMoi += "<td><input type='hidden' class='r_iID_LoaiCongTrinhID' value=''/><div class='sTenLoaiCongTrinh' hidden></div><div class='selectLoaiCongTrinh'>" + CreateHtmlSelectLoaiCongTrinh(data[i].iID_LoaiCongTrinhID) + "</div></td>";
+                    dongMoi += "<td class='r_HanMucDauTu' align='right'><div class='fHanMucDauTu fHanMucDauTuCha'>" + FormatNumber(data[i].fTienHangMuc) + "</div></td>";
+
+                    dongMoi += "<td class='width-150' align='center'>";
+
+                    dongMoi += "<button class='btn-add-child btn-icon' type = 'button' onclick = 'ThemMoiHangMucCon(this)' > " +
+                        "<i class='fa fa-plus fa-lg' aria-hidden='true'></i>" +
+                        "</button> ";
+
+                    dongMoi += "<button class='btn-save btn-icon' hidden type = 'button' onclick = 'CreateHangMuc(this, \"" + TBL_HANG_MUC_CHINH + "\")' > " +
+                        "<i class='fa fa-floppy-o fa-lg' aria-hidden='true'></i>" +
+                        "</button> ";
+                    dongMoi += "<button class='btn-edit btn-icon' hidden type = 'button' onclick = 'EditHangMuc(this, \"" + TBL_HANG_MUC_CHINH + "\")' > " +
+                        "<i class='fa fa-pencil-square-o fa-lg' aria-hidden='true'></i>" +
+                        "</button> ";
+                    dongMoi += "<button class='btn-delete btn-icon' type='button' onclick='XoaDong(this, \"" + TBL_HANG_MUC_CHINH + "\")'>" +
+                        "<span class='fa fa-trash-o fa-lg' aria-hidden='true'></span>" +
+                        "</button></td>";
+                    dongMoi += "</tr>";
+
+                    $("#tblHangMucChinh tbody").append(dongMoi);
+                }
+            }
+            CapNhatCotStt(TBL_HANG_MUC_CHINH);
+            TinhLaiDongTong(TBL_HANG_MUC_CHINH);
+            //ShowHideButtonHangMuc();
+        }
+    });
+}
+
+
+function CapNhatCotSttNguonVon(idBang) {
+    $("#" + idBang + " tbody tr").each(function (index, tr) {
+        $(tr).find('.r_STT').text(index + 1);
+    });
+}
 /*NinhNV start*/
 function BtnCreateDataClick() {
     window.location.href = "/QLVonDauTu/QLDuAn/CreateNew/";
@@ -190,6 +247,7 @@ function LuuDuAn() {
                         data: { data: data },
                         success: function (r) {
                             if (r.status == true) {
+                                UploadFile(r.iID_DuAnID, 101);
                                 alert(r.sMessage);
                                 window.location.href = "/QLVonDauTu/QLDuAn/Index";
                             }
@@ -208,6 +266,9 @@ function CheckLoi() {
     if ($("#iID_DonViQuanLyID").val() == GUID_EMPTY) {
         messErr.push("Chưa chọn đơn vị quản lý!");
     }
+    //if ($("#iID_DonViQuanLyIDQuanLy").val() == GUID_EMPTY) {
+    //    messErr.push("Chưa chọn đơn vị quản lý dự án!");
+    //}
     //if (sMaDuAn == '') {
     //    messErr.push("Mã dự án chưa được nhập!");
     //}
@@ -310,6 +371,7 @@ function LoadDataComboBoxNguonNganSach() {
         },
         complete: function () {
             LoadListNguonVonByDuAn();
+            LoadListHangMucByDuAn();
         }
     });
 }

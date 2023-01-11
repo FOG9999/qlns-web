@@ -777,6 +777,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.NganSachQuocPhong
             return Json(new { lstData = lstChungTuTH });
         }
 
+        [HttpGet]
+        public FileResult DownloadImportExample()
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/KeHoachVonNam/mauImportKHVNDX.xlsx"));
+            string fileName = "FileImportExp.xlsx";
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+        }
+
         [HttpPost]
         public JsonResult ExportBaoCao(KHVNDXPrintDataExportModel data, List<string> arrIdNguonVon, List<string> arrDonVi, bool bIsTongHop, bool isPdf)
         {

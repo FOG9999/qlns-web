@@ -598,6 +598,9 @@
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_check_exist_giaidoan_kh5namdx.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_check_exist_sokehoach_kh5namdd.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_check_period_valid_suggesstion_medium.sql" />
+    <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_get_all_du_an_da_lap_ctdt_by_iddonvi.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_get_all_du_an_chuyentiep.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_get_detail_kh5nam_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_get_all_chungtudexuat_by_dvql.sql" />
@@ -612,6 +615,9 @@
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_get_list_duan_kh5namdexuat_chitiet_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_get_list_dm_duan_kh5namduocduyet.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_get_list_duan_khvonnamduocduyet_chitiet_by_id.sql" />
+    <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_get_list_duan_chosen.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_get_list_kh5namdexuat_chuyentiep_chitiet_by_id.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_get_list_kh5namdexuat_dieuchinh_chitiet.sql" />
     <Content Include="App_Data\sql\QLVonDauTu\NganSachQuocPhong\vdt_get_list_kh5namduocduyet_chitiet_by_id.sql" />
@@ -1938,6 +1944,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Areas\QLVonDauTu\Views\QLKhoiTaoThongTinDuAn\Import.cshtml" />
+    <Content Include="Areas\QLVonDauTu\ReportExcelForm\KeHoachVonNam\mauImportKHVNDX.xlsx" />
+    <Content Include="Areas\QLVonDauTu\Views\KeHoachTrungHanDeXuat\_modalDialogMm.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Areas\QuyetToan\Controllers\ReportController.cs1" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\Index.cshtml" />
     <Content Include="Areas\QLNH\Views\ThongTriQuyetToan\_list.cshtml" />

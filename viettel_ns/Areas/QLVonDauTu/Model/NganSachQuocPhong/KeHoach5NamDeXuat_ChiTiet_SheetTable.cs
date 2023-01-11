@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Reflection;
 using System.Web;
+using System.Web.UI;
 using Viettel.Domain.DomainModel;
 using Viettel.Models.QLVonDauTu;
 using Viettel.Services;
@@ -47,6 +49,11 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
 
         private void fillSheet(string Id, int iNamLamViec, Dictionary<string, string> filters)
         {
+            #region Lay XauNoiMa_Cha
+            ColumnNameId = "iID_KeHoach5Nam_DeXuat_ChiTietID";
+            ColumnNameParentId = "iID_ParentID";
+            ColumnNameIsParent = "bIsParent";
+            #endregion
             VDT_KHV_KeHoach5Nam_DeXuat itemQuery = _iQLVonDauTuService.GetKeHoach5NamDeXuatById(!string.IsNullOrEmpty(Id) ? Guid.Parse(Id) : Guid.Empty);
 
             _filters = filters ?? new Dictionary<string, string>();
@@ -67,19 +74,171 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
             }
             else
             {
-                dtChiTiet = _iQLVonDauTuService.GetListKH5NamDeXuatChiTietById(Id, iNamLamViec, _filters);
+                if (_lstDuAnChecked.Count > 0)
+                {
+                    var listId = _lstDuAnChecked.Select(x => x.IDDuAnID);                   //tất cả dự án được tick chọn
+                    var listSaved = _iQLVonDauTuService.GetListDuAnSavedKHTHDeXuat(Guid.Parse(Id)).Select(x => x.iID_DuAnID);             //list dự án đã được lưu vào db
+                    //string listIdDuan = String.Join(",", _lstDuAnChecked.Select(x => x.IDDuAnID.ToString()).ToList());
+                    var listAdd = listId.Where(x => !listSaved.Contains(x));
+                    string listIdDuan = String.Join(",", listAdd);                  //= listId - listSaved  
+                    //var listId = listIdChungTu.Split(',').ToList();
+                    DataTable itemSaved = _iQLVonDauTuService.GetListKH5NamDeXuatChiTietById(Id, iNamLamViec, _filters);        // lấy lại những dòng chi tiết đã được lưu vào db
+                    DataTable itemAdd = _iQLVonDauTuService.GetListDuAnChosen(listIdDuan, iNamLamViec, _filters);               // lấy lên những dòng chi tiết thêm mới
+                    //dtChiTiet = _iQLVonDauTuService.GetListDuAnChosen(listIdDuan, iNamLamViec, _filters);
+                    
+                    if(itemAdd != null)
+                    {
+                        List<string> listParent = new List<string>();
+                        List<int> listRemoved = new List<int>();
+                        for (int i = 0; i < itemAdd.Rows.Count; i++)
+                        {
+                            var row = itemAdd.Rows[i];
+                            if (row["iLevel"].ToString() == "2" && row["numChild"].ToString() != "")
+                            {
+                                // nếu có con mà chưa có trong listParent thì xóa nguồn vốn
+                                if (!listParent.Contains(row["iID_DuAnID"].ToString()))
+                                {
+                                    row["iID_NguonVonID"] = DBNull.Value;
+                                    row["sTenNganSach"] = DBNull.Value;
+                                    listParent.Add(row["iID_DuAnID"].ToString());
+                                }
+                                // có rồi thì bỏ dòng
+                                else
+                                {
+                                    listRemoved.Add(i);
+                                }
+                            }
+                        }
+
+                        DataTable cloneList = new DataTable();
+                        for (int i = 0; i < itemAdd.Columns.Count; i++)
+                        {
+                            cloneList.Columns.Add(itemAdd.Columns[i].ColumnName);
+                        }
+                        for (int i = 0; i < itemAdd.Rows.Count; i++)
+                        {
+                            if (!listRemoved.Contains(i))
+                            {
+                                cloneList.ImportRow(itemAdd.Rows[i]);
+                            }
+                        }
+
+                        /*int sttCha = 1;
+                        var map = new Dictionary<string, KeyValuePair<int, int>>();
+                        var mapValue = new KeyValuePair<int, int>();
+                        Guid currParentId = Guid.Empty;
+                        for (int i = 0; i < cloneList.Rows.Count; i++)
+                        {
+                            var row = cloneList.Rows[i];
+                            //nếu row có iLevel = 2(dòng dự án) thì đánh stt tăng dần bình thường
+                            if (row["iLevel"].ToString() == "2")
+                            {
+                                row["sSTT"] = sttCha.ToString();
+                                if (!map.ContainsKey(row["iID_DuAnID"].ToString()))
+                                {
+                                    map.Add(row["iID_DuAnID"].ToString(), new KeyValuePair<int, int>(sttCha, 0));
+                                }
+                                sttCha++;
+                            }
+                            //nếu row có iLevel = 3(dòng chi tiết) thì cần xác định dòng dự án cha và stt con max hiện tại
+                            if (row["iLevel"].ToString() == "3" && map.TryGetValue(row["iID_DuAnID"].ToString(), out mapValue))
+                            {
+                                row["sSTT"] = map[row["iID_DuAnID"].ToString()].Key.ToString() + "." + (map[row["iID_DuAnID"].ToString()].Value + 1).ToString();
+                                var newKeyPair = new KeyValuePair<int, int>(map[row["iID_DuAnID"].ToString()].Key, map[row["iID_DuAnID"].ToString()].Value + 1);
+                                map[row["iID_DuAnID"].ToString()] = newKeyPair;             // cập nhật stt con max
+                            }
+
+                            // sinh khóa chính id cho quan hệ cha con
+                            row[ColumnNameId] = Guid.NewGuid();
+                            // nếu dự án có chi tiết
+                            if ((row[ColumnNameIsParent].ToString() == "1" || Convert.ToBoolean(row[ColumnNameIsParent])) && row["iLevel"].ToString() == "2")
+                            {
+                                currParentId = Guid.Parse(row[ColumnNameId].ToString());
+                                row["iID_ParentID"] = currParentId;
+                            }
+                            else if ((row[ColumnNameIsParent].ToString() == "0" || !Convert.ToBoolean(row[ColumnNameIsParent])) && row["iLevel"].ToString() == "3")
+                            {
+                                row["iID_ParentID"] = currParentId;
+                            }
+                            else row["iID_ParentID"] = row[ColumnNameId];
+                        }*/                        
+                        if(cloneList != null)
+                        {
+                            Guid currParentId = Guid.Empty;
+                            for (int i = 0; i < cloneList.Rows.Count; i++)
+                            {
+                                var row = cloneList.Rows[i];
+                                // sinh khóa chính id cho quan hệ cha con
+                                row[ColumnNameId] = Guid.NewGuid();
+                                // nếu dự án có chi tiết
+                                if ((row[ColumnNameIsParent].ToString() == "1" || Convert.ToBoolean(row[ColumnNameIsParent])) && row["iLevel"].ToString() == "2")
+                                {
+                                    currParentId = Guid.Parse(row[ColumnNameId].ToString());
+                                    row["iID_ParentID"] = currParentId;
+                                }
+                                else if ((row[ColumnNameIsParent].ToString() == "0" || !Convert.ToBoolean(row[ColumnNameIsParent])) && row["iLevel"].ToString() == "3")
+                                {
+                                    row["iID_ParentID"] = currParentId;
+                                }
+                                else row["iID_ParentID"] = row[ColumnNameId];
+                            }
+                        }
+                        itemAdd = cloneList;
+                        if (itemSaved != null)
+                        {
+                            itemSaved.Merge(itemAdd, true, MissingSchemaAction.Ignore);
+                            dtChiTiet = itemSaved;
+                        }
+                        else
+                        {
+                            itemAdd.Merge(itemSaved, true, MissingSchemaAction.Ignore);
+                            dtChiTiet = itemAdd;
+                        }
+                        /*itemAdd.Merge(itemSaved, true, MissingSchemaAction.Ignore);
+                        dtChiTiet = itemAdd;*/                        
+                    }
+                    else
+                    {
+                        dtChiTiet = itemSaved;
+                    }
+
+                    //sinh STT
+                    int sttCha = 1;
+                    var map = new Dictionary<string, KeyValuePair<int, int>>();
+                    var mapValue = new KeyValuePair<int, int>();                    
+                    for (int i = 0; i < dtChiTiet.Rows.Count; i++)
+                    {
+                        var row = dtChiTiet.Rows[i];
+                        //nếu row có iLevel = 2(dòng dự án) thì đánh stt tăng dần bình thường
+                        if (row["iLevel"].ToString() == "2")
+                        {
+                            row["sSTT"] = sttCha.ToString();
+                            if (!map.ContainsKey(row["iID_DuAnID"].ToString()))
+                            {
+                                map.Add(row["iID_DuAnID"].ToString(), new KeyValuePair<int, int>(sttCha, 0));
+                            }
+                            sttCha++;
+                        }
+                        //nếu row có iLevel = 3(dòng chi tiết) thì cần xác định dòng dự án cha và stt con max hiện tại
+                        if (row["iLevel"].ToString() == "3" && map.TryGetValue(row["iID_DuAnID"].ToString(), out mapValue))
+                        {
+                            row["sSTT"] = map[row["iID_DuAnID"].ToString()].Key.ToString() + "." + (map[row["iID_DuAnID"].ToString()].Value + 1).ToString();
+                            var newKeyPair = new KeyValuePair<int, int>(map[row["iID_DuAnID"].ToString()].Key, map[row["iID_DuAnID"].ToString()].Value + 1);
+                            map[row["iID_DuAnID"].ToString()] = newKeyPair;             // cập nhật stt con max
+                        }                        
+                    }
+                }
+                else
+                {
+                    dtChiTiet = _iQLVonDauTuService.GetListKH5NamDeXuatChiTietById(Id, iNamLamViec, _filters);
+                }
+                
             }
             if (dtChiTiet == null)
             {
                 dtChiTiet = new DataTable();
             }
             dtChiTiet_Cu = dtChiTiet.Copy();
-
-            #region Lay XauNoiMa_Cha
-            ColumnNameId = "iID_KeHoach5Nam_DeXuat_ChiTietID";
-            ColumnNameParentId = "iID_ParentID";
-            ColumnNameIsParent = "bIsParent";
-            #endregion
 
             fillData(Id);
         }
@@ -122,6 +281,36 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
             updateCellsEditable();
             updateCellsValue();
             updateChanges();
+            updateArrThayDoi();
+
+        }
+
+        private void updateArrThayDoi()
+        {
+            List<string> arrSpecial = new List<string>();
+            arrSpecial.Add("sTen");
+            arrSpecial.Add("iID_DonViID");
+            arrSpecial.Add("sDiaDiem");
+            arrSpecial.Add("iGiaiDoanTu");
+            arrSpecial.Add("iGiaiDoanDen");
+            arrSpecial.Add("iID_LoaiCongTrinhID");
+            arrSpecial.Add("iID_NguonVonID");            
+            arrSpecial.Add("sTenLoaiCongTrinh");            
+            arrSpecial.Add("sTenNganSach");                                    
+            arrSpecial.Add("iID_ParentID");            
+            arrSpecial.Add("sSTT");            
+            List<int> listIndex = new List<int>();
+            arrSpecial.ForEach(h =>
+            {
+                listIndex.Add(arrDSMaCot.FindIndex(x => x == h));
+            });
+            for(int i = 0; i < _arrThayDoi.Count; i++)
+            {
+                listIndex.ForEach(ind =>
+                {
+                    _arrThayDoi[i][ind] = true;
+                });
+            }            
         }
 
         protected virtual void updateColumnsParent1()
@@ -131,7 +320,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
             {
                 var r = dtChiTiet.Rows[i];
                 //Xac dinh hang nay co phai la hang cha khong?
-                arrLaHangCha.Add(Convert.ToBoolean(r[ColumnNameIsParent]));
+                //arrLaHangCha.Add(Convert.ToBoolean(r[ColumnNameIsParent]));                       
+                arrLaHangCha.Add((r[ColumnNameIsParent].ToString() == "0" || (r[ColumnNameIsParent].ToString() == "False")) ? false : true);                
 
 
                 int parent = -1;
@@ -183,7 +373,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     }
                     if (dtChiTiet.Rows[i][columns[k].ColumnName] == DBNull.Value || (Convert.ToDouble(dtChiTiet.Rows[i][columns[k].ColumnName]) != S) && S != 0)
                     {
-                        dtChiTiet.Rows[i][columns[k].ColumnName] = S;
+                        dtChiTiet.Rows[i][columns[k].ColumnName] = S;                        
                     }
                 }
             }
@@ -267,7 +457,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
             {
                 return dataTable.AsEnumerable().Select(row => new VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet
                 {
-                    iID_KeHoach5Nam_DeXuat_ChiTietID = Guid.Parse(row["iID_KeHoach5Nam_DeXuat_ChiTietID"].ToString()),
+                    //iID_KeHoach5Nam_DeXuat_ChiTietID = Guid.Parse(row["iID_KeHoach5Nam_DeXuat_ChiTietID"].ToString()),
+                    iID_KeHoach5Nam_DeXuat_ChiTietID = row["iID_KeHoach5Nam_DeXuat_ChiTietID"].ToString() != "" ? Guid.Parse(row["iID_KeHoach5Nam_DeXuat_ChiTietID"].ToString()) : Guid.Empty,
                     fHanMucDauTu = Convert.ToDouble(row["fHanMucDauTu"]),
                     fGiaTriNamThuNhat = Convert.ToDouble(row["fGiaTriNamThuNhat"]),
                     fGiaTriNamThuHai = Convert.ToDouble(row["fGiaTriNamThuHai"]),
@@ -352,6 +543,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     // cot fix
                     new SheetColumn(columnName: "sSTT", header: "STT", columnWidth:50, align: "left", hasSearch: false, isReadonly: true),
                     new SheetColumn(columnName: "sTen", header: "Tên Group - dự án", columnWidth:200, align: "left", hasSearch: true, isReadonly: false),
+                    new SheetColumn(columnName: "sQuyetDinhCTDT", header: "Số quyết định CTĐT", columnWidth:200, align: "left", hasSearch: true, isReadonly: true),
+                    new SheetColumn(columnName: "sChuDauTu", header: "Chủ đầu tư", columnWidth:200, align: "left", hasSearch: true, isReadonly: true),
                     //new SheetColumn(columnName: "sDonViThucHienDuAn", header: "Đơn vị thực hiện dự án", columnWidth:200, align: "left", hasSearch: true, dataType: 3, isReadonly: false),
                     new SheetColumn(columnName: "sDonVi", header: "Đơn vị", columnWidth:200, align: "left", hasSearch: true, dataType: 3, isReadonly: true),
                     new SheetColumn(columnName: "sDiaDiem", header: "Địa điểm thực hiện", columnWidth:150, align: "left", hasSearch: true, isReadonly: false),

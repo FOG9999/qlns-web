@@ -108,6 +108,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Model.NganSachQuocPhong
                     {
                         DataRow drNew = dr;
                         drNew["sTenLoaiCongTrinh"] = dicLoaiCongTrinh[iIdLoaiCongTrinhId].sTenLoaiCongTrinh;
+                        //drNew["iID_DuAn_HangMucID"] = lstHangMuc.Where(h => h.)
                         dtChiTiet.Rows.Add(drNew.ItemArray);
                         continue;
                     }

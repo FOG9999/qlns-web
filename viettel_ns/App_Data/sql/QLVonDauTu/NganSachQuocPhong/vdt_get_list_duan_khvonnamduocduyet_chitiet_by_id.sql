@@ -1,15 +1,11 @@
-DECLARE @phanBoVonId uniqueidentifier set @phanBoVonId = '25361cc1-60f7-4a6a-a0e9-b1807f64e187'
-DECLARE @iIdPhanBoVonDeXuat uniqueidentifier set @iIdPhanBoVonDeXuat = '799cde17-2ded-40c0-a5a0-e96b3b3dcd69'
+DECLARE @phanBoVonId uniqueidentifier set @phanBoVonId = '66f233d7-4be5-4de1-b476-49088ee353f4'
+DECLARE @iIdPhanBoVonDeXuat uniqueidentifier set @iIdPhanBoVonDeXuat = 'd4864ca4-7d72-4d22-8eaa-9420da6df589'
 DECLARE @sTenDuAn nvarchar(50) set @sTenDuAn=null
 DECLARE @sLoaiDuAn nvarchar(50) set @sLoaiDuAn=null
 DECLARE @sTenDonViThucHienDuAn nvarchar(50) set @sTenDonViThucHienDuAn=null
 DECLARE @iNamLamViec int set @iNamLamViec = 2022
 
 --#DECLARE#--
-
-DECLARE @idNguonVon int;
-SET @idNguonVon = (SELECT iID_NguonVonID from VDT_KHV_KeHoachVonNam_DeXuat where iID_KeHoachVonNamDeXuatID = @iIdPhanBoVonDeXuat)
-
 select * from
 (
 select
@@ -63,7 +59,7 @@ from
 	LEFT JOIN NS_DonVi dv ON dv.iID_Ma = da.iID_DonViQuanLyID AND dv.iNamLamViec_DonVi = @iNamLamViec
 left join
 	VDT_DA_DuAn_HangMuc dahm
-on da.iID_DuAnID = dahm.iID_DuAnID and dahm.iID_NguonVonID = @idNguonVon
+on da.iID_DuAnID = dahm.iID_DuAnID
 left join
 	VDT_KHV_KeHoach5Nam_ChiTiet kh5nct
 on da.iID_DuAnID = kh5nct.iID_DuAnID
@@ -71,8 +67,7 @@ left join
 	VDT_DM_LoaiCongTrinh lct
 on da.iID_LoaiCongTrinhID = lct.iID_LoaiCongTrinh or dahm.iID_LoaiCongTrinhID = lct.iID_LoaiCongTrinh
 Left join VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet khvndxct
-on da.iID_DuAnID = khvndxct.iID_DuAnID and khvndxct.iID_LoaiCongTrinh = dahm.iID_LoaiCongTrinhID and khvndxct.iID_KeHoachVonNamDeXuatID = @iIdPhanBoVonDeXuat
---left join VDT_KHV_KeHoachVonNam_DeXuat khvnd on khvnd.iID_KeHoachVonNamDeXuatID = khvndxct.iID_KeHoachVonNamDeXuatID on khvn
+on da.iID_DuAnID = khvndxct.iID_DuAnID and khvndxct.iID_LoaiCongTrinh = dahm.iID_LoaiCongTrinhID
 where
 	da.iID_DuAnID in (
 		select 
@@ -87,8 +82,6 @@ where
 			khvndx.iID_KeHoachVonNamDeXuatID = @iIdPhanBoVonDeXuat
 			and khvndxct.iID_DonViID = (SELECT iID_DonViQuanLyID FROM VDT_KHV_KeHoachVonNam_DuocDuyet where iID_KeHoachVonNam_DuocDuyetID = @phanBoVonId)
 	)
-
-
 union all
 
 select
@@ -170,7 +163,7 @@ LEFT JOIN
 	VDT_KHV_KeHoachVonNam_DeXuat_ChiTiet khvnct
 --on khvnct.iID_DuAnID = khvnddct.iID_DuAnID AND khvnct.iID_KeHoachVonNamDeXuatID = @iIdPhanBoVonDeXuat
 on khvnct.iID_KeHoachVonNamDeXuatID = khvndx.iID_KeHoachVonNamDeXuatID
-LEFT JOIN VDT_DA_DuAn_HangMuc dahm on dahm.iID_DuAnID = khvnddct.iID_DuAnID and khvnddct.iID_LoaiCongTrinh = dahm.iID_LoaiCongTrinhID and dahm.iID_NguonVonID = @idNguonVon
+LEFT JOIN VDT_DA_DuAn_HangMuc dahm on dahm.iID_DuAnID = khvnddct.iID_DuAnID and khvnddct.iID_LoaiCongTrinh = dahm.iID_LoaiCongTrinhID
 where
 	khvnddct.iID_KeHoachVonNam_DuocDuyetID = @phanBoVonId
 	and dv.iID_Ma = (SELECT iID_DonViQuanLyID FROM VDT_KHV_KeHoachVonNam_DuocDuyet where iID_KeHoachVonNam_DuocDuyetID = @phanBoVonId)

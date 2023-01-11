@@ -50,6 +50,7 @@ namespace Viettel.Models.QLVonDauTu
         public string STenNguonVon { get; set; }
         public bool IsChecked { get; set; }
         public int? ILoai { get; set; }
+        public string SSoQuyetDinh { get; set; }
     }
 
     public class KeHoach5NamDeXuatDataImportModel

@@ -124,14 +124,13 @@ SELECT * INTO #TEMP_ALL FROM (
 ) as tempTable;
 
 
-select *, 
-	CAST('0' as bit) as isMap
-from #TEMP_ALL
-where 1 = 1 
-	and (@sMaDuAn is null or sMaDuAn like @sMaDuAn)
-	and (@sTenDuAn is null or sTenDuAn like @sTenDuAn)
-ORDER BY dDateCreate DESC, iID_DuAnID, bLaHangCha DESC
-;
+select tmpall.*, ccdt.sSoQuyetDinh, CAST('0' as bit) as isMap
+from #TEMP_ALL as tmpall
+join VDT_DA_ChuTruongDauTu ccdt on tmpall.iID_DuAnID = ccdt.iID_DuAnID
+where 1 = 1
+  and (@sMaDuAn is null or tmpall.sMaDuAn like @sMaDuAn)
+  and (@sTenDuAn is null or tmpall.sTenDuAn like @sTenDuAn)
+ORDER BY tmpall.dDateCreate DESC, tmpall.iID_DuAnID, tmpall.bLaHangCha DESC;
 
 DROP table #TEMP_DuAN;
 DROP table #TEMP_ChiTiet;

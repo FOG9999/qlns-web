@@ -11,7 +11,7 @@
     <th></th>
     <th width="5%"></th>
     <th width="35%"><input type="text" class="form-control clearable gr_search" id="txtTenDuAn" /></th>
-    <th width="10%">@Html.DropDownList("iID_CapPheDuyetID", (SelectList)(ViewBag.ListPhanCapPheDuyet), "--Tất cả--", new { @class = "form-control", @id = "iID_CapPheDuyetID" })</th>
+    <th width="10%">@Html.DropDownList("iID_CapPheDuyetID", (SelectList)(ViewBag.ListPhanCapPheDuyet), "--Tất cả--", new { @class = "form-control", @id = "iID_CapPheDuyetID", @onchange = "SearchData()" })</th>
     <th width="13%">
         <div style="display: flex">
             <div class='input-group'>
@@ -23,7 +23,7 @@
             </div>
         </div>
     </th>
-    <th width="10%">@Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), "--Tất cả--", new { @class = "form-control", @id = "iID_DonViQuanLyID" })</th>
+    <th width="10%">@Html.DropDownList("iID_DonViQuanLyID", (SelectList)(ViewBag.ListDonViQuanLy), "--Tất cả--", new { @class = "form-control", @id = "iID_DonViQuanLyID", @onchange = "SearchData()" })</th>
     @*<th width="10%">
             <input type="hidden" id="hid_iID_LoaiCongTrinhID">
             <input type="text" id="iID_LoaiCongTrinhID" name="iID_LoaiCongTrinhID" class="form-control gr_search" value="" />
@@ -41,7 +41,7 @@
     <th width="35%">Tên dự án</th>
     <th width="10%">Phân cấp phê duyệt</th>
     <th width="13%">Thời gian TH</th>
-    <th width="12%">Đơn vị thực hiện dự án</th>
+    <th width="12%">Đơn vị</th>
     <th width="11%">Hạn mức đầu tư</th>
     <th width="5%">Tài liệu</th>
     <th width="10%">Thao tác</th>

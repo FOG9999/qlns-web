@@ -897,9 +897,10 @@ function ValidateData() {
         })
         listCheckDuplicates.push(item);
     });
-    if (listItemDuplicates.length > 0) {
+    //có gì tính sau
+    /*if (listItemDuplicates.length > 0) {
         sMessError.push('Dòng chi tiết dự án có thông tin trùng loại công trình và nguồn vốn.');
-    }
+    }*/
 
 
     if (sMessError != null && sMessError != undefined && sMessError.length > 0) {

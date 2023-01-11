@@ -588,7 +588,8 @@ namespace VIETTEL.Models
                 {
                     var isReadonlyRow = false;
 
-                    if (!string.IsNullOrWhiteSpace(ColumnNameIsParent) && Convert.ToBoolean(r[ColumnNameIsParent]) && !ParentRowEditable)
+                    //if (!string.IsNullOrWhiteSpace(ColumnNameIsParent) && Convert.ToBoolean(r[ColumnNameIsParent]) && !ParentRowEditable)
+                    if (!string.IsNullOrWhiteSpace(ColumnNameIsParent) && Convert.ToBoolean(r[ColumnNameIsParent].ToString()) && !ParentRowEditable)
                     {
                         isReadonlyRow = true;
                     }

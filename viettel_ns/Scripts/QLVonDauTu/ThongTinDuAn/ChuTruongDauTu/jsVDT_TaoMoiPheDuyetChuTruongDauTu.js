@@ -24,6 +24,7 @@ $(document).ready(function ($) {
     GetCbxChuDauTu();
     //ReloadDuAn();
     Event();
+    LoadDataComboBoxDuAn($("#iID_DonViQuanLyID :selected").html().split('-')[0].trim());
 
     var isShowing = false;
     $('.date').datepicker({
@@ -176,9 +177,13 @@ function GetValueChangeDuAn(value) {
                     LoadViewHangMuc();
                     //EventChangeSetValueAutoMaHangMuc(data.sMaDuAn);
                 }
-                if (data.iID_ChuDauTuID != null)
-                    $("#iID_ChuDauTuID").find(":selected").data(data.iID_ChuDauTuID);
-
+                if (data.iID_ChuDauTuID != null) {
+                    //$("#iID_ChuDauTuID").find(":selected").data(data.iID_ChuDauTuID);
+                    var idSelect = $("#iID_ChuDauTuID option[data-sid_cdt='" + data.iID_ChuDauTuID + "']")[0].value;
+                    $("#iID_ChuDauTuID").val(idSelect);
+                    $("#iID_ChuDauTuID").change();
+                }
+                    
                 $("#sDiaDiemDauTu").val(data.sDiaDiem);
                 $("#sSuCanThietDauTu").val(data.sSuCanThietDauTu);
                 $("#sMucTieu").val(data.sMucTieu);
@@ -187,7 +192,7 @@ function GetValueChangeDuAn(value) {
                 $("#sQuyMo").val(data.sQuyMo);
                 $("#sKhoiCong").val(data.sKhoiCong);
                 $("#sHoanThanh").val(data.sKetThuc);
-                if (data.iID_NhomDuAnID != null)
+                if (data.iID_NhomDuAnID != null && data.iID_NhomDuAnID != GUID_EMPTY)
                     $("#iID_NhomDuAnID").val(data.iID_NhomDuAnID);
                 if (data.iID_HinhThucQuanLyID != null)
                     $("#iID_HinhThucQuanLyID").val(data.iID_HinhThucQuanLyID);
@@ -202,24 +207,24 @@ function GetValueChangeDuAn(value) {
 
     // Tạo danh sách ở phần Nguồn vốn đầu tư
     $.ajax({
-        url: "/QLVonDauTu/ChuTruongDauTu/LayDanhSachNguonVonTheoDuAnId",
+        url: "/QLDuAn/GetListNguonVonByDuAn",
         type: "POST",
-        data: { iID: value },
+        data: { id: value },
         dataType: "json",
         cache: false,
         success: function (data) {
             $("#tblNguonVonDauTu tbody tr").remove();
             arrNguonVon = [];
-
             if (data != null) {
-                for (var i = 0; i < data.length; i++) {
+                for (var i = 0; i < data.data.length; i++) {
+                    console.log(data.data[i].fThanhTien)
                     var dongMoi = "";
                     dongMoi += "<tr>";
                     dongMoi += "<td class='r_STT width-50'>" + (i + 1) + "</td>";
                     /*dongMoi += "<td style='text-align: left'>" + data[i].sTen + "</td>";*/
-                    dongMoi += "<td><input type='hidden' class='r_iID_NguonVonID' value='" + data[i].iID_NguonVonID + "'/><div class='sTenNguonVon' hidden></div><div class='selectNguonVon'>" + CreateHtmlSelectNguonVon(data[i].iID_NguonVonID) + "</div></td>";
+                    dongMoi += "<td><input type='hidden' class='r_iID_NguonVonID' value='" + data.data[i].iID_NguonVonID + "'/><div class='sTenNguonVon' hidden></div><div class='selectNguonVon'>" + CreateHtmlSelectNguonVon(data.data[i].iID_NguonVonID) + "</div></td>";
                     /*dongMoi += "<td style='text-align: right'>" + FormatNumber(data[i].TongHanMucDauTu) + "</td>";*/
-                    dongMoi += "<td class='r_GiaTriNguonVon' ><div hidden></div><input type='text' style='text-align: right' class='form-control txtGiaTriNguonVon' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' value='" + FormatNumber(data[i].TongHanMucDauTu) + "'/></td>"
+                    dongMoi += "<td class='r_GiaTriNguonVon' ><div hidden></div><input type='text' style='text-align: right' class='form-control txtGiaTriNguonVon' onkeyup='ValidateNumberKeyUp(this);' onkeypress='return ValidateNumberKeyPress(this, event);' value='" + FormatNumber(data.data[i].fThanhTien) + "'/></td>"
                     dongMoi += "<td class='width-150' align='center'>";
                     dongMoi += "<button class='btn-save btn-icon' hidden type = 'button' onclick = 'CreateNguonVon(this, \"" + TBL_NGUON_VON_DAU_TU + "\")'> " +
                         "<i class='fa fa-floppy-o fa-lg' aria-hidden='true'></i>" +

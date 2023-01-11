@@ -379,7 +379,7 @@ function GetDataChiTietTable() {
         obj.sNG = $(item).find(".c_sNG").text();
         obj.sTNG = $(item).find(".c_sTNG").text();
         obj.fSoTien = UnFormatNumber($(item).find(".ctxt_sfSotien").val());
-        if (!(obj.fSoTien == null || obj.fSoTien == undefined || obj.fSoTien == "")) {
+        if (!(obj.fSoTien == null || obj.fSoTien == undefined )) {
             lstChiTiet.push(obj);
         }
 

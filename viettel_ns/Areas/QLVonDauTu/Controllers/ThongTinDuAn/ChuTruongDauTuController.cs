@@ -61,14 +61,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             vm.Items = _iQLVonDauTuService.LayDanhSachChuTruongDauTu(ref vm._paging, PhienLamViec.NamLamViec, Username, sSoQuyetDinh, sNoiDung, fTongMucDauTuFrom, fTongMucDauTuTo,
                 dNgayQuyetDinhFrom, dNgayQuyetDinhTo, sMaDonVi);
             TempData.Keep("DataSearch");
-            TempData["DataSearch"] = vm.Items;           
+            TempData["DataSearch"] = vm.Items;
             ViewBag.ListDonViQuanLy = _iNganSachService.GetDonviListByUser(Username, PhienLamViec.NamLamViec).ToSelectList("iID_MaDonVi", "sMoTa");
 
             // Xu ly ho tro xuat excel
             PagingInfo pageInfo = new PagingInfo() { ItemsPerPage = vm._paging.TotalItems };
             pageInfo.CurrentPage = 1;
             var dataExport = _iQLVonDauTuService.LayDanhSachChuTruongDauTu(ref pageInfo, PhienLamViec.NamLamViec, Username, sSoQuyetDinh, sNoiDung, fTongMucDauTuFrom, fTongMucDauTuTo,
-                dNgayQuyetDinhFrom, dNgayQuyetDinhTo, sMaDonVi); 
+                dNgayQuyetDinhFrom, dNgayQuyetDinhTo, sMaDonVi);
             TempData["DataExcel"] = dataExport;
             // End Xu ly ho tro xuat excel
 
@@ -237,7 +237,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
         public JsonResult Save(VDT_DA_ChuTruongDauTuCreateModel model)
         {
             var sMessage = string.Format(Constants.THEM_BAN_GHI, model.sSoQuyetDinh);
-            if(model.iID_ChuTruongDauTuID == null || model.iID_ChuTruongDauTuID == Guid.Empty)
+            if (model.iID_ChuTruongDauTuID == null || model.iID_ChuTruongDauTuID == Guid.Empty)
             {
                 if (model.iID_ParentID != null) sMessage = sMessage.Replace("Thêm mới", "Điều chỉnh");
             }
@@ -481,10 +481,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
                 }
 
                 trans.Commit();
-                
+
             }
 
-            return Json(new { status = true, iID_ChuTruongDauTuID= model.iID_ChuTruongDauTuID, sMessage = sMessage });
+            return Json(new { status = true, iID_ChuTruongDauTuID = model.iID_ChuTruongDauTuID, sMessage = sMessage });
         }
 
         [HttpPost]
@@ -708,8 +708,10 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             var entity = _iQLVonDauTuService.GetThongTinChuTruongDauTuById(Guid.Parse(id));
             bool xoa = _iQLVonDauTuService.XoaChuTruongDauTu(Guid.Parse(id));
             if (xoa)
+            {
                 sMessage = string.Format(Constants.XOA_BAN_GHI, entity.sSoQuyetDinh);
                 return Json(new { status = xoa, sMessage = sMessage }, JsonRequestBehavior.AllowGet);
+            }
             return Json(new { status = xoa, sMessage = sMessage }, JsonRequestBehavior.AllowGet);
         }
 
@@ -833,7 +835,7 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             {
                 //List<VdtKhvKeHoachVonUngChiTietModel> listDataQuery = _iQLVonDauTuService.KehoachVonUngDuocDuyetChiTietExport(id).ToList();
                 var listData = (List<VDTChuTruongDauTuViewModel>)TempData["DataExcel"];
-                
+
                 var grouplistData = listData.GroupBy(x => x.sDonViQuanLy?.Trim());
 
                 var results = new List<VDTChuTruongDauTuViewModel>();
@@ -873,14 +875,14 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             XlsFile Result = new XlsFile(true);
             Result.Open(Server.MapPath("~/Areas/QLVonDauTu/ReportExcelForm/ChuTruongDauTu/Export_DS_ChuTruongDauTu.xlsx"));
             FlexCelReport fr = new FlexCelReport();
-            
+
             //var dataModel = _iQLVonDauTuService.GetKHVUDuocDuyetById(id);
             //VDTKhvkeHoachVonUngViewModel objKHVU = new VDTKhvkeHoachVonUngViewModel();
             //objKHVU.sTenDonViQuanLy = dataModel.sTenDonViQuanLy.ToUpper();
             //objKHVU.sTenNguonVon = dataModel.sTenNguonVon.Substring(dataModel.sTenNguonVon.LastIndexOf(".") + 1).ToUpper();
             //objKHVU.iNamKeHoach = dataModel.iNamKeHoach;
             //objKHVU.sSoQuyetDinh = dataModel.sSoQuyetDinh;
-            
+
             fr.AddTable<VDTChuTruongDauTuViewModel>("Items", lstData);
 
             //fr.SetValue("sTenDonVi", objKHVU.sTenDonViQuanLy);
@@ -894,8 +896,8 @@ namespace VIETTEL.Areas.QLVonDauTu.Controllers.ThongTinDuAn
             return Result;
         }
 
-        public FileContentResult ExportExcelChuTruongDauTu() 
-        { 
+        public FileContentResult ExportExcelChuTruongDauTu()
+        {
             string sContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             string sFileName = "ChuTruongDauTuExport.xlsx";
             ExcelFile xls = (ExcelFile)TempData["DataExport"];

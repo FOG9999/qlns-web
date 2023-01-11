@@ -25,6 +25,13 @@ SELECT
 	tree.fTiGia,
 	tree.sTrangThai,
 	tree.sGhiChu,
+	ctdt.sSoQuyetDinh as sQuyetDinhCTDT,
+	(
+			CASE
+				WHEN ctdt.iID_ChuDauTuID is null THEN ''
+				ELSE CONCAT(cdt.sId_CDT, ' - ', cdt.sTenCDT)
+			END
+		) as sChuDauTu,
 	case
 		when 
 			khthdxctpr.iID_KeHoach5Nam_DeXuat_ChiTietID is not null
@@ -150,7 +157,8 @@ SELECT
 			--ELSE CONCAT(dv.iID_MaDonVi, ' - ', dv.sTen)
 
 			When tree.iLevel = 1 then ''
-			else CONCAT(dvth.iID_MaDonVi, ' - ', dvth.sTenDonVi)
+			--else CONCAT(dvth.iID_MaDonVi, ' - ', dvth.sTenDonVi)
+			ELSE CONCAT(dv.iID_MaDonVi, ' - ', dv.sTen)
 		END
 	) as sDonVi,
 	tbl_count_child.numChild,
@@ -171,7 +179,7 @@ FROM VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet tree
 LEFT JOIN (
 	select iID_ParentID, count(iID_ParentID) as numChild
 	from VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet
-	where iID_ParentID is not null
+	where iID_ParentID is not null and iID_KeHoach5Nam_DeXuat_ChiTietID != iID_ParentID
 	GROUP BY iID_ParentID
 ) tbl_count_child on tree.iID_KeHoach5Nam_DeXuat_ChiTietID = tbl_count_child.iID_ParentID
 LEFT JOIN NS_DonVi dv on tree.iID_DonViID = dv.iID_Ma
@@ -181,6 +189,9 @@ LEFT JOIN NS_NguonNganSach nns on tree.iID_NguonVonID = nns.iID_MaNguonNganSach
 LEFT JOIN VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet parent on tree.iID_ParentID = parent.iID_KeHoach5Nam_DeXuat_ChiTietID
 LEFT JOIN VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet khthdxctpr on tree.iID_ParentModified = khthdxctpr.iID_KeHoach5Nam_DeXuat_ChiTietID
 LEFT JOIN VDT_KHV_KeHoach5Nam_DeXuat khvndx on khvndx.iID_KeHoach5Nam_DeXuatID =tree.iID_KeHoach5Nam_DeXuatID
+--LEFT JOIN VDT_DA_DuAn duan on duan.iID_DuAnID = tree.iID_DuAnID
+LEFT JOIN VDT_DA_ChuTruongDauTu ctdt on ctdt.iID_DuAnID = tree.iID_DuAnID
+left join DM_ChuDauTu cdt on ctdt.iID_ChuDauTuID = cdt.ID
 where 1 = 1
 	and tree.iID_KeHoach5Nam_DeXuatID = @iId
 	and (@sTen is null or tree.sTen like @sTen)
@@ -189,4 +200,4 @@ where 1 = 1
 	and (@iGiaiDoanTu is null or tree.iGiaiDoanTu like @iGiaiDoanTu)
 	and (@iGiaiDoanDen is null or tree.iGiaiDoanDen like @iGiaiDoanDen)
 	and (@sDonVi is null or dv.sTen like @sDonVi)
-ORDER BY tree.sMaOrder
+ORDER BY tree.sSTT

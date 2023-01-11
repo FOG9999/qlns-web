@@ -442,6 +442,31 @@ function OpenModalCt(idDonVi, id) {
     });
 }
 
+function OpenModalMm(idDonVi, id) {
+    $.ajax({
+        type: "POST",
+        dataType: "html",
+        url: "/QLVonDauTu/KeHoachTrungHanDeXuat/GetModalMm",
+        data: { idDonVi: idDonVi, id: id },
+        success: function (data) {
+            $("#modalDuAnDeXuat").html(data);
+            $("#modalDuAnDeXuat input:checked" + "[data-check='duanChecked']").each((ind, ele) => {
+                ChooseDuAn($(ele).attr('class'))
+            })
+            $("#" + 'modalDuAnDeXuat' + " .cbAll_DuAn").change(function () {
+                if (this.checked) {
+                    $("#modalDuAnDeXuat input" + "[data-check='duanChecked']").prop('checked', true).trigger("change");
+                    $("#modalDuAnDeXuat input:checked" + "[data-check='duanChecked']").each((ind, ele) => {
+                        ChooseDuAn($(ele).attr('class'))
+                    })
+                }
+                else
+                    $("#modalDuAnDeXuat input" + "[data-check='duanChecked']").prop('checked', false).trigger("change");
+            })
+        }
+    });
+}
+
 function OpenModal(id, isModified, isAggregate) {
     var lstDataChecked = JSON.parse(sessionStorage.getItem('dataChecked'));
     $.ajax({

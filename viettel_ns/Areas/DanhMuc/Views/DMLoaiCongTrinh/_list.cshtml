@@ -41,8 +41,8 @@
     <th width="5%"><input type="text" class="form-control gr_search" id="txtMaLoaiCongTrinh" /></th>
     <th width="5%"><input type="text" class="form-control gr_search" id="txtTenVietTat" /></th>
     <th width="15%"><input type="text" class="form-control gr_search" id="txtsTenLoaiCongTrinh" /></th>
-    <th width="5%"><input type="text" class="form-control gr_search" id="txtiThuTu" /></th>
     <th width="5%"><input type="text" class="form-control gr_search" id="txtsMoTa" /></th>
+    <th width="5%"><input type="text" class="form-control gr_search" id="txtiThuTu" /></th>
     <th width="15%"></th>
     <th width="5%"></th>
     <th width="5%"></th>
@@ -132,14 +132,14 @@
             $(this).css("background-color", "");
         });
 
-        $("#tblListLoaiChiPhi .gr_search").each(function (index, value) {
-            $(this).keypress(function (e) {
-                if (e.which == 13) {//Enter key pressed
+        document.addEventListener('keydown', eventKey);
+        function eventKey(e) {
+            if (e != null && e != undefined) {
+                if (e.key == "Enter") {
                     ChangePage();
                 }
-            });
-        });
-        /*formatMoney();*/
+            }
+        }
     });
 
 </script>

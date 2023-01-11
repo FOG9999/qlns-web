@@ -143,7 +143,8 @@
                     OpenModalCt('@Model.iID_DonViQuanLyID', '@Model.iID_KeHoach5Nam_DeXuatID');
                     }
                     else {
-                                $("#modalDuAnDeXuat").html('');
+                                @*$("#modalDuAnDeXuat").html('');*@
+                        OpenModalMm(iDonViQuanLy, '@Model.iID_KeHoach5Nam_DeXuatID');
                     }
         }
 
@@ -156,7 +157,8 @@
                     OpenModalCt(iDonViQuanLy, '@Model.iID_KeHoach5Nam_DeXuatID');
                 }
                 else {
-                    $("#modalDuAnDeXuat").html('');
+                    @*$("#modalDuAnDeXuat").html('');*@
+                    OpenModalMm(iDonViQuanLy, '@Model.iID_KeHoach5Nam_DeXuatID');
                 }
         });
 
@@ -170,7 +172,7 @@
                     OpenModalCt(iDonViQuanLy, '@Model.iID_KeHoach5Nam_DeXuatID');
                 }
                 else {
-                    $("#modalDuAnDeXuat").html('');
+                    OpenModalMm(iDonViQuanLy, '@Model.iID_KeHoach5Nam_DeXuatID');
                 }
             }
 

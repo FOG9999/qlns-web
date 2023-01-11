@@ -93,7 +93,7 @@ function loadDataExcel() {
 }
 //duonglt test 
 function downloadImpExp() {
-    window.location.href = "/QLVonDauTu/KeHoachTrungHanDeXuat/DownloadImportExample";
+    window.location.href = "/QLVonDauTu/KeHoachTrungHanDeXuat/DownloadImportExample2";
 }
 //end test
 //function loadGridListExcel() {

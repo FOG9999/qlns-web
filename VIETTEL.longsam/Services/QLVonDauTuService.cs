@@ -1208,9 +1208,12 @@ namespace Viettel.Services
         List<DuAnViewModel> GetAllDuAnByListId(List<Guid> lstId);
         IEnumerable<VDT_KHV_KeHoach5Nam_DeXuat> GetKeHoach5NamDeXuatByCondition();
         IEnumerable<DuAnKeHoach5Nam> GetAllDuAnChuyenTiep(string iIdMaDonVi);
+        IEnumerable<DuAnKeHoach5Nam> GetAllDuAnDaLapCTDT(string iIdMaDonVi);
         KeHoach5NamDeXuatModel GetKeHoach5NamDeXuatByIdForDetail(Guid Id);
         bool CheckExistSoKeHoach(string sSoQuyetDinh, int iNamLamViec, Guid? iId);
         DataTable GetListKH5NamDeXuatChiTietById(string Id, int iNamLamViec, Dictionary<string, string> _filters);
+        DataTable GetListDuAnChosen(string listId, int iNamLamViec, Dictionary<string, string> _filters);
+        IEnumerable<VDT_DA_DuAn> GetListDuAnSavedKHTHDeXuat(Guid? idKHTHDeXuat);
         NS_DonVi GetNSDonViByMaDonVi(string maDv);
         DataTable GetListKH5NamDeXuatChuyenTiepChiTietById(string Id, Dictionary<string, string> _filters);
         IEnumerable<VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet> GetAllKH5NamDeXuatChiTiet(int iNamLamViec);
@@ -13137,6 +13140,23 @@ namespace Viettel.Services
             }
         }
 
+        public IEnumerable<DuAnKeHoach5Nam> GetAllDuAnDaLapCTDT(string idDonVi)
+        {
+            var sql = FileHelpers.GetSqlQuery("vdt_get_all_du_an_da_lap_ctdt_by_iddonvi.sql");
+
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var itemQuery = conn.Query<DuAnKeHoach5Nam>(sql,
+                    param: new
+                    {
+                        idDonVi
+                    },
+                    commandType: CommandType.Text);
+
+                return itemQuery;
+            }
+        }
+
         public List<DuAnViewModel> GetAllDuAnByListId(List<Guid> lstId)
         {
             using (var conn = _connectionFactory.GetConnection())
@@ -13240,6 +13260,40 @@ namespace Viettel.Services
                     cmd.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
                     return cmd.GetTable();
                 }
+            }
+        }
+
+        public DataTable GetListDuAnChosen(string listId, int iNamLamViec, Dictionary<string, string> _filters)
+        {
+            var sql = FileHelpers.GetSqlQuery("vdt_get_list_duan_chosen.sql");
+
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    //_filters.ToList().ForEach(x =>
+                    //{
+                    //    cmd.Parameters.AddWithValue($"{x.Key}", string.IsNullOrWhiteSpace(x.Value) ? x.Value.ToParamString() : $"%{x.Value}%");
+                    //});
+                    cmd.Parameters.AddWithValue("@listId", listId);
+                    //cmd.Parameters.AddWithValue("@iNamLamViec", iNamLamViec);
+                    return cmd.GetTable();
+                }
+            }
+        }
+
+        public IEnumerable<VDT_DA_DuAn> GetListDuAnSavedKHTHDeXuat(Guid? idKHTHDeXuat)
+        {
+            using (var conn = _connectionFactory.GetConnection())
+            {
+                var sql = "SELECT iID_DuAnID FROM VDT_KHV_KeHoach5Nam_DeXuat_ChiTiet where iID_KeHoach5Nam_DeXuatID = @idKHTHDeXuat group by iID_DuAnID ";
+                var items = conn.Query<VDT_DA_DuAn>(sql,
+                    param: new
+                    {
+                        idKHTHDeXuat
+                    },
+                    commandType: CommandType.Text);
+                return items;
             }
         }
 

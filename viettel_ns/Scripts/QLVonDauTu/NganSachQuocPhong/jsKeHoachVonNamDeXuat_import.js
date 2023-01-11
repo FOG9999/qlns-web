@@ -291,3 +291,6 @@ function loadFrameImport(iNamKeHoach,bIsImport) {
     return "/QLVonDauTu/KeHoachVonNamDeXuat/SheetFrameImport?id=" + iNamKeHoach + "&bIsImport=" + bIsImport ;
 }
 
+function downloadImpExp() {
+    window.location.href = "/QLVonDauTu/KeHoachVonNamDeXuat/DownloadImportExample";
+}

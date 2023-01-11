@@ -173,17 +173,17 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 		WITH tmpLCTCDT(iID_DuAnID,sTenLoaiCongTrinh,iID_LoaiCongTrinh)
 		AS
 		(
-			SELECT da.iID_DuAnID , lct.sTenLoaiCongTrinh, lct.iID_LoaiCongTrinh
-			FROM VDT_DA_DuAn da
-			LEFT JOIN VDT_DM_LoaiCongTrinh lct ON lct.iID_LoaiCongTrinh = da.iID_LoaiCongTrinhID
-			WHERE da.iID_DuAnID in (SELECT * FROM f_split(@lstDuAnID)) and da.iID_LoaiCongTrinhID  IS NOT NULL 
-			UNION ALL
+			--SELECT da.iID_DuAnID , lct.sTenLoaiCongTrinh, lct.iID_LoaiCongTrinh
+			--FROM VDT_DA_DuAn da
+			--LEFT JOIN VDT_DM_LoaiCongTrinh lct ON lct.iID_LoaiCongTrinh = da.iID_LoaiCongTrinhID
+			--WHERE da.iID_DuAnID in (SELECT * FROM f_split(@lstDuAnID)) 
+			--UNION ALL
 
 			SELECT da.iID_DuAnID , lct.sTenLoaiCongTrinh, lct.iID_LoaiCongTrinh
 			FROM VDT_DA_DuAn da
-			LEFT JOIN VDT_DA_DuAn_HangMuc hm ON hm.iID_DuAnID = da.iID_DuAnID and hm.iID_NguonVonID = @iIDNguonVonID
+			LEFT JOIN VDT_DA_DuAn_HangMuc hm ON hm.iID_DuAnID = da.iID_DuAnID 
 			LEFT JOIN VDT_DM_LoaiCongTrinh lct ON lct.iID_LoaiCongTrinh = hm.iID_LoaiCongTrinhID
-			WHERE da.iID_DuAnID IN (SELECT * FROM f_split(@lstDuAnID)) AND da.iID_LoaiCongTrinhID IS NULL 
+			WHERE da.iID_DuAnID IN (SELECT * FROM f_split(@lstDuAnID)) 
 		)
 		 
 		SELECT DISTINCT * INTO #tmpLCTCDT
@@ -207,7 +207,7 @@ DECLARE @guidEmpty uniqueidentifier = CAST(0x0 AS UNIQUEIDENTIFIER)
 	LEFT JOIN #tmpVonKeoDai as vkd on tmdt.iID_DuAnID = vkd.iID_DuAnID
 	LEFT JOIN #tmpLCTCDT as tmpLCTCDT on tmpLCTCDT.iID_DuAnID = tmdt.iID_DuAnID
 	LEFT JOIN #tmpCDT as tmpCDT on tmpCDT.iID_DuAnID = tmdt.iID_DuAnID
-	LEFT JOIN VDT_DA_DuAn_HangMuc dahm on dahm.iID_DuAnID = tmdt.iID_DuAnID AND dahm.iID_LoaiCongTrinhID = tmpLCTCDT.iID_LoaiCongTrinh and dahm.iID_NguonVonID = @iIDNguonVonID
+	LEFT JOIN VDT_DA_DuAn_HangMuc dahm on dahm.iID_DuAnID = tmdt.iID_DuAnID AND dahm.iID_LoaiCongTrinhID = tmpLCTCDT.iID_LoaiCongTrinh
 	WHERE tmdt.iID_DuAnID IN (SELECT * FROM f_split(@lstDuAnID))
 	--lay gia tri dieu chinh--
 	BEGIN
